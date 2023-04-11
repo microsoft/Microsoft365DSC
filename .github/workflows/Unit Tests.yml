@@ -23,10 +23,26 @@ jobs:
 
           foreach ($module in $Manifest.Dependencies)
           {
-            Install-Module $module.ModuleName -RequiredVersion $module.RequiredVersion -Force -Scope AllUsers
-            Import-Module $module.ModuleName -Force
+            Write-Verbose -Message "Installing module: $($module.ModuleName)"
+            if ($module.AllowPreRelease)
+            {
+              try
+              {
+                  Install-Module $module.ModuleName -AllowPreRelease -Force -Scope AllUsers
+              }
+              catch
+              {}
+            }
+            else
+            {
+              try
+              {
+                Install-Module $module.ModuleName -RequiredVersion $module.RequiredVersion -Force -Scope AllUsers
+              }
+              catch
+              {}
+            }
           }
-
           Install-Module PSDesiredStateConfiguration -Force -Scope AllUsers
           Install-Module Pester -Force -SkipPublisherCheck -RequiredVersion 5.4.0 -Scope AllUsers
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);

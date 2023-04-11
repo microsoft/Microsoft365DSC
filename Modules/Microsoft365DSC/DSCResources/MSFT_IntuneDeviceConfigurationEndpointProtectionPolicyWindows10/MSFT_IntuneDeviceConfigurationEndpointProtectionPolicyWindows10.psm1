@@ -38,12 +38,12 @@ function Get-TargetResource
         $ApplicationGuardAllowVirtualGPU,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockBoth','blockHostToContainer','blockContainerToHost','blockNone')]
+        [ValidateSet('notConfigured', 'blockBoth', 'blockHostToContainer', 'blockContainerToHost', 'blockNone')]
         [System.String]
         $ApplicationGuardBlockClipboardSharing,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockImageAndTextFile','blockImageFile','blockNone','blockTextFile')]
+        [ValidateSet('notConfigured', 'blockImageAndTextFile', 'blockImageFile', 'blockNone', 'blockTextFile')]
         [System.String]
         $ApplicationGuardBlockFileTransfer,
 
@@ -60,7 +60,7 @@ function Get-TargetResource
         $ApplicationGuardEnabled,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabledForEdge','enabledForOffice','enabledForEdgeAndOffice')]
+        [ValidateSet('notConfigured', 'enabledForEdge', 'enabledForOffice', 'enabledForEdgeAndOffice')]
         [System.String]
         $ApplicationGuardEnabledOptions,
 
@@ -69,7 +69,7 @@ function Get-TargetResource
         $ApplicationGuardForceAuditing,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enforceComponentsAndStoreApps','auditComponentsAndStoreApps','enforceComponentsStoreAppsAndSmartlocker','auditComponentsStoreAppsAndSmartlocker')]
+        [ValidateSet('notConfigured', 'enforceComponentsAndStoreApps', 'auditComponentsAndStoreApps', 'enforceComponentsStoreAppsAndSmartlocker', 'auditComponentsStoreAppsAndSmartlocker')]
         [System.String]
         $AppLockerApplicationControl,
 
@@ -94,7 +94,7 @@ function Get-TargetResource
         $BitLockerFixedDrivePolicy,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled','enabledForAzureAd','enabledForAzureAdAndHybrid')]
+        [ValidateSet('notConfigured', 'disabled', 'enabledForAzureAd', 'enabledForAzureAdAndHybrid')]
         [System.String]
         $BitLockerRecoveryPasswordRotation,
 
@@ -111,12 +111,12 @@ function Get-TargetResource
         $DefenderAdditionalGuardedFolders,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderAdobeReaderLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderAdvancedRansomewareProtectionType,
 
@@ -173,7 +173,7 @@ function Get-TargetResource
         $DefenderBlockEndUserAccess,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderBlockPersistenceThroughWmiType,
 
@@ -182,7 +182,7 @@ function Get-TargetResource
         $DefenderCheckForSignaturesBeforeRunningScan,
 
         [Parameter()]
-        [ValidateSet('notConfigured','high','highPlus','zeroTolerance')]
+        [ValidateSet('notConfigured', 'high', 'highPlus', 'zeroTolerance')]
         [System.String]
         $DefenderCloudBlockLevel,
 
@@ -247,12 +247,12 @@ function Get-TargetResource
         $DefenderDisableScanScriptsLoadedInInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderEmailContentExecution,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderEmailContentExecutionType,
 
@@ -289,77 +289,77 @@ function Get-TargetResource
         $DefenderGuardedFoldersAllowedAppPaths,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','blockDiskModification','auditDiskModification')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $DefenderGuardMyFoldersType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderNetworkProtectionType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeAppsExecutableContentCreationOrLaunch,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeAppsExecutableContentCreationOrLaunchType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeAppsLaunchChildProcessType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeAppsOtherProcessInjection,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeAppsOtherProcessInjectionType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeCommunicationAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeMacroCodeAllowWin32Imports,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeMacroCodeAllowWin32ImportsType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderPotentiallyUnwantedAppAction,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderPreventCredentialStealingType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderProcessCreation,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderProcessCreationType,
 
@@ -368,7 +368,7 @@ function Get-TargetResource
         $DefenderProcessesToExclude,
 
         [Parameter()]
-        [ValidateSet('monitorAllFiles','monitorIncomingFilesOnly','monitorOutgoingFilesOnly')]
+        [ValidateSet('monitorAllFiles', 'monitorIncomingFilesOnly', 'monitorOutgoingFilesOnly')]
         [System.String]
         $DefenderScanDirection,
 
@@ -377,7 +377,7 @@ function Get-TargetResource
         $DefenderScanMaxCpuPercentage,
 
         [Parameter()]
-        [ValidateSet('userDefined','disabled','quick','full')]
+        [ValidateSet('userDefined', 'disabled', 'quick', 'full')]
         [System.String]
         $DefenderScanType,
 
@@ -386,7 +386,7 @@ function Get-TargetResource
         $DefenderScheduledQuickScanTime,
 
         [Parameter()]
-        [ValidateSet('userDefined','everyday','sunday','monday','tuesday','wednesday','thursday','friday','saturday','noScheduledScan')]
+        [ValidateSet('userDefined', 'everyday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'noScheduledScan')]
         [System.String]
         $DefenderScheduledScanDay,
 
@@ -395,22 +395,22 @@ function Get-TargetResource
         $DefenderScheduledScanTime,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderScriptDownloadedPayloadExecution,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderScriptDownloadedPayloadExecutionType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderScriptObfuscatedMacroCode,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderScriptObfuscatedMacroCodeType,
 
@@ -483,12 +483,12 @@ function Get-TargetResource
         $DefenderSecurityCenterHelpURL,
 
         [Parameter()]
-        [ValidateSet('notConfigured','displayInAppAndInNotifications','displayOnlyInApp','displayOnlyInNotifications')]
+        [ValidateSet('notConfigured', 'displayInAppAndInNotifications', 'displayOnlyInApp', 'displayOnlyInNotifications')]
         [System.String]
         $DefenderSecurityCenterITContactDisplay,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockNoncriticalNotifications','blockAllNotifications')]
+        [ValidateSet('notConfigured', 'blockNoncriticalNotifications', 'blockAllNotifications')]
         [System.String]
         $DefenderSecurityCenterNotificationsFromApp,
 
@@ -501,27 +501,27 @@ function Get-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet('sendSafeSamplesAutomatically','alwaysPrompt','neverSend','sendAllSamplesAutomatically')]
+        [ValidateSet('sendSafeSamplesAutomatically', 'alwaysPrompt', 'neverSend', 'sendAllSamplesAutomatically')]
         [System.String]
         $DefenderSubmitSamplesConsentType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderUntrustedExecutable,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderUntrustedExecutableType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderUntrustedUSBProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderUntrustedUSBProcessType,
 
@@ -534,22 +534,22 @@ function Get-TargetResource
         $DeviceGuardEnableVirtualizationBasedSecurity,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $DeviceGuardLaunchSystemGuard,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enableWithUEFILock','enableWithoutUEFILock','disable')]
+        [ValidateSet('notConfigured', 'enableWithUEFILock', 'enableWithoutUEFILock', 'disable')]
         [System.String]
         $DeviceGuardLocalSystemAuthorityCredentialGuardSettings,
 
         [Parameter()]
-        [ValidateSet('notConfigured','withoutDMA','withDMA')]
+        [ValidateSet('notConfigured', 'withoutDMA', 'withDMA')]
         [System.String]
         $DeviceGuardSecureBootWithDMA,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','blockAll','allowAll')]
+        [ValidateSet('deviceDefault', 'blockAll', 'allowAll')]
         [System.String]
         $DmaGuardDeviceEnumerationPolicy,
 
@@ -558,7 +558,7 @@ function Get-TargetResource
         $FirewallBlockStatefulFTP,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','none','attempt','require')]
+        [ValidateSet('deviceDefault', 'none', 'attempt', 'require')]
         [System.String]
         $FirewallCertificateRevocationListCheckMethod,
 
@@ -591,12 +591,12 @@ function Get-TargetResource
         $FirewallMergeKeyingModuleSettings,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','disabled','queueInbound','queueOutbound','queueBoth')]
+        [ValidateSet('deviceDefault', 'disabled', 'queueInbound', 'queueOutbound', 'queueBoth')]
         [System.String]
         $FirewallPacketQueueingMethod,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','none','utF8')]
+        [ValidateSet('deviceDefault', 'none', 'utF8')]
         [System.String]
         $FirewallPreSharedKeyEncodingMethod,
 
@@ -617,7 +617,7 @@ function Get-TargetResource
         $FirewallRules,
 
         [Parameter()]
-        [ValidateSet('lmAndNltm','lmNtlmAndNtlmV2','lmAndNtlmOnly','lmAndNtlmV2','lmNtlmV2AndNotLm','lmNtlmV2AndNotLmOrNtm')]
+        [ValidateSet('lmAndNltm', 'lmNtlmAndNtlmV2', 'lmAndNtlmOnly', 'lmAndNtlmV2', 'lmNtlmV2AndNotLm', 'lmNtlmV2AndNotLmOrNtm')]
         [System.String]
         $LanManagerAuthenticationLevel,
 
@@ -630,7 +630,7 @@ function Get-TargetResource
         $LocalSecurityOptionsAdministratorAccountName,
 
         [Parameter()]
-        [ValidateSet('notConfigured','elevateWithoutPrompting','promptForCredentialsOnTheSecureDesktop','promptForConsentOnTheSecureDesktop','promptForCredentials','promptForConsent','promptForConsentForNonWindowsBinaries')]
+        [ValidateSet('notConfigured', 'elevateWithoutPrompting', 'promptForCredentialsOnTheSecureDesktop', 'promptForConsentOnTheSecureDesktop', 'promptForCredentials', 'promptForConsent', 'promptForConsentForNonWindowsBinaries')]
         [System.String]
         $LocalSecurityOptionsAdministratorElevationPromptBehavior,
 
@@ -731,7 +731,7 @@ function Get-TargetResource
         $LocalSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange,
 
         [Parameter()]
-        [ValidateSet('notConfigured','administrators','administratorsAndPowerUsers','administratorsAndInteractiveUsers')]
+        [ValidateSet('notConfigured', 'administrators', 'administratorsAndPowerUsers', 'administratorsAndInteractiveUsers')]
         [System.String]
         $LocalSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser,
 
@@ -748,12 +748,12 @@ function Get-TargetResource
         $LocalSecurityOptionsHideUsernameAtSignIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','administrators','administratorsAndPowerUsers','administratorsAndInteractiveUsers')]
+        [ValidateSet('notConfigured', 'administrators', 'administratorsAndPowerUsers', 'administratorsAndInteractiveUsers')]
         [System.String]
         $LocalSecurityOptionsInformationDisplayedOnLockScreen,
 
         [Parameter()]
-        [ValidateSet('notConfigured','userDisplayNameDomainUser','userDisplayNameOnly','doNotDisplayUser')]
+        [ValidateSet('notConfigured', 'userDisplayNameDomainUser', 'userDisplayNameOnly', 'doNotDisplayUser')]
         [System.String]
         $LocalSecurityOptionsInformationShownOnLockScreen,
 
@@ -774,12 +774,12 @@ function Get-TargetResource
         $LocalSecurityOptionsMachineInactivityLimitInMinutes,
 
         [Parameter()]
-        [ValidateSet('none','requireNtmlV2SessionSecurity','require128BitEncryption','ntlmV2And128BitEncryption')]
+        [ValidateSet('none', 'requireNtmlV2SessionSecurity', 'require128BitEncryption', 'ntlmV2And128BitEncryption')]
         [System.String]
         $LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients,
 
         [Parameter()]
-        [ValidateSet('none','requireNtmlV2SessionSecurity','require128BitEncryption','ntlmV2And128BitEncryption')]
+        [ValidateSet('none', 'requireNtmlV2SessionSecurity', 'require128BitEncryption', 'ntlmV2And128BitEncryption')]
         [System.String]
         $LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers,
 
@@ -792,12 +792,12 @@ function Get-TargetResource
         $LocalSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares,
 
         [Parameter()]
-        [ValidateSet('noAction','lockWorkstation','forceLogoff','disconnectRemoteDesktopSession')]
+        [ValidateSet('noAction', 'lockWorkstation', 'forceLogoff', 'disconnectRemoteDesktopSession')]
         [System.String]
         $LocalSecurityOptionsSmartCardRemovalBehavior,
 
         [Parameter()]
-        [ValidateSet('notConfigured','automaticallyDenyElevationRequests','promptForCredentialsOnTheSecureDesktop','promptForCredentials')]
+        [ValidateSet('notConfigured', 'automaticallyDenyElevationRequests', 'promptForCredentialsOnTheSecureDesktop', 'promptForCredentials')]
         [System.String]
         $LocalSecurityOptionsStandardUserElevationPromptBehavior,
 
@@ -942,12 +942,12 @@ function Get-TargetResource
         $UserRightsTakeOwnership,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enable','disable')]
+        [ValidateSet('notConfigured', 'enable', 'disable')]
         [System.String]
         $WindowsDefenderTamperProtection,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesAccessoryManagementServiceStartupMode,
 
@@ -956,17 +956,17 @@ function Get-TargetResource
         $XboxServicesEnableXboxGameSaveTask,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesLiveAuthManagerServiceStartupMode,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesLiveGameSaveServiceStartupMode,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesLiveNetworkingServiceStartupMode,
 
@@ -1044,13 +1044,13 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an Intune Device Configuration Endpoint Protection Policy for Windows10 with Id {$Id}"
 
-            if(-Not [string]::IsNullOrEmpty($DisplayName))
+            if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgDeviceManagementDeviceConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
@@ -1089,13 +1089,13 @@ function Get-TargetResource
         {
             $complexRecoveryOptions.Add('RecoveryPasswordUsage', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.recoveryOptions.recoveryPasswordUsage.toString())
         }
-        if($complexRecoveryOptions.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexRecoveryOptions.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexRecoveryOptions = $null
         }
-        $complexBitLockerFixedDrivePolicy.Add('RecoveryOptions',$complexRecoveryOptions)
+        $complexBitLockerFixedDrivePolicy.Add('RecoveryOptions', $complexRecoveryOptions)
         $complexBitLockerFixedDrivePolicy.Add('RequireEncryptionForWriteAccess', $getValue.AdditionalProperties.bitLockerFixedDrivePolicy.requireEncryptionForWriteAccess)
-        if($complexBitLockerFixedDrivePolicy.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexBitLockerFixedDrivePolicy.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexBitLockerFixedDrivePolicy = $null
         }
@@ -1107,7 +1107,7 @@ function Get-TargetResource
             $complexBitLockerRemovableDrivePolicy.Add('EncryptionMethod', $getValue.AdditionalProperties.bitLockerRemovableDrivePolicy.encryptionMethod.toString())
         }
         $complexBitLockerRemovableDrivePolicy.Add('RequireEncryptionForWriteAccess', $getValue.AdditionalProperties.bitLockerRemovableDrivePolicy.requireEncryptionForWriteAccess)
-        if($complexBitLockerRemovableDrivePolicy.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexBitLockerRemovableDrivePolicy.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexBitLockerRemovableDrivePolicy = $null
         }
@@ -1138,11 +1138,11 @@ function Get-TargetResource
         {
             $complexRecoveryOptions.Add('RecoveryPasswordUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.recoveryOptions.recoveryPasswordUsage.toString())
         }
-        if($complexRecoveryOptions.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexRecoveryOptions.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexRecoveryOptions = $null
         }
-        $complexBitLockerSystemDrivePolicy.Add('RecoveryOptions',$complexRecoveryOptions)
+        $complexBitLockerSystemDrivePolicy.Add('RecoveryOptions', $complexRecoveryOptions)
         $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationBlockWithoutTpmChip', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationBlockWithoutTpmChip)
         $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationRequired', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationRequired)
         if ($null -ne $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmKeyUsage)
@@ -1161,7 +1161,7 @@ function Get-TargetResource
         {
             $complexBitLockerSystemDrivePolicy.Add('StartupAuthenticationTpmUsage', $getValue.AdditionalProperties.bitLockerSystemDrivePolicy.startupAuthenticationTpmUsage.toString())
         }
-        if($complexBitLockerSystemDrivePolicy.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexBitLockerSystemDrivePolicy.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexBitLockerSystemDrivePolicy = $null
         }
@@ -1183,7 +1183,7 @@ function Get-TargetResource
         {
             $complexDefenderDetectedMalwareActions.Add('SevereSeverity', $getValue.AdditionalProperties.defenderDetectedMalwareActions.severeSeverity.toString())
         }
-        if($complexDefenderDetectedMalwareActions.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexDefenderDetectedMalwareActions.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexDefenderDetectedMalwareActions = $null
         }
@@ -1215,7 +1215,7 @@ function Get-TargetResource
         $complexFirewallProfileDomain.Add('StealthModeRequired', $getValue.AdditionalProperties.firewallProfileDomain.stealthModeRequired)
         $complexFirewallProfileDomain.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.AdditionalProperties.firewallProfileDomain.unicastResponsesToMulticastBroadcastsBlocked)
         $complexFirewallProfileDomain.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.AdditionalProperties.firewallProfileDomain.unicastResponsesToMulticastBroadcastsRequired)
-        if($complexFirewallProfileDomain.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexFirewallProfileDomain.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexFirewallProfileDomain = $null
         }
@@ -1247,7 +1247,7 @@ function Get-TargetResource
         $complexFirewallProfilePrivate.Add('StealthModeRequired', $getValue.AdditionalProperties.firewallProfilePrivate.stealthModeRequired)
         $complexFirewallProfilePrivate.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.AdditionalProperties.firewallProfilePrivate.unicastResponsesToMulticastBroadcastsBlocked)
         $complexFirewallProfilePrivate.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.AdditionalProperties.firewallProfilePrivate.unicastResponsesToMulticastBroadcastsRequired)
-        if($complexFirewallProfilePrivate.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexFirewallProfilePrivate.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexFirewallProfilePrivate = $null
         }
@@ -1279,13 +1279,13 @@ function Get-TargetResource
         $complexFirewallProfilePublic.Add('StealthModeRequired', $getValue.AdditionalProperties.firewallProfilePublic.stealthModeRequired)
         $complexFirewallProfilePublic.Add('UnicastResponsesToMulticastBroadcastsBlocked', $getValue.AdditionalProperties.firewallProfilePublic.unicastResponsesToMulticastBroadcastsBlocked)
         $complexFirewallProfilePublic.Add('UnicastResponsesToMulticastBroadcastsRequired', $getValue.AdditionalProperties.firewallProfilePublic.unicastResponsesToMulticastBroadcastsRequired)
-        if($complexFirewallProfilePublic.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexFirewallProfilePublic.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexFirewallProfilePublic = $null
         }
 
         $complexFirewallRules = @()
-        foreach($currentfirewallRules in $getValue.AdditionalProperties.firewallRules)
+        foreach ($currentfirewallRules in $getValue.AdditionalProperties.firewallRules)
         {
             $myfirewallRules = @{}
             if ($null -ne $getValue.AdditionalProperties.firewallRules.action)
@@ -1319,7 +1319,7 @@ function Get-TargetResource
             {
                 $myfirewallRules.Add('TrafficDirection', $getValue.AdditionalProperties.firewallRules.trafficDirection.toString())
             }
-            if($myfirewallRules.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myfirewallRules.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexFirewallRules += $myfirewallRules
             }
@@ -1327,667 +1327,667 @@ function Get-TargetResource
 
         $complexUserRightsAccessCredentialManagerAsTrustedCaller = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsAccessCredentialManagerAsTrustedCaller.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsAccessCredentialManagerAsTrustedCaller.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsAccessCredentialManagerAsTrustedCaller.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsAccessCredentialManagerAsTrustedCaller.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsAccessCredentialManagerAsTrustedCaller.state)
         {
             $complexUserRightsAccessCredentialManagerAsTrustedCaller.Add('State', $getValue.AdditionalProperties.userRightsAccessCredentialManagerAsTrustedCaller.state.toString())
         }
-        if($complexUserRightsAccessCredentialManagerAsTrustedCaller.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsAccessCredentialManagerAsTrustedCaller.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsAccessCredentialManagerAsTrustedCaller = $null
         }
 
         $complexUserRightsActAsPartOfTheOperatingSystem = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsActAsPartOfTheOperatingSystem.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsActAsPartOfTheOperatingSystem.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsActAsPartOfTheOperatingSystem.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsActAsPartOfTheOperatingSystem.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsActAsPartOfTheOperatingSystem.state)
         {
             $complexUserRightsActAsPartOfTheOperatingSystem.Add('State', $getValue.AdditionalProperties.userRightsActAsPartOfTheOperatingSystem.state.toString())
         }
-        if($complexUserRightsActAsPartOfTheOperatingSystem.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsActAsPartOfTheOperatingSystem.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsActAsPartOfTheOperatingSystem = $null
         }
 
         $complexUserRightsAllowAccessFromNetwork = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsAllowAccessFromNetwork.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsAllowAccessFromNetwork.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsAllowAccessFromNetwork.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsAllowAccessFromNetwork.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsAllowAccessFromNetwork.state)
         {
             $complexUserRightsAllowAccessFromNetwork.Add('State', $getValue.AdditionalProperties.userRightsAllowAccessFromNetwork.state.toString())
         }
-        if($complexUserRightsAllowAccessFromNetwork.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsAllowAccessFromNetwork.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsAllowAccessFromNetwork = $null
         }
 
         $complexUserRightsBackupData = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsBackupData.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsBackupData.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsBackupData.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsBackupData.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsBackupData.state)
         {
             $complexUserRightsBackupData.Add('State', $getValue.AdditionalProperties.userRightsBackupData.state.toString())
         }
-        if($complexUserRightsBackupData.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsBackupData.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsBackupData = $null
         }
 
         $complexUserRightsBlockAccessFromNetwork = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsBlockAccessFromNetwork.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsBlockAccessFromNetwork.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsBlockAccessFromNetwork.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsBlockAccessFromNetwork.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsBlockAccessFromNetwork.state)
         {
             $complexUserRightsBlockAccessFromNetwork.Add('State', $getValue.AdditionalProperties.userRightsBlockAccessFromNetwork.state.toString())
         }
-        if($complexUserRightsBlockAccessFromNetwork.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsBlockAccessFromNetwork.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsBlockAccessFromNetwork = $null
         }
 
         $complexUserRightsChangeSystemTime = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsChangeSystemTime.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsChangeSystemTime.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsChangeSystemTime.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsChangeSystemTime.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsChangeSystemTime.state)
         {
             $complexUserRightsChangeSystemTime.Add('State', $getValue.AdditionalProperties.userRightsChangeSystemTime.state.toString())
         }
-        if($complexUserRightsChangeSystemTime.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsChangeSystemTime.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsChangeSystemTime = $null
         }
 
         $complexUserRightsCreateGlobalObjects = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreateGlobalObjects.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreateGlobalObjects.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsCreateGlobalObjects.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsCreateGlobalObjects.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsCreateGlobalObjects.state)
         {
             $complexUserRightsCreateGlobalObjects.Add('State', $getValue.AdditionalProperties.userRightsCreateGlobalObjects.state.toString())
         }
-        if($complexUserRightsCreateGlobalObjects.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreateGlobalObjects.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsCreateGlobalObjects = $null
         }
 
         $complexUserRightsCreatePageFile = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreatePageFile.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreatePageFile.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsCreatePageFile.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsCreatePageFile.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsCreatePageFile.state)
         {
             $complexUserRightsCreatePageFile.Add('State', $getValue.AdditionalProperties.userRightsCreatePageFile.state.toString())
         }
-        if($complexUserRightsCreatePageFile.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreatePageFile.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsCreatePageFile = $null
         }
 
         $complexUserRightsCreatePermanentSharedObjects = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreatePermanentSharedObjects.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreatePermanentSharedObjects.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsCreatePermanentSharedObjects.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsCreatePermanentSharedObjects.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsCreatePermanentSharedObjects.state)
         {
             $complexUserRightsCreatePermanentSharedObjects.Add('State', $getValue.AdditionalProperties.userRightsCreatePermanentSharedObjects.state.toString())
         }
-        if($complexUserRightsCreatePermanentSharedObjects.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreatePermanentSharedObjects.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsCreatePermanentSharedObjects = $null
         }
 
         $complexUserRightsCreateSymbolicLinks = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreateSymbolicLinks.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreateSymbolicLinks.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsCreateSymbolicLinks.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsCreateSymbolicLinks.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsCreateSymbolicLinks.state)
         {
             $complexUserRightsCreateSymbolicLinks.Add('State', $getValue.AdditionalProperties.userRightsCreateSymbolicLinks.state.toString())
         }
-        if($complexUserRightsCreateSymbolicLinks.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreateSymbolicLinks.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsCreateSymbolicLinks = $null
         }
 
         $complexUserRightsCreateToken = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreateToken.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsCreateToken.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsCreateToken.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsCreateToken.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsCreateToken.state)
         {
             $complexUserRightsCreateToken.Add('State', $getValue.AdditionalProperties.userRightsCreateToken.state.toString())
         }
-        if($complexUserRightsCreateToken.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsCreateToken.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsCreateToken = $null
         }
 
         $complexUserRightsDebugPrograms = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsDebugPrograms.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsDebugPrograms.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsDebugPrograms.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsDebugPrograms.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsDebugPrograms.state)
         {
             $complexUserRightsDebugPrograms.Add('State', $getValue.AdditionalProperties.userRightsDebugPrograms.state.toString())
         }
-        if($complexUserRightsDebugPrograms.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsDebugPrograms.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsDebugPrograms = $null
         }
 
         $complexUserRightsDelegation = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsDelegation.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsDelegation.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsDelegation.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsDelegation.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsDelegation.state)
         {
             $complexUserRightsDelegation.Add('State', $getValue.AdditionalProperties.userRightsDelegation.state.toString())
         }
-        if($complexUserRightsDelegation.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsDelegation.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsDelegation = $null
         }
 
         $complexUserRightsDenyLocalLogOn = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsDenyLocalLogOn.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsDenyLocalLogOn.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsDenyLocalLogOn.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsDenyLocalLogOn.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsDenyLocalLogOn.state)
         {
             $complexUserRightsDenyLocalLogOn.Add('State', $getValue.AdditionalProperties.userRightsDenyLocalLogOn.state.toString())
         }
-        if($complexUserRightsDenyLocalLogOn.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsDenyLocalLogOn.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsDenyLocalLogOn = $null
         }
 
         $complexUserRightsGenerateSecurityAudits = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsGenerateSecurityAudits.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsGenerateSecurityAudits.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsGenerateSecurityAudits.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsGenerateSecurityAudits.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsGenerateSecurityAudits.state)
         {
             $complexUserRightsGenerateSecurityAudits.Add('State', $getValue.AdditionalProperties.userRightsGenerateSecurityAudits.state.toString())
         }
-        if($complexUserRightsGenerateSecurityAudits.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsGenerateSecurityAudits.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsGenerateSecurityAudits = $null
         }
 
         $complexUserRightsImpersonateClient = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsImpersonateClient.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsImpersonateClient.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsImpersonateClient.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsImpersonateClient.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsImpersonateClient.state)
         {
             $complexUserRightsImpersonateClient.Add('State', $getValue.AdditionalProperties.userRightsImpersonateClient.state.toString())
         }
-        if($complexUserRightsImpersonateClient.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsImpersonateClient.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsImpersonateClient = $null
         }
 
         $complexUserRightsIncreaseSchedulingPriority = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsIncreaseSchedulingPriority.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsIncreaseSchedulingPriority.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsIncreaseSchedulingPriority.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsIncreaseSchedulingPriority.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsIncreaseSchedulingPriority.state)
         {
             $complexUserRightsIncreaseSchedulingPriority.Add('State', $getValue.AdditionalProperties.userRightsIncreaseSchedulingPriority.state.toString())
         }
-        if($complexUserRightsIncreaseSchedulingPriority.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsIncreaseSchedulingPriority.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsIncreaseSchedulingPriority = $null
         }
 
         $complexUserRightsLoadUnloadDrivers = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsLoadUnloadDrivers.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsLoadUnloadDrivers.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsLoadUnloadDrivers.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsLoadUnloadDrivers.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsLoadUnloadDrivers.state)
         {
             $complexUserRightsLoadUnloadDrivers.Add('State', $getValue.AdditionalProperties.userRightsLoadUnloadDrivers.state.toString())
         }
-        if($complexUserRightsLoadUnloadDrivers.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsLoadUnloadDrivers.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsLoadUnloadDrivers = $null
         }
 
         $complexUserRightsLocalLogOn = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsLocalLogOn.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsLocalLogOn.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsLocalLogOn.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsLocalLogOn.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsLocalLogOn.state)
         {
             $complexUserRightsLocalLogOn.Add('State', $getValue.AdditionalProperties.userRightsLocalLogOn.state.toString())
         }
-        if($complexUserRightsLocalLogOn.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsLocalLogOn.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsLocalLogOn = $null
         }
 
         $complexUserRightsLockMemory = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsLockMemory.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsLockMemory.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsLockMemory.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsLockMemory.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsLockMemory.state)
         {
             $complexUserRightsLockMemory.Add('State', $getValue.AdditionalProperties.userRightsLockMemory.state.toString())
         }
-        if($complexUserRightsLockMemory.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsLockMemory.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsLockMemory = $null
         }
 
         $complexUserRightsManageAuditingAndSecurityLogs = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsManageAuditingAndSecurityLogs.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsManageAuditingAndSecurityLogs.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsManageAuditingAndSecurityLogs.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsManageAuditingAndSecurityLogs.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsManageAuditingAndSecurityLogs.state)
         {
             $complexUserRightsManageAuditingAndSecurityLogs.Add('State', $getValue.AdditionalProperties.userRightsManageAuditingAndSecurityLogs.state.toString())
         }
-        if($complexUserRightsManageAuditingAndSecurityLogs.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsManageAuditingAndSecurityLogs.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsManageAuditingAndSecurityLogs = $null
         }
 
         $complexUserRightsManageVolumes = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsManageVolumes.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsManageVolumes.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsManageVolumes.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsManageVolumes.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsManageVolumes.state)
         {
             $complexUserRightsManageVolumes.Add('State', $getValue.AdditionalProperties.userRightsManageVolumes.state.toString())
         }
-        if($complexUserRightsManageVolumes.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsManageVolumes.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsManageVolumes = $null
         }
 
         $complexUserRightsModifyFirmwareEnvironment = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsModifyFirmwareEnvironment.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsModifyFirmwareEnvironment.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsModifyFirmwareEnvironment.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsModifyFirmwareEnvironment.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsModifyFirmwareEnvironment.state)
         {
             $complexUserRightsModifyFirmwareEnvironment.Add('State', $getValue.AdditionalProperties.userRightsModifyFirmwareEnvironment.state.toString())
         }
-        if($complexUserRightsModifyFirmwareEnvironment.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsModifyFirmwareEnvironment.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsModifyFirmwareEnvironment = $null
         }
 
         $complexUserRightsModifyObjectLabels = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsModifyObjectLabels.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsModifyObjectLabels.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsModifyObjectLabels.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsModifyObjectLabels.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsModifyObjectLabels.state)
         {
             $complexUserRightsModifyObjectLabels.Add('State', $getValue.AdditionalProperties.userRightsModifyObjectLabels.state.toString())
         }
-        if($complexUserRightsModifyObjectLabels.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsModifyObjectLabels.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsModifyObjectLabels = $null
         }
 
         $complexUserRightsProfileSingleProcess = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsProfileSingleProcess.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsProfileSingleProcess.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsProfileSingleProcess.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsProfileSingleProcess.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsProfileSingleProcess.state)
         {
             $complexUserRightsProfileSingleProcess.Add('State', $getValue.AdditionalProperties.userRightsProfileSingleProcess.state.toString())
         }
-        if($complexUserRightsProfileSingleProcess.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsProfileSingleProcess.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsProfileSingleProcess = $null
         }
 
         $complexUserRightsRemoteDesktopServicesLogOn = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsRemoteDesktopServicesLogOn.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsRemoteDesktopServicesLogOn.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsRemoteDesktopServicesLogOn.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsRemoteDesktopServicesLogOn.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsRemoteDesktopServicesLogOn.state)
         {
             $complexUserRightsRemoteDesktopServicesLogOn.Add('State', $getValue.AdditionalProperties.userRightsRemoteDesktopServicesLogOn.state.toString())
         }
-        if($complexUserRightsRemoteDesktopServicesLogOn.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsRemoteDesktopServicesLogOn.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsRemoteDesktopServicesLogOn = $null
         }
 
         $complexUserRightsRemoteShutdown = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsRemoteShutdown.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsRemoteShutdown.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsRemoteShutdown.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsRemoteShutdown.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsRemoteShutdown.state)
         {
             $complexUserRightsRemoteShutdown.Add('State', $getValue.AdditionalProperties.userRightsRemoteShutdown.state.toString())
         }
-        if($complexUserRightsRemoteShutdown.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsRemoteShutdown.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsRemoteShutdown = $null
         }
 
         $complexUserRightsRestoreData = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsRestoreData.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsRestoreData.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsRestoreData.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsRestoreData.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsRestoreData.state)
         {
             $complexUserRightsRestoreData.Add('State', $getValue.AdditionalProperties.userRightsRestoreData.state.toString())
         }
-        if($complexUserRightsRestoreData.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsRestoreData.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsRestoreData = $null
         }
 
         $complexUserRightsTakeOwnership = @{}
         $complexLocalUsersOrGroups = @()
-        foreach($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsTakeOwnership.localUsersOrGroups)
+        foreach ($currentLocalUsersOrGroups in $getValue.AdditionalProperties.userRightsTakeOwnership.localUsersOrGroups)
         {
             $myLocalUsersOrGroups = @{}
             $myLocalUsersOrGroups.Add('Description', $currentLocalUsersOrGroups.description)
             $myLocalUsersOrGroups.Add('Name', $currentLocalUsersOrGroups.name)
             $myLocalUsersOrGroups.Add('SecurityIdentifier', $currentLocalUsersOrGroups.securityIdentifier)
-            if($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
+            if ($myLocalUsersOrGroups.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexLocalUsersOrGroups += $myLocalUsersOrGroups
             }
         }
-        $complexUserRightsTakeOwnership.Add('LocalUsersOrGroups',$complexLocalUsersOrGroups)
+        $complexUserRightsTakeOwnership.Add('LocalUsersOrGroups', $complexLocalUsersOrGroups)
         if ($null -ne $getValue.AdditionalProperties.userRightsTakeOwnership.state)
         {
             $complexUserRightsTakeOwnership.Add('State', $getValue.AdditionalProperties.userRightsTakeOwnership.state.toString())
         }
-        if($complexUserRightsTakeOwnership.values.Where({ $null -ne $_ }).count -eq 0)
+        if ($complexUserRightsTakeOwnership.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexUserRightsTakeOwnership = $null
         }
@@ -2624,11 +2624,13 @@ function Get-TargetResource
         foreach ($assignmentEntry in $AssignmentsValues)
         {
             $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {
+                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
+                    })
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
             }
             $assignmentResult += $assignmentValue
         }
@@ -2687,12 +2689,12 @@ function Set-TargetResource
         $ApplicationGuardAllowVirtualGPU,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockBoth','blockHostToContainer','blockContainerToHost','blockNone')]
+        [ValidateSet('notConfigured', 'blockBoth', 'blockHostToContainer', 'blockContainerToHost', 'blockNone')]
         [System.String]
         $ApplicationGuardBlockClipboardSharing,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockImageAndTextFile','blockImageFile','blockNone','blockTextFile')]
+        [ValidateSet('notConfigured', 'blockImageAndTextFile', 'blockImageFile', 'blockNone', 'blockTextFile')]
         [System.String]
         $ApplicationGuardBlockFileTransfer,
 
@@ -2709,7 +2711,7 @@ function Set-TargetResource
         $ApplicationGuardEnabled,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabledForEdge','enabledForOffice','enabledForEdgeAndOffice')]
+        [ValidateSet('notConfigured', 'enabledForEdge', 'enabledForOffice', 'enabledForEdgeAndOffice')]
         [System.String]
         $ApplicationGuardEnabledOptions,
 
@@ -2718,7 +2720,7 @@ function Set-TargetResource
         $ApplicationGuardForceAuditing,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enforceComponentsAndStoreApps','auditComponentsAndStoreApps','enforceComponentsStoreAppsAndSmartlocker','auditComponentsStoreAppsAndSmartlocker')]
+        [ValidateSet('notConfigured', 'enforceComponentsAndStoreApps', 'auditComponentsAndStoreApps', 'enforceComponentsStoreAppsAndSmartlocker', 'auditComponentsStoreAppsAndSmartlocker')]
         [System.String]
         $AppLockerApplicationControl,
 
@@ -2743,7 +2745,7 @@ function Set-TargetResource
         $BitLockerFixedDrivePolicy,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled','enabledForAzureAd','enabledForAzureAdAndHybrid')]
+        [ValidateSet('notConfigured', 'disabled', 'enabledForAzureAd', 'enabledForAzureAdAndHybrid')]
         [System.String]
         $BitLockerRecoveryPasswordRotation,
 
@@ -2760,12 +2762,12 @@ function Set-TargetResource
         $DefenderAdditionalGuardedFolders,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderAdobeReaderLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderAdvancedRansomewareProtectionType,
 
@@ -2822,7 +2824,7 @@ function Set-TargetResource
         $DefenderBlockEndUserAccess,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderBlockPersistenceThroughWmiType,
 
@@ -2831,7 +2833,7 @@ function Set-TargetResource
         $DefenderCheckForSignaturesBeforeRunningScan,
 
         [Parameter()]
-        [ValidateSet('notConfigured','high','highPlus','zeroTolerance')]
+        [ValidateSet('notConfigured', 'high', 'highPlus', 'zeroTolerance')]
         [System.String]
         $DefenderCloudBlockLevel,
 
@@ -2896,12 +2898,12 @@ function Set-TargetResource
         $DefenderDisableScanScriptsLoadedInInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderEmailContentExecution,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderEmailContentExecutionType,
 
@@ -2938,77 +2940,77 @@ function Set-TargetResource
         $DefenderGuardedFoldersAllowedAppPaths,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','blockDiskModification','auditDiskModification')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $DefenderGuardMyFoldersType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderNetworkProtectionType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeAppsExecutableContentCreationOrLaunch,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeAppsExecutableContentCreationOrLaunchType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeAppsLaunchChildProcessType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeAppsOtherProcessInjection,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeAppsOtherProcessInjectionType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeCommunicationAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeMacroCodeAllowWin32Imports,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeMacroCodeAllowWin32ImportsType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderPotentiallyUnwantedAppAction,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderPreventCredentialStealingType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderProcessCreation,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderProcessCreationType,
 
@@ -3017,7 +3019,7 @@ function Set-TargetResource
         $DefenderProcessesToExclude,
 
         [Parameter()]
-        [ValidateSet('monitorAllFiles','monitorIncomingFilesOnly','monitorOutgoingFilesOnly')]
+        [ValidateSet('monitorAllFiles', 'monitorIncomingFilesOnly', 'monitorOutgoingFilesOnly')]
         [System.String]
         $DefenderScanDirection,
 
@@ -3026,7 +3028,7 @@ function Set-TargetResource
         $DefenderScanMaxCpuPercentage,
 
         [Parameter()]
-        [ValidateSet('userDefined','disabled','quick','full')]
+        [ValidateSet('userDefined', 'disabled', 'quick', 'full')]
         [System.String]
         $DefenderScanType,
 
@@ -3035,7 +3037,7 @@ function Set-TargetResource
         $DefenderScheduledQuickScanTime,
 
         [Parameter()]
-        [ValidateSet('userDefined','everyday','sunday','monday','tuesday','wednesday','thursday','friday','saturday','noScheduledScan')]
+        [ValidateSet('userDefined', 'everyday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'noScheduledScan')]
         [System.String]
         $DefenderScheduledScanDay,
 
@@ -3044,22 +3046,22 @@ function Set-TargetResource
         $DefenderScheduledScanTime,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderScriptDownloadedPayloadExecution,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderScriptDownloadedPayloadExecutionType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderScriptObfuscatedMacroCode,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderScriptObfuscatedMacroCodeType,
 
@@ -3132,12 +3134,12 @@ function Set-TargetResource
         $DefenderSecurityCenterHelpURL,
 
         [Parameter()]
-        [ValidateSet('notConfigured','displayInAppAndInNotifications','displayOnlyInApp','displayOnlyInNotifications')]
+        [ValidateSet('notConfigured', 'displayInAppAndInNotifications', 'displayOnlyInApp', 'displayOnlyInNotifications')]
         [System.String]
         $DefenderSecurityCenterITContactDisplay,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockNoncriticalNotifications','blockAllNotifications')]
+        [ValidateSet('notConfigured', 'blockNoncriticalNotifications', 'blockAllNotifications')]
         [System.String]
         $DefenderSecurityCenterNotificationsFromApp,
 
@@ -3150,27 +3152,27 @@ function Set-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet('sendSafeSamplesAutomatically','alwaysPrompt','neverSend','sendAllSamplesAutomatically')]
+        [ValidateSet('sendSafeSamplesAutomatically', 'alwaysPrompt', 'neverSend', 'sendAllSamplesAutomatically')]
         [System.String]
         $DefenderSubmitSamplesConsentType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderUntrustedExecutable,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderUntrustedExecutableType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderUntrustedUSBProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderUntrustedUSBProcessType,
 
@@ -3183,22 +3185,22 @@ function Set-TargetResource
         $DeviceGuardEnableVirtualizationBasedSecurity,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $DeviceGuardLaunchSystemGuard,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enableWithUEFILock','enableWithoutUEFILock','disable')]
+        [ValidateSet('notConfigured', 'enableWithUEFILock', 'enableWithoutUEFILock', 'disable')]
         [System.String]
         $DeviceGuardLocalSystemAuthorityCredentialGuardSettings,
 
         [Parameter()]
-        [ValidateSet('notConfigured','withoutDMA','withDMA')]
+        [ValidateSet('notConfigured', 'withoutDMA', 'withDMA')]
         [System.String]
         $DeviceGuardSecureBootWithDMA,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','blockAll','allowAll')]
+        [ValidateSet('deviceDefault', 'blockAll', 'allowAll')]
         [System.String]
         $DmaGuardDeviceEnumerationPolicy,
 
@@ -3207,7 +3209,7 @@ function Set-TargetResource
         $FirewallBlockStatefulFTP,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','none','attempt','require')]
+        [ValidateSet('deviceDefault', 'none', 'attempt', 'require')]
         [System.String]
         $FirewallCertificateRevocationListCheckMethod,
 
@@ -3240,12 +3242,12 @@ function Set-TargetResource
         $FirewallMergeKeyingModuleSettings,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','disabled','queueInbound','queueOutbound','queueBoth')]
+        [ValidateSet('deviceDefault', 'disabled', 'queueInbound', 'queueOutbound', 'queueBoth')]
         [System.String]
         $FirewallPacketQueueingMethod,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','none','utF8')]
+        [ValidateSet('deviceDefault', 'none', 'utF8')]
         [System.String]
         $FirewallPreSharedKeyEncodingMethod,
 
@@ -3266,7 +3268,7 @@ function Set-TargetResource
         $FirewallRules,
 
         [Parameter()]
-        [ValidateSet('lmAndNltm','lmNtlmAndNtlmV2','lmAndNtlmOnly','lmAndNtlmV2','lmNtlmV2AndNotLm','lmNtlmV2AndNotLmOrNtm')]
+        [ValidateSet('lmAndNltm', 'lmNtlmAndNtlmV2', 'lmAndNtlmOnly', 'lmAndNtlmV2', 'lmNtlmV2AndNotLm', 'lmNtlmV2AndNotLmOrNtm')]
         [System.String]
         $LanManagerAuthenticationLevel,
 
@@ -3279,7 +3281,7 @@ function Set-TargetResource
         $LocalSecurityOptionsAdministratorAccountName,
 
         [Parameter()]
-        [ValidateSet('notConfigured','elevateWithoutPrompting','promptForCredentialsOnTheSecureDesktop','promptForConsentOnTheSecureDesktop','promptForCredentials','promptForConsent','promptForConsentForNonWindowsBinaries')]
+        [ValidateSet('notConfigured', 'elevateWithoutPrompting', 'promptForCredentialsOnTheSecureDesktop', 'promptForConsentOnTheSecureDesktop', 'promptForCredentials', 'promptForConsent', 'promptForConsentForNonWindowsBinaries')]
         [System.String]
         $LocalSecurityOptionsAdministratorElevationPromptBehavior,
 
@@ -3380,7 +3382,7 @@ function Set-TargetResource
         $LocalSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange,
 
         [Parameter()]
-        [ValidateSet('notConfigured','administrators','administratorsAndPowerUsers','administratorsAndInteractiveUsers')]
+        [ValidateSet('notConfigured', 'administrators', 'administratorsAndPowerUsers', 'administratorsAndInteractiveUsers')]
         [System.String]
         $LocalSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser,
 
@@ -3397,12 +3399,12 @@ function Set-TargetResource
         $LocalSecurityOptionsHideUsernameAtSignIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','administrators','administratorsAndPowerUsers','administratorsAndInteractiveUsers')]
+        [ValidateSet('notConfigured', 'administrators', 'administratorsAndPowerUsers', 'administratorsAndInteractiveUsers')]
         [System.String]
         $LocalSecurityOptionsInformationDisplayedOnLockScreen,
 
         [Parameter()]
-        [ValidateSet('notConfigured','userDisplayNameDomainUser','userDisplayNameOnly','doNotDisplayUser')]
+        [ValidateSet('notConfigured', 'userDisplayNameDomainUser', 'userDisplayNameOnly', 'doNotDisplayUser')]
         [System.String]
         $LocalSecurityOptionsInformationShownOnLockScreen,
 
@@ -3423,12 +3425,12 @@ function Set-TargetResource
         $LocalSecurityOptionsMachineInactivityLimitInMinutes,
 
         [Parameter()]
-        [ValidateSet('none','requireNtmlV2SessionSecurity','require128BitEncryption','ntlmV2And128BitEncryption')]
+        [ValidateSet('none', 'requireNtmlV2SessionSecurity', 'require128BitEncryption', 'ntlmV2And128BitEncryption')]
         [System.String]
         $LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients,
 
         [Parameter()]
-        [ValidateSet('none','requireNtmlV2SessionSecurity','require128BitEncryption','ntlmV2And128BitEncryption')]
+        [ValidateSet('none', 'requireNtmlV2SessionSecurity', 'require128BitEncryption', 'ntlmV2And128BitEncryption')]
         [System.String]
         $LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers,
 
@@ -3441,12 +3443,12 @@ function Set-TargetResource
         $LocalSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares,
 
         [Parameter()]
-        [ValidateSet('noAction','lockWorkstation','forceLogoff','disconnectRemoteDesktopSession')]
+        [ValidateSet('noAction', 'lockWorkstation', 'forceLogoff', 'disconnectRemoteDesktopSession')]
         [System.String]
         $LocalSecurityOptionsSmartCardRemovalBehavior,
 
         [Parameter()]
-        [ValidateSet('notConfigured','automaticallyDenyElevationRequests','promptForCredentialsOnTheSecureDesktop','promptForCredentials')]
+        [ValidateSet('notConfigured', 'automaticallyDenyElevationRequests', 'promptForCredentialsOnTheSecureDesktop', 'promptForCredentials')]
         [System.String]
         $LocalSecurityOptionsStandardUserElevationPromptBehavior,
 
@@ -3591,12 +3593,12 @@ function Set-TargetResource
         $UserRightsTakeOwnership,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enable','disable')]
+        [ValidateSet('notConfigured', 'enable', 'disable')]
         [System.String]
         $WindowsDefenderTamperProtection,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesAccessoryManagementServiceStartupMode,
 
@@ -3605,17 +3607,17 @@ function Set-TargetResource
         $XboxServicesEnableXboxGameSaveTask,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesLiveAuthManagerServiceStartupMode,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesLiveGameSaveServiceStartupMode,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesLiveNetworkingServiceStartupMode,
 
@@ -3697,32 +3699,32 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Endpoint Protection Policy for Windows10 with DisplayName {$DisplayName}"
-        $PSBoundParameters.Remove("Assignments") | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
 
-        $keys=(([Hashtable]$CreateParameters).clone()).Keys
-        foreach($key in $keys)
+        $keys = (([Hashtable]$CreateParameters).clone()).Keys
+        foreach ($key in $keys)
         {
-            if($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like "*cimInstance*")
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
             {
-                $CreateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
+                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10EndpointProtectionConfiguration")
-        $policy=New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EndpointProtectionConfiguration')
+        $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
 
-        if($policy.id)
+        if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -3731,30 +3733,30 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Endpoint Protection Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $PSBoundParameters.Remove("Assignments") | Out-Null
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
 
-        $keys=(([Hashtable]$UpdateParameters).clone()).Keys
-        foreach($key in $keys)
+        $keys = (([Hashtable]$UpdateParameters).clone()).Keys
+        foreach ($key in $keys)
         {
-            if($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like "*cimInstance*")
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
             {
-                $UpdateParameters.$key= Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windows10EndpointProtectionConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10EndpointProtectionConfiguration')
         Update-MgDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            $assignmentsHash+=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
@@ -3810,12 +3812,12 @@ function Test-TargetResource
         $ApplicationGuardAllowVirtualGPU,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockBoth','blockHostToContainer','blockContainerToHost','blockNone')]
+        [ValidateSet('notConfigured', 'blockBoth', 'blockHostToContainer', 'blockContainerToHost', 'blockNone')]
         [System.String]
         $ApplicationGuardBlockClipboardSharing,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockImageAndTextFile','blockImageFile','blockNone','blockTextFile')]
+        [ValidateSet('notConfigured', 'blockImageAndTextFile', 'blockImageFile', 'blockNone', 'blockTextFile')]
         [System.String]
         $ApplicationGuardBlockFileTransfer,
 
@@ -3832,7 +3834,7 @@ function Test-TargetResource
         $ApplicationGuardEnabled,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabledForEdge','enabledForOffice','enabledForEdgeAndOffice')]
+        [ValidateSet('notConfigured', 'enabledForEdge', 'enabledForOffice', 'enabledForEdgeAndOffice')]
         [System.String]
         $ApplicationGuardEnabledOptions,
 
@@ -3841,7 +3843,7 @@ function Test-TargetResource
         $ApplicationGuardForceAuditing,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enforceComponentsAndStoreApps','auditComponentsAndStoreApps','enforceComponentsStoreAppsAndSmartlocker','auditComponentsStoreAppsAndSmartlocker')]
+        [ValidateSet('notConfigured', 'enforceComponentsAndStoreApps', 'auditComponentsAndStoreApps', 'enforceComponentsStoreAppsAndSmartlocker', 'auditComponentsStoreAppsAndSmartlocker')]
         [System.String]
         $AppLockerApplicationControl,
 
@@ -3866,7 +3868,7 @@ function Test-TargetResource
         $BitLockerFixedDrivePolicy,
 
         [Parameter()]
-        [ValidateSet('notConfigured','disabled','enabledForAzureAd','enabledForAzureAdAndHybrid')]
+        [ValidateSet('notConfigured', 'disabled', 'enabledForAzureAd', 'enabledForAzureAdAndHybrid')]
         [System.String]
         $BitLockerRecoveryPasswordRotation,
 
@@ -3883,12 +3885,12 @@ function Test-TargetResource
         $DefenderAdditionalGuardedFolders,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderAdobeReaderLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderAdvancedRansomewareProtectionType,
 
@@ -3945,7 +3947,7 @@ function Test-TargetResource
         $DefenderBlockEndUserAccess,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderBlockPersistenceThroughWmiType,
 
@@ -3954,7 +3956,7 @@ function Test-TargetResource
         $DefenderCheckForSignaturesBeforeRunningScan,
 
         [Parameter()]
-        [ValidateSet('notConfigured','high','highPlus','zeroTolerance')]
+        [ValidateSet('notConfigured', 'high', 'highPlus', 'zeroTolerance')]
         [System.String]
         $DefenderCloudBlockLevel,
 
@@ -4019,12 +4021,12 @@ function Test-TargetResource
         $DefenderDisableScanScriptsLoadedInInternetExplorer,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderEmailContentExecution,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderEmailContentExecutionType,
 
@@ -4061,77 +4063,77 @@ function Test-TargetResource
         $DefenderGuardedFoldersAllowedAppPaths,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','blockDiskModification','auditDiskModification')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $DefenderGuardMyFoldersType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderNetworkProtectionType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeAppsExecutableContentCreationOrLaunch,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeAppsExecutableContentCreationOrLaunchType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeAppsLaunchChildProcessType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeAppsOtherProcessInjection,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeAppsOtherProcessInjectionType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeCommunicationAppsLaunchChildProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderOfficeMacroCodeAllowWin32Imports,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderOfficeMacroCodeAllowWin32ImportsType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderPotentiallyUnwantedAppAction,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderPreventCredentialStealingType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderProcessCreation,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderProcessCreationType,
 
@@ -4140,7 +4142,7 @@ function Test-TargetResource
         $DefenderProcessesToExclude,
 
         [Parameter()]
-        [ValidateSet('monitorAllFiles','monitorIncomingFilesOnly','monitorOutgoingFilesOnly')]
+        [ValidateSet('monitorAllFiles', 'monitorIncomingFilesOnly', 'monitorOutgoingFilesOnly')]
         [System.String]
         $DefenderScanDirection,
 
@@ -4149,7 +4151,7 @@ function Test-TargetResource
         $DefenderScanMaxCpuPercentage,
 
         [Parameter()]
-        [ValidateSet('userDefined','disabled','quick','full')]
+        [ValidateSet('userDefined', 'disabled', 'quick', 'full')]
         [System.String]
         $DefenderScanType,
 
@@ -4158,7 +4160,7 @@ function Test-TargetResource
         $DefenderScheduledQuickScanTime,
 
         [Parameter()]
-        [ValidateSet('userDefined','everyday','sunday','monday','tuesday','wednesday','thursday','friday','saturday','noScheduledScan')]
+        [ValidateSet('userDefined', 'everyday', 'sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'noScheduledScan')]
         [System.String]
         $DefenderScheduledScanDay,
 
@@ -4167,22 +4169,22 @@ function Test-TargetResource
         $DefenderScheduledScanTime,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderScriptDownloadedPayloadExecution,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderScriptDownloadedPayloadExecutionType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderScriptObfuscatedMacroCode,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderScriptObfuscatedMacroCodeType,
 
@@ -4255,12 +4257,12 @@ function Test-TargetResource
         $DefenderSecurityCenterHelpURL,
 
         [Parameter()]
-        [ValidateSet('notConfigured','displayInAppAndInNotifications','displayOnlyInApp','displayOnlyInNotifications')]
+        [ValidateSet('notConfigured', 'displayInAppAndInNotifications', 'displayOnlyInApp', 'displayOnlyInNotifications')]
         [System.String]
         $DefenderSecurityCenterITContactDisplay,
 
         [Parameter()]
-        [ValidateSet('notConfigured','blockNoncriticalNotifications','blockAllNotifications')]
+        [ValidateSet('notConfigured', 'blockNoncriticalNotifications', 'blockAllNotifications')]
         [System.String]
         $DefenderSecurityCenterNotificationsFromApp,
 
@@ -4273,27 +4275,27 @@ function Test-TargetResource
         $DefenderSignatureUpdateIntervalInHours,
 
         [Parameter()]
-        [ValidateSet('sendSafeSamplesAutomatically','alwaysPrompt','neverSend','sendAllSamplesAutomatically')]
+        [ValidateSet('sendSafeSamplesAutomatically', 'alwaysPrompt', 'neverSend', 'sendAllSamplesAutomatically')]
         [System.String]
         $DefenderSubmitSamplesConsentType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderUntrustedExecutable,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderUntrustedExecutableType,
 
         [Parameter()]
-        [ValidateSet('userDefined','enable','auditMode','warn','notConfigured')]
+        [ValidateSet('userDefined', 'enable', 'auditMode', 'warn', 'notConfigured')]
         [System.String]
         $DefenderUntrustedUSBProcess,
 
         [Parameter()]
-        [ValidateSet('userDefined','block','auditMode','warn','disable')]
+        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $DefenderUntrustedUSBProcessType,
 
@@ -4306,22 +4308,22 @@ function Test-TargetResource
         $DeviceGuardEnableVirtualizationBasedSecurity,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enabled','disabled')]
+        [ValidateSet('notConfigured', 'enabled', 'disabled')]
         [System.String]
         $DeviceGuardLaunchSystemGuard,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enableWithUEFILock','enableWithoutUEFILock','disable')]
+        [ValidateSet('notConfigured', 'enableWithUEFILock', 'enableWithoutUEFILock', 'disable')]
         [System.String]
         $DeviceGuardLocalSystemAuthorityCredentialGuardSettings,
 
         [Parameter()]
-        [ValidateSet('notConfigured','withoutDMA','withDMA')]
+        [ValidateSet('notConfigured', 'withoutDMA', 'withDMA')]
         [System.String]
         $DeviceGuardSecureBootWithDMA,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','blockAll','allowAll')]
+        [ValidateSet('deviceDefault', 'blockAll', 'allowAll')]
         [System.String]
         $DmaGuardDeviceEnumerationPolicy,
 
@@ -4330,7 +4332,7 @@ function Test-TargetResource
         $FirewallBlockStatefulFTP,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','none','attempt','require')]
+        [ValidateSet('deviceDefault', 'none', 'attempt', 'require')]
         [System.String]
         $FirewallCertificateRevocationListCheckMethod,
 
@@ -4363,12 +4365,12 @@ function Test-TargetResource
         $FirewallMergeKeyingModuleSettings,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','disabled','queueInbound','queueOutbound','queueBoth')]
+        [ValidateSet('deviceDefault', 'disabled', 'queueInbound', 'queueOutbound', 'queueBoth')]
         [System.String]
         $FirewallPacketQueueingMethod,
 
         [Parameter()]
-        [ValidateSet('deviceDefault','none','utF8')]
+        [ValidateSet('deviceDefault', 'none', 'utF8')]
         [System.String]
         $FirewallPreSharedKeyEncodingMethod,
 
@@ -4389,7 +4391,7 @@ function Test-TargetResource
         $FirewallRules,
 
         [Parameter()]
-        [ValidateSet('lmAndNltm','lmNtlmAndNtlmV2','lmAndNtlmOnly','lmAndNtlmV2','lmNtlmV2AndNotLm','lmNtlmV2AndNotLmOrNtm')]
+        [ValidateSet('lmAndNltm', 'lmNtlmAndNtlmV2', 'lmAndNtlmOnly', 'lmAndNtlmV2', 'lmNtlmV2AndNotLm', 'lmNtlmV2AndNotLmOrNtm')]
         [System.String]
         $LanManagerAuthenticationLevel,
 
@@ -4402,7 +4404,7 @@ function Test-TargetResource
         $LocalSecurityOptionsAdministratorAccountName,
 
         [Parameter()]
-        [ValidateSet('notConfigured','elevateWithoutPrompting','promptForCredentialsOnTheSecureDesktop','promptForConsentOnTheSecureDesktop','promptForCredentials','promptForConsent','promptForConsentForNonWindowsBinaries')]
+        [ValidateSet('notConfigured', 'elevateWithoutPrompting', 'promptForCredentialsOnTheSecureDesktop', 'promptForConsentOnTheSecureDesktop', 'promptForCredentials', 'promptForConsent', 'promptForConsentForNonWindowsBinaries')]
         [System.String]
         $LocalSecurityOptionsAdministratorElevationPromptBehavior,
 
@@ -4503,7 +4505,7 @@ function Test-TargetResource
         $LocalSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange,
 
         [Parameter()]
-        [ValidateSet('notConfigured','administrators','administratorsAndPowerUsers','administratorsAndInteractiveUsers')]
+        [ValidateSet('notConfigured', 'administrators', 'administratorsAndPowerUsers', 'administratorsAndInteractiveUsers')]
         [System.String]
         $LocalSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser,
 
@@ -4520,12 +4522,12 @@ function Test-TargetResource
         $LocalSecurityOptionsHideUsernameAtSignIn,
 
         [Parameter()]
-        [ValidateSet('notConfigured','administrators','administratorsAndPowerUsers','administratorsAndInteractiveUsers')]
+        [ValidateSet('notConfigured', 'administrators', 'administratorsAndPowerUsers', 'administratorsAndInteractiveUsers')]
         [System.String]
         $LocalSecurityOptionsInformationDisplayedOnLockScreen,
 
         [Parameter()]
-        [ValidateSet('notConfigured','userDisplayNameDomainUser','userDisplayNameOnly','doNotDisplayUser')]
+        [ValidateSet('notConfigured', 'userDisplayNameDomainUser', 'userDisplayNameOnly', 'doNotDisplayUser')]
         [System.String]
         $LocalSecurityOptionsInformationShownOnLockScreen,
 
@@ -4546,12 +4548,12 @@ function Test-TargetResource
         $LocalSecurityOptionsMachineInactivityLimitInMinutes,
 
         [Parameter()]
-        [ValidateSet('none','requireNtmlV2SessionSecurity','require128BitEncryption','ntlmV2And128BitEncryption')]
+        [ValidateSet('none', 'requireNtmlV2SessionSecurity', 'require128BitEncryption', 'ntlmV2And128BitEncryption')]
         [System.String]
         $LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients,
 
         [Parameter()]
-        [ValidateSet('none','requireNtmlV2SessionSecurity','require128BitEncryption','ntlmV2And128BitEncryption')]
+        [ValidateSet('none', 'requireNtmlV2SessionSecurity', 'require128BitEncryption', 'ntlmV2And128BitEncryption')]
         [System.String]
         $LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers,
 
@@ -4564,12 +4566,12 @@ function Test-TargetResource
         $LocalSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares,
 
         [Parameter()]
-        [ValidateSet('noAction','lockWorkstation','forceLogoff','disconnectRemoteDesktopSession')]
+        [ValidateSet('noAction', 'lockWorkstation', 'forceLogoff', 'disconnectRemoteDesktopSession')]
         [System.String]
         $LocalSecurityOptionsSmartCardRemovalBehavior,
 
         [Parameter()]
-        [ValidateSet('notConfigured','automaticallyDenyElevationRequests','promptForCredentialsOnTheSecureDesktop','promptForCredentials')]
+        [ValidateSet('notConfigured', 'automaticallyDenyElevationRequests', 'promptForCredentialsOnTheSecureDesktop', 'promptForCredentials')]
         [System.String]
         $LocalSecurityOptionsStandardUserElevationPromptBehavior,
 
@@ -4714,12 +4716,12 @@ function Test-TargetResource
         $UserRightsTakeOwnership,
 
         [Parameter()]
-        [ValidateSet('notConfigured','enable','disable')]
+        [ValidateSet('notConfigured', 'enable', 'disable')]
         [System.String]
         $WindowsDefenderTamperProtection,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesAccessoryManagementServiceStartupMode,
 
@@ -4728,17 +4730,17 @@ function Test-TargetResource
         $XboxServicesEnableXboxGameSaveTask,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesLiveAuthManagerServiceStartupMode,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesLiveGameSaveServiceStartupMode,
 
         [Parameter()]
-        [ValidateSet('manual','automatic','disabled')]
+        [ValidateSet('manual', 'automatic', 'disabled')]
         [System.String]
         $XboxServicesLiveNetworkingServiceStartupMode,
 
@@ -4833,7 +4835,7 @@ function Test-TargetResource
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
@@ -4917,7 +4919,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EndpointProtectionConfiguration' `
-            }
+        }
         #endregion
 
         $i = 1
@@ -4957,14 +4959,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'BitLockerFixedDrivePolicy'
+                        Name            = 'BitLockerFixedDrivePolicy'
                         CimInstanceName = 'MicrosoftGraphBitLockerFixedDrivePolicy'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'RecoveryOptions'
+                        Name            = 'RecoveryOptions'
                         CimInstanceName = 'MicrosoftGraphBitLockerRecoveryOptions'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -4972,7 +4974,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphbitLockerFixedDrivePolicy' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.BitLockerFixedDrivePolicy = $complexTypeStringResult
                 }
@@ -4986,7 +4988,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.BitLockerRemovableDrivePolicy `
                     -CIMInstanceName 'MicrosoftGraphbitLockerRemovableDrivePolicy'
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.BitLockerRemovableDrivePolicy = $complexTypeStringResult
                 }
@@ -4999,14 +5001,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'BitLockerSystemDrivePolicy'
+                        Name            = 'BitLockerSystemDrivePolicy'
                         CimInstanceName = 'MicrosoftGraphBitLockerSystemDrivePolicy'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'RecoveryOptions'
+                        Name            = 'RecoveryOptions'
                         CimInstanceName = 'MicrosoftGraphBitLockerRecoveryOptions'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5014,7 +5016,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphbitLockerSystemDrivePolicy' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.BitLockerSystemDrivePolicy = $complexTypeStringResult
                 }
@@ -5028,7 +5030,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.DefenderDetectedMalwareActions `
                     -CIMInstanceName 'MicrosoftGraphdefenderDetectedMalwareActions'
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.DefenderDetectedMalwareActions = $complexTypeStringResult
                 }
@@ -5042,7 +5044,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.FirewallProfileDomain `
                     -CIMInstanceName 'MicrosoftGraphwindowsFirewallNetworkProfile'
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.FirewallProfileDomain = $complexTypeStringResult
                 }
@@ -5056,7 +5058,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.FirewallProfilePrivate `
                     -CIMInstanceName 'MicrosoftGraphwindowsFirewallNetworkProfile'
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.FirewallProfilePrivate = $complexTypeStringResult
                 }
@@ -5070,7 +5072,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.FirewallProfilePublic `
                     -CIMInstanceName 'MicrosoftGraphwindowsFirewallNetworkProfile'
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.FirewallProfilePublic = $complexTypeStringResult
                 }
@@ -5084,7 +5086,7 @@ function Export-TargetResource
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.FirewallRules `
                     -CIMInstanceName 'MicrosoftGraphwindowsFirewallRule'
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.FirewallRules = $complexTypeStringResult
                 }
@@ -5097,14 +5099,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsAccessCredentialManagerAsTrustedCaller'
+                        Name            = 'UserRightsAccessCredentialManagerAsTrustedCaller'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5112,7 +5114,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsAccessCredentialManagerAsTrustedCaller = $complexTypeStringResult
                 }
@@ -5125,14 +5127,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsActAsPartOfTheOperatingSystem'
+                        Name            = 'UserRightsActAsPartOfTheOperatingSystem'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5140,7 +5142,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsActAsPartOfTheOperatingSystem = $complexTypeStringResult
                 }
@@ -5153,14 +5155,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsAllowAccessFromNetwork'
+                        Name            = 'UserRightsAllowAccessFromNetwork'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5168,7 +5170,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsAllowAccessFromNetwork = $complexTypeStringResult
                 }
@@ -5181,14 +5183,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsBackupData'
+                        Name            = 'UserRightsBackupData'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5196,7 +5198,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsBackupData = $complexTypeStringResult
                 }
@@ -5209,14 +5211,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsBlockAccessFromNetwork'
+                        Name            = 'UserRightsBlockAccessFromNetwork'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5224,7 +5226,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsBlockAccessFromNetwork = $complexTypeStringResult
                 }
@@ -5237,14 +5239,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsChangeSystemTime'
+                        Name            = 'UserRightsChangeSystemTime'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5252,7 +5254,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsChangeSystemTime = $complexTypeStringResult
                 }
@@ -5265,14 +5267,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsCreateGlobalObjects'
+                        Name            = 'UserRightsCreateGlobalObjects'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5280,7 +5282,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreateGlobalObjects = $complexTypeStringResult
                 }
@@ -5293,14 +5295,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsCreatePageFile'
+                        Name            = 'UserRightsCreatePageFile'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5308,7 +5310,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreatePageFile = $complexTypeStringResult
                 }
@@ -5321,14 +5323,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsCreatePermanentSharedObjects'
+                        Name            = 'UserRightsCreatePermanentSharedObjects'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5336,7 +5338,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreatePermanentSharedObjects = $complexTypeStringResult
                 }
@@ -5349,14 +5351,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsCreateSymbolicLinks'
+                        Name            = 'UserRightsCreateSymbolicLinks'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5364,7 +5366,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreateSymbolicLinks = $complexTypeStringResult
                 }
@@ -5377,14 +5379,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsCreateToken'
+                        Name            = 'UserRightsCreateToken'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5392,7 +5394,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsCreateToken = $complexTypeStringResult
                 }
@@ -5405,14 +5407,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsDebugPrograms'
+                        Name            = 'UserRightsDebugPrograms'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5420,7 +5422,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsDebugPrograms = $complexTypeStringResult
                 }
@@ -5433,14 +5435,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsDelegation'
+                        Name            = 'UserRightsDelegation'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5448,7 +5450,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsDelegation = $complexTypeStringResult
                 }
@@ -5461,14 +5463,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsDenyLocalLogOn'
+                        Name            = 'UserRightsDenyLocalLogOn'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5476,7 +5478,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsDenyLocalLogOn = $complexTypeStringResult
                 }
@@ -5489,14 +5491,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsGenerateSecurityAudits'
+                        Name            = 'UserRightsGenerateSecurityAudits'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5504,7 +5506,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsGenerateSecurityAudits = $complexTypeStringResult
                 }
@@ -5517,14 +5519,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsImpersonateClient'
+                        Name            = 'UserRightsImpersonateClient'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5532,7 +5534,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsImpersonateClient = $complexTypeStringResult
                 }
@@ -5545,14 +5547,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsIncreaseSchedulingPriority'
+                        Name            = 'UserRightsIncreaseSchedulingPriority'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5560,7 +5562,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsIncreaseSchedulingPriority = $complexTypeStringResult
                 }
@@ -5573,14 +5575,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsLoadUnloadDrivers'
+                        Name            = 'UserRightsLoadUnloadDrivers'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5588,7 +5590,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsLoadUnloadDrivers = $complexTypeStringResult
                 }
@@ -5601,14 +5603,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsLocalLogOn'
+                        Name            = 'UserRightsLocalLogOn'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5616,7 +5618,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsLocalLogOn = $complexTypeStringResult
                 }
@@ -5629,14 +5631,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsLockMemory'
+                        Name            = 'UserRightsLockMemory'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5644,7 +5646,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsLockMemory = $complexTypeStringResult
                 }
@@ -5657,14 +5659,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsManageAuditingAndSecurityLogs'
+                        Name            = 'UserRightsManageAuditingAndSecurityLogs'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5672,7 +5674,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsManageAuditingAndSecurityLogs = $complexTypeStringResult
                 }
@@ -5685,14 +5687,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsManageVolumes'
+                        Name            = 'UserRightsManageVolumes'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5700,7 +5702,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsManageVolumes = $complexTypeStringResult
                 }
@@ -5713,14 +5715,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsModifyFirmwareEnvironment'
+                        Name            = 'UserRightsModifyFirmwareEnvironment'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5728,7 +5730,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsModifyFirmwareEnvironment = $complexTypeStringResult
                 }
@@ -5741,14 +5743,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsModifyObjectLabels'
+                        Name            = 'UserRightsModifyObjectLabels'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5756,7 +5758,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsModifyObjectLabels = $complexTypeStringResult
                 }
@@ -5769,14 +5771,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsProfileSingleProcess'
+                        Name            = 'UserRightsProfileSingleProcess'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5784,7 +5786,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsProfileSingleProcess = $complexTypeStringResult
                 }
@@ -5797,14 +5799,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsRemoteDesktopServicesLogOn'
+                        Name            = 'UserRightsRemoteDesktopServicesLogOn'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5812,7 +5814,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsRemoteDesktopServicesLogOn = $complexTypeStringResult
                 }
@@ -5825,14 +5827,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsRemoteShutdown'
+                        Name            = 'UserRightsRemoteShutdown'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5840,7 +5842,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsRemoteShutdown = $complexTypeStringResult
                 }
@@ -5853,14 +5855,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsRestoreData'
+                        Name            = 'UserRightsRestoreData'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5868,7 +5870,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsRestoreData = $complexTypeStringResult
                 }
@@ -5881,14 +5883,14 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'UserRightsTakeOwnership'
+                        Name            = 'UserRightsTakeOwnership'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'LocalUsersOrGroups'
+                        Name            = 'LocalUsersOrGroups'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -5896,7 +5898,7 @@ function Export-TargetResource
                     -CIMInstanceName 'MicrosoftGraphdeviceManagementUserRightsSetting' `
                     -ComplexTypeMapping $complexMapping
 
-                if(-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.UserRightsTakeOwnership = $complexTypeStringResult
                 }
@@ -5905,7 +5907,7 @@ function Export-TargetResource
                     $Results.Remove('UserRightsTakeOwnership') | Out-Null
                 }
             }
-            if($Results.Assignments)
+            if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
                 if ($complexTypeStringResult)
@@ -5924,159 +5926,159 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.BitLockerFixedDrivePolicy)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "BitLockerFixedDrivePolicy" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'BitLockerFixedDrivePolicy' -IsCIMArray:$False
             }
             if ($Results.BitLockerRemovableDrivePolicy)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "BitLockerRemovableDrivePolicy" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'BitLockerRemovableDrivePolicy' -IsCIMArray:$False
             }
             if ($Results.BitLockerSystemDrivePolicy)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "BitLockerSystemDrivePolicy" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'BitLockerSystemDrivePolicy' -IsCIMArray:$False
             }
             if ($Results.DefenderDetectedMalwareActions)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DefenderDetectedMalwareActions" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'DefenderDetectedMalwareActions' -IsCIMArray:$False
             }
             if ($Results.FirewallProfileDomain)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FirewallProfileDomain" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'FirewallProfileDomain' -IsCIMArray:$False
             }
             if ($Results.FirewallProfilePrivate)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FirewallProfilePrivate" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'FirewallProfilePrivate' -IsCIMArray:$False
             }
             if ($Results.FirewallProfilePublic)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FirewallProfilePublic" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'FirewallProfilePublic' -IsCIMArray:$False
             }
             if ($Results.FirewallRules)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FirewallRules" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'FirewallRules' -IsCIMArray:$True
             }
             if ($Results.UserRightsAccessCredentialManagerAsTrustedCaller)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsAccessCredentialManagerAsTrustedCaller" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsAccessCredentialManagerAsTrustedCaller' -IsCIMArray:$False
             }
             if ($Results.UserRightsActAsPartOfTheOperatingSystem)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsActAsPartOfTheOperatingSystem" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsActAsPartOfTheOperatingSystem' -IsCIMArray:$False
             }
             if ($Results.UserRightsAllowAccessFromNetwork)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsAllowAccessFromNetwork" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsAllowAccessFromNetwork' -IsCIMArray:$False
             }
             if ($Results.UserRightsBackupData)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsBackupData" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsBackupData' -IsCIMArray:$False
             }
             if ($Results.UserRightsBlockAccessFromNetwork)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsBlockAccessFromNetwork" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsBlockAccessFromNetwork' -IsCIMArray:$False
             }
             if ($Results.UserRightsChangeSystemTime)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsChangeSystemTime" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsChangeSystemTime' -IsCIMArray:$False
             }
             if ($Results.UserRightsCreateGlobalObjects)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsCreateGlobalObjects" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsCreateGlobalObjects' -IsCIMArray:$False
             }
             if ($Results.UserRightsCreatePageFile)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsCreatePageFile" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsCreatePageFile' -IsCIMArray:$False
             }
             if ($Results.UserRightsCreatePermanentSharedObjects)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsCreatePermanentSharedObjects" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsCreatePermanentSharedObjects' -IsCIMArray:$False
             }
             if ($Results.UserRightsCreateSymbolicLinks)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsCreateSymbolicLinks" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsCreateSymbolicLinks' -IsCIMArray:$False
             }
             if ($Results.UserRightsCreateToken)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsCreateToken" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsCreateToken' -IsCIMArray:$False
             }
             if ($Results.UserRightsDebugPrograms)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsDebugPrograms" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsDebugPrograms' -IsCIMArray:$False
             }
             if ($Results.UserRightsDelegation)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsDelegation" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsDelegation' -IsCIMArray:$False
             }
             if ($Results.UserRightsDenyLocalLogOn)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsDenyLocalLogOn" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsDenyLocalLogOn' -IsCIMArray:$False
             }
             if ($Results.UserRightsGenerateSecurityAudits)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsGenerateSecurityAudits" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsGenerateSecurityAudits' -IsCIMArray:$False
             }
             if ($Results.UserRightsImpersonateClient)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsImpersonateClient" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsImpersonateClient' -IsCIMArray:$False
             }
             if ($Results.UserRightsIncreaseSchedulingPriority)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsIncreaseSchedulingPriority" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsIncreaseSchedulingPriority' -IsCIMArray:$False
             }
             if ($Results.UserRightsLoadUnloadDrivers)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsLoadUnloadDrivers" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsLoadUnloadDrivers' -IsCIMArray:$False
             }
             if ($Results.UserRightsLocalLogOn)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsLocalLogOn" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsLocalLogOn' -IsCIMArray:$False
             }
             if ($Results.UserRightsLockMemory)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsLockMemory" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsLockMemory' -IsCIMArray:$False
             }
             if ($Results.UserRightsManageAuditingAndSecurityLogs)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsManageAuditingAndSecurityLogs" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsManageAuditingAndSecurityLogs' -IsCIMArray:$False
             }
             if ($Results.UserRightsManageVolumes)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsManageVolumes" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsManageVolumes' -IsCIMArray:$False
             }
             if ($Results.UserRightsModifyFirmwareEnvironment)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsModifyFirmwareEnvironment" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsModifyFirmwareEnvironment' -IsCIMArray:$False
             }
             if ($Results.UserRightsModifyObjectLabels)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsModifyObjectLabels" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsModifyObjectLabels' -IsCIMArray:$False
             }
             if ($Results.UserRightsProfileSingleProcess)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsProfileSingleProcess" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsProfileSingleProcess' -IsCIMArray:$False
             }
             if ($Results.UserRightsRemoteDesktopServicesLogOn)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsRemoteDesktopServicesLogOn" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsRemoteDesktopServicesLogOn' -IsCIMArray:$False
             }
             if ($Results.UserRightsRemoteShutdown)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsRemoteShutdown" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsRemoteShutdown' -IsCIMArray:$False
             }
             if ($Results.UserRightsRestoreData)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsRestoreData" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsRestoreData' -IsCIMArray:$False
             }
             if ($Results.UserRightsTakeOwnership)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "UserRightsTakeOwnership" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'UserRightsTakeOwnership' -IsCIMArray:$False
             }
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
             #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
-            $currentDSCBlock=$currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
-            $currentDSCBlock=$currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
+            $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
+            $currentDSCBlock = $currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -6098,88 +6100,88 @@ function Export-TargetResource
         return ''
     }
 }
-    function Update-DeviceConfigurationPolicyAssignment
-    {
-        [CmdletBinding()]
-        [OutputType([System.Collections.Hashtable])]
-        param (
-            [Parameter(Mandatory = 'true')]
-            [System.String]
-            $DeviceConfigurationPolicyId,
-
-            [Parameter()]
-            [Array]
-            $Targets,
-
-            [Parameter()]
-            [System.String]
-            $Repository='deviceManagement/configurationPolicies',
-
-            [Parameter()]
-            [ValidateSet('v1.0','beta')]
-            [System.String]
-            $APIVersion='beta'
-        )
-        try
-        {
-            $deviceManagementPolicyAssignments=@()
-
-            $Uri="https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
-
-            foreach($target in $targets)
-            {
-                $formattedTarget=@{"@odata.type"=$target.dataType}
-                if($target.groupId)
-                {
-                    $formattedTarget.Add('groupId',$target.groupId)
-                }
-                if($target.collectionId)
-                {
-                    $formattedTarget.Add('collectionId',$target.collectionId)
-                }
-                if($target.deviceAndAppManagementAssignmentFilterType)
-                {
-                    $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
-                }
-                if($target.deviceAndAppManagementAssignmentFilterId)
-                {
-                    $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
-                }
-                $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
-            }
-            $body=@{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
-            #write-verbose -Message $body
-            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
-        }
-        catch
-        {
-            New-M365DSCLogEntry -Message 'Error updating data:'
-                -Exception $_
-                -Source $($MyInvocation.MyCommand.Source)
-                -TenantId $TenantId
-                -Credential $Credential
-
-            return $null
-        }
-
-
-    }function Rename-M365DSCCimInstanceParameter
+function Update-DeviceConfigurationPolicyAssignment
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets,
+
+        [Parameter()]
+        [System.String]
+        $Repository = 'deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0', 'beta')]
+        [System.String]
+        $APIVersion = 'beta'
+    )
+    try
+    {
+        $deviceManagementPolicyAssignments = @()
+
+        $Uri = "https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+
+        foreach ($target in $targets)
+        {
+            $formattedTarget = @{'@odata.type' = $target.dataType }
+            if ($target.groupId)
+            {
+                $formattedTarget.Add('groupId', $target.groupId)
+            }
+            if ($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId', $target.collectionId)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
+        }
+        $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:'
+        -Exception $_
+        -Source $($MyInvocation.MyCommand.Source)
+        -TenantId $TenantId
+        -Credential $Credential
+
+        return $null
+    }
+
+
+}function Rename-M365DSCCimInstanceParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable], [System.Collections.Hashtable[]])]
     param(
         [Parameter(Mandatory = 'true')]
         $Properties
     )
 
-    $keyToRename=@{
-        "odataType"="@odata.type"
+    $keyToRename = @{
+        'odataType' = '@odata.type'
     }
 
-    $result=$Properties
+    $result = $Properties
 
-    $type=$Properties.getType().FullName
+    $type = $Properties.getType().FullName
 
     #region Array
     if ($type -like '*[[\]]')
@@ -6189,34 +6191,34 @@ function Export-TargetResource
         {
             $values += Rename-M365DSCCimInstanceParameter $item
         }
-        $result=$values
+        $result = $values
 
-        return ,$result
+        return , $result
     }
     #endregion
 
     #region Single
-    if($type -like "*Hashtable")
+    if ($type -like '*Hashtable')
     {
-        $result=([Hashtable]$Properties).clone()
+        $result = ([Hashtable]$Properties).clone()
     }
-    if($type -like '*CimInstance*' -or $type -like '*Hashtable*'-or $type -like '*Object*')
+    if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
-        $keys=($hashProperties.clone()).keys
-        foreach($key in $keys)
+        $keys = ($hashProperties.clone()).keys
+        foreach ($key in $keys)
         {
-            $keyName=$key.substring(0,1).tolower()+$key.substring(1,$key.length-1)
+            $keyName = $key.substring(0, 1).tolower() + $key.substring(1, $key.length - 1)
             if ($key -in $keyToRename.Keys)
             {
-                $keyName=$keyToRename.$key
+                $keyName = $keyToRename.$key
             }
 
-            $property=$hashProperties.$key
-            if($null -ne $property)
+            $property = $hashProperties.$key
+            if ($null -ne $property)
             {
                 $hashProperties.Remove($key)
-                $hashProperties.add($keyName,(Rename-M365DSCCimInstanceParameter $property))
+                $hashProperties.add($keyName, (Rename-M365DSCCimInstanceParameter $property))
             }
         }
         $result = $hashProperties
@@ -6228,51 +6230,51 @@ function Export-TargetResource
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable],[hashtable[]])]
+    [OutputType([hashtable], [hashtable[]])]
     param(
         [Parameter()]
         $ComplexObject
     )
 
-    if($null -eq $ComplexObject)
+    if ($null -eq $ComplexObject)
     {
         return $null
     }
 
-    if($ComplexObject.gettype().fullname -like "*[[\]]")
+    if ($ComplexObject.gettype().fullname -like '*[[\]]')
     {
-        $results=@()
+        $results = @()
 
-        foreach($item in $ComplexObject)
+        foreach ($item in $ComplexObject)
         {
-            if($item)
+            if ($item)
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                $results+=$hash
+                $results += $hash
             }
         }
 
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,[hashtable[]]$results
+        return , [hashtable[]]$results
     }
 
-    if($ComplexObject.getType().fullname -like '*Dictionary*')
+    if ($ComplexObject.getType().fullname -like '*Dictionary*')
     {
         $results = @{}
 
-        $ComplexObject=[hashtable]::new($ComplexObject)
-        $keys=$ComplexObject.Keys
+        $ComplexObject = [hashtable]::new($ComplexObject)
+        $keys = $ComplexObject.Keys
         foreach ($key in $keys)
         {
-            if($null -ne $ComplexObject.$key)
+            if ($null -ne $ComplexObject.$key)
             {
                 $keyName = $key
 
-                $keyType=$ComplexObject.$key.gettype().fullname
+                $keyType = $ComplexObject.$key.gettype().fullname
 
-                if($keyType -like "*CimInstance*" -or $keyType -like "*Dictionary*" -or $keyType -like "Microsoft.Graph.PowerShell.Models.*"  -or $keyType -like "*[[\]]")
+                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like '*[[\]]')
                 {
                     $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
 
@@ -6289,27 +6291,27 @@ function Get-M365DSCDRGComplexTypeToHashtable
 
     $results = @{}
 
-    if($ComplexObject.getType().Fullname -like "*hashtable")
+    if ($ComplexObject.getType().Fullname -like '*hashtable')
     {
         $keys = $ComplexObject.keys
     }
     else
     {
-        $keys = $ComplexObject | Get-Member | Where-Object -FilterScript {$_.MemberType -eq 'Property'}
+        $keys = $ComplexObject | Get-Member | Where-Object -FilterScript { $_.MemberType -eq 'Property' }
     }
 
     foreach ($key in $keys)
     {
-        $keyName=$key
-        if($ComplexObject.getType().Fullname -notlike "*hashtable")
+        $keyName = $key
+        if ($ComplexObject.getType().Fullname -notlike '*hashtable')
         {
-            $keyName=$key.Name
+            $keyName = $key.Name
         }
 
-        if($null -ne $ComplexObject.$keyName)
+        if ($null -ne $ComplexObject.$keyName)
         {
-            $keyType=$ComplexObject.$keyName.gettype().fullname
-            if($keyType -like "*CimInstance*" -or $keyType -like "*Dictionary*" -or $keyType -like "Microsoft.Graph.PowerShell.Models.*" )
+            $keyType = $ComplexObject.$keyName.gettype().fullname
+            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' )
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
@@ -6367,15 +6369,15 @@ function Get-M365DSCDRGComplexTypeToString
 
         [Parameter()]
         [System.String]
-        $Whitespace='',
+        $Whitespace = '',
 
         [Parameter()]
         [System.uint32]
-        $IndentLevel=3,
+        $IndentLevel = 3,
 
         [Parameter()]
         [switch]
-        $isArray=$false
+        $isArray = $false
     )
 
     if ($null -eq $ComplexObject)
@@ -6383,26 +6385,26 @@ function Get-M365DSCDRGComplexTypeToString
         return $null
     }
 
-    $indent=''
+    $indent = ''
     for ($i = 0; $i -lt $IndentLevel ; $i++)
     {
-        $indent+='    '
+        $indent += '    '
     }
     #If ComplexObject  is an Array
-    if ($ComplexObject.GetType().FullName -like "*[[\]]")
+    if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
-        $currentProperty=@()
+        $currentProperty = @()
         $IndentLevel++
         foreach ($item in $ComplexObject)
         {
-            $splat=@{
-                'ComplexObject'=$item
-                'CIMInstanceName'=$CIMInstanceName
-                'IndentLevel'=$IndentLevel
+            $splat = @{
+                'ComplexObject'   = $item
+                'CIMInstanceName' = $CIMInstanceName
+                'IndentLevel'     = $IndentLevel
             }
             if ($ComplexTypeMapping)
             {
-                $splat.add('ComplexTypeMapping',$ComplexTypeMapping)
+                $splat.add('ComplexTypeMapping', $ComplexTypeMapping)
             }
 
             $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @splat
@@ -6411,23 +6413,23 @@ function Get-M365DSCDRGComplexTypeToString
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,$currentProperty
+        return , $currentProperty
     }
 
-    $currentProperty=''
-    if($isArray)
+    $currentProperty = ''
+    if ($isArray)
     {
         $currentProperty += "`r`n"
         $currentProperty += $indent
     }
 
-    $CIMInstanceName=$CIMInstanceName.replace("MSFT_","")
+    $CIMInstanceName = $CIMInstanceName.replace('MSFT_', '')
     $currentProperty += "MSFT_$CIMInstanceName{`r`n"
     $IndentLevel++
-    $indent=''
+    $indent = ''
     for ($i = 0; $i -lt $IndentLevel ; $i++)
     {
-        $indent+='    '
+        $indent += '    '
     }
     $keyNotNull = 0
 
@@ -6441,37 +6443,37 @@ function Get-M365DSCDRGComplexTypeToString
         if ($null -ne $ComplexObject.$key)
         {
             $keyNotNull++
-            if ($ComplexObject.$key.GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*" -or $key -in $ComplexTypeMapping.Name)
+            if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*' -or $key -in $ComplexTypeMapping.Name)
             {
-                $hashPropertyType=$ComplexObject[$key].GetType().Name.tolower()
+                $hashPropertyType = $ComplexObject[$key].GetType().Name.tolower()
 
-                $isArray=$false
-                if($ComplexObject[$key].GetType().FullName -like "*[[\]]")
+                $isArray = $false
+                if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
                 {
-                    $isArray=$true
+                    $isArray = $true
                 }
                 #overwrite type if object defined in mapping complextypemapping
-                if($key -in $ComplexTypeMapping.Name)
+                if ($key -in $ComplexTypeMapping.Name)
                 {
-                    $hashPropertyType=([Array]($ComplexTypeMapping|Where-Object -FilterScript {$_.Name -eq $key}).CimInstanceName)[0]
-                    $hashProperty=$ComplexObject[$key]
+                    $hashPropertyType = ([Array]($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName)[0]
+                    $hashProperty = $ComplexObject[$key]
                 }
                 else
                 {
-                    $hashProperty=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
+                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
                 }
 
-                if(-not $isArray)
+                if (-not $isArray)
                 {
                     $currentProperty += $indent + $key + ' = '
                 }
 
-                if($isArray -and $key -in $ComplexTypeMapping.Name )
+                if ($isArray -and $key -in $ComplexTypeMapping.Name )
                 {
-                    if($ComplexObject.$key.count -gt 0)
+                    if ($ComplexObject.$key.count -gt 0)
                     {
                         $currentProperty += $indent + $key + ' = '
-                        $currentProperty += "@("
+                        $currentProperty += '@('
                     }
                 }
 
@@ -6480,17 +6482,17 @@ function Get-M365DSCDRGComplexTypeToString
                     $IndentLevel++
                     foreach ($item in $ComplexObject[$key])
                     {
-                        if ($ComplexObject.$key.GetType().FullName -like "Microsoft.Graph.PowerShell.Models.*")
+                        if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
                         {
-                            $item=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+                            $item = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
                         }
                         $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $item `
-                        -CIMInstanceName $hashPropertyType `
-                        -IndentLevel $IndentLevel `
-                        -ComplexTypeMapping $ComplexTypeMapping `
-                        -IsArray:$true
-                        if([string]::IsNullOrWhiteSpace($nestedPropertyString))
+                            -ComplexObject $item `
+                            -CIMInstanceName $hashPropertyType `
+                            -IndentLevel $IndentLevel `
+                            -ComplexTypeMapping $ComplexTypeMapping `
+                            -IsArray:$true
+                        if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
                         {
                             $nestedPropertyString = "@()`r`n"
                         }
@@ -6501,26 +6503,26 @@ function Get-M365DSCDRGComplexTypeToString
                 else
                 {
                     $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
-                                    -ComplexObject $hashProperty `
-                                    -CIMInstanceName $hashPropertyType `
-                                    -IndentLevel $IndentLevel `
-                                    -ComplexTypeMapping $ComplexTypeMapping
-                    if([string]::IsNullOrWhiteSpace($nestedPropertyString))
+                        -ComplexObject $hashProperty `
+                        -CIMInstanceName $hashPropertyType `
+                        -IndentLevel $IndentLevel `
+                        -ComplexTypeMapping $ComplexTypeMapping
+                    if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
                     {
                         $nestedPropertyString = "`$null`r`n"
                     }
                     $currentProperty += $nestedPropertyString
                 }
-                if($isArray)
+                if ($isArray)
                 {
-                    if($ComplexObject.$key.count -gt 0)
+                    if ($ComplexObject.$key.count -gt 0)
                     {
                         $currentProperty += $indent
                         $currentProperty += ')'
                         $currentProperty += "`r`n"
                     }
                 }
-                $isArray=$PSBoundParameters.IsArray
+                $isArray = $PSBoundParameters.IsArray
             }
             else
             {
@@ -6529,11 +6531,11 @@ function Get-M365DSCDRGComplexTypeToString
         }
         else
         {
-            $mappedKey=$ComplexTypeMapping|where-object -filterscript {$_.name -eq $key}
+            $mappedKey = $ComplexTypeMapping | Where-Object -FilterScript { $_.name -eq $key }
 
-            if($mappedKey -and $mappedKey.isRequired)
+            if ($mappedKey -and $mappedKey.isRequired)
             {
-                if($mappedKey.isArray)
+                if ($mappedKey.isArray)
                 {
                     $currentProperty += "$indent$key = @()`r`n"
                 }
@@ -6544,32 +6546,32 @@ function Get-M365DSCDRGComplexTypeToString
             }
         }
     }
-    $indent=''
-    for ($i = 0; $i -lt $IndentLevel-1 ; $i++)
+    $indent = ''
+    for ($i = 0; $i -lt $IndentLevel - 1 ; $i++)
     {
-        $indent+='    '
+        $indent += '    '
     }
     $currentProperty += "$indent}"
-    if($isArray  -or $IndentLevel -gt 4)
+    if ($isArray -or $IndentLevel -gt 4)
     {
         $currentProperty += "`r`n"
     }
 
     #Indenting last parenthese when the cim instance is an array
-    if($IndentLevel -eq 5)
+    if ($IndentLevel -eq 5)
     {
-        $indent=''
-        for ($i = 0; $i -lt $IndentLevel-2 ; $i++)
+        $indent = ''
+        for ($i = 0; $i -lt $IndentLevel - 2 ; $i++)
         {
-            $indent+='    '
+            $indent += '    '
         }
         $currentProperty += $indent
     }
 
-    $emptyCIM=$currentProperty.replace(" ","").replace("`r`n","")
-    if($emptyCIM -eq "MSFT_$CIMInstanceName{}")
+    $emptyCIM = $currentProperty.replace(' ', '').replace("`r`n", '')
+    if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
     {
-        $currentProperty=$null
+        $currentProperty = $null
     }
 
     return $currentProperty
@@ -6589,49 +6591,49 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
 
         [Parameter()]
         [System.String]
-        $Space="                "
+        $Space = '                '
 
     )
 
-    $returnValue=""
+    $returnValue = ''
     switch -Wildcard ($Value.GetType().Fullname )
     {
-        "*.Boolean"
+        '*.Boolean'
         {
-            $returnValue= $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
+            $returnValue = $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
         }
-        "*.String"
+        '*.String'
         {
-            if($key -eq '@odata.type')
+            if ($key -eq '@odata.type')
             {
-                $key='odataType'
+                $key = 'odataType'
             }
-            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
+            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
         }
-        "*.DateTime"
+        '*.DateTime'
         {
-            $returnValue= $Space + $Key + " = '" + $Value + "'`r`n"
+            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
         }
-        "*[[\]]"
+        '*[[\]]'
         {
-            $returnValue= $Space + $key + " = @("
-            $whitespace=""
-            $newline=""
-            if($Value.count -gt 1)
+            $returnValue = $Space + $key + ' = @('
+            $whitespace = ''
+            $newline = ''
+            if ($Value.count -gt 1)
             {
                 $returnValue += "`r`n"
-                $whitespace=$Space+"    "
-                $newline="`r`n"
+                $whitespace = $Space + '    '
+                $newline = "`r`n"
             }
-            foreach ($item in ($Value | Where-Object -FilterScript {$null -ne $_ }))
+            foreach ($item in ($Value | Where-Object -FilterScript { $null -ne $_ }))
             {
                 switch -Wildcard ($item.GetType().Fullname )
                 {
-                    "*.String"
+                    '*.String'
                     {
                         $returnValue += "$whitespace'$item'$newline"
                     }
-                    "*.DateTime"
+                    '*.DateTime'
                     {
                         $returnValue += "$whitespace'$item'$newline"
                     }
@@ -6641,7 +6643,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
                     }
                 }
             }
-            if($Value.count -gt 1)
+            if ($Value.count -gt 1)
             {
                 $returnValue += "$Space)`r`n"
             }
@@ -6653,7 +6655,7 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
         }
         Default
         {
-            $returnValue= $Space + $Key + " = " + $Value + "`r`n"
+            $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
         }
     }
     return $returnValue
@@ -6671,47 +6673,47 @@ function Compare-M365DSCComplexObject
     )
 
     #Comparing full objects
-    if($null -eq  $Source  -and $null -eq $Target)
+    if ($null -eq $Source -and $null -eq $Target)
     {
         return $true
     }
 
-    $sourceValue=""
-    $targetValue=""
+    $sourceValue = ''
+    $targetValue = ''
     if (($null -eq $Source) -xor ($null -eq $Target))
     {
-        if($null -eq $Source)
+        if ($null -eq $Source)
         {
-            $sourceValue="Source is null"
+            $sourceValue = 'Source is null'
         }
 
-        if($null -eq $Target)
+        if ($null -eq $Target)
         {
-            $targetValue="Target is null"
+            $targetValue = 'Target is null'
         }
         Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
         return $false
     }
 
-    if($Source.getType().FullName -like "*CimInstance[[\]]" -or $Source.getType().FullName -like "*Hashtable[[\]]")
+    if ($Source.getType().FullName -like '*CimInstance[[\]]' -or $Source.getType().FullName -like '*Hashtable[[\]]')
     {
-        if($source.count -ne $target.count)
+        if ($source.count -ne $target.count)
         {
             Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
             return $false
         }
-        if($source.count -eq 0)
+        if ($source.count -eq 0)
         {
             return $true
         }
 
-        foreach($item in $Source)
+        foreach ($item in $Source)
         {
 
-            $hashSource=Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-            foreach($targetItem in $Target)
+            $hashSource = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+            foreach ($targetItem in $Target)
             {
-                $compareResult= Compare-M365DSCComplexObject `
+                $compareResult = Compare-M365DSCComplexObject `
                     -Source $hashSource `
                     -Target $targetItem
 
@@ -6721,36 +6723,36 @@ function Compare-M365DSCComplexObject
                 }
             }
 
-            if(-not $compareResult)
+            if (-not $compareResult)
             {
-                Write-Verbose -Message "Configuration drift - The complex array items are not identical"
+                Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
                 return $false
             }
         }
         return $true
     }
 
-    $keys= $Source.Keys|Where-Object -FilterScript {$_ -ne "PSComputerName"}
+    $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
     foreach ($key in $keys)
     {
         #Matching possible key names between Source and Target
-        $skey=$key
-        $tkey=$key
+        $skey = $key
+        $tkey = $key
 
-        $sourceValue=$Source.$key
-        $targetValue=$Target.$tkey
+        $sourceValue = $Source.$key
+        $targetValue = $Target.$tkey
         #One of the item is null and not the other
         if (($null -eq $Source.$key) -xor ($null -eq $Target.$tkey))
         {
 
-            if($null -eq $Source.$key)
+            if ($null -eq $Source.$key)
             {
-                $sourceValue="null"
+                $sourceValue = 'null'
             }
 
-            if($null -eq $Target.$tkey)
+            if ($null -eq $Target.$tkey)
             {
-                $targetValue="null"
+                $targetValue = 'null'
             }
 
             #Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
@@ -6758,16 +6760,16 @@ function Compare-M365DSCComplexObject
         }
 
         #Both keys aren't null or empty
-        if(($null -ne $Source.$key) -and ($null -ne $Target.$tkey))
+        if (($null -ne $Source.$key) -and ($null -ne $Target.$tkey))
         {
-            if($Source.$key.getType().FullName -like "*CimInstance*" -or $Source.$key.getType().FullName -like "*hashtable*"  )
+            if ($Source.$key.getType().FullName -like '*CimInstance*' -or $Source.$key.getType().FullName -like '*hashtable*'  )
             {
                 #Recursive call for complex object
-                $compareResult= Compare-M365DSCComplexObject `
+                $compareResult = Compare-M365DSCComplexObject `
                     -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source.$key) `
                     -Target $Target.$tkey
 
-                if(-not $compareResult)
+                if (-not $compareResult)
                 {
 
                     #Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
@@ -6777,18 +6779,18 @@ function Compare-M365DSCComplexObject
             else
             {
                 #Simple object comparison
-                $referenceObject=$Target.$tkey
-                $differenceObject=$Source.$key
+                $referenceObject = $Target.$tkey
+                $differenceObject = $Source.$key
 
                 #Identifying date from the current values
-                $targetType=($Target.$tkey.getType()).Name
-                if($targetType -like "*Date*")
+                $targetType = ($Target.$tkey.getType()).Name
+                if ($targetType -like '*Date*')
                 {
-                    $compareResult=$true
-                    $sourceDate= [DateTime]$Source.$key
-                    if($sourceDate -ne $targetType)
+                    $compareResult = $true
+                    $sourceDate = [DateTime]$Source.$key
+                    if ($sourceDate -ne $targetType)
                     {
-                        $compareResult=$null
+                        $compareResult = $null
                     }
                 }
                 else
@@ -6812,47 +6814,47 @@ function Compare-M365DSCComplexObject
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
-    [OutputType([hashtable],[hashtable[]])]
+    [OutputType([hashtable], [hashtable[]])]
     param(
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )
 
 
-    if($ComplexObject.getType().Fullname -like "*[[\]]")
+    if ($ComplexObject.getType().Fullname -like '*[[\]]')
     {
-        $results=@()
-        foreach($item in $ComplexObject)
+        $results = @()
+        foreach ($item in $ComplexObject)
         {
-            $hash=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-            $results+=$hash
+            $hash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+            $results += $hash
         }
 
         #Write-Verbose -Message ("Convert-M365DSCDRGComplexTypeToHashtable >>> results: "+(convertTo-JSON $results -Depth 20))
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
-        return ,[hashtable[]]$results
+        return , [hashtable[]]$results
     }
     $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
 
-    if($null -ne $hashComplexObject)
+    if ($null -ne $hashComplexObject)
     {
 
-        $results=$hashComplexObject.clone()
-        $keys=$hashComplexObject.Keys|Where-Object -FilterScript {$_ -ne 'PSComputerName'}
+        $results = $hashComplexObject.clone()
+        $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
         foreach ($key in $keys)
         {
-            if($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like "*CimInstance*")
+            if ($hashComplexObject[$key] -and $hashComplexObject[$key].getType().Fullname -like '*CimInstance*')
             {
-                $results[$key]=Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
+                $results[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
             }
             else
             {
                 $propertyName = $key[0].ToString().ToLower() + $key.Substring(1, $key.Length - 1)
-                $propertyValue=$results[$key]
-                $results.remove($key)|out-null
-                $results.add($propertyName,$propertyValue)
+                $propertyValue = $results[$key]
+                $results.remove($key) | Out-Null
+                $results.add($propertyName, $propertyValue)
             }
         }
     }

@@ -1,6 +1,6 @@
 {
     "resourceName": "IntuneDeviceConfigurationPolicyWindows10",
-    "description": "This resource configures an Intune device configuration profile for an Windows 10 Device.",
+    "description": "This resource configures an Intune Device Configuration Policy for Windows10.",
     "permissions": {
         "graph": {
             "delegated": {

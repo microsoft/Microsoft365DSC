@@ -5,65 +5,29 @@ function Get-TargetResource
     param
     (
         #region resource generator code
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $WindowsNetworkIsolationPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SupportsScopeTags,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
         [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDeviceResetOnInstallFailure,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDeviceUseOnInstallFailure,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowLogCollectionOnInstallFailure,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowNonBlockingAppInstallation,
-
-        [Parameter()]
-        [System.Boolean]
-        $BlockDeviceSetupRetryByUser,
-
-        [Parameter()]
-        [System.String]
-        $CustomErrorMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableUserStatusTrackingAfterFirstUser,
-
-        [Parameter()]
-        [System.Int32]
-        $InstallProgressTimeoutInMinutes,
-
-        [Parameter()]
-        [System.Boolean]
-        $InstallQualityUpdates,
-
-        [Parameter()]
-        [System.String[]]
-        $SelectedMobileAppIds,
-
-        [Parameter()]
-        [System.Boolean]
-        $ShowInstallationProgress,
-
-        [Parameter()]
-        [System.Boolean]
-        $TrackInstallProgressForAutopilotOnly,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
 
         [Parameter()]
@@ -119,50 +83,105 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with Id {$Id}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Network Boundary Policy for Windows10 with Id {$Id}"
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDeviceManagementDeviceEnrollmentConfiguration `
-                    -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
-                        $_.DisplayName -eq "$($DisplayName)" `
+                $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue | Where-Object -FilterScript { `
+                        $_.AdditionalProperties -eq '#microsoft.graph.windows10NetworkBoundaryConfiguration' `
                 }
             }
         }
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with DisplayName {$DisplayName}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Network Boundary Policy for Windows10 with DisplayName {$DisplayName}"
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
+        Write-Verbose -Message "An Intune Device Configuration Network Boundary Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        #region resource generator code
+        $complexWindowsNetworkIsolationPolicy = @{}
+        $complexEnterpriseCloudResources = @()
+        foreach ($currentEnterpriseCloudResources in $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseCloudResources)
+        {
+            $myEnterpriseCloudResources = @{}
+            $myEnterpriseCloudResources.Add('IpAddressOrFQDN', $currentEnterpriseCloudResources.ipAddressOrFQDN)
+            $myEnterpriseCloudResources.Add('Proxy', $currentEnterpriseCloudResources.proxy)
+            if ($myEnterpriseCloudResources.values.Where({ $null -ne $_ }).count -gt 0)
+            {
+                $complexEnterpriseCloudResources += $myEnterpriseCloudResources
+            }
+        }
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseCloudResources', $complexEnterpriseCloudResources)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseInternalProxyServers', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseInternalProxyServers)
+        $complexEnterpriseIPRanges = @()
+        foreach ($currentEnterpriseIPRanges in $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseIPRanges)
+        {
+            $myEnterpriseIPRanges = @{}
+            $myEnterpriseIPRanges.Add('CidrAddress', $currentEnterpriseIPRanges.cidrAddress)
+            $myEnterpriseIPRanges.Add('LowerAddress', $currentEnterpriseIPRanges.lowerAddress)
+            $myEnterpriseIPRanges.Add('UpperAddress', $currentEnterpriseIPRanges.upperAddress)
+            if ($null -ne $currentEnterpriseIPRanges.'@odata.type')
+            {
+                $myEnterpriseIPRanges.Add('odataType', $currentEnterpriseIPRanges.'@odata.type'.toString())
+            }
+            if ($myEnterpriseIPRanges.values.Where({ $null -ne $_ }).count -gt 0)
+            {
+                $complexEnterpriseIPRanges += $myEnterpriseIPRanges
+            }
+        }
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseIPRanges', $complexEnterpriseIPRanges)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseIPRangesAreAuthoritative', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseIPRangesAreAuthoritative)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseNetworkDomainNames', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseNetworkDomainNames)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseProxyServers', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseProxyServers)
+        $complexWindowsNetworkIsolationPolicy.Add('EnterpriseProxyServersAreAuthoritative', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.enterpriseProxyServersAreAuthoritative)
+        $complexWindowsNetworkIsolationPolicy.Add('NeutralDomainResources', $getValue.AdditionalProperties.windowsNetworkIsolationPolicy.neutralDomainResources)
+        if ($complexWindowsNetworkIsolationPolicy.values.Where({ $null -ne $_ }).count -eq 0)
+        {
+            $complexWindowsNetworkIsolationPolicy = $null
+        }
+        #endregion
 
         $results = @{
             #region resource generator code
-            AllowDeviceResetOnInstallFailure        = $getValue.AdditionalProperties.allowDeviceResetOnInstallFailure
-            AllowDeviceUseOnInstallFailure          = $getValue.AdditionalProperties.allowDeviceUseOnInstallFailure
-            AllowLogCollectionOnInstallFailure      = $getValue.AdditionalProperties.allowLogCollectionOnInstallFailure
-            AllowNonBlockingAppInstallation         = $getValue.AdditionalProperties.allowNonBlockingAppInstallation
-            BlockDeviceSetupRetryByUser             = $getValue.AdditionalProperties.blockDeviceSetupRetryByUser
-            CustomErrorMessage                      = $getValue.AdditionalProperties.customErrorMessage
-            DisableUserStatusTrackingAfterFirstUser = $getValue.AdditionalProperties.disableUserStatusTrackingAfterFirstUser
-            InstallProgressTimeoutInMinutes         = $getValue.AdditionalProperties.installProgressTimeoutInMinutes
-            InstallQualityUpdates                   = $getValue.AdditionalProperties.installQualityUpdates
-            SelectedMobileAppIds                    = $getValue.AdditionalProperties.selectedMobileAppIds
-            ShowInstallationProgress                = $getValue.AdditionalProperties.showInstallationProgress
-            TrackInstallProgressForAutopilotOnly    = $getValue.AdditionalProperties.trackInstallProgressForAutopilotOnly
-            Description                             = $getValue.Description
-            DisplayName                             = $getValue.DisplayName
-            Id                                      = $getValue.Id
-            Ensure                                  = 'Present'
+            WindowsNetworkIsolationPolicy = $complexWindowsNetworkIsolationPolicy
+            Description                   = $getValue.Description
+            DisplayName                   = $getValue.DisplayName
+            SupportsScopeTags             = $getValue.SupportsScopeTags
+            Id                            = $getValue.Id
+            Ensure                        = 'Present'
+            Credential                    = $Credential
+            ApplicationId                 = $ApplicationId
+            TenantId                      = $TenantId
+            ApplicationSecret             = $ApplicationSecret
+            CertificateThumbprint         = $CertificateThumbprint
+            Managedidentity               = $ManagedIdentity.IsPresent
             #endregion
         }
+        $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {
+                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
+                    })
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
 
         return [System.Collections.Hashtable] $results
     }
@@ -184,67 +203,30 @@ function Set-TargetResource
     param
     (
         #region resource generator code
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $WindowsNetworkIsolationPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SupportsScopeTags,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
         [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDeviceResetOnInstallFailure,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDeviceUseOnInstallFailure,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowLogCollectionOnInstallFailure,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowNonBlockingAppInstallation,
-
-        [Parameter()]
-        [System.Boolean]
-        $BlockDeviceSetupRetryByUser,
-
-        [Parameter()]
-        [System.String]
-        $CustomErrorMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableUserStatusTrackingAfterFirstUser,
-
-        [Parameter()]
-        [System.Int32]
-        $InstallProgressTimeoutInMinutes,
-
-        [Parameter()]
-        [System.Boolean]
-        $InstallQualityUpdates,
-
-        [Parameter()]
-        [System.String[]]
-        $SelectedMobileAppIds,
-
-        [Parameter()]
-        [System.Boolean]
-        $ShowInstallationProgress,
-
-        [Parameter()]
-        [System.Boolean]
-        $TrackInstallProgressForAutopilotOnly,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
-
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -300,61 +282,77 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Intune Device Enrollment Configuration for Windows10 with DisplayName {$DisplayName}"
+        Write-Verbose -Message "Creating an Intune Device Configuration Network Boundary Policy for Windows10 with DisplayName {$DisplayName}"
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
 
+        $keys = (([Hashtable]$CreateParameters).clone()).Keys
+        foreach ($key in $keys)
+        {
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            {
+                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
+            }
+        }
         #region resource generator code
-        if ($CreateParameters.showInstallationProgress -eq $false)
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10NetworkBoundaryConfiguration')
+        $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            $CreateParameters.blockDeviceSetupRetryByUser = $true
-            $CreateParameters.Remove('allowLogCollectionOnInstallFailure') | Out-Null
-            $CreateParameters.Remove('allowNonBlockingAppInstallation') | Out-Null
-            $CreateParameters.Remove('customErrorMessage') | Out-Null
-            $CreateParameters.Remove('disableUserStatusTrackingAfterFirstUser') | Out-Null
-            $CreateParameters.Remove('installProgressTimeoutInMinutes') | Out-Null
-            $CreateParameters.Remove('installQualityUpdates') | Out-Null
-            $CreateParameters.Remove('trackInstallProgressForAutopilotOnly') | Out-Null
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
 
-        if ($CreateParameters.blockDeviceSetupRetryByUser -eq $true)
+        if ($policy.id)
         {
-            $CreateParameters.Remove('allowDeviceUseOnInstallFailure') | Out-Null
-            $CreateParameters.Remove('allowDeviceResetOnInstallFailure') | Out-Null
-            $CreateParameters.Remove('selectedMobileAppIds') | Out-Null
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceConfigurations'
         }
-
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration')
-        $null = New-MgDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $CreateParameters
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Intune Device Enrollment Configuration for Windows10 with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Updating the Intune Device Configuration Network Boundary Policy for Windows10 with Id {$($currentInstance.Id)}"
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
-        #region resource generator code
-        if ($UpdateParameters.blockDeviceSetupRetryByUser -eq $true)
-        {
-            $UpdateParameters.Remove('allowDeviceUseOnInstallFailure') | Out-Null
-            $UpdateParameters.Remove('allowDeviceResetOnInstallFailure') | Out-Null
-            $UpdateParameters.Remove('selectedMobileAppIds') | Out-Null
-        }
+        $UpdateParameters.Remove('Id') | Out-Null
 
-        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration')
-        Update-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $currentInstance.Id `
+        $keys = (([Hashtable]$UpdateParameters).clone()).Keys
+        foreach ($key in $keys)
+        {
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
+            {
+                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+            }
+        }
+        #region resource generator code
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10NetworkBoundaryConfiguration')
+        Update-MgDeviceManagementDeviceConfiguration  `
+            -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/deviceConfigurations'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Enrollment Configuration for Windows10 with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Removing the Intune Device Configuration Network Boundary Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $currentInstance.Id
+        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -366,65 +364,29 @@ function Test-TargetResource
     param
     (
         #region resource generator code
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $WindowsNetworkIsolationPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $SupportsScopeTags,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
         [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDeviceResetOnInstallFailure,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDeviceUseOnInstallFailure,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowLogCollectionOnInstallFailure,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowNonBlockingAppInstallation,
-
-        [Parameter()]
-        [System.Boolean]
-        $BlockDeviceSetupRetryByUser,
-
-        [Parameter()]
-        [System.String]
-        $CustomErrorMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableUserStatusTrackingAfterFirstUser,
-
-        [Parameter()]
-        [System.Int32]
-        $InstallProgressTimeoutInMinutes,
-
-        [Parameter()]
-        [System.Boolean]
-        $InstallQualityUpdates,
-
-        [Parameter()]
-        [System.String[]]
-        $SelectedMobileAppIds,
-
-        [Parameter()]
-        [System.Boolean]
-        $ShowInstallationProgress,
-
-        [Parameter()]
-        [System.Boolean]
-        $TrackInstallProgressForAutopilotOnly,
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
 
         [Parameter()]
@@ -469,7 +431,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Device Configuration Network Boundary Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -511,8 +473,6 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    $ValuesToCheck.Remove('Id') | Out-Null
 
     if ($testResult)
     {
@@ -577,10 +537,11 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementDeviceEnrollmentConfiguration `
+        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+            -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10NetworkBoundaryConfiguration' `
         }
         #endregion
 
@@ -604,7 +565,8 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
-                DisplayName           = $config.displayName
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -616,19 +578,72 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
+            if ($null -ne $Results.WindowsNetworkIsolationPolicy)
+            {
+                $complexMapping = @(
+                    @{
+                        Name            = 'WindowsNetworkIsolationPolicy'
+                        CimInstanceName = 'MicrosoftGraphWindowsNetworkIsolationPolicy'
+                        IsRequired      = $False
+                    }
+                    @{
+                        Name            = 'EnterpriseCloudResources'
+                        CimInstanceName = 'MicrosoftGraphProxiedDomain1'
+                        IsRequired      = $False
+                    }
+                    @{
+                        Name            = 'EnterpriseIPRanges'
+                        CimInstanceName = 'MicrosoftGraphIpRange1'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.WindowsNetworkIsolationPolicy `
+                    -CIMInstanceName 'MicrosoftGraphwindowsNetworkIsolationPolicy' `
+                    -ComplexTypeMapping $complexMapping
 
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.WindowsNetworkIsolationPolicy = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('WindowsNetworkIsolationPolicy') | Out-Null
+                }
+            }
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
+            if ($Results.WindowsNetworkIsolationPolicy)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsNetworkIsolationPolicy' -IsCIMArray:$False
+            }
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
+            }
+            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
+            $currentDSCBlock = $currentDSCBlock.replace("    ,`r`n" , "    `r`n" )
+            $currentDSCBlock = $currentDSCBlock.replace("`r`n;`r`n" , "`r`n" )
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
-
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
         return $dscContent
     }
@@ -646,12 +661,75 @@ function Export-TargetResource
     }
 }
 
+function Update-DeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets,
+
+        [Parameter()]
+        [System.String]
+        $Repository = 'deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0', 'beta')]
+        [System.String]
+        $APIVersion = 'beta'
+    )
+    try
+    {
+        $deviceManagementPolicyAssignments = @()
+        $Uri = "https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+
+        foreach ($target in $targets)
+        {
+            $formattedTarget = @{'@odata.type' = $target.dataType }
+            if ($target.groupId)
+            {
+                $formattedTarget.Add('groupId', $target.groupId)
+            }
+            if ($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId', $target.collectionId)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
+        }
+        $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
 function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable], [System.Collections.Hashtable[]])]
-    param
-    (
+    param(
         [Parameter(Mandatory = 'true')]
         $Properties
     )
@@ -704,7 +782,6 @@ function Rename-M365DSCCimInstanceParameter
         }
         $result = $hashProperties
     }
-
     return $result
     #endregion
 }
@@ -713,8 +790,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
     [OutputType([hashtable], [hashtable[]])]
-    param
-    (
+    param(
         [Parameter()]
         $ComplexObject
     )
@@ -794,7 +870,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         if ($null -ne $ComplexObject.$keyName)
         {
             $keyType = $ComplexObject.$keyName.gettype().fullname
-            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' )
+            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
@@ -806,7 +882,6 @@ function Get-M365DSCDRGComplexTypeToHashtable
             }
         }
     }
-
     return [hashtable]$results
 }
 
@@ -838,8 +913,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
 function Get-M365DSCDRGComplexTypeToString
 {
     [CmdletBinding()]
-    param
-    (
+    param(
         [Parameter()]
         $ComplexObject,
 
@@ -952,7 +1026,7 @@ function Get-M365DSCDRGComplexTypeToString
                     $currentProperty += $indent + $key + ' = '
                 }
 
-                if ($isArray -and $key -in $ComplexTypeMapping.Name )
+                if ($isArray -and $key -in $ComplexTypeMapping.Name)
                 {
                     if ($ComplexObject.$key.count -gt 0)
                     {
@@ -1057,16 +1131,14 @@ function Get-M365DSCDRGComplexTypeToString
     {
         $currentProperty = $null
     }
-
     return $currentProperty
 }
 
-function Get-M365DSCDRGSimpleObjectTypeToString
+Function Get-M365DSCDRGSimpleObjectTypeToString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
-    param
-    (
+    param(
         [Parameter(Mandatory = 'true')]
         [System.String]
         $Key,
@@ -1077,6 +1149,7 @@ function Get-M365DSCDRGSimpleObjectTypeToString
         [Parameter()]
         [System.String]
         $Space = '                '
+
     )
 
     $returnValue = ''
@@ -1111,7 +1184,7 @@ function Get-M365DSCDRGSimpleObjectTypeToString
             }
             foreach ($item in ($Value | Where-Object -FilterScript { $null -ne $_ }))
             {
-                switch -Wildcard ($item.GetType().Fullname )
+                switch -Wildcard ($item.GetType().Fullname)
                 {
                     '*.String'
                     {
@@ -1149,11 +1222,9 @@ function Compare-M365DSCComplexObject
 {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
-    param
-    (
+    param(
         [Parameter()]
         $Source,
-
         [Parameter()]
         $Target
     )
@@ -1195,7 +1266,6 @@ function Compare-M365DSCComplexObject
 
         foreach ($item in $Source)
         {
-
             $hashSource = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
             foreach ($targetItem in $Target)
             {
@@ -1248,7 +1318,7 @@ function Compare-M365DSCComplexObject
         #Both keys aren't null or empty
         if (($null -ne $Source.$key) -and ($null -ne $Target.$tkey))
         {
-            if ($Source.$key.getType().FullName -like '*CimInstance*' -or $Source.$key.getType().FullName -like '*hashtable*'  )
+            if ($Source.$key.getType().FullName -like '*CimInstance*' -or $Source.$key.getType().FullName -like '*hashtable*')
             {
                 #Recursive call for complex object
                 $compareResult = Compare-M365DSCComplexObject `
@@ -1293,7 +1363,6 @@ function Compare-M365DSCComplexObject
             }
         }
     }
-
     return $true
 }
 
@@ -1301,12 +1370,10 @@ function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
     [OutputType([hashtable], [hashtable[]])]
-    param
-    (
+    param(
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )
-
 
     if ($ComplexObject.getType().Fullname -like '*[[\]]')
     {
@@ -1327,7 +1394,6 @@ function Convert-M365DSCDRGComplexTypeToHashtable
 
     if ($null -ne $hashComplexObject)
     {
-
         $results = $hashComplexObject.clone()
         $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
         foreach ($key in $keys)
