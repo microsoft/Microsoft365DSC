@@ -33,6 +33,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
+            Mock -CommandName Write-Host -MockWith {
+            }
+
             Mock -CommandName Update-MgDeviceManagementGroupPolicyConfiguration -MockWith {
             }
 
@@ -74,7 +77,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                     )
                     DefinitionValues                 = [CimInstance[]]@(
-                        (N-ClientOnly)
                         (New-CimInstance -ClassName MSFT_IntuneGroupPolicyDefinitionValue -Property @{
                             ConfigurationType  = 'policy'
                             PresentationValues = [CimInstance[]]@(
