@@ -642,20 +642,13 @@ function Get-TargetResource
         $getValue = $null
 
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
-            -All:$true `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { `
-                $_.id -eq $Id `
-        }
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
 
         if (-not $getValue)
         {
-            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
-                -All:$true `
-                -ErrorAction Stop | Where-Object `
-                -FilterScript { `
-                    $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' -and $_.displayName -eq $($DisplayName) `
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerGeneralDeviceConfiguration' `
             }
         }
         #endregion

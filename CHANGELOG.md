@@ -1,12 +1,37 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.412.1
 
+* AADUser
+  * Password property will only used with New-MgUser and ignored for updates
+    FIXES [#3093](https://github.com/microsoft/Microsoft365DSC/issues/3093)
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+   * Initial release
+     FIXES [#2833](https://github.com/microsoft/Microsoft365DSC/issues/2833)
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Initial Release
       FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
+* IntuneDeviceConfigurationDomainJoinPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationWindowsTeamPolicyWindows10
+  * Initial release
+* O365SearchAndIntelligenceConfigurations
+  * Initial release.
 * TeamsUpdateManagementPolicy
   * Added support for the Forced value for the AllowPublicPreview property.
+* DRG
+  * Fixed layout and display issues in module file
+* MISC
+  * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
+    Fixes #3082
+  * M365DSCUtil: Fixed an issue when calling Assert-M365DSCBlueprint with App credentials
+    FIXES [#3153](https://github.com/microsoft/Microsoft365DSC/issues/3153)
+  * Added check to validate that the Release Notes in the module manifest are not longer than
+    10,000 characters, which will prevent publishing the module to the PowerShell Gallery
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell dependencies to version 2.0.159.
 
 # 1.23.405.1
 

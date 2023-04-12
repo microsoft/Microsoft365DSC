@@ -112,20 +112,15 @@ function Get-TargetResource
         #region resource generator code
         if (-Not [string]::IsNullOrEmpty($DisplayName))
         {
-            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
-                -ErrorAction Stop | Where-Object `
-                -FilterScript { `
-                    $_.DisplayName -eq "$($DisplayName)" `
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.aospDeviceOwnerWiFiConfiguration' `
             }
         }
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
-                -ErrorAction Stop | Where-Object `
-                -FilterScript { `
-                    $_.id -eq $id `
-            }
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
         }
         #endregion
 

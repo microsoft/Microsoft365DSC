@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        <ParameterBlock><AssignmentsParam>        #endregion
+<ParameterBlock><AssignmentsParam>        #endregion
 
         [Parameter()]
         [System.String]
@@ -74,17 +74,17 @@ function Get-TargetResource
         #endregionResourceGenerator#>
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message 'Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}'
+            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
             return $nullResult
         }
         $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message 'An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found.'<#ResourceGenerator
+        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
 <ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
         $results = @{<#ResourceGenerator
             #region resource generator code
 <HashTableMapping>            #endregionResourceGenerator#>
         }
-        <#ComplexTypeContent#><#AssignmentsGet#>
+<#ComplexTypeContent#><#AssignmentsGet#>
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -105,7 +105,7 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        <ParameterBlock><AssignmentsParam>        #endregion
+<ParameterBlock><AssignmentsParam>        #endregion
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -155,7 +155,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
-        <#AssignmentsRemove#>
+<#AssignmentsRemove#>
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
@@ -170,12 +170,12 @@ function Set-TargetResource
         }<#ResourceGenerator
         #region resource generator code
 <NewDataType>        $policy = <NewCmdLetName> <#NewKeyIdentifier#>
-        <#AssignmentsNew#>        #endregionResourceGenerator#>
+<#AssignmentsNew#>        #endregionResourceGenerator#>
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
-        <#AssignmentsRemove#>
+<#AssignmentsRemove#>
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
@@ -191,13 +191,13 @@ function Set-TargetResource
         }<#ResourceGenerator
         #region resource generator code
 <UpdateDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
-        <#AssignmentsUpdate#>        #endregionResourceGenerator#>
+<#AssignmentsUpdate#>        #endregionResourceGenerator#>
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
         #region resource generator code
-        <RemoveCmdLetName> <#removeKeyIdentifier#>
+<RemoveCmdLetName> <#removeKeyIdentifier#>
         #endregionResourceGenerator#>
     }
 }
@@ -209,7 +209,7 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        <ParameterBlock><AssignmentsParam>        #endregion
+<ParameterBlock><AssignmentsParam>        #endregion
 
         [Parameter()]
         [System.String]
@@ -253,7 +253,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message 'Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}'
+    Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -357,8 +357,7 @@ function Export-TargetResource
     #endregion
 
     try
-    {
-        <#ResourceGenerator
+    {<#ResourceGenerator
         #region resource generator code
 <exportGetCommand>        #endregionResourceGenerator#>
 
@@ -394,13 +393,13 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            <#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
+<#ConvertComplexToString#><#AssignmentsConvertComplexToString#>
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            <#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#><#TrailingCharRemoval#>
+<#ConvertComplexToVariable#><#AssignmentsConvertComplexToVariable#><#TrailingCharRemoval#>
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
