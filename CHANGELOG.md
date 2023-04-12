@@ -2,18 +2,12 @@
 
 # UNRELEASED
 
+* AADUser
+  * Password property will only used with New-MgUser and ignored for updates
+    FIXES [#3093](https://github.com/microsoft/Microsoft365DSC/issues/3093)
 * IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
-  * Initial release
+   * Initial release
      FIXES [#2833](https://github.com/microsoft/Microsoft365DSC/issues/2833)
-* IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
-  * Initial release.
-* O365SearchAndIntelligenceConfigurations
-  * Initial release.
-* DRG
-  * Fixed layout and display issues in module file
-
-# 1.23.405.1
-
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Initial Release
       FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
@@ -23,6 +17,8 @@
   * Initial release
 * IntuneDeviceConfigurationWindowsTeamPolicyWindows10
   * Initial release
+* O365SearchAndIntelligenceConfigurations
+  * Initial release.
 * TeamsUpdateManagementPolicy
   * Added support for the Forced value for the AllowPublicPreview property.
 * DRG
@@ -32,8 +28,10 @@
     Fixes #3082
   * M365DSCUtil: Fixed an issue when calling Assert-M365DSCBlueprint with App credentials
     FIXES [#3153](https://github.com/microsoft/Microsoft365DSC/issues/3153)
+  * Added check to validate that the Release Notes in the module manifest are not longer than
+    10,000 characters, which will prevent publishing the module to the PowerShell Gallery
 
-# 1.23.405.0
+# 1.23.405.1
 
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
@@ -63,8 +61,6 @@
   * [BREAKING CHANGE] Remove deprecated parameter PreferredDataLocation* EXOAntiPhishPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EnableAntispoofEnforcement and
     TargetedDomainProtectionAction
-  * Password property will only used with New-MgUser and ignored for updates
-    FIXES [#3093](https://github.com/microsoft/Microsoft365DSC/issues/3093)
 * EXOGroupSettings
   * Initial Release
     FIXES [#3089](https://github.com/microsoft/Microsoft365DSC/issues/3089)

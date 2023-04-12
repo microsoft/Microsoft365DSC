@@ -79,13 +79,13 @@ For 1. we can change the key parameters and the configuration will compile. We c
 
 ## The current implementation of key parameters in Microsoft365DSC
 
-With the [April 2023 release](../blog/april-2023-major-release/index.html) of Microsoft365DSC we have many breaking changes that help to better identify the resources in the configuration. There were several changes to key parameters. This implementation  a new way of handling key parameters. This new implementation is based on the following principles:
+With the [April 2023 release](../../blog/april-2023-major-release/index.html) of Microsoft365DSC we have many breaking changes that help to better identify the resources in the configuration. There were several changes to key parameters. This implementation  a new way of handling key parameters. This new implementation is based on the following principles:
 
 1. The key parameters are the parameters that are used to identify a resource.
    There is [more information](https://docs.microsoft.com/en-us/powershell/dsc/authoringresourcekey) available on how to define key parameters in DSC resources:
    >The type qualifier, [Key], on a property indicates that this property will uniquely identify the resource instance. At least one [Key] property is required.
 2. The immutable identifiers are the unique identifiers that are created during the creation of the resource. For some resources, these are now exposed through M365DSC. This offers two use cases:
-   1. During the initial creation of the resource the display name would be used to identify the resource. This is the same as the current implementation.
-   2. For updates of the resource, the immutable identifier would be used to identify the resource. This is a new implementation.
+   - During the initial creation of the resource the display name would be used to identify the resource. This is the same as the current implementation.
+   - For updates of the resource, the immutable identifier would be used to identify the resource. This is a new implementation.
 
 The new implementation is kind of a heuristic approach to enable exports and imports of configurations. Besides that it is a good practice to better identify the resources in the configuration.
