@@ -68,7 +68,6 @@ function Get-TargetResource
 
     $nullReturn = @{
         IsSingleInstance = $IsSingleInstance
-        Ensure           = 'Absent'
     }
 
     try
@@ -100,7 +99,6 @@ function Get-TargetResource
             ItemInsightsDisabledForGroup          = $itemInsightsDisabledForGroupValue
             PersonInsightsIsEnabledInOrganization = $PersonInsights.IsEnabledInOrganization
             PersonInsightsDisabledForGroup        = $PersonInsightsDisabledForGroupValue
-            Ensure                                = 'Present'
             Credential                            = $Credential
             ApplicationId                         = $ApplicationId
             TenantId                              = $TenantId
@@ -392,7 +390,7 @@ function Export-TargetResource
         $Results = Get-TargetResource @Params
 
         $dscContent = ''
-        if ($Results.Ensure -eq 'Present')
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
