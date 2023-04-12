@@ -1,13 +1,14 @@
-﻿# O365OrgSettings
+﻿# O365SearchAndIntelligenceConfigurations
 
 ## Parameters
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
-| **CortanaEnabled** | Write | Boolean | Allow Cortana in windows 10 (version 1909 and earlier), and the Cortana app on iOS and Android, to access Microsoft-hosted data on behalf of people in your organization. | |
-| **M365WebEnableUsersToOpenFilesFrom3PStorage** | Write | Boolean | Let users open files stored in third-party storage services in Microsoft 365 on the Web. | |
-| **Ensure** | Write | String | Since there is only one setting available, this must be set to 'Present' | `Present` |
+| **ItemInsightsIsEnabledInOrganization** | Write | Boolean | Specifies whether or not Item Insights should be available for the organization. | |
+| **ItemInsightsDisabledForGroup** | Write | String | Specifies a single Azure AD Group for which Item Insights needs to be disabled. | |
+| **PersonInsightsIsEnabledInOrganization** | Write | Boolean | Specifies whether or not Person Insights should be available for the organization. | |
+| **PersonInsightsDisabledForGroup** | Write | String | Specifies a single Azure AD Group for which Person Insights needs to be disabled. | |
 | **Credential** | Write | PSCredential | Credentials of the Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -17,7 +18,7 @@
 
 ## Description
 
-This resource configures the Org settings for a Microsoft 365 tenant.
+This resource configures the Search And Intelligence configuration settings.
 
 ## Permissions
 
@@ -27,7 +28,7 @@ To authenticate with Microsoft Exchange, this resource required the following pe
 
 #### Roles
 
-- Organization Configuration
+- 
 
 #### Role Groups
 
@@ -53,12 +54,13 @@ Configuration Example
 
     node localhost
     {
-        O365OrgSettings 'O365OrgSettings'
+        O365SearchAndIntelligenceConfigurations 'SearchAndIntelligenceConfigurations'
         {
-            Credential                                 = $Credscredential;
-            Ensure                                     = "Present";
-            IsSingleInstance                           = "Yes";
-            M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
+            Credential                            = $Credscredential;
+            IsSingleInstance                      = "Yes";
+            ItemInsightsIsEnabledInOrganization   = $False;
+            ItemInsightsDisabledForGroup          = "TestGroup"
+            PersonInsightsIsEnabledInOrganization = $True;
         }
     }
 }
