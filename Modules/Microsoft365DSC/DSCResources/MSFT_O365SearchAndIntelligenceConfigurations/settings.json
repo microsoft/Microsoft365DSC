@@ -16,7 +16,7 @@
                     "User.Read.All"
                 ],
                 "update": [
-                    "User.ReadWrite"
+                    "User.ReadWrite.All"
                 ]
             }
         },
