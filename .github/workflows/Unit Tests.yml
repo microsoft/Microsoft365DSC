@@ -21,7 +21,7 @@ jobs:
         run: |
           Install-Module ReverseDSC -Force -Scope AllUsers
           Install-Module PSDesiredStateConfiguration -Force -Scope AllUsers
-          Install-Module Pester -Force -SkipPublisherCheck -RequiredVersion 5.4.0 -Scope AllUsers
+          Install-Module Pester -Force -SkipPublisherCheck -Scope AllUsers
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
       - name: Run Quality Checks
         shell: pwsh

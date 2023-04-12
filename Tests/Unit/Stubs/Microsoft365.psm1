@@ -41081,7 +41081,7 @@ function Add-PnPApp
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41094,15 +41094,15 @@ function Add-PnPHubSiteAssociation
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $HubSite,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $Site,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41115,7 +41115,7 @@ function Add-PnPOrgAssetsLibrary
         $ThumbnailUrl,
 
         [Parameter()]
-        [Microsoft.SharePoint.Administration.OrgAssetType]
+        [PSObject]
         $OrgAssetType,
 
         [Parameter()]
@@ -41123,11 +41123,11 @@ function Add-PnPOrgAssetsLibrary
         $LibraryUrl,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41144,7 +41144,7 @@ function Add-PnPSiteDesign
         $Description,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
+        [PSObject]
         $WebTemplate,
 
         [Parameter()]
@@ -41160,7 +41160,7 @@ function Add-PnPSiteDesign
         $PreviewImageUrl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41193,7 +41193,7 @@ function Add-PnPSiteScript
         $Content,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41206,7 +41206,7 @@ function Add-PnPTenantTheme
         $Overwrite,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -41214,11 +41214,11 @@ function Add-PnPTenantTheme
         $IsInverted,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePalettePipeBind]
+        [PSObject]
         $Palette
     )
 }
@@ -41227,7 +41227,7 @@ function Get-PnPApp
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -41235,7 +41235,7 @@ function Get-PnPApp
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41244,7 +41244,7 @@ function Get-PnPAuditing
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41253,7 +41253,7 @@ function Get-PnPAvailableLanguage
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41262,7 +41262,7 @@ function Get-PnPBrowserIdleSignout
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41271,7 +41271,7 @@ function Get-PnPContext
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41296,7 +41296,7 @@ function Get-PnPFile
         $AsMemoryStream,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41304,7 +41304,7 @@ function Get-PnPFile
         $ThrowExceptionIfFileNotFound,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41349,15 +41349,15 @@ function Get-PnPGroup
         $AssociatedVisitorGroup,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41366,15 +41366,15 @@ function Get-PnPGroupPermissions
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41383,7 +41383,7 @@ function Get-PnPHomeSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41392,11 +41392,11 @@ function Get-PnPHubSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41405,7 +41405,7 @@ function Get-PnPOrgAssetsLibrary
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41414,11 +41414,11 @@ function Get-PnPProperty
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.SharePoint.Client.ClientObject]
+        [PSObject]
         $ClientObject,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41435,7 +41435,7 @@ function Get-PnPPropertyBag
         $Folder,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41443,7 +41443,7 @@ function Get-PnPPropertyBag
         $Key,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41452,19 +41452,19 @@ function Get-PnPSearchConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Search.BookmarkStatus]
+        [PSObject]
         $BookmarkStatus,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41472,7 +41472,7 @@ function Get-PnPSearchConfiguration
         $ExcludeVisualPromotedResults,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Search.OutputFormat]
+        [PSObject]
         $OutputFormat,
 
         [Parameter()]
@@ -41489,7 +41489,7 @@ function Get-PnPSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41502,11 +41502,11 @@ function Get-PnPSiteDesign
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41515,11 +41515,11 @@ function Get-PnPSiteDesignRights
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41528,15 +41528,15 @@ function Get-PnPSiteScript
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $SiteDesign,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41545,7 +41545,7 @@ function Get-PnPStorageEntity
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
@@ -41553,7 +41553,7 @@ function Get-PnPStorageEntity
         $Key,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41562,7 +41562,7 @@ function Get-PnPTenant
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41571,7 +41571,7 @@ function Get-PnPTenantAppCatalogUrl
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41580,11 +41580,11 @@ function Get-PnPTenantCdnEnabled
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41593,11 +41593,11 @@ function Get-PnPTenantCdnPolicies
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41622,11 +41622,11 @@ function Get-PnPTenantSite
         $Template,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SPOSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41643,7 +41643,7 @@ function Get-PnPTenantSyncClientRestriction
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41656,7 +41656,7 @@ function Get-PnPTenantTheme
         $Name,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41673,7 +41673,7 @@ function Get-PnPUser
         $WithRightsAssigned,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41681,11 +41681,11 @@ function Get-PnPUser
         $WithRightsAssignedDetailed,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41702,7 +41702,7 @@ function Get-PnPUserProfileProperty
         $Account,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41711,11 +41711,11 @@ function Get-PnPWeb
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41732,11 +41732,11 @@ function Grant-PnPHubSiteRights
         $Principals,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41749,15 +41749,15 @@ function Grant-PnPSiteDesignRights
         $Principals,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignPrincipalRights]
+        [PSObject]
         $Rights,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41770,11 +41770,11 @@ function New-PnPGroup
         $Description,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        [PSObject]
         $SetAssociatedGroup,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41802,7 +41802,7 @@ function New-PnPGroup
         $AllowMembersEditMembership,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41823,7 +41823,7 @@ function New-PnPTenantSite
         $Template,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        [PSObject]
         $SharingCapability,
 
         [Parameter()]
@@ -41851,7 +41851,7 @@ function New-PnPTenantSite
         $TimeZone,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41888,11 +41888,11 @@ function Register-PnPHubSite
         $Principals,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $Site,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41901,7 +41901,7 @@ function Remove-PnPApp
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -41909,7 +41909,7 @@ function Remove-PnPApp
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41918,15 +41918,15 @@ function Remove-PnPGroup
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41939,7 +41939,7 @@ function Remove-PnPHomeSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41952,11 +41952,11 @@ function Remove-PnPHubSiteAssociation
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $Site,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41965,7 +41965,7 @@ function Remove-PnPOrgAssetsLibrary
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
@@ -41973,7 +41973,7 @@ function Remove-PnPOrgAssetsLibrary
         $LibraryUrl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41990,7 +41990,7 @@ function Remove-PnPPropertyBagValue
         $Folder,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41998,7 +41998,7 @@ function Remove-PnPPropertyBagValue
         $Key,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42006,16 +42006,41 @@ function Remove-PnPPropertyBagValue
         $Force
     )
 }
+function Remove-PnPSearchConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Configuration,
+
+        [Parameter()]
+        [PSObject]
+        $Web,
+
+        [Parameter()]
+        [PSObject]
+        $Scope,
+
+        [Parameter()]
+        [PSObject]
+        $Connection,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+}
 function Remove-PnPSiteDesign
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42028,7 +42053,7 @@ function Remove-PnPStorageEntity
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
@@ -42036,7 +42061,7 @@ function Remove-PnPStorageEntity
         $Key,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42053,7 +42078,7 @@ function Remove-PnPTenantSite
         $SkipRecycleBin,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42070,11 +42095,11 @@ function Remove-PnPTenantTheme
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42087,11 +42112,11 @@ function Revoke-PnPSiteDesignRights
         $Principals,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42132,7 +42157,7 @@ function Set-PnPAuditing
         $EditUsersPermissions,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42161,7 +42186,7 @@ function Set-PnPBrowserIdleSignout
         $SignoutAfter,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42178,7 +42203,7 @@ function Set-PnPGroup
         $Description,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -42202,7 +42227,7 @@ function Set-PnPGroup
         $RemoveRole,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -42210,7 +42235,7 @@ function Set-PnPGroup
         $AllowMembersEditMembership,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42222,7 +42247,7 @@ function Set-PnPGroup
         $RequestToJoinEmail,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        [PSObject]
         $SetAssociatedGroup,
 
         [Parameter()]
@@ -42239,11 +42264,11 @@ function Set-PnPGroupPermissions
         $AddRole,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -42251,11 +42276,11 @@ function Set-PnPGroupPermissions
         $RemoveRole,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        [PSObject]
         $List
     )
 }
@@ -42268,7 +42293,7 @@ function Set-PnPHomeSite
         $HomeSiteUrl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42301,11 +42326,11 @@ function Set-PnPHubSite
         $Title,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42334,11 +42359,11 @@ function Set-PnPPropertyBagValue
         $Indexed,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42355,15 +42380,15 @@ function Set-PnPSearchConfiguration
         $Configuration,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42380,11 +42405,11 @@ function Set-PnPSite
         $RestrictedAccessControl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        [PSObject]
         $SharingCapability,
 
         [Parameter()]
@@ -42392,7 +42417,7 @@ function Set-PnPSite
         $DisableFlows,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.MediaTranscriptionPolicyType]]
+        [PSObject]
         $MediaTranscription,
 
         [Parameter()]
@@ -42424,7 +42449,7 @@ function Set-PnPSite
         $SensitivityLabel,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        [PSObject]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -42444,7 +42469,7 @@ function Set-PnPSite
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion]]
+        [PSObject]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -42452,7 +42477,7 @@ function Set-PnPSite
         $LockState,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]]
+        [PSObject]
         $DisableAppViews,
 
         [Parameter()]
@@ -42472,7 +42497,7 @@ function Set-PnPSite
         $AnonymousLinkExpirationInDays,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]]
+        [PSObject]
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
@@ -42492,7 +42517,7 @@ function Set-PnPSite
         $LocaleId,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
+        [PSObject]
         $DefaultSharingLinkType,
 
         [Parameter()]
@@ -42513,7 +42538,7 @@ function Set-PnPSiteDesign
         $Description,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
+        [PSObject]
         $WebTemplate,
 
         [Parameter()]
@@ -42533,11 +42558,11 @@ function Set-PnPSiteDesign
         $PreviewImageUrl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42574,11 +42599,11 @@ function Set-PnPSiteScript
         $Title,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42599,11 +42624,11 @@ function Set-PnPStorageEntity
         $Comment,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42632,7 +42657,7 @@ function Set-PnPTenant
         $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
+        [PSObject]
         $FolderAnonymousLinkType,
 
         [Parameter()]
@@ -42648,7 +42673,7 @@ function Set-PnPTenant
         $OwnerAnonymousNotification,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SPOConditionalAccessPolicyType]]
+        [PSObject]
         $ConditionalAccessPolicy,
 
         [Parameter()]
@@ -42676,7 +42701,7 @@ function Set-PnPTenant
         $EnableRestrictedAccessControl,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        [PSObject]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -42728,11 +42753,11 @@ function Set-PnPTenant
         $ExternalUserExpirationRequired,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SpecialCharactersState]]
+        [PSObject]
         $SpecialCharactersStateInFileFolderNames,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        [PSObject]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -42756,7 +42781,7 @@ function Set-PnPTenant
         $PublicCdnEnabled,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SensitiveByDefaultState]]
+        [PSObject]
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
@@ -42772,7 +42797,7 @@ function Set-PnPTenant
         $SharingAllowedDomainList,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
+        [PSObject]
         $DefaultSharingLinkType,
 
         [Parameter()]
@@ -42788,7 +42813,7 @@ function Set-PnPTenant
         $ProvisionSharedWithEveryoneFolder,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]]
+        [PSObject]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
@@ -42852,7 +42877,7 @@ function Set-PnPTenant
         $IPAddressEnforcement,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        [PSObject]
         $SharingCapability,
 
         [Parameter()]
@@ -42900,7 +42925,7 @@ function Set-PnPTenant
         $DisablePersonalListCreation,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        [PSObject]
         $ODBMembersCanShare,
 
         [Parameter()]
@@ -42912,11 +42937,11 @@ function Set-PnPTenant
         $LegacyAuthProtocolsEnabled,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
+        [PSObject]
         $FileAnonymousLinkType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42969,11 +42994,11 @@ function Set-PnPTenantCdnEnabled
         $NoDefaultOrigins,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.CdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42986,7 +43011,7 @@ function Set-PnPTenantCdnPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
@@ -42994,11 +43019,11 @@ function Set-PnPTenantCdnPolicy
         $PolicyValue,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnPolicyType]
+        [PSObject]
         $PolicyType
     )
 }
@@ -43011,15 +43036,15 @@ function Set-PnPTenantSite
         $ExternalUserExpirationInDays,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]
+        [PSObject]
         $SharingCapability,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.FlowsPolicy]
+        [PSObject]
         $DisableFlows,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.MediaTranscriptionPolicyType]]
+        [PSObject]
         $MediaTranscription,
 
         [Parameter()]
@@ -43047,7 +43072,7 @@ function Set-PnPTenantSite
         $ResourceQuotaWarningLevel,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -43055,7 +43080,7 @@ function Set-PnPTenantSite
         $StorageQuotaWarningLevel,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SPOSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -43075,7 +43100,7 @@ function Set-PnPTenantSite
         $RemoveLabel,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]
+        [PSObject]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -43115,7 +43140,7 @@ function Set-PnPTenantSite
         $DefaultLinkToExistingAccess,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion]
+        [PSObject]
         $RestrictedToGeo,
 
         [Parameter()]
@@ -43127,7 +43152,7 @@ function Set-PnPTenantSite
         $DenyAddAndCustomizePages,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]
+        [PSObject]
         $DisableAppViews,
 
         [Parameter()]
@@ -43143,27 +43168,27 @@ function Set-PnPTenantSite
         $Owners,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.InformationBarriersMode]
+        [PSObject]
         $InformationBarriersMode,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SPOLimitedAccessFileType]
+        [PSObject]
         $LimitedAccessFileType,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.BlockDownloadLinksFileTypes]
+        [PSObject]
         $BlockDownloadLinksFileType,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SiteUserInfoVisibilityPolicyValue]
+        [PSObject]
         $OverrideBlockUserInfoVisibility,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]
+        [PSObject]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.PnPConditionalAccessPolicyType]
+        [PSObject]
         $ConditionalAccessPolicy,
 
         [Parameter()]
@@ -43191,7 +43216,7 @@ function Set-PnPTenantSite
         $ShowPeoplePickerSuggestionsForGuestUsers,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]
+        [PSObject]
         $DefaultSharingLinkType,
 
         [Parameter()]
@@ -43199,7 +43224,7 @@ function Set-PnPTenantSite
         $EnablePWA,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]
+        [PSObject]
         $DisableCompanyWideSharingLinks
     )
 }
@@ -43220,11 +43245,11 @@ function Set-PnPTenantSyncClientRestriction
         $Enable,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.GrooveBlockOption]
+        [PSObject]
         $GrooveBlockOption,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -43250,15 +43275,16 @@ function Unregister-PnPHubSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $Site,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
 #endregion
+
 #region PowerPlatforms
 function Get-AdminPowerApp
 {
@@ -43832,7 +43858,7 @@ function New-CsTeamsComplianceRecordingPolicy
         $DisableComplianceRecordingAudioNotificationForCalls,
 
         [Parameter()]
-        [System.Management.Automation.PSListModifier`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ComplianceRecordingApplication]]
+        [PSObject]
         $ComplianceRecordingApplications,
 
         [Parameter()]
@@ -43881,11 +43907,11 @@ function New-CsTeamsEmergencyCallingPolicy
         $EnhancedEmergencyServiceDisclaimer,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.NotificationMode]]
+        [PSObject]
         $NotificationMode,
 
         [Parameter()]
-        [System.Management.Automation.PSListModifier`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsEmergencyCallingExtendedNotification]]
+        [PSObject]
         $ExtendedNotifications,
 
         [Parameter()]
@@ -43893,7 +43919,7 @@ function New-CsTeamsEmergencyCallingPolicy
         $Force,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalLocationLookupMode]]
+        [PSObject]
         $ExternalLocationLookupMode
     )
 }
@@ -44943,7 +44969,7 @@ function Set-CsTeamsComplianceRecordingPolicy
         $DisableComplianceRecordingAudioNotificationForCalls,
 
         [Parameter()]
-        [System.Management.Automation.PSListModifier`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ComplianceRecordingApplication]]
+        [PSObject]
         $ComplianceRecordingApplications,
 
         [Parameter()]
@@ -44992,11 +45018,11 @@ function Set-CsTeamsEmergencyCallingPolicy
         $EnhancedEmergencyServiceDisclaimer,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.NotificationMode]]
+        [PSObject]
         $NotificationMode,
 
         [Parameter()]
-        [System.Management.Automation.PSListModifier`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.TeamsEmergencyCallingExtendedNotification]]
+        [PSObject]
         $ExtendedNotifications,
 
         [Parameter()]
@@ -45004,7 +45030,7 @@ function Set-CsTeamsEmergencyCallingPolicy
         $Force,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Teams.Policy.Administration.Cmdlets.Core.ExternalLocationLookupMode]]
+        [PSObject]
         $ExternalLocationLookupMode
     )
 }

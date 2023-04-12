@@ -191,7 +191,7 @@ function New-M365DSCStubFiles
                         {
                             $StubContent += "        [Parameter()]`r`n"
                             $ParamType = $param.ParameterType.ToString()
-                            if ($ParamType -eq 'System.Collections.Generic.List`1[System.String]')
+                            if ($ParamType -eq "System.Collections.Generic.List``1[System.String]")
                             {
                                 $ParamType = 'System.String[]'
                             }
@@ -207,11 +207,19 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft.Teams.'))
+                            elseif ($ParamType.StartsWith('Microsoft.Teams.') -or `
+                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier``1[Microsoft."))
                             {
                                 $ParamType = 'PSObject'
                             }
                             elseif ($ParamType.StartsWith('Microsoft.Rtc.'))
+                            {
+                                $ParamType = 'PSObject'
+                            }
+                            elseif ($ParamType.StartsWith('Microsoft.SharePoint.') -or `
+                                    $ParamType.StartsWith('Microsoft.Online') -or `
+                                    $ParamType.StartsWith('PnP.PowerShell') -or `
+                                    $ParamType.StartsWith("System.Nullable``1[Microsoft."))
                             {
                                 $ParamType = 'PSObject'
                             }
