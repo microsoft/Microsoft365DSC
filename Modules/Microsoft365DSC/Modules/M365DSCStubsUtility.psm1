@@ -218,7 +218,7 @@ function New-M365DSCStubFiles
                             }
                             elseif ($ParamType.StartsWith('Microsoft.SharePoint.') -or `
                                     $ParamType.StartsWith('Microsoft.Online') -or `
-                                    $ParamType.StartsWith('PnP.PowerShell') -or `
+                                    $ParamType.StartsWith('PnP.') -or `
                                     $ParamType.StartsWith("System.Nullable``1[Microsoft."))
                             {
                                 $ParamType = 'PSObject'

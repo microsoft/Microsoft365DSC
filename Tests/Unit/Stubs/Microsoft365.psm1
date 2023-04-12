@@ -41077,7 +41077,7 @@ function Add-PnPApp
         $Overwrite,
 
         [Parameter()]
-        [PnP.Framework.Enums.AppCatalogScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
@@ -41231,7 +41231,7 @@ function Get-PnPApp
         $Identity,
 
         [Parameter()]
-        [PnP.Framework.Enums.AppCatalogScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
@@ -41905,7 +41905,7 @@ function Remove-PnPApp
         $Identity,
 
         [Parameter()]
-        [PnP.Framework.Enums.AppCatalogScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
