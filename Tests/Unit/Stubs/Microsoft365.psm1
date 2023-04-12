@@ -42473,7 +42473,7 @@ function Set-PnPSite
         $RestrictedToGeo,
 
         [Parameter()]
-        [System.Nullable`1[PnP.Framework.SiteLockState]]
+        [PSObject]
         $LockState,
 
         [Parameter()]
@@ -43144,7 +43144,7 @@ function Set-PnPTenantSite
         $RestrictedToGeo,
 
         [Parameter()]
-        [System.Nullable`1[PnP.Framework.SiteLockState]]
+        [PSObject]
         $LockState,
 
         [Parameter()]
@@ -43284,6 +43284,8 @@ function Unregister-PnPHubSite
     )
 }
 #endregion
+
+
 
 #region PowerPlatforms
 function Get-AdminPowerApp
