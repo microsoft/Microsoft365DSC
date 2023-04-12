@@ -24,6 +24,8 @@
 * MISC
   * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
     Fixes #3082
+  * M365DSCUtil: Fixed an issue when calling Assert-M365DSCBlueprint with App credentials
+    FIXES [#3153](https://github.com/microsoft/Microsoft365DSC/issues/3153)
 
 # 1.23.405.1
 
