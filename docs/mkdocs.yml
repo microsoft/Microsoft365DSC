@@ -35,6 +35,7 @@ nav:
           - 'Compare-M365DSCConfigurations': 'user-guide/cmdlets/Compare-M365DSCConfigurations.md'
           - 'Get-M365DSCAllResources': 'user-guide/cmdlets/Get-M365DSCAllResources.md'
           - 'Get-M365DSCCompiledPermissionList': 'user-guide/cmdlets/Get-M365DSCCompiledPermissionList.md'
+          - 'Get-M365DSCLoggingOption': 'user-guide/cmdlets/Get-M365DSCLoggingOption.md'
           - 'Get-M365DSCNotificationEndPointRegistration': 'user-guide/cmdlets/Get-M365DSCNotificationEndpointRegistration.md'
           - 'Get-M365DSCTelemetryOption': 'user-guide/cmdlets/Get-M365DSCTelemetryOption.md'
           - 'Get-M365DSCWorkloadsListFromResourceNames': 'user-guide/cmdlets/Get-M365DSCWorkloadsListFromResourceNames.md'
@@ -45,6 +46,7 @@ nav:
           - 'New-M365DSCReportFromConfiguration': 'user-guide/cmdlets/New-M365DSCReportFromConfiguration.md'
           - 'Remove-M365DSCNotificationEndPointRegistration': 'user-guide/cmdlets/Remove-M365DSCNotificationEndpointRegistration.md'
           - 'Set-M365DSCAgentCertificateConfiguration': 'user-guide/cmdlets/Set-M365DSCAgentCertificateConfiguration.md'
+          - 'Set-M365DSCLoggingOption': 'user-guide/cmdlets/Set-M365DSCLoggingOption.md'
           - 'Set-M365DSCTelemetryOption': 'user-guide/cmdlets/Set-M365DSCTelemetryOption.md'
           - 'Test-M365DSCAgent': 'user-guide/cmdlets/Test-M365DSCAgent.md'
           - 'Test-M365DSCDependenciesForNewVersions': 'user-guide/cmdlets/Test-M365DSCDependenciesForNewVersions.md'
@@ -62,6 +64,7 @@ nav:
       - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
       - 'OneDrive & SharePoint Permissions': 'concepts/odsp-permissions.md'
       - 'Consent Flow': 'concepts/consent-flow.md'
+      - 'Key Parameters in DSC': 'concepts/key-parameters.md'
   - Resources:
       - 'Overview': 'resources/overview.md'
       - 'Azure AD': 'resources/azure-ad'

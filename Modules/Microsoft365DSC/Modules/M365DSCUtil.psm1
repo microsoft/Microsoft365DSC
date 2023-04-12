@@ -1095,7 +1095,7 @@ function Export-M365DSCConfiguration
                 }
                 else
                 {
-                    Write-Warning -Message "We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*"
+                    Write-Host -Object "[WARNING] We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*" -ForegroundColor Yellow
                 }
             }
             return $true
@@ -1112,18 +1112,6 @@ function Export-M365DSCConfiguration
         $CertificateThumbprint,
 
         [Parameter(ParameterSetName = 'Export')]
-        [ValidateScript({
-            $invalid = $_.Username -notmatch ".onmicrosoft."
-            if (-not $invalid)
-            {
-                return $true
-            }
-            else
-            {
-                Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
-            }
-            return $true
-        })]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1155,6 +1143,15 @@ function Export-M365DSCConfiguration
     $Global:WarningPreference = 'SilentlyContinue'
 
     ##### FIRST CHECK AUTH PARAMETERS
+    if ($PSBoundParameters.ContainsKey('Credential') -eq $true -and `
+        -not [System.String]::IsNullOrEmpty($Credential))
+    {
+        if ($Credential.Username -notmatch ".onmicrosoft.")
+        {
+            Write-Host -Object "[WARNING] We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property." -ForegroundColor Yellow
+        }
+    }
+
     if ($PSBoundParameters.ContainsKey('CertificatePath') -eq $true -and `
             $PSBoundParameters.ContainsKey('CertificatePassword') -eq $false)
     {
