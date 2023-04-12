@@ -21,12 +21,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            if ($null -eq (Get-Module PnP.PowerShell))
-            {
-                Import-Module PnP.PowerShell
-
-            }
-
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@contoso.com', $secpasswd)
             $global:tenantName = $Credential.UserName.Split('@')[1].Split('.')[0]

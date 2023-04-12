@@ -30,6 +30,8 @@
     FIXES [#3153](https://github.com/microsoft/Microsoft365DSC/issues/3153)
   * Added check to validate that the Release Notes in the module manifest are not longer than
     10,000 characters, which will prevent publishing the module to the PowerShell Gallery
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell dependencies to version 2.0.159.
 
 # 1.23.405.1
 

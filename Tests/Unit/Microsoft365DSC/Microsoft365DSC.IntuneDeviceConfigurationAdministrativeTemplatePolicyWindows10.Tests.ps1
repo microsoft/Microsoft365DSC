@@ -58,7 +58,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Update-DeviceConfigurationGroupPolicyDefinitionValue -MockWith {
             }
-
         }
         # Test contexts
         Context -Name 'The IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 should exist but it DOES NOT' -Fixture {
