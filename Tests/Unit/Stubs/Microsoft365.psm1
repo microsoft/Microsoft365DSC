@@ -24744,87 +24744,6 @@ function Get-MgDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function Get-MgDirectoryAdministrativeUnitExtension
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $AdministrativeUnitId,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $ExtensionId,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
 function Get-MgDirectoryAdministrativeUnitMember
 {
     [CmdletBinding()]
@@ -25517,14 +25436,6 @@ function New-MgDirectoryAdministrativeUnit
         $IsMemberManagementRestricted,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Visibility,
-
-        [Parameter()]
         [PSObject]
         $ScopedRoleMembers,
 
@@ -25553,6 +25464,14 @@ function New-MgDirectoryAdministrativeUnit
         $Extensions,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Visibility,
+
+        [Parameter()]
         [System.DateTime]
         $DeletedDateTime,
 
@@ -25563,59 +25482,6 @@ function New-MgDirectoryAdministrativeUnit
         [Parameter()]
         [PSObject]
         $HttpPipelineAppend
-    )
-}
-function New-MgDirectoryAdministrativeUnitExtension
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $AdministrativeUnitId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
     )
 }
 function New-MgDirectoryAdministrativeUnitMemberByRef
@@ -25958,59 +25824,6 @@ function Remove-MgDirectoryAdministrativeUnit
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Remove-MgDirectoryAdministrativeUnitExtension
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [System.String]
-        $AdministrativeUnitId,
-
-        [Parameter()]
-        [System.String]
-        $ExtensionId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -26652,67 +26465,6 @@ function Update-MgDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
-function Update-MgDirectoryAdministrativeUnitExtension
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $AdministrativeUnitId,
-
-        [Parameter()]
-        [System.String]
-        $ExtensionId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
 function Update-MgOrganization
 {
     [CmdletBinding()]
@@ -26743,6 +26495,10 @@ function Update-MgOrganization
 
         [Parameter()]
         [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject]
         $Settings,
 
         [Parameter()]
@@ -26760,6 +26516,10 @@ function Update-MgOrganization
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $PassThru,
+
+        [Parameter()]
+        [System.String[]]
+        $SecurityComplianceNotificationMails,
 
         [Parameter()]
         [PSObject]
@@ -26791,15 +26551,15 @@ function Update-MgOrganization
 
         [Parameter()]
         [PSObject]
+        $VerifiedDomains,
+
+        [Parameter()]
+        [PSObject]
         $AssignedPlans,
 
         [Parameter()]
         [PSObject]
         $MobileDeviceManagementAuthority,
-
-        [Parameter()]
-        [System.String[]]
-        $SecurityComplianceNotificationPhones,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -26818,16 +26578,12 @@ function Update-MgOrganization
         $BodyParameter,
 
         [Parameter()]
-        [System.String[]]
-        $SecurityComplianceNotificationMails,
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $CertificateBasedAuthConfiguration,
 
         [Parameter()]
         [System.String]
@@ -26838,16 +26594,16 @@ function Update-MgOrganization
         $PrivacyProfile,
 
         [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
 
         [Parameter()]
         [System.DateTime]
         $OnPremisesLastSyncDateTime,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
 
         [Parameter()]
         [PSObject]
@@ -26858,8 +26614,8 @@ function Update-MgOrganization
         $DirectorySizeQuota,
 
         [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
+        [PSObject]
+        $CertificateBasedAuthConfiguration,
 
         [Parameter()]
         [PSObject]
@@ -26886,12 +26642,12 @@ function Update-MgOrganization
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
+        [System.String[]]
+        $SecurityComplianceNotificationPhones,
 
         [Parameter()]
-        [PSObject]
-        $VerifiedDomains
+        [System.String]
+        $PartnerTenantType
     )
 }
 function Get-MgAdministrativeUnit
@@ -27048,33 +26804,17 @@ function Get-MgDirectorySetting
         $HttpPipelineAppend
     )
 }
-function New-MgAdministrativeUnit
+function Get-MgOrganizationSetting
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
         [Parameter()]
         [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsMemberManagementRestricted,
+        [System.Uri]
+        $Proxy,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -27082,47 +26822,121 @@ function New-MgAdministrativeUnit
 
         [Parameter()]
         [System.String]
-        $Visibility,
+        $OrganizationId,
 
         [Parameter()]
         [PSObject]
-        $ScopedRoleMembers,
+        $InputObject,
 
         [Parameter()]
         [PSObject]
-        $Members,
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgOrganizationSettingItemInsight
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
 
         [Parameter()]
         [System.Uri]
         $Proxy,
 
         [Parameter()]
-        [PSObject]
-        $BodyParameter,
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
 
         [Parameter()]
         [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        $OrganizationId,
 
         [Parameter()]
         [PSObject]
-        $Extensions,
-
-        [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
+        $InputObject,
 
         [Parameter()]
         [PSObject]
-        $HttpPipelineAppend
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Get-MgOrganizationSettingPersonInsight
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $OrganizationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
     )
 }
 function New-MgDirectorySetting
@@ -27183,25 +26997,30 @@ function Remove-MgDirectorySetting
         $HttpPipelineAppend
     )
 }
-function Update-MgAdministrativeUnit
+function Update-MgDirectorySetting
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Description,
-
+        [PSObject]
+        $Values
+    )
+}
+function Update-MgOrganizationSetting
+{
+    [CmdletBinding()]
+    param(
         [Parameter()]
-        [System.String]
-        $AdministrativeUnitId,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
+        [PSObject]
+        $PeopleInsights,
 
         [Parameter()]
         [PSObject]
-        $InputObject,
+        $ProfileCardProperties,
+
+        [Parameter()]
+        [PSObject]
+        $MicrosoftApplicationDataAccess,
 
         [Parameter()]
         [System.Collections.Hashtable]
@@ -27212,16 +27031,89 @@ function Update-MgAdministrativeUnit
         $HttpPipelinePrepend,
 
         [Parameter()]
+        [PSObject]
+        $ContactInsights,
+
+        [Parameter()]
+        [PSObject]
+        $ItemInsights,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $Pronouns,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsMemberManagementRestricted,
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
 
         [Parameter()]
         [PSObject]
-        $ScopedRoleMembers,
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String]
+        $OrganizationId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
 
         [Parameter()]
         [PSObject]
-        $Members,
+        $HttpPipelineAppend
+    )
+}
+function Update-MgOrganizationSettingItemInsight
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsEnabledInOrganization,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $DisabledForGroup,
 
         [Parameter()]
         [System.Uri]
@@ -27244,44 +27136,90 @@ function Update-MgAdministrativeUnit
         $PassThru,
 
         [Parameter()]
-        [PSObject]
-        $Extensions,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Visibility,
-
-        [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
+        [System.String]
+        $OrganizationId,
 
         [Parameter()]
         [PSObject]
         $HttpPipelineAppend
     )
 }
-function Update-MgDirectorySetting
+function Update-MgOrganizationSettingPersonInsight
 {
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsEnabledInOrganization,
+
+        [Parameter()]
         [PSObject]
-        $Values
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String]
+        $DisabledForGroup,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String]
+        $OrganizationId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
     )
 }
 #endregion
+
+
 #region MicrosoftGraph
 function Get-MgAgreement
 {
@@ -41077,11 +41015,11 @@ function Add-PnPApp
         $Overwrite,
 
         [Parameter()]
-        [PnP.Framework.Enums.AppCatalogScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41094,15 +41032,15 @@ function Add-PnPHubSiteAssociation
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $HubSite,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $Site,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41115,7 +41053,7 @@ function Add-PnPOrgAssetsLibrary
         $ThumbnailUrl,
 
         [Parameter()]
-        [Microsoft.SharePoint.Administration.OrgAssetType]
+        [PSObject]
         $OrgAssetType,
 
         [Parameter()]
@@ -41123,11 +41061,11 @@ function Add-PnPOrgAssetsLibrary
         $LibraryUrl,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41144,7 +41082,7 @@ function Add-PnPSiteDesign
         $Description,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
+        [PSObject]
         $WebTemplate,
 
         [Parameter()]
@@ -41160,7 +41098,7 @@ function Add-PnPSiteDesign
         $PreviewImageUrl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41193,7 +41131,7 @@ function Add-PnPSiteScript
         $Content,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41206,7 +41144,7 @@ function Add-PnPTenantTheme
         $Overwrite,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -41214,11 +41152,11 @@ function Add-PnPTenantTheme
         $IsInverted,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePalettePipeBind]
+        [PSObject]
         $Palette
     )
 }
@@ -41227,15 +41165,15 @@ function Get-PnPApp
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.Framework.Enums.AppCatalogScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41244,7 +41182,7 @@ function Get-PnPAuditing
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41253,7 +41191,7 @@ function Get-PnPAvailableLanguage
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41262,7 +41200,7 @@ function Get-PnPBrowserIdleSignout
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41271,7 +41209,7 @@ function Get-PnPContext
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41296,7 +41234,7 @@ function Get-PnPFile
         $AsMemoryStream,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41304,7 +41242,7 @@ function Get-PnPFile
         $ThrowExceptionIfFileNotFound,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41349,15 +41287,15 @@ function Get-PnPGroup
         $AssociatedVisitorGroup,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41366,15 +41304,15 @@ function Get-PnPGroupPermissions
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41383,7 +41321,7 @@ function Get-PnPHomeSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41392,11 +41330,11 @@ function Get-PnPHubSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41405,7 +41343,7 @@ function Get-PnPOrgAssetsLibrary
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41414,11 +41352,11 @@ function Get-PnPProperty
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.SharePoint.Client.ClientObject]
+        [PSObject]
         $ClientObject,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41435,7 +41373,7 @@ function Get-PnPPropertyBag
         $Folder,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41443,7 +41381,7 @@ function Get-PnPPropertyBag
         $Key,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41452,19 +41390,19 @@ function Get-PnPSearchConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Search.BookmarkStatus]
+        [PSObject]
         $BookmarkStatus,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41472,7 +41410,7 @@ function Get-PnPSearchConfiguration
         $ExcludeVisualPromotedResults,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Search.OutputFormat]
+        [PSObject]
         $OutputFormat,
 
         [Parameter()]
@@ -41489,7 +41427,7 @@ function Get-PnPSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41502,11 +41440,11 @@ function Get-PnPSiteDesign
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41515,11 +41453,11 @@ function Get-PnPSiteDesignRights
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41528,15 +41466,15 @@ function Get-PnPSiteScript
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $SiteDesign,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41545,7 +41483,7 @@ function Get-PnPStorageEntity
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
@@ -41553,7 +41491,7 @@ function Get-PnPStorageEntity
         $Key,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41562,7 +41500,7 @@ function Get-PnPTenant
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41571,7 +41509,7 @@ function Get-PnPTenantAppCatalogUrl
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41580,11 +41518,11 @@ function Get-PnPTenantCdnEnabled
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41593,11 +41531,11 @@ function Get-PnPTenantCdnPolicies
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41622,11 +41560,11 @@ function Get-PnPTenantSite
         $Template,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SPOSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41643,7 +41581,7 @@ function Get-PnPTenantSyncClientRestriction
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41656,7 +41594,7 @@ function Get-PnPTenantTheme
         $Name,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41673,7 +41611,7 @@ function Get-PnPUser
         $WithRightsAssigned,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41681,11 +41619,11 @@ function Get-PnPUser
         $WithRightsAssignedDetailed,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.UserPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41702,7 +41640,7 @@ function Get-PnPUserProfileProperty
         $Account,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41711,11 +41649,11 @@ function Get-PnPWeb
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41732,11 +41670,11 @@ function Grant-PnPHubSiteRights
         $Principals,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41749,15 +41687,15 @@ function Grant-PnPSiteDesignRights
         $Principals,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.TenantSiteDesignPrincipalRights]
+        [PSObject]
         $Rights,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41770,11 +41708,11 @@ function New-PnPGroup
         $Description,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        [PSObject]
         $SetAssociatedGroup,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41802,7 +41740,7 @@ function New-PnPGroup
         $AllowMembersEditMembership,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41823,7 +41761,7 @@ function New-PnPTenantSite
         $Template,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        [PSObject]
         $SharingCapability,
 
         [Parameter()]
@@ -41851,7 +41789,7 @@ function New-PnPTenantSite
         $TimeZone,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41888,11 +41826,11 @@ function Register-PnPHubSite
         $Principals,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $Site,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41901,15 +41839,15 @@ function Remove-PnPApp
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.AppMetadataPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.Framework.Enums.AppCatalogScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41918,15 +41856,15 @@ function Remove-PnPGroup
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41939,7 +41877,7 @@ function Remove-PnPHomeSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41952,11 +41890,11 @@ function Remove-PnPHubSiteAssociation
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $Site,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -41965,7 +41903,7 @@ function Remove-PnPOrgAssetsLibrary
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
@@ -41973,7 +41911,7 @@ function Remove-PnPOrgAssetsLibrary
         $LibraryUrl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -41990,7 +41928,7 @@ function Remove-PnPPropertyBagValue
         $Folder,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -41998,7 +41936,7 @@ function Remove-PnPPropertyBagValue
         $Key,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42006,16 +41944,41 @@ function Remove-PnPPropertyBagValue
         $Force
     )
 }
+function Remove-PnPSearchConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Configuration,
+
+        [Parameter()]
+        [PSObject]
+        $Web,
+
+        [Parameter()]
+        [PSObject]
+        $Scope,
+
+        [Parameter()]
+        [PSObject]
+        $Connection,
+
+        [Parameter()]
+        [System.String]
+        $Path
+    )
+}
 function Remove-PnPSiteDesign
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42028,7 +41991,7 @@ function Remove-PnPStorageEntity
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
@@ -42036,7 +41999,7 @@ function Remove-PnPStorageEntity
         $Key,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42053,7 +42016,7 @@ function Remove-PnPTenantSite
         $SkipRecycleBin,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42070,11 +42033,11 @@ function Remove-PnPTenantTheme
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.ThemePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42087,11 +42050,11 @@ function Revoke-PnPSiteDesignRights
         $Principals,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42132,7 +42095,7 @@ function Set-PnPAuditing
         $EditUsersPermissions,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42161,7 +42124,7 @@ function Set-PnPBrowserIdleSignout
         $SignoutAfter,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42178,7 +42141,7 @@ function Set-PnPGroup
         $Description,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
@@ -42202,7 +42165,7 @@ function Set-PnPGroup
         $RemoveRole,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -42210,7 +42173,7 @@ function Set-PnPGroup
         $AllowMembersEditMembership,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42222,7 +42185,7 @@ function Set-PnPGroup
         $RequestToJoinEmail,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.AssociatedGroupType]
+        [PSObject]
         $SetAssociatedGroup,
 
         [Parameter()]
@@ -42239,11 +42202,11 @@ function Set-PnPGroupPermissions
         $AddRole,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.GroupPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -42251,11 +42214,11 @@ function Set-PnPGroupPermissions
         $RemoveRole,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.ListPipeBind]
+        [PSObject]
         $List
     )
 }
@@ -42268,7 +42231,7 @@ function Set-PnPHomeSite
         $HomeSiteUrl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42301,11 +42264,11 @@ function Set-PnPHubSite
         $Title,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.HubSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42334,11 +42297,11 @@ function Set-PnPPropertyBagValue
         $Indexed,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42355,15 +42318,15 @@ function Set-PnPSearchConfiguration
         $Configuration,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.WebPipeBind]
+        [PSObject]
         $Web,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.SearchConfigurationScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42380,11 +42343,11 @@ function Set-PnPSite
         $RestrictedAccessControl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        [PSObject]
         $SharingCapability,
 
         [Parameter()]
@@ -42392,7 +42355,7 @@ function Set-PnPSite
         $DisableFlows,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.MediaTranscriptionPolicyType]]
+        [PSObject]
         $MediaTranscription,
 
         [Parameter()]
@@ -42424,7 +42387,7 @@ function Set-PnPSite
         $SensitivityLabel,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        [PSObject]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -42444,15 +42407,15 @@ function Set-PnPSite
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion]]
+        [PSObject]
         $RestrictedToGeo,
 
         [Parameter()]
-        [System.Nullable`1[PnP.Framework.SiteLockState]]
+        [PSObject]
         $LockState,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]]
+        [PSObject]
         $DisableAppViews,
 
         [Parameter()]
@@ -42472,7 +42435,7 @@ function Set-PnPSite
         $AnonymousLinkExpirationInDays,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]]
+        [PSObject]
         $DisableCompanyWideSharingLinks,
 
         [Parameter()]
@@ -42492,7 +42455,7 @@ function Set-PnPSite
         $LocaleId,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
+        [PSObject]
         $DefaultSharingLinkType,
 
         [Parameter()]
@@ -42513,7 +42476,7 @@ function Set-PnPSiteDesign
         $Description,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.SiteWebTemplate]
+        [PSObject]
         $WebTemplate,
 
         [Parameter()]
@@ -42533,11 +42496,11 @@ function Set-PnPSiteDesign
         $PreviewImageUrl,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteDesignPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42574,11 +42537,11 @@ function Set-PnPSiteScript
         $Title,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.TenantSiteScriptPipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
@@ -42599,11 +42562,11 @@ function Set-PnPStorageEntity
         $Comment,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.StorageEntityScope]
+        [PSObject]
         $Scope,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42632,7 +42595,7 @@ function Set-PnPTenant
         $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
+        [PSObject]
         $FolderAnonymousLinkType,
 
         [Parameter()]
@@ -42648,7 +42611,7 @@ function Set-PnPTenant
         $OwnerAnonymousNotification,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SPOConditionalAccessPolicyType]]
+        [PSObject]
         $ConditionalAccessPolicy,
 
         [Parameter()]
@@ -42676,7 +42639,7 @@ function Set-PnPTenant
         $EnableRestrictedAccessControl,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]]
+        [PSObject]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -42728,11 +42691,11 @@ function Set-PnPTenant
         $ExternalUserExpirationRequired,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SpecialCharactersState]]
+        [PSObject]
         $SpecialCharactersStateInFileFolderNames,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        [PSObject]
         $ODBAccessRequests,
 
         [Parameter()]
@@ -42756,7 +42719,7 @@ function Set-PnPTenant
         $PublicCdnEnabled,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SensitiveByDefaultState]]
+        [PSObject]
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
@@ -42772,7 +42735,7 @@ function Set-PnPTenant
         $SharingAllowedDomainList,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]]
+        [PSObject]
         $DefaultSharingLinkType,
 
         [Parameter()]
@@ -42788,7 +42751,7 @@ function Set-PnPTenant
         $ProvisionSharedWithEveryoneFolder,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]]
+        [PSObject]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
@@ -42852,7 +42815,7 @@ function Set-PnPTenant
         $IPAddressEnforcement,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]]
+        [PSObject]
         $SharingCapability,
 
         [Parameter()]
@@ -42900,7 +42863,7 @@ function Set-PnPTenant
         $DisablePersonalListCreation,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.SharingState]]
+        [PSObject]
         $ODBMembersCanShare,
 
         [Parameter()]
@@ -42912,11 +42875,11 @@ function Set-PnPTenant
         $LegacyAuthProtocolsEnabled,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.SharePoint.Client.AnonymousLinkType]]
+        [PSObject]
         $FileAnonymousLinkType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42969,11 +42932,11 @@ function Set-PnPTenantCdnEnabled
         $NoDefaultOrigins,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.CdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -42986,7 +42949,7 @@ function Set-PnPTenantCdnPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnType]
+        [PSObject]
         $CdnType,
 
         [Parameter()]
@@ -42994,11 +42957,11 @@ function Set-PnPTenantCdnPolicy
         $PolicyValue,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SPOTenantCdnPolicyType]
+        [PSObject]
         $PolicyType
     )
 }
@@ -43011,15 +42974,15 @@ function Set-PnPTenantSite
         $ExternalUserExpirationInDays,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SharingCapabilities]
+        [PSObject]
         $SharingCapability,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.FlowsPolicy]
+        [PSObject]
         $DisableFlows,
 
         [Parameter()]
-        [System.Nullable`1[Microsoft.Online.SharePoint.TenantManagement.MediaTranscriptionPolicyType]]
+        [PSObject]
         $MediaTranscription,
 
         [Parameter()]
@@ -43047,7 +43010,7 @@ function Set-PnPTenantSite
         $ResourceQuotaWarningLevel,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -43055,7 +43018,7 @@ function Set-PnPTenantSite
         $StorageQuotaWarningLevel,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SPOSitePipeBind]
+        [PSObject]
         $Identity,
 
         [Parameter()]
@@ -43075,7 +43038,7 @@ function Set-PnPTenantSite
         $RemoveLabel,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SharingPermissionType]
+        [PSObject]
         $DefaultLinkPermission,
 
         [Parameter()]
@@ -43115,11 +43078,11 @@ function Set-PnPTenantSite
         $DefaultLinkToExistingAccess,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.RestrictedToRegion]
+        [PSObject]
         $RestrictedToGeo,
 
         [Parameter()]
-        [System.Nullable`1[PnP.Framework.SiteLockState]]
+        [PSObject]
         $LockState,
 
         [Parameter()]
@@ -43127,7 +43090,7 @@ function Set-PnPTenantSite
         $DenyAddAndCustomizePages,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.AppViewsPolicy]
+        [PSObject]
         $DisableAppViews,
 
         [Parameter()]
@@ -43143,27 +43106,27 @@ function Set-PnPTenantSite
         $Owners,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.InformationBarriersMode]
+        [PSObject]
         $InformationBarriersMode,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SPOLimitedAccessFileType]
+        [PSObject]
         $LimitedAccessFileType,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.BlockDownloadLinksFileTypes]
+        [PSObject]
         $BlockDownloadLinksFileType,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.SiteUserInfoVisibilityPolicyValue]
+        [PSObject]
         $OverrideBlockUserInfoVisibility,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SharingDomainRestrictionModes]
+        [PSObject]
         $SharingDomainRestrictionMode,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.PnPConditionalAccessPolicyType]
+        [PSObject]
         $ConditionalAccessPolicy,
 
         [Parameter()]
@@ -43191,7 +43154,7 @@ function Set-PnPTenantSite
         $ShowPeoplePickerSuggestionsForGuestUsers,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantManagement.SharingLinkType]
+        [PSObject]
         $DefaultSharingLinkType,
 
         [Parameter()]
@@ -43199,7 +43162,7 @@ function Set-PnPTenantSite
         $EnablePWA,
 
         [Parameter()]
-        [Microsoft.Online.SharePoint.TenantAdministration.CompanyWideSharingLinksPolicy]
+        [PSObject]
         $DisableCompanyWideSharingLinks
     )
 }
@@ -43220,11 +43183,11 @@ function Set-PnPTenantSyncClientRestriction
         $Enable,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Enums.GrooveBlockOption]
+        [PSObject]
         $GrooveBlockOption,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection,
 
         [Parameter()]
@@ -43250,15 +43213,18 @@ function Unregister-PnPHubSite
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PipeBinds.SitePipeBind]
+        [PSObject]
         $Site,
 
         [Parameter()]
-        [PnP.PowerShell.Commands.Base.PnPConnection]
+        [PSObject]
         $Connection
     )
 }
 #endregion
+
+
+
 #region PowerPlatforms
 function Get-AdminPowerApp
 {
@@ -43505,7 +43471,46 @@ function Get-CsOnlineVoicemailPolicy
         $Identity
     )
 }
+function Get-CsTeamsCallHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
 function Get-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Get-CsTeamsComplianceRecordingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Get-CsTeamsEmergencyCallingPolicy
 {
     [CmdletBinding()]
     param(
@@ -43694,6 +43699,39 @@ function New-CsOnlineVoicemailPolicy
         $EnableTranscriptionTranslation
     )
 }
+function New-CsTeamsCallHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $StreamingSourceUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $AudioFileId,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $StreamingSourceAuthType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
 function New-CsTeamsChannelsPolicy
 {
     [CmdletBinding()]
@@ -43737,6 +43775,92 @@ function New-CsTeamsChannelsPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force
+    )
+}
+function New-CsTeamsComplianceRecordingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $RecordReroutedCalls,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableComplianceRecordingAudioNotificationForCalls,
+
+        [Parameter()]
+        [PSObject]
+        $ComplianceRecordingApplications,
+
+        [Parameter()]
+        [System.Boolean]
+        $WarnUserOnRemoval,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function New-CsTeamsEmergencyCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $NotificationGroup,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $NotificationDialOutNumber,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EnhancedEmergencyServiceDisclaimer,
+
+        [Parameter()]
+        [PSObject]
+        $NotificationMode,
+
+        [Parameter()]
+        [PSObject]
+        $ExtendedNotifications,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [PSObject]
+        $ExternalLocationLookupMode
     )
 }
 function New-CsTeamsFeedbackPolicy
@@ -43821,16 +43945,28 @@ function New-CsTeamsMeetingPolicy
         $ExplicitRecordingConsent,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowNetworkConfigurationSettingsLookup,
+        [System.Nullable`1[System.Int64]]
+        $WatermarkForCameraVideoOpacity,
 
         [Parameter()]
         [System.Boolean]
         $AllowTranscription,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForCameraVideo,
+
+        [Parameter()]
         [System.String]
         $ForceStreamingAttendeeMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $WatermarkForScreenSharingPattern,
 
         [Parameter()]
         [System.String]
@@ -43839,6 +43975,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.String]
         $RoomPeopleNameUserOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNetworkConfigurationSettingsLookup,
 
         [Parameter()]
         [System.String]
@@ -43885,12 +44025,20 @@ function New-CsTeamsMeetingPolicy
         $AllowPrivateMeetNow,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowExternalNonTrustedMeetingChat,
+
+        [Parameter()]
         [System.String]
         $AllowEngagementReport,
 
         [Parameter()]
         [System.Boolean]
         $AllowWatermarkForCameraVideo,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $WatermarkForScreenSharingOpacity,
 
         [Parameter()]
         [System.Boolean]
@@ -43903,6 +44051,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowOrganizersToOverrideLobbySettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForScreenSharing,
 
         [Parameter()]
         [System.String]
@@ -44009,10 +44161,6 @@ function New-CsTeamsMeetingPolicy
         $AllowSharedNotes,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
         [System.Boolean]
         $AllowParticipantGiveRequestControl,
 
@@ -44067,6 +44215,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.String]
+        $WatermarkForCameraVideoPattern,
 
         [Parameter()]
         [System.Boolean]
@@ -44204,6 +44356,10 @@ function New-CsTeamsMessagingPolicy
         [Parameter()]
         [System.String]
         $GiphyRatingType,
+
+        [Parameter()]
+        [System.String]
+        $InOrganizationChatControl,
 
         [Parameter()]
         [System.Boolean]
@@ -44414,7 +44570,58 @@ function Remove-CsOnlineVoicemailPolicy
         $Identity
     )
 }
+function Remove-CsTeamsCallHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
 function Remove-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Remove-CsTeamsComplianceRecordingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Remove-CsTeamsEmergencyCallingPolicy
 {
     [CmdletBinding()]
     param(
@@ -44603,6 +44810,39 @@ function Set-CsOnlineVoicemailPolicy
         $EnableTranscriptionTranslation
     )
 }
+function Set-CsTeamsCallHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $StreamingSourceUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $AudioFileId,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $StreamingSourceAuthType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
 function Set-CsTeamsChannelsPolicy
 {
     [CmdletBinding()]
@@ -44646,6 +44886,92 @@ function Set-CsTeamsChannelsPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force
+    )
+}
+function Set-CsTeamsComplianceRecordingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $RecordReroutedCalls,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableComplianceRecordingAudioNotificationForCalls,
+
+        [Parameter()]
+        [PSObject]
+        $ComplianceRecordingApplications,
+
+        [Parameter()]
+        [System.Boolean]
+        $WarnUserOnRemoval,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Set-CsTeamsEmergencyCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $NotificationGroup,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $NotificationDialOutNumber,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EnhancedEmergencyServiceDisclaimer,
+
+        [Parameter()]
+        [PSObject]
+        $NotificationMode,
+
+        [Parameter()]
+        [PSObject]
+        $ExtendedNotifications,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [PSObject]
+        $ExternalLocationLookupMode
     )
 }
 function Set-CsTeamsFeedbackPolicy
@@ -44730,16 +45056,28 @@ function Set-CsTeamsMeetingPolicy
         $ExplicitRecordingConsent,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowNetworkConfigurationSettingsLookup,
+        [System.Nullable`1[System.Int64]]
+        $WatermarkForCameraVideoOpacity,
 
         [Parameter()]
         [System.Boolean]
         $AllowTranscription,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForCameraVideo,
+
+        [Parameter()]
         [System.String]
         $ForceStreamingAttendeeMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $WatermarkForScreenSharingPattern,
 
         [Parameter()]
         [System.String]
@@ -44748,6 +45086,10 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.String]
         $RoomPeopleNameUserOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNetworkConfigurationSettingsLookup,
 
         [Parameter()]
         [System.String]
@@ -44794,12 +45136,20 @@ function Set-CsTeamsMeetingPolicy
         $AllowPrivateMeetNow,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowExternalNonTrustedMeetingChat,
+
+        [Parameter()]
         [System.String]
         $AllowEngagementReport,
 
         [Parameter()]
         [System.Boolean]
         $AllowWatermarkForCameraVideo,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $WatermarkForScreenSharingOpacity,
 
         [Parameter()]
         [System.Boolean]
@@ -44812,6 +45162,10 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowOrganizersToOverrideLobbySettings,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowWatermarkCustomizationForScreenSharing,
 
         [Parameter()]
         [System.String]
@@ -44918,10 +45272,6 @@ function Set-CsTeamsMeetingPolicy
         $AllowSharedNotes,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
-
-        [Parameter()]
         [System.Boolean]
         $AllowParticipantGiveRequestControl,
 
@@ -44976,6 +45326,10 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowPSTNUsersToBypassLobby,
+
+        [Parameter()]
+        [System.String]
+        $WatermarkForCameraVideoPattern,
 
         [Parameter()]
         [System.Boolean]
@@ -45113,6 +45467,10 @@ function Set-CsTeamsMessagingPolicy
         [Parameter()]
         [System.String]
         $GiphyRatingType,
+
+        [Parameter()]
+        [System.String]
+        $InOrganizationChatControl,
 
         [Parameter()]
         [System.Boolean]
@@ -45356,6 +45714,39 @@ function Get-CsGroupPolicyAssignment
         $HttpPipelineAppend
     )
 }
+function Get-CsOnlineApplicationInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Int32]
+        $ResultSize,
+
+        [Parameter()]
+        [System.String[]]
+        $Identities
+    )
+}
 function Get-CsOnlineDialInConferencingTenantSettings
 {
     [CmdletBinding()]
@@ -45473,6 +45864,10 @@ function Get-CsOnlineUser
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String]
+        $OrderBy,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $SkipUserPolicies,
 
@@ -45576,72 +45971,130 @@ function Get-CsOnlineVoiceRoutingPolicy
         $MsftInternalProcessingMode
     )
 }
-function Get-CsOnlineVoiceUser
+function Get-CsPhoneNumberAssignment
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Nullable`1[System.Int32]]
-        $First,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $NumberAssigned,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $GetFromAAD,
-
-        [Parameter()]
-        [System.Object]
-        $EnterpriseVoiceStatus,
+        [System.String]
+        $NumberType,
 
         [Parameter()]
         [System.String]
-        $SearchQuery,
+        $IsoCountryCode,
 
         [Parameter()]
-        [System.Nullable`1[System.Guid]]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $TelephoneNumberLessThan,
+
+        [Parameter()]
+        [System.String]
+        $CapabilitiesContain,
+
+        [Parameter()]
+        [System.String]
+        $ActivationState,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $TelephoneNumber,
+
+        [Parameter()]
+        [System.String]
+        $TelephoneNumberStartsWith,
+
+        [Parameter()]
+        [System.String]
+        $TelephoneNumberContain,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String]
         $CivicAddressId,
 
         [Parameter()]
-        [System.Object]
-        $PSTNConnectivity,
+        [System.String]
+        $LocationId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $AssignedPstnTargetId,
+
+        [Parameter()]
+        [System.String]
+        $TelephoneNumberGreaterThan,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $NumberNotAssigned,
+        $Break,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ExpandLocation,
+        [System.String]
+        $PstnAssignmentStatus,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-CsTeamsAudioConferencingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
 
         [Parameter()]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [System.Nullable`1[System.Guid]]
-        $LocationId,
-
-        [Parameter()]
         [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $GetPendingUsers,
-
-        [Parameter()]
-        [System.Nullable`1[System.Int32]]
-        $Skip,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $MsftInternalProcessingMode
     )
 }
 function Get-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsCallParkPolicy
 {
     [CmdletBinding()]
     param(
@@ -45675,7 +46128,7 @@ function Get-CsTeamsClientConfiguration
         $MsftInternalProcessingMode
     )
 }
-function Get-CsTeamsEmergencyCallingPolicy
+function Get-CsTeamsCortanaPolicy
 {
     [CmdletBinding()]
     param(
@@ -45693,6 +46146,23 @@ function Get-CsTeamsEmergencyCallingPolicy
     )
 }
 function Get-CsTeamsEmergencyCallRoutingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsEnhancedEncryptionPolicy
 {
     [CmdletBinding()]
     param(
@@ -45866,7 +46336,75 @@ function Get-CsTeamsMeetingConfiguration
         $MsftInternalProcessingMode
     )
 }
+function Get-CsTeamsMobilityPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsNetworkRoamingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Get-CsTeamsShiftsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsTranslationRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsUnassignedNumberTreatment
 {
     [CmdletBinding()]
     param(
@@ -45901,6 +46439,40 @@ function Get-CsTeamsUpgradeConfiguration
     )
 }
 function Get-CsTeamsUpgradePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsVdiPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsWorkLoadPolicy
 {
     [CmdletBinding()]
     param(
@@ -45956,6 +46528,74 @@ function Get-CsTenantDialPlan
     )
 }
 function Get-CsTenantFederationConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTenantNetworkRegion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTenantNetworkSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTenantNetworkSubnet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTenantTrustedIPAddress
 {
     [CmdletBinding()]
     param(
@@ -46047,7 +46687,36 @@ function Grant-CsTeamsUpgradePolicy
 
         [Parameter()]
         [System.String]
-        $MsftInternalProcessingMode
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Import-CsOnlineAudioFile
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.Byte[]]
+        $Content,
+
+        [Parameter()]
+        [System.String]
+        $FileName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function New-CsEdgeAllowAllKnownDomains
@@ -46186,6 +46855,31 @@ function New-CsOnlineVoiceRoutingPolicy
         $MsftInternalProcessingMode
     )
 }
+function New-CsTeamsAudioConferencingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $MeetingInvitePhoneNumbers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTollFreeDialin,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function New-CsTeamsCallingPolicy
 {
     [CmdletBinding()]
@@ -46287,7 +46981,7 @@ function New-CsTeamsCallingPolicy
         $AllowTranscriptionForCalling
     )
 }
-function New-CsTeamsEmergencyCallingPolicy
+function New-CsTeamsCallParkPolicy
 {
     [CmdletBinding()]
     param(
@@ -46296,8 +46990,16 @@ function New-CsTeamsEmergencyCallingPolicy
         $Description,
 
         [Parameter()]
-        [System.String]
-        $NotificationGroup,
+        [System.Int64]
+        $ParkTimeoutSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallPark,
+
+        [Parameter()]
+        [System.Int64]
+        $PickupRangeEnd,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -46305,7 +47007,40 @@ function New-CsTeamsEmergencyCallingPolicy
 
         [Parameter()]
         [System.String]
-        $NotificationDialOutNumber,
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Int64]
+        $PickupRangeStart
+    )
+}
+function New-CsTeamsCortanaPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCortanaInContextSuggestions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $CortanaVoiceInvocationMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCortanaVoiceInvocation,
 
         [Parameter()]
         [System.String]
@@ -46313,19 +47048,11 @@ function New-CsTeamsEmergencyCallingPolicy
 
         [Parameter()]
         [System.String]
-        $EnhancedEmergencyServiceDisclaimer,
-
-        [Parameter()]
-        [System.Object]
-        $NotificationMode,
-
-        [Parameter()]
-        [System.String]
         $MsftInternalProcessingMode,
 
         [Parameter()]
-        [System.String]
-        $ExternalLocationLookupMode
+        [System.Boolean]
+        $AllowCortanaAmbientListening
     )
 }
 function New-CsTeamsEmergencyCallRoutingPolicy
@@ -46372,6 +47099,35 @@ function New-CsTeamsEmergencyNumber
         [Parameter()]
         [System.String]
         $EmergencyDialMask,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsTeamsEnhancedEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $CallingEndtoEndEncryptionEnabledType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $MeetingEndToEndEncryption,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -46518,6 +47274,68 @@ function New-CsTeamsMeetingBroadcastPolicy
         $Confirm
     )
 }
+function New-CsTeamsMobilityPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $IPVideoMobileMode,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $IPAudioMobileMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.String]
+        $MobileDialerPreference
+    )
+}
+function New-CsTeamsNetworkRoamingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Int64]
+        $MediaBitRateKb,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPVideo
+    )
+}
 function New-CsTeamsShiftsPolicy
 {
     [CmdletBinding()]
@@ -46563,6 +47381,150 @@ function New-CsTeamsShiftsPolicy
         $EnableShiftPresence
     )
 }
+function New-CsTeamsTranslationRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Pattern,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Translation,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsTeamsUnassignedNumberTreatment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $TreatmentPriority,
+
+        [Parameter()]
+        [System.String]
+        $TreatmentId,
+
+        [Parameter()]
+        [System.String]
+        $Pattern,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $TargetType,
+
+        [Parameter()]
+        [System.String]
+        $Target,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsTeamsVdiPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $DisableCallsAndMeetings,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAudioVideoInCallsAndMeetings
+    )
+}
+function New-CsTeamsWorkLoadPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingPinned,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallingPinned,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeeting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMessagingPinned,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMessaging
+    )
+}
 function New-CsTenantDialPlan
 {
     [CmdletBinding()]
@@ -46594,6 +47556,154 @@ function New-CsTenantDialPlan
         [Parameter()]
         [System.String]
         $SimpleName,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsTenantNetworkRegion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $BypassID,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $CentralSite,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $NetworkRegionID,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsTenantNetworkSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $EmergencyCallRoutingPolicy,
+
+        [Parameter()]
+        [System.String]
+        $LocationPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableLocationBasedRouting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $NetworkRegionID,
+
+        [Parameter()]
+        [System.String]
+        $SiteAddress,
+
+        [Parameter()]
+        [System.String]
+        $NetworkRoamingPolicy,
+
+        [Parameter()]
+        [System.String]
+        $EmergencyCallingPolicy,
+
+        [Parameter()]
+        [System.String]
+        $NetworkSiteID,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsTenantNetworkSubnet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $SubnetID,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $NetworkSiteID,
+
+        [Parameter()]
+        [System.Int32]
+        $MaskBits,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function New-CsTenantTrustedIPAddress
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $IPAddress,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaskBits,
 
         [Parameter()]
         [System.String]
@@ -46753,6 +47863,23 @@ function Remove-CsPhoneNumberAssignment
         $PhoneNumber
     )
 }
+function Remove-CsTeamsAudioConferencingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Remove-CsTeamsCallingPolicy
 {
     [CmdletBinding()]
@@ -46770,7 +47897,24 @@ function Remove-CsTeamsCallingPolicy
         $MsftInternalProcessingMode
     )
 }
-function Remove-CsTeamsEmergencyCallingPolicy
+function Remove-CsTeamsCallParkPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTeamsCortanaPolicy
 {
     [CmdletBinding()]
     param(
@@ -46788,6 +47932,23 @@ function Remove-CsTeamsEmergencyCallingPolicy
     )
 }
 function Remove-CsTeamsEmergencyCallRoutingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTeamsEnhancedEncryptionPolicy
 {
     [CmdletBinding()]
     param(
@@ -46872,6 +48033,40 @@ function Remove-CsTeamsMeetingBroadcastPolicy
         $MsftInternalProcessingMode
     )
 }
+function Remove-CsTeamsMobilityPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTeamsNetworkRoamingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Remove-CsTeamsShiftsPolicy
 {
     [CmdletBinding()]
@@ -46889,7 +48084,143 @@ function Remove-CsTeamsShiftsPolicy
         $MsftInternalProcessingMode
     )
 }
+function Remove-CsTeamsTranslationRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTeamsUnassignedNumberTreatment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTeamsVdiPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTeamsWorkLoadPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Remove-CsTenantDialPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTenantNetworkRegion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTenantNetworkSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTenantNetworkSubnet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Remove-CsTenantTrustedIPAddress
 {
     [CmdletBinding()]
     param(
@@ -47180,6 +48511,31 @@ function Set-CsPhoneNumberAssignment
         $PhoneNumber
     )
 }
+function Set-CsTeamsAudioConferencingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $MeetingInvitePhoneNumbers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTollFreeDialin,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Set-CsTeamsCallingPolicy
 {
     [CmdletBinding()]
@@ -47281,6 +48637,43 @@ function Set-CsTeamsCallingPolicy
         $AllowTranscriptionForCalling
     )
 }
+function Set-CsTeamsCallParkPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Int64]
+        $ParkTimeoutSeconds,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallPark,
+
+        [Parameter()]
+        [System.Int64]
+        $PickupRangeEnd,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Int64]
+        $PickupRangeStart
+    )
+}
 function Set-CsTeamsClientConfiguration
 {
     [CmdletBinding()]
@@ -47358,7 +48751,7 @@ function Set-CsTeamsClientConfiguration
         $MsftInternalProcessingMode
     )
 }
-function Set-CsTeamsEmergencyCallingPolicy
+function Set-CsTeamsCortanaPolicy
 {
     [CmdletBinding()]
     param(
@@ -47367,8 +48760,8 @@ function Set-CsTeamsEmergencyCallingPolicy
         $Description,
 
         [Parameter()]
-        [System.String]
-        $NotificationGroup,
+        [System.Boolean]
+        $AllowCortanaInContextSuggestions,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -47376,7 +48769,11 @@ function Set-CsTeamsEmergencyCallingPolicy
 
         [Parameter()]
         [System.String]
-        $NotificationDialOutNumber,
+        $CortanaVoiceInvocationMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCortanaVoiceInvocation,
 
         [Parameter()]
         [System.String]
@@ -47384,19 +48781,11 @@ function Set-CsTeamsEmergencyCallingPolicy
 
         [Parameter()]
         [System.String]
-        $EnhancedEmergencyServiceDisclaimer,
-
-        [Parameter()]
-        [System.Object]
-        $NotificationMode,
-
-        [Parameter()]
-        [System.String]
         $MsftInternalProcessingMode,
 
         [Parameter()]
-        [System.String]
-        $ExternalLocationLookupMode
+        [System.Boolean]
+        $AllowCortanaAmbientListening
     )
 }
 function Set-CsTeamsEmergencyCallRoutingPolicy
@@ -47418,6 +48807,35 @@ function Set-CsTeamsEmergencyCallRoutingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowEnhancedEmergencyServices,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Set-CsTeamsEnhancedEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $CallingEndtoEndEncryptionEnabledType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $MeetingEndToEndEncryption,
 
         [Parameter()]
         [System.String]
@@ -47797,6 +49215,68 @@ function Set-CsTeamsMeetingConfiguration
         $LegalURL
     )
 }
+function Set-CsTeamsMobilityPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $IPVideoMobileMode,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $IPAudioMobileMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.String]
+        $MobileDialerPreference
+    )
+}
+function Set-CsTeamsNetworkRoamingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Int64]
+        $MediaBitRateKb,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowIPVideo
+    )
+}
 function Set-CsTeamsShiftsPolicy
 {
     [CmdletBinding()]
@@ -47842,6 +49322,72 @@ function Set-CsTeamsShiftsPolicy
         $EnableShiftPresence
     )
 }
+function Set-CsTeamsTranslationRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Pattern,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Translation,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Set-CsTeamsUnassignedNumberTreatment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $TreatmentPriority,
+
+        [Parameter()]
+        [System.String]
+        $Pattern,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $TargetType,
+
+        [Parameter()]
+        [System.String]
+        $Target,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Set-CsTeamsUpgradeConfiguration
 {
     [CmdletBinding()]
@@ -47865,6 +49411,76 @@ function Set-CsTeamsUpgradeConfiguration
         [Parameter()]
         [System.String]
         $MsftInternalProcessingMode
+    )
+}
+function Set-CsTeamsVdiPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $DisableCallsAndMeetings,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAudioVideoInCallsAndMeetings
+    )
+}
+function Set-CsTeamsWorkLoadPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeetingPinned,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallingPinned,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMeeting,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMessagingPinned,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowMessaging
     )
 }
 function Set-CsTenantDialPlan
@@ -47959,6 +49575,134 @@ function Set-CsTenantFederationConfiguration
         [Parameter()]
         [System.Boolean]
         $RestrictTeamsConsumerToExternalUserProfiles
+    )
+}
+function Set-CsTenantNetworkRegion
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $CentralSite,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $NetworkRegionID,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Set-CsTenantNetworkSite
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $EmergencyCallRoutingPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableLocationBasedRouting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $NetworkRegionID,
+
+        [Parameter()]
+        [System.String]
+        $NetworkRoamingPolicy,
+
+        [Parameter()]
+        [System.String]
+        $EmergencyCallingPolicy,
+
+        [Parameter()]
+        [System.String]
+        $LocationPolicy,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Set-CsTenantNetworkSubnet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $NetworkSiteID,
+
+        [Parameter()]
+        [System.Int32]
+        $MaskBits,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Set-CsTenantTrustedIPAddress
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $MaskBits,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
     )
 }
 function Set-CsUser
@@ -48092,6 +49836,7 @@ function Set-CsUserCallingSettings
     )
 }
 #endregion
+
 #region MgDeviceAppMgtMdmWindowInformationProtectionPolicy
 function Get-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
 {
@@ -48573,6 +50318,1278 @@ function Update-MgDeviceAppMgtMdmWindowInformationProtectionPolicy
     )
 }
 
+#endregion
+
+#region MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue
+function Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyDefinitionValueId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyPresentationValueId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
+    )
+}
+
+function New-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyDefinitionValueId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $DefinitionValue,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Presentation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Remove-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyDefinitionValueId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyPresentationValueId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Update-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyDefinitionValueId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyPresentationValueId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $DefinitionValue,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Presentation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyDefinitionValueId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials
+    )
+}
+
+function Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValue
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyDefinitionValueId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
+    )
+}
+
+function New-MgDeviceManagementGroupPolicyConfigurationDefinitionValue
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject]
+        $ConfigurationType,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Definition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject[]]
+        $PresentationValues,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Remove-MgDeviceManagementGroupPolicyConfigurationDefinitionValue
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyDefinitionValueId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Update-MgDeviceManagementGroupPolicyConfigurationDefinitionValue
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyDefinitionValueId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject]
+        $ConfigurationType,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Definition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject[]]
+        $PresentationValues,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Get-MgDeviceManagementGroupPolicyConfiguration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
+    )
+}
+
+function New-MgDeviceManagementGroupPolicyConfiguration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject[]]
+        $DefinitionValues,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $PolicyConfigurationIngestionType,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Remove-MgDeviceManagementGroupPolicyConfiguration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Set-MgDeviceManagementGroupPolicyConfiguration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Update-MgDeviceManagementGroupPolicyConfiguration
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [PSObject[]]
+        $Assignments,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [PSObject[]]
+        $DefinitionValues,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $PolicyConfigurationIngestionType,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Get-MgDeviceManagementGroupPolicyConfigurationAssignment
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable
+    )
+}
+
+function New-MgDeviceManagementGroupPolicyConfigurationAssignment
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Target,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Remove-MgDeviceManagementGroupPolicyConfigurationAssignment
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+
+function Update-MgDeviceManagementGroupPolicyConfigurationAssignment
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationAssignmentId,
+
+        [Parameter()]
+        [System.String]
+        $GroupPolicyConfigurationId,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.DateTime]
+        $LastModifiedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $Target,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [PSObject[]]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
 #endregion
 
 #region MgDeviceManagementWindowFeatureUpdateProfile

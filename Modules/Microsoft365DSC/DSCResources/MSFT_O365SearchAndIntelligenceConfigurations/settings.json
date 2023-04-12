@@ -1,0 +1,36 @@
+﻿{
+    "resourceName": "O365SearchAndIntelligenceConfigurations",
+    "description": "This resource configures the Search And Intelligence configuration settings.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "User.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "User.ReadWrite"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "User.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "User.ReadWrite"
+                    }
+                ]
+            }
+        },
+        "exchange": {
+            "requiredroles": [],
+            "requiredrolegroups": []
+        }
+    }
+}

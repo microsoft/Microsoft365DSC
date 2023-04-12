@@ -1,25 +1,40 @@
 # Change log for Microsoft365DSC
 
+# 1.23.412.1
+
+* AADUser
+  * Password property will only used with New-MgUser and ignored for updates
+    FIXES [#3093](https://github.com/microsoft/Microsoft365DSC/issues/3093)
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+   * Initial release
+     FIXES [#2833](https://github.com/microsoft/Microsoft365DSC/issues/2833)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Initial Release
+      FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
+* IntuneDeviceConfigurationDomainJoinPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationWindowsTeamPolicyWindows10
+  * Initial release
+* O365SearchAndIntelligenceConfigurations
+  * Initial release.
+* TeamsUpdateManagementPolicy
+  * Added support for the Forced value for the AllowPublicPreview property.
+* DRG
+  * Fixed layout and display issues in module file
+* MISC
+  * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
+    Fixes #3082
+  * M365DSCUtil: Fixed an issue when calling Assert-M365DSCBlueprint with App credentials
+    FIXES [#3153](https://github.com/microsoft/Microsoft365DSC/issues/3153)
+  * Added check to validate that the Release Notes in the module manifest are not longer than
+    10,000 characters, which will prevent publishing the module to the PowerShell Gallery
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell dependencies to version 2.0.159.
+
 # 1.23.405.1
 
-* IntuneDeviceEnrollmentPlatformRestriction
-  * [BREAKING CHANGE] Updated resource to manage single and default platform restriction policies
-    FIXES [#2347](https://github.com/microsoft/Microsoft365DSC/issues/2347)
-* IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
-  * Initial Release
-    FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)
-* IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
-  * Initial release
-* IntuneDeviceConfigurationPolicyWindows10
-  * [BREAKING CHANGE] Added complex parameters as embedded CIM (DefenderDetectedMalwareActions, EdgeHomeButtonConfiguration, EdgeSearchEngine, NetworkProxyServer, Windows10AppsForceUpdateSchedule)
-  * Resource regenerated with DRG
-  * FIXES[#2867](https://github.com/microsoft/Microsoft365DSC/issues/2867)
-  * FIXES[#2868](https://github.com/microsoft/Microsoft365DSC/issues/2868)
-* IntuneDeviceEnrollmentStatusPageWindows10
-  * [BREAKING CHANGE] Renamed resource IntuneDeviceEnrollmentConfigurationWindows10 to IntuneDeviceEnrollmentStatusPageWindows10
-  * Added support for property Assignments.
-  * Added support for property Priority
-  * FIXES [#2933](https://github.com/microsoft/Microsoft365DSC/issues/2933)
 * AADAdministrativeUnit
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Fixes extraction of the Members property.
@@ -88,6 +103,11 @@
   * [BREAKING CHANGE] Setting Identity as Key parameter and DisplayName as Required
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * [BREAKING CHANGE] Fix resource
+* IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10
+  * Initial Release
+    FIXES [#2830](https://github.com/microsoft/Microsoft365DSC/issues/2830)
+* IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
+  * Initial release
 * IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator, IntuneDeviceConfigurationPolicyAndroidDeviceOwner,
   IntuneDeviceConfigurationPolicyAndroidOpenSourceProject, IntuneDeviceConfigurationPolicyMacOS,
   IntuneDeviceConfigurationPolicyiOS, IntuneExploitProtectionPolicyWindows10SettingCatalog,
@@ -98,6 +118,19 @@
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * Properly escapes single quotes from CIMInstances string values.
     FIXES [#3117](https://github.com/microsoft/Microsoft365DSC/issues/3117)
+* IntuneDeviceConfigurationPolicyWindows10
+  * [BREAKING CHANGE] Added complex parameters as embedded CIM (DefenderDetectedMalwareActions, EdgeHomeButtonConfiguration, EdgeSearchEngine, NetworkProxyServer, Windows10AppsForceUpdateSchedule)
+  * Resource regenerated with DRG
+    FIXES[#2867](https://github.com/microsoft/Microsoft365DSC/issues/2867)
+    FIXES[#2868](https://github.com/microsoft/Microsoft365DSC/issues/2868)
+* IntuneDeviceEnrollmentPlatformRestriction
+  * [BREAKING CHANGE] Updated resource to manage single and default platform restriction policies
+    FIXES [#2347](https://github.com/microsoft/Microsoft365DSC/issues/2347)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * [BREAKING CHANGE] Renamed resource IntuneDeviceEnrollmentConfigurationWindows10 to IntuneDeviceEnrollmentStatusPageWindows10
+  * Added support for property Assignments.
+  * Added support for property Priority
+    FIXES [#2933](https://github.com/microsoft/Microsoft365DSC/issues/2933)
 * IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner
   * [BREAKING CHANGE] Setting Id as Key parameter and DisplayName as Required
   * [BREAKING CHANGE] Corrected typo in resource name (Entreprise to Enterprise)
