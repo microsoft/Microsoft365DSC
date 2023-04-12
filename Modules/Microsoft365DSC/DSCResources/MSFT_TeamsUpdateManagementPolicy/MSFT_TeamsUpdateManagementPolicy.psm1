@@ -22,7 +22,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
+        [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
@@ -152,7 +152,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
+        [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
@@ -269,7 +269,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
+        [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
