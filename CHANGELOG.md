@@ -17,6 +17,8 @@
   * Initial release
 * IntuneDeviceConfigurationWindowsTeamPolicyWindows10
   * Initial release
+* O365SearchAndIntelligenceConfigurations
+  * Initial release.
 * TeamsUpdateManagementPolicy
   * Added support for the Forced value for the AllowPublicPreview property.
 * DRG
