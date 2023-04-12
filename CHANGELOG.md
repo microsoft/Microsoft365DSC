@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.412.1
 
 * AADUser
   * Password property will only used with New-MgUser and ignored for updates
