@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Initial release
+     FIXES [#2833](https://github.com/microsoft/Microsoft365DSC/issues/2833)
 * IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10
   * Initial release.
 * O365SearchAndIntelligenceConfigurations
@@ -27,6 +30,8 @@
 * MISC
   * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
     Fixes #3082
+  * M365DSCUtil: Fixed an issue when calling Assert-M365DSCBlueprint with App credentials
+    FIXES [#3153](https://github.com/microsoft/Microsoft365DSC/issues/3153)
 
 # 1.23.405.0
 
@@ -58,6 +63,8 @@
   * [BREAKING CHANGE] Remove deprecated parameter PreferredDataLocation* EXOAntiPhishPolicy
   * [BREAKING CHANGE] Remove deprecated parameters EnableAntispoofEnforcement and
     TargetedDomainProtectionAction
+  * Password property will only used with New-MgUser and ignored for updates
+    FIXES [#3093](https://github.com/microsoft/Microsoft365DSC/issues/3093)
 * EXOGroupSettings
   * Initial Release
     FIXES [#3089](https://github.com/microsoft/Microsoft365DSC/issues/3089)

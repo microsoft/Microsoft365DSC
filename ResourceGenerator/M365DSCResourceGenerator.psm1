@@ -672,7 +672,6 @@ function Update-DeviceConfigurationPolicyAssignment
     }
 }
 
-
 "@
 
             $AssignmentsCIM = @'
