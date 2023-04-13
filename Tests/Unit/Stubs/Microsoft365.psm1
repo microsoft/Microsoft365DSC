@@ -23077,6 +23077,10 @@ function New-MgBetaDirectorySetting
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String[]]
+        $Values,
+
+        [Parameter()]
         [System.String]
         $TemplateId,
 
@@ -23550,6 +23554,10 @@ function Update-MgBetaDirectorySetting
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.String[]]
+        $Values,
+
+        [Parameter()]
         [System.String]
         $DirectorySettingId,
 
@@ -23983,6 +23991,7 @@ function Update-MgBetaOrganizationSettingPersonInsight
     )
 }
 #endregion
+
 #region Microsoft.Graph.Beta.Identity.Governance
 function Get-MgBetaEntitlementManagementAccessPackage
 {

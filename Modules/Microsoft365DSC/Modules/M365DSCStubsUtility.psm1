@@ -167,8 +167,15 @@ function New-M365DSCStubFiles
 
                 $foundParamNames = @()
 
-                # If the cmdlet has a property names 
-                $parameters.Remove("Values") | Out-Null
+                # If the cmdlet has a property names
+                if ($parameters.ContainsKey('Values'))
+                {
+                    $parameters.Remove('Values') | Out-Null
+                    $foundParamNames += 'Values'
+                    $StubContent.Append("        [Parameter()]`r`n") | Out-Null
+                    $StubContent.Append("        [System.String[]]`r`n") | Out-Null
+                    $StubContent.Append("        `$Values,`r`n`r`n") | Out-Null
+                }
                 foreach ($param in $parameters.Values)
                 {
                     Write-Verbose -Message "    --> $($param.Name)"
