@@ -931,6 +931,10 @@ function New-M365DSCDeltaReport
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    # Excluding authentication properties by default.
+    $authParameters = @("Credential", "ManagedIdentity", "ApplicationId", "TenantId", "CertificatePath", "CertificatePassword", "CertificateThumbprint")
+    $ExcludedProperties = $ExcludedProperties + $authParameters | Select-Object -Unique
+
     Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
     if (-not $Delta)
     {
