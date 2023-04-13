@@ -7,6 +7,8 @@
     FIXES [#3104](https://github.com/microsoft/Microsoft365DSC/issues/3104)
 * MISC
   * Reports will now exclude the authentication parameters (e.g., CertificateThumbprint, Credential, etc.).
+  * Changed the Encoding helper's logic to ensure titled quotes and apostrophes are correctly evaluated.
+    FIXES [#3165](https://github.com/microsoft/Microsoft365DSC/issues/3165)
 
 # 1.23.412.1
 
