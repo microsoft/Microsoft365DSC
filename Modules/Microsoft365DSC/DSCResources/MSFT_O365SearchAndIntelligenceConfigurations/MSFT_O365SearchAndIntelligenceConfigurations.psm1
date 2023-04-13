@@ -51,8 +51,7 @@ function Get-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -77,7 +76,7 @@ function Get-TargetResource
             $TenantId = $Credential.UserName.Split('@')[1]
         }
 
-        $ItemInsights = Get-MgOrganizationSettingItemInsight -OrganizationId $TenantId
+        $ItemInsights = Get-MgBetaOrganizationSettingItemInsight -OrganizationId $TenantId
         $itemInsightsDisabledForGroupValue = $null
         if (-not [System.String]::IsNullOrEmpty($ItemInsights.DisabledForGroup))
         {
@@ -85,7 +84,7 @@ function Get-TargetResource
             $itemInsightsDisabledForGroupValue = $group.DisplayName
         }
 
-        $PersonInsights = Get-MgOrganizationSettingPersonInsight -OrganizationId $TenantId
+        $PersonInsights = Get-MgBetaOrganizationSettingPersonInsight -OrganizationId $TenantId
         $PersonInsightsDisabledForGroupValue = $null
         if (-not [System.String]::IsNullOrEmpty($PersonInsights.DisabledForGroup))
         {
@@ -184,8 +183,7 @@ function Set-TargetResource
 
     Write-Verbose -Message 'Setting configuration of Search and Intelligence'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     if ($ConnectionMode -eq 'Credentials')
     {
@@ -216,7 +214,7 @@ function Set-TargetResource
         $ItemInsightsUpdateParams.Add("DisabledForGroup", $disabledForGroupValue)
     }
     Write-Verbose -Message "Updating settings for Item Insights"
-    Update-MgOrganizationSettingItemInsight @ItemInsightsUpdateParams | Out-Null
+    Update-MgBetaOrganizationSettingItemInsight @ItemInsightsUpdateParams | Out-Null
     #endregion
 
     #region Person Insights
@@ -244,7 +242,7 @@ function Set-TargetResource
     }
 
     Write-Verbose -Message "Updating settings for Person Insights"
-    Update-MgOrganizationSettingPersonInsight @PersonInsightsUpdateParams | Out-Null
+    Update-MgBetaOrganizationSettingPersonInsight @PersonInsightsUpdateParams | Out-Null
     #endregion
 }
 
@@ -360,8 +358,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

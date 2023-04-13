@@ -166,6 +166,9 @@ function New-M365DSCStubFiles
                 $invalidTypes = @('ActionPreference')
 
                 $foundParamNames = @()
+
+                # If the cmdlet has a property names 
+                $parameters.Remove("Values") | Out-Null
                 foreach ($param in $parameters.Values)
                 {
                     Write-Verbose -Message "    --> $($param.Name)"
@@ -232,7 +235,7 @@ function New-M365DSCStubFiles
         }
         Write-Progress -Activity 'Generating Stubs' -Completed
 
-        $Content.Append("#region $($Module.Name)`r`n") | Out-Null
+        $Content.Append("#region $($Module.ModuleName)`r`n") | Out-Null
 
         $TypesToConvert = @('Microsoft.Online.SharePoint.PowerShell.SpoHubSitePipeBind', `
                 'Microsoft.Online.SharePoint.PowerShell.SpoSitePipeBind'
