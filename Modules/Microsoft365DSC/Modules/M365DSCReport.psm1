@@ -932,7 +932,7 @@ function New-M365DSCDeltaReport
     #endregion
 
     # Excluding authentication properties by default.
-    $authParameters = @("Credential", "ManagedIdentity", "ApplicationId", "TenantId", "CertificatePath", "CertificatePassword", "CertificateThumbprint")
+    $authParameters = @("Credential", "ManagedIdentity", "ApplicationId", "TenantId", "CertificatePath", "CertificatePassword", "CertificateThumbprint", "ApplicationSecret")
     $ExcludedProperties = $ExcludedProperties + $authParameters | Select-Object -Unique
 
     Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
