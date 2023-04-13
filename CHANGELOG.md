@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Reports will now exclude the authentication parameters (e.g., CertificateThumbprint, Credential, etc.).
+
 # 1.23.412.1
 
 * AADUser
