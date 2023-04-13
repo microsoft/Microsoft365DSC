@@ -866,7 +866,8 @@ function Convert-StringToAdvancedSettings
 
             if ($settingKey -like '*defaultlabel*')
             {
-                if ($values -ne "None") {
+                if ($values -ne "None")
+                {
                     $label = Get-Label -Identity $values
                     $values = $label.DisplayName
                 }
