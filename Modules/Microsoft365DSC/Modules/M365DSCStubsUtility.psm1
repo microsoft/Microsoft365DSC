@@ -99,6 +99,22 @@ function New-M365DSCStubFiles
             $cmdlets += Get-Command -CommandType 'Function' -Module $CurrentModuleName
         }
 
+        if ($Module.Name -eq 'MicrosoftGraph')
+        {
+            Write-Host 'Loading Beta Graph APIs'
+            $MaximumFunctionCount = 32000
+            Select-MgProfile -Name beta | Out-Null
+            $betaCmdlets = Get-Command -CommandType 'Cmdlet' -Module $CurrentModuleName
+            $betaCmdlets += Get-Command -CommandType 'Function' -Module $CurrentModuleName
+            foreach ($cmdlet in $betaCmdlets)
+            {
+                if ($cmdlets.Name -notcontains $cmdlet.Name)
+                {
+                    $cmdlets += $cmdlet
+                }
+            }
+        }
+
         try
         {
             $aliases = Get-Command -CommandType 'Alias' | Where-Object -FilterScript { $_.Source -eq $CurrentModuleName }
@@ -163,15 +179,15 @@ function New-M365DSCStubFiles
                 $invalidTypes = @('ActionPreference')
 
                 $foundParamNames = @()
-                foreach ($key in $parameters.Keys)
+                foreach ($param in $parameters.Values)
                 {
-                    Write-Verbose -Message "    --> $($parameters.$key.Name)"
-                    if ($foundParamNames -notcontains $parameters.$key.Name)
+                    Write-Verbose -Message "    --> $($param.Name)"
+                    if ($foundParamNames -notcontains $param.Name)
                     {
-                        $foundParamNames += $parameters.$key.Name
-                        if ($parameters.$key.ParameterType.Name -notin $invalidTypes -and `
-                        $parameters.$key.Name -notin $invalidParameters -and `
-                                -not [System.String]::IsNullOrEmpty($parameters.$key.Name))
+                        $foundParamNames += $param.Name
+                        if ($param.ParameterType.Name -notin $invalidTypes -and `
+                                $param.Name -notin $invalidParameters -and `
+                                -not [System.String]::IsNullOrEmpty($param.Name))
                         {
                             $StubContent += "        [Parameter()]`r`n"
                             $ParamType = $param.ParameterType.ToString()
@@ -179,12 +195,11 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'System.String[]'
                             }
-                            elseif ($ParamType -eq 'System.Nullable``1[System.Boolean]')
+                            elseif ($ParamType -eq 'System.Nullable`1[System.Boolean]')
                             {
                                 $ParamType = 'System.Boolean'
                             }
-                            elseif ($ParamType.StartsWith("System.Collections.Generic.List``1[Microsoft.Open.MSGraph.Model.") -or
-                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier``1[Microsoft.Teams."))
+                            elseif ($ParamType.StartsWith("System.Collections.Generic.List``1[Microsoft."))
                             {
                                 $ParamType = 'System.Object[]'
                             }
@@ -211,7 +226,7 @@ function New-M365DSCStubFiles
                                 $ParamType = 'PSObject'
                             }
                             $StubContent += "        [$ParamType]`r`n"
-                            $StubContent += "        `$$($parameters.$key.Name),`r`n`r`n"
+                            $StubContent += "        `$$($param.Name),`r`n`r`n"
                         }
                     }
                 }
@@ -242,7 +257,7 @@ function New-M365DSCStubFiles
         $Content += $StubContent
         $Content += "#endregion`r`n"
         $i++
-        Remove-Module $CurrentModuleName -ErrorAction SilentlyContinue
+        Remove-Module $CurrentModuleName
     }
     $Content | Out-File $DestinationFilePath -Encoding utf8
 }
