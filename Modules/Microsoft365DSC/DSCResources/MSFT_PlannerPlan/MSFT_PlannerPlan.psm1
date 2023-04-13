@@ -103,7 +103,7 @@ function Get-TargetResource
                     {
                         $OwnerGroupValue = $group.DisplayName
                     }
-                    break;
+                    break
                 }
             }
             catch

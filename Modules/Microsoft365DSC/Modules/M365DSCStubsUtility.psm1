@@ -15,7 +15,11 @@ function New-M365DSCStubFiles
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.Collections.Hashtable[]]
+        $Workloads
     )
 
     if ($null -eq $Credential)
@@ -41,27 +45,31 @@ function New-M365DSCStubFiles
     $Content = ''
     $folderPath = Join-Path $PSScriptRoot -ChildPath '../DSCResources'
     Write-Host $FolderPath
-    $workloads = @(
-        @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Administration'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Enrolment'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Devices.CorporateManagement'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Groups'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Governance'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Signins'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Planner'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Teams'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users'; },
-        @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users.Actions';},
-        @{Name = 'SecurityComplianceCenter'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Label' },
-        @{Name = 'PnP'; ModuleName = 'PnP.PowerShell'; },
-        @{Name = 'PowerPlatforms'; ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'; },
-        @{Name = 'MicrosoftTeams'; ModuleName = 'MicrosoftTeams'; }
-    )
+    if ($null -eq $Workloads)
+    {
+        $workloads = @(
+            @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Administration'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Enrolment'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Devices.CorporateManagement'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Groups'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Governance'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Signins'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Planner'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Teams'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users.Actions';},
+            @{Name = 'SecurityComplianceCenter'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Label' },
+            @{Name = 'PnP'; ModuleName = 'PnP.PowerShell'; },
+            @{Name = 'PowerPlatforms'; ModuleName = 'Microsoft.PowerApps.Administration.PowerShell'; },
+            @{Name = 'MicrosoftTeams'; ModuleName = 'MicrosoftTeams'; }
+        )
+    }
+
     foreach ($Module in $workloads)
     {
         Write-Host "Connecting to {$($Module.Name)}"
@@ -183,7 +191,7 @@ function New-M365DSCStubFiles
                         {
                             $StubContent += "        [Parameter()]`r`n"
                             $ParamType = $param.ParameterType.ToString()
-                            if ($ParamType -eq 'System.Collections.Generic.List`1[System.String]')
+                            if ($ParamType -eq "System.Collections.Generic.List``1[System.String]")
                             {
                                 $ParamType = 'System.String[]'
                             }
@@ -199,11 +207,20 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft.Teams.'))
+                            elseif ($ParamType.StartsWith('Microsoft.Teams.') -or `
+                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier``1[Microsoft."))
                             {
                                 $ParamType = 'PSObject'
                             }
                             elseif ($ParamType.StartsWith('Microsoft.Rtc.'))
+                            {
+                                $ParamType = 'PSObject'
+                            }
+                            elseif ($ParamType.StartsWith('Microsoft.SharePoint.') -or `
+                                    $ParamType.StartsWith('Microsoft.Online') -or `
+                                    $ParamType.StartsWith('PnP.') -or `
+                                    $ParamType.StartsWith("System.Nullable``1[Microsoft.") -or `
+                                    $ParamType.StartsWith("System.Nullable``1[PnP."))
                             {
                                 $ParamType = 'PSObject'
                             }

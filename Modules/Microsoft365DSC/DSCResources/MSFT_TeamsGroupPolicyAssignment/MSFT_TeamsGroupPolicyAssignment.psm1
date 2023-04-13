@@ -4,15 +4,15 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupDisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
@@ -21,7 +21,7 @@ function Get-TargetResource
         [System.String]
         $PolicyName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Priority,
 
@@ -68,12 +68,13 @@ function Get-TargetResource
     {
         Write-Verbose -Message "Getting GroupPOlicyAssignment for {$GroupId}"
         $group = Find-CsGroup -SearchQuery $GroupId
-        if($group.Length -gt 1)
+        if ($group.Length -gt 1)
         {
             Write-Verbose -Message "Found $($group.Length) groups with the id {$GroupId}"
             $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
         }
-        else{
+        else
+        {
             Write-Verbose -Message "Getting GroupPolicyAssignment for {$GroupDisplayName}"
             $Group = Find-CsGroup -SearchQuery $GroupDisplayName
             if ($group.Length -gt 1)
@@ -124,15 +125,15 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupDisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
@@ -141,7 +142,7 @@ function Set-TargetResource
         [System.String]
         $PolicyName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Priority,
 
@@ -267,15 +268,15 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupDisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $GroupId,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
@@ -284,7 +285,7 @@ function Test-TargetResource
         [System.String]
         $PolicyName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Priority,
 

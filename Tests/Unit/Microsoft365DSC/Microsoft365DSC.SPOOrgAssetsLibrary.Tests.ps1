@@ -21,12 +21,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            if ($null -eq (Get-Module PnP.PowerShell))
-            {
-                Import-Module PnP.PowerShell
-
-            }
-
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@contoso.com', $secpasswd)
             $global:tenantName = $Credential.UserName.Split('@')[1].Split('.')[0]
@@ -51,6 +45,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-M365TenantName -MockWith {
                 return 'contoso'
+            }
+
+            Mock -CommandName Start-Sleep -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -116,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             decodedurl = 'sites/m365dsc/Branding'
                         }
                     }
-                    CdnType            = 'Public'
+                    CdnType = 'Public'
                 }
             }
 
@@ -161,7 +158,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             decodedurl = 'sites/m365dsc/Branding'
                         }
                     }
-                    CdnType            = 'Public'
+                    CdnType = 'Public'
                 }
             }
 
@@ -238,7 +235,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         LibraryUrl = @{
                             decodedurl = 'https://contoso.sharepoint.com/sites/m365dsc/Branding'
                         }
-                        CdnType            = 'Public'
+                        CdnType    = 'Public'
                     }
                 }
             }

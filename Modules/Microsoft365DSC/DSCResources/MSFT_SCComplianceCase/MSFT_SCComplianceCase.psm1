@@ -190,9 +190,18 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentCase.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Status')
         $CreationParams.Remove('Ensure')
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         Write-Verbose "Creating new Compliance Case $Name calling the New-ComplianceCase cmdlet."
         New-ComplianceCase @CreationParams
@@ -297,7 +306,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    # Remove authentication parameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

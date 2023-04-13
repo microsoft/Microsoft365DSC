@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneWindowUpdateForBusinessRingUpdateProfileWindows10' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -46,6 +46,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
+            Mock -CommandName Select-MgProfile -MockWith {
+            }
+
             Mock -CommandName Get-MgDeviceManagementDeviceConfigurationAssignment -MockWith {
             }
 
@@ -55,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name 'The IntuneWindowUpdateForBusinessRingUpdateProfileWindows10 should exist but it DOES NOT' -Fixture {
+        Context -Name 'The IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowWindows11Upgrade                   = $True
@@ -121,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWindowUpdateForBusinessRingUpdateProfileWindows10 exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowWindows11Upgrade                   = $True
@@ -237,7 +240,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWindowUpdateForBusinessRingUpdateProfileWindows10 Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowWindows11Upgrade                   = $True
@@ -344,7 +347,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWindowUpdateForBusinessRingUpdateProfileWindows10 exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     AllowWindows11Upgrade                   = $True

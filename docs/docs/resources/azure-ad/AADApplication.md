@@ -13,7 +13,6 @@
 | **IdentifierUris** | Write | StringArray[] | User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain. | |
 | **KnownClientApplications** | Write | StringArray[] | Client applications that are tied to this resource application. | |
 | **LogoutURL** | Write | String | The logout url for this application. | |
-| **Oauth2RequirePostResponse** | Write | Boolean | Set this to true if an Oauth2 post response is required. | |
 | **PublicClient** | Write | Boolean | Specifies whether this application is a public client (such as an installed application running on a mobile device). Default is false. | |
 | **ReplyURLs** | Write | StringArray[] | Specifies the URLs that user tokens are sent to for sign in, or the redirect URIs that OAuth 2.0 authorization codes and access tokens are sent to. | |
 | **Owners** | Write | StringArray[] | UPN or ObjectID values of the app's owners. | |

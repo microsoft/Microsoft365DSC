@@ -74,10 +74,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $PreferredDataLocation,
-
-        [Parameter()]
-        [System.String]
         $PreferredLanguage,
 
         [Parameter()]
@@ -316,10 +312,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $PreferredDataLocation,
-
-        [Parameter()]
-        [System.String]
         $PreferredLanguage,
 
         [Parameter()]
@@ -372,12 +364,6 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
-    # PreferredDataLocation is no longer an accepted value;
-    if (![System.String]::IsNullOrEmpty($PreferredDataLocation))
-    {
-        Write-Warning '[DEPRECATED] Property PreferredDataLocation is no longer supported by resource AADUser'
-    }
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
 
@@ -476,51 +462,58 @@ function Set-TargetResource
         }
         #endregion
 
-        if ($null -ne $Password)
-        {
-            $passwordValue = $Password.GetNetworkCredential().Password
-        }
-        else
-        {
-            try
-            {
-                # This only works in PowerShell 5.1
-                $passwordValue = [System.Web.Security.Membership]::GeneratePassword(30, 2)
-            }
-            catch
-            {
-                $TokenSet = @{
-                    U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
-                    L = [Char[]]'abcdefghijklmnopqrstuvwxyz'
-                    N = [Char[]]'0123456789'
-                    S = [Char[]]'!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~'
-                }
-
-                $Upper = Get-Random -Count 5 -InputObject $TokenSet.U
-                $Lower = Get-Random -Count 5 -InputObject $TokenSet.L
-                $Number = Get-Random -Count 5 -InputObject $TokenSet.N
-                $Special = Get-Random -Count 5 -InputObject $TokenSet.S
-
-                $StringSet = $Upper + $Lower + $Number + $Special
-
-                $stringPassword = (Get-Random -Count 15 -InputObject $StringSet) -join ''
-                $passwordValue = ConvertTo-SecureString $stringPassword -AsPlainText -Force
-            }
-        }
-
-        $PasswordProfile = @{
-            Password = $passwordValue
-        }
-        $CreationParams.Add('PasswordProfile', $PasswordProfile)
-
-        if ($user.UserPrincipalName)
+        if ($null -ne $user.UserPrincipalName)
         {
             Write-Verbose -Message "Updating Office 365 User $UserPrincipalName Information"
+
+            if ($null -ne $Password)
+            {
+                Write-Verbose -Message "PasswordProfile property will not be updated"
+            }
+
             $CreationParams.Add('UserId', $UserPrincipalName)
             Update-MgUser @CreationParams
         }
         else
         {
+
+            if ($null -ne $Password)
+            {
+                $passwordValue = $Password.GetNetworkCredential().Password
+            }
+            else
+            {
+                if ($PSVersionTable.PSVersion.Major -eq 5)
+                {
+                    Add-Type -AssemblyName System.Web
+                    $passwordValue = [System.Web.Security.Membership]::GeneratePassword(30, 2)
+                }
+                else
+                {
+                    $TokenSet = @{
+                        U = [Char[]]'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+                        L = [Char[]]'abcdefghijklmnopqrstuvwxyz'
+                        N = [Char[]]'0123456789'
+                        S = [Char[]]'!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~'
+                    }
+
+                    $Upper = Get-Random -Count 8 -InputObject $TokenSet.U
+                    $Lower = Get-Random -Count 8 -InputObject $TokenSet.L
+                    $Number = Get-Random -Count 8 -InputObject $TokenSet.N
+                    $Special = Get-Random -Count 8 -InputObject $TokenSet.S
+
+                    $StringSet = $Upper + $Lower + $Number + $Special
+
+                    $stringPassword = (Get-Random -Count 30 -InputObject $StringSet) -join ''
+                    $passwordValue = ConvertTo-SecureString $stringPassword -AsPlainText -Force
+                }
+            }
+
+            $PasswordProfile = @{
+                Password = $passwordValue
+            }
+            $CreationParams.Add('PasswordProfile', $PasswordProfile)
+
             Write-Verbose -Message "Creating Office 365 User $UserPrincipalName"
             $CreationParams.Add('AccountEnabled', $true)
             $CreationParams.Add('MailNickName', $UserPrincipalName.Split('@')[0])
@@ -666,10 +659,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $PostalCode,
-
-        [Parameter()]
-        [System.String]
-        $PreferredDataLocation,
 
         [Parameter()]
         [System.String]
