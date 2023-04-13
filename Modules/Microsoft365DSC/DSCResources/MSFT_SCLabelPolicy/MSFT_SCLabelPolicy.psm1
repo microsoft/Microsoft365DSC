@@ -901,8 +901,15 @@ function Convert-CIMToAdvancedSettings
         $settingsValues = ''
         if ($obj.Key -like '*defaultlabel*')
         {
-            $label = Get-Label | Where-Object -FilterScript { $_.DisplayName -eq $obj.Value }
-            $settingsValues = $label.ImmutableId.ToString()
+            if ($obj.Value -ne "None")
+            {
+                $label = Get-Label | Where-Object -FilterScript { $_.DisplayName -eq $obj.Value }
+                $settingsValues = $label.ImmutableId.ToString()
+            }
+            else
+            {
+                $settingsValues = "None"
+            }
         }
         else
         {
