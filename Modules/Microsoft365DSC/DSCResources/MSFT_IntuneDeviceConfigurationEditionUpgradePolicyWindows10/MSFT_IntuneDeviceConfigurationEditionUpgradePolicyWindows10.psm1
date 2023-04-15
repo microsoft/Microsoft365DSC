@@ -10,7 +10,7 @@ function Get-TargetResource
         $License,
 
         [Parameter()]
-        [ValidateSet('productKey','licenseFile','notConfigured')]
+        [ValidateSet('productKey', 'licenseFile', 'notConfigured')]
         [System.String]
         $LicenseType,
 
@@ -19,12 +19,12 @@ function Get-TargetResource
         $ProductKey,
 
         [Parameter()]
-        [ValidateSet('windows10Enterprise','windows10EnterpriseN','windows10Education','windows10EducationN','windows10MobileEnterprise','windows10HolographicEnterprise','windows10Professional','windows10ProfessionalN','windows10ProfessionalEducation','windows10ProfessionalEducationN','windows10ProfessionalWorkstation','windows10ProfessionalWorkstationN','notConfigured','windows10Home','windows10HomeChina','windows10HomeN','windows10HomeSingleLanguage','windows10Mobile','windows10IoTCore','windows10IoTCoreCommercial')]
+        [ValidateSet('windows10Enterprise', 'windows10EnterpriseN', 'windows10Education', 'windows10EducationN', 'windows10MobileEnterprise', 'windows10HolographicEnterprise', 'windows10Professional', 'windows10ProfessionalN', 'windows10ProfessionalEducation', 'windows10ProfessionalEducationN', 'windows10ProfessionalWorkstation', 'windows10ProfessionalWorkstationN', 'notConfigured', 'windows10Home', 'windows10HomeChina', 'windows10HomeN', 'windows10HomeSingleLanguage', 'windows10Mobile', 'windows10IoTCore', 'windows10IoTCoreCommercial')]
         [System.String]
         $TargetEdition,
 
         [Parameter()]
-        [ValidateSet('noRestriction','block','unlock')]
+        [ValidateSet('noRestriction', 'block', 'unlock')]
         [System.String]
         $WindowsSMode,
 
@@ -98,7 +98,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -110,8 +110,8 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.editionUpgradeConfiguration" `
-                    }
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.editionUpgradeConfiguration' `
+                }
             }
         }
         #endregion
@@ -167,11 +167,13 @@ function Get-TargetResource
         foreach ($assignmentEntry in $AssignmentsValues)
         {
             $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
                 deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+                    {
+                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
+                    })
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
             }
             $assignmentResult += $assignmentValue
         }
@@ -202,7 +204,7 @@ function Set-TargetResource
         $License,
 
         [Parameter()]
-        [ValidateSet('productKey','licenseFile','notConfigured')]
+        [ValidateSet('productKey', 'licenseFile', 'notConfigured')]
         [System.String]
         $LicenseType,
 
@@ -211,12 +213,12 @@ function Set-TargetResource
         $ProductKey,
 
         [Parameter()]
-        [ValidateSet('windows10Enterprise','windows10EnterpriseN','windows10Education','windows10EducationN','windows10MobileEnterprise','windows10HolographicEnterprise','windows10Professional','windows10ProfessionalN','windows10ProfessionalEducation','windows10ProfessionalEducationN','windows10ProfessionalWorkstation','windows10ProfessionalWorkstationN','notConfigured','windows10Home','windows10HomeChina','windows10HomeN','windows10HomeSingleLanguage','windows10Mobile','windows10IoTCore','windows10IoTCoreCommercial')]
+        [ValidateSet('windows10Enterprise', 'windows10EnterpriseN', 'windows10Education', 'windows10EducationN', 'windows10MobileEnterprise', 'windows10HolographicEnterprise', 'windows10Professional', 'windows10ProfessionalN', 'windows10ProfessionalEducation', 'windows10ProfessionalEducationN', 'windows10ProfessionalWorkstation', 'windows10ProfessionalWorkstationN', 'notConfigured', 'windows10Home', 'windows10HomeChina', 'windows10HomeN', 'windows10HomeSingleLanguage', 'windows10Mobile', 'windows10IoTCore', 'windows10IoTCoreCommercial')]
         [System.String]
         $TargetEdition,
 
         [Parameter()]
-        [ValidateSet('noRestriction','block','unlock')]
+        [ValidateSet('noRestriction', 'block', 'unlock')]
         [System.String]
         $WindowsSMode,
 
@@ -285,12 +287,17 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Edition Upgrade Policy for Windows10 with DisplayName {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
 
+        #Removing ProductKey if obfuscated
+        if (-not [String]::IsNullOrEmpty($ProductKey) -and $ProductKey.Contains('#'))
+        {
+            $CreateParameters.Remove('ProductKey') | Out-Null
+        }
         $keys = (([Hashtable]$CreateParameters).clone()).Keys
         foreach ($key in $keys)
         {
@@ -300,7 +307,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.editionUpgradeConfiguration")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.editionUpgradeConfiguration')
         $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
@@ -310,7 +317,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -319,13 +326,18 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Edition Upgrade Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
 
+        #Removing ProductKey if obfuscated
+        if (-not [String]::IsNullOrEmpty($ProductKey) -and $ProductKey.Contains('#'))
+        {
+            $UpdateParameters.Remove('ProductKey') | Out-Null
+        }
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
         {
@@ -335,7 +347,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.editionUpgradeConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.editionUpgradeConfiguration')
         Update-MgDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -354,7 +366,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Device Configuration Edition Upgrade Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -371,7 +383,7 @@ function Test-TargetResource
         $License,
 
         [Parameter()]
-        [ValidateSet('productKey','licenseFile','notConfigured')]
+        [ValidateSet('productKey', 'licenseFile', 'notConfigured')]
         [System.String]
         $LicenseType,
 
@@ -380,12 +392,12 @@ function Test-TargetResource
         $ProductKey,
 
         [Parameter()]
-        [ValidateSet('windows10Enterprise','windows10EnterpriseN','windows10Education','windows10EducationN','windows10MobileEnterprise','windows10HolographicEnterprise','windows10Professional','windows10ProfessionalN','windows10ProfessionalEducation','windows10ProfessionalEducationN','windows10ProfessionalWorkstation','windows10ProfessionalWorkstationN','notConfigured','windows10Home','windows10HomeChina','windows10HomeN','windows10HomeSingleLanguage','windows10Mobile','windows10IoTCore','windows10IoTCoreCommercial')]
+        [ValidateSet('windows10Enterprise', 'windows10EnterpriseN', 'windows10Education', 'windows10EducationN', 'windows10MobileEnterprise', 'windows10HolographicEnterprise', 'windows10Professional', 'windows10ProfessionalN', 'windows10ProfessionalEducation', 'windows10ProfessionalEducationN', 'windows10ProfessionalWorkstation', 'windows10ProfessionalWorkstationN', 'notConfigured', 'windows10Home', 'windows10HomeChina', 'windows10HomeN', 'windows10HomeSingleLanguage', 'windows10Mobile', 'windows10IoTCore', 'windows10IoTCoreCommercial')]
         [System.String]
         $TargetEdition,
 
         [Parameter()]
-        [ValidateSet('noRestriction','block','unlock')]
+        [ValidateSet('noRestriction', 'block', 'unlock')]
         [System.String]
         $WindowsSMode,
 
@@ -497,7 +509,7 @@ function Test-TargetResource
         {
             $testResult = $false
         }
-        elseif ($ProductKey.substring($ProductKey.length -4) -ne $CurrentValues.ProductKey.substring($CurrentValues.ProductKey.length -4))
+        elseif ($ProductKey.substring($ProductKey.length - 4) -ne $CurrentValues.ProductKey.substring($CurrentValues.ProductKey.length - 4))
         {
             $testResult = $false
         }
@@ -574,7 +586,7 @@ function Export-TargetResource
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.editionUpgradeConfiguration' `
-            }
+        }
         #endregion
 
         $i = 1
@@ -596,15 +608,15 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
@@ -629,7 +641,7 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock
@@ -672,7 +684,7 @@ function Update-DeviceConfigurationPolicyAssignment
         $Repository = 'deviceManagement/configurationPolicies',
 
         [Parameter()]
-        [ValidateSet('v1.0','beta')]
+        [ValidateSet('v1.0', 'beta')]
         [System.String]
         $APIVersion = 'beta'
     )
@@ -683,26 +695,26 @@ function Update-DeviceConfigurationPolicyAssignment
 
         foreach ($target in $targets)
         {
-            $formattedTarget = @{"@odata.type" = $target.dataType}
+            $formattedTarget = @{'@odata.type' = $target.dataType }
             if ($target.groupId)
             {
-                $formattedTarget.Add('groupId',$target.groupId)
+                $formattedTarget.Add('groupId', $target.groupId)
             }
             if ($target.collectionId)
             {
-                $formattedTarget.Add('collectionId',$target.collectionId)
+                $formattedTarget.Add('collectionId', $target.collectionId)
             }
             if ($target.deviceAndAppManagementAssignmentFilterType)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
             }
             if ($target.deviceAndAppManagementAssignmentFilterId)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
             }
-            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
         }
-        $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
     }
