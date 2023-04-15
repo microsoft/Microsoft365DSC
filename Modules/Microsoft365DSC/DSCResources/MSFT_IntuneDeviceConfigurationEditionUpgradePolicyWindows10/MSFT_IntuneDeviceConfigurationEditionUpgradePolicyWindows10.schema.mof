@@ -18,7 +18,6 @@ class MSFT_IntuneDeviceConfigurationEditionUpgradePolicyWindows10 : OMI_BaseReso
     [Write, Description("S mode configuration. Possible values are: noRestriction, block, unlock."), ValueMap{"noRestriction","block","unlock"}, Values{"noRestriction","block","unlock"}] String WindowsSMode;
     [Write, Description("Admin provided description of the Device Configuration.")] String Description;
     [Required, Description("Admin provided name of the device configuration.")] String DisplayName;
-    [Write, Description("Indicates whether or not the underlying Device Configuration supports the assignment of scope tags. Assigning to the ScopeTags property is not allowed when this value is false and entities will not be visible to scoped users. This occurs for Legacy policies created in Silverlight and can be resolved by deleting and recreating the policy in the Azure Portal. This property is read-only.")] Boolean SupportsScopeTags;
     [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;

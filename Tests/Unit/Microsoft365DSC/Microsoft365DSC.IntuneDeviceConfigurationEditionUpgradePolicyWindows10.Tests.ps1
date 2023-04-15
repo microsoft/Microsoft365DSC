@@ -64,7 +64,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     License = "FakeStringValue"
                     LicenseType = "productKey"
                     ProductKey = "FakeStringValue"
-                    SupportsScopeTags = $True
                     TargetEdition = "windows10Enterprise"
                     WindowsSMode = "noRestriction"
                     Ensure = "Present"
@@ -96,7 +95,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     License = "FakeStringValue"
                     LicenseType = "productKey"
                     ProductKey = "FakeStringValue"
-                    SupportsScopeTags = $True
                     TargetEdition = "windows10Enterprise"
                     WindowsSMode = "noRestriction"
                     Ensure = 'Absent'
@@ -116,7 +114,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        SupportsScopeTags = $True
 
                     }
                 }
@@ -144,7 +141,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     License = "FakeStringValue"
                     LicenseType = "productKey"
                     ProductKey = "FakeStringValue"
-                    SupportsScopeTags = $True
                     TargetEdition = "windows10Enterprise"
                     WindowsSMode = "noRestriction"
                     Ensure = 'Present'
@@ -164,7 +160,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        SupportsScopeTags = $True
 
                     }
                 }
@@ -184,8 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id = "FakeStringValue"
                     License = "FakeStringValue"
                     LicenseType = "productKey"
-                    ProductKey = "FakeStringValue"
-                    SupportsScopeTags = $True
+                    ProductKey = "11111-11111-11111-11111-11111"
                     TargetEdition = "windows10Enterprise"
                     WindowsSMode = "noRestriction"
                     Ensure = 'Present'
@@ -197,7 +191,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdditionalProperties = @{
                             windowsSMode = "noRestriction"
                             '@odata.type' = "#microsoft.graph.editionUpgradeConfiguration"
-                            productKey = "FakeStringValue"
+                            productKey = "11111-11111-11111-11111-22222" #Drift
                             targetEdition = "windows10Enterprise"
                             license = "FakeStringValue"
                             licenseType = "productKey"
@@ -244,7 +238,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        SupportsScopeTags = $True
 
                     }
                 }

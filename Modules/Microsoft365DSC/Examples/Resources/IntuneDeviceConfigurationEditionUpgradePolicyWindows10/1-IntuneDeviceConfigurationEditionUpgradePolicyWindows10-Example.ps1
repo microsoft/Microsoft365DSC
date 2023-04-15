@@ -23,13 +23,13 @@ Configuration Example
                 }
             );
             Credential           = $Credscredential;
-            DisplayName          = "Edition upgrade and mode switch";
+            Description          = "";
+            DisplayName          = "Edition upgrade and mode switch - update";
             Ensure               = "Present";
             Id                   = "3e4222e0-c172-4081-bf9a-2e17ddfc34ca";
             License              = "";
             LicenseType          = "productKey";
-            ProductKey           = "#####-#####-#####-#####-#xxxx";
-            SupportsScopeTags    = $True;
+            ProductKey           = "#####-#####-#####-#####-#2345";
             TargetEdition        = "windows10Professional";
             WindowsSMode         = "block";
         }

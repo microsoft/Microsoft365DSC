@@ -36,10 +36,6 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter()]
-        [System.Boolean]
-        $SupportsScopeTags,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
@@ -156,7 +152,6 @@ function Get-TargetResource
             WindowsSMode          = $enumWindowsSMode
             Description           = $getValue.Description
             DisplayName           = $getValue.DisplayName
-            SupportsScopeTags     = $getValue.SupportsScopeTags
             Id                    = $getValue.Id
             Ensure                = 'Present'
             Credential            = $Credential
@@ -232,10 +227,6 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
-        [Parameter()]
-        [System.Boolean]
-        $SupportsScopeTags,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -405,10 +396,6 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
-        [Parameter()]
-        [System.Boolean]
-        $SupportsScopeTags,
 
         [Parameter(Mandatory = $true)]
         [System.String]
