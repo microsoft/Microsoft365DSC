@@ -149,6 +149,10 @@ function New-M365DSCResource
             else
             {
                 $selectedODataType = $policyTypes | Where-Object -FilterScript { $_ -eq $AdditionalPropertiesType }
+                if ([String]::IsNullOrEmpty($selectedODataType))
+                {
+                    $selectedODataType = $AdditionalPropertiesType
+                }
             }
             $isAdditionalProperty = $true
         }
