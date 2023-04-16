@@ -6,6 +6,8 @@
   * Initial release
 * DRG
   * Fixed issue retrieving the cmdlet definition when the resource type is derived from an abstract type
+  * Fixed issue with UnitTest and complex properties with AdditionalProperties
+  * Fixed issue with Complex constructor and complex properties with AdditionalProperties
 * SCLabelPolicy
   * If label policy is set to None don't get its label display name since it's not required
     FIXES [#3104](https://github.com/microsoft/Microsoft365DSC/issues/3104)
