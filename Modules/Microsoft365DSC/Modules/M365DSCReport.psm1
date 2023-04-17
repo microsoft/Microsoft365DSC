@@ -61,7 +61,8 @@ function New-M365DSCConfigurationToHTML
         $partHTML += '</th>'
 
         $partHTML += "<th colspan='2' style='background-color:silver;text-align:center;' width='80%'>"
-        $partHTML += '<strong>' + $resource.ResourceName + '</strong>'
+        $partHTML += '<strong>' + $resource.ResourceName + " '" + $resource.ResourceInstanceName + "'</strong>"
+        $resource.Remove("ResourceInstanceName") | Out-Null
         $partHTML += '</th></tr>'
 
         if ($SortProperties)
@@ -75,7 +76,7 @@ function New-M365DSCConfigurationToHTML
 
         foreach ($property in $properties)
         {
-            if ($property -ne 'ResourceName' -and $property -ne 'Credential')
+            if ($property -ne 'ResourceName')
             {
                 $partHTML += "<tr><td width='40%' style='padding:5px;text-align:right;border:1px solid black;'><strong>" + $property + '</strong></td>'
                 $value = "`$Null"
@@ -430,6 +431,9 @@ Array that contains the list of configuration components for the destination.
 .Parameter ExcludedProperties
 Array that contains the list of parameters to exclude.
 
+.Parameter IsBlueprintAssessment
+Specifies whether or not we are currently comparing a configuration to a Blueprint.
+
 .Example
 Compare-M365DSCConfigurations -Source 'C:\DSC\source.ps1' -Destination 'C:\DSC\destination.ps1'
 
@@ -464,7 +468,11 @@ function Compare-M365DSCConfigurations
 
         [Parameter()]
         [Array]
-        $ExcludedProperties
+        $ExcludedProperties,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsBlueprintAssessment = $false
     )
 
     if ($CaptureTelemetry)
@@ -552,13 +560,63 @@ function Compare-M365DSCConfigurations
                             $destinationPropertyName = $propertyName
                         }
 
+                        # Case where the property contains CIMInstances
+                        if ($null -ne $sourceResource.$propertyName.Keys -and $sourceResource.$propertyName.Keys.Contains('CIMInstance'))
+                        {
+                            foreach ($instance in $sourceResource.$propertyName)
+                            {
+                                [string]$key = Get-M365DSCCimInstanceKey -CIMInstance $instance
+
+                                if ($null -ne $key)
+                                {
+                                    $destinationResourceInstance = $destinationResource.$destinationPropertyName | Where-Object -FilterScript {$_."$key" -eq $instance."$key"}
+
+                                    if ($null -ne $destinationResourceInstance)
+                                    {
+                                        foreach ($property in $instance.Keys)
+                                        {
+                                            if ($null -ne (Compare-Object -ReferenceObject ($instance."$property")`
+                                                -DifferenceObject ($destinationResourceInstance."$property")))
+                                            {
+                                                $drift = @{
+                                                    ResourceName = $sourceResource.ResourceName
+                                                    Key          = $propertyName
+                                                    KeyValue     = $instance."$key"
+                                                    Properties   = @(@{
+                                                            ParameterName      = $property
+                                                            CIMInstanceKey     = $key
+                                                            CIMInstanceValue   = $instance."$Key"
+                                                            ValueInSource      = $instance."$property"
+                                                            ValueInDestination = $destinationResourceInstance."$property"
+                                                        })
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        # We have detected a drift where the CIM Instance exists in the Source but NOT in the Destination
+                                        $drift = @{
+                                            ResourceName = $sourceResource.ResourceName
+                                            Key          = $propertyName
+                                            KeyValue     = $instance."$key"
+                                            Properties   = @(@{
+                                                    ParameterName      = $propertyName
+                                                    ValueInSource      = $instance
+                                                    ValueInDestination = $null
+                                                })
+                                        }
+                                    }
+                                }
+                            }
+                        }
                         # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
-                        if ($destinationResource.ContainsKey($destinationPropertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
+                        elseif ($destinationResource.ContainsKey($destinationPropertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
                                 $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
                                         -DifferenceObject ($destinationResource.$destinationPropertyName))) -and
                             -not ([System.String]::IsNullOrEmpty($destinationResource.$destinationPropertyName) -and [System.String]::IsNullOrEmpty($sourceResource.$propertyName)))
                         {
-                            if ($null -eq $drift)
+                            if ($null -eq $drift -and (-not $IsBlueprintAssessment -or $destinationResource.ContainsKey($destinationPropertyName)))
                             {
                                 $drift = @{
                                     ResourceName = $sourceResource.ResourceName
@@ -580,7 +638,7 @@ function Compare-M365DSCConfigurations
                                     $drift.Properties[0].Add('_Metadata_Info', $Information)
                                 }
                             }
-                            else
+                            elseif (-not $IsBluePrintAssessment -or $destinationResource.ContainsKey($destinationPropertyName))
                             {
                                 $newDrift = @{
                                     ParameterName      = $propertyName
@@ -612,10 +670,60 @@ function Compare-M365DSCConfigurations
                         {
                             $sourcePropertyName = $propertyName
                         }
-                        if (-not [System.String]::IsNullOrEmpty($propertyName) -and
+                        # Case where the property contains CIMInstances
+                        if ($null -ne $destinationResource.$propertyName.Keys -and $destinationResource.$propertyName.Keys.Contains('CIMInstance'))
+                        {
+                            foreach ($instance in $destinationResource.$propertyName)
+                            {
+                                [string]$key = Get-M365DSCCimInstanceKey -CIMInstance $instance
+
+                                if ($null -ne $key)
+                                {
+                                    $sourceResourceInstance = $sourceResource.$sourcePropertyName | Where-Object -FilterScript {$_."$key" -eq $instance."$key"}
+
+                                    if ($null -ne $sourceResourceInstance)
+                                    {
+                                        foreach ($property in $instance.Keys)
+                                        {
+                                            if ($null -ne (Compare-Object -ReferenceObject ($instance."$property")`
+                                                -DifferenceObject ($sourceResourceInstance."$property")))
+                                            {
+                                                $drift = @{
+                                                    ResourceName = $destinationResource.ResourceName
+                                                    Key          = $propertyName
+                                                    KeyValue     = $instance."$key"
+                                                    Properties   = @(@{
+                                                            ParameterName      = $property
+                                                            CIMInstanceKey     = $key
+                                                            CIMInstanceValue   = $instance."$Key"
+                                                            ValueInSource      = $instance."$property"
+                                                            ValueInDestination = $sourceResourceInstance."$property"
+                                                        })
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        # We have detected a drift where the CIM Instance exists in the Destination but NOT in the Source
+                                        $drift = @{
+                                            ResourceName = $destinationResource.ResourceName
+                                            Key          = $propertyName
+                                            KeyValue     = $instance."$key"
+                                            Properties   = @(@{
+                                                    ParameterName      = $propertyName
+                                                    ValueInSource      = $instance
+                                                    ValueInDestination = $null
+                                                })
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        elseif (-not [System.String]::IsNullOrEmpty($propertyName) -and
                             -not $sourceResource.Contains($sourcePropertyName))
                         {
-                            if ($null -eq $drift)
+                            if ($null -eq $drift -and (-not $IsBlueprintAssessment -or -not $sourcePRopertyName.StartsWith('_metadata_')))
                             {
                                 $drift = @{
                                     ResourceName = $sourceResource.ResourceName
@@ -628,7 +736,7 @@ function Compare-M365DSCConfigurations
                                         })
                                 }
                             }
-                            else
+                            elseif (-not $IsBlueprintAssessment -or -not $sourcePRopertyName.StartsWith('_metadata_'))
                             {
                                 $drift.Properties += @{
                                     ParameterName      = $sourcePropertyName
@@ -709,6 +817,59 @@ function Compare-M365DSCConfigurations
 
 <#
 .Description
+This function gets the key parameter for the specified CIMInstance
+
+.Functionality
+Internal, Hidden
+#>
+function Get-M365DSCCIMInstanceKey
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $CIMInstance
+    )
+    $primaryKey = ''
+    if ($CIMInstance.ContainsKey('IsSingleInstance'))
+    {
+        $primaryKey = ''
+    }
+    elseif ($CIMInstance.ContainsKey('DisplayName'))
+    {
+        $primaryKey = 'DisplayName'
+    }
+    elseif ($CIMInstance.ContainsKey('Identity'))
+    {
+        $primaryKey = 'Identity'
+    }
+    elseif ($CIMInstance.ContainsKey('Id'))
+    {
+        $primaryKey = 'Id'
+    }
+    elseif ($CIMInstance.ContainsKey('Name'))
+    {
+        $primaryKey = 'Name'
+    }
+    elseif ($CIMInstance.ContainsKey('Title'))
+    {
+        $primaryKey = 'Title'
+    }
+    elseif ($CIMInstance.ContainsKey('CdnType'))
+    {
+        $primaryKey = 'CdnType'
+    }
+    elseif ($CIMInstance.ContainsKey('Usage'))
+    {
+        $primaryKey = 'Usage'
+    }
+    return $primaryKey
+}
+
+<#
+.Description
 This function gets the key parameter for the specified resource
 
 .Functionality
@@ -724,7 +885,6 @@ function Get-M365DSCResourceKey
         [System.Collections.Hashtable]
         $Resource
     )
-
     $resourceInfo = Get-DscResource ("MSFT_$($Resource.ResourceName)") -Module 'Microsoft365DSC'
     [Array]$mandatoryParameters = $resourceInfo.Properties | Where-Object -FilterScript { $_.IsMandatory }
     if ($Resource.Contains('IsSingleInstance') -and $mandatoryParameters.Name.Contains('IsSingleInstance'))
@@ -933,6 +1093,7 @@ function New-M365DSCDeltaReport
 
     # Excluding authentication properties by default.
     $authParameters = @("Credential", "ManagedIdentity", "ApplicationId", "TenantId", "CertificatePath", "CertificatePassword", "CertificateThumbprint", "ApplicationSecret")
+    $ExcludedProperties += "ResourceInstanceName"
     $ExcludedProperties = $ExcludedProperties + $authParameters | Select-Object -Unique
 
     Write-Verbose -Message 'Obtaining Delta between the source and destination configurations'
@@ -945,7 +1106,8 @@ function New-M365DSCDeltaReport
             $Delta = Compare-M365DSCConfigurations -Source $Source `
                 -DestinationObject $ParsedBlueprintWithMetadata `
                 -CaptureTelemetry $false `
-                -ExcludedProperties $ExcludedProperties
+                -ExcludedProperties $ExcludedProperties `
+                -IsBluePrintAssessment $true
         }
         Else
         {
@@ -1079,7 +1241,10 @@ function New-M365DSCDeltaReport
                 [void]$reportSB.AppendLine("<table width='100%' cellspacing='0' cellpadding='5'>")
                 [void]$reportSB.AppendLine('<tr>')
                 [void]$reportSB.Append("<th style='width:25%;text-align:center;vertical-align:middle;border:1px solid black;;' ")
-                [void]$reportSB.Append("rowspan='" + ($resource.Properties.Count + 2) + "'>")
+
+                $numberOfMetadataRowForBlueprint = $resource.Properties._Metadata_Level.Count
+                $rowspanCount = ($resource.Properties.Count + 2) + $numberOfMetadataRowForBlueprint
+                [void]$reportSB.Append("rowspan='$rowspanCount'>")
                 $iconPath = Get-IconPath -ResourceName $resource.ResourceName
                 [void]$reportSB.AppendLine("<img src='$iconPath' />")
                 [void]$reportSB.AppendLine('</th>')
@@ -1128,14 +1293,16 @@ function New-M365DSCDeltaReport
                         if ($sourceValue.GetType().Name -eq 'Object[]' -and -not [System.String]::IsNullOrEmpty($CIMType))
                         {
                             $sourceValue = ''
-                            $orderedKeys = $drift.ValueInSource.Key | Sort-Object
-
-                            foreach ($key in $orderedKeys)
+                            foreach ($instance in $drift.ValueInSource)
                             {
-                                $currentValue = ($drift.ValueInSource | Where-Object -FilterScript { $_.Key -eq $key }).Value
+                                $orderedKeys = $instance.Keys | Sort-Object
                                 $sourceValue += "<table width='100%'>"
-                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;'>$CIMType</th></tr>"
-                                $sourceValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'>$key = $currentValue</td></tr>"
+                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$CIMType</th></tr>"
+                                foreach ($key in $orderedKeys)
+                                {
+                                    $currentValue = $instance.$key
+                                    $sourceValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'><strong>$key</strong> = $currentValue</td></tr>"
+                                }
                                 $sourceValue += '</table><br/>'
                             }
                             $sourceValue = $sourceValue.Substring(0, $sourceValue.Length - 5)
@@ -1147,24 +1314,49 @@ function New-M365DSCDeltaReport
                                 -and -not [System.String]::IsNullOrEmpty($CIMType))
                         {
                             $destinationValue = ''
-                            $orderedKeys = $drift.ValueInDestination.Key | Sort-Object
+                            $orderedKeys = $drift.ValueInDestination.Keys | Sort-Object
                             $CIMType = $drift.ValueInDestination[0].CimInstance
 
-                            foreach ($key in $orderedKeys)
+                            foreach ($instance in $drift.ValueInDestination)
                             {
-                                $currentValue = ($drift.ValueInDestination | Where-Object -FilterScript { $_.Key -eq $key }).Value
+                                $orderedKeys = $instance.Keys | Sort-Object
                                 $destinationValue += "<table width='100%'>"
-                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;'>$CIMType</th></tr>"
-                                $destinationValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'>$key = $currentValue</td></tr>"
+                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$CIMType</th></tr>"
+                                foreach ($key in $orderedKeys)
+                                {
+                                    $currentValue = $instance.$key
+                                    $destinationValue += "<tr><td width='100%' style='border:1px solid black; text-align:right;'><strong>$key</strong> = $currentValue</td></tr>"
+                                }
                                 $destinationValue += '</table><br/>'
                             }
                             $destinationValue = $destinationValue.Substring(0, $destinationValue.Length - 5)
                             $cellDestinationStyle = 'vertical-align:top;'
                         }
 
+                        # We have detected the drift in a CIMInstance
+                        if ($drift.ContainsKey("CIMInstanceKey"))
+                        {
+                            $sourceValue = "<table width = '100%'>"
+                            $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
+                            $sourceValue += "<tr><td style='border:1px solid black; text-align:right;'>$($drift.ParameterName)</td><td style='border:1px solid black;'>$($drift.ValueInSource)</td>"
+                            $sourceValue += "</table>"
+
+                            $destinationValue = "<table width = '100%'>"
+                            $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
+                            $destinationValue += "<tr><td style='border:1px solid black; text-align:right;'>$($drift.ParameterName)</td><td style='border:1px solid black;'>$($drift.ValueInDestination)</td>"
+                            $destinationValue += "</table>"
+
+                            $parameterName = $Resource.Key
+                        }
+                        else
+                        {
+                            $parameterName = $drift.ParameterName
+                        }
+
+                        [void]$reportSB.AppendLine($sourceContent)
                         [void]$reportSB.AppendLine('<tr>')
                         [void]$reportSB.AppendLine("<td style='border:1px solid black;text-align:right;' width='45%'>")
-                        [void]$reportSB.AppendLine("$($drift.ParameterName)</td>")
+                        [void]$reportSB.AppendLine("$parameterName</td>")
                         [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellStyle' width='15%'>")
                         [void]$reportSB.AppendLine("$($sourceValue)</td>")
                         [void]$reportSB.AppendLine("<td style='border:1px solid black;$cellDestinationStyle' width='15%'>")
