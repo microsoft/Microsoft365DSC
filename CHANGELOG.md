@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
+  * Initial release
 * IntuneDeviceConfigurationEmailProfilePolicyWindows10
   * Initial release
 * IntuneDeviceConfigurationKioskPolicyWindows10
