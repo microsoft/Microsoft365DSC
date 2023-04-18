@@ -4,6 +4,8 @@
 
 * IntuneDeviceConfigurationEmailProfilePolicyWindows10
   * Initial release
+* IntuneDeviceConfigurationKioskPolicyWindows10
+  * Initial release
 * DRG
   * Fixed issue retrieving the cmdlet definition when the resource type is derived from an abstract type
   * Fixed issue with UnitTest and complex properties with AdditionalProperties
