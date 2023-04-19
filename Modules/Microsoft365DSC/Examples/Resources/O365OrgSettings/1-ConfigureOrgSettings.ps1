@@ -18,7 +18,6 @@ Configuration Example
         O365OrgSettings 'O365OrgSettings'
         {
             Credential                                 = $Credscredential;
-            Ensure                                     = "Present";
             IsSingleInstance                           = "Yes";
             M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
         }
