@@ -145,17 +145,21 @@
       * Initial release
     * IntuneDeviceConfigurationKioskPolicyWindows10
       * Initial release
+    * EXOManagementRoleAssignment
+      * Fixed issue with incorrect Microsoft Graph cmdlets used to retrieve Administrative Units.
+        FIXES [#3185](https://github.com/microsoft/Microsoft365DSC/issues/3185)
+    * SCLabelPolicy
+      * If label policy is set to None do not get its label display name since it is not required
+        FIXES [#3104](https://github.com/microsoft/Microsoft365DSC/issues/3104)
     * DRG
       * Fixed issue retrieving the cmdlet definition when the resource type is derived from an abstract type
       * Fixed issue with UnitTest and complex properties with AdditionalProperties
       * Fixed issue with Complex constructor and complex properties with AdditionalProperties
-    * SCLabelPolicy
-      * If label policy is set to None do not get its label display name since it is not required
-        FIXES [#3104](https://github.com/microsoft/Microsoft365DSC/issues/3104)
     * MISC
       * Reports will now exclude the authentication parameters (e.g., CertificateThumbprint, Credential, etc.).
       * Changed the Encoding helpers logic to ensure titled quotes and apostrophes are correctly evaluated.
-        FIXES [#3165](https://github.com/microsoft/Microsoft365DSC/issues/3165)'
+        FIXES [#3165](https://github.com/microsoft/Microsoft365DSC/issues/3165)
+      * Fixes an issue where the new resource name extraction could still have duplicates.'
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update
       # RequireLicenseAcceptance = $false
