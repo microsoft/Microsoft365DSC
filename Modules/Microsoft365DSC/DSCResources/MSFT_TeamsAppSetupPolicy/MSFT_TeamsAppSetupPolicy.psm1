@@ -215,15 +215,6 @@ function Set-TargetResource
         }
     }
 
-    $appPresetMeetingValues = @()
-    if ($null -ne $AppPresetMeetingList -and ([Array]$AppPresetMeetingList).Count -gt 0)
-    {
-        foreach ($appInstance in $AppPresetMeetingList)
-        {
-            $appPresetMeetingValues += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.AppPreset]::New($appInstance)
-        }
-    }
-
     $pinnedAppBarAppsValue = @()
     if ($null -ne $PinnedAppBarApps -and ([Array]$PinnedAppBarApps).Count -gt 0)
     {

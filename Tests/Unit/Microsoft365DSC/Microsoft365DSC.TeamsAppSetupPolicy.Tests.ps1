@@ -20,7 +20,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-
             $secpasswd = ConvertTo-SecureString 'f@kepassword1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
@@ -42,6 +41,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
+            }
+
+            $fakeAssembly = @"
+                namespace Microsoft.Teams.Policy.Administration.Cmdlets.Core
+                {
+                    public class AppPreset
+                    {
+                        public AppPreset(string appInstance)
+                        {}
+                    }
+
+                    public class PinnedApp
+                    {
+                        public PinnedApp(string appInstance, int order)
+                        {}
+                    }
+                }
+"@
+            try
+            {
+                Add-Type -TypeDefinition $fakeAssembly -ErrorAction SilentlyContinue
+            }
+            catch
+            {
+
             }
         }
 
