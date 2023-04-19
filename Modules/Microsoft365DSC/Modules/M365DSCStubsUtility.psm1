@@ -48,7 +48,8 @@ function New-M365DSCStubFiles
     if ($null -eq $Workloads)
     {
         $workloads = @(
-            @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' },
+            @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement';}, # This is the main EXO module with new cmdlets.
+            @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' }, # This is the EXO Proxy
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement'; },

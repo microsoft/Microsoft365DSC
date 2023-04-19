@@ -1,4 +1,63 @@
 #region ExchangeOnline
+function Get-DefaultTenantBriefingConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Exchange.Management.RestApiClient.Unlimited`1[System.UInt32]]
+        $ResultSize
+    )
+}
+function Get-DefaultTenantMyAnalyticsFeatureConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [Microsoft.Exchange.Management.RestApiClient.Unlimited`1[System.UInt32]]
+        $ResultSize
+    )
+}
+function Set-DefaultTenantBriefingConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PrivacyMode,
+
+        [Parameter()]
+        [Microsoft.Exchange.Management.RestApiClient.Unlimited`1[System.UInt32]]
+        $ResultSize
+    )
+}
+function Set-DefaultTenantMyAnalyticsFeatureConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[System.Double]]
+        $SamplingRate,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyMode,
+
+        [Parameter()]
+        [System.String]
+        $Feature,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsEnabled,
+
+        [Parameter()]
+        [Microsoft.Exchange.Management.RestApiClient.Unlimited`1[System.UInt32]]
+        $ResultSize
+    )
+}
+#endregion
+
+#region ExchangeOnline
 function Add-AvailabilityAddressSpace
 {
     [CmdletBinding()]
