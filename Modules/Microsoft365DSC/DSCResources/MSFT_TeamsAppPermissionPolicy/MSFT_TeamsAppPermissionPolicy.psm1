@@ -85,7 +85,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
-            Identity               = $instance.Identity
+            Identity               = $instance.Identity.Replace('Tag:', '')
             Description            = $instance.Description
             GlobalCatalogAppsType  = $instance.GlobalCatalogAppsType
             PrivateCatalogAppsType = $instance.PrivateCatalogAppsType
@@ -197,59 +197,58 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
+    $DefaultCatalogAppsValue = @()
+    if ($DefaultCatalogApps.Count -gt 0)
+    {
+        foreach ($appEntry in $DefaultCatalogApps)
+        {
+            $DefaultCatalogAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.DefaultCatalogApp]::New($appEntry)
+        }
+    }
+    $PrivateCatalogAppsValue = @()
+    if ($PrivateCatalogApps.Count -gt 0)
+    {
+        foreach ($appEntry in $PrivateCatalogApps)
+        {
+            $PrivateCatalogAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.DefaultCatalogApp]::New($appEntry)
+        }
+    }
+    $GlobalCatalogAppsValue = @()
+    if ($GlobalCatalogApps.Count -gt 0)
+    {
+        foreach ($appEntry in $GlobalCatalogApps)
+        {
+            $GlobalCatalogAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.DefaultCatalogApp]::New($appEntry)
+        }
+    }
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
-
         $CreateParameters.Remove('Verbose') | Out-Null
-
         Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
-        if ($DefaultCatalogApps.Count -gt 0)
-        {
-            $appsValue = [System.Collections.Generic.Lists]::New($DefaultCatalogApps)
-            $CreateParameters.DefaultCatalogApps = $appsValue
-        }
-        if ($PrivateCatalogApps.Count -gt 0)
-        {
-            $appsValue = [System.Collections.Generic.Lists]::New($PrivateCatalogApps)
-            $CreateParameters.PrivateCatalogApps = $appsValue
-        }
-        if ($GlobalCatalogApps.Count -gt 0)
-        {
-            $appsValue = [System.Collections.Generic.Lists]::New($GlobalCatalogApps)
-            $CreateParameters.GlobalCatalogApps = $appsValue
-        }
+
+        $CreateParameters.GlobalCatalogApps = $GlobalCatalogAppsValue
+        $CreateParameters.PrivateCatalogApps = $PrivateCatalogAppsValue
+        $CreateParameters.DefaultCatalogApps = $DefaultCatalogAppsValue
+
         New-CsTeamsAppPermissionPolicy @CreateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$Identity}"
-
         $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
         $UpdateParameters.Remove('Verbose') | Out-Null
+        Write-Verbose -Message "Updating {$Identity}"
 
-        if ($DefaultCatalogApps.Count -gt 0)
-        {
-            $appsValue = [System.Collections.Generic.Lists]::New($DefaultCatalogApps)
-            $CreateParameters.DefaultCatalogApps = $appsValue
-        }
-        if ($PrivateCatalogApps.Count -gt 0)
-        {
-            $appsValue = [System.Collections.Generic.Lists]::New($PrivateCatalogApps)
-            $CreateParameters.PrivateCatalogApps = $appsValue
-        }
-        if ($GlobalCatalogApps.Count -gt 0)
-        {
-            $appsValue = [System.Collections.Generic.Lists]::New($GlobalCatalogApps)
-            $CreateParameters.GlobalCatalogApps = $appsValue
-        }
+        $UpdateParameters.GlobalCatalogApps = $GlobalCatalogAppsValue
+        $UpdateParameters.PrivateCatalogApps = $PrivateCatalogAppsValue
+        $UpdateParameters.DefaultCatalogApps = $DefaultCatalogAppsValue
 
         Set-CsTeamsAppPermissionPolicy @UpdateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$Identity}"
-        Remove-CsTeamsAppPermissionPolicy-Identity $currentInstance.Identity
+        Remove-CsTeamsAppPermissionPolicy -Identity $currentInstance.Identity
     }
 }
 

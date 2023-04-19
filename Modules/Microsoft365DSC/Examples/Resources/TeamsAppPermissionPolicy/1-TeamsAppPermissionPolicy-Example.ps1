@@ -14,11 +14,16 @@ Configuration Example
 
     node localhost
     {
-        TeamsCallHoldPolicy 'Example'
+        TeamsAppPermissionPolicy "TeamsAppPermissionPolicy-Test-Policy"
         {
-            Credential           = $Credscredential;
-            Ensure               = "Present";
-            Identity             = "Global";
+            Credential             = $Credscredential;
+            DefaultCatalogApps     = "com.microsoft.teamspace.tab.vsts";
+            DefaultCatalogAppsType = "AllowedAppList";
+            Description            = "This is a test policy";
+            Ensure                 = "Present";
+            GlobalCatalogAppsType  = "BlockedAppList";
+            Identity               = "TestPolicy";
+            PrivateCatalogAppsType = "BlockedAppList";
         }
     }
 }

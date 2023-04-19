@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'TeamsCallHoldPolicy' -GenericStubModule $GenericStubPath
+    -DscResource 'TeamsAppPermissionPolicy' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -27,19 +27,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Get-PSSession -MockWith {
+            Mock -CommandName Set-CsTeamsAppPermissionPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-PSSession -MockWith {
+            Mock -CommandName New-CsTeamsAppPermissionPolicy -MockWith {
             }
 
-            Mock -CommandName Set-CsTeamsCallHoldPolicy -MockWith {
-            }
-
-            Mock -CommandName New-CsTeamsCallHoldPolicy -MockWith {
-            }
-
-            Mock -CommandName Remove-CsTeamsCallHoldPolicy -MockWith {
+            Mock -CommandName Remove-CsTeamsAppPermissionPolicy -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -52,17 +46,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name 'The TeamsCallHoldPolicy should exist but it DOES NOT' -Fixture {
+        Context -Name 'The policy should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AudioFileId = 'FakeStringValue'
-                    Description = 'FakeStringValue'
-                    Identity    = 'FakeStringValue'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
+                    DefaultCatalogApps     = "com.microsoft.teamspace.tab.vsts";
+                    DefaultCatalogAppsType = "AllowedAppList";
+                    Description            = "This is a test policy";
+                    Ensure                 = "Present";
+                    GlobalCatalogAppsType  = "BlockedAppList";
+                    Identity               = "TestPolicy";
+                    PrivateCatalogAppsType = "BlockedAppList";
+                    Credential             = $Credential
                 }
 
-                Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
                     return $null
                 }
             }
@@ -74,26 +71,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-CsTeamsCallHoldPolicy -Exactly 1
+                Should -Invoke -CommandName New-CsTeamsAppPermissionPolicy -Exactly 1
             }
         }
 
-        Context -Name 'The TeamsCallHoldPolicy exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The policy exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AudioFileId = 'FakeStringValue'
-                    Description = 'FakeStringValue'
-                    Identity    = 'FakeStringValue'
-                    Ensure      = 'Absent'
-                    Credential  = $Credential
+                    DefaultCatalogApps     = "com.microsoft.teamspace.tab.vsts";
+                    DefaultCatalogAppsType = "AllowedAppList";
+                    Description            = "This is a test policy";
+                    Ensure                 = "Absent";
+                    GlobalCatalogAppsType  = "BlockedAppList";
+                    Identity               = "TestPolicy";
+                    PrivateCatalogAppsType = "BlockedAppList";
+                    Credential             = $Credential
                 }
 
-                Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
                     return @{
-                        AudioFileId = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-
+                        DefaultCatalogApps     = @(
+                            @{
+                                Id = "com.microsoft.teamspace.tab.vsts";
+                            }
+                        )
+                        DefaultCatalogAppsType = "AllowedAppList";
+                        Description            = "This is a test policy";
+                        GlobalCatalogAppsType  = "BlockedAppList";
+                        Identity               = "TestPolicy";
+                        PrivateCatalogAppsType = "BlockedAppList";
                     }
                 }
             }
@@ -106,28 +112,37 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should Remove the group from the Set method' {
+            It 'Should Remove the policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-CsTeamsCallHoldPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-CsTeamsAppPermissionPolicy -Exactly 1
             }
         }
 
-        Context -Name 'The TeamsCallHoldPolicy Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The policy Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AudioFileId = 'FakeStringValue'
-                    Description = 'FakeStringValue'
-                    Identity    = 'FakeStringValue'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
+                    DefaultCatalogApps     = "com.microsoft.teamspace.tab.vsts";
+                    DefaultCatalogAppsType = "AllowedAppList";
+                    Description            = "This is a test policy";
+                    Ensure                 = "Present";
+                    GlobalCatalogAppsType  = "BlockedAppList";
+                    Identity               = "TestPolicy";
+                    PrivateCatalogAppsType = "BlockedAppList";
+                    Credential             = $Credential
                 }
 
-                Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
                     return @{
-                        AudioFileId = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-
+                        DefaultCatalogApps     = @(
+                            @{
+                                Id = "com.microsoft.teamspace.tab.vsts";
+                            }
+                        )
+                        DefaultCatalogAppsType = "AllowedAppList";
+                        Description            = "This is a test policy";
+                        GlobalCatalogAppsType  = "BlockedAppList";
+                        Identity               = "TestPolicy";
+                        PrivateCatalogAppsType = "BlockedAppList";
                     }
                 }
             }
@@ -138,21 +153,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The TeamsCallHoldPolicy exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The policy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AudioFileId = 'FakeStringValue'
-                    Description = 'FakeStringValue'
-                    Identity    = 'FakeStringValue'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
+                    DefaultCatalogApps     = "com.microsoft.teamspace.tab.vsts";
+                    DefaultCatalogAppsType = "AllowedAppList";
+                    Description            = "This is a test policy";
+                    Ensure                 = "Present";
+                    GlobalCatalogAppsType  = "BlockedAppList";
+                    Identity               = "TestPolicy";
+                    PrivateCatalogAppsType = "BlockedAppList";
+                    Credential             = $Credential
                 }
 
-                Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
                     return @{
-                        AudioFileId = 'FakeStringValueDrift #Drift'
-                        Description = 'FakeStringValueDrift #Drift'
-                        Identity    = 'FakeStringValue'
+                        DefaultCatalogApps     = @(
+                            @{
+                                Id = "com.microsoft.teamspace.tab.vsts";
+                            }
+                        )
+                        DefaultCatalogAppsType = "AllowedAppList";
+                        Description            = "This is a test policy";
+                        GlobalCatalogAppsType  = "AllowedAppList"; # Drift
+                        Identity               = "TestPolicy";
+                        PrivateCatalogAppsType = "BlockedAppList";
                     }
                 }
             }
@@ -167,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-CsTeamsCallHoldPolicy -Exactly 1
+                Should -Invoke -CommandName Set-CsTeamsAppPermissionPolicy -Exactly 1
             }
         }
 
@@ -179,12 +204,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-CsTeamsCallHoldPolicy -MockWith {
+                Mock -CommandName Get-CsTeamsAppPermissionPolicy -MockWith {
                     return @{
-                        AudioFileId = 'FakeStringValue'
-                        Description = 'FakeStringValue'
-                        Identity    = 'FakeStringValue'
-
+                        DefaultCatalogApps     = @(
+                            @{
+                                Id = "com.microsoft.teamspace.tab.vsts";
+                            }
+                        )
+                        DefaultCatalogAppsType = "AllowedAppList";
+                        Description            = "This is a test policy";
+                        GlobalCatalogAppsType  = "AllowedAppList"; # Drift
+                        Identity               = "TestPolicy";
+                        PrivateCatalogAppsType = "BlockedAppList";
                     }
                 }
             }

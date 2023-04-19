@@ -15,6 +15,8 @@
 * SCLabelPolicy
   * If label policy is set to None don't get its label display name since it's not required
     FIXES [#3104](https://github.com/microsoft/Microsoft365DSC/issues/3104)
+* TeamsAppPermissionPolicy
+  * Initial release.
 * MISC
   * Reports will now exclude the authentication parameters (e.g., CertificateThumbprint, Credential, etc.).
   * Changed the Encoding helper's logic to ensure titled quotes and apostrophes are correctly evaluated.
