@@ -22,21 +22,21 @@ function Format-M365DSCString
     $InvalidCharacters = @(
         @{
             # Tilted Apostrophe
-            InvalidCharacter = '[\u2019]'
-            MainReplaceBy    = "'"
-            CimReplaceBy     = "''"
+            InvalidCharacter = [char]0x2019
+            MainReplaceBy    = "``" + [char]0x2019
+            CimReplaceBy     = "'" + [char]0x2019
         },
         @{
             # Tilted Left Quotes
-            InvalidCharacter = '[\u201C]'
-            MainReplaceBy    = "`""
-            CimReplaceBy     = '"'
+            InvalidCharacter = [char]0x201C
+            MainReplaceBy    = "``" + [char]0x201C
+            CimReplaceBy     = [char]0x201C
         },
         @{
             # Tilted Right Quotes
-            InvalidCharacter = '[\u201D]'
-            MainReplaceBy    = "`""
-            CimReplaceBy     = '"'
+            InvalidCharacter = [char]0x201D
+            MainReplaceBy    = "``" + [char]0x201D
+            CimReplaceBy     = [char]0x201D
         }
     )
 
@@ -59,24 +59,18 @@ function Format-M365DSCString
             $foundProperty = $DSCResource.Properties | Where-Object -FilterScript { $_.Name -eq $key }
             foreach ($entry in $InvalidCharacters)
             {
-                $found = $newProperties.$key -match $entry.InvalidCharacter
-
-                while ($found)
+                if ($foundProperty.PropertyType -eq '[string]')
                 {
-                    if ($foundProperty.PropertyType -eq '[string]')
-                    {
-                        $newProperties.$key = $newProperties.$key -replace $entry.InvalidCharacter, $entry.MainReplaceBy
-                    }
-                    elseif ($foundProperty.PropertyType -like '`[MSFT_*`]')
-                    {
-                        # Case property is a CIMInstance
-                        $newProperties.$key = $newProperties.$key -replace $entry.InvalidCharacter, $entry.CimReplaceBy
-                    }
-                    else
-                    {
-                        break
-                    }
-                    $found = $newProperties.$key -match $entry.InvalidCharacter
+                    $newProperties.$key = $newProperties.$key.Replace($entry.InvalidCharacter.ToString(), $entry.MainReplaceBy.ToString())
+                }
+                elseif ($foundProperty.PropertyType -like '`[MSFT_*`]')
+                {
+                    # Case property is a CIMInstance
+                    $newProperties.$key = $newProperties.$key.Replace($entry.InvalidCharacter.ToString(), $entry.CimReplaceBy.ToString())
+                }
+                else
+                {
+                    break
                 }
             }
         }
