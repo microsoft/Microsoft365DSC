@@ -43,6 +43,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
+            $fakeAssembly = @"
+                namespace Microsoft.Teams.Policy.Administration.Cmdlets.Core
+                {
+                    public class DefaultCatalogApp
+                    {
+                        public DefaultCatalogApp(string appInstance)
+                        {}
+                    }
+                }
+"@
+            try
+            {
+                Add-Type -TypeDefinition $fakeAssembly -ErrorAction SilentlyContinue
+            }
+            catch
+            {
+
+            }
         }
 
         # Test contexts
