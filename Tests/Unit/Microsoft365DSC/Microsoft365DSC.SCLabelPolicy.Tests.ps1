@@ -70,10 +70,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name             = 'TestLabelPolicy'
                     Comment          = 'This is a test label policy'
                     Labels           = @('Personal', 'General')
-                    AdvancedSettings = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                    AdvancedSettings = @(
+                        (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
                             Key   = 'LabelStatus'
                             Value = 'Enabled'
+                        } -ClientOnly),
+                        (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                            Key   = 'DefaultLabelStatus'
+                            Value = 'None'
                         } -ClientOnly)
+                    )
                     Credential       = $Credential
                     Ensure           = 'Present'
                 }
