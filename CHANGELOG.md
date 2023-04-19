@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.419.1
 
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
   * Initial release
