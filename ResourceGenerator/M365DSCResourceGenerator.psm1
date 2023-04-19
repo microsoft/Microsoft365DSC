@@ -149,6 +149,10 @@ function New-M365DSCResource
             else
             {
                 $selectedODataType = $policyTypes | Where-Object -FilterScript { $_ -eq $AdditionalPropertiesType }
+                if ([String]::IsNullOrEmpty($selectedODataType))
+                {
+                    $selectedODataType = $AdditionalPropertiesType
+                }
             }
             $isAdditionalProperty = $true
         }
@@ -1590,15 +1594,15 @@ function Get-ComplexTypeConstructorToString
         if ($isNested)
         {
             $valuePrefix=$ParentPropertyValuePath
-            #if ($null -eq $valuePrefix)
-            #{
+            if ($null -eq $valuePrefix)
+            {
                 $propRoot=$ParentPropertyName.replace("my","")
                 $valuePrefix="current$propRoot."
                 #if ($property.IsRootProperty -eq $false -and -not $IsNested)
                 #{
                 #    $valuePrefix += "AdditionalProperties."
                 #}
-            #}
+            }
         }
         $iterationPropertyName="current$propertyName"
         $complexString.appendLine($spacing + "`$$returnPropertyName" + " = @()") | Out-Null
@@ -1629,13 +1633,20 @@ function Get-ComplexTypeConstructorToString
             #$valuePrefix = "current$propRoot."
             $valuePrefix = "$referencePrefix"
 
-            #$recallProperty=$propertyName
-            $recallProperty=''
+            #$recallProperty=''
             if ($isParentfromAdditionalProperties)
             {
-                $recallProperty=Get-StringFirstCharacterToLower -Value $propertyName
+                #$recallProperty=Get-StringFirstCharacterToLower -Value $propertyName
+                $referencePrefixElements = @()
+                foreach ($elt in ($referencePrefix.split('.') | where-object {-not [String]::IsNullOrWhiteSpace($_)}))
+                {
+                    $referencePrefixElements += Get-StringFirstCharacterToLower -Value $elt
+                    #$referencePrefix = "$valuePrefix$recallProperty."
+                }
+                $referencePrefix = ($referencePrefixElements -join '.') + '.'
+                $valuePrefix = $referencePrefix
             }
-            $valuePrefix += "$recallProperty."
+            #$valuePrefix += "."
         }
         $AssignedPropertyName = $nestedProperty.Name
         if ($nestedProperty.IsRootProperty -eq $false -and -not $IsNested)
@@ -1671,7 +1682,8 @@ function Get-ComplexTypeConstructorToString
                     -IsNested $true `
                     -ParentPropertyName $tempPropertyName `
                     -ParentPropertyValuePath $referencePrefix `
-                    -IsParentFromAdditionalProperties (-not $Property.IsRootProperty)
+                    -IsParentFromAdditionalProperties $(if ($isNested) {$isParentfromAdditionalProperties} else {-not $Property.IsRootProperty})
+                    #-IsParentFromAdditionalProperties (-not $Property.IsRootProperty)
 
                 $complexString.append($nestedString ) | Out-Null
 
@@ -2345,10 +2357,13 @@ function Get-M365DSCFakeValues
                 $propertyType = "MSFT_$propertyType"
                 $hashValue.add('CIMType', $propertyType)
             }
-            $IsParentFromAdditionalProperties=$false
-            if (-not $parameter.IsRootProperty)
+            if (-not $isRecursive)
             {
-                $IsParentFromAdditionalProperties=$true
+                $IsParentFromAdditionalProperties=$false
+                if (-not $parameter.IsRootProperty)
+                {
+                    $IsParentFromAdditionalProperties=$true
+                }
             }
             $hashValue.add('isArray', $parameter.IsArray)
             $nestedProperties = Get-M365DSCFakeValues -ParametersInformation $parameter.Properties `
