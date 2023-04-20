@@ -526,19 +526,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
-                    return $null
-                }
-
                 Mock -CommandName Get-MgGroup -MockWith {
                     return [pscustomobject]@{
                         Id                = '1234567890'
                         DisplayName       = 'DSCScopedRoleUserAdmins'
                     }
-                }
-
-                Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
-                    return $null
                 }
 
                 Mock -CommandName Invoke-MgGraphRequest -MockWith {
@@ -598,19 +590,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
-                    return $null
-                }
-
                 Mock -CommandName Get-MgServicePrincipal -MockWith {
                     return [pscustomobject]@{
                         Id                = '1234567890'
                         DisplayName       = 'DSCScopedRoleSPN'
                     }
-                }
-
-                Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
-                    return $null
                 }
 
                 Mock -CommandName Invoke-MgGraphRequest -MockWith {
