@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADAdministrativeUnit
+  * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
+    FIXES [#3189](https://github.com/microsoft/Microsoft365DSC/issues/3189)
+
 # 1.23.419.1
 
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
