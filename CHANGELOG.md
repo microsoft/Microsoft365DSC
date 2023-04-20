@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.419.1
 
 * AADAdministrativeUnit
   * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
@@ -11,6 +11,9 @@
   * Initial release
 * IntuneDeviceConfigurationKioskPolicyWindows10
   * Initial release
+* EXOManagementRoleAssignment
+  * Fixed issue with incorrect Microsoft Graph cmdlets used to retrieve Administrative Units.
+    FIXES [#3185](https://github.com/microsoft/Microsoft365DSC/issues/3185)
 * SCLabelPolicy
   * If label policy is set to None don't get its label display name since it's not required
     FIXES [#3104](https://github.com/microsoft/Microsoft365DSC/issues/3104)
