@@ -2,9 +2,14 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
+    FIXES [#3189](https://github.com/microsoft/Microsoft365DSC/issues/3189)
 * SCSensitivityLabel
   * Remove property Disabled from schema
     FIXES [#3193](https://github.com/microsoft/Microsoft365DSC/issues/3193)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell tp version 2.0.160.
 
 # 1.23.419.1
 
