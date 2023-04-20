@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell tp version 2.0.160.
+
 # 1.23.419.1
 
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
