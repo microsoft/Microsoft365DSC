@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
+    FIXES [#3189](https://github.com/microsoft/Microsoft365DSC/issues/3189)
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell tp version 2.0.160.
 
