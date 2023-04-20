@@ -208,20 +208,15 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft.Teams.') -or `
-                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier``1[Microsoft."))
-                            {
-                                $ParamType = 'PSObject'
-                            }
                             elseif ($ParamType.StartsWith('Microsoft.Rtc.'))
                             {
                                 $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft.SharePoint.') -or `
-                                    $ParamType.StartsWith('Microsoft.Online') -or `
+                            elseif ($ParamType.StartsWith('Microsoft..') -or `
                                     $ParamType.StartsWith('PnP.') -or `
                                     $ParamType.StartsWith("System.Nullable``1[Microsoft.") -or `
-                                    $ParamType.StartsWith("System.Nullable``1[PnP."))
+                                    $ParamType.StartsWith("System.Nullable``1[PnP.") -or `
+                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier``1[Microsoft."))
                             {
                                 $ParamType = 'PSObject'
                             }
