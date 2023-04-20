@@ -4,7 +4,7 @@ function Get-DefaultTenantBriefingConfig
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Exchange.Management.RestApiClient.Unlimited`1[System.UInt32]]
+        [PSObject]
         $ResultSize
     )
 }
@@ -13,7 +13,7 @@ function Get-DefaultTenantMyAnalyticsFeatureConfig
     [CmdletBinding()]
     param(
         [Parameter()]
-        [Microsoft.Exchange.Management.RestApiClient.Unlimited`1[System.UInt32]]
+        [PSObject]
         $ResultSize
     )
 }
@@ -26,7 +26,7 @@ function Set-DefaultTenantBriefingConfig
         $PrivacyMode,
 
         [Parameter()]
-        [Microsoft.Exchange.Management.RestApiClient.Unlimited`1[System.UInt32]]
+        [PSObject]
         $ResultSize
     )
 }
@@ -51,7 +51,7 @@ function Set-DefaultTenantMyAnalyticsFeatureConfig
         $IsEnabled,
 
         [Parameter()]
-        [Microsoft.Exchange.Management.RestApiClient.Unlimited`1[System.UInt32]]
+        [PSObject]
         $ResultSize
     )
 }

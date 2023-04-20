@@ -212,7 +212,7 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft..') -or `
+                            elseif ($ParamType.StartsWith('Microsoft.') -or `
                                     $ParamType.StartsWith('PnP.') -or `
                                     $ParamType.StartsWith("System.Nullable``1[Microsoft.") -or `
                                     $ParamType.StartsWith("System.Nullable``1[PnP.") -or `
