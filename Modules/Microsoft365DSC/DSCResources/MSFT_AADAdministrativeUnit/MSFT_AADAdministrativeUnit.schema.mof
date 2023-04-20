@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphMember
 {
-    [Write, Description("Identity of member. For users, specify a UserPrincipalName. For groups and devices, specify DisplayName")] String Identity;
-    [Write, Description("Specify User, Group or Device to interpret the identity. Can be ServicePrincipal in ScopedRoleMembers"), ValueMap{"User", "Group", "Device", "ServicePrincipal"}, Values{"User", "Group", "Device", "ServicePrincipal"}] String Type;
+    [Write, Description("Identity of member. For users, specify a UserPrincipalName. For groups, devices and serviceprincipals, specify DisplayName")] String Identity;
+    [Write, Description("Specify User, Group or Device to interpret the identity for Members. Can be ServicePrincipal but not Device in ScopedRoleMembers"), ValueMap{"User", "Group", "Device", "ServicePrincipal"}, Values{"User", "Group", "Device", "ServicePrincipal"}] String Type;
 };
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphScopedRoleMembership

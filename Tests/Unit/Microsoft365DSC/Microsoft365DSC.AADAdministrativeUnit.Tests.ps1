@@ -256,7 +256,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The AU exists and values (Members) are NOT in the desired state' -Fixture {
+        Context -Name 'The AU exists and values (Members contains a User) are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description       = 'DSCAU2'
@@ -266,17 +266,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
                             Identity = 'John.Doe@mytenant.com'
                             Type     = 'User'
-                        } -ClientOnly)
-                    )
-                    ScopedRoleMembers = @(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
-                            RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                                    Identity = 'John.Doe@mytenant.com'
-                                    Type     = 'User'
-                                } -ClientOnly)
-                            #Identity = 'John.Doe@mytenant.com'
-                            #Type     = 'User'
                         } -ClientOnly)
                     )
                     Visibility        = 'Public'
@@ -302,33 +291,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
-                    return $null
-                }
-
-                Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
-                    return [pscustomobject]@{
-                        RoleId         = '12345-67890'
-                        RoleMemberInfo = @{
-                            DisplayName = 'John Doe'
-                            Id          = '1234567890'
-                        }
-                    }
-                }
-
                 Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return [pscustomobject]@{
                         '@odata.type'     = '#microsoft.graph.user'
                         DisplayName       = 'John Doe'
                         UserPrincipalName = 'John.Doe@mytenant.com'
                         Id                = '1234567890'
-                    }
-                }
-
-                Mock -CommandName Get-MgDirectoryRole -MockWith {
-                    return [pscustomobject]@{
-                        Id          = '12345-67890'
-                        DisplayName = 'User Administrator'
                     }
                 }
             }
@@ -347,18 +315,126 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The AU exists and values (ScopedRoleMembers) are NOT in the desired state' -Fixture {
+        Context -Name 'The AU exists and values (Members contains a Group) are NOT in the desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description       = 'DSCAU2'
+                    DisplayName       = 'DSCAU2'
+                    Id                = 'DSCAU2'
+                    Members           = @(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Identity = 'DSCAUMemberGroup'
+                            Type     = 'Group'
+                        } -ClientOnly)
+                    )
+                    Visibility        = 'Public'
+
+                    Ensure            = 'Present'
+                    Credential        = $Credential
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
+                        Description = 'DSCAU2'
+                        DisplayName = 'DSCAU2'
+                        Id          = 'DSCAU2'
+                        Visibility  = 'Public'
+                    }
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return [pscustomobject]@{
+                        Id                = '1234567890'
+                        DisplayName       = 'DSCAUMemberGroup'
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return [pscustomobject]@{
+                        '@odata.type'     = '#microsoft.graph.group'
+                        DisplayName       = 'DSCAUMemberGroup'
+                        Id                = '1234567890'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName New-MgDirectoryAdministrativeUnitMemberByRef -Exactly 1
+            }
+        }
+
+        Context -Name 'The AU exists and values (Members contains a Device) are NOT in the desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description       = 'DSCAU2'
+                    DisplayName       = 'DSCAU2'
+                    Id                = 'DSCAU2'
+                    Members           = @(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Identity = 'DSCAUMemberGroup'
+                            Type     = 'Group'
+                        } -ClientOnly)
+                    )
+                    Visibility        = 'Public'
+
+                    Ensure            = 'Present'
+                    Credential        = $Credential
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
+                        Description = 'DSCAU2'
+                        DisplayName = 'DSCAU2'
+                        Id          = 'DSCAU2'
+                        Visibility  = 'Public'
+                    }
+                }
+
+                Mock -CommandName Get-MgDevice -MockWith {
+                    return [pscustomobject]@{
+                        Id                = '1234567890'
+                        DisplayName       = 'DSCAUMemberDevice'
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return [pscustomobject]@{
+                        '@odata.type'     = '#microsoft.graph.device'
+                        DisplayName       = 'DSCAUMemberDevice'
+                        Id                = '1234567890'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName New-MgDirectoryAdministrativeUnitMemberByRef -Exactly 1
+            }
+        }
+
+        Context -Name 'The AU exists and values (ScopedRoleMembers contains a User) are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description       = 'DSCAU'
                     DisplayName       = 'DSCAU'
                     Id                = 'DSCAU'
-                    Members           = @(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                            Identity = 'John.Doe@mytenant.com'
-                            Type     = 'User'
-                        } -ClientOnly)
-                    )
                     ScopedRoleMembers = @(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
                             RoleName       = 'User Administrator'
@@ -384,17 +460,80 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
-                    return [pscustomobject]@{
-                        Id = '1234567890'
-                    }
-                }
-
                 Mock -CommandName Get-MgUser -MockWith {
                     return [pscustomobject]@{
                         Id                = '1234567890'
                         DisplayName       = 'John Doe'
                         UserPrincipalName = 'John.Doe@mytenant.com'
+                    }
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return [pscustomobject]@{
+                        '@odata.type'     = '#microsoft.graph.user'
+                        DisplayName       = 'John Doe'
+                        UserPrincipalName = 'John.Doe@mytenant.com'
+                        Id                = '1234567890'
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                    return [pscustomobject]@{
+                        Id          = '12345-67890'
+                        DisplayName = 'User Administrator'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName New-MgDirectoryAdministrativeUnitScopedRoleMember -Exactly 1
+            }
+        }
+
+        Context -Name 'The AU exists and values (ScopedRoleMembers contains a Group) are NOT in the desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description       = 'DSCAU'
+                    DisplayName       = 'DSCAU'
+                    Id                = 'DSCAU'
+                    ScopedRoleMembers = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                            RoleName       = 'User Administrator'
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                                    Identity = 'DSCScopedRoleUserAdmins'
+                                    Type     = 'Group'
+                                } -ClientOnly)
+                        } -ClientOnly)
+                    )
+                    Visibility        = 'Public'
+                    Ensure            = 'Present'
+                    Credential        = $Credential
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
+                        Description = 'DSCAU'
+                        DisplayName = 'DSCAU'
+                        Id          = 'DSCAU'
+                        Visibility  = 'Public'
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
+                    return $null
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return [pscustomobject]@{
+                        Id                = '1234567890'
+                        DisplayName       = 'DSCScopedRoleUserAdmins'
                     }
                 }
 
@@ -404,9 +543,80 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.user'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
+                        '@odata.type'     = '#microsoft.graph.group'
+                        DisplayName       = 'DSCScopedRoleUserAdmins'
+                        Id                = '1234567890'
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                    return [pscustomobject]@{
+                        Id          = '12345-67890'
+                        DisplayName = 'User Administrator'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName New-MgDirectoryAdministrativeUnitScopedRoleMember -Exactly 1
+            }
+        }
+
+        Context -Name 'The AU exists and values (ScopedRoleMembers contains an SPN) are NOT in the desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description       = 'DSCAU'
+                    DisplayName       = 'DSCAU'
+                    Id                = 'DSCAU'
+                    ScopedRoleMembers = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                            RoleName       = 'User Administrator'
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                                    Identity = 'DSCScopedRoleSPN'
+                                    Type     = 'ServicePrincipal'
+                                } -ClientOnly)
+                        } -ClientOnly)
+                    )
+                    Visibility        = 'Public'
+                    Ensure            = 'Present'
+                    Credential        = $Credential
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
+                        Description = 'DSCAU'
+                        DisplayName = 'DSCAU'
+                        Id          = 'DSCAU'
+                        Visibility  = 'Public'
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
+                    return $null
+                }
+
+                Mock -CommandName Get-MgServicePrincipal -MockWith {
+                    return [pscustomobject]@{
+                        Id                = '1234567890'
+                        DisplayName       = 'DSCScopedRoleSPN'
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
+                    return $null
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return [pscustomobject]@{
+                        '@odata.type'     = '#microsoft.graph.serviceprincipal'
+                        DisplayName       = 'DSCScopedRoleSPN'
                         Id                = '1234567890'
                     }
                 }
