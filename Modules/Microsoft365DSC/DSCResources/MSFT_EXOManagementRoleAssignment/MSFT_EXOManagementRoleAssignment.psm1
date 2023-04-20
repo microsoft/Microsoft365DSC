@@ -131,7 +131,7 @@ function Get-TargetResource
             {
                 $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                     -InboundParameters $PSBoundParameters
-                $adminUnit = Get-MgAdministrativeUnit -AdministrativeUnitId $roleAssignment.CustomRecipientWriteScope
+                $adminUnit = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $roleAssignment.CustomRecipientWriteScope
 
                 if ($RecipientAdministrativeUnitScope -eq $adminUnit.Id)
                 {
@@ -315,12 +315,14 @@ function Set-TargetResource
     if (-not [System.String]::IsNullOrEmpty($RecipientAdministrativeUnitScope))
     {
         $NewManagementRoleParams.Remove('CustomRecipientWriteScope') | Out-Null
-        $adminUnit = Get-AdministrativeUnit -Identity $RecipientAdministrativeUnitScope -ErrorAction SilentlyContinue
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+        $adminUnit = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $RecipientAdministrativeUnitScope -ErrorAction SilentlyContinue
         if ($null -eq $adminUnit)
         {
-            $adminUnit = Get-AdministrativeUnit | Where-Object -FilterScript { $_.DisplayName -eq $RecipientAdministrativeUnitScope }
+            $adminUnit = Get-MgDirectoryAdministrativeUnit -All | Where-Object -FilterScript { $_.DisplayName -eq $RecipientAdministrativeUnitScope }
         }
-        $NewManagementRoleParams.RecipientAdministrativeUnitScope = $adminUnit.Name
+        $NewManagementRoleParams.RecipientAdministrativeUnitScope = $adminUnit.Id
     }
 
     # CASE: Management Role doesn't exist but should;
