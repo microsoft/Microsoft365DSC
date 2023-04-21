@@ -469,6 +469,10 @@ function Set-TargetResource
                     {
                         throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
                     }
+                    elseif ($roleMemberIdentity.IsAssignableToRole -eq $false)
+                    {
+                        throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} is not role-enabled"
+                    }
                 }
                 elseif ($roleMember.RoleMemberInfo.Type -eq 'ServicePrincipal')
                 {

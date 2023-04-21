@@ -290,15 +290,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         UserPrincipalName = 'John.Doe@mytenant.com'
                     }
                 }
-
-                Mock -CommandName Invoke-MgGraphRequest -MockWith {
-                    return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.user'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                        Id                = '1234567890'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -348,14 +339,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName       = 'DSCAUMemberGroup'
                     }
                 }
-
-                Mock -CommandName Invoke-MgGraphRequest -MockWith {
-                    return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.group'
-                        DisplayName       = 'DSCAUMemberGroup'
-                        Id                = '1234567890'
-                    }
-                }
             }
 
             It 'Should return Values from the Get method' {
@@ -380,8 +363,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                = 'DSCAU2'
                     Members           = @(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                            Identity = 'DSCAUMemberGroup'
-                            Type     = 'Group'
+                            Identity = 'DSCAUMemberDevice'
+                            Type     = 'Device'
                         } -ClientOnly)
                     )
                     Visibility        = 'Public'
@@ -403,14 +386,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return [pscustomobject]@{
                         Id                = '1234567890'
                         DisplayName       = 'DSCAUMemberDevice'
-                    }
-                }
-
-                Mock -CommandName Invoke-MgGraphRequest -MockWith {
-                    return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.device'
-                        DisplayName       = 'DSCAUMemberDevice'
-                        Id                = '1234567890'
                     }
                 }
             }
@@ -468,15 +443,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Invoke-MgGraphRequest -MockWith {
-                    return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.user'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                        Id                = '1234567890'
-                    }
-                }
-
                 Mock -CommandName Get-MgDirectoryRole -MockWith {
                     return [pscustomobject]@{
                         Id          = '12345-67890'
@@ -530,14 +496,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return [pscustomobject]@{
                         Id                = '1234567890'
                         DisplayName       = 'DSCScopedRoleUserAdmins'
-                    }
-                }
-
-                Mock -CommandName Invoke-MgGraphRequest -MockWith {
-                    return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.group'
-                        DisplayName       = 'DSCScopedRoleUserAdmins'
-                        Id                = '1234567890'
+                        IsAssignableToRole = $true
                     }
                 }
 
@@ -558,6 +517,62 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName New-MgDirectoryAdministrativeUnitScopedRoleMember -Exactly 1
+            }
+        }
+
+        Context -Name 'The AU exists, attempt to add as a ScopedRoleMember a Group that is NOT role-enabled. Should throw' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description       = 'DSCAU'
+                    DisplayName       = 'DSCAU'
+                    Id                = 'DSCAU'
+                    ScopedRoleMembers = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                            RoleName       = 'User Administrator'
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                                    Identity = 'DSCNotARoleGroup'
+                                    Type     = 'Group'
+                                } -ClientOnly)
+                        } -ClientOnly)
+                    )
+                    Visibility        = 'Public'
+                    Ensure            = 'Present'
+                    Credential        = $Credential
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
+                    return [pscustomobject]@{
+                        Description = 'DSCAU'
+                        DisplayName = 'DSCAU'
+                        Id          = 'DSCAU'
+                        Visibility  = 'Public'
+                    }
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return [pscustomobject]@{
+                        Id                = '1234567890'
+                        DisplayName       = 'DSCNotARoleGroup'
+                        IsAssignableToRole = $false
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                    return [pscustomobject]@{
+                        Id          = '12345-67890'
+                        DisplayName = 'User Administrator'
+                    }
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+            It 'Should call the Set method and throw' {
+                {Set-TargetResource @testParams} | Should -Throw -ExpectedMessage '*scoped role group*is not role-enabled*'
             }
         }
 
