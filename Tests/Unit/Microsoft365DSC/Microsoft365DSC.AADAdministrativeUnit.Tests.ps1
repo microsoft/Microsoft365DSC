@@ -255,7 +255,86 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
+        Context -Name 'The AU Exists and specified Values are NOT in the desired state (leaving Members and ScopedRoleMembers as-is)' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description                   = 'DSCAU New Description'
+                    DisplayName                   = 'DSCAU'
+                    Id                            = 'DSCAU'
+                    Ensure                        = 'Present'
+                    Credential                    = $Credential
+                }
 
+                # Note: It is in fact possible to update the AU MembershipRule with any invalid value, but in the AAD-portal, updates are not possible unless the rule is valid.
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
+                    return @{
+                        Description          = 'DSCAU Old Description'
+                        DisplayName          = 'DSCAU'
+                        Id                   = 'DSCAU'
+                        AdditionalProperties = @{
+                            membershipType                = 'Assigned'
+                        }
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnitMember -MockWith {
+                    return @(@{
+                            Id = '1234567890'
+                        })
+                }
+
+                Mock -CommandName Get-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
+                    return @(@{
+                            RoleId         = '12345-67890'
+                            RoleMemberInfo = @{
+                                DisplayName = 'John Doe'
+                                Id          = '1234567890'
+                            }
+                        })
+                }
+
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                    return @{
+                        '@odata.type'     = '#microsoft.graph.user'
+                        DisplayName       = 'John Doe'
+                        UserPrincipalName = 'John.Doe@mytenant.com'
+                        Id                = '1234567890'
+                    }
+                }
+
+                Mock -CommandName Get-MgUser -MockWith {
+                    return [pscustomobject]@{
+                        Id                = '1234567890'
+                        DisplayName       = 'John Doe'
+                        UserPrincipalName = 'John.Doe@mytenant.com'
+                    }
+                }
+
+                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                    return @{
+                        Id          = '12345-67890'
+                        DisplayName = 'User Administrator'
+                    }
+                }
+
+            }
+
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method without removing existing Members or ScopedRoleMembers' {
+                Set-TargetResource @testParams
+                Should -Not -Invoke -CommandName Remove-MgDirectoryAdministrativeUnitMemberByRef
+                Should -Not -Invoke -CommandName Remove-MgDirectoryAdministrativeUnitScopedRoleMember
+            }
+
+        }
         Context -Name 'The AU exists and values (Members contains a User) are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -523,7 +602,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The AU exists, attempt to add as a ScopedRoleMember a Group that is NOT role-enabled. Should throw' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description       = 'DSCAU'
+                    Description       = 'DSCAU New Description'
                     DisplayName       = 'DSCAU'
                     Id                = 'DSCAU'
                     ScopedRoleMembers = @(
@@ -535,17 +614,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 } -ClientOnly)
                         } -ClientOnly)
                     )
-                    Visibility        = 'Public'
                     Ensure            = 'Present'
                     Credential        = $Credential
                 }
 
                 Mock -CommandName Get-MgDirectoryAdministrativeUnit -MockWith {
                     return [pscustomobject]@{
-                        Description = 'DSCAU'
+                        Description = 'DSCAU Old Description'
                         DisplayName = 'DSCAU'
                         Id          = 'DSCAU'
-                        Visibility  = 'Public'
                     }
                 }
 
