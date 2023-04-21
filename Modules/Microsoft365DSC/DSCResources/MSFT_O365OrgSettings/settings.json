@@ -5,18 +5,26 @@
         "graph": {
             "delegated": {
                 "read": [
-                    "Application.Read.All"
+                    {
+                        "name": "Application.Read.All"
+                    }
                 ],
                 "update": [
-                    "Application.ReadWrite.All"
+                    {
+                        "name": "Application.ReadWrite.All"
+                    }
                 ]
             },
             "application": {
                 "read": [
-                    "Application.Read.All"
+                    {
+                        "name": "Application.Read.All"
+                    }
                 ],
                 "update": [
-                    "Application.ReadWrite.All"
+                    {
+                        "name": "Application.ReadWrite.All"
+                    }
                 ]
             }
         },
