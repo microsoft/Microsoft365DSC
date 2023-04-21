@@ -581,6 +581,7 @@ function Compare-M365DSCConfigurations
                                         $drift = $null
                                         foreach ($destinationResourceInstance in $destinationResourceInstances)
                                         {
+                                            $foundResourceMatch = $true
                                             foreach ($property in $instance.Keys)
                                             {
                                                 if ($null -ne (Compare-Object -ReferenceObject ($instance."$property")`
@@ -599,9 +600,10 @@ function Compare-M365DSCConfigurations
                                                                 ValueInDestination = $destinationResourceInstance."$property"
                                                             })
                                                     }
+                                                    $foundResourceMatch = $false
                                                 }
                                             }
-                                            if ($null -eq $drift)
+                                            if ($foundResourceMatch)
                                             {
                                                 $foundOneMatch = $true
                                             }
@@ -1461,7 +1463,7 @@ function New-M365DSCDeltaReport
                         # We have detected the drift in a CIMInstance
                         if ($drift.ContainsKey("CIMInstanceKey"))
                         {
-                            if ($null -ne $drift.ValueInSource)
+                            if ($null -ne $drift.ValueInSource -and $null -ne $drift.ValueInDestination)
                             {
                                 $sourceValue = "<table width = '100%'>"
                                 $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
@@ -1469,12 +1471,35 @@ function New-M365DSCDeltaReport
                                 $sourceValue += "<tr><td style='border:1px solid black; text-align:right;'>$($drift.ParameterName)</td><td style='border:1px solid black;'>$valueForSource</td>"
                                 $sourceValue += "</table>"
                             }
+                            elseif ($null -ne $drift.ValueInSource -and $null -eq $drift.ValueInDestination)
+                            {
+                                $sourceValue = "<table width = '100%'>"
+                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"                                
+                                
+                                if ($drift.ValueInSource.GetType().Name -ne 'OrderedDictionary')
+                                {
+                                    $valueForSource = $drift.ValueInSource
+                                    $sourceValue += "<tr><td style='border:1px solid black; text-align:right;'>$($drift.ParameterName)</td><td style='border:1px solid black;'>$valueForSource</td>"
+                                }
+                                else
+                                {
+                                    foreach ($key in $drift.ValueInSource.Keys)
+                                    {
+                                        if ($key -ne 'CIMInstance')
+                                        {
+                                            $valueForSource = $drift.ValueInSource.$key
+                                            $sourceValue += "<tr><td style='border:1px solid black; text-align:right;'>$key</td><td style='border:1px solid black;'>$valueForSource</td>"
+                                        }
+                                    }
+                                }
+                                $sourceValue += "</table>"
+                            }
                             else
                             {
                                 $sourceValue += "&nbsp"
                             }
 
-                            if ($null -ne $drift.ValueInDestination)
+                            if ($null -ne $drift.ValueInDestination -and $null -ne $drift.ValueInSource)
                             {
                                 $destinationValue = "<table width = '100%'>"
                                 $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
@@ -1482,9 +1507,32 @@ function New-M365DSCDeltaReport
                                 $destinationValue += "<tr><td style='border:1px solid black; text-align:right;'>$($drift.ParameterName)</td><td style='border:1px solid black;'>$valueForDestination</td>"
                                 $destinationValue += "</table>"
                             }
+                            elseif ($null -ne $drift.ValueInDestination -and $null -eq $drift.ValueInSource)
+                            {
+                                $destinationValue = "<table width = '100%'>"
+                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"                                
+                                
+                                if ($drift.ValueInDestination.GetType().Name -ne 'OrderedDictionary')
+                                {
+                                    $valueForDestination = $drift.ValueInSource
+                                    $destinationValue += "<tr><td style='border:1px solid black; text-align:right;'>$($drift.ParameterName)</td><td style='border:1px solid black;'>$valueForDestination</td>"
+                                }
+                                else
+                                {
+                                    foreach ($key in $drift.ValueInDestination.Keys)
+                                    {
+                                        if ($key -ne 'CIMInstance')
+                                        {
+                                            $valueForDestination = $drift.ValueInDestination.$key
+                                            $destinationValue += "<tr><td style='border:1px solid black; text-align:right;'>$key</td><td style='border:1px solid black;'>$valueForDestination</td>"
+                                        }
+                                    }
+                                }
+                                $destinationValue += "</table>"
+                            }
                             else
                             {
-                                $sourceValue += "&nbsp"
+                                $destinationValue += "&nbsp"
                             }
                             $parameterName = $Resource.Key
                         }
