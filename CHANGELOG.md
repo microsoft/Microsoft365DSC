@@ -2,15 +2,41 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fix issue incorrectly removing existing Members and ScopedRoleMembers
+    FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)
+  * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
+    FIXES [#3189](https://github.com/microsoft/Microsoft365DSC/issues/3189)
+* SCSensitivityLabel
+  * Remove property Disabled from schema
+    FIXES [#3193](https://github.com/microsoft/Microsoft365DSC/issues/3193)
+* DEPENDENCIES
+  * Updated DSCParser dependencies to version 1.3.0.7.
+  * Updated Microsoft.PowerApps.Administration.PowerShell tp version 2.0.160.
+
+# 1.23.419.1
+
+* IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationEmailProfilePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationKioskPolicyWindows10
+  * Initial release
+* EXOManagementRoleAssignment
+  * Fixed issue with incorrect Microsoft Graph cmdlets used to retrieve Administrative Units.
+    FIXES [#3185](https://github.com/microsoft/Microsoft365DSC/issues/3185)
 * SCLabelPolicy
   * If label policy is set to None don't get its label display name since it's not required
     FIXES [#3104](https://github.com/microsoft/Microsoft365DSC/issues/3104)
+* DRG
+  * Fixed issue retrieving the cmdlet definition when the resource type is derived from an abstract type
+  * Fixed issue with UnitTest and complex properties with AdditionalProperties
+  * Fixed issue with Complex constructor and complex properties with AdditionalProperties
 * MISC
   * Reports will now exclude the authentication parameters (e.g., CertificateThumbprint, Credential, etc.).
   * Changed the Encoding helper's logic to ensure titled quotes and apostrophes are correctly evaluated.
     FIXES [#3165](https://github.com/microsoft/Microsoft365DSC/issues/3165)
-* DEPENDENCIES
-  * Updated DSCParser dependencies to version 1.3.0.7.
+  * Fixes an issue where the new resource name extraction could still have duplicates.
 
 # 1.23.412.1
 

@@ -22,7 +22,6 @@ class MSFT_SCSensitivityLabel : OMI_BaseResource
     [Write, Description("The ParentId parameter specifies the parent label that you want this label to be under (a sublabel). You can use any value that uniquely identifies the parent sensitivity label for example name.")] String ParentId;
     [Write, Description("The Priority parameter specifies a priority value for the sensitivity label that determines the order of label processing. A lower integer value indicates a highter priority.")] uint32 Priority;
     [Write, Description("The ToolTip parameter specifies the default tooltip and sensitivity label description that's seen by users. It the value contains spaces, enclose the value in quotation marks.")] String Tooltip;
-    [Write, Description("The disabled parameter specifies whether to enable or disable the sensitivity label.")] Boolean Disabled;
     [Write, Description("The ApplyContentMarkingFooterAlignment parameter specifies the footer alignment."), ValueMap{"Left","Center","Right"}, Values{"Left","Center","Right"}] String ApplyContentMarkingFooterAlignment;
     [Write, Description("The ApplyContentMarkingFooterEnabled parameter specifies whether to enable or disable the sensitivity label.")] Boolean ApplyContentMarkingFooterEnabled;
     [Write, Description("The ApplyContentMarkingFooterFontColor parameter specifies the color of the footer text. This parameter accepts a hexadecimal color code value in the format #xxxxxx. The default value is #000000.")] String ApplyContentMarkingFooterFontColor;
