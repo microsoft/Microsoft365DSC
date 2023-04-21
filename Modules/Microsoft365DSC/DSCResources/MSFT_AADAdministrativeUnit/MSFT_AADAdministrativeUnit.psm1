@@ -464,7 +464,7 @@ function Set-TargetResource
             $scopedRoleMemberSpecification = @()
             foreach ($roleMember in $CreateParameters.ScopedRoleMembers)
             {
-                Write-Verbose -Message "AU {$DisplayName} member: role '$($roleMember.RoleName)' type '$($roleMember.Type)' identity $($roleMember.Identity)"
+                Write-Verbose -Message "AU {$DisplayName} member: role '$($roleMember.RoleName)' type '$($roleMember.RoleMemberInfo.Type)' identity $($roleMember.RoleMemberInfo.Identity)"
                 try
                 {
                     $roleObject = Get-MgDirectoryRole -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction stop
@@ -492,7 +492,7 @@ function Set-TargetResource
                         throw "AU {$($DisplayName)}:  Scoped Role User {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
                     }
                 }
-                elseif ($roleMember.Type -eq 'Group')
+                elseif ($roleMember.RoleMemberInfo.Type -eq 'Group')
                 {
                     $roleMemberIdentity = Get-MgGroup -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
@@ -500,7 +500,7 @@ function Set-TargetResource
                         throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
                     }
                 }
-                elseif ($roleMember.Type -eq 'ServicePrincipal')
+                elseif ($roleMember.RoleMemberInfo.Type -eq 'ServicePrincipal')
                 {
                     $roleMemberIdentity = Get-MgServicePrincipal -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
