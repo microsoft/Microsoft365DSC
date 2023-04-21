@@ -27,7 +27,7 @@ To authenticate with Microsoft Exchange, this resource required the following pe
 
 #### Roles
 
-- Organization Configuration
+- 
 
 #### Role Groups
 

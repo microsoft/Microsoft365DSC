@@ -499,6 +499,10 @@ function Set-TargetResource
                     {
                         throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
                     }
+                    elseif ($roleMemberIdentity.IsAssignableToRole -eq $false)
+                    {
+                        throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} is not role-enabled"
+                    }
                 }
                 elseif ($roleMember.RoleMemberInfo.Type -eq 'ServicePrincipal')
                 {
@@ -587,7 +591,7 @@ function Set-TargetResource
 
         if ($MembershipType -ne 'Dynamic')
         {
-            if ($backCurrentMembers.Count -gt 0 -or $requestedMembers.Count -gt 0)
+            if ($PSBoundParameters.ContainsKey('Members') -and ($backCurrentMembers.Count -gt 0 -or $requestedMembers.Count -gt 0))
             {
                 $currentMembers = @()
                 foreach ($member in $backCurrentMembers)
@@ -648,7 +652,7 @@ function Set-TargetResource
             }
         }
 
-        if ($ScopedRoleMembers -or $backCurrentScopedRoleMembers)
+        if ($PSBoundParameters.ContainsKey('ScopedRoleMembers') -and ($backCurrentScopedRoleMembers.Count -gt 0 -or $requestedScopedRoleMembers.Count -gt 0))
         {
             $currentScopedRoleMembersValue = @()
             if ($currentInstance.ScopedRoleMembers.Length -ne 0)
@@ -904,7 +908,7 @@ function Test-TargetResource
     # Visibility is currently not returned by Get-TargetResource
     $ValuesToCheck.Remove('Visibility') | Out-Null
 
-    if ($MembershipType -ne 'Dynamic' -and $CurrentValues.MembershipType -ne 'Dynamic')
+    if ($ValuesToCheck.ContainsKey('MembershipType') -and $MembershipType -ne 'Dynamic' -and $CurrentValues.MembershipType -ne 'Dynamic')
     {
         # MembershipType may be returned as null or Assigned with same effect. Only compare if Dynamic is specified or returned
         $ValuesToCheck.Remove('MembershipType') | Out-Null
