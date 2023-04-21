@@ -3,6 +3,8 @@
 # UNRELEASED
 
 * AADAdministrativeUnit
+  * Fix issue incorrectly removing existing Members and ScopedRoleMembers
+    FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)
   * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
     FIXES [#3189](https://github.com/microsoft/Microsoft365DSC/issues/3189)
 * SCSensitivityLabel
