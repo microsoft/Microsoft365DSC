@@ -1,0 +1,25 @@
+{
+    "resourceName": "AADAuthenticationMethodPolicyTemporary",
+    "description": "This resource configures an Azure AD Authentication Method Policy Temporary.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+
+                                             ],
+                                    "update":  [
+
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+
+                                               ],
+                                      "update":  [
+
+                                                 ]
+                                  }
+              }
+}
+
+}

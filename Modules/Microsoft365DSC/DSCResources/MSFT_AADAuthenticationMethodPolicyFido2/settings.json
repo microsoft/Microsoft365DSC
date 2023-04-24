@@ -1,0 +1,25 @@
+{
+    "resourceName": "AADAuthenticationMethodPolicyFido2",
+    "description": "This resource configures an Azure AD Authentication Method Policy Fido2.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+
+                                             ],
+                                    "update":  [
+
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+
+                                               ],
+                                      "update":  [
+
+                                                 ]
+                                  }
+              }
+}
+
+}

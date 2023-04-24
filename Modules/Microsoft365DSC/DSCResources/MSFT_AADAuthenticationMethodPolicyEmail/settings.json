@@ -1,0 +1,25 @@
+{
+    "resourceName": "AADAuthenticationMethodPolicyEmail",
+    "description": "This resource configures an Azure AD Authentication Method Policy Email.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+
+                                             ],
+                                    "update":  [
+
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+
+                                               ],
+                                      "update":  [
+
+                                                 ]
+                                  }
+              }
+}
+
+}

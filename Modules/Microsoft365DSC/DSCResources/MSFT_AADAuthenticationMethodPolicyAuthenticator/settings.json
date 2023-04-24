@@ -1,0 +1,25 @@
+{
+    "resourceName": "AADAuthenticationMethodPolicyAuthenticator",
+    "description": "This resource configures an Azure AD Authentication Method Policy Authenticator.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+
+                                             ],
+                                    "update":  [
+
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+
+                                               ],
+                                      "update":  [
+
+                                                 ]
+                                  }
+              }
+}
+
+}

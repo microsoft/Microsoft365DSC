@@ -1,0 +1,25 @@
+{
+    "resourceName": "AADAuthenticationMethodPolicySms",
+    "description": "This resource configures an Azure AD Authentication Method Policy Sms.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+
+                                             ],
+                                    "update":  [
+
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+
+                                               ],
+                                      "update":  [
+
+                                                 ]
+                                  }
+              }
+}
+
+}
