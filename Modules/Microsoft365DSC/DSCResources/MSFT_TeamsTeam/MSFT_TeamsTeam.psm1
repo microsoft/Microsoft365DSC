@@ -674,7 +674,7 @@ function Export-TargetResource
 
     try
     {
-        if ($ConnectionMode -eq 'ServicePrincipal')
+        if ($ConnectionMode.StartsWith('ServicePrincipal'))
         {
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
         }

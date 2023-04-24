@@ -2,7 +2,7 @@
     Dependencies = @(
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '1.3.0.6'
+            RequiredVersion = '1.3.0.7'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -66,7 +66,7 @@
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
-            RequiredVersion = '2.0.159'
+            RequiredVersion = '2.0.160'
         },
         @{
             ModuleName      = 'MicrosoftTeams'
