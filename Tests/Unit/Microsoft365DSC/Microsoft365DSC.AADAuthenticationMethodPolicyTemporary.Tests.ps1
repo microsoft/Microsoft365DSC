@@ -59,16 +59,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
                             TargetType = "user"
-                            Id = "FakeStringValue"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "TemporaryAccessPass"
                     IsUsableOnce = $True
                     MaximumLifetimeInMinutes = 25
                     MinimumLifetimeInMinutes = 25
                     State = "enabled"
                     Ensure = "Present"
                     Credential = $Credential;
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup"
+                    }
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
@@ -94,11 +107,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultLifetimeInMinutes = 25
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    Id = "TemporaryAccessPass"
                     IsUsableOnce = $True
                     MaximumLifetimeInMinutes = 25
                     MinimumLifetimeInMinutes = 25
@@ -110,6 +123,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             minimumLifetimeInMinutes = 25
                             defaultLifetimeInMinutes = 25
                             isUsableOnce = $True
@@ -119,11 +138,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "TemporaryAccessPass"
                         State = "enabled"
 
                     }
@@ -150,11 +169,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultLifetimeInMinutes = 25
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "TemporaryAccessPass"
                     IsUsableOnce = $True
                     MaximumLifetimeInMinutes = 25
                     MinimumLifetimeInMinutes = 25
@@ -163,9 +188,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup"
+                    }
+                }
+
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             minimumLifetimeInMinutes = 25
                             defaultLifetimeInMinutes = 25
                             isUsableOnce = $True
@@ -175,11 +213,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "TemporaryAccessPass"
                         State = "enabled"
 
                     }
@@ -200,10 +238,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
                             TargetType = "user"
-                            Id = "FakeStringValue"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "TemporaryAccessPass"
                     IsUsableOnce = $True
                     MaximumLifetimeInMinutes = 25
                     MinimumLifetimeInMinutes = 25
@@ -212,9 +256,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup2"
+                    }
+                }
+
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             defaultLifetimeInMinutes = 7
                             '@odata.type' = "#microsoft.graph.temporaryAccessPassAuthenticationMethodConfiguration"
                             minimumLifetimeInMinutes = 7
@@ -223,11 +280,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "TemporaryAccessPass"
                         State = "enabled"
                     }
                 }
@@ -258,6 +315,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             minimumLifetimeInMinutes = 25
                             defaultLifetimeInMinutes = 25
                             isUsableOnce = $True
@@ -271,7 +334,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Id = "FakeStringValue"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "TemporaryAccessPass"
                         State = "enabled"
 
                     }

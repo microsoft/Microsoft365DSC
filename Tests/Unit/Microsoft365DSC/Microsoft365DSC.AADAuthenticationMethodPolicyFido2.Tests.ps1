@@ -56,8 +56,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
+                        } -ClientOnly)
+                    )
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
                     Id = "FakeStringValue"
@@ -71,6 +77,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     State = "enabled"
                     Ensure = "Present"
                     Credential = $Credential;
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup"
+                    }
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
@@ -94,11 +107,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "Fido2"
                     IsAttestationEnforced = $True
                     IsSelfServiceRegistrationAllowed = $True
                     keyRestrictions = (New-CimInstance -ClassName MSFT_MicrosoftGraphfido2KeyRestrictions -Property @{
@@ -114,6 +133,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             isAttestationEnforced = $True
                             '@odata.type' = "#microsoft.graph.fido2AuthenticationMethodConfiguration"
                             isSelfServiceRegistrationAllowed = $True
@@ -125,11 +150,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "Fakegroup"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "Fido2"
                         State = "enabled"
 
                     }
@@ -154,11 +179,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "Fido2"
                     IsAttestationEnforced = $True
                     IsSelfServiceRegistrationAllowed = $True
                     keyRestrictions = (New-CimInstance -ClassName MSFT_MicrosoftGraphfido2KeyRestrictions -Property @{
@@ -171,9 +202,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup"
+                    }
+                }
+
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             isAttestationEnforced = $True
                             '@odata.type' = "#microsoft.graph.fido2AuthenticationMethodConfiguration"
                             isSelfServiceRegistrationAllowed = $True
@@ -185,11 +229,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "Fakegroup"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "Fido2"
                         State = "enabled"
 
                     }
@@ -207,11 +251,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "Fido2"
                     IsAttestationEnforced = $True
                     IsSelfServiceRegistrationAllowed = $True
                     keyRestrictions = (New-CimInstance -ClassName MSFT_MicrosoftGraphfido2KeyRestrictions -Property @{
@@ -224,9 +274,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup2"
+                    }
+                }
+
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.fido2AuthenticationMethodConfiguration"
                             keyRestrictions = @{
                                 enforcementType = "allow"
@@ -235,11 +298,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "Fakegroup"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "Fido2"
                         State = "enabled"
                     }
                 }
@@ -270,6 +333,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             isAttestationEnforced = $True
                             '@odata.type' = "#microsoft.graph.fido2AuthenticationMethodConfiguration"
                             isSelfServiceRegistrationAllowed = $True
@@ -281,11 +350,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "Fakegroup"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "Fido2"
                         State = "enabled"
 
                     }

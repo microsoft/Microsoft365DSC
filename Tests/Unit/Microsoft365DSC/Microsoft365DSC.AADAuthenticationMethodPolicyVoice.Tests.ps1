@@ -56,15 +56,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "Voice"
                     IsOfficePhoneAllowed = $True
                     State = "enabled"
                     Ensure = "Present"
                     Credential = $Credential;
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup"
+                    }
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
@@ -88,11 +101,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
+                            TargetType = "group"
                             Id = "FakeStringValue"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "Voice"
                     IsOfficePhoneAllowed = $True
                     State = "enabled"
                     Ensure = 'Absent'
@@ -102,16 +121,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.voiceAuthenticationMethodConfiguration"
                             isOfficePhoneAllowed = $True
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "Voice"
                         State = "enabled"
 
                     }
@@ -136,30 +161,49 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "Voice"
                     IsOfficePhoneAllowed = $True
                     State = "enabled"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
 
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup"
+                    }
+                }
+
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.voiceAuthenticationMethodConfiguration"
                             isOfficePhoneAllowed = $True
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "Voice"
                         State = "enabled"
 
                     }
@@ -177,29 +221,48 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "Voice"
                     IsOfficePhoneAllowed = $True
                     State = "enabled"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
 
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup2"
+                    }
+                }
+
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.voiceAuthenticationMethodConfiguration"
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "Voice"
                         State = "enabled"
                     }
                 }
@@ -230,16 +293,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.voiceAuthenticationMethodConfiguration"
                             isOfficePhoneAllowed = $True
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "Voice"
                         State = "enabled"
 
                     }

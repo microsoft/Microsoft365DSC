@@ -56,14 +56,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "SoftwareOath"
                     State = "enabled"
                     Ensure = "Present"
                     Credential = $Credential;
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup"
+                    }
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
@@ -87,11 +100,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "SoftwareOath"
                     State = "enabled"
                     Ensure = 'Absent'
                     Credential = $Credential;
@@ -100,15 +119,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.softwareOathAuthenticationMethodConfiguration"
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "SoftwareOath"
                         State = "enabled"
 
                     }
@@ -133,28 +158,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "SoftwareOath"
                     State = "enabled"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
 
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup"
+                    }
+                }
+
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.softwareOathAuthenticationMethodConfiguration"
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "SoftwareOath"
                         State = "enabled"
 
                     }
@@ -172,28 +216,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
+                    Id = "SoftwareOath"
                     State = "enabled"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
 
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000000"
+                        DisplayName = "Fakegroup2"
+                    }
+                }
+
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.softwareOathAuthenticationMethodConfiguration"
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "SoftwareOath"
                         State = "enabled"
                     }
                 }
@@ -224,15 +287,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.softwareOathAuthenticationMethodConfiguration"
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "Fakegroup"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "SoftwareOath"
                         State = "enabled"
 
                     }

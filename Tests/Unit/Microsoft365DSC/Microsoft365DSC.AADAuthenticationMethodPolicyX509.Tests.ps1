@@ -77,6 +77,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id = "00000000-0000-0000-0000-000000000000"
                         } -ClientOnly)
                     )
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = '00000000-0000-0000-0000-000000000000'
+                        } -ClientOnly)
+                    )
                     Id = "X509Certificate"
                     State = "enabled"
                     Ensure = "Present"
@@ -125,6 +131,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id = "00000000-0000-0000-0000-000000000000"
                         } -ClientOnly)
                     )
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
                     Id = "X509Certificate"
                     State = "enabled"
                     Ensure = 'Absent'
@@ -134,6 +146,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.x509CertificateAuthenticationMethodConfiguration"
                             certificateUserBindings = @(
                                 @{
@@ -205,6 +223,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
                     Id = "X509Certificate"
                     State = "enabled"
                     Ensure = 'Present'
@@ -221,6 +245,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.x509CertificateAuthenticationMethodConfiguration"
                             certificateUserBindings = @(
                                 @{
@@ -284,6 +314,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id = "Fakegroup2"
                         } -ClientOnly)
                     )
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
+                        } -ClientOnly)
+                    )
                     Id = "X509Certificate"
                     State = "enabled"
                     Ensure = 'Present'
@@ -300,6 +336,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.x509CertificateAuthenticationMethodConfiguration"
                             certificateUserBindings = @(
                                 @{
@@ -356,6 +398,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
                             '@odata.type' = "#microsoft.graph.x509CertificateAuthenticationMethodConfiguration"
                             certificateUserBindings = @(
                                 @{

@@ -2,26 +2,26 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath '..\..\Unit' `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath '\Stubs\Microsoft365.psm1' `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath '\Stubs\Generic.psm1' `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADAuthenticationMethodPolicyAuthenticator" -GenericStubModule $GenericStubPath
+    -DscResource 'AADAuthenticationMethodPolicyAuthenticator' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString "f@kepassword1" -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString 'f@kepassword1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -43,7 +43,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
             }
 
             # Mock Write-Host to hide output during the tests
@@ -51,66 +51,79 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
         # Test contexts
-        Context -Name "The AADAuthenticationMethodPolicyAuthenticator should exist but it DOES NOT" -Fixture {
+        Context -Name 'The AADAuthenticationMethodPolicyAuthenticator should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ExcludeTargets = [CimInstance[]]@(
+                    ExcludeTargets        = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
-                    featureSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
-                        companionAppAllowedState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
-                        displayAppInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
+                    )
+                    featureSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
+                            companionAppAllowedState                = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            displayAppInformationRequiredState      = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
                         } -ClientOnly)
-                        displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                        } -ClientOnly)
-                        numberMatchingRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                        } -ClientOnly)
-                    } -ClientOnly)
-                    Id = "FakeStringValue"
+                    Id                    = 'MicrosoftAuthenticator'
                     isSoftwareOathEnabled = $True
-                    State = "enabled"
-                    Ensure = "Present"
-                    Credential = $Credential;
+                    State                 = 'enabled'
+                    Ensure                = 'Present'
+                    Credential            = $Credential
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id          = '00000000-0000-0000-0000-000000000000'
+                        DisplayName = 'Fakegroup'
+                    }
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
@@ -129,128 +142,140 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The AADAuthenticationMethodPolicyAuthenticator exists but it SHOULD NOT" -Fixture {
+        Context -Name 'The AADAuthenticationMethodPolicyAuthenticator exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ExcludeTargets = [CimInstance[]]@(
+                    ExcludeTargets        = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
-                    featureSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
-                        companionAppAllowedState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
-                        displayAppInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
+                    )
+                    featureSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
+                            companionAppAllowedState                = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            displayAppInformationRequiredState      = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
                         } -ClientOnly)
-                        displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                        } -ClientOnly)
-                        numberMatchingRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                        } -ClientOnly)
-                    } -ClientOnly)
-                    Id = "FakeStringValue"
+                    Id                    = 'MicrosoftAuthenticator'
                     isSoftwareOathEnabled = $True
-                    State = "enabled"
-                    Ensure = 'Absent'
-                    Credential = $Credential;
+                    State                 = 'enabled'
+                    Ensure                = 'Absent'
+                    Credential            = $Credential
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            featureSettings = @{
-                                companionAppAllowedState = @{
-                                    state = "default"
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
+                            featureSettings       = @{
+                                companionAppAllowedState                = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = '00000000-0000-0000-0000-000000000000'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = '00000000-0000-0000-0000-000000000000'
                                     }
                                 }
-                                displayAppInformationRequiredState = @{
-                                    state = "default"
+                                displayAppInformationRequiredState      = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = '00000000-0000-0000-0000-000000000000'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = '00000000-0000-0000-0000-000000000000'
                                     }
                                 }
                                 displayLocationInformationRequiredState = @{
-                                    state = "default"
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = '00000000-0000-0000-0000-000000000000'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = '00000000-0000-0000-0000-000000000000'
                                     }
                                 }
-                                numberMatchingRequiredState = @{
-                                    state = "default"
+                                numberMatchingRequiredState             = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = '00000000-0000-0000-0000-000000000000'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = '00000000-0000-0000-0000-000000000000'
                                     }
                                 }
                             }
-                            '@odata.type' = "#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration"
+                            '@odata.type'         = '#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration'
                             isSoftwareOathEnabled = $True
                         }
-                        ExcludeTargets = @(
+                        ExcludeTargets       = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = 'group'
+                                Id         = '00000000-0000-0000-0000-000000000000'
                             }
                         )
-                        Id = "FakeStringValue"
-                        State = "enabled"
+                        Id                   = 'MicrosoftAuthenticator'
+                        State                = 'enabled'
 
                     }
                 }
@@ -269,128 +294,147 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -Exactly 1
             }
         }
-        Context -Name "The AADAuthenticationMethodPolicyAuthenticator Exists and Values are already in the desired state" -Fixture {
+        Context -Name 'The AADAuthenticationMethodPolicyAuthenticator Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ExcludeTargets = [CimInstance[]]@(
+                    ExcludeTargets        = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
-                    featureSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
-                        companionAppAllowedState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
-                        displayAppInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
+                    )
+                    featureSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
+                            companionAppAllowedState                = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            displayAppInformationRequiredState      = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
                         } -ClientOnly)
-                        displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                        } -ClientOnly)
-                        numberMatchingRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                        } -ClientOnly)
-                    } -ClientOnly)
-                    Id = "FakeStringValue"
+                    Id                    = 'MicrosoftAuthenticator'
                     isSoftwareOathEnabled = $True
-                    State = "enabled"
-                    Ensure = 'Present'
-                    Credential = $Credential;
+                    State                 = 'enabled'
+                    Ensure                = 'Present'
+                    Credential            = $Credential
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id          = '00000000-0000-0000-0000-000000000000'
+                        DisplayName = 'Fakegroup'
+                    }
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            featureSettings = @{
-                                companionAppAllowedState = @{
-                                    state = "default"
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = 'Fakegroup'
+                                }
+                            )
+                            featureSettings       = @{
+                                companionAppAllowedState                = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
-                                displayAppInformationRequiredState = @{
-                                    state = "default"
+                                displayAppInformationRequiredState      = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
                                 displayLocationInformationRequiredState = @{
-                                    state = "default"
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
-                                numberMatchingRequiredState = @{
-                                    state = "default"
+                                numberMatchingRequiredState             = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
                             }
-                            '@odata.type' = "#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration"
+                            '@odata.type'         = '#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration'
                             isSoftwareOathEnabled = $True
                         }
-                        ExcludeTargets = @(
+                        ExcludeTargets       = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = 'group'
+                                Id         = '00000000-0000-0000-0000-000000000000'
                             }
                         )
-                        Id = "FakeStringValue"
-                        State = "enabled"
+                        Id                   = 'MicrosoftAuthenticator'
+                        State                = 'enabled'
 
                     }
                 }
@@ -402,127 +446,146 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The AADAuthenticationMethodPolicyAuthenticator exists and values are NOT in the desired state" -Fixture {
+        Context -Name 'The AADAuthenticationMethodPolicyAuthenticator exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ExcludeTargets = [CimInstance[]]@(
+                    ExcludeTargets        = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
-                    featureSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
-                        companionAppAllowedState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
-                        displayAppInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
+                    )
+                    featureSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
+                            companionAppAllowedState                = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            displayAppInformationRequiredState      = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
+                            numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
+                                    state         = 'default'
+                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                            targetType = 'group'
+                                            id         = 'Fakegroup'
+                                        } -ClientOnly)
+                                } -ClientOnly)
                         } -ClientOnly)
-                        displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                        } -ClientOnly)
-                        numberMatchingRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                            state = "default"
-                            includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                            excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
-                                targetType = "group"
-                                id = "FakeStringValue"
-                            } -ClientOnly)
-                        } -ClientOnly)
-                    } -ClientOnly)
-                    Id = "FakeStringValue"
+                    Id                    = 'MicrosoftAuthenticator'
                     isSoftwareOathEnabled = $True
-                    State = "enabled"
-                    Ensure = 'Present'
-                    Credential = $Credential;
+                    State                 = 'enabled'
+                    Ensure                = 'Present'
+                    Credential            = $Credential
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id          = '00000000-0000-0000-0000-000000000000'
+                        DisplayName = 'Fakegroup'
+                    }
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type' = "#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration"
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
+                            '@odata.type'   = '#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration'
                             featureSettings = @{
-                                companionAppAllowedState = @{
-                                    state = "default"
+                                companionAppAllowedState                = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
-                                displayAppInformationRequiredState = @{
-                                    state = "default"
+                                displayAppInformationRequiredState      = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
                                 displayLocationInformationRequiredState = @{
-                                    state = "default"
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
-                                numberMatchingRequiredState = @{
-                                    state = "default"
+                                numberMatchingRequiredState             = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
                             }
                         }
-                        ExcludeTargets = @(
+                        ExcludeTargets       = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = 'group'
+                                Id         = '00000000-0000-0000-0000-000000000000'
                             }
                         )
-                        Id = "FakeStringValue"
-                        State = "enabled"
+                        Id                   = 'MicrosoftAuthenticator'
+                        State                = 'enabled'
                     }
                 }
             }
@@ -552,63 +615,69 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            featureSettings = @{
-                                companionAppAllowedState = @{
-                                    state = "default"
+                            IncludeTargets        = @(
+                                @{
+                                    TargetType = 'group'
+                                    Id         = '00000000-0000-0000-0000-000000000000'
+                                }
+                            )
+                            featureSettings       = @{
+                                companionAppAllowedState                = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
-                                displayAppInformationRequiredState = @{
-                                    state = "default"
+                                displayAppInformationRequiredState      = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
                                 displayLocationInformationRequiredState = @{
-                                    state = "default"
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
-                                numberMatchingRequiredState = @{
-                                    state = "default"
+                                numberMatchingRequiredState             = @{
+                                    state         = 'default'
                                     includeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                     excludeTarget = @{
-                                        targetType = "group"
-                                        id = "FakeStringValue"
+                                        targetType = 'group'
+                                        id         = 'Fakegroup'
                                     }
                                 }
                             }
-                            '@odata.type' = "#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration"
+                            '@odata.type'         = '#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration'
                             isSoftwareOathEnabled = $True
                         }
-                        ExcludeTargets = @(
+                        ExcludeTargets       = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = 'group'
+                                Id         = '00000000-0000-0000-0000-000000000000'
                             }
                         )
-                        Id = "FakeStringValue"
-                        State = "enabled"
+                        Id                   = 'MicrosoftAuthenticator'
+                        State                = 'enabled'
 
                     }
                 }

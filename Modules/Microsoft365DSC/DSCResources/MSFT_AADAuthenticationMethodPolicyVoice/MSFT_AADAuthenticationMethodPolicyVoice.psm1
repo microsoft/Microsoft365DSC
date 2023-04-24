@@ -116,7 +116,7 @@ function Get-TargetResource
         #endregion
 
         $complexincludeTargets = @()
-        foreach ($currentincludeTargets in $getValue.includeTargets)
+        foreach ($currentincludeTargets in $getValue.AdditionalProperties.includeTargets)
         {
             $myincludeTargets = @{}
             if ($currentIncludeTargets.id -ne 'all_users'){
