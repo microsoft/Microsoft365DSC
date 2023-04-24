@@ -12,10 +12,37 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    node localhost
+    Node localhost
     {
-        AADAuthenticationMethodPolicyEmail 'Example'
+        AADAuthenticationMethodPolicyEmail "AADAuthenticationMethodPolicyEmail-Email"
         {
+            AllowExternalIdToUseEmailOtp = "default";
+            ApplicationId                = $ConfigurationData.NonNodeData.ApplicationId;
+            CertificateThumbprint        = $ConfigurationData.NonNodeData.CertificateThumbprint;
+            Ensure                       = "Present";
+            ExcludeTargets               = @(
+                MSFT_MicrosoftGraphexcludeTarget2{
+                    Id = 'fakegroup1'
+                    TargetType = 'group'
+                }
+                MSFT_MicrosoftGraphexcludeTarget2{
+                    Id = 'fakegroup2'
+                    TargetType = 'group'
+                }
+            );
+            Id                           = "Email";
+            IncludeTargets               = @(
+                MSFT_MicrosoftGraphincludeTarget2{
+                    Id = 'fakegroup3'
+                    TargetType = 'group'
+                }
+                MSFT_MicrosoftGraphincludeTarget2{
+                    Id = 'fakegroup4'
+                    TargetType = 'group'
+                }
+            );
+            State                        = "enabled";
+            TenantId                     = $ConfigurationData.NonNodeData.TenantId;
         }
     }
 }

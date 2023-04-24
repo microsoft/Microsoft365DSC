@@ -322,28 +322,26 @@ function Set-TargetResource
             }
             if ($key -eq 'IncludeTargets')
             {
+                $i = 0
                 foreach ($entry in $CreateParameters.$key){
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
-                        for($i = 0; $i -lt $CreateParameters.$key.Length; $i++)
-                        {
-                            $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                            $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                        }
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
                     }
+                    $i++
                 }
             }
             if ($key -eq 'ExcludeTargets')
             {
+                $i = 0
                 foreach ($entry in $CreateParameters.$key){
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
-                        for($i = 0; $i -lt $CreateParameters.$key.Length; $i++)
-                        {
-                            $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                            $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                        }
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
                     }
+                    $i++
                 }
             }
         }

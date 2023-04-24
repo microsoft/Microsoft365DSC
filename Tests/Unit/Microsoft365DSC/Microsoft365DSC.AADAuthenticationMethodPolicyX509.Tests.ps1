@@ -73,11 +73,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "00000000-0000-0000-0000-000000000000"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    Id = "X509Certificate"
                     State = "enabled"
                     Ensure = "Present"
                     Credential = $Credential;
@@ -121,11 +121,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "00000000-0000-0000-0000-000000000000"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    Id = "X509Certificate"
                     State = "enabled"
                     Ensure = 'Absent'
                     Credential = $Credential;
@@ -155,11 +155,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "X509Certificate0"
                         State = "enabled"
 
                     }
@@ -201,14 +201,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    Id = "X509Certificate"
                     State = "enabled"
                     Ensure = 'Present'
                     Credential = $Credential;
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000001"
+                        DisplayName = "Fakegroup"
+                    }
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
@@ -235,17 +242,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000001"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "X509Certificate"
                         State = "enabled"
 
                     }
                 }
             }
-
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
@@ -274,14 +280,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                     ExcludeTargets = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
-                            Id = "FakeStringValue"
+                            TargetType = "group"
+                            Id = "Fakegroup2"
                         } -ClientOnly)
                     )
-                    Id = "FakeStringValue"
+                    Id = "X509Certificate"
                     State = "enabled"
                     Ensure = 'Present'
                     Credential = $Credential;
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        Id = "00000000-0000-0000-0000-000000000001"
+                        DisplayName = "Fakegroup"
+                    }
                 }
 
                 Mock -CommandName Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -MockWith {
@@ -308,11 +321,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "X509Certificate"
                         State = "enabled"
                     }
                 }
@@ -364,11 +377,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
+                                TargetType = "group"
+                                Id = "00000000-0000-0000-0000-000000000000"
                             }
                         )
-                        Id = "FakeStringValue"
+                        Id = "X509Certificate"
                         State = "enabled"
 
                     }

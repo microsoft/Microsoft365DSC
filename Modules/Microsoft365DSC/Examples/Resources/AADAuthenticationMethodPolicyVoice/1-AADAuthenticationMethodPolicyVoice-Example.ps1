@@ -12,10 +12,37 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    node localhost
+    Node localhost
     {
-        AADAuthenticationMethodPolicyVoice 'Example'
+        AADAuthenticationMethodPolicyVoice "AADAuthenticationMethodPolicyVoice-Voice"
         {
+            ApplicationId         = $ConfigurationData.NonNodeData.ApplicationId;
+            CertificateThumbprint = $ConfigurationData.NonNodeData.CertificateThumbprint;
+            Ensure                = "Present";
+            Id                    = "Voice";
+            IsOfficePhoneAllowed  = $False;
+            ExcludeTargets           = @(
+                MSFT_MicrosoftGraphexcludeTarget2{
+                    Id = 'fakegroup1'
+                    TargetType = 'group'
+                }
+                MSFT_MicrosoftGraphexcludeTarget2{
+                    Id = 'fakegroup2'
+                    TargetType = 'group'
+                }
+            );
+            IncludeTargets           = @(
+                MSFT_MicrosoftGraphincludeTarget2{
+                    Id = 'fakegroup3'
+                    TargetType = 'group'
+                }
+                MSFT_MicrosoftGraphincludeTarget2{
+                    Id = 'fakegroup4'
+                    TargetType = 'group'
+                }
+            );
+            State                 = "disabled";
+            TenantId              = $ConfigurationData.NonNodeData.TenantId;
         }
     }
 }

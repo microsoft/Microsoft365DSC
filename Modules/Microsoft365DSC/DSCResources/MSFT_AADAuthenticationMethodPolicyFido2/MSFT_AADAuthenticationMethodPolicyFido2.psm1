@@ -117,7 +117,13 @@ function Get-TargetResource
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
             $myExcludeTargets = @{}
-            $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
+            if ($currentExcludeTargets.id -ne 'all_users'){
+                $myExcludeTargetsDisplayName = get-MgGroup -GroupId $currentExcludeTargets.id
+                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            }
+            else{
+                $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
+            }
             if ($null -ne $currentExcludeTargets.targetType)
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
@@ -133,7 +139,13 @@ function Get-TargetResource
         foreach ($currentIncludeTargets in $getValue.AdditionalProperties.includeTargets)
         {
             $myIncludeTargets = @{}
-            $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
+            if ($currentIncludeTargets.id -ne 'all_users'){
+                $myIncludeTargetsDisplayName = get-MgGroup -GroupId $currentIncludeTargets.id
+                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            }
+            else{
+                $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
+            }
             if ($null -ne $currentIncludeTargets.targetType)
             {
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
@@ -282,6 +294,30 @@ function Set-TargetResource
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
+            if ($key -eq 'IncludeTargets')
+            {
+                $i = 0
+                foreach ($entry in $CreateParameters.$key){
+                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
+                    {
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                    }
+                    $i++
+                }
+            }
+            if ($key -eq 'ExcludeTargets')
+            {
+                $i = 0
+                foreach ($entry in $CreateParameters.$key){
+                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
+                    {
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                    }
+                    $i++
+                }
+            }
         }
         #region resource generator code
         $CreateParameters.Add('@odata.type', '#microsoft.graph.fido2AuthenticationMethodConfiguration')
@@ -303,6 +339,30 @@ function Set-TargetResource
             if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+            }
+            if ($key -eq 'IncludeTargets')
+            {
+                $i = 0
+                foreach ($entry in $UpdateParameters.$key){
+                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
+                    {
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                    }
+                    $i++
+                }
+            }
+            if ($key -eq 'ExcludeTargets')
+            {
+                $i = 0
+                foreach ($entry in $UpdateParameters.$key){
+                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
+                    {
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                    }
+                    $i++
+                }
             }
         }
         #region resource generator code

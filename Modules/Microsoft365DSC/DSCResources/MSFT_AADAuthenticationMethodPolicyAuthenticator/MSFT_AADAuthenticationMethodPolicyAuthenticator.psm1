@@ -18,7 +18,11 @@ function Get-TargetResource
         $ExcludeTargets,
 
         [Parameter()]
-        [ValidateSet('enabled','disabled')]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $IncludeTargets,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
 
@@ -81,162 +85,212 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id -ErrorAction SilentlyContinue
 
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Authenticator with Id {$Id}"
-
-            if (-Not [string]::IsNullOrEmpty($DisplayName))
-            {
-                $getValue = Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
-                    -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration" `
-                    }
-            }
-        }
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Authenticator with DisplayName {$DisplayName}"
+            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Authenticator with id {$id}"
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Azure AD Authentication Method Policy Authenticator with Id {$Id} and DisplayName {$DisplayName} was found."
+        Write-Verbose -Message "An Azure AD Authentication Method Policy Authenticator with Id {$Id} was found."
 
         #region resource generator code
         $complexFeatureSettings = @{}
         $complexCompanionAppAllowedState = @{}
         $complexExcludeTarget = @{}
-        $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id)
+        if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+            {
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id
+                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id)
+            }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType.toString())
         }
-        if ($complexExcludeTarget.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexExcludeTarget = $null
         }
-        $complexCompanionAppAllowedState.Add('ExcludeTarget',$complexExcludeTarget)
+        $complexCompanionAppAllowedState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
-        $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id)
+        if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+            {
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id
+                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id)
+            }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType.toString())
         }
-        if ($complexIncludeTarget.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexIncludeTarget = $null
         }
-        $complexCompanionAppAllowedState.Add('IncludeTarget',$complexIncludeTarget)
+        $complexCompanionAppAllowedState.Add('IncludeTarget', $complexIncludeTarget)
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.state)
         {
             $complexCompanionAppAllowedState.Add('State', $getValue.additionalProperties.featureSettings.companionAppAllowedState.state.toString())
         }
-        if ($complexCompanionAppAllowedState.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexCompanionAppAllowedState.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexCompanionAppAllowedState = $null
         }
-        $complexFeatureSettings.Add('CompanionAppAllowedState',$complexCompanionAppAllowedState)
+        $complexFeatureSettings.Add('CompanionAppAllowedState', $complexCompanionAppAllowedState)
         $complexDisplayAppInformationRequiredState = @{}
         $complexExcludeTarget = @{}
-        $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id)
+        if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+            {
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id
+                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id)
+            }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType.toString())
         }
-        if ($complexExcludeTarget.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexExcludeTarget = $null
         }
-        $complexDisplayAppInformationRequiredState.Add('ExcludeTarget',$complexExcludeTarget)
+        $complexDisplayAppInformationRequiredState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
-        $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id)
+        if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+            {
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id
+                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id)
+            }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType.toString())
         }
-        if ($complexIncludeTarget.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexIncludeTarget = $null
         }
-        $complexDisplayAppInformationRequiredState.Add('IncludeTarget',$complexIncludeTarget)
+        $complexDisplayAppInformationRequiredState.Add('IncludeTarget', $complexIncludeTarget)
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.state)
         {
             $complexDisplayAppInformationRequiredState.Add('State', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.state.toString())
         }
-        if ($complexDisplayAppInformationRequiredState.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexDisplayAppInformationRequiredState.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexDisplayAppInformationRequiredState = $null
         }
-        $complexFeatureSettings.Add('DisplayAppInformationRequiredState',$complexDisplayAppInformationRequiredState)
+        $complexFeatureSettings.Add('DisplayAppInformationRequiredState', $complexDisplayAppInformationRequiredState)
         $complexDisplayLocationInformationRequiredState = @{}
         $complexExcludeTarget = @{}
-        $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id)
+        if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+            {
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id
+                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id)
+            }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType.toString())
         }
-        if ($complexExcludeTarget.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexExcludeTarget = $null
         }
-        $complexDisplayLocationInformationRequiredState.Add('ExcludeTarget',$complexExcludeTarget)
+        $complexDisplayLocationInformationRequiredState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
-        $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id)
+        if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+            {
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id
+                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id)
+            }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType.toString())
         }
-        if ($complexIncludeTarget.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexIncludeTarget = $null
         }
-        $complexDisplayLocationInformationRequiredState.Add('IncludeTarget',$complexIncludeTarget)
+        $complexDisplayLocationInformationRequiredState.Add('IncludeTarget', $complexIncludeTarget)
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.state)
         {
             $complexDisplayLocationInformationRequiredState.Add('State', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.state.toString())
         }
-        if ($complexDisplayLocationInformationRequiredState.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexDisplayLocationInformationRequiredState.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexDisplayLocationInformationRequiredState = $null
         }
-        $complexFeatureSettings.Add('DisplayLocationInformationRequiredState',$complexDisplayLocationInformationRequiredState)
+        $complexFeatureSettings.Add('DisplayLocationInformationRequiredState', $complexDisplayLocationInformationRequiredState)
         $complexNumberMatchingRequiredState = @{}
         $complexExcludeTarget = @{}
-        $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.excludeTarget.id)
+        if ($getValue.additionalProperties.featureSettings.numberMatchingRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+            {
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.excludeTarget.id
+                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.excludeTarget.id)
+            }
         if ($null -ne $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.excludeTarget.targetType.toString())
         }
-        if ($complexExcludeTarget.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexExcludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexExcludeTarget = $null
         }
-        $complexNumberMatchingRequiredState.Add('ExcludeTarget',$complexExcludeTarget)
+        $complexNumberMatchingRequiredState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
-        $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.includeTarget.id)
+        if ($getValue.additionalProperties.featureSettings.numberMatchingRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
+            {
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.includeTarget.id
+                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.includeTarget.id)
+            }
         if ($null -ne $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.includeTarget.targetType.toString())
         }
-        if ($complexIncludeTarget.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexIncludeTarget.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexIncludeTarget = $null
         }
-        $complexNumberMatchingRequiredState.Add('IncludeTarget',$complexIncludeTarget)
+        $complexNumberMatchingRequiredState.Add('IncludeTarget', $complexIncludeTarget)
         if ($null -ne $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.state)
         {
             $complexNumberMatchingRequiredState.Add('State', $getValue.additionalProperties.featureSettings.numberMatchingRequiredState.state.toString())
         }
-        if ($complexNumberMatchingRequiredState.values.Where({$null -ne $_}).count -eq 0)
+        if ($complexNumberMatchingRequiredState.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexNumberMatchingRequiredState = $null
         }
-        $complexFeatureSettings.Add('NumberMatchingRequiredState',$complexNumberMatchingRequiredState)
-        if ($complexFeatureSettings.values.Where({$null -ne $_}).count -eq 0)
+        $complexFeatureSettings.Add('NumberMatchingRequiredState', $complexNumberMatchingRequiredState)
+        if ($complexFeatureSettings.values.Where({ $null -ne $_ }).count -eq 0)
         {
             $complexFeatureSettings = $null
         }
@@ -245,17 +299,48 @@ function Get-TargetResource
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
             $myExcludeTargets = @{}
-            $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
+            if ($currentExcludeTargets.id -ne 'all_users')
+            {
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id
+                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
+            }
             if ($null -ne $currentExcludeTargets.targetType)
             {
                 $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
             }
-            if ($myExcludeTargets.values.Where({$null -ne $_}).count -gt 0)
+            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexExcludeTargets += $myExcludeTargets
             }
         }
         #endregion
+
+        $complexIncludeTargets = @()
+        foreach ($currentIncludeTargets in $getValue.AdditionalProperties.includeTargets)
+        {
+            $myIncludeTargets = @{}
+            if ($currentIncludeTargets.id -ne 'all_users')
+            {
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id
+                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+            }
+            else
+            {
+                $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
+            }
+            if ($null -ne $currentIncludeTargets.targetType)
+            {
+                $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
+            }
+            if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            {
+                $complexIncludeTargets += $myIncludeTargets
+            }
+        }
 
         #region resource generator code
         $enumState = $null
@@ -270,6 +355,7 @@ function Get-TargetResource
             FeatureSettings       = $complexFeatureSettings
             IsSoftwareOathEnabled = $getValue.AdditionalProperties.isSoftwareOathEnabled
             ExcludeTargets        = $complexExcludeTargets
+            IncludeTargets        = $complexIncludeTargets
             State                 = $enumState
             Id                    = $getValue.Id
             Ensure                = 'Present'
@@ -315,7 +401,11 @@ function Set-TargetResource
         $ExcludeTargets,
 
         [Parameter()]
-        [ValidateSet('enabled','disabled')]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $IncludeTargets,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
 
@@ -372,11 +462,53 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Azure AD Authentication Method Policy Authenticator with DisplayName {$DisplayName}"
+        Write-Verbose -Message "Creating an Azure AD Authentication Method Policy Authenticator with id {$id}"
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
+
+        # replace group Displayname with group id
+        if ($CreateParameters.featureSettings.companionAppAllowedState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($CreateParameters.featureSettings.companionAppAllowedState.includeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $CreateParameters.featureSettings.companionAppAllowedState.includeTarget.foreach('id',$groupid)
+        }
+        if ($CreateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($CreateParameters.featureSettings.companionAppAllowedState.excludeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $CreateParameters.featureSettings.companionAppAllowedState.excludeTarget.foreach('id',$groupid)
+        }
+        if ($CreateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($CreateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $CreateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.foreach('id',$groupid)
+        }
+        if ($UpdateParCreateParametersameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($CreateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $CreateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.foreach('id',$groupid)
+        }
+        if ($CreateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($CreateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $CreateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.foreach('id',$groupid)
+        }
+        if ($CreateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($CreateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $CreateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.foreach('id',$groupid)
+        }
+        if ($CreateParameters.featureSettings.numberMatchingRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($CreateParameters.featureSettings.numberMatchingRequiredState.includeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $CreateParameters.featureSettings.numberMatchingRequiredState.includeTarget.foreach('id',$groupid)
+        }
+        if ($CreateParameters.featureSettings.numberMatchingRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($CreateParameters.featureSettings.numberMatchingRequiredState.excludeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $CreateParameters.featureSettings.numberMatchingRequiredState.excludeTarget.foreach('id',$groupid)
+        }
 
         $keys = (([Hashtable]$CreateParameters).clone()).Keys
         foreach ($key in $keys)
@@ -385,9 +517,35 @@ function Set-TargetResource
             {
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
+            if ($key -eq 'IncludeTargets')
+            {
+                $i = 0
+                foreach ($entry in $CreateParameters.$key)
+                {
+                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
+                    {
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $CreateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
+                    }
+                    $i++
+                }
+            }
+            if ($key -eq 'ExcludeTargets')
+            {
+                $i = 0
+                foreach ($entry in $CreateParameters.$key)
+                {
+                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
+                    {
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $CreateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
+                    }
+                    $i++
+                }
+            }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration')
         $policy = New-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -BodyParameter $CreateParameters
         #endregion
     }
@@ -399,6 +557,47 @@ function Set-TargetResource
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
+        # replace group Displayname with group id
+        if ($UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.foreach('id',$groupid)
+        }
+        if ($UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.foreach('id',$groupid)
+        }
+        if ($UpdateParametrs.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.foreach('id',$groupid)
+        }
+        if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.foreach('id',$groupid)
+        }
+        if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.foreach('id',$groupid)
+        }
+        if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.foreach('id',$groupid)
+        }
+        if ($UpdateParameters.featureSettings.numberMatchingRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($UpdateParameters.featureSettings.numberMatchingRequiredState.includeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $UpdateParameters.featureSettings.numberMatchingRequiredState.includeTarget.foreach('id',$groupid)
+        }
+        if ($UpdateParameters.featureSettings.numberMatchingRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
+            $Filter = "Displayname eq '$($UpdateParameters.featureSettings.numberMatchingRequiredState.excludeTarget.id)'" | Out-String
+            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
+            $UpdateParameters.featureSettings.numberMatchingRequiredState.excludeTarget.foreach('id',$groupid)
+        }
 
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
@@ -407,9 +606,35 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
+            if ($key -eq 'IncludeTargets')
+            {
+                $i = 0
+                foreach ($entry in $UpdateParameters.$key)
+                {
+                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
+                    {
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
+                    }
+                    $i++
+                }
+            }
+            if ($key -eq 'ExcludeTargets')
+            {
+                $i = 0
+                foreach ($entry in $UpdateParameters.$key)
+                {
+                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
+                    {
+                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
+                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
+                    }
+                    $i++
+                }
+            }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration')
         Update-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
             -AuthenticationMethodConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -417,9 +642,9 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Azure AD Authentication Method Policy Authenticator with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Azure AD Authentication Method Policy Authenticator with Id {$($currentInstance.Id)}"
         #region resource generator code
-Remove-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $currentInstance.Id
+        Remove-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -444,7 +669,11 @@ function Test-TargetResource
         $ExcludeTargets,
 
         [Parameter()]
-        [ValidateSet('enabled','disabled')]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $IncludeTargets,
+
+        [Parameter()]
+        [ValidateSet('enabled', 'disabled')]
         [System.String]
         $State,
 
@@ -496,7 +725,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Authentication Method Policy Authenticator with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Azure AD Authentication Method Policy Authenticator with Id {$Id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -604,11 +833,8 @@ function Export-TargetResource
     {
         #region resource generator code
         [array]$getValue = Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
-            -All `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration' `
-            }
+            -AuthenticationMethodConfigurationId MicrosoftAuthenticator `
+            -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -630,15 +856,14 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
@@ -648,69 +873,69 @@ function Export-TargetResource
             {
                 $complexMapping = @(
                     @{
-                        Name = 'FeatureSettings'
+                        Name            = 'FeatureSettings'
                         CimInstanceName = 'MicrosoftGraphMicrosoftAuthenticatorFeatureSettings'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'CompanionAppAllowedState'
+                        Name            = 'CompanionAppAllowedState'
                         CimInstanceName = 'MicrosoftGraphAuthenticationMethodFeatureConfiguration'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ExcludeTarget'
+                        Name            = 'ExcludeTarget'
                         CimInstanceName = 'MicrosoftGraphFeatureTarget'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'IncludeTarget'
+                        Name            = 'IncludeTarget'
                         CimInstanceName = 'MicrosoftGraphFeatureTarget'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'DisplayAppInformationRequiredState'
+                        Name            = 'DisplayAppInformationRequiredState'
                         CimInstanceName = 'MicrosoftGraphAuthenticationMethodFeatureConfiguration'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ExcludeTarget'
+                        Name            = 'ExcludeTarget'
                         CimInstanceName = 'MicrosoftGraphFeatureTarget'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'IncludeTarget'
+                        Name            = 'IncludeTarget'
                         CimInstanceName = 'MicrosoftGraphFeatureTarget'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'DisplayLocationInformationRequiredState'
+                        Name            = 'DisplayLocationInformationRequiredState'
                         CimInstanceName = 'MicrosoftGraphAuthenticationMethodFeatureConfiguration'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ExcludeTarget'
+                        Name            = 'ExcludeTarget'
                         CimInstanceName = 'MicrosoftGraphFeatureTarget'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'IncludeTarget'
+                        Name            = 'IncludeTarget'
                         CimInstanceName = 'MicrosoftGraphFeatureTarget'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'NumberMatchingRequiredState'
+                        Name            = 'NumberMatchingRequiredState'
                         CimInstanceName = 'MicrosoftGraphAuthenticationMethodFeatureConfiguration'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ExcludeTarget'
+                        Name            = 'ExcludeTarget'
                         CimInstanceName = 'MicrosoftGraphFeatureTarget'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'IncludeTarget'
+                        Name            = 'IncludeTarget'
                         CimInstanceName = 'MicrosoftGraphFeatureTarget'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -741,6 +966,20 @@ function Export-TargetResource
                     $Results.Remove('ExcludeTargets') | Out-Null
                 }
             }
+            if ($null -ne $Results.IncludeTargets)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.IncludeTargets `
+                    -CIMInstanceName 'MicrosoftGraphincludeTarget2'
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.IncludeTargets = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('IncludeTargets') | Out-Null
+                }
+            }
 
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
@@ -749,11 +988,15 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.FeatureSettings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "FeatureSettings" -isCIMArray:$False
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'FeatureSettings' -IsCIMArray:$False
             }
             if ($Results.ExcludeTargets)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ExcludeTargets" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludeTargets' -IsCIMArray:$True
+            }
+            if ($Results.IncludeTargets)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IncludeTargets' -IsCIMArray:$True
             }
             #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
             $currentDSCBlock = $currentDSCBlock.replace("    ,`r`n" , "    `r`n" )

@@ -12,10 +12,75 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    node localhost
+    Node localhost
     {
-        AADAuthenticationMethodPolicyAuthenticator 'Example'
+        AADAuthenticationMethodPolicyAuthenticator "AADAuthenticationMethodPolicyAuthenticator-MicrosoftAuthenticator"
         {
+            ApplicationId         = $ConfigurationData.NonNodeData.ApplicationId;
+            CertificateThumbprint = $ConfigurationData.NonNodeData.CertificateThumbprint;
+            Ensure                = "Present";
+            FeatureSettings       = MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings{
+                DisplayLocationInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
+                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = '00000000-0000-0000-0000-000000000000'
+                        TargetType = 'group'
+                    }
+                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = 'fakegroup1'
+                        TargetType = 'group'
+                    }
+                    State = 'enabled'
+                }
+                            NumberMatchingRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
+                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = '00000000-0000-0000-0000-000000000000'
+                        TargetType = 'group'
+                    }
+                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = 'fakegroup2'
+                        TargetType = 'group'
+                    }
+                    State = 'enabled'
+                }
+                            CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
+                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = '00000000-0000-0000-0000-000000000000'
+                        TargetType = 'group'
+                    }
+                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = 'fakegroup3'
+                        TargetType = 'group'
+                    }
+                    State = 'enabled'
+                }
+                            DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
+                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = '00000000-0000-0000-0000-000000000000'
+                        TargetType = 'group'
+                    }
+                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = 'fakegroup4'
+                        TargetType = 'group'
+                    }
+                    State = 'enabled'
+                }
+                        };
+            Id                    = "MicrosoftAuthenticator";
+            IncludeTargets        = @(
+                MSFT_MicrosoftGraphincludeTarget2{
+                    Id = 'fakegroup5'
+                    TargetType = 'group'
+                }
+            );
+            ExcludeTargets        = @(
+                MSFT_MicrosoftGraphexcludeTarget2{
+                    Id = 'fakegroup6'
+                    TargetType = 'group'
+                }
+            );
+            IsSoftwareOathEnabled = $False;
+            State                 = "enabled";
+            TenantId              = $ConfigurationData.NonNodeData.TenantId;
         }
     }
 }
