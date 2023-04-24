@@ -2,6 +2,24 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicy
+  * Initial release. Configure Authentication policy settings
+* AADAuthenticationMethodPolicyAuthenticator
+  * Initial release. Configure Authentication settings related to MicrosoftAuthenticator
+* AADAuthenticationMethodPolicyEmail
+  * Initial release. Configure Authentication settings related to Email
+* AADAuthenticationMethodPolicyFido2
+  * Initial release. Configure Authentication settings related to Fido2
+* AADAuthenticationMethodPolicySms
+  * Initial release. Configure Authentication settings related to Sms
+* AADAuthenticationMethodPolicySoftware
+  * Initial release. Configure Authentication settings related to SoftwareOath
+* AADAuthenticationMethodPolicyTemporary
+  * Initial release. Configure Authentication settings related to TemporaryAccessPass
+* AADAuthenticationMethodPolicyVoice
+  * Initial release. Configure Authentication settings related to Voice
+* AADAuthenticationMethodPolicyX509
+  * Initial release. Configure Authentication settings related to X509Certificate
 * AADAdministrativeUnit
   * Fix issue incorrectly removing existing Members and ScopedRoleMembers
     FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)

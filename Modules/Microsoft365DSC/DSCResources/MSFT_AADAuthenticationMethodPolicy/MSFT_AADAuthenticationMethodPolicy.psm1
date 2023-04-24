@@ -338,24 +338,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Azure AD Authentication Method Policy with DisplayName {$DisplayName}"
-
-        $CreateParameters = ([Hashtable]$BoundParameters).clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Remove('Id') | Out-Null
-
-        $keys = (([Hashtable]$CreateParameters).clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-        }
-        #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.AuthenticationMethodsPolicy")
-        $policy = New-MgPolicyAuthenticationMethodPolicy 
-        #endregion
+        Write-Verbose -Message "Azure AD Authentication Method Policy instance cannot be created"
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -381,9 +364,9 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Azure AD Authentication Method Policy with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Azure AD Authentication Method Policy with Id {$($currentInstance.Id)}"
         #region resource generator code
-Remove-MgPolicyAuthenticationMethodPolicy 
+Remove-MgPolicyAuthenticationMethodPolicy
         #endregion
     }
 }

@@ -36,9 +36,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Update-MgPolicyAuthenticationMethodPolicy -MockWith {
             }
 
-            Mock -CommandName New-MgPolicyAuthenticationMethodPolicy -MockWith {
-            }
-
             Mock -CommandName Remove-MgPolicyAuthenticationMethodPolicy -MockWith {
             }
 
@@ -57,7 +54,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
-                    LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     PolicyMigrationState = "preMigration"
                     PolicyVersion = "FakeStringValue"
                     ReconfirmationInDays = 25
@@ -109,10 +105,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-            It 'Should Create the group from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgPolicyAuthenticationMethodPolicy -Exactly 1
-            }
         }
 
         Context -Name "The AADAuthenticationMethodPolicy exists but it SHOULD NOT" -Fixture {
@@ -121,7 +113,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
-                    LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     PolicyMigrationState = "preMigration"
                     PolicyVersion = "FakeStringValue"
                     ReconfirmationInDays = 25
@@ -171,7 +162,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                         PolicyMigrationState = "preMigration"
                         PolicyVersion = "FakeStringValue"
                         ReconfirmationInDays = 25
@@ -233,7 +223,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
-                    LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     PolicyMigrationState = "preMigration"
                     PolicyVersion = "FakeStringValue"
                     ReconfirmationInDays = 25
@@ -283,7 +272,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                         PolicyMigrationState = "preMigration"
                         PolicyVersion = "FakeStringValue"
                         ReconfirmationInDays = 25
@@ -338,7 +326,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     Id = "FakeStringValue"
-                    LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                     PolicyMigrationState = "preMigration"
                     PolicyVersion = "FakeStringValue"
                     ReconfirmationInDays = 25
@@ -385,7 +372,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                         PolicyMigrationState = "preMigration"
                         PolicyVersion = "FakeStringValue"
                         ReconfirmationInDays = 7
@@ -457,7 +443,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                         PolicyMigrationState = "preMigration"
                         PolicyVersion = "FakeStringValue"
                         ReconfirmationInDays = 25
