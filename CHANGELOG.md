@@ -10,8 +10,12 @@
 * SCSensitivityLabel
   * Remove property Disabled from schema
     FIXES [#3193](https://github.com/microsoft/Microsoft365DSC/issues/3193)
+* TeamsTeam
+  * Fixes an error when trying to extract teams using a Service Principal.
+    FIXES [#3183](https://github.com/microsoft/Microsoft365DSC/issues/3183)
 * DEPENDENCIES
   * Updated DSCParser dependencies to version 1.3.0.7.
+  * Updated Microsoft.Graph dependencies to version 1.26.0.
   * Updated Microsoft.PowerApps.Administration.PowerShell tp version 2.0.160.
 
 # 1.23.419.1
