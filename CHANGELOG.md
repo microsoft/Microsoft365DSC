@@ -15,6 +15,7 @@
     FIXES [#3183](https://github.com/microsoft/Microsoft365DSC/issues/3183)
 * DEPENDENCIES
   * Updated DSCParser dependencies to version 1.3.0.7.
+  * Updated Microsoft.Graph dependencies to version 1.26.0.
   * Updated Microsoft.PowerApps.Administration.PowerShell tp version 2.0.160.
 
 # 1.23.419.1
