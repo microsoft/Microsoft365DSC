@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADCOnditionalAccessPolicy
+  * Fix Couldn't find Location 00000000-0000-0000-0000-000000000000
+    FIXES[#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
 * AADAdministrativeUnit
   * Fix issue incorrectly removing existing Members and ScopedRoleMembers
     FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)
