@@ -491,9 +491,9 @@ function Get-TargetResource
                     {
                         $ExcludeLocations += $ExcludeLocationGUID
                     }
-                    elseif ($IncludeLocationGUID -eq '00000000-0000-0000-0000-000000000000')
+                    elseif ($ExcludeLocationGUID -eq '00000000-0000-0000-0000-000000000000')
                     {
-                        $IncludeLocations += 'Multifactor authentication trusted IPs'
+                        $ExcludeLocations += 'Multifactor authentication trusted IPs'
                     }
                     elseif ($null -eq $Locationlookup[$ExcludeLocationGUID])
                     {
