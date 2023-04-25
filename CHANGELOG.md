@@ -9,6 +9,10 @@
     FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)
   * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
     FIXES [#3189](https://github.com/microsoft/Microsoft365DSC/issues/3189)
+* SCLabelPolicy
+  * Fixed issue where the Labels parameter isn't handled properly for existing
+    policies
+    FIXES [#3216](https://github.com/microsoft/Microsoft365DSC/issues/3216)
 * SCSensitivityLabel
   * Remove property Disabled from schema
     FIXES [#3193](https://github.com/microsoft/Microsoft365DSC/issues/3193)
