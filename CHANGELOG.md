@@ -10,6 +10,9 @@
 * SCSensitivityLabel
   * Remove property Disabled from schema
     FIXES [#3193](https://github.com/microsoft/Microsoft365DSC/issues/3193)
+  * Corrected issue where SiteAndGroupExternalSharingControlType wasn't
+    applied correctly with existing labels
+    FIXES [#3210](https://github.com/microsoft/Microsoft365DSC/issues/3210)
 * TeamsTeam
   * Fixes an error when trying to extract teams using a Service Principal.
     FIXES [#3183](https://github.com/microsoft/Microsoft365DSC/issues/3183)
