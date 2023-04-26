@@ -1,5 +1,34 @@
 # Change log for Microsoft365DSC
 
+# 1.23.426.1
+
+* AADCOnditionalAccessPolicy
+  * Fix Couldn't find Location 00000000-0000-0000-0000-000000000000
+    FIXES[#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+* AADAdministrativeUnit
+  * Fix issue incorrectly removing existing Members and ScopedRoleMembers
+    FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)
+  * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
+    FIXES [#3189](https://github.com/microsoft/Microsoft365DSC/issues/3189)
+* SCLabelPolicy
+  * Fixed issue where the Labels parameter isn't handled properly for existing
+    policies
+    FIXES [#3216](https://github.com/microsoft/Microsoft365DSC/issues/3216)
+* SCSensitivityLabel
+  * Remove property Disabled from schema
+    FIXES [#3193](https://github.com/microsoft/Microsoft365DSC/issues/3193)
+  * Corrected issue where SiteAndGroupExternalSharingControlType wasn't
+    applied correctly with existing labels
+    FIXES [#3210](https://github.com/microsoft/Microsoft365DSC/issues/3210)
+* TeamsTeam
+  * Fixes an error when trying to extract teams using a Service Principal.
+    FIXES [#3183](https://github.com/microsoft/Microsoft365DSC/issues/3183)
+* DEPENDENCIES
+  * Updated DSCParser dependencies to version 1.3.0.7.
+  * Updated Microsoft.Graph dependencies to version 1.26.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.160.
+  * Updated MSCloudLoginAssistant to version 1.0.106.
+
 # 1.23.419.1
 
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
