@@ -1,6 +1,7 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
 * AADCOnditionalAccessPolicy
   * Fix Couldn't find Location 00000000-0000-0000-0000-000000000000
     FIXES[#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
@@ -25,7 +26,8 @@
 * DEPENDENCIES
   * Updated DSCParser dependencies to version 1.3.0.7.
   * Updated Microsoft.Graph dependencies to version 1.26.0.
-  * Updated Microsoft.PowerApps.Administration.PowerShell tp version 2.0.160.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.160.
+  * Updated MSCloudLoginAssistant to version 1.0.106.
 
 # 1.23.419.1
 
