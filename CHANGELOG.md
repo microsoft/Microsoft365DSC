@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.426.1
 
 * AADCOnditionalAccessPolicy
   * Fix Couldn't find Location 00000000-0000-0000-0000-000000000000
