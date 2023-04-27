@@ -1,6 +1,19 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
+* MISC
+  * If an error occurs during the export process, we now throw an error instead of simply writing the error
+    back to the host via Write-Host.
+
+# 1.23.426.2
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.107.
+    FIXES #3231
+
+# 1.23.426.1
+
 * AADCOnditionalAccessPolicy
   * Fix Couldn't find Location 00000000-0000-0000-0000-000000000000
     FIXES[#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
@@ -27,6 +40,10 @@
     FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)
   * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
     FIXES [#3189](https://github.com/microsoft/Microsoft365DSC/issues/3189)
+* SCLabelPolicy
+  * Fixed issue where the Labels parameter isn't handled properly for existing
+    policies
+    FIXES [#3216](https://github.com/microsoft/Microsoft365DSC/issues/3216)
 * SCSensitivityLabel
   * Remove property Disabled from schema
     FIXES [#3193](https://github.com/microsoft/Microsoft365DSC/issues/3193)
@@ -39,7 +56,8 @@
 * DEPENDENCIES
   * Updated DSCParser dependencies to version 1.3.0.7.
   * Updated Microsoft.Graph dependencies to version 1.26.0.
-  * Updated Microsoft.PowerApps.Administration.PowerShell tp version 2.0.160.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.160.
+  * Updated MSCloudLoginAssistant to version 1.0.106.
 
 # 1.23.419.1
 
