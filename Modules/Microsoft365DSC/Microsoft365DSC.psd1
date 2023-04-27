@@ -140,7 +140,7 @@
 
       # ReleaseNotes of this module
       ReleaseNotes = '* DEPENDENCIES
-        * Updated MSCloudLoginAssistant to version 1.0.107.
+        * Updated MSCloudLoginAssistant to version 1.0.108.
           FIXES #3231'
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update
