@@ -6,6 +6,12 @@
   * If an error occurs during the export process, we now throw an error instead of simply writing the error
     back to the host via Write-Host.
 
+# 1.23.426.2
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.107.
+    FIXES #3231
+
 # 1.23.426.1
 
 * AADCOnditionalAccessPolicy
