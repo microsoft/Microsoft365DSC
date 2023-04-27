@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.23.426.2
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.107.
+    FIXES #3231
+
 # 1.23.426.1
 
 * AADCOnditionalAccessPolicy
