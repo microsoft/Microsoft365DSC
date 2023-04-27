@@ -4,6 +4,9 @@
 
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.108.
+* MISC
+  * If an error occurs during the export process, we now throw an error instead of simply writing the error
+    back to the host via Write-Host.
 
 # 1.23.426.2
 
