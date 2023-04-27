@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.23.426.3
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.108.
+
 # 1.23.426.2
 
 * DEPENDENCIES
