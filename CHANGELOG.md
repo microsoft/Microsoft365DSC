@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+  * IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
+    * Initial release
+
 # 1.23.426.3
 
 * DEPENDENCIES
