@@ -21,7 +21,7 @@ Configuration Example
                 AccountDeletionPolicy = 'diskSpaceThreshold'
                 RemoveAccountsBelowDiskFreePercentage = 20
             };
-            AllowedAccounts              = "guest,domain";
+            AllowedAccounts              = @("guest","domain");
             AllowLocalStorage            = $True;
             Assignments                  = @(
                 MSFT_DeviceManagementConfigurationPolicyAssignments{
