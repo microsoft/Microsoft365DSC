@@ -176,13 +176,15 @@ function New-M365DSCResource
 
         $global:ComplexList=@()
         $cimClasses = Get-Microsoft365DSCModuleCimClass -ResourceName $ResourceName
+        $global:searchedEntity = $selectedODataType
         $typeProperties = Get-TypeProperties `
             -CmdletDefinition $cmdletDefinition `
             -Entity $selectedODataType `
             -IncludeNavigationProperties $IncludeNavigationProperties `
             -CimClasses $cimClasses `
             -Workload $Workload
-        $global:ComplexList=$null
+        $global:ComplexList = $null
+        $global:searchedEntity = $null
         [Hashtable[]]$parameterInformation = Get-ParameterBlockInformation `
             -Properties $typeProperties `
             -DefaultParameterSetProperties $defaultParameterSetProperties
@@ -1250,7 +1252,11 @@ function Get-TypeProperties
 
 
                 $IsRootProperty=$false
-                if (($entityType.BaseType -eq "graph.Entity") -or ($entityType.Name -eq "entity") -or $isAbstract)
+                if($isAbstract)
+                {
+                    write-host ("isAbstract: $isAbstract - entity: $($entityType.Name) - searchedEntity: $global:searchedEntity)")
+                }
+                if (($entityType.BaseType -eq "graph.Entity") -or ($entityType.Name -eq "entity") -or ($isAbstract -and $entityType.Name -eq $global:searchedEntity))
                 {
                     $IsRootProperty=$true
                 }
