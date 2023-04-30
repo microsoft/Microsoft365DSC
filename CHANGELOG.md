@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASE
+# UNRELEASED
 
 * IntuneDeviceConfigurationVpnPolicyWindows10
   * Initial release
