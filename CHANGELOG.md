@@ -2,8 +2,8 @@
 
 # UNRELEASED
 
- * DRG
-  * Fix issue with abstract type and additionalProperties
+ * IntuneDeviceConfigurationTrustedCertificatePolicyWindows10
+  * Initial release
 
 # 1.23.426.3
 
