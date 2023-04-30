@@ -392,15 +392,15 @@ function Get-TargetResource
         }
 
         $complexServers = @()
-        foreach ($currentServers in $getValue.servers)
+        foreach ($currentservers in $getValue.AdditionalProperties.servers)
         {
-            $myServers = @{}
-            $myServers.Add('Address', $currentServers.address)
-            $myServers.Add('Description', $currentServers.description)
-            $myServers.Add('IsDefaultServer', $currentServers.isDefaultServer)
-            if ($myServers.values.Where({$null -ne $_}).count -gt 0)
+            $myservers = @{}
+            $myservers.Add('Address', $currentservers.address)
+            $myservers.Add('Description', $currentservers.description)
+            $myservers.Add('IsDefaultServer', $currentservers.isDefaultServer)
+            if ($myservers.values.Where({$null -ne $_}).count -gt 0)
             {
-                $complexServers += $myServers
+                $complexServers += $myservers
             }
         }
         #endregion
@@ -451,8 +451,8 @@ function Get-TargetResource
             TrafficRules                               = $complexTrafficRules
             TrustedNetworkDomains                      = $getValue.AdditionalProperties.trustedNetworkDomains
             WindowsInformationProtectionDomain         = $getValue.AdditionalProperties.windowsInformationProtectionDomain
-            ConnectionName                             = $getValue.ConnectionName
-            CustomXml                                  = $getValue.CustomXml
+            ConnectionName                             = $getValue.AdditionalProperties.connectionName
+            CustomXml                                  = $getValue.AdditionalProperties.customXml
             Servers                                    = $complexServers
             Description                                = $getValue.Description
             DisplayName                                = $getValue.DisplayName

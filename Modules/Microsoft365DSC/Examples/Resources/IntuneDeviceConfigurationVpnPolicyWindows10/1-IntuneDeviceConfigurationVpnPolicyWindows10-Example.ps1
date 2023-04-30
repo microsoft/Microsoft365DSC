@@ -23,8 +23,10 @@ Configuration Example
                 }
             );
             AuthenticationMethod                       = "usernameAndPassword";
+            ConnectionName                             = "Cisco VPN";
             ConnectionType                             = "ciscoAnyConnect";
             Credential                                 = $Credscredential;
+            CustomXml                                  = "";
             DisplayName                                = "VPN";
             DnsRules                                   = @(
                 MSFT_MicrosoftGraphvpnDnsRule{
@@ -50,6 +52,13 @@ Configuration Example
                 Address = '10.0.10.100'
             };
             RememberUserCredentials                    = $True;
+            Servers                                    = @("
+                MSFT_MicrosoftGraphvpnServer{
+                    IsDefaultServer = $True
+                    Description = 'gateway1'
+                    Address = '10.0.1.10'
+                }
+            ");
             TrafficRules                               = @(
                 MSFT_MicrosoftGraphvpnTrafficRule{
                     Name = 'VPN rule'

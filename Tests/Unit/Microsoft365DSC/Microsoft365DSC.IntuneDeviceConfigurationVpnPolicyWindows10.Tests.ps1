@@ -75,8 +75,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         integrityCheckMethod = "sha2_256"
                         authenticationTransformConstants = "md5_96"
                     } -ClientOnly)
-                    Description = "FakeStringValue"
-                    DisplayName = "FakeStringValue"
+                    description = "FakeStringValue"
+                    displayName = "FakeStringValue"
                     dnsRules = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnDnsRule -Property @{
                             servers = @("FakeStringValue")
@@ -93,7 +93,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     enableDnsRegistration = $True
                     enableSingleSignOnWithAlternateCertificate = $True
                     enableSplitTunneling = $True
-                    Id = "FakeStringValue"
+                    id = "FakeStringValue"
                     microsoftTunnelSiteId = "FakeStringValue"
                     onlyAssociatedAppsCanUseConnection = $True
                     profileTarget = "user"
@@ -112,11 +112,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             destinationPrefix = "FakeStringValue"
                         } -ClientOnly)
                     )
-                    Servers = [CimInstance[]]@(
+                    servers = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnServer -Property @{
-                            IsDefaultServer = $True
-                            Description = "FakeStringValue"
-                            Address = "FakeStringValue"
+                            isDefaultServer = $True
+                            description = "FakeStringValue"
+                            address = "FakeStringValue"
                         } -ClientOnly)
                     )
                     singleSignOnEku = (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage -Property @{
@@ -205,8 +205,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         integrityCheckMethod = "sha2_256"
                         authenticationTransformConstants = "md5_96"
                     } -ClientOnly)
-                    Description = "FakeStringValue"
-                    DisplayName = "FakeStringValue"
+                    description = "FakeStringValue"
+                    displayName = "FakeStringValue"
                     dnsRules = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnDnsRule -Property @{
                             servers = @("FakeStringValue")
@@ -223,7 +223,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     enableDnsRegistration = $True
                     enableSingleSignOnWithAlternateCertificate = $True
                     enableSplitTunneling = $True
-                    Id = "FakeStringValue"
+                    id = "FakeStringValue"
                     microsoftTunnelSiteId = "FakeStringValue"
                     onlyAssociatedAppsCanUseConnection = $True
                     profileTarget = "user"
@@ -242,11 +242,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             destinationPrefix = "FakeStringValue"
                         } -ClientOnly)
                     )
-                    Servers = [CimInstance[]]@(
+                    servers = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnServer -Property @{
-                            IsDefaultServer = $True
-                            Description = "FakeStringValue"
-                            Address = "FakeStringValue"
+                            isDefaultServer = $True
+                            description = "FakeStringValue"
+                            address = "FakeStringValue"
                         } -ClientOnly)
                     )
                     singleSignOnEku = (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage -Property @{
@@ -347,7 +347,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             dnsSuffixes = @("FakeStringValue")
                             profileTarget = "user"
                             enableAlwaysOn = $True
+                            servers = @(
+                                @{
+                                    isDefaultServer = $True
+                                    description = "FakeStringValue"
+                                    address = "FakeStringValue"
+                                }
+                            )
                             connectionType = "pulseSecure"
+                            connectionName = "FakeStringValue"
                             cryptographySuite = @{
                                 cipherTransformConstants = "aes256"
                                 encryptionMethod = "aes256"
@@ -400,17 +408,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type' = "#microsoft.graph.windows10VpnConfiguration"
                             enableSplitTunneling = $True
                         }
-                        connectionName = "FakeStringValue"
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        Servers = @(
-                            @{
-                                IsDefaultServer = $True
-                                Description = "FakeStringValue"
-                                Address = "FakeStringValue"
-                            }
-                        )
+                        description = "FakeStringValue"
+                        displayName = "FakeStringValue"
+                        id = "FakeStringValue"
 
                     }
                 }
@@ -449,8 +449,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         integrityCheckMethod = "sha2_256"
                         authenticationTransformConstants = "md5_96"
                     } -ClientOnly)
-                    Description = "FakeStringValue"
-                    DisplayName = "FakeStringValue"
+                    description = "FakeStringValue"
+                    displayName = "FakeStringValue"
                     dnsRules = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnDnsRule -Property @{
                             servers = @("FakeStringValue")
@@ -467,7 +467,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     enableDnsRegistration = $True
                     enableSingleSignOnWithAlternateCertificate = $True
                     enableSplitTunneling = $True
-                    Id = "FakeStringValue"
+                    id = "FakeStringValue"
                     microsoftTunnelSiteId = "FakeStringValue"
                     onlyAssociatedAppsCanUseConnection = $True
                     profileTarget = "user"
@@ -486,11 +486,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             destinationPrefix = "FakeStringValue"
                         } -ClientOnly)
                     )
-                    Servers = [CimInstance[]]@(
+                    servers = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnServer -Property @{
-                            IsDefaultServer = $True
-                            Description = "FakeStringValue"
-                            Address = "FakeStringValue"
+                            isDefaultServer = $True
+                            description = "FakeStringValue"
+                            address = "FakeStringValue"
                         } -ClientOnly)
                     )
                     singleSignOnEku = (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage -Property @{
@@ -591,7 +591,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             dnsSuffixes = @("FakeStringValue")
                             profileTarget = "user"
                             enableAlwaysOn = $True
+                            servers = @(
+                                @{
+                                    isDefaultServer = $True
+                                    description = "FakeStringValue"
+                                    address = "FakeStringValue"
+                                }
+                            )
                             connectionType = "pulseSecure"
+                            connectionName = "FakeStringValue"
                             cryptographySuite = @{
                                 cipherTransformConstants = "aes256"
                                 encryptionMethod = "aes256"
@@ -644,17 +652,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type' = "#microsoft.graph.windows10VpnConfiguration"
                             enableSplitTunneling = $True
                         }
-                        connectionName = "FakeStringValue"
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        Servers = @(
-                            @{
-                                IsDefaultServer = $True
-                                Description = "FakeStringValue"
-                                Address = "FakeStringValue"
-                            }
-                        )
+                        description = "FakeStringValue"
+                        displayName = "FakeStringValue"
+                        id = "FakeStringValue"
 
                     }
                 }
@@ -686,8 +686,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         integrityCheckMethod = "sha2_256"
                         authenticationTransformConstants = "md5_96"
                     } -ClientOnly)
-                    Description = "FakeStringValue"
-                    DisplayName = "FakeStringValue"
+                    description = "FakeStringValue"
+                    displayName = "FakeStringValue"
                     dnsRules = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnDnsRule -Property @{
                             servers = @("FakeStringValue")
@@ -704,7 +704,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     enableDnsRegistration = $True
                     enableSingleSignOnWithAlternateCertificate = $True
                     enableSplitTunneling = $True
-                    Id = "FakeStringValue"
+                    id = "FakeStringValue"
                     microsoftTunnelSiteId = "FakeStringValue"
                     onlyAssociatedAppsCanUseConnection = $True
                     profileTarget = "user"
@@ -723,11 +723,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             destinationPrefix = "FakeStringValue"
                         } -ClientOnly)
                     )
-                    Servers = [CimInstance[]]@(
+                    servers = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnServer -Property @{
-                            IsDefaultServer = $True
-                            Description = "FakeStringValue"
-                            Address = "FakeStringValue"
+                            isDefaultServer = $True
+                            description = "FakeStringValue"
+                            address = "FakeStringValue"
                         } -ClientOnly)
                     )
                     singleSignOnEku = (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage -Property @{
@@ -790,8 +790,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     proxyServerUri = "FakeStringValue"
                                 }
                             )
-                            '@odata.type' = "#microsoft.graph.windows10VpnConfiguration"
-                            windowsInformationProtectionDomain = "FakeStringValue"
+                            singleSignOnEku = @{
+                                objectIdentifier = "FakeStringValue"
+                                name = "FakeStringValue"
+                            }
+                            singleSignOnIssuerHash = "FakeStringValue"
+                            associatedApps = @(
+                                @{
+                                    identifier = "FakeStringValue"
+                                    appType = "desktop"
+                                }
+                            )
+                            trustedNetworkDomains = @("FakeStringValue")
+                            routes = @(
+                                @{
+                                    prefixSize = 7
+                                    destinationPrefix = "FakeStringValue"
+                                }
+                            )
+                            microsoftTunnelSiteId = "FakeStringValue"
+                            connectionName = "FakeStringValue"
+                            dnsSuffixes = @("FakeStringValue")
+                            profileTarget = "user"
+                            authenticationMethod = "certificate"
+                            servers = @(
+                                @{
+                                    description = "FakeStringValue"
+                                    address = "FakeStringValue"
+                                }
+                            )
+                            connectionType = "pulseSecure"
                             trafficRules = @(
                                 @{
                                     remotePortRanges = @(
@@ -831,29 +859,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     vpnTrafficDirection = "outbound"
                                 }
                             )
-                            connectionType = "pulseSecure"
-                            authenticationMethod = "certificate"
-                            profileTarget = "user"
-                            dnsSuffixes = @("FakeStringValue")
-                            microsoftTunnelSiteId = "FakeStringValue"
-                            routes = @(
-                                @{
-                                    prefixSize = 7
-                                    destinationPrefix = "FakeStringValue"
-                                }
-                            )
-                            trustedNetworkDomains = @("FakeStringValue")
-                            associatedApps = @(
-                                @{
-                                    identifier = "FakeStringValue"
-                                    appType = "desktop"
-                                }
-                            )
-                            singleSignOnIssuerHash = "FakeStringValue"
-                            singleSignOnEku = @{
-                                objectIdentifier = "FakeStringValue"
-                                name = "FakeStringValue"
-                            }
+                            windowsInformationProtectionDomain = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.windows10VpnConfiguration"
                             proxyServer = @{
                                 port = 7
                                 automaticConfigurationScriptUrl = "FakeStringValue"
@@ -869,16 +876,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 authenticationTransformConstants = "md5_96"
                             }
                         }
-                        connectionName = "FakeStringValue"
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        Servers = @(
-                            @{
-                                Description = "FakeStringValue"
-                                Address = "FakeStringValue"
-                            }
-                        )
+                        description = "FakeStringValue"
+                        displayName = "FakeStringValue"
+                        id = "FakeStringValue"
                     }
                 }
             }
@@ -953,7 +953,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             dnsSuffixes = @("FakeStringValue")
                             profileTarget = "user"
                             enableAlwaysOn = $True
+                            servers = @(
+                                @{
+                                    isDefaultServer = $True
+                                    description = "FakeStringValue"
+                                    address = "FakeStringValue"
+                                }
+                            )
                             connectionType = "pulseSecure"
+                            connectionName = "FakeStringValue"
                             cryptographySuite = @{
                                 cipherTransformConstants = "aes256"
                                 encryptionMethod = "aes256"
@@ -1006,17 +1014,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type' = "#microsoft.graph.windows10VpnConfiguration"
                             enableSplitTunneling = $True
                         }
-                        connectionName = "FakeStringValue"
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        Servers = @(
-                            @{
-                                IsDefaultServer = $True
-                                Description = "FakeStringValue"
-                                Address = "FakeStringValue"
-                            }
-                        )
+                        description = "FakeStringValue"
+                        displayName = "FakeStringValue"
+                        id = "FakeStringValue"
 
                     }
                 }
