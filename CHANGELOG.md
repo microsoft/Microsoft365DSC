@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+ * DRG
+  * Fix issue with abstract type and additionalProperties
+
 # 1.23.426.3
 
 * DEPENDENCIES
