@@ -1249,13 +1249,7 @@ function Get-TypeProperties
             $rawProperties=$entityType.Property
             foreach ($property in $rawProperties)
             {
-
-
                 $IsRootProperty=$false
-                if($isAbstract)
-                {
-                    write-host ("isAbstract: $isAbstract - entity: $($entityType.Name) - searchedEntity: $global:searchedEntity)")
-                }
                 if (($entityType.BaseType -eq "graph.Entity") -or ($entityType.Name -eq "entity") -or ($isAbstract -and $entityType.Name -eq $global:searchedEntity))
                 {
                     $IsRootProperty=$true
