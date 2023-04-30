@@ -14,7 +14,7 @@ class MSFT_MicrosoftGraphCustomSubjectAlternativeName
     [Write, Description("Custom SAN Type. Possible values are: none, emailAddress, userPrincipalName, customAzureADAttribute, domainNameService, universalResourceIdentifier."), ValueMap{"none","emailAddress","userPrincipalName","customAzureADAttribute","domainNameService","universalResourceIdentifier"}, Values{"none","emailAddress","userPrincipalName","customAzureADAttribute","domainNameService","universalResourceIdentifier"}] String SanType;
 };
 [ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphExtendedKeyUsage1
+class MSFT_MicrosoftGraphExtendedKeyUsage
 {
     [Write, Description("Extended Key Usage Name")] String Name;
     [Write, Description("Extended Key Usage Object Identifier")] String ObjectIdentifier;
@@ -28,7 +28,7 @@ class MSFT_IntuneDeviceConfigurationPkcsCertificatePolicyWindows10 : OMI_BaseRes
     [Write, Description("PKCS Certification Authority")] String CertificationAuthority;
     [Write, Description("PKCS Certification Authority Name")] String CertificationAuthorityName;
     [Write, Description("Custom Subject Alternative Name Settings. This collection can contain a maximum of 500 elements."), EmbeddedInstance("MSFT_MicrosoftGraphcustomSubjectAlternativeName")] String CustomSubjectAlternativeNames[];
-    [Write, Description("Extended Key Usage (EKU) settings. This collection can contain a maximum of 500 elements."), EmbeddedInstance("MSFT_MicrosoftGraphextendedKeyUsage1")] String ExtendedKeyUsages[];
+    [Write, Description("Extended Key Usage (EKU) settings. This collection can contain a maximum of 500 elements."), EmbeddedInstance("MSFT_MicrosoftGraphextendedKeyUsage")] String ExtendedKeyUsages[];
     [Write, Description("Custom String that defines the AAD Attribute.")] String SubjectAlternativeNameFormatString;
     [Write, Description("Custom format to use with SubjectNameFormat = Custom. Example: CN=EmailAddress}},E=EmailAddress}},OU=Enterprise Users,O=Contoso Corporation,L=Redmond,ST=WA,C=US")] String SubjectNameFormatString;
     [Write, Description("Scale for the Certificate Validity Period. Possible values are: days, months, years."), ValueMap{"days","months","years"}, Values{"days","months","years"}] String CertificateValidityPeriodScale;

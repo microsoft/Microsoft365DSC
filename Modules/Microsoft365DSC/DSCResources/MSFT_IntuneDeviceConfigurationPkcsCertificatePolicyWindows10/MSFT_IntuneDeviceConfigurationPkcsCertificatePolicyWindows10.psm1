@@ -198,27 +198,27 @@ function Get-TargetResource
         }
 
         $enumCertificateValidityPeriodScale = $null
-        if ($null -ne $getValue.CertificateValidityPeriodScale)
+        if ($null -ne $getValue.AdditionalProperties.certificateValidityPeriodScale)
         {
-            $enumCertificateValidityPeriodScale = $getValue.CertificateValidityPeriodScale.ToString()
+            $enumCertificateValidityPeriodScale = $getValue.AdditionalProperties.certificateValidityPeriodScale.ToString()
         }
 
         $enumKeyStorageProvider = $null
-        if ($null -ne $getValue.KeyStorageProvider)
+        if ($null -ne $getValue.AdditionalProperties.keyStorageProvider)
         {
-            $enumKeyStorageProvider = $getValue.KeyStorageProvider.ToString()
+            $enumKeyStorageProvider = $getValue.AdditionalProperties.keyStorageProvider.ToString()
         }
 
         $enumSubjectAlternativeNameType = $null
-        if ($null -ne $getValue.SubjectAlternativeNameType)
+        if ($null -ne $getValue.AdditionalProperties.subjectAlternativeNameType)
         {
-            $enumSubjectAlternativeNameType = $getValue.SubjectAlternativeNameType.ToString()
+            $enumSubjectAlternativeNameType = $getValue.AdditionalProperties.subjectAlternativeNameType.ToString()
         }
 
         $enumSubjectNameFormat = $null
-        if ($null -ne $getValue.SubjectNameFormat)
+        if ($null -ne $getValue.AdditionalProperties.subjectNameFormat)
         {
-            $enumSubjectNameFormat = $getValue.SubjectNameFormat.ToString()
+            $enumSubjectNameFormat = $getValue.AdditionalProperties.subjectNameFormat.ToString()
         }
         #endregion
 
@@ -233,9 +233,9 @@ function Get-TargetResource
             SubjectAlternativeNameFormatString = $getValue.AdditionalProperties.subjectAlternativeNameFormatString
             SubjectNameFormatString            = $getValue.AdditionalProperties.subjectNameFormatString
             CertificateValidityPeriodScale     = $enumCertificateValidityPeriodScale
-            CertificateValidityPeriodValue     = $getValue.CertificateValidityPeriodValue
+            CertificateValidityPeriodValue     = $getValue.AdditionalProperties.certificateValidityPeriodValue
             KeyStorageProvider                 = $enumKeyStorageProvider
-            RenewalThresholdPercentage         = $getValue.RenewalThresholdPercentage
+            RenewalThresholdPercentage         = $getValue.AdditionalProperties.renewalThresholdPercentage
             SubjectAlternativeNameType         = $enumSubjectAlternativeNameType
             SubjectNameFormat                  = $enumSubjectNameFormat
             Description                        = $getValue.Description
@@ -778,7 +778,7 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.ExtendedKeyUsages `
-                    -CIMInstanceName 'MicrosoftGraphextendedKeyUsage1'
+                    -CIMInstanceName 'MicrosoftGraphextendedKeyUsage'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.ExtendedKeyUsages = $complexTypeStringResult

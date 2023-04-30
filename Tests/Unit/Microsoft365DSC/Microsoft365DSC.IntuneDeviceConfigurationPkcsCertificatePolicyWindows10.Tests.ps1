@@ -73,7 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
                     extendedKeyUsages = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage1 -Property @{
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage -Property @{
                             objectIdentifier = "FakeStringValue"
                             name = "FakeStringValue"
                         } -ClientOnly)
@@ -123,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
                     extendedKeyUsages = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage1 -Property @{
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage -Property @{
                             objectIdentifier = "FakeStringValue"
                             name = "FakeStringValue"
                         } -ClientOnly)
@@ -142,35 +142,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            customSubjectAlternativeNames = @(
-                                @{
-                                    sanType = "none"
-                                    name = "FakeStringValue"
-                                }
-                            )
-                            subjectNameFormatString = "FakeStringValue"
+                            subjectAlternativeNameType = "none"
                             certificationAuthorityName = "FakeStringValue"
+                            renewalThresholdPercentage = 25
                             subjectAlternativeNameFormatString = "FakeStringValue"
+                            certificateValidityPeriodScale = "days"
+                            keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
+                            certificationAuthority = "FakeStringValue"
+                            certificateValidityPeriodValue = 25
                             certificateTemplateName = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
+                            subjectNameFormatString = "FakeStringValue"
+                            subjectNameFormat = "commonName"
+                            certificateStore = "user"
                             extendedKeyUsages = @(
                                 @{
                                     objectIdentifier = "FakeStringValue"
                                     name = "FakeStringValue"
                                 }
                             )
-                            certificationAuthority = "FakeStringValue"
-                            certificateStore = "user"
-                            '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
+                            customSubjectAlternativeNames = @(
+                                @{
+                                    sanType = "none"
+                                    name = "FakeStringValue"
+                                }
+                            )
                         }
-                        certificateValidityPeriodScale = "days"
-                        certificateValidityPeriodValue = 25
                         description = "FakeStringValue"
                         displayName = "FakeStringValue"
                         id = "FakeStringValue"
-                        keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                        renewalThresholdPercentage = 25
-                        subjectAlternativeNameType = "none"
-                        subjectNameFormat = "commonName"
 
                     }
                 }
@@ -207,7 +207,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
                     extendedKeyUsages = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage1 -Property @{
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage -Property @{
                             objectIdentifier = "FakeStringValue"
                             name = "FakeStringValue"
                         } -ClientOnly)
@@ -226,35 +226,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            customSubjectAlternativeNames = @(
-                                @{
-                                    sanType = "none"
-                                    name = "FakeStringValue"
-                                }
-                            )
-                            subjectNameFormatString = "FakeStringValue"
+                            subjectAlternativeNameType = "none"
                             certificationAuthorityName = "FakeStringValue"
+                            renewalThresholdPercentage = 25
                             subjectAlternativeNameFormatString = "FakeStringValue"
+                            certificateValidityPeriodScale = "days"
+                            keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
+                            certificationAuthority = "FakeStringValue"
+                            certificateValidityPeriodValue = 25
                             certificateTemplateName = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
+                            subjectNameFormatString = "FakeStringValue"
+                            subjectNameFormat = "commonName"
+                            certificateStore = "user"
                             extendedKeyUsages = @(
                                 @{
                                     objectIdentifier = "FakeStringValue"
                                     name = "FakeStringValue"
                                 }
                             )
-                            certificationAuthority = "FakeStringValue"
-                            certificateStore = "user"
-                            '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
+                            customSubjectAlternativeNames = @(
+                                @{
+                                    sanType = "none"
+                                    name = "FakeStringValue"
+                                }
+                            )
                         }
-                        certificateValidityPeriodScale = "days"
-                        certificateValidityPeriodValue = 25
                         description = "FakeStringValue"
                         displayName = "FakeStringValue"
                         id = "FakeStringValue"
-                        keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                        renewalThresholdPercentage = 25
-                        subjectAlternativeNameType = "none"
-                        subjectNameFormat = "commonName"
 
                     }
                 }
@@ -284,7 +284,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
                     extendedKeyUsages = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage1 -Property @{
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphextendedKeyUsage -Property @{
                             objectIdentifier = "FakeStringValue"
                             name = "FakeStringValue"
                         } -ClientOnly)
@@ -303,35 +303,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            customSubjectAlternativeNames = @(
-                                @{
-                                    sanType = "none"
-                                    name = "FakeStringValue"
-                                }
-                            )
-                            subjectNameFormatString = "FakeStringValue"
+                            subjectAlternativeNameType = "none"
                             certificationAuthorityName = "FakeStringValue"
+                            renewalThresholdPercentage = 7
                             subjectAlternativeNameFormatString = "FakeStringValue"
+                            certificateValidityPeriodScale = "days"
+                            keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
+                            certificationAuthority = "FakeStringValue"
+                            certificateValidityPeriodValue = 7
                             certificateTemplateName = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
+                            subjectNameFormatString = "FakeStringValue"
+                            subjectNameFormat = "commonName"
+                            certificateStore = "user"
                             extendedKeyUsages = @(
                                 @{
                                     objectIdentifier = "FakeStringValue"
                                     name = "FakeStringValue"
                                 }
                             )
-                            certificationAuthority = "FakeStringValue"
-                            certificateStore = "user"
-                            '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
+                            customSubjectAlternativeNames = @(
+                                @{
+                                    sanType = "none"
+                                    name = "FakeStringValue"
+                                }
+                            )
                         }
-                        certificateValidityPeriodScale = "days"
-                        certificateValidityPeriodValue = 7
                         description = "FakeStringValue"
                         displayName = "FakeStringValue"
                         id = "FakeStringValue"
-                        keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                        renewalThresholdPercentage = 7
-                        subjectAlternativeNameType = "none"
-                        subjectNameFormat = "commonName"
                     }
                 }
             }
@@ -361,35 +361,35 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            customSubjectAlternativeNames = @(
-                                @{
-                                    sanType = "none"
-                                    name = "FakeStringValue"
-                                }
-                            )
-                            subjectNameFormatString = "FakeStringValue"
+                            subjectAlternativeNameType = "none"
                             certificationAuthorityName = "FakeStringValue"
+                            renewalThresholdPercentage = 25
                             subjectAlternativeNameFormatString = "FakeStringValue"
+                            certificateValidityPeriodScale = "days"
+                            keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
+                            certificationAuthority = "FakeStringValue"
+                            certificateValidityPeriodValue = 25
                             certificateTemplateName = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
+                            subjectNameFormatString = "FakeStringValue"
+                            subjectNameFormat = "commonName"
+                            certificateStore = "user"
                             extendedKeyUsages = @(
                                 @{
                                     objectIdentifier = "FakeStringValue"
                                     name = "FakeStringValue"
                                 }
                             )
-                            certificationAuthority = "FakeStringValue"
-                            certificateStore = "user"
-                            '@odata.type' = "#microsoft.graph.windows10PkcsCertificateProfile"
+                            customSubjectAlternativeNames = @(
+                                @{
+                                    sanType = "none"
+                                    name = "FakeStringValue"
+                                }
+                            )
                         }
-                        certificateValidityPeriodScale = "days"
-                        certificateValidityPeriodValue = 25
                         description = "FakeStringValue"
                         displayName = "FakeStringValue"
                         id = "FakeStringValue"
-                        keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                        renewalThresholdPercentage = 25
-                        subjectAlternativeNameType = "none"
-                        subjectNameFormat = "commonName"
 
                     }
                 }
