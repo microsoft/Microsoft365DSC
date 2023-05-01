@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
+  * Initial release
 * MISC
   * M365DSCUtil: Fixed an issue on function Get-M365DSCExportContentForResource if ConnectionMode was set to anything but "Credentials*"
  * DRG
