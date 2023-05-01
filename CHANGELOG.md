@@ -4,6 +4,8 @@
 
 * MISC
   * M365DSCUtil: Fixed an issue on function Get-M365DSCExportContentForResource if ConnectionMode was set to anything but "Credentials*"
+ * DRG
+  * Fix issue with abstract type and additionalProperties
 
 # 1.23.426.3
 
