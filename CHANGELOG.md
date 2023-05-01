@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+  * IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
+    * Initial release
  * DRG
   * Fix issue with abstract type and additionalProperties
 
