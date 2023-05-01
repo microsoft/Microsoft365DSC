@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             destinationPrefix = "FakeStringValue"
                         } -ClientOnly)
                     )
-                    servers = [CimInstance[]]@(
+                    serverCollection = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnServer -Property @{
                             isDefaultServer = $True
                             description = "FakeStringValue"
@@ -242,7 +242,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             destinationPrefix = "FakeStringValue"
                         } -ClientOnly)
                     )
-                    servers = [CimInstance[]]@(
+                    serverCollection = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnServer -Property @{
                             isDefaultServer = $True
                             description = "FakeStringValue"
@@ -486,7 +486,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             destinationPrefix = "FakeStringValue"
                         } -ClientOnly)
                     )
-                    servers = [CimInstance[]]@(
+                    serverCollection = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnServer -Property @{
                             isDefaultServer = $True
                             description = "FakeStringValue"
@@ -723,7 +723,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             destinationPrefix = "FakeStringValue"
                         } -ClientOnly)
                     )
-                    servers = [CimInstance[]]@(
+                    serverCollection = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphvpnServer -Property @{
                             isDefaultServer = $True
                             description = "FakeStringValue"

@@ -120,7 +120,7 @@ class MSFT_IntuneDeviceConfigurationVpnPolicyWindows10 : OMI_BaseResource
     [Write, Description("Windows Information Protection (WIP) domain to associate with this connection.")] String WindowsInformationProtectionDomain;
     [Write, Description("Connection name displayed to the user.")] String ConnectionName;
     [Write, Description("Custom XML commands that configures the VPN connection. (UTF8 encoded byte array)")] String CustomXml;
-    [Write, Description("List of VPN Servers on the network. Make sure end users can access these network locations. This collection can contain a maximum of 500 elements."), EmbeddedInstance("MSFT_MicrosoftGraphvpnServer")] String Servers[];
+    [Write, Description("List of VPN Servers on the network. Make sure end users can access these network locations. This collection can contain a maximum of 500 elements."), EmbeddedInstance("MSFT_MicrosoftGraphvpnServer")] String ServerCollection[];
     [Write, Description("Admin provided description of the Device Configuration.")] String Description;
     [Required, Description("Admin provided name of the device configuration.")] String DisplayName;
     [Key, Description("The unique identifier for an entity. Read-only.")] String Id;

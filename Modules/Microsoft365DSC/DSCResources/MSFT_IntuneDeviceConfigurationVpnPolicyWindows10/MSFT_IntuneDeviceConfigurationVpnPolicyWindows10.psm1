@@ -114,7 +114,7 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Servers,
+        $ServerCollection,
 
         [Parameter()]
         [System.String]
@@ -453,7 +453,7 @@ function Get-TargetResource
             WindowsInformationProtectionDomain         = $getValue.AdditionalProperties.windowsInformationProtectionDomain
             ConnectionName                             = $getValue.AdditionalProperties.connectionName
             CustomXml                                  = $getValue.AdditionalProperties.customXml
-            Servers                                    = $complexServers
+            ServerCollection                           = $complexServers
             Description                                = $getValue.Description
             DisplayName                                = $getValue.DisplayName
             Id                                         = $getValue.Id
@@ -610,7 +610,7 @@ function Set-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Servers,
+        $ServerCollection,
 
         [Parameter()]
         [System.String]
@@ -628,6 +628,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -744,7 +745,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Configuration Vpn Policy for Windows10 with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Device Configuration Vpn Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
 Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
@@ -867,7 +868,7 @@ function Test-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Servers,
+        $ServerCollection,
 
         [Parameter()]
         [System.String]
@@ -1203,18 +1204,18 @@ function Export-TargetResource
                     $Results.Remove('TrafficRules') | Out-Null
                 }
             }
-            if ($null -ne $Results.Servers)
+            if ($null -ne $Results.ServerCollection)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.Servers `
+                    -ComplexObject $Results.ServerCollection `
                     -CIMInstanceName 'MicrosoftGraphvpnServer'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
-                    $Results.Servers = $complexTypeStringResult
+                    $Results.ServerCollection = $complexTypeStringResult
                 }
                 else
                 {
-                    $Results.Remove('Servers') | Out-Null
+                    $Results.Remove('ServerCollection') | Out-Null
                 }
             }
             if ($Results.Assignments)
@@ -1262,9 +1263,9 @@ function Export-TargetResource
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "TrafficRules" -isCIMArray:$True
             }
-            if ($Results.Servers)
+            if ($Results.ServerCollection)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Servers" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "ServerCollection" -isCIMArray:$True
             }
             if ($Results.Assignments)
             {
@@ -1370,6 +1371,7 @@ function Rename-M365DSCCimInstanceParameter
 
     $keyToRename = @{
         'odataType' = '@odata.type'
+        'ServerCollection' = 'servers'
     }
 
     $result = $Properties
@@ -2048,4 +2050,4 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     return [hashtable]$results
 }
 
-Export-ModuleMember -Function *-TargetResource
+Export-ModuleMember -Function *-TargetResource,*

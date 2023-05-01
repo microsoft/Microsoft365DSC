@@ -52,13 +52,13 @@ Configuration Example
                 Address = '10.0.10.100'
             };
             RememberUserCredentials                    = $True;
-            Servers                                    = @("
+            ServerCollection                           = @(
                 MSFT_MicrosoftGraphvpnServer{
                     IsDefaultServer = $True
                     Description = 'gateway1'
                     Address = '10.0.1.10'
                 }
-            ");
+            );
             TrafficRules                               = @(
                 MSFT_MicrosoftGraphvpnTrafficRule{
                     Name = 'VPN rule'
