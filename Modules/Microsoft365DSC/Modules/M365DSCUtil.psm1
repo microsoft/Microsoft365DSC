@@ -3168,7 +3168,12 @@ function Get-M365DSCExportContentForResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String]
+        $TenantId
     )
 
     $OrganizationName = ''
