@@ -6,6 +6,8 @@
   * Initial release
 * IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
   * Initial release
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Initial release
  * IntuneDeviceConfigurationSecureAssessmentPolicyWindows10
   * Initial release
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
