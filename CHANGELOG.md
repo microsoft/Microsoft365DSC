@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationVpnPolicyWindows10
+  * Initial release
   * IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
     * Initial release
  * DRG
