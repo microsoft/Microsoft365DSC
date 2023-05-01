@@ -3174,18 +3174,14 @@ function Get-M365DSCExportContentForResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $TenantId
+        $Credential
     )
 
     $OrganizationName = ''
     if ($ConnectionMode -like 'ServicePrincipal*' -or `
             $ConnectionMode -eq 'ManagedIdentity')
     {
-        $OrganizationName = $TenantId
+        $OrganizationName = $Results.TenantId
     }
     else
     {
