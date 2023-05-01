@@ -1128,6 +1128,9 @@ function Export-M365DSCConfiguration
         $ManagedIdentity
     )
 
+    # Define the exported resource instances' names Global variable
+    $Global:M365DSCExportedResourceInstancesNames = @()
+
     # LaunchWebUI specified, launching that now
     if ($LaunchWebUI)
     {
@@ -1308,6 +1311,9 @@ function Export-M365DSCConfiguration
             -AllComponents `
             -Filters $Filters
     }
+
+    # Clear the exported resource instances' names Global variable
+    $Global:M365DSCExportedResourceInstancesNames = $null
 }
 
 $Script:M365DSCDependenciesValidated = $false
@@ -3235,6 +3241,19 @@ function Get-M365DSCExportContentForResource
     {
         $instanceName += "-$($Results.Workload)"
     }
+
+    # Check to see if a resource with this exact name was already exported, if so, append a number to the end.
+    $i = 2
+    $tempName = $instanceName
+    while ($null -ne $Global:M365DSCExportedResourceInstancesNames -and `
+           $Global:M365DSCExportedResourceInstancesNames.Contains($tempName))
+    {
+        $tempName = $instanceName + "-" + $i.ToString()
+        $i++
+    }
+    $instanceName = $tempName
+    $Global:M365DSCExportedResourceInstancesNames += $tempName
+
     $content = "        $ResourceName `"$instanceName`"`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
@@ -3291,6 +3310,7 @@ function Get-M365DSCExportContentForResource
     }
     $content += $partialContent
     $content += "        }`r`n"
+
     return $content
 }
 

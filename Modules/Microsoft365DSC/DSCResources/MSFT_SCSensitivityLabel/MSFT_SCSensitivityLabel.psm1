@@ -832,6 +832,12 @@ function Set-TargetResource
             $SetParams['LocaleSettings'] = $locale
         }
 
+        if ($SetParams.ContainsKey('SiteAndGroupExternalSharingControlType'))
+        {
+            $SetParams.SiteExternalSharingControlType = $SetParams.SiteAndGroupExternalSharingControlType
+            $SetParams.Remove('SiteAndGroupExternalSharingControlType')
+        }
+
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove('Name') | Out-Null
 

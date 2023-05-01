@@ -4,18 +4,32 @@
     "permissions": {
         "graph": {
             "delegated": {
-                "read": [],
-                "update": []
+                "read": [
+                    {
+                        "name": "Application.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Application.ReadWrite.All"
+                    }
+                ]
             },
             "application": {
-                "read": [],
-                "update": []
+                "read": [
+                    {
+                        "name": "Application.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Application.ReadWrite.All"
+                    }
+                ]
             }
         },
         "exchange": {
-            "requiredroles": [
-                "Organization Configuration"
-            ],
+            "requiredroles": [],
             "requiredrolegroups": []
         }
     }

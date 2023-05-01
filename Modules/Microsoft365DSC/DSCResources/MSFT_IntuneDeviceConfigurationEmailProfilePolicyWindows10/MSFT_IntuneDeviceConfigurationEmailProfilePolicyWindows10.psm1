@@ -5,44 +5,79 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $Id,
+        $AccountName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet('userDefined','oneDay','threeDays','oneWeek','twoWeeks','oneMonth','unlimited')]
         [System.String]
-        $DisplayName,
+        $DurationOfEmailToSync,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [System.String]
+        $EmailAddressSource,
+
+        [Parameter()]
+        [ValidateSet('userDefined','asMessagesArrive','manual','fifteenMinutes','thirtyMinutes','sixtyMinutes','basedOnMyUsage')]
+        [System.String]
+        $EmailSyncSchedule,
+
+        [Parameter()]
+        [System.String]
+        $HostName,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSsl,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncCalendar,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncContacts,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncTasks,
+
+        [Parameter()]
+        [System.String]
+        $CustomDomainName,
+
+        [Parameter()]
+        [ValidateSet('fullDomainName','netBiosDomainName')]
+        [System.String]
+        $UserDomainNameSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName','primarySmtpAddress','samAccountName')]
+        [System.String]
+        $UsernameAADSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [System.String]
+        $UsernameSource,
 
         [Parameter()]
         [System.String]
         $Description,
 
-        [Parameter()]
-        [validateset('Public', 'HiddenMembership')]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Visibility,
+        $DisplayName,
 
-        [Parameter()]
-        [validateset('Assigned', 'Dynamic')]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $MembershipType,
-
-        [Parameter()]
-        [System.String]
-        $MembershipRule,
-
-        [Parameter()]
-        [validateset('Paused', 'On')]
-        [System.String]
-        $MembershipRuleProcessingState,
+        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Members,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ScopedRoleMembers,
+        $Assignments,
         #endregion
 
         [Parameter()]
@@ -79,7 +114,7 @@ function Get-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
+            -ProfileName 'beta'
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -98,33 +133,86 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        if (-not [string]::IsNullOrEmpty($Id))
-        {
-            $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction SilentlyContinue
-        }
+        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
 
-        if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($DisplayName))
+        if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Administrative Unit with Id {$Id}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Email Profile Policy for Windows10 with Id {$Id}"
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue | Where-Object `
+                    -FilterScript { `
+                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows10EasEmailProfileConfiguration" `
+                    }
             }
         }
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Administrative Unit with DisplayName {$DisplayName}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Email Profile Policy for Windows10 with DisplayName {$DisplayName}"
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Azure AD Administrative Unit with Id {$Id} and DisplayName {$DisplayName} was found."
+        Write-Verbose -Message "An Intune Device Configuration Email Profile Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
+
+        #region resource generator code
+        $enumDurationOfEmailToSync = $null
+        if ($null -ne $getValue.AdditionalProperties.durationOfEmailToSync)
+        {
+            $enumDurationOfEmailToSync = $getValue.AdditionalProperties.durationOfEmailToSync.ToString()
+        }
+
+        $enumEmailAddressSource = $null
+        if ($null -ne $getValue.AdditionalProperties.emailAddressSource)
+        {
+            $enumEmailAddressSource = $getValue.AdditionalProperties.emailAddressSource.ToString()
+        }
+
+        $enumEmailSyncSchedule = $null
+        if ($null -ne $getValue.AdditionalProperties.emailSyncSchedule)
+        {
+            $enumEmailSyncSchedule = $getValue.AdditionalProperties.emailSyncSchedule.ToString()
+        }
+
+        $enumUserDomainNameSource = $null
+        if ($null -ne $getValue.UserDomainNameSource)
+        {
+            $enumUserDomainNameSource = $getValue.UserDomainNameSource.ToString()
+        }
+
+        $enumUsernameAADSource = $null
+        if ($null -ne $getValue.UsernameAADSource)
+        {
+            $enumUsernameAADSource = $getValue.UsernameAADSource.ToString()
+        }
+
+        $enumUsernameSource = $null
+        if ($null -ne $getValue.UsernameSource)
+        {
+            $enumUsernameSource = $getValue.UsernameSource.ToString()
+        }
+        #endregion
+
         $results = @{
             #region resource generator code
+            AccountName           = $getValue.AdditionalProperties.accountName
+            DurationOfEmailToSync = $enumDurationOfEmailToSync
+            EmailAddressSource    = $enumEmailAddressSource
+            EmailSyncSchedule     = $enumEmailSyncSchedule
+            HostName              = $getValue.AdditionalProperties.hostName
+            RequireSsl            = $getValue.AdditionalProperties.requireSsl
+            SyncCalendar          = $getValue.AdditionalProperties.syncCalendar
+            SyncContacts          = $getValue.AdditionalProperties.syncContacts
+            SyncTasks             = $getValue.AdditionalProperties.syncTasks
+            CustomDomainName      = $getValue.CustomDomainName
+            UserDomainNameSource  = $enumUserDomainNameSource
+            UsernameAADSource     = $enumUsernameAADSource
+            UsernameSource        = $enumUsernameSource
             Description           = $getValue.Description
             DisplayName           = $getValue.DisplayName
-            Visibility            = $getValue.Visibility
             Id                    = $getValue.Id
             Ensure                = 'Present'
             Credential            = $Credential
@@ -135,103 +223,21 @@ function Get-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             #endregion
         }
-
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipType))
+        $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
         {
-            $results.Add('MembershipType', $getValue.AdditionalProperties.MembershipType)
-        }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipRule))
-        {
-            $results.Add('MembershipRule', $getValue.AdditionalProperties.MembershipRule)
-        }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipRuleProcessingState))
-        {
-            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.MembershipRuleProcessingState)
-        }
-
-        Write-Verbose -Message "AU {$DisplayName} MembershipType {$($results.MembershipType)}"
-        if ($results.MembershipType -ne 'Dynamic')
-        {
-            Write-Verbose -Message "AU {$DisplayName} get Members"
-            [array]$auMembers = Get-MgDirectoryAdministrativeUnitMember -AdministrativeUnitId $getValue.Id -All
-            if ($auMembers.Count -gt 0)
-            {
-                Write-Verbose -Message "AU {$DisplayName} process $($auMembers.Count) members"
-                $memberSpec = @()
-                foreach ($auMember in $auMembers)
-                {
-                    $member = @{}
-                    $memberObject = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/directoryobjects/$($auMember.Id)"
-                    if ($memberObject.'@odata.type' -match 'user')
-                    {
-                        $member.Add('Identity', $memberObject.UserPrincipalName)
-                        $member.Add('Type', 'User')
-                    }
-                    elseif ($memberObject.'@odata.type' -match 'group')
-                    {
-                        $member.Add('Identity', $memberObject.DisplayName)
-                        $member.Add('Type', 'Group')
-                    }
-                    else
-                    {
-                        $member.Add('Identity', $memberObject.DisplayName)
-                        $member.Add('Type', 'Device')
-                    }
-                    Write-Verbose -Message "AU {$DisplayName} member found: Type '$($member.Type)' identity '$($member.Identity)'"
-                    $memberSpec += $member
-                }
-                Write-Verbose -Message "AU {$DisplayName} add Members to results"
-                $results.Add('Members', $memberSpec)
+            $assignmentValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
             }
+            $assignmentResult += $assignmentValue
         }
+        $results.Add('Assignments', $assignmentResult)
 
-        Write-Verbose -Message "AU {$DisplayName} get Scoped Role Members"
-        $ErrorActionPreference = 'Stop'
-        [array]$auScopedRoleMembers = Get-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId $getValue.Id -All
-        if ($auScopedRoleMembers.Count -gt 0)
-        {
-            Write-Verbose -Message "AU {$DisplayName} process $($auScopedRoleMembers.Count) scoped role members"
-            $scopedRoleMemberSpec = @()
-            foreach ($auScopedRoleMember in $auScopedRoleMembers)
-            {
-                Write-Verbose -Message "AU {$DisplayName} verify RoleId {$($auScopedRoleMember.RoleId)}"
-                $roleObject = Get-MgDirectoryRole -DirectoryRoleId $auScopedRoleMember.RoleId -ErrorAction Stop
-                Write-Verbose -Message "Found DirectoryRole '$($roleObject.DisplayName)' with id $($roleObject.Id)"
-                $scopedRoleMember = [ordered]@{
-                    RoleName       = $roleObject.DisplayName
-                    RoleMemberInfo = @{
-                        Type     = $null
-                        Identity = $null
-                    }
-                }
-                Write-Verbose -Message "AU {$DisplayName} verify RoleMemberInfo.Id {$($auScopedRoleMember.RoleMemberInfo.Id)}"
-                $memberObject = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/directoryobjects/$($auScopedRoleMember.RoleMemberInfo.Id)"
-                Write-Verbose -Message "AU {$DisplayName} @odata.Type={$($memberObject.'@odata.type')}"
-                if (($memberObject.'@odata.type') -match 'user')
-                {
-                    Write-Verbose -Message "AU {$DisplayName} UPN = {$($memberObject.UserPrincipalName)}"
-                    $scopedRoleMember.RoleMemberInfo.Identity = $memberObject.UserPrincipalName
-                    $scopedRoleMember.RoleMemberInfo.Type = 'User'
-                }
-                elseif (($memberObject.'@odata.type') -match 'group')
-                {
-                    Write-Verbose -Message "AU {$DisplayName} Group = {$($memberObject.DisplayName)}"
-                    $scopedRoleMember.RoleMemberInfo.Identity = $memberObject.DisplayName
-                    $scopedRoleMember.RoleMemberInfo.Type = 'Group'
-                }
-                else
-                {
-                    Write-Verbose -Message "AU {$DisplayName} SPN = {$($memberObject.DisplayName)}"
-                    $scopedRoleMember.RoleMemberInfo.Identity = $memberObject.DisplayName
-                    $scopedRoleMember.RoleMemberInfo.Type = 'ServicePrincipal'
-                }
-                Write-Verbose -Message "AU {$DisplayName} scoped role member: RoleName '$($scopedRoleMember.RoleName)' Type '$($scopedRoleMember.RoleMemberInfo.Type)' Identity '$($scopedRoleMember.RoleMemberInfo.Identity)'"
-                $scopedRoleMemberSpec += $scopedRoleMember
-            }
-            Write-Verbose -Message "AU {$DisplayName} add $($scopedRoleMemberSpec.Count) ScopedRoleMembers to results"
-            $results.Add('ScopedRoleMembers', $scopedRoleMemberSpec)
-        }
-        Write-Verbose -Message "AU {$DisplayName} return results"
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -252,46 +258,80 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $Id,
+        $AccountName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet('userDefined','oneDay','threeDays','oneWeek','twoWeeks','oneMonth','unlimited')]
         [System.String]
-        $DisplayName,
+        $DurationOfEmailToSync,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [System.String]
+        $EmailAddressSource,
+
+        [Parameter()]
+        [ValidateSet('userDefined','asMessagesArrive','manual','fifteenMinutes','thirtyMinutes','sixtyMinutes','basedOnMyUsage')]
+        [System.String]
+        $EmailSyncSchedule,
+
+        [Parameter()]
+        [System.String]
+        $HostName,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSsl,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncCalendar,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncContacts,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncTasks,
+
+        [Parameter()]
+        [System.String]
+        $CustomDomainName,
+
+        [Parameter()]
+        [ValidateSet('fullDomainName','netBiosDomainName')]
+        [System.String]
+        $UserDomainNameSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName','primarySmtpAddress','samAccountName')]
+        [System.String]
+        $UsernameAADSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [System.String]
+        $UsernameSource,
 
         [Parameter()]
         [System.String]
         $Description,
 
-        [Parameter()]
-        [validateset('Public', 'HiddenMembership')]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Visibility,
+        $DisplayName,
 
-        [Parameter()]
-        [validateset('Assigned', 'Dynamic')]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $MembershipType,
-
-        [Parameter()]
-        [System.String]
-        $MembershipRule,
-
-        [Parameter()]
-        [validateset('Paused', 'On')]
-        [System.String]
-        $MembershipRuleProcessingState,
+        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Members,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ScopedRoleMembers,
+        $Assignments,
         #endregion
-
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -336,25 +376,14 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('Verbose') | Out-Null
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    $backCurrentMembers = $currentInstance.Members
-    $backCurrentScopedRoleMembers = $currentInstance.ScopedRoleMembers
-
-    if ($Ensure -eq 'Present')
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        if ($MembershipType -eq 'Dynamic' -and $Members.Count -gt 0)
-        {
-            throw "AU {$($DisplayName)}: Members is not allowed when MembershipType is Dynamic"
-        }
-        $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
+        Write-Verbose -Message "Creating an Intune Device Configuration Email Profile Policy for Windows10 with DisplayName {$DisplayName}"
+        $BoundParameters.Remove("Assignments") | Out-Null
+
+        $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
 
@@ -366,175 +395,29 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
-        $memberSpecification = $null
-        if ($CreateParameters.MembershipType -ne 'Dynamic' -and $CreateParameters.Members.Count -gt 0)
-        {
-            $memberSpecification = @()
-            Write-Verbose -Message "AU {$DisplayName} process $($CreateParameters.Members.Count) Members"
-            foreach ($member in $CreateParameters.Members)
-            {
-                Write-Verbose -Message "AU {$DisplayName} member Type '$($member.Type)' Identity '$($member.Identity)'"
-                if ($member.Type -eq 'User')
-                {
-                    $memberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($member.Identity)'" -ErrorAction Stop
-                    if ($memberIdentity)
-                    {
-                        $memberSpecification += [pscustomobject]@{Type = "$($member.Type)s"; Id = $memberIdentity.Id }
-                    }
-                    else
-                    {
-                        throw "AU {$($DisplayName)}: User {$($member.Identity)} does not exist"
-                    }
-                }
-                elseif ($member.Type -eq 'Group')
-                {
-                    $memberIdentity = Get-MgGroup -Filter "DisplayName eq '$($member.Identity)'" -ErrorAction Stop
-                    if ($memberIdentity)
-                    {
-                        if ($memberIdentity.Count -gt 1)
-                        {
-                            throw "AU {$($DisplayName)}: Group displayname {$($member.Identity)} is not unique"
-                        }
-                        $memberSpecification += [pscustomobject]@{Type = "$($member.Type)s"; Id = $memberIdentity.Id }
-                    }
-                    else
-                    {
-                        throw "AU {$($DisplayName)}: Group {$($member.Identity)} does not exist"
-                    }
-                }
-                elseif ($member.Type -eq 'Device')
-                {
-                    $memberIdentity = Get-MgDevice -Filter "DisplayName eq '$($member.Identity)'" -ErrorAction Stop
-                    if ($memberIdentity)
-                    {
-                        if ($memberIdentity.Count -gt 1)
-                        {
-                            throw "AU {$($DisplayName)}: Device displayname {$($member.Identity)} is not unique"
-                        }
-                        $memberSpecification += [pscustomobject]@{Type = "$($member.Type)s"; Id = $memberIdentity.Id }
-                    }
-                    else
-                    {
-                        throw "AU {$($DisplayName)}: Device {$($Member.Identity)} does not exist"
-                    }
-                }
-                else
-                {
-                    throw "AU {$($DisplayName)}: Member {$($Member.Identity)} has invalid type {$($Member.Type)}"
-                }
-            }
-            # Members are added to the AU *after* it has been created
-        }
-        $CreateParameters.Remove('Members') | Out-Null
-
-        # Resolve ScopedRoleMembers Type/Identity to user, group or service principal
-        if ($CreateParameters.ScopedRoleMembers)
-        {
-            Write-Verbose -Message "AU {$DisplayName} process $($CreateParameters.ScopedRoleMembers.Count) ScopedRoleMembers"
-            $scopedRoleMemberSpecification = @()
-            foreach ($roleMember in $CreateParameters.ScopedRoleMembers)
-            {
-                Write-Verbose -Message "AU {$DisplayName} member: role '$($roleMember.RoleName)' type '$($roleMember.RoleMemberInfo.Type)' identity $($roleMember.RoleMemberInfo.Identity)"
-                try
-                {
-                    $roleObject = Get-MgDirectoryRole -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction stop
-                    Write-Verbose -Message "AU {$DisplayName} role is enabled"
-                }
-                catch
-                {
-                    Write-Verbose -Message "Azure AD role {$($rolemember.RoleName)} is not enabled"
-                    $roleTemplate = Get-MgDirectoryRoleTemplate -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction Stop
-                    if ($null -ne $roleTemplate)
-                    {
-                        Write-Verbose -Message "Enable Azure AD role {$($rolemember.RoleName)} with id {$($roleTemplate.Id)}"
-                        $roleObject = New-MgDirectoryRole -RoleTemplateId $roleTemplate.Id -ErrorAction Stop
-                    }
-                }
-                if ($null -eq $roleObject)
-                {
-                    throw "AU {$($DisplayName)}: RoleName {$($roleMember.RoleName)} does not exist"
-                }
-                if ($roleMember.RoleMemberInfo.Type -eq 'User')
-                {
-                    $roleMemberIdentity = Get-MgUser -Filter "UserPrincipalName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
-                    if ($null -eq $roleMemberIdentity)
-                    {
-                        throw "AU {$($DisplayName)}:  Scoped Role User {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
-                    }
-                }
-                elseif ($roleMember.RoleMemberInfo.Type -eq 'Group')
-                {
-                    $roleMemberIdentity = Get-MgGroup -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
-                    if ($null -eq $roleMemberIdentity)
-                    {
-                        throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
-                    }
-                    elseif ($roleMemberIdentity.IsAssignableToRole -eq $false)
-                    {
-                        throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} is not role-enabled"
-                    }
-                }
-                elseif ($roleMember.RoleMemberInfo.Type -eq 'ServicePrincipal')
-                {
-                    $roleMemberIdentity = Get-MgServicePrincipal -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
-                    if ($null -eq $roleMemberIdentity)
-                    {
-                        throw "AU {$($DisplayName)}: Scoped Role ServicePrincipal {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
-                    }
-                }
-                else
-                {
-                    throw "AU {$($DisplayName)}: Invalid ScopedRoleMember.RoleMemberInfo.Type {$($roleMember.RoleMemberInfo.Type)}"
-                }
-                if ($roleMemberIdentity.Count -gt 1)
-                {
-                    throw "AU {$($DisplayName)}: ScopedRoleMember for role {$($roleMember.RoleName)}: $($roleMember.RoleMemberInfo.Type) {$($roleMember.RoleMemberInfo.Identity)} is not unique"
-                }
-                $scopedRoleMemberSpecification += @{
-                    RoleId         = $roleObject.Id
-                    RoleMemberInfo = @{
-                        Id = $roleMemberIdentity.Id
-                    }
-                }
-            }
-            # ScopedRoleMember-info is added after the AU is created
-        }
-        $CreateParameters.Remove('ScopedRoleMembers') | Out-Null
-
-    }
-
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Creating an Azure AD Administrative Unit with DisplayName {$DisplayName}"
-
         #region resource generator code
-        $policy = New-MgDirectoryAdministrativeUnit -BodyParameter $CreateParameters
-
-        if ($MembershipType -ne 'Dynamic')
+        $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10EasEmailProfileConfiguration")
+        $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
-            foreach ($member in $memberSpecification)
-            {
-                $memberBodyParam = @{
-                    '@odata.id' = "https://graph.microsoft.com/v1.0/$($member.Type)/$($member.Id)"
-                }
-
-                New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId $policy.Id -BodyParameter $memberBodyParam
-            }
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
 
-        foreach ($scopedRoleMember in $scopedRoleMemberSpecification)
+        if ($policy.id)
         {
-            New-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId $policy.Id -BodyParameter $scopedRoleMember
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceConfigurations'
         }
-
-
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Azure AD Administrative Unit with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Updating the Intune Device Configuration Email Profile Policy for Windows10 with Id {$($currentInstance.Id)}"
+        $BoundParameters.Remove("Assignments") | Out-Null
 
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
         $UpdateParameters.Remove('Id') | Out-Null
@@ -547,195 +430,27 @@ function Set-TargetResource
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
-
-        $requestedMembers = $UpdateParameters.Members
-        $UpdateParameters.Remove('Members') | Out-Null
-        $requestedScopedRoleMembers = $UpdateParameters.ScopedRoleMembers
-        $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
-
         #region resource generator code
-        Update-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id -BodyParameter $UpdateParameters
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windows10EasEmailProfileConfiguration")
+        Update-MgDeviceManagementDeviceConfiguration  `
+            -DeviceConfigurationId $currentInstance.Id `
+            -BodyParameter $UpdateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/deviceConfigurations'
         #endregion
-
-        if ($MembershipType -ne 'Dynamic')
-        {
-            if ($PSBoundParameters.ContainsKey('Members') -and ($backCurrentMembers.Count -gt 0 -or $requestedMembers.Count -gt 0))
-            {
-                $currentMembers = @()
-                foreach ($member in $backCurrentMembers)
-                {
-                    $currentMembers += [pscustomobject]@{Type = $member.Type; Identity = $member.Identity }
-                }
-                $desiredMembers = @()
-                foreach ($member in $requestedMembers)
-                {
-                    $desiredMembers += [pscustomobject]@{Type = $member.Type; Identity = $member.Identity }
-                }
-                $membersDiff = Compare-Object -ReferenceObject $currentMembers -DifferenceObject $desiredMembers -Property Identity, Type
-                foreach ($diff in $membersDiff)
-                {
-                    if ($diff.Type -eq 'User')
-                    {
-                        $memberObject = Get-MgUser -Filter "UserPrincipalName eq '$($diff.Identity)'"
-                        $memberType = 'users'
-                    }
-                    elseif ($diff.Type -eq 'Group')
-                    {
-                        $memberObject = Get-MgGroup -Filter "DisplayName eq '$($diff.Identity)'"
-                        $membertype = 'groups'
-                    }
-                    elseif ($diff.Type -eq 'Device')
-                    {
-                        $memberObject = Get-MgDevice -Filter "DisplayName eq '$($diff.Identity)'"
-                        $membertype = 'devices'
-                    }
-                    else
-                    {
-                        # a *new* member has been specified with invalid type
-                        throw "AU {$($DisplayName)}: Member {$($diff.Identity)} has invalid type {$($diff.Type)}"
-                    }
-                    if ($null -eq $memberObject)
-                    {
-                        throw "AU member {$($diff.Identity)} does not exist as a $($diff.Type)"
-                    }
-                    if ($memberObject.Count -gt 1)
-                    {
-                        throw "AU member {$($diff.Identity)} is not a unique $($diff.Type.ToLower()) (Count=$($memberObject.Count))"
-                    }
-                    if ($diff.SideIndicator -eq '=>')
-                    {
-                        Write-Verbose -Message "AdministrativeUnit {$DisplayName} Adding member {$($diff.Identity)}, type {$($diff.Type)}"
-
-                        $memberBodyParam = @{
-                            '@odata.id' = "https://graph.microsoft.com/v1.0/$memberType/$($memberObject.Id)"
-                        }
-                        New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $memberBodyParam | Out-Null
-                    }
-                    else
-                    {
-                        Write-Verbose -Message "Administrative Unit {$DisplayName} Removing member {$($diff.Identity)}, type {$($diff.Type)}"
-                        Remove-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -DirectoryObjectId ($memberObject.Id) | Out-Null
-                    }
-                }
-            }
-        }
-
-        if ($PSBoundParameters.ContainsKey('ScopedRoleMembers') -and ($backCurrentScopedRoleMembers.Count -gt 0 -or $requestedScopedRoleMembers.Count -gt 0))
-        {
-            if ($backCurrentScopedRoleMembers.Length -ne 0)
-            {
-                $currentScopedRoleMembersValue = $backCurrentScopedRoleMembers
-            }
-            if ($null -eq $currentScopedRoleMembersValue)
-            {
-                $currentScopedRoleMembersValue = @()
-            }
-            $desiredScopedRoleMembersValue = $requestedScopedRoleMembers
-            if ($null -eq $desiredScopedRoleMembersValue)
-            {
-                $desiredScopedRoleMembersValue = @()
-            }
-
-            # flatten hashtabls for compare
-            $compareCurrentScopedRoleMembersValue = @()
-            foreach ($roleMember in $currentScopedRoleMembersValue)
-            {
-                $compareCurrentScopedRoleMembersValue += [pscustomobject]@{
-                    RoleName = $roleMember.RoleName
-                    Identity = $roleMember.RoleMemberInfo.Identity
-                    Type     = $roleMember.RoleMemberInfo.Type
-                }
-            }
-            $compareDesiredScopedRoleMembersValue = @()
-            foreach ($roleMember in $desiredScopedRoleMembersValue)
-            {
-                $compareDesiredScopedRoleMembersValue += [pscustomobject]@{
-                    RoleName = $roleMember.RoleName
-                    Identity = $roleMember.RoleMemberInfo.Identity
-                    Type     = $roleMember.RoleMemberInfo.Type
-                }
-            }
-            Write-Verbose -Message "AU {$DisplayName} Update ScopedRoleMembers: Current members: $($compareCurrentScopedRoleMembersValue.Identity -join ', ')"
-            Write-Verbose -Message "                                            Desired members: $($compareDesiredScopedRoleMembersValue.Identity -join ', ')"
-            $scopedRoleMembersDiff = Compare-Object -ReferenceObject $compareCurrentScopedRoleMembersValue -DifferenceObject $compareDesiredScopedRoleMembersValue -Property RoleName, Identity, Type
-            # $scopedRoleMembersDiff = Compare-Object -ReferenceObject $CurrentScopedRoleMembersValue -DifferenceObject $DesiredScopedRoleMembersValue -Property RoleName, Identity, Type
-            Write-Verbose -Message "                                            # compare results : $($scopedRoleMembersDiff.Count -gt 0)"
-
-            foreach ($diff in $scopedRoleMembersDiff)
-            {
-                if ($diff.Type -eq 'User')
-                {
-                    $memberObject = Get-MgUser -Filter "UserPrincipalName eq '$($diff.Identity)'"
-                    #$memberType = 'users'
-                }
-                elseif ($diff.Type -eq 'Group')
-                {
-                    $memberObject = Get-MgGroup -Filter "DisplayName eq '$($diff.Identity)'"
-                    #$membertype = 'groups'
-                }
-                elseif ($diff.Type -eq 'ServicePrincipal')
-                {
-                    $memberObject = Get-MgServicePrincipal -Filter "DisplayName eq '$($diff.Identity)'"
-                    #$memberType = "servicePrincipals"
-                }
-                else
-                {
-                    if ($diff.RoleName)
-                    {
-                        throw "AU {$DisplayName} scoped role {$($diff.RoleName)} member {$($diff.Identity)} has invalid type $($diff.Type)"
-                    }
-                    else
-                    {
-                        Write-Verbose -Message 'Compare ScopedRoleMembers - skip processing blank RoleName'
-                        continue   # don't process,
-                    }
-                }
-                if ($null -eq $memberObject)
-                {
-                    throw "AU scoped role member {$($diff.Identity)} does not exist as a $($diff.Type)"
-                }
-                if ($memberObject.Count -gt 1)
-                {
-                    throw "AU scoped role member {$($diff.Identity)} is not a unique $($diff.Type) (Count=$($memberObject.Count))"
-                }
-                if ($diff.SideIndicator -ne '==')
-                {
-                    $roleObject = Get-MgDirectoryRole -Filter "DisplayName eq '$($diff.RoleName)'"
-                    if ($null -eq $roleObject)
-                    {
-                        throw "AU {$DisplayName} Scoped Role {$($diff.RoleName)} does not exist as an Azure AD role"
-                    }
-                }
-                if ($diff.SideIndicator -eq '=>')
-                {
-                    Write-Verbose -Message "Adding new scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} to Administrative Unit {$DisplayName}"
-
-                    $scopedRoleMemberParam = @{
-                        RoleId         = $roleObject.Id
-                        RoleMemberInfo = @{
-                            Id = $memberObject.Id
-                        }
-                    }
-                    # addition of scoped rolemember may throw if role is not supported as a scoped role
-                    New-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $scopedRoleMemberParam -ErrorAction Stop | Out-Null
-                }
-                else
-                {
-                    if (-not [string]::IsNullOrEmpty($diff.Rolename))
-                    {
-                        Write-Verbose -Message "Removing scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} from Administrative Unit {$DisplayName}"
-                        $scopedRoleMemberObject = Get-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -All | Where-Object -FilterScript { $_.RoleId -eq $roleObject.Id -and $_.RoleMemberInfo.Id -eq $memberObject.Id }
-                        Remove-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -ScopedRoleMembershipId $scopedRoleMemberObject.Id -ErrorAction Stop | Out-Null
-                    }
-                }
-            }
-        }
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Azure AD Administrative Unit with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Removing the Intune Device Configuration Email Profile Policy for Windows10 with Id {$($currentInstance.Id)}" 
         #region resource generator code
-        Remove-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
+Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -747,44 +462,79 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
-        $Id,
+        $AccountName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
+        [ValidateSet('userDefined','oneDay','threeDays','oneWeek','twoWeeks','oneMonth','unlimited')]
         [System.String]
-        $DisplayName,
+        $DurationOfEmailToSync,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [System.String]
+        $EmailAddressSource,
+
+        [Parameter()]
+        [ValidateSet('userDefined','asMessagesArrive','manual','fifteenMinutes','thirtyMinutes','sixtyMinutes','basedOnMyUsage')]
+        [System.String]
+        $EmailSyncSchedule,
+
+        [Parameter()]
+        [System.String]
+        $HostName,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireSsl,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncCalendar,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncContacts,
+
+        [Parameter()]
+        [System.Boolean]
+        $SyncTasks,
+
+        [Parameter()]
+        [System.String]
+        $CustomDomainName,
+
+        [Parameter()]
+        [ValidateSet('fullDomainName','netBiosDomainName')]
+        [System.String]
+        $UserDomainNameSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName','primarySmtpAddress','samAccountName')]
+        [System.String]
+        $UsernameAADSource,
+
+        [Parameter()]
+        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [System.String]
+        $UsernameSource,
 
         [Parameter()]
         [System.String]
         $Description,
 
-        [Parameter()]
-        [validateset('Public', 'HiddenMembership')]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Visibility,
+        $DisplayName,
 
-        [Parameter()]
-        [validateset('Assigned', 'Dynamic')]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $MembershipType,
-
-        [Parameter()]
-        [System.String]
-        $MembershipRule,
-
-        [Parameter()]
-        [validateset('Paused', 'On')]
-        [System.String]
-        $MembershipRuleProcessingState,
+        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Members,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ScopedRoleMembers,
+        $Assignments,
         #endregion
 
         [Parameter()]
@@ -829,14 +579,14 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Administrative Unit with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Device Configuration Email Profile Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
     if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
-        Write-Verbose -Message "Test-TargetResource returned $false - Ensure not the same"
+        Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
     $testResult = $true
@@ -856,30 +606,19 @@ function Test-TargetResource
 
             if (-Not $testResult)
             {
-                Write-Verbose -Message "Difference found for $key"
                 $testResult = $false
                 break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
+    $ValuesToCheck.remove('Id') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Id') | Out-Null
-
-    # Visibility is currently not returned by Get-TargetResource
-    $ValuesToCheck.Remove('Visibility') | Out-Null
-
-    if ($ValuesToCheck.ContainsKey('MembershipType') -and $MembershipType -ne 'Dynamic' -and $CurrentValues.MembershipType -ne 'Dynamic')
-    {
-        # MembershipType may be returned as null or Assigned with same effect. Only compare if Dynamic is specified or returned
-        $ValuesToCheck.Remove('MembershipType') | Out-Null
-    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -930,7 +669,7 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -947,8 +686,12 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDirectoryAdministrativeUnit -All `
-            -ErrorAction Stop
+        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+            -All `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EasEmailProfileConfiguration' `
+            }
         #endregion
 
         $i = 1
@@ -970,67 +713,42 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                DisplayName           = $config.DisplayName
-                Id                    = $config.Id
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                ApplicationSecret     = $ApplicationSecret
+                Id = $config.Id
+                DisplayName           =  $config.DisplayName
+                Ensure = 'Present'
+                Credential = $Credential
+                ApplicationId = $ApplicationId
+                TenantId = $TenantId
+                ApplicationSecret = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
+                Managedidentity = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
-
-            if ($null -ne $Results.ScopedRoleMembers)
-            {
-                $complexMapping = @(
-                    @{
-                        Name            = 'RoleMemberInfo'
-                        CimInstanceName = 'MicrosoftGraphMember'
-                    }
-                )
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.ScopedRoleMembers) `
-                    -CIMInstanceName MicrosoftGraphScopedRoleMembership -ComplexTypeMapping $complexMapping
-
-                $Results.ScopedRoleMembers = $complexTypeStringResult
-
-                if ([String]::IsNullOrEmpty($complexTypeStringResult))
-                {
-                    $Results.Remove('ScopedRoleMembers') | Out-Null
-                }
-            }
-            if ($null -ne $Results.Members)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Members) `
-                    -CIMInstanceName MicrosoftGraphMember
-                $Results.Members = $complexTypeStringResult
-
-                if ([String]::IsNullOrEmpty($complexTypeStringResult))
-                {
-                    $Results.Remove('Members') | Out-Null
-                }
-            }
-
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+            }
 
-            if ($null -ne $Results.ScopedRoleMembers)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ScopedRoleMembers' -IsCIMArray $true
-            }
-            if ($null -ne $Results.Members)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Members' -IsCIMArray $true
-                $currentDSCBlock = $currentDSCBlock.Replace(",`r`n", '').Replace("`");`r`n", ");`r`n")
-            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -1041,8 +759,6 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "Exception: $($_.Exception.Message)"
-
         Write-Host $Global:M365DSCEmojiRedX
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
@@ -1052,6 +768,70 @@ function Export-TargetResource
             -Credential $Credential
 
         return ''
+    }
+}
+
+function Update-DeviceConfigurationPolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter()]
+        [Array]
+        $Targets,
+
+        [Parameter()]
+        [System.String]
+        $Repository = 'deviceManagement/configurationPolicies',
+
+        [Parameter()]
+        [ValidateSet('v1.0','beta')]
+        [System.String]
+        $APIVersion = 'beta'
+    )
+    try
+    {
+        $deviceManagementPolicyAssignments = @()
+        $Uri = "https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+
+        foreach ($target in $targets)
+        {
+            $formattedTarget = @{"@odata.type" = $target.dataType}
+            if ($target.groupId)
+            {
+                $formattedTarget.Add('groupId',$target.groupId)
+            }
+            if ($target.collectionId)
+            {
+                $formattedTarget.Add('collectionId',$target.collectionId)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterType)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+            }
+            if ($target.deviceAndAppManagementAssignmentFilterId)
+            {
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+            }
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
+        }
+        $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
     }
 }
 function Rename-M365DSCCimInstanceParameter
@@ -1111,10 +891,10 @@ function Rename-M365DSCCimInstanceParameter
         }
         $result = $hashProperties
     }
-
     return $result
     #endregion
 }
+
 function Get-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
@@ -1199,7 +979,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         if ($null -ne $ComplexObject.$keyName)
         {
             $keyType = $ComplexObject.$keyName.gettype().fullname
-            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' )
+            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
@@ -1211,7 +991,6 @@ function Get-M365DSCDRGComplexTypeToHashtable
             }
         }
     }
-
     return [hashtable]$results
 }
 
@@ -1273,8 +1052,6 @@ function Get-M365DSCDRGComplexTypeToString
         return $null
     }
 
-    Write-Verbose -Message "Get-M365DSCDRGComplexTypeToString $CIMInstanceName isArray=$isArray"
-
     $indent = ''
     for ($i = 0; $i -lt $IndentLevel ; $i++)
     {
@@ -1300,8 +1077,6 @@ function Get-M365DSCDRGComplexTypeToString
             $currentProperty += Get-M365DSCDRGComplexTypeToString -isArray:$true @splat
         }
 
-        Write-Verbose -Message "return array currentProperty on next line:`r`n $($currentProperty -join "`r`n")"
-
         # PowerShell returns all non-captured stream output, not just the argument of the return statement.
         #An empty array is mangled into $null in the process.
         #However, an array can be preserved on return by prepending it with the array construction operator (,)
@@ -1316,7 +1091,7 @@ function Get-M365DSCDRGComplexTypeToString
     }
 
     $CIMInstanceName = $CIMInstanceName.replace('MSFT_', '')
-    $currentProperty += "MSFT_$CIMInstanceName { `r`n"
+    $currentProperty += "MSFT_$CIMInstanceName{`r`n"
     $IndentLevel++
     $indent = ''
     for ($i = 0; $i -lt $IndentLevel ; $i++)
@@ -1332,10 +1107,8 @@ function Get-M365DSCDRGComplexTypeToString
 
     foreach ($key in $ComplexObject.Keys)
     {
-        Write-Verbose -Message "ComplexObject key=$key"
         if ($null -ne $ComplexObject.$key)
         {
-            Write-Verbose -Message "`tnot null"
             $keyNotNull++
             if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*' -or $key -in $ComplexTypeMapping.Name)
             {
@@ -1349,7 +1122,7 @@ function Get-M365DSCDRGComplexTypeToString
                 #overwrite type if object defined in mapping complextypemapping
                 if ($key -in $ComplexTypeMapping.Name)
                 {
-                    $hashPropertyType = ($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName
+                    $hashPropertyType = ([Array]($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName)[0]
                     $hashProperty = $ComplexObject[$key]
                 }
                 else
@@ -1362,7 +1135,7 @@ function Get-M365DSCDRGComplexTypeToString
                     $currentProperty += $indent + $key + ' = '
                 }
 
-                if ($isArray -and $key -in $ComplexTypeMapping.Name )
+                if ($isArray -and $key -in $ComplexTypeMapping.Name)
                 {
                     if ($ComplexObject.$key.count -gt 0)
                     {
@@ -1380,22 +1153,32 @@ function Get-M365DSCDRGComplexTypeToString
                         {
                             $item = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
                         }
-                        $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                        $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
                             -ComplexObject $item `
                             -CIMInstanceName $hashPropertyType `
                             -IndentLevel $IndentLevel `
                             -ComplexTypeMapping $ComplexTypeMapping `
                             -IsArray:$true
+                        if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
+                        {
+                            $nestedPropertyString = "@()`r`n"
+                        }
+                        $currentProperty += $nestedPropertyString
                     }
                     $IndentLevel--
                 }
                 else
                 {
-                    $currentProperty += Get-M365DSCDRGComplexTypeToString `
+                    $nestedPropertyString = Get-M365DSCDRGComplexTypeToString `
                         -ComplexObject $hashProperty `
                         -CIMInstanceName $hashPropertyType `
                         -IndentLevel $IndentLevel `
                         -ComplexTypeMapping $ComplexTypeMapping
+                    if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
+                    {
+                        $nestedPropertyString = "`$null`r`n"
+                    }
+                    $currentProperty += $nestedPropertyString
                 }
                 if ($isArray)
                 {
@@ -1451,7 +1234,12 @@ function Get-M365DSCDRGComplexTypeToString
         }
         $currentProperty += $indent
     }
-    Write-Verbose -Message "return item currentProperty on next line:`r`n$currentProperty"
+
+    $emptyCIM = $currentProperty.replace(' ', '').replace("`r`n", '')
+    if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
+    {
+        $currentProperty = $null
+    }
     return $currentProperty
 }
 
@@ -1473,7 +1261,6 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
 
     )
 
-    Write-Verbose -Message "Get-M365DSCDRGSimpleObjectTypeToString key='$Key', value='$Value'. Type=$($value.gettype().fullname)"
     $returnValue = ''
     switch -Wildcard ($Value.GetType().Fullname )
     {
@@ -1504,9 +1291,9 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
                 $whitespace = $Space + '    '
                 $newline = "`r`n"
             }
-            foreach ($item in $Value)
+            foreach ($item in ($Value | Where-Object -FilterScript { $null -ne $_ }))
             {
-                switch -Wildcard ($item.GetType().Fullname )
+                switch -Wildcard ($item.GetType().Fullname)
                 {
                     '*.String'
                     {
@@ -1537,7 +1324,6 @@ Function Get-M365DSCDRGSimpleObjectTypeToString
             $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
         }
     }
-    Write-Verbose -Message "return '$returnValue'"
     return $returnValue
 }
 
@@ -1589,7 +1375,6 @@ function Compare-M365DSCComplexObject
 
         foreach ($item in $Source)
         {
-
             $hashSource = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
             foreach ($targetItem in $Target)
             {
@@ -1599,7 +1384,6 @@ function Compare-M365DSCComplexObject
 
                 if ($compareResult)
                 {
-                    Write-Verbose -Message 'Compare-M365DSCComplexObject: Diff found'
                     break
                 }
             }
@@ -1643,7 +1427,7 @@ function Compare-M365DSCComplexObject
         #Both keys aren't null or empty
         if (($null -ne $Source.$key) -and ($null -ne $Target.$tkey))
         {
-            if ($Source.$key.getType().FullName -like '*CimInstance*' -or $Source.$key.getType().FullName -like '*hashtable*'  )
+            if ($Source.$key.getType().FullName -like '*CimInstance*' -or $Source.$key.getType().FullName -like '*hashtable*')
             {
                 #Recursive call for complex object
                 $compareResult = Compare-M365DSCComplexObject `
@@ -1652,7 +1436,6 @@ function Compare-M365DSCComplexObject
 
                 if (-not $compareResult)
                 {
-
                     #Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
@@ -1689,9 +1472,9 @@ function Compare-M365DSCComplexObject
             }
         }
     }
-
     return $true
 }
+
 function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
@@ -1700,7 +1483,6 @@ function Convert-M365DSCDRGComplexTypeToHashtable
         [Parameter(Mandatory = 'true')]
         $ComplexObject
     )
-
 
     if ($ComplexObject.getType().Fullname -like '*[[\]]')
     {
@@ -1721,7 +1503,6 @@ function Convert-M365DSCDRGComplexTypeToHashtable
 
     if ($null -ne $hashComplexObject)
     {
-
         $results = $hashComplexObject.clone()
         $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
         foreach ($key in $keys)
