@@ -2,11 +2,13 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
+  * Initial release
 * IntuneDeviceConfigurationVpnPolicyWindows10
   * Initial release
-  * IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
-    * Initial release
- * DRG
+* DRG
   * Fix issue with abstract type and additionalProperties
 
 # 1.23.426.3
