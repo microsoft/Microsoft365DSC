@@ -6,6 +6,8 @@
   * Initial release
 * IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
   * Initial release
+* IntuneDeviceConfigurationTrustedCertificatePolicyWindows10
+  * Initial release
 * IntuneDeviceConfigurationVpnPolicyWindows10
   * Initial release
 * DRG
