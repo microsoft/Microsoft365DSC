@@ -3177,7 +3177,6 @@ function Get-M365DSCExportContentForResource
         $Credential,
 
         [Parameter()]
-        [ValidateNotNullOrEmpty()]
         [System.String]
         $TenantId
     )
