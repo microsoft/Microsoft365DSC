@@ -75,6 +75,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $RootCertificateId,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter(Mandatory = $true)]
@@ -264,6 +268,7 @@ function Get-TargetResource
             RenewalThresholdPercentage         = $getValue.AdditionalProperties.renewalThresholdPercentage
             SubjectAlternativeNameType         = $enumSubjectAlternativeNameType
             SubjectNameFormat                  = $enumSubjectNameFormat
+            RootCertificateId                  = Get-DeviceConfigurationPolicyRootCertificateId -DeviceConfigurationPolicyId $getValue.Id
             Description                        = $getValue.Description
             DisplayName                        = $getValue.DisplayName
             Id                                 = $getValue.Id
@@ -381,6 +386,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $RootCertificateId,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter(Mandatory = $true)]
@@ -395,6 +404,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -425,6 +435,7 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -445,6 +456,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Scep Certificate Policy for Windows10 with DisplayName {$DisplayName}"
         $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('RootCertificateId') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -459,6 +471,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
+        $CreateParameters.Add("rootCertificate@odata.bind", "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$RootCertificateId')")
         $CreateParameters.Add("@odata.type", "#microsoft.graph.windows81SCEPCertificateProfile")
         $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
@@ -479,6 +492,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Scep Certificate Policy for Windows10 with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('RootCertificateId') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -508,10 +522,14 @@ function Set-TargetResource
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceConfigurations'
         #endregion
+
+        Update-DeviceConfigurationPolicyRootCertificateId `
+            -DeviceConfigurationPolicyId $currentInstance.id `
+            -RootCertificateId $RootCertificateId
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Configuration Scep Certificate Policy for Windows10 with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Device Configuration Scep Certificate Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
 Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
@@ -592,6 +610,10 @@ function Test-TargetResource
         [ValidateSet('commonName','commonNameIncludingEmail','commonNameAsEmail','custom','commonNameAsIMEI','commonNameAsSerialNumber','commonNameAsAadDeviceId','commonNameAsIntuneDeviceId','commonNameAsDurableDeviceId')]
         [System.String]
         $SubjectNameFormat,
+
+        [Parameter()]
+        [System.String]
+        $RootCertificateId,
 
         [Parameter()]
         [System.String]
@@ -881,6 +903,44 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-DeviceConfigurationPolicyRootCertificateId
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId
+    )
+
+    $Uri = " https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windows81SCEPCertificateProfile/rootCertificate"
+    $result = Invoke-MgGraphRequest -Method Get -Uri $Uri -ErrorAction Stop
+
+    return $result.id
+}
+
+function Update-DeviceConfigurationPolicyRootCertificateId
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceConfigurationPolicyId,
+
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $RootCertificateId
+    )
+
+    $Uri = " https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windows81SCEPCertificateProfile/rootCertificate/`$ref"
+    $ref = @{
+        '@odata.id' = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$RootCertificateId')"
+    }
+
+    Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body ($ref|ConvertTo-Json) -ErrorAction Stop
 }
 
 function Update-DeviceConfigurationPolicyAssignment

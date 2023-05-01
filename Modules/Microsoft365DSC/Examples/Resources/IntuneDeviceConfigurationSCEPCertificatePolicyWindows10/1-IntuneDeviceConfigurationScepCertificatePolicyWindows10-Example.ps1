@@ -45,11 +45,12 @@ Configuration Example
             KeySize                        = "size2048";
             KeyStorageProvider             = "useTpmKspOtherwiseUseSoftwareKsp";
             KeyUsage                       = "digitalSignature";
-            RenewalThresholdPercentage     = 20;
+            RenewalThresholdPercentage     = 25;
             ScepServerUrls                 = @("https://mydomain.com/certsrv/mscep/mscep.dll");
             SubjectAlternativeNameType     = "none";
             SubjectNameFormat              = "custom";
             SubjectNameFormatString        = "CN={{UserName}},E={{EmailAddress}}";
+            RootCertificateId              = "169bf4fc-5914-40f4-ad33-48c225396183";
         }
     }
 }

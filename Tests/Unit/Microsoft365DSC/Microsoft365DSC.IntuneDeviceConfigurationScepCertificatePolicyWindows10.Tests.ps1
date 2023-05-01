@@ -53,6 +53,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgDeviceManagementDeviceConfigurationAssignment -MockWith {
             }
 
+            Mock -CommandName Get-DeviceConfigurationPolicyRootCertificateId -MockWith {
+                return "00000000-0000-0000-0000-000000000000"
+            }
+
+            Mock -CommandName Update-DeviceConfigurationPolicyRootCertificateId -MockWith {
+            }
         }
         # Test contexts
         Context -Name "The IntuneDeviceConfigurationScepCertificatePolicyWindows10 should exist but it DOES NOT" -Fixture {
@@ -86,6 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     subjectAlternativeNameType = "none"
                     subjectNameFormat = "commonName"
                     SubjectNameFormatString = "FakeStringValue"
+                    RootCertificateId = "00000000-0000-0000-0000-000000000000"
                     Ensure = "Present"
                     Credential = $Credential;
                 }
@@ -137,6 +144,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     subjectAlternativeNameType = "none"
                     subjectNameFormat = "commonName"
                     SubjectNameFormatString = "FakeStringValue"
+                    RootCertificateId = "00000000-0000-0000-0000-000000000000"
                     Ensure = 'Absent'
                     Credential = $Credential;
                 }
@@ -223,6 +231,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     subjectAlternativeNameType = "none"
                     subjectNameFormat = "commonName"
                     SubjectNameFormatString = "FakeStringValue"
+                    RootCertificateId = "00000000-0000-0000-0000-000000000000"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
@@ -302,6 +311,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     subjectAlternativeNameType = "none"
                     subjectNameFormat = "commonName"
                     SubjectNameFormatString = "FakeStringValue"
+                    RootCertificateId = "00000000-0000-0000-0000-000000000000"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
