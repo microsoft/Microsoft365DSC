@@ -18,6 +18,8 @@
   * Initial release
 * DRG
   * Fix issue with abstract type and additionalProperties
+* MISC
+  * Intune: changed the display or instances to show the display name instead of Id during extraction.
 
 # 1.23.426.3
 
