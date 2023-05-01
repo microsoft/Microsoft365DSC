@@ -7,7 +7,6 @@
     FIXES [#3104](https://github.com/microsoft/Microsoft365DSC/issues/3104)
 * MISC
   * Reports will now exclude the authentication parameters (e.g., CertificateThumbprint, Credential, etc.).
-  * M365DSCUtil: Fixed an issue on function Get-M365DSCExportContentForResource if ConnectionMode was set to anything but "Credentials*"
 
 # 1.23.412.1
 
