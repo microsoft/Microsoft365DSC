@@ -8,6 +8,8 @@
   * Initial release
  * IntuneDeviceConfigurationSecureAssessmentPolicyWindows10
   * Initial release
+* IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
+  * Initial release
 * IntuneDeviceConfigurationTrustedCertificatePolicyWindows10
   * Initial release
 * IntuneDeviceConfigurationVpnPolicyWindows10
