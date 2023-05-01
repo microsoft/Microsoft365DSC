@@ -172,7 +172,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         AdditionalProperties = @{
                             destinationStore = "computerCertStoreRoot"
-                            certFileName = "FakeStringValue"
+                            certFileName = "CertFileName Drift"
                             '@odata.type' = "#microsoft.graph.windows81TrustedRootCertificate"
                         }
                         Description = "FakeStringValue"
