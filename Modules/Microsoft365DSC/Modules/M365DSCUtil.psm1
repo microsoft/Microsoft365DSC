@@ -2589,7 +2589,11 @@ function Assert-M365DSCBlueprint
 
         [Parameter()]
         [System.String[]]
-        $ExcludedProperties
+        $ExcludedProperties,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedResources
     )
 
     $InformationPreference = 'SilentlyContinue'
@@ -2642,15 +2646,26 @@ function Assert-M365DSCBlueprint
         $ResourcesInBluePrint = @()
         foreach ($resource in $parsedBluePrint)
         {
+            if ($resource.ResourceName -in $ExcludedResources)
+            {
+                continue
+            }
             if ($ResourcesInBluePrint -notcontains $resource.ResourceName)
             {
                 $ResourcesInBluePrint += $resource.ResourceName
             }
         }
 
-        if (!$ResourcesInBluePrint)
+        if ([String]::IsNullOrEmpty($ResourcesInBluePrint))
         {
-            Write-Host 'Malformed BluePrint, aborting'
+            if (![String]::IsNullOrEmpty($ExcludedProperties))
+            {
+                Write-Host 'All resources were excluded from BluePrint, aborting'
+            }
+            else
+            {
+                Write-Host 'Malformed BluePrint, aborting'
+            }
             break
         }
 
