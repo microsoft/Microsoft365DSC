@@ -20,6 +20,7 @@
   * Fix issue with abstract type and additionalProperties
 * MISC
   * Intune: changed the display or instances to show the display name instead of Id during extraction.
+  * M365DSCUtil: Fixed an issue on function Get-M365DSCExportContentForResource if ConnectionMode was set to anything but "Credentials*"
 
 # 1.23.426.3
 
