@@ -2704,7 +2704,8 @@ function Assert-M365DSCBlueprint
             -IsBlueprintAssessment:$true `
             -HeaderFilePath $HeaderFilePath `
             -Type $Type `
-            -ExcludedProperties $ExcludedProperties
+            -ExcludedProperties $ExcludedProperties `
+            -ExcludedResources $ExcludedResources
     }
     else
     {
