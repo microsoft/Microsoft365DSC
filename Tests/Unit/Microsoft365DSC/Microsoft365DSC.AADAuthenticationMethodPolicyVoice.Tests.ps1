@@ -55,13 +55,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyVoiceExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -100,13 +100,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFTAADAuthenticationMethodPolicyVoiceExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "FakeStringValue"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -160,13 +160,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFTAADAuthenticationMethodPolicyVoiceExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -220,13 +220,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFTAADAuthenticationMethodPolicyVoiceExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)

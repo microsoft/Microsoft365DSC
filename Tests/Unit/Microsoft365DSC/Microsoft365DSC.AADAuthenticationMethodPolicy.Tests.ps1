@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             State = "default"
                             SnoozeDurationInDays = 25
                             ExcludeTargets = [CimInstance[]]@(
-                                (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget -Property @{
+                                (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
                                     TargetType = "user"
                                     Id = "FakeStringValue"
                                 } -ClientOnly)
@@ -79,13 +79,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SystemCredentialPreferences = (New-CimInstance -ClassName MSFT_MicrosoftGraphsystemCredentialPreferences -Property @{
                         State = "default"
                         IncludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphincludeTarget -Property @{
+                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyIncludeTarget -Property @{
                                 TargetType = "user"
                                 Id = "FakeStringValue"
                             } -ClientOnly)
                         )
                         ExcludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget -Property @{
+                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
                                 TargetType = "user"
                                 Id = "FakeStringValue"
                             } -ClientOnly)
@@ -128,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             State = "default"
                             SnoozeDurationInDays = 25
                             ExcludeTargets = [CimInstance[]]@(
-                                (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget -Property @{
+                                (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
                                     TargetType = "user"
                                     Id = "FakeStringValue"
                                 } -ClientOnly)
@@ -138,13 +138,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SystemCredentialPreferences = (New-CimInstance -ClassName MSFT_MicrosoftGraphsystemCredentialPreferences -Property @{
                         State = "default"
                         IncludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphincludeTarget -Property @{
+                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyIncludeTarget -Property @{
                                 TargetType = "user"
                                 Id = "FakeStringValue"
                             } -ClientOnly)
                         )
                         ExcludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget -Property @{
+                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
                                 TargetType = "user"
                                 Id = "FakeStringValue"
                             } -ClientOnly)
@@ -238,7 +238,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             State = "default"
                             SnoozeDurationInDays = 25
                             ExcludeTargets = [CimInstance[]]@(
-                                (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget -Property @{
+                                (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
                                     TargetType = "user"
                                     Id = "FakeStringValue"
                                 } -ClientOnly)
@@ -248,13 +248,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SystemCredentialPreferences = (New-CimInstance -ClassName MSFT_MicrosoftGraphsystemCredentialPreferences -Property @{
                         State = "default"
                         IncludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphincludeTarget -Property @{
+                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyIncludeTarget -Property @{
                                 TargetType = "user"
                                 Id = "FakeStringValue"
                             } -ClientOnly)
                         )
                         ExcludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget -Property @{
+                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
                                 TargetType = "user"
                                 Id = "FakeStringValue"
                             } -ClientOnly)
@@ -341,7 +341,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             State = "default"
                             SnoozeDurationInDays = 25
                             ExcludeTargets = [CimInstance[]]@(
-                                (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget -Property @{
+                                (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
                                     TargetType = "user"
                                     Id = "FakeStringValue"
                                 } -ClientOnly)
@@ -351,13 +351,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SystemCredentialPreferences = (New-CimInstance -ClassName MSFT_MicrosoftGraphsystemCredentialPreferences -Property @{
                         State = "default"
                         IncludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphincludeTarget -Property @{
+                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyIncludeTarget -Property @{
                                 TargetType = "user"
                                 Id = "FakeStringValue"
                             } -ClientOnly)
                         )
                         ExcludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget -Property @{
+                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
                                 TargetType = "user"
                                 Id = "FakeStringValue"
                             } -ClientOnly)

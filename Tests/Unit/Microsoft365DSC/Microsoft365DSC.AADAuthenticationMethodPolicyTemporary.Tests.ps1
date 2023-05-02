@@ -57,13 +57,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultLength = 25
                     DefaultLifetimeInMinutes = 25
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
+                        (New-CimInstance -ClassName MSFTAADAuthenticationMethodPolicyTemporaryExcludeTarget -Property @{
+                            TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -106,9 +106,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultLength = 25
                     DefaultLifetimeInMinutes = 25
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFTAADAuthenticationMethodPolicyTemporaryExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
+                        } -ClientOnly)
+                    )
+                    IncludeTargets        = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget -Property @{
+                            TargetType = 'group'
+                            Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
                     Id = "TemporaryAccessPass"
@@ -168,13 +174,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultLength = 25
                     DefaultLifetimeInMinutes = 25
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFTAADAuthenticationMethodPolicyTemporaryExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -236,13 +242,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DefaultLength = 25
                     DefaultLifetimeInMinutes = 25
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
-                            TargetType = "user"
+                        (New-CimInstance -ClassName MSFTAADAuthenticationMethodPolicyTemporaryExcludeTarget -Property @{
+                            TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -330,7 +336,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         ExcludeTargets = @(
                             @{
-                                TargetType = "user"
+                                TargetType = "group"
                                 Id = "FakeStringValue"
                             }
                         )

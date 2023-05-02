@@ -5,11 +5,6 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param(
-        [Parameter()]
-        [PSCredential]
-        $Credscredential
-    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost

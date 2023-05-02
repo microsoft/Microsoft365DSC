@@ -5,11 +5,6 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param(
-        [Parameter()]
-        [PSCredential]
-        $Credscredential
-    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
@@ -42,22 +37,22 @@ Configuration Example
             );
             Ensure                          = "Present";
             ExcludeTargets                  = @(
-                MSFT_MicrosoftGraphexcludeTarget2{
+                MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
                     Id = 'fakegroup1'
                     TargetType = 'group'
                 }
-                MSFT_MicrosoftGraphexcludeTarget2{
+                MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
                     Id = 'fakegroup2'
                     TargetType = 'group'
                 }
             );
             Id                              = "X509Certificate";
             IncludeTargets                  = @(
-                MSFT_MicrosoftGraphincludeTarget2{
+                MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
                     Id = 'fakegroup3'
                     TargetType = 'group'
                 }
-                MSFT_MicrosoftGraphincludeTarget2{
+                MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
                     Id = 'fakegroup4'
                     TargetType = 'group'
                 }

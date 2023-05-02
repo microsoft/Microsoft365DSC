@@ -55,13 +55,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ExcludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -146,13 +146,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ExcludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -298,13 +298,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ExcludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -450,13 +450,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ExcludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)

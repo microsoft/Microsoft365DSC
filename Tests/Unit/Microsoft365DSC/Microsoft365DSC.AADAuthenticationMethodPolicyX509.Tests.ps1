@@ -72,13 +72,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                     )
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "00000000-0000-0000-0000-000000000000"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyX509IncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = '00000000-0000-0000-0000-000000000000'
                         } -ClientOnly)
@@ -126,13 +126,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                     )
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFTAADAuthenticationMethodPolicyX509ExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "00000000-0000-0000-0000-000000000000"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyX509IncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -218,13 +218,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                     )
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyX509IncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -309,13 +309,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                     )
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup2"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyX509IncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)

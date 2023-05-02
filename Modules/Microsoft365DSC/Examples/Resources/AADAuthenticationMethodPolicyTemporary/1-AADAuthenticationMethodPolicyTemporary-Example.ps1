@@ -5,11 +5,6 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param(
-        [Parameter()]
-        [PSCredential]
-        $Credscredential
-    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
@@ -22,22 +17,22 @@ Configuration Example
             DefaultLifetimeInMinutes = 60;
             Ensure                   = "Present";
             ExcludeTargets           = @(
-                MSFT_MicrosoftGraphexcludeTarget2{
+                MSFT_AADAuthenticationMethodPolicyTemporaryExcludeTarget{
                     Id = 'fakegroup1'
                     TargetType = 'group'
                 }
-                MSFT_MicrosoftGraphexcludeTarget2{
+                MSFT_AADAuthenticationMethodPolicyTemporaryExcludeTarget{
                     Id = 'fakegroup2'
                     TargetType = 'group'
                 }
             );
             Id                       = "TemporaryAccessPass";
             IncludeTargets           = @(
-                MSFT_MicrosoftGraphincludeTarget2{
+                MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget{
                     Id = 'fakegroup3'
                     TargetType = 'group'
                 }
-                MSFT_MicrosoftGraphincludeTarget2{
+                MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget{
                     Id = 'fakegroup4'
                     TargetType = 'group'
                 }

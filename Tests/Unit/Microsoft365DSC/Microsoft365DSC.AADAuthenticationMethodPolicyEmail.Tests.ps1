@@ -56,13 +56,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AllowExternalIdToUseEmailOtp = "default"
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -101,13 +101,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AllowExternalIdToUseEmailOtp = "default"
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -161,13 +161,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AllowExternalIdToUseEmailOtp = "default"
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
@@ -221,13 +221,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     AllowExternalIdToUseEmailOtp = "default"
                     ExcludeTargets = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget -Property @{
                             TargetType = "group"
                             Id = "Fakegroup"
                         } -ClientOnly)
                     )
                     IncludeTargets        = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphexcludeTarget2 -Property @{
+                        (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget -Property @{
                             TargetType = 'group'
                             Id         = 'Fakegroup'
                         } -ClientOnly)
