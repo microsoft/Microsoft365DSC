@@ -14,19 +14,14 @@ Configuration Example
             ApplicationId         = $ConfigurationData.NonNodeData.ApplicationId;
             CertificateThumbprint = $ConfigurationData.NonNodeData.CertificateThumbprint;
             Ensure                = "Present";
+            ExcludeTargets        = @(
+                MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
+                    Id = 'fakegroup1'
+                    TargetType = 'group'
+                }
+            );
             FeatureSettings       = MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings{
                 DisplayLocationInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
-                        Id = '00000000-0000-0000-0000-000000000000'
-                        TargetType = 'group'
-                    }
-                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
-                        Id = 'fakegroup1'
-                        TargetType = 'group'
-                    }
-                    State = 'enabled'
-                }
-                            NumberMatchingRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
                     ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
                         Id = '00000000-0000-0000-0000-000000000000'
                         TargetType = 'group'
@@ -37,7 +32,7 @@ Configuration Example
                     }
                     State = 'enabled'
                 }
-                            CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
+                            NumberMatchingRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
                     ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
                         Id = '00000000-0000-0000-0000-000000000000'
                         TargetType = 'group'
@@ -48,7 +43,7 @@ Configuration Example
                     }
                     State = 'enabled'
                 }
-                            DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
+                            CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
                     ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
                         Id = '00000000-0000-0000-0000-000000000000'
                         TargetType = 'group'
@@ -59,16 +54,21 @@ Configuration Example
                     }
                     State = 'enabled'
                 }
+                            DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
+                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = '00000000-0000-0000-0000-000000000000'
+                        TargetType = 'group'
+                    }
+                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                        Id = 'fakegroup5'
+                        TargetType = 'group'
+                    }
+                    State = 'enabled'
+                }
                         };
             Id                    = "MicrosoftAuthenticator";
             IncludeTargets        = @(
                 MSFT_AADAuthenticationMethodPolicyAuthenticatorIncludeTarget{
-                    Id = 'fakegroup5'
-                    TargetType = 'group'
-                }
-            );
-            ExcludeTargets        = @(
-                MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
                     Id = 'fakegroup6'
                     TargetType = 'group'
                 }
