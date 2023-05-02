@@ -2640,7 +2640,15 @@ function Assert-M365DSCBlueprint
             $endPosition = $fileContent.IndexOf("`r", $startPosition)
             $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
         }
-        $parsedBluePrint = ConvertTo-DSCObject -Content $fileContent
+
+        try
+        {
+            $parsedBluePrint = ConvertTo-DSCObject -Content $fileContent
+        }
+        catch
+        {
+            throw $_
+        }
 
         # Generate an Array of Resource Types contained in the BluePrint
         $ResourcesInBluePrint = @()
