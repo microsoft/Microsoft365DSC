@@ -2666,7 +2666,7 @@ function Assert-M365DSCBlueprint
 
         if ([String]::IsNullOrEmpty($ResourcesInBluePrint))
         {
-            if (![String]::IsNullOrEmpty($ExcludedProperties))
+            if (![String]::IsNullOrEmpty($ExcludedResources))
             {
                 Write-Host 'All resources were excluded from BluePrint, aborting'
             }
