@@ -2,8 +2,6 @@
 
 # UNRELEASED
 
-* IntuneDeviceConfigurationWiredNetworkPolicyWindows10
-  * Initial release
 * IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
   * Initial release
 * IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
@@ -18,11 +16,16 @@
   * Initial release
 * IntuneDeviceConfigurationVpnPolicyWindows10
   * Initial release
+* IntuneDeviceConfigurationWiredNetworkPolicyWindows10
+  * Initial release
 * DRG
   * Fix issue with abstract type and additionalProperties
 * MISC
   * Intune: changed the display or instances to show the display name instead of Id during extraction.
   * M365DSCUtil: Fixed an issue on function Get-M365DSCExportContentForResource if ConnectionMode was set to anything but "Credentials*"
+  * EXPORT: Multiple fixes for display and handling of invalid licenses.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.109.
 
 # 1.23.426.3
 

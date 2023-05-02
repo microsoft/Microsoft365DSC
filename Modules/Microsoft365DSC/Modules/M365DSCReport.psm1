@@ -840,7 +840,7 @@ function Compare-M365DSCConfigurations
         }
         catch
         {
-            Write-Verbose -Message "Error: $_"
+            Write-Host "Error: $_"
         }
         $i++
     }
@@ -875,7 +875,7 @@ function Compare-M365DSCConfigurations
                         ResourceInstanceName = $currentDestinationResource.ResourceInstanceName
                         Key                  = $keyName
                         KeyValue             = $currentDestinationResource."$keyName"
-                        Properties           = @(@{                                
+                        Properties           = @(@{
                             ParameterName      = '_IsInConfiguration_'
                             ValueInSource      = 'Absent'
                             ValueInDestination = 'Present'
@@ -894,7 +894,7 @@ function Compare-M365DSCConfigurations
     }
     catch
     {
-        Write-Verbose -Message "Error: $_"
+        Write-Host "Error: $_"
     }
     Write-Progress -Activity 'Scanning Destination...' -Completed
 
@@ -1155,7 +1155,7 @@ function New-M365DSCDeltaReport
         return
     }
 
-    if ($OutputPath -and (Test-Path -Path $OutputPath) -eq $false)
+    if ($OutputPath -and (Test-Path -Path $OutputPath) -eq $true)
     {
         Write-Warning "File specified in parameter OutputPath already exists and will be overwritten: $OutputPath"
         Write-Warning "Make sure you specify a file that not exists, if you don't want the file to be overwritten!"
@@ -1474,8 +1474,8 @@ function New-M365DSCDeltaReport
                             elseif ($null -ne $drift.ValueInSource -and $null -eq $drift.ValueInDestination)
                             {
                                 $sourceValue = "<table width = '100%'>"
-                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"                                
-                                
+                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
+
                                 if ($drift.ValueInSource.GetType().Name -ne 'OrderedDictionary')
                                 {
                                     $valueForSource = $drift.ValueInSource
@@ -1510,8 +1510,8 @@ function New-M365DSCDeltaReport
                             elseif ($null -ne $drift.ValueInDestination -and $null -eq $drift.ValueInSource)
                             {
                                 $destinationValue = "<table width = '100%'>"
-                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"                                
-                                
+                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
+
                                 if ($drift.ValueInDestination.GetType().Name -ne 'OrderedDictionary')
                                 {
                                     $valueForDestination = $drift.ValueInSource
