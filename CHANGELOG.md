@@ -2,13 +2,15 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationWiredNetworkPolicyWindows10
+  * Initial release
 * IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
   * Initial release
 * IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
   * Initial release
 * IntuneDeviceConfigurationScepCertificatePolicyWindows10
   * Initial release
- * IntuneDeviceConfigurationSecureAssessmentPolicyWindows10
+* IntuneDeviceConfigurationSecureAssessmentPolicyWindows10
   * Initial release
 * IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
   * Initial release
