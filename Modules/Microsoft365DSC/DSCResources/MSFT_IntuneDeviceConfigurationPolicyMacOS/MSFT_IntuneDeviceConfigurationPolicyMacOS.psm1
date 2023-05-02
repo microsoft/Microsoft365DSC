@@ -1330,7 +1330,7 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            Write-Host "    |---[$i/$($getValue.Count)] $($config.id)" -NoNewline
+            Write-Host "    |---[$i/$($getValue.Count)] $($config.DisplayName)" -NoNewline
             $params = @{
                 Id                    = $config.id
                 DisplayName           = $config.DisplayName

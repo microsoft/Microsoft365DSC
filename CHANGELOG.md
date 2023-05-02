@@ -2,6 +2,30 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Initial release
+ * IntuneDeviceConfigurationSecureAssessmentPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationTrustedCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationVpnPolicyWindows10
+  * Initial release
+* DRG
+  * Fix issue with abstract type and additionalProperties
+* MISC
+  * Intune: changed the display or instances to show the display name instead of Id during extraction.
+
+# 1.23.426.3
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.108.
+  * Updated Microsoft.Graph dependencies to version 1.27.0.
 * MISC
   * If an error occurs during the export process, we now throw an error instead of simply writing the error
     back to the host via Write-Host.

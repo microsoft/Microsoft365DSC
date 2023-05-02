@@ -59,7 +59,7 @@ Configuration Example
             Name                 = "Default Role Assignment Policy"
             Description          = "This policy grants end users the permission to set their options in Outlook on the web and perform other self-administration tasks."
             IsDefault            = $True
-            Roles                = @("My Marketplace Apps","MyVoiceMail","MyDistributionGroups","MyRetentionPolicies","MyTeamMailboxes","MyContactInformation","MyMailSubscriptions","MyBaseOptions","MyTextMessaging","MyDistributionGroupMembership","MyProfileInformation","My Custom Apps","My ReadWriteMailbox Apps")
+            Roles                = @("My Marketplace Apps","MyVoiceMail","MyDistributionGroups","MyRetentionPolicies","MyContactInformation","MyBaseOptions","MyTextMessaging","MyDistributionGroupMembership","MyProfileInformation","My Custom Apps","My ReadWriteMailbox Apps")
             Ensure               = "Present"
             Credential           = $credsGlobalAdmin
         }
