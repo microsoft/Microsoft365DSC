@@ -647,12 +647,12 @@ function Export-TargetResource
                     }
                     @{
                         Name = 'ExcludeTargets'
-                        CimInstanceName = 'MicrosoftGraphExcludeTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyExcludeTarget'
                         IsRequired = $False
                     }
                     @{
                         Name = 'IncludeTargets'
-                        CimInstanceName = 'MicrosoftGraphIncludeTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyIncludeTarget'
                         IsRequired = $False
                     }
                 )

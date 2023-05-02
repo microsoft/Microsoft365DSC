@@ -12,10 +12,16 @@ class MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign
     [Write, Description("Enable or disable the feature. Possible values are: default, enabled, disabled, unknownFutureValue. The default value is used when the configuration hasn't been explicitly set and uses the default behavior of Azure AD for the setting. The default value is disabled."), ValueMap{"default","enabled","disabled","unknownFutureValue"}, Values{"default","enabled","disabled","unknownFutureValue"}] String State;
 };
 [ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphExcludeTarget
+class MSFT_AADAuthenticationMethodPolicyExcludeTarget
 {
     [Write, Description("The object identifier of an Azure AD group.")] String Id;
     [Write, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_AADAuthenticationMethodPolicyIncludeTarget
+{
+    [Write, Description("The ID of the entity targeted.")] String Id;
+    [Write, Description("The kind of entity targeted. Possible values are: user, group."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
 };
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget
@@ -27,15 +33,9 @@ class MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphSystemCredentialPreferences
 {
-    [Write, Description("Users and groups excluded from the preferred authentication method experience of the system."), EmbeddedInstance("MSFT_MicrosoftGraphExcludeTarget")] String ExcludeTargets[];
-    [Write, Description("Users and groups included in the preferred authentication method experience of the system."), EmbeddedInstance("MSFT_MicrosoftGraphIncludeTarget")] String IncludeTargets[];
+    [Write, Description("Users and groups excluded from the preferred authentication method experience of the system."), EmbeddedInstance("MSFT_AADAuthenticationMethodPolicyExcludeTarget")] String ExcludeTargets[];
+    [Write, Description("Users and groups included in the preferred authentication method experience of the system."), EmbeddedInstance("MSFT_AADAuthenticationMethodPolicyIncludeTarget")] String IncludeTargets[];
     [Write, Description("Indicates whether the feature is enabled or disabled. Possible values are: default, enabled, disabled, unknownFutureValue. The default value is used when the configuration hasn't been explicitly set, and uses the default behavior of Azure Active Directory for the setting. The default value is disabled."), ValueMap{"default","enabled","disabled","unknownFutureValue"}, Values{"default","enabled","disabled","unknownFutureValue"}] String State;
-};
-[ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphIncludeTarget
-{
-    [Write, Description("The ID of the entity targeted.")] String Id;
-    [Write, Description("The kind of entity targeted. Possible values are: user, group."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("AADAuthenticationMethodPolicy")]

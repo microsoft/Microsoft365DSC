@@ -619,7 +619,7 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.ExcludeTargets `
-                    -CIMInstanceName 'MicrosoftGraphexcludeTarget2'
+                    -CIMInstanceName 'AADAuthenticationMethodPolicyFido2ExcludeTarget'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.ExcludeTargets = $complexTypeStringResult
@@ -633,7 +633,7 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.IncludeTargets `
-                    -CIMInstanceName 'MicrosoftGraphincludeTarget2'
+                    -CIMInstanceName 'AADAuthenticationMethodPolicyFido2IncludeTarget'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.IncludeTargets = $complexTypeStringResult

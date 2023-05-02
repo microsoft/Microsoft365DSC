@@ -1,25 +1,44 @@
 {
     "resourceName": "AADAuthenticationMethodPolicyEmail",
     "description": "This resource configures an Azure AD Authentication Method Policy Email.",
-    "permissions":    {
-    "graph":  {
-                  "delegated":  {
-                                    "read":  [
-
-                                             ],
-                                    "update":  [
-
-                                               ]
-                                },
-                  "application":  {
-                                      "read":  [
-
-                                               ],
-                                      "update":  [
-
-                                                 ]
-                                  }
-              }
-}
-
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ]
+            }
+        }
+    }
 }
