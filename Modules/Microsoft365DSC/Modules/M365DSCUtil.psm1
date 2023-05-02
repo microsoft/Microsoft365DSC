@@ -3181,7 +3181,7 @@ function Get-M365DSCExportContentForResource
     if ($ConnectionMode -like 'ServicePrincipal*' -or `
             $ConnectionMode -eq 'ManagedIdentity')
     {
-        $OrganizationName = $TenantId
+        $OrganizationName = $Results.TenantId
     }
     else
     {
