@@ -1001,8 +1001,11 @@ Specifies the path of the PFX file which is used for authentication.
 .Parameter Filters
 Specifies resource level filters to apply in order to reduce the number of instances exported.
 
-.Parameter Identity
-Specifies use of managed identity for authentication
+.Parameter ManagedIdentity
+Specifies use of managed identity for authentication.
+
+.Parameter Validate
+Specifies that the configuration needs to be validated for conflicts or issues after its extraction is completed.
 
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
@@ -1125,7 +1128,11 @@ function Export-M365DSCConfiguration
 
         [Parameter(ParameterSetName = 'Export')]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter(ParameterSetName = 'Export')]
+        [Switch]
+        $Validate
     )
 
     # Define the exported resource instances' names Global variable
@@ -1272,7 +1279,8 @@ function Export-M365DSCConfiguration
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity `
             -GenerateInfo $GenerateInfo `
-            -Filters $Filters
+            -Filters $Filters `
+            -Validate:$Validate
     }
     elseif ($null -ne $Components)
     {
@@ -1290,7 +1298,8 @@ function Export-M365DSCConfiguration
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity `
             -GenerateInfo $GenerateInfo `
-            -Filters $Filters
+            -Filters $Filters `
+            -Validate:$Validate
     }
     elseif ($null -ne $Mode)
     {
@@ -1309,7 +1318,8 @@ function Export-M365DSCConfiguration
             -ManagedIdentity:$ManagedIdentity `
             -GenerateInfo $GenerateInfo `
             -AllComponents `
-            -Filters $Filters
+            -Filters $Filters `
+            -Validate:$Validate
     }
 
     # Clear the exported resource instances' names Global variable
@@ -4172,6 +4182,67 @@ function Remove-M365DSCAuthenticationParameter
     return $BoundParameters
 }
 
+<#
+.Description
+This function analyzes an M365DSC configuration file and returns information about potential issues (e.g., duplicate primary keys).
+
+.Example
+Get-M365DSCConfigurationConflict -ConfigurationContent "content"
+
+.Functionality
+Public
+#>
+function Get-M365DSCConfigurationConflict
+{
+    [CmdletBinding()]
+    [OutputType([Array])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ConfigurationContent
+    )
+
+    $results = @()
+    Write-Verbose -Message "Converting configuration's content into a PowerShell Object using DSCParser"
+    $parsedContent = ConvertTo-DSCObject -Content $ConfigurationContent
+
+    $resourcesPrimaryIdentities = @()
+    $resourcesInModule = Get-DSCResource -Module 'Microsoft365DSC'
+    foreach ($component in $parsedContent)
+    {
+        $resourceDefinition = $resourcesInModule | Where-Object -FilterScript {$_.Name -eq $component.ResourceName}
+        [Array]$mandatoryProperties = $resourceDefinition.Properties | Where-Object -FilterScript {$_.IsMandatory}
+        $primaryKeyValues = ""
+        foreach ($mandatoryKey in $mandatoryProperties.Name)
+        {
+            $primaryKeyValues += "$($component.$mandatoryKey)|"
+        }
+        $entryValue = "[$($component.ResourceName)]$primaryKeyValues"
+        if ($resourcesPrimaryIdentities.Contains($entryValue))
+        {
+            Write-Verbose -Message "Found primary key conflict in resource {$($component.ResourceInstanceName)}"
+            $currentEntry = @{
+                ResourceName         = $component.ResourceName
+                InstanceName         = $component.ResourceInstanceName
+                AdditionalProperties = @{}
+                Reason               = "DuplicatePrimaryKey"
+            }
+
+            foreach ($mandatoryKey in $mandatoryProperties.Name)
+            {
+                $currentEntry.AdditionalProperties.Add($mandatoryKey, $component.$mandatoryKey)
+            }
+            $results += $currentEntry
+        }
+        else
+        {
+            $resourcesPrimaryIdentities += $entryValue
+        }
+    }
+    return $results
+}
+
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
     'Confirm-ImportedCmdletIsAvailable',
@@ -4184,6 +4255,7 @@ Export-ModuleMember -Function @(
     'Get-M365DSCAuthenticationMode',
     'Get-M365DSCComponentsForAuthenticationType',
     'Get-M365DSCComponentsWithMostSecureAuthenticationType',
+    'Get-M365DSCConfigurationConflict',
     'Get-M365DSCExportContentForResource',
     'Get-M365DSCOrganization',
     'Get-M365DSCTenantDomain',
