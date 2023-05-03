@@ -1,9 +1,38 @@
 # Change log for Microsoft365DSC
 
+# 1.23.503.1
+
+* IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationSecureAssessmentPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationTrustedCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationVpnPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationWiredNetworkPolicyWindows10
+  * Initial release
+* DRG
+  * Fix issue with abstract type and additionalProperties
+* MISC
+  * Intune: changed the display or instances to show the display name instead of Id during extraction.
+  * M365DSCUtil: Fixed an issue on function Get-M365DSCExportContentForResource if ConnectionMode was set to anything but "Credentials*"
+  * Assert-M365DSCBlueprint, New-M365DSCDeltaReport, Compare-M365DSCConfigurations: Add support to exclude resources from being compared
+  * EXPORT: Multiple fixes for display and handling of invalid licenses.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.109.
+
 # 1.23.426.3
 
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.108.
+  * Updated Microsoft.Graph dependencies to version 1.27.0.
 * MISC
   * If an error occurs during the export process, we now throw an error instead of simply writing the error
     back to the host via Write-Host.
@@ -19,6 +48,24 @@
 * AADCOnditionalAccessPolicy
   * Fix Couldn't find Location 00000000-0000-0000-0000-000000000000
     FIXES[#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+* AADAuthenticationMethodPolicy
+  * Initial release. Configure Authentication policy settings
+* AADAuthenticationMethodPolicyAuthenticator
+  * Initial release. Configure Authentication settings related to MicrosoftAuthenticator
+* AADAuthenticationMethodPolicyEmail
+  * Initial release. Configure Authentication settings related to Email
+* AADAuthenticationMethodPolicyFido2
+  * Initial release. Configure Authentication settings related to Fido2
+* AADAuthenticationMethodPolicySms
+  * Initial release. Configure Authentication settings related to Sms
+* AADAuthenticationMethodPolicySoftware
+  * Initial release. Configure Authentication settings related to SoftwareOath
+* AADAuthenticationMethodPolicyTemporary
+  * Initial release. Configure Authentication settings related to TemporaryAccessPass
+* AADAuthenticationMethodPolicyVoice
+  * Initial release. Configure Authentication settings related to Voice
+* AADAuthenticationMethodPolicyX509
+  * Initial release. Configure Authentication settings related to X509Certificate
 * AADAdministrativeUnit
   * Fix issue incorrectly removing existing Members and ScopedRoleMembers
     FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)

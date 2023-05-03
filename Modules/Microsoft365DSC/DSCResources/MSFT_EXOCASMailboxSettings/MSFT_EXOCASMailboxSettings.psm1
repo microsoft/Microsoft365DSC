@@ -747,7 +747,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$mailboxes = Get-Mailbox -ResultSize 'Unlimited'
+        [array]$mailboxes = Get-CASMailbox -ResultSize 'Unlimited'
 
         $i = 1
         if ($mailboxes.Length -eq 0)
@@ -762,7 +762,7 @@ function Export-TargetResource
         foreach ($mailbox in $mailboxes)
         {
             Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewline
-            $mailboxName = $mailbox.UserPrincipalName
+            $mailboxName = $mailbox.Identity
             if (![System.String]::IsNullOrEmpty($mailboxName))
             {
                 $Params = @{

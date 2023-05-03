@@ -431,6 +431,9 @@ Array that contains the list of configuration components for the destination.
 .Parameter ExcludedProperties
 Array that contains the list of parameters to exclude.
 
+.Parameter ExcludedResources
+Array that contains the list of resources to exclude.
+
 .Parameter IsBlueprintAssessment
 Specifies whether or not we are currently comparing a configuration to a Blueprint.
 
@@ -471,6 +474,10 @@ function Compare-M365DSCConfigurations
         $ExcludedProperties,
 
         [Parameter()]
+        [Array]
+        $ExcludedResources,
+
+        [Parameter()]
         [System.Boolean]
         $IsBlueprintAssessment = $false
     )
@@ -502,6 +509,11 @@ function Compare-M365DSCConfigurations
     $i = 1
     foreach ($sourceResource in $SourceObject)
     {
+        if ($sourceResource.ResourceName -in $ExcludedResources)
+        {
+            continue
+        }
+
         try
         {
             [array]$key = Get-M365DSCResourceKey -Resource $sourceResource
@@ -840,7 +852,7 @@ function Compare-M365DSCConfigurations
         }
         catch
         {
-            Write-Verbose -Message "Error: $_"
+            Write-Host "Error: $_"
         }
         $i++
     }
@@ -875,7 +887,7 @@ function Compare-M365DSCConfigurations
                         ResourceInstanceName = $currentDestinationResource.ResourceInstanceName
                         Key                  = $keyName
                         KeyValue             = $currentDestinationResource."$keyName"
-                        Properties           = @(@{                                
+                        Properties           = @(@{
                             ParameterName      = '_IsInConfiguration_'
                             ValueInSource      = 'Absent'
                             ValueInDestination = 'Present'
@@ -894,7 +906,7 @@ function Compare-M365DSCConfigurations
     }
     catch
     {
-        Write-Verbose -Message "Error: $_"
+        Write-Host "Error: $_"
     }
     Write-Progress -Activity 'Scanning Destination...' -Completed
 
@@ -1088,6 +1100,9 @@ An array with difference, already compiled from another source.
 .Parameter ExcludedProperties
 Array that contains the list of parameters to exclude.
 
+.Parameter ExcludedResources
+Array that contains the list of resources to exclude.
+
 .Example
 New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html'
 
@@ -1137,7 +1152,11 @@ function New-M365DSCDeltaReport
 
         [Parameter()]
         [Array]
-        $ExcludedProperties
+        $ExcludedProperties,
+
+        [Parameter()]
+        [Array]
+        $ExcludedResources
     )
 
     # Validate that the latest version of the module is installed.
@@ -1155,7 +1174,7 @@ function New-M365DSCDeltaReport
         return
     }
 
-    if ($OutputPath -and (Test-Path -Path $OutputPath) -eq $false)
+    if ($OutputPath -and (Test-Path -Path $OutputPath) -eq $true)
     {
         Write-Warning "File specified in parameter OutputPath already exists and will be overwritten: $OutputPath"
         Write-Warning "Make sure you specify a file that not exists, if you don't want the file to be overwritten!"
@@ -1193,6 +1212,7 @@ function New-M365DSCDeltaReport
                 -DestinationObject $ParsedBlueprintWithMetadata `
                 -CaptureTelemetry $false `
                 -ExcludedProperties $ExcludedProperties `
+                -ExcludedResources $ExcludedResources `
                 -IsBluePrintAssessment $true
         }
         Else
@@ -1201,7 +1221,8 @@ function New-M365DSCDeltaReport
                 -Source $Source `
                 -Destination $Destination `
                 -CaptureTelemetry $false `
-                -ExcludedProperties $ExcludedProperties
+                -ExcludedProperties $ExcludedProperties `
+                -ExcludedResources $ExcludedResources
         }
     }
 
@@ -1474,8 +1495,8 @@ function New-M365DSCDeltaReport
                             elseif ($null -ne $drift.ValueInSource -and $null -eq $drift.ValueInDestination)
                             {
                                 $sourceValue = "<table width = '100%'>"
-                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"                                
-                                
+                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
+
                                 if ($drift.ValueInSource.GetType().Name -ne 'OrderedDictionary')
                                 {
                                     $valueForSource = $drift.ValueInSource
@@ -1510,8 +1531,8 @@ function New-M365DSCDeltaReport
                             elseif ($null -ne $drift.ValueInDestination -and $null -eq $drift.ValueInSource)
                             {
                                 $destinationValue = "<table width = '100%'>"
-                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"                                
-                                
+                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
+
                                 if ($drift.ValueInDestination.GetType().Name -ne 'OrderedDictionary')
                                 {
                                     $valueForDestination = $drift.ValueInSource
