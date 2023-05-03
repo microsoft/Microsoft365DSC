@@ -471,6 +471,10 @@ function Compare-M365DSCConfigurations
         $ExcludedProperties,
 
         [Parameter()]
+        [Array]
+        $ExcludedResources,
+
+        [Parameter()]
         [System.Boolean]
         $IsBlueprintAssessment = $false
     )
@@ -502,6 +506,11 @@ function Compare-M365DSCConfigurations
     $i = 1
     foreach ($sourceResource in $SourceObject)
     {
+        if ($sourceResource.ResourceName -in $ExcludedResources)
+        {
+            continue
+        }
+
         try
         {
             [array]$key = Get-M365DSCResourceKey -Resource $sourceResource
@@ -1137,7 +1146,11 @@ function New-M365DSCDeltaReport
 
         [Parameter()]
         [Array]
-        $ExcludedProperties
+        $ExcludedProperties,
+
+        [Parameter()]
+        [Array]
+        $ExcludedResources
     )
 
     # Validate that the latest version of the module is installed.
@@ -1193,6 +1206,7 @@ function New-M365DSCDeltaReport
                 -DestinationObject $ParsedBlueprintWithMetadata `
                 -CaptureTelemetry $false `
                 -ExcludedProperties $ExcludedProperties `
+                -ExcludedResources $ExcludedResources `
                 -IsBluePrintAssessment $true
         }
         Else
@@ -1201,7 +1215,8 @@ function New-M365DSCDeltaReport
                 -Source $Source `
                 -Destination $Destination `
                 -CaptureTelemetry $false `
-                -ExcludedProperties $ExcludedProperties
+                -ExcludedProperties $ExcludedProperties `
+                -ExcludedResources $ExcludedResources
         }
     }
 

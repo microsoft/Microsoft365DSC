@@ -23,6 +23,7 @@
 * MISC
   * Intune: changed the display or instances to show the display name instead of Id during extraction.
   * M365DSCUtil: Fixed an issue on function Get-M365DSCExportContentForResource if ConnectionMode was set to anything but "Credentials*"
+  * Assert-M365DSCBlueprint, New-M365DSCDeltaReport, Compare-M365DSCConfigurations: Add support to exclude resources from being compared
   * EXPORT: Multiple fixes for display and handling of invalid licenses.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.109.
