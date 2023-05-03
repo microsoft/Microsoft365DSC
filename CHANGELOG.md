@@ -4,6 +4,7 @@
 
 * AADCrossTenantAccessPolicy
   * Initial release
+    FIXES [#3251](https://github.com/microsoft/Microsoft365DSC/issues/3251)
 
 # 1.23.503.1
 
