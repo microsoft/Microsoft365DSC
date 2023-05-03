@@ -22,6 +22,7 @@ This function does not generate any output.
 | Delta | False | Array |  |  | An array with difference, already compiled from another source. |
 | Type | False | String | HTML | HTML, JSON |  |
 | ExcludedProperties | False | Array |  |  | Array that contains the list of parameters to exclude. |
+| ExcludedResources | False | Array |  |  |  |
 
 ## Examples
 

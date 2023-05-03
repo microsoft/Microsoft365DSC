@@ -23,6 +23,7 @@ This function does not generate any output.
 | HeaderFilePath | False | String |  |  | Specifies that file that contains a custom header for the report. |
 | Type | False | String | HTML | HTML, JSON |  |
 | ExcludedProperties | False | String[] |  |  | Specifies the name of parameters that should not be assessed as part of the report. The names will speficied will apply to all resources where they are encountered. |
+| ExcludedResources | False | String[] |  |  |  |
 
 ## Examples
 
