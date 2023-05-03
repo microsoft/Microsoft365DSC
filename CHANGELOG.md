@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.503.1
 
 * IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
   * Initial release
