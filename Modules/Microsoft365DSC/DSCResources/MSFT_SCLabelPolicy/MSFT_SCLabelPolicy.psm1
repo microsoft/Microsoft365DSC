@@ -154,7 +154,7 @@ function Get-TargetResource
     {
         try
         {
-            $policy = Get-LabelPolicy -Identity $Name -ErrorAction SilentlyContinue
+            $policy = Get-LabelPolicy -Identity $Name -ErrorAction SilentlyContinue -WarningAction Ignore
         }
         catch
         {
@@ -858,7 +858,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-LabelPolicy -ErrorAction Stop
+        [array]$policies = Get-LabelPolicy -ErrorAction Stop -WarningAction Ignore
 
         $dscContent = ''
         $i = 1

@@ -849,7 +849,7 @@ function Compare-M365DSCConfigurations
         }
         catch
         {
-            Write-Verbose -Message "Error: $_"
+            Write-Host "Error: $_"
         }
         $i++
     }
@@ -903,7 +903,7 @@ function Compare-M365DSCConfigurations
     }
     catch
     {
-        Write-Verbose -Message "Error: $_"
+        Write-Host "Error: $_"
     }
     Write-Progress -Activity 'Scanning Destination...' -Completed
 
@@ -1168,7 +1168,7 @@ function New-M365DSCDeltaReport
         return
     }
 
-    if ($OutputPath -and (Test-Path -Path $OutputPath) -eq $false)
+    if ($OutputPath -and (Test-Path -Path $OutputPath) -eq $true)
     {
         Write-Warning "File specified in parameter OutputPath already exists and will be overwritten: $OutputPath"
         Write-Warning "Make sure you specify a file that not exists, if you don't want the file to be overwritten!"
