@@ -12,7 +12,7 @@
 | **MembershipRule** | Write | String | Specify membership rule. Requires that MembershipType is set to Dynamic. Note that the functionality is currently in preview. | |
 | **MembershipRuleProcessingState** | Write | String | Specify dynamic membership-rule processing-state. Valid values are 'On' and 'Paused'. Requires that MembershipType is set to Dynamic. Note that the functionality is currently in preview. | |
 | **Members** | Write | MSFT_MicrosoftGraphMember[] | Specify members. Only specify if MembershipType is NOT set to Dynamic | |
-| **ScopedRoleMembers** | Write | MSFT_MicrosoftGraphScopedRoleMembership[] | Specify Scoped Role Membership. | |
+| **ScopedRoleMembers** | Write | MSFT_MicrosoftGraphScopedRoleMembership[] | Specify Scoped Role Membership. Note: Any groups must be role-enabled | |
 | **Ensure** | Write | String | Present ensures the Administrative Unit exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -27,8 +27,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Write | String | Identity of member. For users, specify a UserPrincipalName. For groups and devices, specify DisplayName | |
-| **Type** | Write | String | Specify User, Group or Device to interpret the identity. Can be ServicePrincipal in ScopedRoleMembers | `User`, `Group`, `Device`, `ServicePrincipal` |
+| **Identity** | Write | String | Identity of member. For users, specify a UserPrincipalName. For groups, devices and serviceprincipals, specify DisplayName | |
+| **Type** | Write | String | Specify User, Group or Device to interpret the identity for Members. Specify User, Group or ServicePrincipal for ScopedRoleMembers. | `User`, `Group`, `Device`, `ServicePrincipal` |
 
 ### MSFT_MicrosoftGraphScopedRoleMembership
 
@@ -37,7 +37,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **RoleName** | Write | String | Name of the Azure AD Role that is assigned. See https://learn.microsoft.com/en-us/azure/active-directory/roles/admin-units-assign-roles#roles-that-can-be-assigned-with-administrative-unit-scope | |
-| **RoleMemberInfo** | Write | MSFT_MicrosoftGraphMember | Member that is assigned the scoped role | |
+| **RoleMemberInfo** | Write | MSFT_MicrosoftGraphMember | Member that is assigned the scoped role. Note: Any groups must be role-enabled | |
 
 
 ## Description

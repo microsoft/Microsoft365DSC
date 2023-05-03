@@ -13,7 +13,6 @@
 | **ParentId** | Write | String | The ParentId parameter specifies the parent label that you want this label to be under (a sublabel). You can use any value that uniquely identifies the parent sensitivity label for example name. | |
 | **Priority** | Write | UInt32 | The Priority parameter specifies a priority value for the sensitivity label that determines the order of label processing. A lower integer value indicates a highter priority. | |
 | **Tooltip** | Write | String | The ToolTip parameter specifies the default tooltip and sensitivity label description that's seen by users. It the value contains spaces, enclose the value in quotation marks. | |
-| **Disabled** | Write | Boolean | The disabled parameter specifies whether to enable or disable the sensitivity label. | |
 | **ApplyContentMarkingFooterAlignment** | Write | String | The ApplyContentMarkingFooterAlignment parameter specifies the footer alignment. | `Left`, `Center`, `Right` |
 | **ApplyContentMarkingFooterEnabled** | Write | Boolean | The ApplyContentMarkingFooterEnabled parameter specifies whether to enable or disable the sensitivity label. | |
 | **ApplyContentMarkingFooterFontColor** | Write | String | The ApplyContentMarkingFooterFontColor parameter specifies the color of the footer text. This parameter accepts a hexadecimal color code value in the format #xxxxxx. The default value is #000000. | |

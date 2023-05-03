@@ -7,7 +7,7 @@
 | **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
 | **CortanaEnabled** | Write | Boolean | Allow Cortana in windows 10 (version 1909 and earlier), and the Cortana app on iOS and Android, to access Microsoft-hosted data on behalf of people in your organization. | |
 | **M365WebEnableUsersToOpenFilesFrom3PStorage** | Write | Boolean | Let users open files stored in third-party storage services in Microsoft 365 on the Web. | |
-| **Ensure** | Write | String | Since there is only one setting availble, this must be set to 'Present' | `Present` |
+| **Ensure** | Write | String | Since there is only one setting available, this must be set to 'Present' | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -27,7 +27,7 @@ To authenticate with Microsoft Exchange, this resource required the following pe
 
 #### Roles
 
-- Organization Configuration
+- 
 
 #### Role Groups
 

@@ -1095,7 +1095,7 @@ function Export-M365DSCConfiguration
                 }
                 else
                 {
-                    Write-Warning -Message "We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*"
+                    Write-Host -Object "[WARNING] We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*" -ForegroundColor Yellow
                 }
             }
             return $true
@@ -1112,18 +1112,6 @@ function Export-M365DSCConfiguration
         $CertificateThumbprint,
 
         [Parameter(ParameterSetName = 'Export')]
-        [ValidateScript({
-            $invalid = $_.Username -notmatch ".onmicrosoft."
-            if (-not $invalid)
-            {
-                return $true
-            }
-            else
-            {
-                Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
-            }
-            return $true
-        })]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1140,6 +1128,9 @@ function Export-M365DSCConfiguration
         $ManagedIdentity
     )
 
+    # Define the exported resource instances' names Global variable
+    $Global:M365DSCExportedResourceInstancesNames = @()
+
     # LaunchWebUI specified, launching that now
     if ($LaunchWebUI)
     {
@@ -1155,6 +1146,15 @@ function Export-M365DSCConfiguration
     $Global:WarningPreference = 'SilentlyContinue'
 
     ##### FIRST CHECK AUTH PARAMETERS
+    if ($PSBoundParameters.ContainsKey('Credential') -eq $true -and `
+        -not [System.String]::IsNullOrEmpty($Credential))
+    {
+        if ($Credential.Username -notmatch ".onmicrosoft.")
+        {
+            Write-Host -Object "[WARNING] We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property." -ForegroundColor Yellow
+        }
+    }
+
     if ($PSBoundParameters.ContainsKey('CertificatePath') -eq $true -and `
             $PSBoundParameters.ContainsKey('CertificatePassword') -eq $false)
     {
@@ -1311,6 +1311,9 @@ function Export-M365DSCConfiguration
             -AllComponents `
             -Filters $Filters
     }
+
+    # Clear the exported resource instances' names Global variable
+    $Global:M365DSCExportedResourceInstancesNames = $null
 }
 
 $Script:M365DSCDependenciesValidated = $false
@@ -2524,7 +2527,10 @@ Specifies the path of the PFX file which is used for authentication.
 Specifies that file that contains a custom header for the report.
 
 .Parameter ExcludedProperties
-Specifies the name of parameters that should not be assessed as part of the report. The names will speficied will apply to all resources where they are encountered.
+Specifies the name of parameters that should not be assessed as part of the report. The names speficied will apply to all resources where they are encountered.
+
+.Parameter ExcludedResources
+Specifies the name of resources that should not be assessed as part of the report.
 
 .Example
 Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html'
@@ -2586,7 +2592,11 @@ function Assert-M365DSCBlueprint
 
         [Parameter()]
         [System.String[]]
-        $ExcludedProperties
+        $ExcludedProperties,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedResources
     )
 
     $InformationPreference = 'SilentlyContinue'
@@ -2633,21 +2643,40 @@ function Assert-M365DSCBlueprint
             $endPosition = $fileContent.IndexOf("`r", $startPosition)
             $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
         }
-        $parsedBluePrint = ConvertTo-DSCObject -Content $fileContent
+
+        try
+        {
+            $parsedBluePrint = ConvertTo-DSCObject -Content $fileContent
+        }
+        catch
+        {
+            throw $_
+        }
 
         # Generate an Array of Resource Types contained in the BluePrint
         $ResourcesInBluePrint = @()
         foreach ($resource in $parsedBluePrint)
         {
+            if ($resource.ResourceName -in $ExcludedResources)
+            {
+                continue
+            }
             if ($ResourcesInBluePrint -notcontains $resource.ResourceName)
             {
                 $ResourcesInBluePrint += $resource.ResourceName
             }
         }
 
-        if (!$ResourcesInBluePrint)
+        if ([String]::IsNullOrEmpty($ResourcesInBluePrint))
         {
-            Write-Host 'Malformed BluePrint, aborting'
+            if (![String]::IsNullOrEmpty($ExcludedResources))
+            {
+                Write-Host 'All resources were excluded from BluePrint, aborting'
+            }
+            else
+            {
+                Write-Host 'Malformed BluePrint, aborting'
+            }
             break
         }
 
@@ -2678,7 +2707,8 @@ function Assert-M365DSCBlueprint
             -IsBlueprintAssessment:$true `
             -HeaderFilePath $HeaderFilePath `
             -Type $Type `
-            -ExcludedProperties $ExcludedProperties
+            -ExcludedProperties $ExcludedProperties `
+            -ExcludedResources $ExcludedResources
     }
     else
     {
@@ -3178,7 +3208,7 @@ function Get-M365DSCExportContentForResource
     if ($ConnectionMode -like 'ServicePrincipal*' -or `
             $ConnectionMode -eq 'ManagedIdentity')
     {
-        $OrganizationName = $TenantId
+        $OrganizationName = $Results.TenantId
     }
     else
     {
@@ -3233,6 +3263,19 @@ function Get-M365DSCExportContentForResource
     {
         $instanceName += "-$($Results.Workload)"
     }
+
+    # Check to see if a resource with this exact name was already exported, if so, append a number to the end.
+    $i = 2
+    $tempName = $instanceName
+    while ($null -ne $Global:M365DSCExportedResourceInstancesNames -and `
+           $Global:M365DSCExportedResourceInstancesNames.Contains($tempName))
+    {
+        $tempName = $instanceName + "-" + $i.ToString()
+        $i++
+    }
+    $instanceName = $tempName
+    $Global:M365DSCExportedResourceInstancesNames += $tempName
+
     $content = "        $ResourceName `"$instanceName`"`r`n"
     $content += "        {`r`n"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
@@ -3289,6 +3332,7 @@ function Get-M365DSCExportContentForResource
     }
     $content += $partialContent
     $content += "        }`r`n"
+
     return $content
 }
 

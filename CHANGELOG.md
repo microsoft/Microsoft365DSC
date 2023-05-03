@@ -1,7 +1,127 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.503.1
 
+* IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationSecureAssessmentPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationTrustedCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationVpnPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationWiredNetworkPolicyWindows10
+  * Initial release
+* DRG
+  * Fix issue with abstract type and additionalProperties
+* MISC
+  * Intune: changed the display or instances to show the display name instead of Id during extraction.
+  * M365DSCUtil: Fixed an issue on function Get-M365DSCExportContentForResource if ConnectionMode was set to anything but "Credentials*"
+  * Assert-M365DSCBlueprint, New-M365DSCDeltaReport, Compare-M365DSCConfigurations: Add support to exclude resources from being compared
+  * EXPORT: Multiple fixes for display and handling of invalid licenses.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.109.
+
+# 1.23.426.3
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.108.
+  * Updated Microsoft.Graph dependencies to version 1.27.0.
+* MISC
+  * If an error occurs during the export process, we now throw an error instead of simply writing the error
+    back to the host via Write-Host.
+
+# 1.23.426.2
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.107.
+    FIXES #3231
+
+# 1.23.426.1
+
+* AADCOnditionalAccessPolicy
+  * Fix Couldn't find Location 00000000-0000-0000-0000-000000000000
+    FIXES[#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+* AADAuthenticationMethodPolicy
+  * Initial release. Configure Authentication policy settings
+* AADAuthenticationMethodPolicyAuthenticator
+  * Initial release. Configure Authentication settings related to MicrosoftAuthenticator
+* AADAuthenticationMethodPolicyEmail
+  * Initial release. Configure Authentication settings related to Email
+* AADAuthenticationMethodPolicyFido2
+  * Initial release. Configure Authentication settings related to Fido2
+* AADAuthenticationMethodPolicySms
+  * Initial release. Configure Authentication settings related to Sms
+* AADAuthenticationMethodPolicySoftware
+  * Initial release. Configure Authentication settings related to SoftwareOath
+* AADAuthenticationMethodPolicyTemporary
+  * Initial release. Configure Authentication settings related to TemporaryAccessPass
+* AADAuthenticationMethodPolicyVoice
+  * Initial release. Configure Authentication settings related to Voice
+* AADAuthenticationMethodPolicyX509
+  * Initial release. Configure Authentication settings related to X509Certificate
+* AADAdministrativeUnit
+  * Fix issue incorrectly removing existing Members and ScopedRoleMembers
+    FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)
+  * Fix issue creating ScopedRoleMembers of Type Group or ServicePrincipal
+    FIXES [#3189](https://github.com/microsoft/Microsoft365DSC/issues/3189)
+* SCLabelPolicy
+  * Fixed issue where the Labels parameter isn't handled properly for existing
+    policies
+    FIXES [#3216](https://github.com/microsoft/Microsoft365DSC/issues/3216)
+* SCSensitivityLabel
+  * Remove property Disabled from schema
+    FIXES [#3193](https://github.com/microsoft/Microsoft365DSC/issues/3193)
+  * Corrected issue where SiteAndGroupExternalSharingControlType wasn't
+    applied correctly with existing labels
+    FIXES [#3210](https://github.com/microsoft/Microsoft365DSC/issues/3210)
+* TeamsTeam
+  * Fixes an error when trying to extract teams using a Service Principal.
+    FIXES [#3183](https://github.com/microsoft/Microsoft365DSC/issues/3183)
+* DEPENDENCIES
+  * Updated DSCParser dependencies to version 1.3.0.7.
+  * Updated Microsoft.Graph dependencies to version 1.26.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.160.
+  * Updated MSCloudLoginAssistant to version 1.0.106.
+
+# 1.23.419.1
+
+* IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationEmailProfilePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationKioskPolicyWindows10
+  * Initial release
+* EXOManagementRoleAssignment
+  * Fixed issue with incorrect Microsoft Graph cmdlets used to retrieve Administrative Units.
+    FIXES [#3185](https://github.com/microsoft/Microsoft365DSC/issues/3185)
+* SCLabelPolicy
+  * If label policy is set to None don't get its label display name since it's not required
+    FIXES [#3104](https://github.com/microsoft/Microsoft365DSC/issues/3104)
+* DRG
+  * Fixed issue retrieving the cmdlet definition when the resource type is derived from an abstract type
+  * Fixed issue with UnitTest and complex properties with AdditionalProperties
+  * Fixed issue with Complex constructor and complex properties with AdditionalProperties
+* MISC
+  * Reports will now exclude the authentication parameters (e.g., CertificateThumbprint, Credential, etc.).
+  * Changed the Encoding helper's logic to ensure titled quotes and apostrophes are correctly evaluated.
+    FIXES [#3165](https://github.com/microsoft/Microsoft365DSC/issues/3165)
+  * Fixes an issue where the new resource name extraction could still have duplicates.
+
+# 1.23.412.1
+
+* AADUser
+  * Password property will only used with New-MgUser and ignored for updates
+    FIXES [#3093](https://github.com/microsoft/Microsoft365DSC/issues/3093)
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+   * Initial release
+     FIXES [#2833](https://github.com/microsoft/Microsoft365DSC/issues/2833)
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Initial Release
       FIXES [#3068](https://github.com/microsoft/Microsoft365DSC/issues/3068)
@@ -11,6 +131,8 @@
   * Initial release
 * IntuneDeviceConfigurationWindowsTeamPolicyWindows10
   * Initial release
+* O365SearchAndIntelligenceConfigurations
+  * Initial release.
 * TeamsUpdateManagementPolicy
   * Added support for the Forced value for the AllowPublicPreview property.
 * DRG
@@ -18,6 +140,12 @@
 * MISC
   * Changed Get-MgDeviceManagementDeviceConfiguration to use the cmdlet switches rather than filtering output once returned.
     Fixes #3082
+  * M365DSCUtil: Fixed an issue when calling Assert-M365DSCBlueprint with App credentials
+    FIXES [#3153](https://github.com/microsoft/Microsoft365DSC/issues/3153)
+  * Added check to validate that the Release Notes in the module manifest are not longer than
+    10,000 characters, which will prevent publishing the module to the PowerShell Gallery
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell dependencies to version 2.0.159.
 
 # 1.23.405.1
 
