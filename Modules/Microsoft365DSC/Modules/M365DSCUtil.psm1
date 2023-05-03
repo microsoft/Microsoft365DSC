@@ -2527,7 +2527,10 @@ Specifies the path of the PFX file which is used for authentication.
 Specifies that file that contains a custom header for the report.
 
 .Parameter ExcludedProperties
-Specifies the name of parameters that should not be assessed as part of the report. The names will speficied will apply to all resources where they are encountered.
+Specifies the name of parameters that should not be assessed as part of the report. The names speficied will apply to all resources where they are encountered.
+
+.Parameter ExcludedResources
+Specifies the name of resources that should not be assessed as part of the report.
 
 .Example
 Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html'

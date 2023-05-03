@@ -431,6 +431,9 @@ Array that contains the list of configuration components for the destination.
 .Parameter ExcludedProperties
 Array that contains the list of parameters to exclude.
 
+.Parameter ExcludedResources
+Array that contains the list of resources to exclude.
+
 .Parameter IsBlueprintAssessment
 Specifies whether or not we are currently comparing a configuration to a Blueprint.
 
@@ -1096,6 +1099,9 @@ An array with difference, already compiled from another source.
 
 .Parameter ExcludedProperties
 Array that contains the list of parameters to exclude.
+
+.Parameter ExcludedResources
+Array that contains the list of resources to exclude.
 
 .Example
 New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html'
