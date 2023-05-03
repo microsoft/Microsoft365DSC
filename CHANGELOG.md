@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADCrossTenantAccessPolicy
+  * Initial release
+
 # 1.23.503.1
 
 * IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
