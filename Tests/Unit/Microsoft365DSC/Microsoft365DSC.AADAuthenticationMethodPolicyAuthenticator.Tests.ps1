@@ -69,44 +69,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     featureSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
                             companionAppAllowedState                = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             displayAppInformationRequiredState      = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
@@ -160,44 +160,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     featureSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
                             companionAppAllowedState                = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             displayAppInformationRequiredState      = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
@@ -312,44 +312,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     featureSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
                             companionAppAllowedState                = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             displayAppInformationRequiredState      = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
@@ -464,44 +464,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     featureSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings -Property @{
                             companionAppAllowedState                = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             displayAppInformationRequiredState      = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
                             numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_MicrosoftGraphfeatureTarget -Property @{
+                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
                                             id         = 'Fakegroup'
                                         } -ClientOnly)

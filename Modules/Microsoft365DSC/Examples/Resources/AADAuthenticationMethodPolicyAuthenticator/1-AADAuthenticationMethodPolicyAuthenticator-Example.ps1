@@ -22,44 +22,44 @@ Configuration Example
             );
             FeatureSettings       = MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings{
                 DisplayLocationInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = '00000000-0000-0000-0000-000000000000'
                         TargetType = 'group'
                     }
-                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                    IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'fakegroup2'
                         TargetType = 'group'
                     }
                     State = 'enabled'
                 }
                             NumberMatchingRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = '00000000-0000-0000-0000-000000000000'
                         TargetType = 'group'
                     }
-                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                    IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'fakegroup3'
                         TargetType = 'group'
                     }
                     State = 'enabled'
                 }
                             CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = '00000000-0000-0000-0000-000000000000'
                         TargetType = 'group'
                     }
-                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                    IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'fakegroup4'
                         TargetType = 'group'
                     }
                     State = 'enabled'
                 }
                             DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = '00000000-0000-0000-0000-000000000000'
                         TargetType = 'group'
                     }
-                    IncludeTarget = MSFT_MicrosoftGraphFeatureTarget{
+                    IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'fakegroup5'
                         TargetType = 'group'
                     }

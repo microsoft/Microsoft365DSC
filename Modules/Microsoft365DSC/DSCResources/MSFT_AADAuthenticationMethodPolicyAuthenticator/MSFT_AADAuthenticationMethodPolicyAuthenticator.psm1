@@ -884,12 +884,12 @@ function Export-TargetResource
                     }
                     @{
                         Name            = 'ExcludeTarget'
-                        CimInstanceName = 'MicrosoftGraphFeatureTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
                         IsRequired      = $False
                     }
                     @{
                         Name            = 'IncludeTarget'
-                        CimInstanceName = 'MicrosoftGraphFeatureTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
                         IsRequired      = $False
                     }
                     @{
@@ -899,12 +899,12 @@ function Export-TargetResource
                     }
                     @{
                         Name            = 'ExcludeTarget'
-                        CimInstanceName = 'MicrosoftGraphFeatureTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
                         IsRequired      = $False
                     }
                     @{
                         Name            = 'IncludeTarget'
-                        CimInstanceName = 'MicrosoftGraphFeatureTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
                         IsRequired      = $False
                     }
                     @{
@@ -914,12 +914,12 @@ function Export-TargetResource
                     }
                     @{
                         Name            = 'ExcludeTarget'
-                        CimInstanceName = 'MicrosoftGraphFeatureTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
                         IsRequired      = $False
                     }
                     @{
                         Name            = 'IncludeTarget'
-                        CimInstanceName = 'MicrosoftGraphFeatureTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
                         IsRequired      = $False
                     }
                     @{
@@ -929,12 +929,12 @@ function Export-TargetResource
                     }
                     @{
                         Name            = 'ExcludeTarget'
-                        CimInstanceName = 'MicrosoftGraphFeatureTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
                         IsRequired      = $False
                     }
                     @{
                         Name            = 'IncludeTarget'
-                        CimInstanceName = 'MicrosoftGraphFeatureTarget'
+                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
                         IsRequired      = $False
                     }
                 )
