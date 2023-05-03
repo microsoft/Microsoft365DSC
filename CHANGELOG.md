@@ -2,9 +2,12 @@
 
 # UNRELEASED
 
+* AADCrossTenantAccessPolicy
+  * Initial release
+    FIXES [#3251](https://github.com/microsoft/Microsoft365DSC/issues/3251)
 * MISC
   * Added a new Get-M365DSCConfigurationConflict cmdlet to help validate configurations and added
-    the -Validate switch to the Export-M365DSCConfiguration cmdlet
+    the -Validate switch to the Export-M365DSCConfiguration cmdlet.
 
 # 1.23.503.1
 
