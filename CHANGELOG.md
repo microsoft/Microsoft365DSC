@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADCrossTenantAccessPolicy
+  * Initial release
+    FIXES [#3251](https://github.com/microsoft/Microsoft365DSC/issues/3251)
+* AADCrossTenantAccessPolicyConfigurationPartner
+  * Initial release
+    FIXES [#3253](https://github.com/microsoft/Microsoft365DSC/issues/3253)
+
 # 1.23.503.1
 
 * IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
@@ -45,7 +54,7 @@
 
 # 1.23.426.1
 
-* AADCOnditionalAccessPolicy
+* AADConditionalAccessPolicy
   * Fix Couldn't find Location 00000000-0000-0000-0000-000000000000
     FIXES[#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
 * AADAuthenticationMethodPolicy
