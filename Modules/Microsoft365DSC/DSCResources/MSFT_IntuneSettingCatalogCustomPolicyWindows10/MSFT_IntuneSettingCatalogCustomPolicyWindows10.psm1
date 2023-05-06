@@ -7,35 +7,19 @@ function Get-TargetResource
         #region resource generator code
         [Parameter()]
         [System.String]
-        $CreationSource,
-
-        [Parameter()]
-        [System.String]
         $Description,
 
-        [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
         [Parameter()]
-        [ValidateSet('none','android','iOS','macOS','windows10X','windows10','linux','unknownFutureValue')]
+        [ValidateSet('none', 'android', 'iOS', 'macOS', 'windows10X', 'windows10', 'linux', 'unknownFutureValue')]
         [System.String]
         $Platforms,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $PriorityMetaData,
-
-        [Parameter()]
-        [System.Int32]
-        $SettingCount,
-
-        [Parameter()]
-        [ValidateSet('none','mdm','windows10XManagement','configManager','appleRemoteManagement','microsoftSense','exchangeOnline','linuxMdm','enrollment','endpointPrivilegeManagement','unknownFutureValue')]
+        [ValidateSet('none', 'mdm', 'windows10XManagement', 'configManager', 'appleRemoteManagement', 'microsoftSense', 'exchangeOnline', 'linuxMdm', 'enrollment', 'endpointPrivilegeManagement', 'unknownFutureValue')]
         [System.String]
         $Technologies,
 
@@ -109,7 +93,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ExpandProperty "settings" -ErrorAction SilentlyContinue
+        $getValue = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -120,9 +104,11 @@ function Get-TargetResource
                 $getValue = Get-MgDeviceManagementConfigurationPolicy `
                     -Filter "Name eq '$Name'" `
                     -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.DeviceManagementConfigurationPolicy" `
-                    }
+                    -FilterScript {[String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId)}
+                if ($null -ne $getValue)
+                {
+                    $getValue = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $getValue.id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
+                }
             }
         }
         #endregion
@@ -134,756 +120,24 @@ function Get-TargetResource
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Setting Catalog Custom Policy for Windows10 with Id {$Id} and Name {$Name} was found."
 
-        #region resource generator code
-        $complexPriorityMetaData = @{}
-        $complexPriorityMetaData.Add('Priority', $getValue.PriorityMetaData.priority)
-        if ($complexPriorityMetaData.values.Where({$null -ne $_}).count -eq 0)
-        {
-            $complexPriorityMetaData = $null
-        }
-
-        $complexTemplateReference = @{}
-        $complexTemplateReference.Add('TemplateDisplayName', $getValue.TemplateReference.templateDisplayName)
-        $complexTemplateReference.Add('TemplateDisplayVersion', $getValue.TemplateReference.templateDisplayVersion)
-        if ($null -ne $getValue.TemplateReference.templateFamily)
-        {
-            $complexTemplateReference.Add('TemplateFamily', $getValue.TemplateReference.templateFamily.toString())
-        }
-        $complexTemplateReference.Add('TemplateId', $getValue.TemplateReference.templateId)
-        if ($complexTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-        {
-            $complexTemplateReference = $null
-        }
-
         $complexSettings = @()
         foreach ($currentSettings in $getValue.settings)
         {
             $mySettings = @{}
             $complexSettingInstance = @{}
             $complexSettingInstance.Add('SettingDefinitionId', $currentSettings.settingInstance.settingDefinitionId)
-            $complexSettingInstanceTemplateReference = @{}
-            $complexSettingInstanceTemplateReference.Add('SettingInstanceTemplateId', $currentSettings.SettingInstance.settingInstanceTemplateReference.settingInstanceTemplateId)
-            if ($complexSettingInstanceTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-            {
-                $complexSettingInstanceTemplateReference = $null
-            }
-            $complexSettingInstance.Add('SettingInstanceTemplateReference',$complexSettingInstanceTemplateReference)
-            $complexChoiceSettingCollectionValue = @()
-            foreach ($currentChoiceSettingCollectionValue in $currentcomplexSettingInstance.choiceSettingCollectionValue)
-            {
-                $myChoiceSettingCollectionValue = @{}
-                $complexChildren = @()
-                foreach ($currentChildren in $currentChoiceSettingCollectionValue.children)
-                {
-                    $myChildren = @{}
-                    $myChildren.Add('SettingDefinitionId', $currentChildren.settingDefinitionId)
-                    $complexSettingInstanceTemplateReference = @{}
-                    $complexSettingInstanceTemplateReference.Add('SettingInstanceTemplateId', $currentChildren.SettingInstanceTemplateReference.settingInstanceTemplateReference.settingInstanceTemplateId)
-                    if ($complexSettingInstanceTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                    {
-                        $complexSettingInstanceTemplateReference = $null
-                    }
-                    $myChildren.Add('SettingInstanceTemplateReference',$complexSettingInstanceTemplateReference)
-                    $complexChoiceSettingCollectionValue = @()
-                    foreach ($currentChoiceSettingCollectionValue in $currentChildren.choiceSettingCollectionValue)
-                    {
-                        $myChoiceSettingCollectionValue = @{}
-                        $complexChildren = @()
-                        foreach ($currentChildren in $currentChoiceSettingCollectionValue.children)
-                        {
-                            $myChildren = @{}
-                            if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                            {
-                                $complexChildren += $myChildren
-                            }
-                        }
-                        $myChoiceSettingCollectionValue.Add('Children',$complexChildren)
-                        $myChoiceSettingCollectionValue.Add('Value', $currentChoiceSettingCollectionValue.value)
-                        $complexSettingValueTemplateReference = @{}
-                        $complexSettingValueTemplateReference.Add('SettingValueTemplateId', $currentChoiceSettingCollectionValue.SettingValueTemplateReference.settingValueTemplateReference.settingValueTemplateId)
-                        $complexSettingValueTemplateReference.Add('UseTemplateDefault', $currentChoiceSettingCollectionValue.SettingValueTemplateReference.settingValueTemplateReference.useTemplateDefault)
-                        if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                        {
-                            $complexSettingValueTemplateReference = $null
-                        }
-                        $myChoiceSettingCollectionValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-                        if ($null -ne $currentChoiceSettingCollectionValue.'@odata.type')
-                        {
-                            $myChoiceSettingCollectionValue.Add('odataType', $currentChoiceSettingCollectionValue.'@odata.type'.toString())
-                        }
-                        if ($myChoiceSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                        {
-                            $complexChoiceSettingCollectionValue += $myChoiceSettingCollectionValue
-                        }
-                    }
-                    $myChildren.Add('ChoiceSettingCollectionValue',$complexChoiceSettingCollectionValue)
-                    $complexChoiceSettingValue = @{}
-                    $complexChildren = @()
-                    foreach ($currentChildren in $currentcomplexChoiceSettingValue.children)
-                    {
-                        $myChildren = @{}
-                        $myChildren.Add('SettingDefinitionId', $currentChildren.settingDefinitionId)
-                        $complexSettingInstanceTemplateReference = @{}
-                        if ($complexSettingInstanceTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                        {
-                            $complexSettingInstanceTemplateReference = $null
-                        }
-                        $myChildren.Add('SettingInstanceTemplateReference',$complexSettingInstanceTemplateReference)
-                        $complexChoiceSettingCollectionValue = @()
-                        foreach ($currentChoiceSettingCollectionValue in $currentChildren.choiceSettingCollectionValue)
-                        {
-                            $myChoiceSettingCollectionValue = @{}
-                            if ($myChoiceSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                            {
-                                $complexChoiceSettingCollectionValue += $myChoiceSettingCollectionValue
-                            }
-                        }
-                        $myChildren.Add('ChoiceSettingCollectionValue',$complexChoiceSettingCollectionValue)
-                        $complexChoiceSettingValue = @{}
-                        if ($complexChoiceSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                        {
-                            $complexChoiceSettingValue = $null
-                        }
-                        $myChildren.Add('ChoiceSettingValue',$complexChoiceSettingValue)
-                        $complexGroupSettingCollectionValue = @()
-                        foreach ($currentGroupSettingCollectionValue in $currentChildren.groupSettingCollectionValue)
-                        {
-                            $myGroupSettingCollectionValue = @{}
-                            $complexChildren = @()
-                            foreach ($currentChildren in $currentGroupSettingCollectionValue.children)
-                            {
-                                $myChildren = @{}
-                                $myChildren.Add('SettingDefinitionId', $currentChildren.settingDefinitionId)
-                                $complexSettingInstanceTemplateReference = @{}
-                                if ($complexSettingInstanceTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                                {
-                                    $complexSettingInstanceTemplateReference = $null
-                                }
-                                $myChildren.Add('SettingInstanceTemplateReference',$complexSettingInstanceTemplateReference)
-                                $complexChoiceSettingCollectionValue = @()
-                                foreach ($currentChoiceSettingCollectionValue in $currentChildren.choiceSettingCollectionValue)
-                                {
-                                    $myChoiceSettingCollectionValue = @{}
-                                    if ($myChoiceSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                    {
-                                        $complexChoiceSettingCollectionValue += $myChoiceSettingCollectionValue
-                                    }
-                                }
-                                $myChildren.Add('ChoiceSettingCollectionValue',$complexChoiceSettingCollectionValue)
-                                $complexChoiceSettingValue = @{}
-                                if ($complexChoiceSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                {
-                                    $complexChoiceSettingValue = $null
-                                }
-                                $myChildren.Add('ChoiceSettingValue',$complexChoiceSettingValue)
-                                $complexGroupSettingCollectionValue = @()
-                                foreach ($currentGroupSettingCollectionValue in $currentChildren.groupSettingCollectionValue)
-                                {
-                                    $myGroupSettingCollectionValue = @{}
-                                    if ($myGroupSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                    {
-                                        $complexGroupSettingCollectionValue += $myGroupSettingCollectionValue
-                                    }
-                                }
-                                $myChildren.Add('GroupSettingCollectionValue',$complexGroupSettingCollectionValue)
-                                $complexGroupSettingValue = @{}
-                                $complexChildren = @()
-                                foreach ($currentChildren in $currentcomplexGroupSettingValue.children)
-                                {
-                                    $myChildren = @{}
-                                    $myChildren.Add('SettingDefinitionId', $currentChildren.settingDefinitionId)
-                                    $complexSettingInstanceTemplateReference = @{}
-                                    if ($complexSettingInstanceTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                                    {
-                                        $complexSettingInstanceTemplateReference = $null
-                                    }
-                                    $myChildren.Add('SettingInstanceTemplateReference',$complexSettingInstanceTemplateReference)
-                                    $complexChoiceSettingCollectionValue = @()
-                                    foreach ($currentChoiceSettingCollectionValue in $currentChildren.choiceSettingCollectionValue)
-                                    {
-                                        $myChoiceSettingCollectionValue = @{}
-                                        if ($myChoiceSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                        {
-                                            $complexChoiceSettingCollectionValue += $myChoiceSettingCollectionValue
-                                        }
-                                    }
-                                    $myChildren.Add('ChoiceSettingCollectionValue',$complexChoiceSettingCollectionValue)
-                                    $complexChoiceSettingValue = @{}
-                                    if ($complexChoiceSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                    {
-                                        $complexChoiceSettingValue = $null
-                                    }
-                                    $myChildren.Add('ChoiceSettingValue',$complexChoiceSettingValue)
-                                    $complexGroupSettingCollectionValue = @()
-                                    foreach ($currentGroupSettingCollectionValue in $currentChildren.groupSettingCollectionValue)
-                                    {
-                                        $myGroupSettingCollectionValue = @{}
-                                        if ($myGroupSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                        {
-                                            $complexGroupSettingCollectionValue += $myGroupSettingCollectionValue
-                                        }
-                                    }
-                                    $myChildren.Add('GroupSettingCollectionValue',$complexGroupSettingCollectionValue)
-                                    $complexGroupSettingValue = @{}
-                                    if ($complexGroupSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                    {
-                                        $complexGroupSettingValue = $null
-                                    }
-                                    $myChildren.Add('GroupSettingValue',$complexGroupSettingValue)
-                                    $complexSimpleSettingCollectionValue = @()
-                                    foreach ($currentSimpleSettingCollectionValue in $currentChildren.simpleSettingCollectionValue)
-                                    {
-                                        $mySimpleSettingCollectionValue = @{}
-                                        $mySimpleSettingCollectionValue.Add('Value', $currentSimpleSettingCollectionValue.value)
-                                        if ($null -ne $currentSimpleSettingCollectionValue.valueState)
-                                        {
-                                            $mySimpleSettingCollectionValue.Add('ValueState', $currentSimpleSettingCollectionValue.valueState.toString())
-                                        }
-                                        if ($null -ne $currentSimpleSettingCollectionValue.'@odata.type')
-                                        {
-                                            $mySimpleSettingCollectionValue.Add('odataType', $currentSimpleSettingCollectionValue.'@odata.type'.toString())
-                                        }
-                                        $complexSettingValueTemplateReference = @{}
-                                        $complexSettingValueTemplateReference.Add('SettingValueTemplateId', $currentSimpleSettingCollectionValue.SettingValueTemplateReference.settingValueTemplateReference.settingValueTemplateId)
-                                        $complexSettingValueTemplateReference.Add('UseTemplateDefault', $currentSimpleSettingCollectionValue.SettingValueTemplateReference.settingValueTemplateReference.useTemplateDefault)
-                                        if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                                        {
-                                            $complexSettingValueTemplateReference = $null
-                                        }
-                                        $mySimpleSettingCollectionValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-                                        $complexChildren = @()
-                                        foreach ($currentChildren in $currentSimpleSettingCollectionValue.children)
-                                        {
-                                            $myChildren = @{}
-                                            $myChildren.Add('SettingDefinitionId', $currentChildren.settingDefinitionId)
-                                            $complexSettingInstanceTemplateReference = @{}
-                                            if ($complexSettingInstanceTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                                            {
-                                                $complexSettingInstanceTemplateReference = $null
-                                            }
-                                            $myChildren.Add('SettingInstanceTemplateReference',$complexSettingInstanceTemplateReference)
-                                            $complexChoiceSettingCollectionValue = @()
-                                            foreach ($currentChoiceSettingCollectionValue in $currentChildren.choiceSettingCollectionValue)
-                                            {
-                                                $myChoiceSettingCollectionValue = @{}
-                                                if ($myChoiceSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                                {
-                                                    $complexChoiceSettingCollectionValue += $myChoiceSettingCollectionValue
-                                                }
-                                            }
-                                            $myChildren.Add('ChoiceSettingCollectionValue',$complexChoiceSettingCollectionValue)
-                                            $complexChoiceSettingValue = @{}
-                                            if ($complexChoiceSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                            {
-                                                $complexChoiceSettingValue = $null
-                                            }
-                                            $myChildren.Add('ChoiceSettingValue',$complexChoiceSettingValue)
-                                            $complexGroupSettingCollectionValue = @()
-                                            foreach ($currentGroupSettingCollectionValue in $currentChildren.groupSettingCollectionValue)
-                                            {
-                                                $myGroupSettingCollectionValue = @{}
-                                                if ($myGroupSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                                {
-                                                    $complexGroupSettingCollectionValue += $myGroupSettingCollectionValue
-                                                }
-                                            }
-                                            $myChildren.Add('GroupSettingCollectionValue',$complexGroupSettingCollectionValue)
-                                            $complexGroupSettingValue = @{}
-                                            if ($complexGroupSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                            {
-                                                $complexGroupSettingValue = $null
-                                            }
-                                            $myChildren.Add('GroupSettingValue',$complexGroupSettingValue)
-                                            $complexSimpleSettingCollectionValue = @()
-                                            foreach ($currentSimpleSettingCollectionValue in $currentChildren.simpleSettingCollectionValue)
-                                            {
-                                                $mySimpleSettingCollectionValue = @{}
-                                                if ($mySimpleSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                                {
-                                                    $complexSimpleSettingCollectionValue += $mySimpleSettingCollectionValue
-                                                }
-                                            }
-                                            $myChildren.Add('SimpleSettingCollectionValue',$complexSimpleSettingCollectionValue)
-                                            $complexSimpleSettingValue = @{}
-                                            $complexSimpleSettingValue.Add('Value', $currentChildren.SimpleSettingValue.simpleSettingValue.value)
-                                            if ($null -ne $currentChildren.SimpleSettingValue.simpleSettingValue.valueState)
-                                            {
-                                                $complexSimpleSettingValue.Add('ValueState', $currentChildren.SimpleSettingValue.simpleSettingValue.valueState.toString())
-                                            }
-                                            if ($null -ne $currentChildren.SimpleSettingValue.simpleSettingValue.'@odata.type')
-                                            {
-                                                $complexSimpleSettingValue.Add('odataType', $currentChildren.SimpleSettingValue.simpleSettingValue.'@odata.type'.toString())
-                                            }
-                                            $complexSettingValueTemplateReference = @{}
-                                            $complexSettingValueTemplateReference.Add('SettingValueTemplateId', $currentChildren.SimpleSettingValue.SettingValueTemplateReference.settingValueTemplateReference.settingValueTemplateId)
-                                            $complexSettingValueTemplateReference.Add('UseTemplateDefault', $currentChildren.SimpleSettingValue.SettingValueTemplateReference.settingValueTemplateReference.useTemplateDefault)
-                                            if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                                            {
-                                                $complexSettingValueTemplateReference = $null
-                                            }
-                                            $complexSimpleSettingValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-                                            $complexChildren = @()
-                                            foreach ($currentChildren in $currentcomplexSimpleSettingValue.children)
-                                            {
-                                                $myChildren = @{}
-                                                $myChildren.Add('SettingDefinitionId', $currentChildren.settingDefinitionId)
-                                                $complexSettingInstanceTemplateReference = @{}
-                                                if ($complexSettingInstanceTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                                                {
-                                                    $complexSettingInstanceTemplateReference = $null
-                                                }
-                                                $myChildren.Add('SettingInstanceTemplateReference',$complexSettingInstanceTemplateReference)
-                                                $complexChoiceSettingCollectionValue = @()
-                                                foreach ($currentChoiceSettingCollectionValue in $currentChildren.choiceSettingCollectionValue)
-                                                {
-                                                    $myChoiceSettingCollectionValue = @{}
-                                                    if ($myChoiceSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                                    {
-                                                        $complexChoiceSettingCollectionValue += $myChoiceSettingCollectionValue
-                                                    }
-                                                }
-                                                $myChildren.Add('ChoiceSettingCollectionValue',$complexChoiceSettingCollectionValue)
-                                                $complexChoiceSettingValue = @{}
-                                                if ($complexChoiceSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                                {
-                                                    $complexChoiceSettingValue = $null
-                                                }
-                                                $myChildren.Add('ChoiceSettingValue',$complexChoiceSettingValue)
-                                                $complexGroupSettingCollectionValue = @()
-                                                foreach ($currentGroupSettingCollectionValue in $currentChildren.groupSettingCollectionValue)
-                                                {
-                                                    $myGroupSettingCollectionValue = @{}
-                                                    if ($myGroupSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                                    {
-                                                        $complexGroupSettingCollectionValue += $myGroupSettingCollectionValue
-                                                    }
-                                                }
-                                                $myChildren.Add('GroupSettingCollectionValue',$complexGroupSettingCollectionValue)
-                                                $complexGroupSettingValue = @{}
-                                                if ($complexGroupSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                                {
-                                                    $complexGroupSettingValue = $null
-                                                }
-                                                $myChildren.Add('GroupSettingValue',$complexGroupSettingValue)
-                                                $complexSimpleSettingCollectionValue = @()
-                                                foreach ($currentSimpleSettingCollectionValue in $currentChildren.simpleSettingCollectionValue)
-                                                {
-                                                    $mySimpleSettingCollectionValue = @{}
-                                                    if ($mySimpleSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                                    {
-                                                        $complexSimpleSettingCollectionValue += $mySimpleSettingCollectionValue
-                                                    }
-                                                }
-                                                $myChildren.Add('SimpleSettingCollectionValue',$complexSimpleSettingCollectionValue)
-                                                $complexSimpleSettingValue = @{}
-                                                if ($complexSimpleSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                                {
-                                                    $complexSimpleSettingValue = $null
-                                                }
-                                                $myChildren.Add('SimpleSettingValue',$complexSimpleSettingValue)
-                                                if ($null -ne $currentChildren.'@odata.type')
-                                                {
-                                                    $myChildren.Add('odataType', $currentChildren.'@odata.type'.toString())
-                                                }
-                                                if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                                                {
-                                                    $complexChildren += $myChildren
-                                                }
-                                            }
-                                            $complexSimpleSettingValue.Add('Children',$complexChildren)
-                                            if ($null -ne $currentChildren.SimpleSettingValue.simpleSettingValue.'@odata.type')
-                                            {
-                                                $complexSimpleSettingValue.Add('odataType', $currentChildren.SimpleSettingValue.simpleSettingValue.'@odata.type'.toString())
-                                            }
-                                            if ($complexSimpleSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                            {
-                                                $complexSimpleSettingValue = $null
-                                            }
-                                            $myChildren.Add('SimpleSettingValue',$complexSimpleSettingValue)
-                                            if ($null -ne $currentChildren.'@odata.type')
-                                            {
-                                                $myChildren.Add('odataType', $currentChildren.'@odata.type'.toString())
-                                            }
-                                            if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                                            {
-                                                $complexChildren += $myChildren
-                                            }
-                                        }
-                                        $mySimpleSettingCollectionValue.Add('Children',$complexChildren)
-                                        if ($null -ne $currentSimpleSettingCollectionValue.'@odata.type')
-                                        {
-                                            $mySimpleSettingCollectionValue.Add('odataType', $currentSimpleSettingCollectionValue.'@odata.type'.toString())
-                                        }
-                                        if ($mySimpleSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                        {
-                                            $complexSimpleSettingCollectionValue += $mySimpleSettingCollectionValue
-                                        }
-                                    }
-                                    $myChildren.Add('SimpleSettingCollectionValue',$complexSimpleSettingCollectionValue)
-                                    $complexSimpleSettingValue = @{}
-                                    if ($complexSimpleSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                    {
-                                        $complexSimpleSettingValue = $null
-                                    }
-                                    $myChildren.Add('SimpleSettingValue',$complexSimpleSettingValue)
-                                    if ($null -ne $currentChildren.'@odata.type')
-                                    {
-                                        $myChildren.Add('odataType', $currentChildren.'@odata.type'.toString())
-                                    }
-                                    if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                                    {
-                                        $complexChildren += $myChildren
-                                    }
-                                }
-                                $complexGroupSettingValue.Add('Children',$complexChildren)
-                                $complexSettingValueTemplateReference = @{}
-                                $complexSettingValueTemplateReference.Add('SettingValueTemplateId', $currentChildren.GroupSettingValue.SettingValueTemplateReference.settingValueTemplateReference.settingValueTemplateId)
-                                $complexSettingValueTemplateReference.Add('UseTemplateDefault', $currentChildren.GroupSettingValue.SettingValueTemplateReference.settingValueTemplateReference.useTemplateDefault)
-                                if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                                {
-                                    $complexSettingValueTemplateReference = $null
-                                }
-                                $complexGroupSettingValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-                                $complexGroupSettingValue.Add('Value', $currentChildren.GroupSettingValue.groupSettingValue.value)
-                                if ($null -ne $currentChildren.GroupSettingValue.groupSettingValue.'@odata.type')
-                                {
-                                    $complexGroupSettingValue.Add('odataType', $currentChildren.GroupSettingValue.groupSettingValue.'@odata.type'.toString())
-                                }
-                                if ($complexGroupSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                {
-                                    $complexGroupSettingValue = $null
-                                }
-                                $myChildren.Add('GroupSettingValue',$complexGroupSettingValue)
-                                $complexSimpleSettingCollectionValue = @()
-                                foreach ($currentSimpleSettingCollectionValue in $currentChildren.simpleSettingCollectionValue)
-                                {
-                                    $mySimpleSettingCollectionValue = @{}
-                                    if ($mySimpleSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                                    {
-                                        $complexSimpleSettingCollectionValue += $mySimpleSettingCollectionValue
-                                    }
-                                }
-                                $myChildren.Add('SimpleSettingCollectionValue',$complexSimpleSettingCollectionValue)
-                                $complexSimpleSettingValue = @{}
-                                if ($complexSimpleSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                                {
-                                    $complexSimpleSettingValue = $null
-                                }
-                                $myChildren.Add('SimpleSettingValue',$complexSimpleSettingValue)
-                                if ($null -ne $currentChildren.'@odata.type')
-                                {
-                                    $myChildren.Add('odataType', $currentChildren.'@odata.type'.toString())
-                                }
-                                if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                                {
-                                    $complexChildren += $myChildren
-                                }
-                            }
-                            $myGroupSettingCollectionValue.Add('Children',$complexChildren)
-                            $complexSettingValueTemplateReference = @{}
-                            $complexSettingValueTemplateReference.Add('SettingValueTemplateId', $currentGroupSettingCollectionValue.SettingValueTemplateReference.settingValueTemplateReference.settingValueTemplateId)
-                            $complexSettingValueTemplateReference.Add('UseTemplateDefault', $currentGroupSettingCollectionValue.SettingValueTemplateReference.settingValueTemplateReference.useTemplateDefault)
-                            if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                            {
-                                $complexSettingValueTemplateReference = $null
-                            }
-                            $myGroupSettingCollectionValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-                            $myGroupSettingCollectionValue.Add('Value', $currentGroupSettingCollectionValue.value)
-                            if ($null -ne $currentGroupSettingCollectionValue.'@odata.type')
-                            {
-                                $myGroupSettingCollectionValue.Add('odataType', $currentGroupSettingCollectionValue.'@odata.type'.toString())
-                            }
-                            if ($myGroupSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                            {
-                                $complexGroupSettingCollectionValue += $myGroupSettingCollectionValue
-                            }
-                        }
-                        $myChildren.Add('GroupSettingCollectionValue',$complexGroupSettingCollectionValue)
-                        $complexGroupSettingValue = @{}
-                        if ($complexGroupSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                        {
-                            $complexGroupSettingValue = $null
-                        }
-                        $myChildren.Add('GroupSettingValue',$complexGroupSettingValue)
-                        $complexSimpleSettingCollectionValue = @()
-                        foreach ($currentSimpleSettingCollectionValue in $currentChildren.simpleSettingCollectionValue)
-                        {
-                            $mySimpleSettingCollectionValue = @{}
-                            if ($mySimpleSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                            {
-                                $complexSimpleSettingCollectionValue += $mySimpleSettingCollectionValue
-                            }
-                        }
-                        $myChildren.Add('SimpleSettingCollectionValue',$complexSimpleSettingCollectionValue)
-                        $complexSimpleSettingValue = @{}
-                        if ($complexSimpleSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                        {
-                            $complexSimpleSettingValue = $null
-                        }
-                        $myChildren.Add('SimpleSettingValue',$complexSimpleSettingValue)
-                        if ($null -ne $currentChildren.'@odata.type')
-                        {
-                            $myChildren.Add('odataType', $currentChildren.'@odata.type'.toString())
-                        }
-                        if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                        {
-                            $complexChildren += $myChildren
-                        }
-                    }
-                    $complexChoiceSettingValue.Add('Children',$complexChildren)
-                    $complexChoiceSettingValue.Add('Value', $currentChildren.ChoiceSettingValue.choiceSettingValue.value)
-                    $complexSettingValueTemplateReference = @{}
-                    $complexSettingValueTemplateReference.Add('SettingValueTemplateId', $currentChildren.ChoiceSettingValue.SettingValueTemplateReference.settingValueTemplateReference.settingValueTemplateId)
-                    $complexSettingValueTemplateReference.Add('UseTemplateDefault', $currentChildren.ChoiceSettingValue.SettingValueTemplateReference.settingValueTemplateReference.useTemplateDefault)
-                    if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                    {
-                        $complexSettingValueTemplateReference = $null
-                    }
-                    $complexChoiceSettingValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-                    if ($null -ne $currentChildren.ChoiceSettingValue.choiceSettingValue.'@odata.type')
-                    {
-                        $complexChoiceSettingValue.Add('odataType', $currentChildren.ChoiceSettingValue.choiceSettingValue.'@odata.type'.toString())
-                    }
-                    if ($complexChoiceSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                    {
-                        $complexChoiceSettingValue = $null
-                    }
-                    $myChildren.Add('ChoiceSettingValue',$complexChoiceSettingValue)
-                    $complexGroupSettingCollectionValue = @()
-                    foreach ($currentGroupSettingCollectionValue in $currentChildren.groupSettingCollectionValue)
-                    {
-                        $myGroupSettingCollectionValue = @{}
-                        if ($myGroupSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                        {
-                            $complexGroupSettingCollectionValue += $myGroupSettingCollectionValue
-                        }
-                    }
-                    $myChildren.Add('GroupSettingCollectionValue',$complexGroupSettingCollectionValue)
-                    $complexGroupSettingValue = @{}
-                    if ($complexGroupSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                    {
-                        $complexGroupSettingValue = $null
-                    }
-                    $myChildren.Add('GroupSettingValue',$complexGroupSettingValue)
-                    $complexSimpleSettingCollectionValue = @()
-                    foreach ($currentSimpleSettingCollectionValue in $currentChildren.simpleSettingCollectionValue)
-                    {
-                        $mySimpleSettingCollectionValue = @{}
-                        if ($mySimpleSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                        {
-                            $complexSimpleSettingCollectionValue += $mySimpleSettingCollectionValue
-                        }
-                    }
-                    $myChildren.Add('SimpleSettingCollectionValue',$complexSimpleSettingCollectionValue)
-                    $complexSimpleSettingValue = @{}
-                    if ($complexSimpleSettingValue.values.Where({$null -ne $_}).count -eq 0)
-                    {
-                        $complexSimpleSettingValue = $null
-                    }
-                    $myChildren.Add('SimpleSettingValue',$complexSimpleSettingValue)
-                    if ($null -ne $currentChildren.'@odata.type')
-                    {
-                        $myChildren.Add('odataType', $currentChildren.'@odata.type'.toString())
-                    }
-                    if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                    {
-                        $complexChildren += $myChildren
-                    }
-                }
-                $myChoiceSettingCollectionValue.Add('Children',$complexChildren)
-                $myChoiceSettingCollectionValue.Add('Value', $currentChoiceSettingCollectionValue.value)
-                $complexSettingValueTemplateReference = @{}
-                if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                {
-                    $complexSettingValueTemplateReference = $null
-                }
-                $myChoiceSettingCollectionValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-                if ($null -ne $currentChoiceSettingCollectionValue.'@odata.type')
-                {
-                    $myChoiceSettingCollectionValue.Add('odataType', $currentChoiceSettingCollectionValue.'@odata.type'.toString())
-                }
-                if ($myChoiceSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                {
-                    $complexChoiceSettingCollectionValue += $myChoiceSettingCollectionValue
-                }
-            }
-            $complexSettingInstance.Add('ChoiceSettingCollectionValue',$complexChoiceSettingCollectionValue)
-            $complexChoiceSettingValue = @{}
-            $complexChildren = @()
-            foreach ($currentChildren in $currentcomplexChoiceSettingValue.children)
-            {
-                $myChildren = @{}
-                if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                {
-                    $complexChildren += $myChildren
-                }
-            }
-            $complexChoiceSettingValue.Add('Children',$complexChildren)
-            $complexChoiceSettingValue.Add('Value', $currentSettings.SettingInstance.ChoiceSettingValue.choiceSettingValue.value)
-            $complexSettingValueTemplateReference = @{}
-            if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-            {
-                $complexSettingValueTemplateReference = $null
-            }
-            $complexChoiceSettingValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-            if ($null -ne $currentSettings.SettingInstance.ChoiceSettingValue.choiceSettingValue.'@odata.type')
-            {
-                $complexChoiceSettingValue.Add('odataType', $currentSettings.SettingInstance.ChoiceSettingValue.choiceSettingValue.'@odata.type'.toString())
-            }
-            if ($complexChoiceSettingValue.values.Where({$null -ne $_}).count -eq 0)
-            {
-                $complexChoiceSettingValue = $null
-            }
-            $complexSettingInstance.Add('ChoiceSettingValue',$complexChoiceSettingValue)
-            $complexGroupSettingCollectionValue = @()
-            foreach ($currentGroupSettingCollectionValue in $currentcomplexSettingInstance.groupSettingCollectionValue)
-            {
-                $myGroupSettingCollectionValue = @{}
-                $complexChildren = @()
-                foreach ($currentChildren in $currentGroupSettingCollectionValue.children)
-                {
-                    $myChildren = @{}
-                    if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                    {
-                        $complexChildren += $myChildren
-                    }
-                }
-                $myGroupSettingCollectionValue.Add('Children',$complexChildren)
-                $complexSettingValueTemplateReference = @{}
-                if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                {
-                    $complexSettingValueTemplateReference = $null
-                }
-                $myGroupSettingCollectionValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-                $myGroupSettingCollectionValue.Add('Value', $currentGroupSettingCollectionValue.value)
-                if ($null -ne $currentGroupSettingCollectionValue.'@odata.type')
-                {
-                    $myGroupSettingCollectionValue.Add('odataType', $currentGroupSettingCollectionValue.'@odata.type'.toString())
-                }
-                if ($myGroupSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                {
-                    $complexGroupSettingCollectionValue += $myGroupSettingCollectionValue
-                }
-            }
-            $complexSettingInstance.Add('GroupSettingCollectionValue',$complexGroupSettingCollectionValue)
-            $complexGroupSettingValue = @{}
-            $complexChildren = @()
-            foreach ($currentChildren in $currentcomplexGroupSettingValue.children)
-            {
-                $myChildren = @{}
-                if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                {
-                    $complexChildren += $myChildren
-                }
-            }
-            $complexGroupSettingValue.Add('Children',$complexChildren)
-            $complexSettingValueTemplateReference = @{}
-            if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-            {
-                $complexSettingValueTemplateReference = $null
-            }
-            $complexGroupSettingValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-            $complexGroupSettingValue.Add('Value', $currentSettings.SettingInstance.GroupSettingValue.groupSettingValue.value)
-            if ($null -ne $currentSettings.SettingInstance.GroupSettingValue.groupSettingValue.'@odata.type')
-            {
-                $complexGroupSettingValue.Add('odataType', $currentSettings.SettingInstance.GroupSettingValue.groupSettingValue.'@odata.type'.toString())
-            }
-            if ($complexGroupSettingValue.values.Where({$null -ne $_}).count -eq 0)
-            {
-                $complexGroupSettingValue = $null
-            }
-            $complexSettingInstance.Add('GroupSettingValue',$complexGroupSettingValue)
-            $complexSimpleSettingCollectionValue = @()
-            foreach ($currentSimpleSettingCollectionValue in $currentcomplexSettingInstance.simpleSettingCollectionValue)
-            {
-                $mySimpleSettingCollectionValue = @{}
-                $mySimpleSettingCollectionValue.Add('Value', $currentSimpleSettingCollectionValue.value)
-                if ($null -ne $currentSimpleSettingCollectionValue.valueState)
-                {
-                    $mySimpleSettingCollectionValue.Add('ValueState', $currentSimpleSettingCollectionValue.valueState.toString())
-                }
-                if ($null -ne $currentSimpleSettingCollectionValue.'@odata.type')
-                {
-                    $mySimpleSettingCollectionValue.Add('odataType', $currentSimpleSettingCollectionValue.'@odata.type'.toString())
-                }
-                $complexSettingValueTemplateReference = @{}
-                if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-                {
-                    $complexSettingValueTemplateReference = $null
-                }
-                $mySimpleSettingCollectionValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-                $complexChildren = @()
-                foreach ($currentChildren in $currentSimpleSettingCollectionValue.children)
-                {
-                    $myChildren = @{}
-                    if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                    {
-                        $complexChildren += $myChildren
-                    }
-                }
-                $mySimpleSettingCollectionValue.Add('Children',$complexChildren)
-                if ($null -ne $currentSimpleSettingCollectionValue.'@odata.type')
-                {
-                    $mySimpleSettingCollectionValue.Add('odataType', $currentSimpleSettingCollectionValue.'@odata.type'.toString())
-                }
-                if ($mySimpleSettingCollectionValue.values.Where({$null -ne $_}).count -gt 0)
-                {
-                    $complexSimpleSettingCollectionValue += $mySimpleSettingCollectionValue
-                }
-            }
-            $complexSettingInstance.Add('SimpleSettingCollectionValue',$complexSimpleSettingCollectionValue)
-            $complexSimpleSettingValue = @{}
-            $complexSimpleSettingValue.Add('Value', $currentSettings.SettingInstance.SimpleSettingValue.simpleSettingValue.value)
-            if ($null -ne $currentSettings.SettingInstance.SimpleSettingValue.simpleSettingValue.valueState)
-            {
-                $complexSimpleSettingValue.Add('ValueState', $currentSettings.SettingInstance.SimpleSettingValue.simpleSettingValue.valueState.toString())
-            }
-            if ($null -ne $currentSettings.SettingInstance.SimpleSettingValue.simpleSettingValue.'@odata.type')
-            {
-                $complexSimpleSettingValue.Add('odataType', $currentSettings.SettingInstance.SimpleSettingValue.simpleSettingValue.'@odata.type'.toString())
-            }
-            $complexSettingValueTemplateReference = @{}
-            if ($complexSettingValueTemplateReference.values.Where({$null -ne $_}).count -eq 0)
-            {
-                $complexSettingValueTemplateReference = $null
-            }
-            $complexSimpleSettingValue.Add('SettingValueTemplateReference',$complexSettingValueTemplateReference)
-            $complexChildren = @()
-            foreach ($currentChildren in $currentcomplexSimpleSettingValue.children)
-            {
-                $myChildren = @{}
-                if ($myChildren.values.Where({$null -ne $_}).count -gt 0)
-                {
-                    $complexChildren += $myChildren
-                }
-            }
-            $complexSimpleSettingValue.Add('Children',$complexChildren)
-            if ($null -ne $currentSettings.SettingInstance.SimpleSettingValue.simpleSettingValue.'@odata.type')
-            {
-                $complexSimpleSettingValue.Add('odataType', $currentSettings.SettingInstance.SimpleSettingValue.simpleSettingValue.'@odata.type'.toString())
-            }
-            if ($complexSimpleSettingValue.values.Where({$null -ne $_}).count -eq 0)
-            {
-                $complexSimpleSettingValue = $null
-            }
-            $complexSettingInstance.Add('SimpleSettingValue',$complexSimpleSettingValue)
-            if ($null -ne $currentSettings.SettingInstance.settingInstance.'@odata.type')
-            {
-                $complexSettingInstance.Add('odataType', $currentSettings.SettingInstance.settingInstance.'@odata.type'.toString())
-            }
-            if ($complexSettingInstance.values.Where({$null -ne $_}).count -eq 0)
-            {
-                $complexSettingInstance = $null
-            }
-            $mySettings.Add('SettingInstance',$complexSettingInstance)
-            $mySettings.Add('Id', $currentSettings.id)
-            if ($mySettings.values.Where({$null -ne $_}).count -gt 0)
+            $complexSettingInstance.Add('odataType', $currentSettings.settingInstance.AdditionalProperties.'@odata.type')
+            $valueName = $currentSettings.settingInstance.AdditionalProperties.'@odata.type'.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
+            $valueName = Get-StringFirstCharacterToLower -Value $valueName
+            $rawValue = $currentSettings.settingInstance.AdditionalProperties.$valueName
+            $complexValue = get-SettingValue -SettingValue $rawValue -SettingValueType $currentSettings.settingInstance.AdditionalProperties.'@odata.type'
+            $complexSettingInstance.Add($valueName,$complexValue)
+            $mySettings.Add('SettingInstance', $complexSettingInstance)
+            if ($mySettings.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexSettings += $mySettings
             }
         }
-        #endregion
-
         #region resource generator code
         $enumPlatforms = $null
         if ($null -ne $getValue.Platforms)
@@ -900,15 +154,10 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            CreationSource        = $getValue.CreationSource
             Description           = $getValue.Description
-            IsAssigned            = $getValue.IsAssigned
             Name                  = $getValue.Name
             Platforms             = $enumPlatforms
-            PriorityMetaData      = $complexPriorityMetaData
-            SettingCount          = $getValue.SettingCount
             Technologies          = $enumTechnologies
-            TemplateReference     = $complexTemplateReference
             Settings              = $complexSettings
             Id                    = $getValue.Id
             Ensure                = 'Present'
@@ -925,11 +174,13 @@ function Get-TargetResource
         foreach ($assignmentEntry in $AssignmentsValues)
         {
             $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
                 deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+                    {
+                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
+                    })
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
             }
             $assignmentResult += $assignmentValue
         }
@@ -957,35 +208,19 @@ function Set-TargetResource
         #region resource generator code
         [Parameter()]
         [System.String]
-        $CreationSource,
-
-        [Parameter()]
-        [System.String]
         $Description,
 
-        [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
         [Parameter()]
-        [ValidateSet('none','android','iOS','macOS','windows10X','windows10','linux','unknownFutureValue')]
+        [ValidateSet('none', 'android', 'iOS', 'macOS', 'windows10X', 'windows10', 'linux', 'unknownFutureValue')]
         [System.String]
         $Platforms,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $PriorityMetaData,
-
-        [Parameter()]
-        [System.Int32]
-        $SettingCount,
-
-        [Parameter()]
-        [ValidateSet('none','mdm','windows10XManagement','configManager','appleRemoteManagement','microsoftSense','exchangeOnline','linuxMdm','enrollment','endpointPrivilegeManagement','unknownFutureValue')]
+        [ValidateSet('none', 'mdm', 'windows10XManagement', 'configManager', 'appleRemoteManagement', 'microsoftSense', 'exchangeOnline', 'linuxMdm', 'enrollment', 'endpointPrivilegeManagement', 'unknownFutureValue')]
         [System.String]
         $Technologies,
 
@@ -1005,6 +240,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -1054,7 +290,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Setting Catalog Custom Policy for Windows10 with Name {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -1069,7 +305,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.DeviceManagementConfigurationPolicy")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.DeviceManagementConfigurationPolicy')
         $policy = New-MgDeviceManagementConfigurationPolicy -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
@@ -1079,7 +315,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/configurationPolicies'
         }
@@ -1088,7 +324,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Setting Catalog Custom Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -1104,10 +340,10 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.DeviceManagementConfigurationPolicy")
-        Update-MgDeviceManagementConfigurationPolicy  `
+        Update-IntuneDeviceConfigurationPolicy  `
             -DeviceManagementConfigurationPolicyId $currentInstance.Id `
-            -BodyParameter $UpdateParameters
+            @UpdateParameters
+
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -1123,7 +359,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Setting Catalog Custom Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-Remove-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentInstance.Id
+        Remove-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentInstance.Id
         #endregion
     }
 }
@@ -1137,35 +373,19 @@ function Test-TargetResource
         #region resource generator code
         [Parameter()]
         [System.String]
-        $CreationSource,
-
-        [Parameter()]
-        [System.String]
         $Description,
 
-        [Parameter()]
-        [System.Boolean]
-        $IsAssigned,
-
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
         [Parameter()]
-        [ValidateSet('none','android','iOS','macOS','windows10X','windows10','linux','unknownFutureValue')]
+        [ValidateSet('none', 'android', 'iOS', 'macOS', 'windows10X', 'windows10', 'linux', 'unknownFutureValue')]
         [System.String]
         $Platforms,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $PriorityMetaData,
-
-        [Parameter()]
-        [System.Int32]
-        $SettingCount,
-
-        [Parameter()]
-        [ValidateSet('none','mdm','windows10XManagement','configManager','appleRemoteManagement','microsoftSense','exchangeOnline','linuxMdm','enrollment','endpointPrivilegeManagement','unknownFutureValue')]
+        [ValidateSet('none', 'mdm', 'windows10XManagement', 'configManager', 'appleRemoteManagement', 'microsoftSense', 'exchangeOnline', 'linuxMdm', 'enrollment', 'endpointPrivilegeManagement', 'unknownFutureValue')]
         [System.String]
         $Technologies,
 
@@ -1248,7 +468,6 @@ function Test-TargetResource
         if ($source.getType().Name -like '*CimInstance*')
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
@@ -1258,7 +477,6 @@ function Test-TargetResource
                 $testResult = $false
                 break
             }
-
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
@@ -1277,11 +495,9 @@ function Test-TargetResource
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+            -ValuesToCheck $ValuesToCheck.Keys -verbose
     }
-
     Write-Verbose -Message "Test-TargetResource returned $testResult"
-
     return $testResult
 }
 
@@ -1337,7 +553,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgDeviceManagementConfigurationPolicy `
             -All `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object { [String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId) }
         #endregion
 
         $i = 1
@@ -1353,431 +569,84 @@ function Export-TargetResource
         foreach ($config in $getValue)
         {
             $displayedKey = $config.Id
-            if (-not [String]::IsNullOrEmpty($config.displayName))
+            if (-not [String]::IsNullOrEmpty($config.Name))
             {
-                $displayedKey = $config.displayName
+                $displayedKey = $config.Name
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                Name                  = $config.Name
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            if ($null -ne $Results.PriorityMetaData)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.PriorityMetaData `
-                    -CIMInstanceName 'MicrosoftGraphdeviceManagementPriorityMetaData'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                {
-                    $Results.PriorityMetaData = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('PriorityMetaData') | Out-Null
-                }
-            }
-            if ($null -ne $Results.TemplateReference)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.TemplateReference `
-                    -CIMInstanceName 'MicrosoftGraphdeviceManagementConfigurationPolicyTemplateReference'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                {
-                    $Results.TemplateReference = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('TemplateReference') | Out-Null
-                }
-            }
+
             if ($null -ne $Results.Settings)
             {
                 $complexMapping = @(
                     @{
-                        Name = 'Settings'
+                        Name            = 'Settings'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSetting'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'SettingInstance'
+                        Name            = 'SettingInstance'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'SettingInstanceTemplateReference'
+                        Name            = 'SettingInstanceTemplateReference'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstanceTemplateReference'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ChoiceSettingCollectionValue'
+                        Name            = 'ChoiceSettingCollectionValue'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'Children'
+                        Name            = 'Children'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'SettingInstanceTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstanceTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
+                        Name            = 'SettingValueTemplateReference'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'ChoiceSettingValue'
+                        Name            = 'ChoiceSettingValue'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingInstanceTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstanceTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingCollectionValue'
+                        Name            = 'GroupSettingCollectionValue'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingInstanceTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstanceTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingCollectionValue'
+                        Name            = 'GroupSettingValue'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'GroupSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingInstanceTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstanceTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingCollectionValue'
+                        Name            = 'SimpleSettingCollectionValue'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                     @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingInstanceTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstanceTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingCollectionValue'
+                        Name            = 'SimpleSettingValue'
                         CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingInstanceTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstanceTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ChoiceSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'GroupSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationGroupSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingCollectionValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SimpleSettingValue'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'SettingValueTemplateReference'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'Children'
-                        CimInstanceName = 'MicrosoftGraphDeviceManagementConfigurationSettingInstance'
-                        IsRequired = $False
+                        IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
@@ -1811,21 +680,14 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            if ($Results.PriorityMetaData)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "PriorityMetaData" -isCIMArray:$False
-            }
-            if ($Results.TemplateReference)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "TemplateReference" -isCIMArray:$False
-            }
+
             if ($Results.Settings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Settings" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Settings' -IsCIMArray:$True
             }
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
             #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
             $currentDSCBlock = $currentDSCBlock.replace("    ,`r`n" , "    `r`n" )
@@ -1853,6 +715,162 @@ function Export-TargetResource
     }
 }
 
+function Get-StringFirstCharacterToUpper
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Value
+    )
+
+    return $Value.Substring(0, 1).ToUpper() + $Value.Substring(1, $Value.length - 1)
+}
+
+function Get-StringFirstCharacterToLower
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $Value
+    )
+
+    return $Value.Substring(0, 1).ToLower() + $Value.Substring(1, $Value.length - 1)
+}
+
+function Get-SettingValue
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter()]
+        $SettingValue,
+        [Parameter()]
+        $SettingValueType
+
+    )
+    $complexValue = @{}
+    $complexValue.Add('odataType',$SettingValue.'@odata.type')
+    switch -Wildcard ($SettingValueType)
+    {
+        '*ChoiceSettingInstance'
+        {
+            $complexValue.Add('Value',$SettingValue.value)
+            $children = @()
+            foreach($child in $SettingValue.children)
+            {
+                $complexChild = @{}
+                $complexChild.Add('SettingDefinitionId', $child.settingDefinitionId)
+                $complexChild.Add('odataType', $child.'@odata.type')
+                $valueName = $child.'@odata.type'.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
+                $valueName = Get-StringFirstCharacterToLower -Value $valueName
+                $rawValue = $child.$valueName
+                $settingValue = Get-SettingValue -SettingValue $rawValue  -SettingValueType $child.'@odata.type'
+                $complexChild.Add($valueName,$settingValue)
+                $children += $complexChild
+            }
+            $complexValue.Add('Children',$children)
+        }
+        '*SimpleSettingInstance'
+        {
+            $valueName = 'IntValue'
+            $value = $SettingValue.value
+            if($SettingValue.'@odata.type' -ne '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue')
+            {
+                $valueName = 'StringValue'
+            }
+            $complexValue.Add($valueName,$value)
+            if($SettingValue.'@odata.type' -eq '#microsoft.graph.deviceManagementConfigurationSecretSettingValue')
+            {
+                $complexValue.Add('ValueState',$SettingValue.valueState)
+            }
+        }
+        '*GroupSettingInstance'
+        {
+            $children = @()
+            foreach($child in $SettingValue.children)
+            {
+                $complexChild = @{}
+                $complexChild.Add('SettingDefinitionId', $child.settingDefinitionId)
+                $complexChild.Add('odataType', $child.'@odata.type')
+                $valueName = $child.'@odata.type'.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
+                $valueName = Get-StringFirstCharacterToLower -Value $valueName
+                $rawValue = $child.$valueName
+                $settingValue = Get-SettingValue -SettingValue $rawValue  -SettingValueType $child.'@odata.type'
+                $complexChild.Add($valueName,$settingValue)
+                $children += $complexChild
+            }
+            $complexValue.Add('Children',$children)
+        }
+    }
+    return $complexValue
+}
+
+function Update-IntuneDeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceManagementConfigurationPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Platforms,
+
+        [Parameter()]
+        [System.String]
+        $Technologies,
+
+        [Parameter()]
+        [System.String]
+        $TemplateReferenceId,
+
+        [Parameter()]
+        [Array]
+        $Settings
+
+    )
+    try
+    {
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId"
+
+        $policy = @{
+            'name'              = $Name
+            'description'       = $Description
+            'platforms'         = $Platforms
+            'templateReference' = @{'templateId' = $TemplateReferenceId }
+            'technologies'      = $Technologies
+            'settings'          = $Settings
+        }
+        $body = $policy | ConvertTo-Json -Depth 20
+        #write-verbose -Message $body
+        Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body $body -ErrorAction Stop 4> $null
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+}
+
 function Update-DeviceConfigurationPolicyAssignment
 {
     [CmdletBinding()]
@@ -1871,7 +889,7 @@ function Update-DeviceConfigurationPolicyAssignment
         $Repository = 'deviceManagement/configurationPolicies',
 
         [Parameter()]
-        [ValidateSet('v1.0','beta')]
+        [ValidateSet('v1.0', 'beta')]
         [System.String]
         $APIVersion = 'beta'
     )
@@ -1882,28 +900,28 @@ function Update-DeviceConfigurationPolicyAssignment
 
         foreach ($target in $targets)
         {
-            $formattedTarget = @{"@odata.type" = $target.dataType}
+            $formattedTarget = @{'@odata.type' = $target.dataType }
             if ($target.groupId)
             {
-                $formattedTarget.Add('groupId',$target.groupId)
+                $formattedTarget.Add('groupId', $target.groupId)
             }
             if ($target.collectionId)
             {
-                $formattedTarget.Add('collectionId',$target.collectionId)
+                $formattedTarget.Add('collectionId', $target.collectionId)
             }
             if ($target.deviceAndAppManagementAssignmentFilterType)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
             }
             if ($target.deviceAndAppManagementAssignmentFilterId)
             {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
             }
-            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
+            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
         }
-        $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop 4> $null
     }
     catch
     {
@@ -1928,6 +946,8 @@ function Rename-M365DSCCimInstanceParameter
 
     $keyToRename = @{
         'odataType' = '@odata.type'
+        'StringValue' = 'value'
+        'IntValue' = 'value'
     }
 
     $result = $Properties
@@ -2473,7 +1493,7 @@ function Compare-M365DSCComplexObject
 
             if (-not $compareResult)
             {
-                Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
+                #Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
                 return $false
             }
         }

@@ -7,11 +7,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The group Id that is the target of the assignment.")] String groupId;
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
-[ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphDeviceManagementPriorityMetaData
-{
-    [Write, Description("Priority of the policy. Valid values 1 to 500")] UInt32 Priority;
-};
+
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphDeviceManagementConfigurationPolicyTemplateReference
 {
@@ -67,24 +63,20 @@ class MSFT_MicrosoftGraphDeviceManagementConfigurationGroupSettingValue
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue
 {
-    [Write, Description("Value of the integer setting.")] UInt32 Value;
+    [Write, Description("Value of the integer setting.")] UInt32 IntValue;
+    [Write, Description("Value of the string setting.")] String StringValue;
     [Write, Description("Gets or sets a value indicating the encryption state of the Value property. Possible values are: invalid, notEncrypted, encryptedValueToken."), ValueMap{"invalid","notEncrypted","encryptedValueToken"}, Values{"invalid","notEncrypted","encryptedValueToken"}] String ValueState;
     [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.deviceManagementConfigurationIntegerSettingValue","#microsoft.graph.deviceManagementConfigurationStringSettingValue","#microsoft.graph.deviceManagementConfigurationSecretSettingValue"}, Values{"#microsoft.graph.deviceManagementConfigurationIntegerSettingValue","#microsoft.graph.deviceManagementConfigurationStringSettingValue","#microsoft.graph.deviceManagementConfigurationSecretSettingValue"}] String odataType;
     [Write, Description("Setting value template reference"), EmbeddedInstance("MSFT_MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference")] String SettingValueTemplateReference;
     [Write, Description("Child settings."), EmbeddedInstance("MSFT_MicrosoftGraphDeviceManagementConfigurationSettingInstance")] String Children[];
-    [Write, Description("The type of the entity."), ValueMap{"#microsoft.graph.deviceManagementConfigurationChoiceSettingValue","#microsoft.graph.deviceManagementConfigurationGroupSettingValue","#microsoft.graph.deviceManagementConfigurationSimpleSettingValue"}, Values{"#microsoft.graph.deviceManagementConfigurationChoiceSettingValue","#microsoft.graph.deviceManagementConfigurationGroupSettingValue","#microsoft.graph.deviceManagementConfigurationSimpleSettingValue"}] String odataType;
 };
 
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneSettingCatalogCustomPolicyWindows10")]
 class MSFT_IntuneSettingCatalogCustomPolicyWindows10 : OMI_BaseResource
 {
-    [Write, Description("Policy creation source")] String CreationSource;
     [Write, Description("Policy description")] String Description;
-    [Write, Description("Policy assignment status. This property is read-only.")] Boolean IsAssigned;
-    [Write, Description("Policy name")] String Name;
+    [Required, Description("Policy name")] String Name;
     [Write, Description("Platforms for this policy. Possible values are: none, android, iOS, macOS, windows10X, windows10, linux, unknownFutureValue."), ValueMap{"none","android","iOS","macOS","windows10X","windows10","linux","unknownFutureValue"}, Values{"none","android","iOS","macOS","windows10X","windows10","linux","unknownFutureValue"}] String Platforms;
-    [Write, Description("Indicates the priority of each policies that are selected by the admin during enrollment process"), EmbeddedInstance("MSFT_MicrosoftGraphdeviceManagementPriorityMetaData")] String PriorityMetaData;
-    [Write, Description("Number of settings")] UInt32 SettingCount;
     [Write, Description("Technologies for this policy. Possible values are: none, mdm, windows10XManagement, configManager, appleRemoteManagement, microsoftSense, exchangeOnline, edgeMAM, linuxMdm, enrollment, endpointPrivilegeManagement, unknownFutureValue."), ValueMap{"none","mdm","windows10XManagement","configManager","appleRemoteManagement","microsoftSense","exchangeOnline","linuxMdm","enrollment","endpointPrivilegeManagement","unknownFutureValue"}, Values{"none","mdm","windows10XManagement","configManager","appleRemoteManagement","microsoftSense","exchangeOnline","linuxMdm","enrollment","endpointPrivilegeManagement","unknownFutureValue"}] String Technologies;
     [Write, Description("Template reference information"), EmbeddedInstance("MSFT_MicrosoftGraphdeviceManagementConfigurationPolicyTemplateReference")] String TemplateReference;
     [Write, Description("Policy settings"), EmbeddedInstance("MSFT_MicrosoftGraphdeviceManagementConfigurationSetting")] String Settings[];
