@@ -745,7 +745,7 @@ function Get-StringFirstCharacterToLower
 function Get-SettingValue
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
+    [OutputType([System.Collections.Hashtable],[System.Collections.Hashtable[]])]
     param (
         [Parameter()]
         $SettingValue,
@@ -753,12 +753,13 @@ function Get-SettingValue
         $SettingValueType
 
     )
-    $complexValue = @{}
-    $complexValue.Add('odataType',$SettingValue.'@odata.type')
+
     switch -Wildcard ($SettingValueType)
     {
         '*ChoiceSettingInstance'
         {
+            $complexValue = @{}
+            $complexValue.Add('odataType',$SettingValue.'@odata.type')
             $complexValue.Add('Value',$SettingValue.value)
             $children = @()
             foreach($child in $SettingValue.children)
@@ -769,14 +770,41 @@ function Get-SettingValue
                 $valueName = $child.'@odata.type'.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
                 $valueName = Get-StringFirstCharacterToLower -Value $valueName
                 $rawValue = $child.$valueName
-                $settingValue = Get-SettingValue -SettingValue $rawValue  -SettingValueType $child.'@odata.type'
-                $complexChild.Add($valueName,$settingValue)
+                $childSettingValue = Get-SettingValue -SettingValue $rawValue -SettingValueType $child.'@odata.type'
+                $complexChild.Add($valueName,$childSettingValue)
                 $children += $complexChild
             }
             $complexValue.Add('Children',$children)
         }
+        '*ChoiceSettingCollectionInstance'
+        {
+            $complexCollection = @()
+            foreach($item in $SettingValue)
+            {
+                $complexValue = @{}
+                $complexValue.Add('Value',$item.value)
+                $children = @()
+                foreach($child in $item.children)
+                {
+                    $complexChild = @{}
+                    $complexChild.Add('SettingDefinitionId', $child.settingDefinitionId)
+                    $complexChild.Add('odataType', $child.'@odata.type')
+                    $valueName = $child.'@odata.type'.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
+                    $valueName = Get-StringFirstCharacterToLower -Value $valueName
+                    $rawValue = $child.$valueName
+                    $childSettingValue = Get-SettingValue -SettingValue $rawValue  -SettingValueType $child.'@odata.type'
+                    $complexChild.Add($valueName,$childSettingValue)
+                    $children += $complexChild
+                }
+                $complexValue.Add('Children',$children)
+                $complexCollection += $complexValue
+            }
+            return ,([hashtable[]]$complexCollection)
+        }
         '*SimpleSettingInstance'
         {
+            $complexValue = @{}
+            $complexValue.Add('odataType',$SettingValue.'@odata.type')
             $valueName = 'IntValue'
             $value = $SettingValue.value
             if($SettingValue.'@odata.type' -ne '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue')
@@ -789,8 +817,33 @@ function Get-SettingValue
                 $complexValue.Add('ValueState',$SettingValue.valueState)
             }
         }
+        '*SimpleSettingCollectionInstance'
+        {
+            $complexCollection = @()
+
+            foreach($item in $SettingValue)
+            {
+                $complexValue = @{}
+                $complexValue.Add('odataType',$item.'@odata.type')
+                $valueName = 'IntValue'
+                $value = $item.value
+                if($item.'@odata.type' -ne '#microsoft.graph.deviceManagementConfigurationIntegerSettingValue')
+                {
+                    $valueName = 'StringValue'
+                }
+                $complexValue.Add($valueName,$value)
+                if($item.'@odata.type' -eq '#microsoft.graph.deviceManagementConfigurationSecretSettingValue')
+                {
+                    $complexValue.Add('ValueState',$item.valueState)
+                }
+                $complexCollection += $complexValue
+            }
+            return ,([hashtable[]]$complexCollection)
+        }
         '*GroupSettingInstance'
         {
+            $complexValue = @{}
+            $complexValue.Add('odataType',$SettingValue.'@odata.type')
             $children = @()
             foreach($child in $SettingValue.children)
             {
@@ -805,6 +858,31 @@ function Get-SettingValue
                 $children += $complexChild
             }
             $complexValue.Add('Children',$children)
+        }
+        '*GroupSettingCollectionInstance'
+        {
+            $complexCollection = @()
+            foreach($groupSettingValue in $SettingValue)
+            {
+                $complexValue = @{}
+                #$complexValue.Add('odataType',$SettingValue.'@odata.type')
+                $children = @()
+                foreach($child in $groupSettingValue.children)
+                {
+                    $complexChild = @{}
+                    $complexChild.Add('SettingDefinitionId', $child.settingDefinitionId)
+                    $complexChild.Add('odataType', $child.'@odata.type')
+                    $valueName = $child.'@odata.type'.replace('#microsoft.graph.deviceManagementConfiguration', '').replace('Instance', 'Value')
+                    $valueName = Get-StringFirstCharacterToLower -Value $valueName
+                    $rawValue = $child.$valueName
+                    $settingValue = Get-SettingValue -SettingValue $rawValue  -SettingValueType $child.'@odata.type'
+                    $complexChild.Add($valueName,$settingValue)
+                    $children += $complexChild
+                }
+                $complexValue.Add('Children',$children)
+                $complexCollection += $complexValue
+            }
+            return ,([hashtable[]]$complexCollection)
         }
     }
     return $complexValue
