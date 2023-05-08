@@ -1,6 +1,6 @@
 {
-    "resourceName": "AADAuthenticationMethodPolicyConfigurationPartner",
-    "description": "This resource configures an Azure AD Authentication Method Policy Configuration Partner.",
+    "resourceName": "AADAuthenticationMethodPolicyConfigurationDefault",
+    "description": "This resource configures an Azure AD Authentication Method Policy Configuration Default.",
     "permissions": {
         "graph": {
             "delegated": {

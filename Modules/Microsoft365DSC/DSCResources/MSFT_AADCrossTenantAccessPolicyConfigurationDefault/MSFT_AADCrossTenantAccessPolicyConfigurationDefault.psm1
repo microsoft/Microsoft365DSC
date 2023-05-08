@@ -6,7 +6,8 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PartnerTenantId,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -78,12 +79,11 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = Get-MgPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId `
-                        -ErrorAction SilentlyContinue
+        $getValue = Get-MgPolicyCrossTenantAccessPolicyDefault -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Cross Tenant Access Configuration Partner with TenantId {$PartnerTenantId}"
+            Write-Verbose -Message "Could not find an Azure AD Cross Tenant Access Configuration Default with TenantId {$PartnerTenantId}"
             return $nullResult
         }
 
@@ -109,7 +109,7 @@ function Get-TargetResource
             $InboundTrustValue = $getValue.InboundTrust
         }
         $results = @{
-            PartnerTenantId          = $getValue.TenantId
+            IsSingleInstance         = 'Yes'
             B2BCollaborationInbound  = $B2BCollaborationInboundValue
             B2BCollaborationOutbound = $B2BCollaborationOutboundValue
             B2BDirectConnectInbound  = $B2BDirectConnectInboundValue
@@ -145,7 +145,8 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PartnerTenantId,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -219,6 +220,7 @@ function Set-TargetResource
     $OperationParams.Remove("CertificateThumbprint") | Out-Null
     $OperationParams.Remove("ApplicationSecret") | Out-Null
     $OperationParams.Remove("Ensure") | Out-Null
+    $OperationParams.Remove("IsSingleInstance") | Out-Null
 
     if ($null -ne $OperationParams.B2BCollaborationInbound)
     {
@@ -245,25 +247,14 @@ function Set-TargetResource
         $OperationParams.InboundTrust = (Get-M365DSCAADCrossTenantAccessPolicyInboundTrust -Setting $OperationParams.InboundTrust)
     }
 
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Creating new Cross Tenant Access Policy Configuration Partner entry for TenantId {$PartnerTenantId}"
-        Write-Verbose -Message (Convert-M365DscHashtableToString -Hashtable $OperationParams)
-        $OperationParams.Add('TenantId', $PartnerTenantId)
-        $OperationParams.Remove('PartnerTenantId') | Out-Null
-        New-MgPolicyCrossTenantAccessPolicyPartner @OperationParams
-    }
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Updating Cross Tenant Access Policy Configuration Partner entry with TenantId {$PartnerTenantId}"
-        $OperationParams.Add('-CrossTenantAccessPolicyConfigurationPartnerTenantId', $PartnerTenantId)
-        $OperationParams.Remove('PartnerTenantId') | Out-Null
-        Update-MgPolicyCrossTenantAccessPolicyPartner @OperationParams
+        Write-Verbose -Message "Updating Cross Tenant Access Policy Configuration Default"
+        Update-MgPolicyCrossTenantAccessPolicyDefault @OperationParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Cross Tenant Access Policy Configuration Partner entry with TenantId {$PartnerTenantId}"
-        Remove-MgPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId
+        Write-Verbose -Message "Removing Cross Tenant Access Policy Configuration Default is not supported"
     }
 }
 
@@ -275,7 +266,8 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PartnerTenantId,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -339,7 +331,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Cross Tenant Access Policy Configuration Partner with Tenant Id [$PartnerTenantId]"
+    Write-Verbose -Message "Testing configuration of the Azure AD Cross Tenant Access Policy Configuration Default with Tenant Id [$PartnerTenantId]"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -440,90 +432,82 @@ function Export-TargetResource
 
     try
     {
-        [array] $getValue = Get-MgPolicyCrossTenantAccessPolicyPartner -ErrorAction Stop
-
-        $i = 1
         $dscContent = ''
-        Write-Host "`r`n" -NoNewline
-        foreach ($entry in $getValue)
-        {
-            Write-Host "    |---[$i/$($getValue.Count)] $($entry.TenantId)" -NoNewline
-            $Params = @{
-                PartnerTenantId       = $entry.TenantId
-                ApplicationSecret     = $ApplicationSecret
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                Credential            = $Credential
-                Managedidentity       = $ManagedIdentity.IsPresent
-            }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-
-            if ($null -ne $Results.B2BCollaborationInbound)
-            {
-                $Results.B2BCollaborationInbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BCollaborationInbound
-            }
-            if ($null -ne $Results.B2BCollaborationOutbound)
-            {
-                $Results.B2BCollaborationOutbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BCollaborationOutbound
-            }
-            if ($null -ne $Results.B2BDirectConnectInbound)
-            {
-                $Results.B2BDirectConnectInbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BDirectConnectInbound
-            }
-            if ($null -ne $Results.B2BDirectConnectOutbound)
-            {
-                $Results.B2BDirectConnectOutbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BDirectConnectOutbound
-            }
-            if ($null -ne $Results.InboundTrust)
-            {
-                $Results.InboundTrust = Get-M365DSCAADCrossTenantAccessPolicyInboundTrustAsString -Setting $Results.InboundTrust
-            }
-
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-
-            if ($null -ne $Results.B2BCollaborationInbound)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'B2BCollaborationInbound'
-            }
-            if ($null -ne $Results.B2BCollaborationOutbound)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'B2BCollaborationOutbound'
-            }
-            if ($null -ne $Results.B2BDirectConnectInbound)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'B2BDirectConnectInbound'
-            }
-            if ($null -ne $Results.B2BDirectConnectOutbound)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'B2BDirectConnectOutbound'
-            }
-            if ($null -ne $Results.InboundTrust)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                    -ParameterName 'InboundTrust'
-            }
-
-            # Fix OrganizationName variable in CIMInstance
-            $currentDSCBlock = $currentDSCBlock.Replace('@$OrganizationName''', "@' + `$OrganizationName")
-
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
+        $Params = @{
+            IsSingleInstance      = 'Yes'
+            ApplicationSecret     = $ApplicationSecret
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            Credential            = $Credential
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
+        $Results = Get-TargetResource @Params
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+
+        if ($null -ne $Results.B2BCollaborationInbound)
+        {
+            $Results.B2BCollaborationInbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BCollaborationInbound
+        }
+        if ($null -ne $Results.B2BCollaborationOutbound)
+        {
+            $Results.B2BCollaborationOutbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BCollaborationOutbound
+        }
+        if ($null -ne $Results.B2BDirectConnectInbound)
+        {
+            $Results.B2BDirectConnectInbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BDirectConnectInbound
+        }
+        if ($null -ne $Results.B2BDirectConnectOutbound)
+        {
+            $Results.B2BDirectConnectOutbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BDirectConnectOutbound
+        }
+        if ($null -ne $Results.InboundTrust)
+        {
+            $Results.InboundTrust = Get-M365DSCAADCrossTenantAccessPolicyInboundTrustAsString -Setting $Results.InboundTrust
+        }
+
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -Credential $Credential
+
+        if ($null -ne $Results.B2BCollaborationInbound)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'B2BCollaborationInbound'
+        }
+        if ($null -ne $Results.B2BCollaborationOutbound)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'B2BCollaborationOutbound'
+        }
+        if ($null -ne $Results.B2BDirectConnectInbound)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'B2BDirectConnectInbound'
+        }
+        if ($null -ne $Results.B2BDirectConnectOutbound)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'B2BDirectConnectOutbound'
+        }
+        if ($null -ne $Results.InboundTrust)
+        {
+            $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                -ParameterName 'InboundTrust'
+        }
+
+        # Fix OrganizationName variable in CIMInstance
+        $currentDSCBlock = $currentDSCBlock.Replace('@$OrganizationName''', "@' + `$OrganizationName")
+
+        $dscContent += $currentDSCBlock
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
+
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+
         return $dscContent
     }
     catch
@@ -597,7 +581,6 @@ function Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString
         [Parameter(Mandatory = $true)]
         $Setting
     )
-
     $StringContent = $null
     if ($null -ne $Setting.applications.targets -and $null -ne $Setting.usersAndGroups.targets)
     {

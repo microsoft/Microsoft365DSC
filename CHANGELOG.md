@@ -5,6 +5,9 @@
 * AADCrossTenantAccessPolicy
   * Initial release
     FIXES [#3251](https://github.com/microsoft/Microsoft365DSC/issues/3251)
+* AADCrossTenantAccessPolicyConfigurationDefault
+  * Initial release
+    FIXES [#3252](https://github.com/microsoft/Microsoft365DSC/issues/3252)
 * AADCrossTenantAccessPolicyConfigurationPartner
   * Initial release
     FIXES [#3253](https://github.com/microsoft/Microsoft365DSC/issues/3253)

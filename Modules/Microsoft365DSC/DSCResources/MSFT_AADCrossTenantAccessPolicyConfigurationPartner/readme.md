@@ -1,6 +1,6 @@
 
-# AADCrossTenantAccessPolicyConfiguration Partner
+# AADCrossTenantAccessPolicyConfigurationPartner
 
 ## Description
 
-This resource manages Azure AD Cross Tenant Access Policies ConfigurationPArtner.
+This resource manages Azure AD Cross Tenant Access Policies Configuration Partner.
