@@ -2,6 +2,13 @@
 
 # UNRELEASED
 
+ * IntuneSettingCatalogCustomPolicyWindows10
+  * Initial release
+  FIXES [#2692](https://github.com/microsoft/Microsoft365DSC/issues/2692),
+  FIXES [#2976](https://github.com/microsoft/Microsoft365DSC/issues/2976),
+  FIXES [#3070](https://github.com/microsoft/Microsoft365DSC/issues/3070),
+  FIXES [#3071](https://github.com/microsoft/Microsoft365DSC/issues/3071),
+  FIXES [#3156](https://github.com/microsoft/Microsoft365DSC/issues/3156)
 * AADCrossTenantAccessPolicy
   * Initial release
     FIXES [#3251](https://github.com/microsoft/Microsoft365DSC/issues/3251)
