@@ -1,16 +1,16 @@
-﻿# AADCrossTenantAccessPolicyConfigurationPartner
+﻿# AADCrossTenantAccessPolicyConfigurationDefault
 
 ## Parameters
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **PartnerTenantId** | Key | String | The tenant identifier for the partner Azure Active Directory (Azure AD) organization. | |
+| **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
 | **B2BCollaborationInbound** | Write | MSFT_AADCrossTenantAccessPolicyB2BSetting | Defines your partner-specific configuration for users from other organizations accessing your resources via Azure AD B2B collaboration. | |
 | **B2BCollaborationOutbound** | Write | MSFT_AADCrossTenantAccessPolicyB2BSetting | Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B collaboration. | |
 | **B2BDirectConnectInbound** | Write | MSFT_AADCrossTenantAccessPolicyB2BSetting | Defines your partner-specific configuration for users from other organizations accessing your resources via Azure AD B2B direct connect. | |
 | **B2BDirectConnectOutbound** | Write | MSFT_AADCrossTenantAccessPolicyB2BSetting | Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B direct connect. | |
 | **InboundTrust** | Write | MSFT_AADCrossTenantAccessPolicyInboundTrust | Determines the partner-specific configuration for trusting other Conditional Access claims from external Azure AD organizations. | |
-| **Ensure** | Write | String | Specify if the policy should exist or not. | `Present`, `Absent` |
+| **Ensure** | Write | String | Specify if the instance should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -58,7 +58,7 @@
 
 ## Description
 
-This resource manages Azure AD Cross Tenant Access Policies Configuration Partner.
+This resource manages Azure AD Cross Tenant Access Policies Configuration Default.
 
 ## Permissions
 
@@ -105,14 +105,14 @@ Configuration Example
 
     Node localhost
     {
-        AADCrossTenantAccessPolicyConfigurationPartner "AADCrossTenantAccessPolicyConfigurationPartner"
+        AADCrossTenantAccessPolicyConfigurationDefault "AADCrossTenantAccessPolicyConfigurationDefault"
         {
             B2BCollaborationInbound  = MSFT_AADCrossTenantAccessPolicyB2BSetting {
                 Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
                     AccessType = 'allowed'
                     Targets    = @(
                         MSFT_AADCrossTenantAccessPolicyTarget{
-                            Target     = 'Office365'
+                            Target     = 'AllApplications'
                             TargetType = 'application'
                         }
                     )
@@ -141,11 +141,7 @@ Configuration Example
                     AccessType = 'allowed'
                     Targets    = @(
                         MSFT_AADCrossTenantAccessPolicyTarget{
-                            Target     = 'My Test Group'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADCrossTenantAccessPolicyTarget{
-                            Target     = 'Bob.Houle@contoso.com'
+                            Target     = 'AllUsers'
                             TargetType = 'user'
                         }
                     )
@@ -165,7 +161,27 @@ Configuration Example
                     AccessType = 'blocked'
                     Targets    = @(
                         MSFT_AADCrossTenantAccessPolicyTarget{
-                            Target     = 'John.Smith@contoso.com'
+                            Target     = 'AllUsers'
+                            TargetType = 'user'
+                        }
+                    )
+                }
+            }
+            B2BDirectConnectOutbound = MSFT_AADCrossTenantAccessPolicyB2BSetting {
+                Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                    AccessType = 'blocked'
+                    Targets    = @(
+                        MSFT_AADCrossTenantAccessPolicyTarget{
+                            Target     = 'AllApplications'
+                            TargetType = 'application'
+                        }
+                    )
+                }
+                UsersAndGroups = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                    AccessType = 'blocked'
+                    Targets    = @(
+                        MSFT_AADCrossTenantAccessPolicyTarget{
+                            Target     = 'AllUsers'
                             TargetType = 'user'
                         }
                     )
@@ -173,7 +189,12 @@ Configuration Example
             }
             Credential               = $Credscredential;
             Ensure                   = "Present";
-            PartnerTenantId          = "12345-12345-12345-12345-12345";
+            InboundTrust             = MSFT_AADCrossTenantAccessPolicyInboundTrust {
+                IsCompliantDeviceAccepted           = $False
+                IsHybridAzureADJoinedDeviceAccepted = $False
+                IsMfaAccepted                       = $False
+            }
+            IsSingleInstance                        = "Yes";
         }
     }
 }
