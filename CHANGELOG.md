@@ -18,6 +18,8 @@
 * AADCrossTenantAccessPolicyConfigurationPartner
   * Initial release
     FIXES [#3253](https://github.com/microsoft/Microsoft365DSC/issues/3253)
+* TeamsMessagingPolicy
+  * Add support for new parameters: AllowSmartCompose, AllowSmartReply, AllowUserDeleteChat
 * DEPENDENCIES
   * Updated DSCParser to version 1.0.8.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.162.
