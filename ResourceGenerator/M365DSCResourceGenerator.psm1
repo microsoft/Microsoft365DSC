@@ -1205,7 +1205,7 @@ function Get-TypeProperties
 
         [Parameter()]
         [System.Boolean]
-        $IncludeNavigationProperties=$true,
+        $IncludeNavigationProperties=$false,
 
         [Parameter()]
         [System.String[]]
@@ -1213,7 +1213,11 @@ function Get-TypeProperties
 
         [Parameter()]
         [System.String]
-        $Workload
+        $Workload,
+
+        [Parameter()]
+        [System.String]
+        $ParentPropertyName=""
     )
 
     $namespace=$CmdletDefinition|Where-Object -FilterScript {$_.EntityType.Name -contains $Entity}
@@ -1370,7 +1374,6 @@ function Get-TypeProperties
         }
     }
     while($null -ne $baseType)
-
     # Enrich properties
     $result=@()
     foreach ($property in $properties)
@@ -1411,18 +1414,21 @@ function Get-TypeProperties
             #Complex
             if (($derivedType -in $namespace.ComplexType.Name) -or ($property.IsNavigationProperty))
             {
-                $complexName=$property.Name+"-"+$property.Type
+                $complexName=$ParentPropertyName+"-"+$property.Name+"-"+$property.Type
                 $isComplex=$true
 
                 if ($complexName -notin $global:ComplexList)
                 {
-                    #$global:ComplexList+= $complexName
-
+                    if ($ParentPropertyName -ne "")
+                    {
+                        $global:ComplexList+= $complexName
+                    }
                     $nestedProperties = Get-TypeProperties `
                         -CmdletDefinition $CmdletDefinition `
                         -Entity $derivedType `
                         -CimClasses $CimClasses `
-                        -Workload $Workload
+                        -Workload $Workload `
+                        -ParentPropertyName $property.Name
                     $property.Add('Properties', $nestedProperties)
                 }
             }
@@ -2366,14 +2372,17 @@ function Get-M365DSCFakeValues
                 }
             }
             $hashValue.add('isArray', $parameter.IsArray)
-            $nestedProperties = Get-M365DSCFakeValues -ParametersInformation $parameter.Properties `
-                -Workload $Workload `
-                -isCmdletCall $isCmdletCall `
-                -isRecursive $true `
-                -IntroduceDrift $IntroduceDrift `
-                -IsGetTargetResource $IsGetTargetResource `
-                -IsParentFromAdditionalProperties $IsParentFromAdditionalProperties
-
+            $nestedProperties = @()
+            if ($null -ne $parameter.Properties)
+            {
+                $nestedProperties = Get-M365DSCFakeValues -ParametersInformation $parameter.Properties `
+                    -Workload $Workload `
+                    -isCmdletCall $isCmdletCall `
+                    -isRecursive $true `
+                    -IntroduceDrift $IntroduceDrift `
+                    -IsGetTargetResource $IsGetTargetResource `
+                    -IsParentFromAdditionalProperties $IsParentFromAdditionalProperties
+            }
             $hashValue.add('Properties', $nestedProperties)
             $hashValue.add('Name', $parameterName)
         }
@@ -2471,6 +2480,7 @@ function Get-M365DSCFakeValues
                 {
                     $parameterName = Get-StringFirstCharacterToLower -Value $parameterName
                 }
+                write-host -ForegroundColor Yellow $parameterName
                 $result.Add($parameterName, $hashValue)
             }
         }
