@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("AADAuthenticationStrengthPolicy")]
 class MSFT_AADAuthenticationStrengthPolicy : OMI_BaseResource
 {
-    [Required, Description("The name of the policy.")] String DisplayName;
+    [Key, Description("The name of the policy.")] String DisplayName;
     [Write, Description("A description of the policy.")] String Description;
     [Write, Description("The unique identifier of the policy.")] String Id;
     [Write, Description("The authentication method combinations allowed by this authentication strength policy. The possible values of this flagged enum are: password, voice, hardwareOath, softwareOath, sms, fido2, windowsHelloForBusiness, microsoftAuthenticatorPush, deviceBasedPush, temporaryAccessPassOneTime, temporaryAccessPassMultiUse, email, x509CertificateSingleFactor, x509CertificateMultiFactor, federatedSingleFactor, federatedMultiFactor, unknownFutureValue."), ValueMap{"password","voice","hardwareOath","softwareOath","sms","fido2","windowsHelloForBusiness","microsoftAuthenticatorPush","deviceBasedPush","temporaryAccessPassOneTime","temporaryAccessPassMultiUse","email","x509CertificateSingleFactor","x509CertificateMultiFactor","federatedSingleFactor","federatedMultiFactor","unknownFutureValue"}, Values{"password","voice","hardwareOath","softwareOath","sms","fido2","windowsHelloForBusiness","microsoftAuthenticatorPush","deviceBasedPush","temporaryAccessPassOneTime","temporaryAccessPassMultiUse","email","x509CertificateSingleFactor","x509CertificateMultiFactor","federatedSingleFactor","federatedMultiFactor","unknownFutureValue"}] String AllowedCombinations[];
