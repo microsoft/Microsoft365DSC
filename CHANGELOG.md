@@ -19,6 +19,7 @@
   * Initial release
     FIXES [#3253](https://github.com/microsoft/Microsoft365DSC/issues/3253)
 * DEPENDENCIES
+  * Updated DSCParser to version 1.0.8.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.162.
   * Updated MSCloudLoginAssistant to version 1.0.110.
 
