@@ -2,13 +2,6 @@
 
 # UNRELEASED
 
- * IntuneSettingCatalogCustomPolicyWindows10
-  * Initial release
-  FIXES [#2692](https://github.com/microsoft/Microsoft365DSC/issues/2692),
-  FIXES [#2976](https://github.com/microsoft/Microsoft365DSC/issues/2976),
-  FIXES [#3070](https://github.com/microsoft/Microsoft365DSC/issues/3070),
-  FIXES [#3071](https://github.com/microsoft/Microsoft365DSC/issues/3071),
-  FIXES [#3156](https://github.com/microsoft/Microsoft365DSC/issues/3156)
 * AADCrossTenantAccessPolicy
   * Initial release
     FIXES [#3251](https://github.com/microsoft/Microsoft365DSC/issues/3251)
@@ -18,6 +11,15 @@
 * AADCrossTenantAccessPolicyConfigurationPartner
   * Initial release
     FIXES [#3253](https://github.com/microsoft/Microsoft365DSC/issues/3253)
+ * IntuneSettingCatalogCustomPolicyWindows10
+  * Initial release
+  FIXES [#2692](https://github.com/microsoft/Microsoft365DSC/issues/2692),
+  FIXES [#2976](https://github.com/microsoft/Microsoft365DSC/issues/2976),
+  FIXES [#3070](https://github.com/microsoft/Microsoft365DSC/issues/3070),
+  FIXES [#3071](https://github.com/microsoft/Microsoft365DSC/issues/3071),
+  FIXES [#3156](https://github.com/microsoft/Microsoft365DSC/issues/3156)
+* AADAuthenticationStrengthPolicy
+  * Initial release
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.162.
   * Updated MSCloudLoginAssistant to version 1.0.110.
