@@ -1357,8 +1357,8 @@ function Export-TargetResource
     {
         if ($_ -match 'The tenant needs an AAD Premium 2 license')
         {
-            Write-Host -Message "`nWARNING: AAD Premium License is required to get the role" -ForegroundColor Yellow
-            continue
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) AAD Premium License is required to get the role."
+            return ''
         }
     }
     try

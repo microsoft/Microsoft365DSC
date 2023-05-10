@@ -176,6 +176,10 @@ function Get-TargetResource
         [System.String[]]
         $CustomAuthenticationFactors,
 
+        [Parameter()]
+        [System.String]
+        $AuthenticationStrength,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -553,6 +557,17 @@ function Get-TargetResource
             }
         }
 
+        $AuthenticationStrengthValue = $null
+        if ($null -ne $Policy.GrantControls -and $null -ne $Policy.GrantControls.AuthenticationStrength -and `
+            $null -ne $Policy.GrantControls.AuthenticationStrength.Id)
+        {
+            $strengthPolicy = Get-MgPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Policy.GrantControls.AuthenticationStrength.Id
+            if ($null -ne $strengthPolicy)
+            {
+                $AuthenticationStrengthValue = $strengthPolicy.DisplayName
+            }
+        }
+
         $result = @{
             DisplayName                              = $Policy.DisplayName
             Id                                       = $Policy.Id
@@ -616,6 +631,7 @@ function Get-TargetResource
             #make false if undefined, true if true
             PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
             #no translation needed
+            AuthenticationStrength                   = $AuthenticationStrengthValue
             #Standard part
             TermsOfUse                               = $termOfUseName
             Ensure                                   = 'Present'
@@ -807,6 +823,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $CustomAuthenticationFactors,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationStrength,
 
         #generic
         [Parameter()]
@@ -1330,7 +1350,7 @@ function Set-TargetResource
         #create and provision Grant Control object
         Write-Verbose -Message 'Set-Targetresource: create and provision Grant Control object'
 
-        if ($GrantControlOperator -and ($BuiltInControls -or $TermsOfUse -or $CustomAuthenticationFactors))
+        if ($GrantControlOperator -and ($BuiltInControls -or $TermsOfUse -or $CustomAuthenticationFactors -or $AuthenticationStrength))
         {
             $GrantControls = @{
                 Operator = $GrantControlOperator
@@ -1343,6 +1363,18 @@ function Set-TargetResource
             if ($customAuthenticationFactors)
             {
                 $GrantControls.Add('customAuthenticationFactors', $CustomAuthenticationFactors)
+            }
+            if ($AuthenticationStrength)
+            {
+                $strengthPolicy = Get-MgPolicyAuthenticationStrengthPolicy | Where-Object -FilterScript {$_.DisplayName -eq $AuthenticationStrength} -ErrorAction SilentlyContinue
+                if ($null -ne $strengthPolicy)
+                {
+                    $authenticationStrengthInstance = @{
+                        id            = $strengthPolicy.Id
+                        "@odata.type" = "#microsoft.graph.authenticationStrengthPolicy"
+                    }
+                    $GrantControls.Add('authenticationStrength', $authenticationStrengthInstance)
+                }
             }
 
             if ($TermsOfUse)
@@ -1654,6 +1686,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $CustomAuthenticationFactors,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationStrength,
 
         #generic
         [Parameter()]

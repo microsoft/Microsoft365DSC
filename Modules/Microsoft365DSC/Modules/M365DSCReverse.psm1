@@ -832,9 +832,9 @@ function Start-M365DSCConfigurationExtract
     }
     catch
     {
-        Write-Host $_
         $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
         Write-Host "Partial Export file was saved at: $partialPath"
+        throw $_
     }
 }
 

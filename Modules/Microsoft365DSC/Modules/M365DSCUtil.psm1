@@ -2442,7 +2442,10 @@ Specifies the path of the PFX file which is used for authentication.
 Specifies that file that contains a custom header for the report.
 
 .Parameter ExcludedProperties
-Specifies the name of parameters that should not be assessed as part of the report. The names will speficied will apply to all resources where they are encountered.
+Specifies the name of parameters that should not be assessed as part of the report. The names speficied will apply to all resources where they are encountered.
+
+.Parameter ExcludedResources
+Specifies the name of resources that should not be assessed as part of the report.
 
 .Example
 Assert-M365DSCBlueprint -BluePrintUrl 'C:\DS\blueprint.m365' -OutputReportPath 'C:\DSC\BlueprintReport.html'
@@ -2504,7 +2507,11 @@ function Assert-M365DSCBlueprint
 
         [Parameter()]
         [System.String[]]
-        $ExcludedProperties
+        $ExcludedProperties,
+
+        [Parameter()]
+        [System.String[]]
+        $ExcludedResources
     )
 
     $InformationPreference = 'SilentlyContinue'
@@ -2551,21 +2558,40 @@ function Assert-M365DSCBlueprint
             $endPosition = $fileContent.IndexOf("`r", $startPosition)
             $fileContent = $fileContent.Remove($startPosition, $endPosition - $startPosition)
         }
-        $parsedBluePrint = ConvertTo-DSCObject -Content $fileContent
+
+        try
+        {
+            $parsedBluePrint = ConvertTo-DSCObject -Content $fileContent
+        }
+        catch
+        {
+            throw $_
+        }
 
         # Generate an Array of Resource Types contained in the BluePrint
         $ResourcesInBluePrint = @()
         foreach ($resource in $parsedBluePrint)
         {
+            if ($resource.ResourceName -in $ExcludedResources)
+            {
+                continue
+            }
             if ($ResourcesInBluePrint -notcontains $resource.ResourceName)
             {
                 $ResourcesInBluePrint += $resource.ResourceName
             }
         }
 
-        if (!$ResourcesInBluePrint)
+        if ([String]::IsNullOrEmpty($ResourcesInBluePrint))
         {
-            Write-Host 'Malformed BluePrint, aborting'
+            if (![String]::IsNullOrEmpty($ExcludedResources))
+            {
+                Write-Host 'All resources were excluded from BluePrint, aborting'
+            }
+            else
+            {
+                Write-Host 'Malformed BluePrint, aborting'
+            }
             break
         }
 
@@ -2596,7 +2622,8 @@ function Assert-M365DSCBlueprint
             -IsBlueprintAssessment:$true `
             -HeaderFilePath $HeaderFilePath `
             -Type $Type `
-            -ExcludedProperties $ExcludedProperties
+            -ExcludedProperties $ExcludedProperties `
+            -ExcludedResources $ExcludedResources
     }
     else
     {
@@ -3096,7 +3123,7 @@ function Get-M365DSCExportContentForResource
     if ($ConnectionMode -like 'ServicePrincipal*' -or `
             $ConnectionMode -eq 'ManagedIdentity')
     {
-        $OrganizationName = $TenantId
+        $OrganizationName = $Results.TenantId
     }
     else
     {

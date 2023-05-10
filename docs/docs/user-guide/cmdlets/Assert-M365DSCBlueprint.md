@@ -22,7 +22,8 @@ This function does not generate any output.
 | CertificateThumbprint | False | String |  |  | Specifies the thumbprint to be used for authentication. |
 | HeaderFilePath | False | String |  |  | Specifies that file that contains a custom header for the report. |
 | Type | False | String | HTML | HTML, JSON |  |
-| ExcludedProperties | False | String[] |  |  | Specifies the name of parameters that should not be assessed as part of the report. The names will speficied will apply to all resources where they are encountered. |
+| ExcludedProperties | False | String[] |  |  | Specifies the name of parameters that should not be assessed as part of the report. The names speficied will apply to all resources where they are encountered. |
+| ExcludedResources | False | String[] |  |  | Specifies the name of resources that should not be assessed as part of the report. |
 
 ## Examples
 

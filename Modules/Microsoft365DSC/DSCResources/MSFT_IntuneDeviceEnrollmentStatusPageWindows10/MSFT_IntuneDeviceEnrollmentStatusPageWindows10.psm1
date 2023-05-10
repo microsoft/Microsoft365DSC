@@ -110,7 +110,7 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
-        Confirm-M365DSCDependencies -Verbose
+        Confirm-M365DSCDependencies
 
         #region Telemetry
         $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
@@ -728,13 +728,20 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return ''
     }
