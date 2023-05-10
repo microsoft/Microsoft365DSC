@@ -21,7 +21,7 @@
   FIXES [#3071](https://github.com/microsoft/Microsoft365DSC/issues/3071),
   FIXES [#3156](https://github.com/microsoft/Microsoft365DSC/issues/3156)
 * DEPENDENCIES
-  * Updated DSCParser to version 1.0.8.
+  * Updated DSCParser to version 1.0.9.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.162.
   * Updated MSCloudLoginAssistant to version 1.0.110.
 
