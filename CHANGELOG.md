@@ -4,6 +4,8 @@
 
 * AADAuthenticationStrengthPolicy
   * Initial release
+* AADConditionalAccessPolicy
+  * Added support for the AuthenticationStrength parameter.
 * AADCrossTenantAccessPolicy
   * Initial release
     FIXES [#3251](https://github.com/microsoft/Microsoft365DSC/issues/3251)
