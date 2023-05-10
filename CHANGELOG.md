@@ -22,6 +22,10 @@
   FIXES [#3156](https://github.com/microsoft/Microsoft365DSC/issues/3156)
 * TeamsMessagingPolicy
   * Add support for new parameters: AllowSmartCompose, AllowSmartReply, AllowUserDeleteChat
+* TeamsGuestMessagingConfiguration
+  * Add support for AllowUserDeleteChat parameter
+* TeamsGuestMeetingConfiguration
+  * Add support for LiveCaptionsEnabledType parameter
 * DEPENDENCIES
   * Updated DSCParser to version 1.0.9.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.162.
