@@ -83,7 +83,7 @@ function Get-TargetResource
         [System.String[]]
         $RoleScopeTagIds,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -289,7 +289,7 @@ function Set-TargetResource
         [System.String[]]
         $RoleScopeTagIds,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -512,7 +512,7 @@ function Test-TargetResource
         [System.String[]]
         $RoleScopeTagIds,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',

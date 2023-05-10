@@ -170,7 +170,7 @@ function Get-TargetResource
         [System.Boolean]
         $EncryptAppData,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -520,7 +520,7 @@ function Set-TargetResource
         [System.Boolean]
         $EncryptAppData,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -864,7 +864,7 @@ function Test-TargetResource
         [System.Boolean]
         $EncryptAppData,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',

@@ -17,7 +17,7 @@ function Get-TargetResource
         [System.UInt32]
         $Limit,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -121,7 +121,7 @@ function Set-TargetResource
         [System.UInt32]
         $Limit,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -220,7 +220,7 @@ function Test-TargetResource
         [System.UInt32]
         $Limit,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
