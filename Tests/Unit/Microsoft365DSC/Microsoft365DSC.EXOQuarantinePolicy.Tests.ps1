@@ -114,12 +114,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity = 'DefaultGlobalPolicy'
                     }
                 }
-
-                Mock -CommandName Get-QuarantinePolicy -ParameterFilter { $QuarantinePolicyType -eq 'GlobalQuarantinePolicy' } -MockWith {
-                    return @{
-                        Identity = 'DefaultGlobalPolicy'
-                    }
-                }
             }
 
             It 'Should return true from the Test method' {
