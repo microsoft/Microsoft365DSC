@@ -96,10 +96,15 @@ function Get-TargetResource
 
     try
     {
-        $QuarantinePolicies = Get-QuarantinePolicy -ErrorAction Stop
-        $QuarantinePolicies += Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy -ErrorAction Stop
-
-        $QuarantinePolicy = $QuarantinePolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if ($Identity -eq 'DefaultGlobalPolicy')
+        {
+            $QuarantinePolicy = Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy -ErrorAction Stop
+        }
+        else
+        {
+            $QuarantinePolicies = Get-QuarantinePolicy -ErrorAction Stop
+            $QuarantinePolicy = $QuarantinePolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        }
         if ($null -eq $QuarantinePolicy)
         {
             Write-Verbose -Message "QuarantinePolicy $($Identity) does not exist."
@@ -304,9 +309,15 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $QuarantinePolicies = Get-QuarantinePolicy
-    $QuarantinePolicies += Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy
-    $QuarantinePolicy = $QuarantinePolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if ($Identity -eq 'DefaultGlobalPolicy')
+    {
+        $QuarantinePolicy = Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy
+    }
+    else
+    {
+        $QuarantinePolicies = Get-QuarantinePolicy
+        $QuarantinePolicy = $QuarantinePolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    }
     $QuarantinePolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $QuarantinePolicyParams.Remove('Ensure') | Out-Null
     $QuarantinePolicyParams.Remove('Credential') | Out-Null
