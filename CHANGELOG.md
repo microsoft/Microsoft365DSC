@@ -32,6 +32,9 @@
   * Updated DSCParser to version 1.0.9.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.162.
   * Updated MSCloudLoginAssistant to version 1.0.110.
+* MISC
+  * Added a new Get-M365DSCConfigurationConflict cmdlet to help validate configurations and added
+    the -Validate switch to the Export-M365DSCConfiguration cmdlet.
 
 # 1.23.503.1
 
