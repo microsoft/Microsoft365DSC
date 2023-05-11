@@ -111,7 +111,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementWindowAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -119,7 +119,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgBetaDeviceManagementWindowAutopilotDeploymentProfile `
+                $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -197,7 +197,7 @@ function Get-TargetResource
             Managedidentity                        = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementWindowAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -359,7 +359,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $CreateParameters.Add("@odata.type", "#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile")
-        $policy = New-MgBetaDeviceManagementWindowAutopilotDeploymentProfile -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -394,7 +394,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile")
-        Update-MgBetaDeviceManagementWindowAutopilotDeploymentProfile  `
+        Update-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile  `
             -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
@@ -412,7 +412,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgBetaDeviceManagementWindowAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $currentInstance.Id
+        Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $currentInstance.Id
         #endregion
     }
 }
@@ -625,7 +625,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementWindowAutopilotDeploymentProfile `
+        [array]$getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile `
             -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `

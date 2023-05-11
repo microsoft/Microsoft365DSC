@@ -155,7 +155,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -163,7 +163,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy `
+                $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -593,7 +593,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $policy = New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -BodyParameter $CreateParameters
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -616,7 +616,7 @@ function Set-TargetResource
 
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.MdmWindowsInformationProtectionPolicy")
-        Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy  `
+        Update-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy  `
             -MdmWindowsInformationProtectionPolicyId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion
@@ -625,7 +625,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $currentInstance.Id
+        Remove-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $currentInstance.Id
         #endregion
     }
 }
@@ -884,7 +884,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy `
+        [array]$getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
             -All `
             -ErrorAction Stop
         #endregion

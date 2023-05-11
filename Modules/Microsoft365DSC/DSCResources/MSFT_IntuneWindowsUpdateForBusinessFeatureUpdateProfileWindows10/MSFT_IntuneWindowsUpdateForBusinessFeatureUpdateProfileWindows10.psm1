@@ -81,7 +81,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementWindowFeatureUpdateProfile -WindowsFeatureUpdateProfileId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -WindowsFeatureUpdateProfileId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -89,7 +89,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgBetaDeviceManagementWindowFeatureUpdateProfile `
+                $getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -136,7 +136,7 @@ function Get-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementWindowFeatureUpdateProfileAssignment -WindowsFeatureUpdateProfileId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfileAssignment -WindowsFeatureUpdateProfileId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -509,7 +509,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementWindowFeatureUpdateProfile `
+        [array]$getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile `
             -All `
             -ErrorAction Stop
         #endregion

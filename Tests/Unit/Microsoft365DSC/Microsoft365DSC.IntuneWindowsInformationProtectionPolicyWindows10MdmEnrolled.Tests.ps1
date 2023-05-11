@@ -33,13 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MockWith {
+            Mock -CommandName Update-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MockWith {
             }
 
-            Mock -CommandName New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MockWith {
+            Mock -CommandName New-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -161,7 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                             = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MockWith {
                     return $null
                 }
             }
@@ -173,7 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -Exactly 1
             }
         }
 
@@ -283,7 +283,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                             = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MockWith {
                     return @{
                         AdditionalProperties                   = @{
                             '@odata.type' = '#microsoft.graph.MdmWindowsInformationProtectionPolicy'
@@ -412,7 +412,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -Exactly 1
             }
         }
         Context -Name 'The IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled Exists and Values are already in the desired state' -Fixture {
@@ -521,7 +521,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                             = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MockWith {
                     return @{
                         AdditionalProperties                   = @{
                             '@odata.type' = '#microsoft.graph.MdmWindowsInformationProtectionPolicy'
@@ -752,7 +752,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                             = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MockWith {
                     return @{
                         DataRecoveryCertificate        = @{
                             Description        = 'FakeStringValue'
@@ -868,7 +868,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -Exactly 1
             }
         }
 
@@ -880,7 +880,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowInformationProtectionPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MockWith {
                     return @{
                         AdditionalProperties                   = @{
                             '@odata.type' = '#microsoft.graph.MdmWindowsInformationProtectionPolicy'

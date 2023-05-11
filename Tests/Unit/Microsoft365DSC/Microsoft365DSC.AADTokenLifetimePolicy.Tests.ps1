@@ -32,13 +32,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgPolicyTokenLifetimePolicy -MockWith {
+            Mock -CommandName Update-MgBetaPolicyTokenLifetimePolicy -MockWith {
             }
 
-            Mock -CommandName Remove-MgPolicyTokenLifetimePolicy -MockWith {
+            Mock -CommandName Remove-MgBetaPolicyTokenLifetimePolicy -MockWith {
             }
 
-            Mock -CommandName New-MgPolicyTokenLifetimePolicy -MockWith {
+            Mock -CommandName New-MgBetaPolicyTokenLifetimePolicy -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -62,21 +62,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgPolicyTokenLifetimePolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyTokenLifetimePolicy -MockWith {
                     return $null
                 }
             }
 
             It 'Should return values from the get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName 'Get-MgPolicyTokenLifetimePolicy' -Exactly 2
+                Should -Invoke -CommandName 'Get-MgBetaPolicyTokenLifetimePolicy' -Exactly 1
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should create the Policy from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgPolicyTokenLifetimePolicy' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaPolicyTokenLifetimePolicy' -Exactly 1
             }
         }
         Context -Name 'The Policy exists but it should not' -Fixture {
@@ -90,7 +90,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgPolicyTokenLifetimePolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyTokenLifetimePolicy -MockWith {
                     $AADPolicy = New-Object PSCustomObject
                     $AADPolicy | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'PolicyDisplayName'
                     $AADPolicy | Add-Member -MemberType NoteProperty -Name ID -Value '78a80fa1-8ced-4019-94d8-2e0130644496'
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName 'Get-MgPolicyTokenLifetimePolicy' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaPolicyTokenLifetimePolicy' -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-MgPolicyTokenLifetimePolicy' -Exactly 1
+                Should -Invoke -CommandName 'Remove-MgBetaPolicyTokenLifetimePolicy' -Exactly 1
             }
         }
 
@@ -127,7 +127,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgPolicyTokenLifetimePolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyTokenLifetimePolicy -MockWith {
                     $AADPolicy = New-Object PSCustomObject
                     $AADPolicy | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'PolicyDisplayName'
                     $AADPolicy | Add-Member -MemberType NoteProperty -Name ID -Value '78a80fa1-8ced-4019-94d8-2e0130644496'
@@ -141,7 +141,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgPolicyTokenLifetimePolicy' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaPolicyTokenLifetimePolicy' -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -160,7 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgPolicyTokenLifetimePolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyTokenLifetimePolicy -MockWith {
                     $AADPolicy = New-Object PSCustomObject
                     $AADPolicy | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'PolicyDisplayName'
                     $AADPolicy | Add-Member -MemberType NoteProperty -Name ID -Value '78a80fa1-8ced-4019-94d8-2e0130644496'
@@ -173,7 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgPolicyTokenLifetimePolicy' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaPolicyTokenLifetimePolicy' -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -182,7 +182,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Update-MgPolicyTokenLifetimePolicy' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgBetaPolicyTokenLifetimePolicy' -Exactly 1
             }
         }
 
@@ -194,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgPolicyTokenLifetimePolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyTokenLifetimePolicy -MockWith {
                     $AADPolicy = New-Object PSCustomObject
                     $AADPolicy | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'PolicyDisplayName'
                     $AADPolicy | Add-Member -MemberType NoteProperty -Name ID -Value '78a80fa1-8ced-4019-94d8-2e0130644496'

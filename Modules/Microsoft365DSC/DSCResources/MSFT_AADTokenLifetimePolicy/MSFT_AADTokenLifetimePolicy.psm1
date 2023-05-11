@@ -76,9 +76,9 @@ function Get-TargetResource
         $nullReturn.Ensure = 'Absent'
         try
         {
-            if ($null -ne $Id)
+            if (-Not [System.String]::IsNullOrEMpty($Id))
             {
-                $Policy = Get-MgPolicyTokenLifetimePolicy -TokenLifetimePolicyId $Id
+                $Policy = Get-MgBetaPolicyTokenLifetimePolicy -TokenLifetimePolicyId $Id -ErrorAction SilentlyContinue
             }
         }
         catch
@@ -89,7 +89,7 @@ function Get-TargetResource
         {
             try
             {
-                $Policy = Get-MgPolicyTokenLifetimePolicy -Filter "DisplayName eq '$DisplayName'"
+                $Policy = Get-MgBetaPolicyTokenLifetimePolicy -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
             }
             catch
             {
@@ -222,7 +222,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating new AzureAD Token Lifetime Policy {$Displayname)}"
         Write-Verbose -Message "Parameters: $($currentParameters | Out-String)}"
         $currentParameters.Remove('Id') | Out-Null
-        New-MgPolicyTokenLifetimePolicy @currentParameters
+        New-MgBetaPolicyTokenLifetimePolicy @currentParameters
     }
     # Policy should exist and will be configured to desire state
     elseif ($Ensure -eq 'Present' -and $CurrentAADPolicy.Ensure -eq 'Present')
@@ -230,13 +230,13 @@ function Set-TargetResource
         Write-Verbose -Message "Updating existing AzureAD Policy {$Displayname)}"
         $currentParameters.Add('TokenLifetimePolicyId', $currentAADPolicy.ID)
         $currentParameters.Remove('Id') | Out-Null
-        Update-MgPolicyTokenLifetimePolicy @currentParameters
+        Update-MgBetaPolicyTokenLifetimePolicy @currentParameters
     }
     # Policy exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD Policy {$Displayname)}"
-        Remove-MgPolicyTokenLifetimePolicy -TokenLifetimePolicyId $currentAADPolicy.ID
+        Remove-MgBetaPolicyTokenLifetimePolicy -TokenLifetimePolicyId $currentAADPolicy.ID
     }
 }
 
@@ -372,7 +372,7 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$AADPolicies = Get-MgPolicyTokenLifetimePolicy -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$AADPolicies = Get-MgBetaPolicyTokenLifetimePolicy -All:$true -Filter $Filter -ErrorAction Stop
 
         if ($AADPolicies.Length -eq 0)
         {
