@@ -28,6 +28,8 @@
   * Add support for AllowUserDeleteChat parameter
 * TeamsGuestMeetingConfiguration
   * Add support for LiveCaptionsEnabledType parameter
+* TeamsTeam
+  * Fix group creation
 * DEPENDENCIES
   * Updated DSCParser to version 1.0.9.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.162.
