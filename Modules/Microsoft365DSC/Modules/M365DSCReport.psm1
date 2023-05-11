@@ -505,6 +505,7 @@ function Compare-M365DSCConfigurations
         [Array] $DestinationObject = Initialize-M365DSCReporting -ConfigurationPath $Destination
     }
 
+    $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
     # Loop through all items in the source array
     $i = 1
     foreach ($sourceResource in $SourceObject)
@@ -516,7 +517,7 @@ function Compare-M365DSCConfigurations
 
         try
         {
-            [array]$key = Get-M365DSCResourceKey -Resource $sourceResource
+            [array]$key = Get-M365DSCResourceKey -Resource $sourceResource -DSCResourceInfo $dscResourceInfo
             Write-Progress -Activity "Scanning Source $Source...[$i/$($SourceObject.Count)]" -PercentComplete ($i / ($SourceObject.Count) * 100)
             [array]$destinationResource = $DestinationObject | Where-Object -FilterScript { $_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[0]) -eq $sourceResource.($key[0]) }
 
@@ -867,7 +868,7 @@ function Compare-M365DSCConfigurations
             try
             {
                 [System.Collections.HashTable]$currentDestinationResource = ([array]$destinationResource)[0]
-                $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
+                $key = Get-M365DSCResourceKey -Resource $currentDestinationResource -DSCResourceInfo $dscResourceInfo
                 Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i / ($DestinationObject.Count) * 100)
                 $sourceResource = $SourceObject | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and `
                                                                                $_.($key[0]) -eq $currentDestinationResource.($key[0]) -and `
@@ -981,9 +982,13 @@ function Get-M365DSCResourceKey
     (
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
-        $Resource
+        $Resource,
+
+        [Parameter(Mandatory = $true)]
+        [Array]
+        $DSCResourceInfo
     )
-    $resourceInfo = Get-DscResource ("MSFT_$($Resource.ResourceName)") -Module 'Microsoft365DSC'
+    $resourceInfo = $DSCResourceInfo | Where-Object -FilterScript {$_.Name -eq $Resource.ResourceName}
     [Array]$mandatoryParameters = $resourceInfo.Properties | Where-Object -FilterScript { $_.IsMandatory }
     if ($Resource.Contains('IsSingleInstance') -and $mandatoryParameters.Name.Contains('IsSingleInstance'))
     {
@@ -1062,7 +1067,7 @@ function Get-M365DSCResourceKey
     }
     elseif ($mandatoryParameters.count -eq 0)
     {
-        throw "No mandatory parameters found for $($Resource.ResourceName)"
+        Write-Verbose -Message "No mandatory parameters found for $($Resource.ResourceName)"
     }
     else
     {
