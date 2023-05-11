@@ -693,7 +693,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10VpnConfiguration")
-        $policy = NewBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {

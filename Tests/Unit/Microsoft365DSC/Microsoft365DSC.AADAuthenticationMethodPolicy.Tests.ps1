@@ -27,16 +27,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Get-PSSession -MockWith {
+            Mock -CommandName Update-MgBetaPolicyAuthenticationMethodPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-PSSession -MockWith {
-            }
-
-            Mock -CommandName Update-MgPolicyAuthenticationMethodPolicy -MockWith {
-            }
-
-            Mock -CommandName Remove-MgPolicyAuthenticationMethodPolicy -MockWith {
+            Mock -CommandName Remove-MgBetaPolicyAuthenticationMethodPolicy -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -95,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationMethodPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationMethodPolicy -MockWith {
                     return $null
                 }
             }
@@ -154,7 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationMethodPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationMethodPolicy -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = "#microsoft.graph.AuthenticationMethodsPolicy"
@@ -214,7 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgPolicyAuthenticationMethodPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaPolicyAuthenticationMethodPolicy -Exactly 1
             }
         }
         Context -Name "The AADAuthenticationMethodPolicy Exists and Values are already in the desired state" -Fixture {
@@ -264,7 +258,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationMethodPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationMethodPolicy -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = "#microsoft.graph.AuthenticationMethodsPolicy"
@@ -367,7 +361,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationMethodPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationMethodPolicy -MockWith {
                     return @{
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
@@ -423,7 +417,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgPolicyAuthenticationMethodPolicy -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaPolicyAuthenticationMethodPolicy -Exactly 1
             }
         }
 
@@ -435,7 +429,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationMethodPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationMethodPolicy -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = "#microsoft.graph.AuthenticationMethodsPolicy"
