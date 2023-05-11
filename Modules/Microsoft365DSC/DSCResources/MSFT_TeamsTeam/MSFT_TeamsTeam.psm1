@@ -412,7 +412,7 @@ function Set-TargetResource
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
-            $group = New-MgSGroup -DisplayName $DisplayName -GroupTypes 'Unified' -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
+            $group = New-MgGroup -DisplayName $DisplayName -GroupTypes 'Unified' -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
             $currentOwner = (($CurrentParameters.Owner)[0])
 
             Write-Verbose -Message "Retrieving Group Owner {$currentOwner}"
