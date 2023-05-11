@@ -96,9 +96,15 @@ function Get-TargetResource
 
     try
     {
-        $QuarantinePolicys = Get-QuarantinePolicy -ErrorAction Stop
-
-        $QuarantinePolicy = $QuarantinePolicys | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        if ($Identity -eq 'DefaultGlobalPolicy')
+        {
+            $QuarantinePolicy = Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy -ErrorAction Stop
+        }
+        else
+        {
+            $QuarantinePolicies = Get-QuarantinePolicy -ErrorAction Stop
+            $QuarantinePolicy = $QuarantinePolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        }
         if ($null -eq $QuarantinePolicy)
         {
             Write-Verbose -Message "QuarantinePolicy $($Identity) does not exist."
@@ -303,8 +309,15 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $QuarantinePolicys = Get-QuarantinePolicy
-    $QuarantinePolicy = $QuarantinePolicys | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    if ($Identity -eq 'DefaultGlobalPolicy')
+    {
+        $QuarantinePolicy = Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy
+    }
+    else
+    {
+        $QuarantinePolicies = Get-QuarantinePolicy
+        $QuarantinePolicy = $QuarantinePolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    }
     $QuarantinePolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $QuarantinePolicyParams.Remove('Ensure') | Out-Null
     $QuarantinePolicyParams.Remove('Credential') | Out-Null
@@ -491,8 +504,9 @@ function Export-TargetResource
 
     try
     {
-        [array]$QuarantinePolicys = Get-QuarantinePolicy -ErrorAction Stop
-        if ($QuarantinePolicys.Length -eq 0)
+        [array]$QuarantinePolicies = Get-QuarantinePolicy -ErrorAction Stop
+        [array]$QuarantinePolicies += Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy -ErrorAction Stop
+        if ($QuarantinePolicies.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -502,9 +516,9 @@ function Export-TargetResource
         }
         $dscContent = ''
         $i = 1
-        foreach ($QuarantinePolicy in $QuarantinePolicys)
+        foreach ($QuarantinePolicy in $QuarantinePolicies)
         {
-            Write-Host "    |---[$i/$($QuarantinePolicys.length)] $($QuarantinePolicy.Identity)" -NoNewline
+            Write-Host "    |---[$i/$($QuarantinePolicies.length)] $($QuarantinePolicy.Identity)" -NoNewline
 
             $Params = @{
                 Identity              = $QuarantinePolicy.Identity
