@@ -97,6 +97,7 @@ function Get-TargetResource
     try
     {
         $QuarantinePolicys = Get-QuarantinePolicy -ErrorAction Stop
+        $QuarantinePolicys += Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy -ErrorAction Stop
 
         $QuarantinePolicy = $QuarantinePolicys | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $QuarantinePolicy)
@@ -304,6 +305,7 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $QuarantinePolicys = Get-QuarantinePolicy
+    $QuarantinePolicys += Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy
     $QuarantinePolicy = $QuarantinePolicys | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $QuarantinePolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $QuarantinePolicyParams.Remove('Ensure') | Out-Null
@@ -492,6 +494,7 @@ function Export-TargetResource
     try
     {
         [array]$QuarantinePolicys = Get-QuarantinePolicy -ErrorAction Stop
+        [array]$QuarantinePolicys += Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy -ErrorAction Stop
         if ($QuarantinePolicys.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
