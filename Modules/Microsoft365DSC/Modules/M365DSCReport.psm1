@@ -1067,7 +1067,7 @@ function Get-M365DSCResourceKey
     }
     elseif ($mandatoryParameters.count -eq 0)
     {
-        throw "No mandatory parameters found for $($Resource.ResourceName)"
+        Write-Verbose -Message "No mandatory parameters found for $($Resource.ResourceName)"
     }
     else
     {
