@@ -270,7 +270,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $CreateParameters.Add("@odata.type", "#microsoft.graph.WindowsFeatureUpdateProfile")
-        $policy=New-MgBetaDeviceManagementWindowFeatureUpdateProfile -BodyParameter $CreateParameters
+        $policy=New-MgBetaDeviceManagementWindowsFeatureUpdateProfile -BodyParameter $CreateParameters
         $assignmentsHash=@()
         foreach($assignment in $Assignments)
         {
@@ -307,7 +307,7 @@ function Set-TargetResource
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.WindowsFeatureUpdateProfile")
         write-verbose ($updateparameters|convertto-json -depth 20)
-        Update-MgBetaDeviceManagementWindowFeatureUpdateProfile  `
+        Update-MgBetaDeviceManagementWindowsFeatureUpdateProfile  `
             -WindowsFeatureUpdateProfileId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
@@ -324,7 +324,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Windows Update For Business Feature Update Profile for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgBetaDeviceManagementWindowFeatureUpdateProfile -WindowsFeatureUpdateProfileId $currentInstance.Id
+        Remove-MgBetaDeviceManagementWindowsFeatureUpdateProfile -WindowsFeatureUpdateProfileId $currentInstance.Id
         #endregion
     }
 }

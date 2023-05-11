@@ -28,12 +28,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Get-PSSession -MockWith {
-            }
-
-            Mock -CommandName Remove-PSSession -MockWith {
-            }
-
             Mock -CommandName Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
             }
 
@@ -45,9 +39,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
-            }
-
-            Mock -CommandName Select-MgProfile -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests

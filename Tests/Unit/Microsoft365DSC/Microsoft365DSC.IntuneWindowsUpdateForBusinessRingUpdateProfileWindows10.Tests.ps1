@@ -27,12 +27,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Get-PSSession -MockWith {
-            }
-
-            Mock -CommandName Remove-PSSession -MockWith {
-            }
-
             Mock -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -MockWith {
             }
 

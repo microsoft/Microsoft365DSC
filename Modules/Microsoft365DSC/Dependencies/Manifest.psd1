@@ -37,6 +37,10 @@
             RequiredVersion = '2.0.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Identity.SignIns'
+            RequiredVersion = '2.0.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Beta.Teams'
             RequiredVersion = '2.0.0'
         },
@@ -58,10 +62,6 @@
         },
         @{
             ModuleName      = 'Microsoft.Graph.Identity.Governance'
-            RequiredVersion = '2.0.0'
-        },
-        @{
-            ModuleName      = 'Microsoft.Graph.Identity.SignIns'
             RequiredVersion = '2.0.0'
         },
         @{
