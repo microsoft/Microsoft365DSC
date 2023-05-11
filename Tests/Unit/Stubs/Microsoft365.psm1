@@ -34411,7 +34411,6 @@ function Update-MgBetaPolicyTokenLifetimePolicy
     )
 }
 #endregion
-
 #region Microsoft.Graph.Planner
 function Get-MgGroupPlanner
 {
