@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.510.1
 
 * AADAuthenticationStrengthPolicy
   * Initial release
@@ -35,7 +35,7 @@
   * Fix group creation
 * DEPENDENCIES
   * Updated DSCParser to version 1.0.9.
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.162.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.1623.
   * Updated MSCloudLoginAssistant to version 1.0.110.
 * MISC
   * Added a new Get-M365DSCConfigurationConflict cmdlet to help validate configurations and added
