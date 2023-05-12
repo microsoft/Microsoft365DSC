@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Remove Windows Mobile support
+    FIXES [#3303](https://github.com/microsoft/Microsoft365DSC/issues/3303)
 * IntuneSettingCatalogCustomPolicyWindows10
   * Add missing properties to schema
     FIXES [#3300](https://github.com/microsoft/Microsoft365DSC/issues/3300)
