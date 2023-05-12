@@ -35,10 +35,6 @@ function Get-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
-        $WindowsMobileRestriction,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
         $AndroidRestriction,
 
         [Parameter()]
@@ -207,10 +203,6 @@ function Set-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsHomeSkuRestriction,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $WindowsMobileRestriction,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -428,10 +420,6 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $WindowsHomeSkuRestriction,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
-        $WindowsMobileRestriction,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -694,18 +682,6 @@ function Export-TargetResource
                     $Results.Remove('WindowsHomeSkuRestriction') | Out-Null
                 }
             }
-            if ($null -ne $Results.WindowsMobileRestriction)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.WindowsMobileRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
-                if ($complexTypeStringResult)
-                {
-                    $Results.WindowsMobileRestriction = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('WindowsMobileRestriction') | Out-Null
-                }
-            }
 
             if ($null -ne $Results.AndroidRestriction)
             {
@@ -792,10 +768,6 @@ function Export-TargetResource
             if ($null -ne $Results.WindowsHomeSkuRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsHomeSkuRestriction'
-            }
-            if ($null -ne $Results.WindowsMobileRestriction)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsMobileRestriction'
             }
 
             if ($null -ne $Results.AndroidRestriction)
