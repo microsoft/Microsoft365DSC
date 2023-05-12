@@ -51,6 +51,8 @@ class MSFT_MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphDeviceManagementConfigurationSettingValueTemplateReference
 {
+    [Write, Description("Setting value template id")] String settingValueTemplateId;
+    [Write, Description("Indicates whether to update policy setting value to match template setting default value")] Boolean useTemplateDefault;
 };
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphDeviceManagementConfigurationGroupSettingValue
@@ -88,5 +90,5 @@ class MSFT_IntuneSettingCatalogCustomPolicyWindows10 : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };
