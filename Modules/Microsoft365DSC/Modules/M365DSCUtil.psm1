@@ -111,7 +111,7 @@ function Get-TeamByName
 
 <#
 .Description
-This function converts a parameter hastable to a string, for outputting to screen
+This function converts a parameter hashtable to a string, for outputting to screen
 
 .Functionality
 Internal
