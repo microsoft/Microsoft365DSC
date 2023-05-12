@@ -11,6 +11,7 @@
 * MISC
   * Major performance improvements for the New-M365DSCDeltaReport cmdlet.
     FIXES [#3016](https://github.com/microsoft/Microsoft365DSC/issues/3016)
+  * M365DSCUtil: Fix typo in order to obfuscate cert thumbprint
 
 # 1.23.510.1
 
