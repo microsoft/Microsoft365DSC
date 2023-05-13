@@ -111,7 +111,7 @@ function Get-TeamByName
 
 <#
 .Description
-This function converts a parameter hastable to a string, for outputting to screen
+This function converts a parameter hashtable to a string, for outputting to screen
 
 .Functionality
 Internal
@@ -126,7 +126,7 @@ function Convert-M365DscHashtableToString
     )
 
     $values = @()
-    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', 'CertificateThumnbprint', 'CertificatePath', 'CertificatePassword', 'Credential')
+    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', 'CertificateThumbprint', 'CertificatePath', 'CertificatePassword', 'Credential')
     foreach ($pair in $Hashtable.GetEnumerator())
     {
         try
