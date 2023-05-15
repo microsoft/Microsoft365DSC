@@ -11,6 +11,9 @@
 * IntuneSettingCatalogCustomPolicyWindows10
   * Add missing properties to schema
     FIXES [#3300](https://github.com/microsoft/Microsoft365DSC/issues/3300)
+* SPOUserProfileProperty
+  * Fixes and issue where the properties weren't properly set.
+    FIXES [#3226](https://github.com/microsoft/Microsoft365DSC/issues/3226)
 * MISC
   * Major performance improvements for the New-M365DSCDeltaReport cmdlet.
     FIXES [#3016](https://github.com/microsoft/Microsoft365DSC/issues/3016)
