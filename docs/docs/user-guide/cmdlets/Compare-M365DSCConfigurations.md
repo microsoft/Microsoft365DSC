@@ -19,6 +19,8 @@ This function outputs information as the following type:
 | SourceObject | False | Array |  |  | Array that contains the list of configuration components for the source. |
 | DestinationObject | False | Array |  |  | Array that contains the list of configuration components for the destination. |
 | ExcludedProperties | False | Array |  |  | Array that contains the list of parameters to exclude. |
+| ExcludedResources | False | Array |  |  | Array that contains the list of resources to exclude. |
+| IsBlueprintAssessment | False | Boolean |  |  | Specifies whether or not we are currently comparing a configuration to a Blueprint. |
 
 ## Examples
 
