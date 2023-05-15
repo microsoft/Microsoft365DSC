@@ -146,6 +146,12 @@ function Get-TargetResource
         }
 
         $results += Get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
+
+        if ($null -ne $results.WindowsMobileRestriction)
+        {
+            $results.Remove('WindowsMobileRestriction') | Out-Null
+        }
+
         $AssignmentsValues = Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
