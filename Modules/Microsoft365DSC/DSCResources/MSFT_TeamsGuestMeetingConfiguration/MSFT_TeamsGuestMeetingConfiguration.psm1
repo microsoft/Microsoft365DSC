@@ -15,6 +15,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet('Disabled', 'DisabledUserOverride')]
+        $LiveCaptionsEnabledType,
+
+        [Parameter()]
+        [System.String]
         [ValidateSet('Disabled', 'EntireScreen', 'SingleApplication')]
         $ScreenSharingMode,
 
@@ -65,14 +70,15 @@ function Get-TargetResource
         $config = Get-CsTeamsGuestMeetingConfiguration -ErrorAction Stop
 
         $result = @{
-            Identity              = $config.Identity
-            AllowIPVideo          = $config.AllowIPVideo
-            ScreenSharingMode     = $config.ScreenSharingMode
-            AllowMeetNow          = $config.AllowMeetNow
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+            Identity                = $config.Identity
+            AllowIPVideo            = $config.AllowIPVideo
+            LiveCaptionsEnabledType = $config.LiveCaptionsEnabledType
+            ScreenSharingMode       = $config.ScreenSharingMode
+            AllowMeetNow            = $config.AllowMeetNow
+            Credential              = $Credential
+            ApplicationId           = $ApplicationId
+            TenantId                = $TenantId
+            CertificateThumbprint   = $CertificateThumbprint
         }
         return $result
     }
@@ -101,6 +107,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowIPVideo,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Disabled', 'DisabledUserOverride')]
+        $LiveCaptionsEnabledType,
 
         [Parameter()]
         [System.String]
@@ -168,6 +179,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowIPVideo,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Disabled', 'DisabledUserOverride')]
+        $LiveCaptionsEnabledType,
 
         [Parameter()]
         [System.String]

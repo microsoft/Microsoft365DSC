@@ -1,0 +1,44 @@
+{
+    "resourceName": "AADAuthenticationMethodPolicySms",
+    "description": "This resource configures an Azure AD Authentication Method Policy Sms.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}

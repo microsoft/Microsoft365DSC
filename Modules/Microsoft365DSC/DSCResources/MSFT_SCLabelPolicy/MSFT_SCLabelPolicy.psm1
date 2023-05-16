@@ -107,6 +107,23 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of Sensitivity Label Policy for $Name"
+
+    if ($PSBoundParameters.ContainsKey('Labels') -and `
+        ($PSBoundParameters.ContainsKey('AddLabels') -or $PSBoundParameters.ContainsKey('RemoveLabels')))
+    {
+        throw 'You cannot use the Labels parameter and the AddLabels or RemoveLabels parameters at the same time.'
+    }
+
+    if ($PSBoundParameters.ContainsKey('AddLabels') -and $PSBoundParameters.ContainsKey('RemoveLabels'))
+    {
+        # Check if AddLabels and RemoveLabels contain the same labels
+        [array]$diff = Compare-Object -ReferenceObject $AddLabels -DifferenceObject $RemoveLabels -ExcludeDifferent -IncludeEqual
+        if ($diff.Count -gt 0)
+        {
+            throw 'Parameters AddLabels and RemoveLabels cannot contain the same labels. Make sure labels are not present in both parameters.'
+        }
+    }
+
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
@@ -137,7 +154,7 @@ function Get-TargetResource
     {
         try
         {
-            $policy = Get-LabelPolicy -Identity $Name -ErrorAction SilentlyContinue
+            $policy = Get-LabelPolicy -Identity $Name -ErrorAction SilentlyContinue -WarningAction Ignore
         }
         catch
         {
@@ -300,6 +317,22 @@ function Set-TargetResource
 
     Write-Verbose -Message "Setting configuration of Sensitivity label policy for $Name"
 
+    if ($PSBoundParameters.ContainsKey('Labels') -and `
+        ($PSBoundParameters.ContainsKey('AddLabels') -or $PSBoundParameters.ContainsKey('RemoveLabels')))
+    {
+        throw 'You cannot use the Labels parameter and the AddLabels or RemoveLabels parameters at the same time.'
+    }
+
+    if ($PSBoundParameters.ContainsKey('AddLabels') -and $PSBoundParameters.ContainsKey('RemoveLabels'))
+    {
+        # Check if AddLabels and RemoveLabels contain the same labels
+        [array]$diff = Compare-Object -ReferenceObject $AddLabels -DifferenceObject $RemoveLabels -ExcludeDifferent -IncludeEqual
+        if ($diff.Count -gt 0)
+        {
+            throw 'Parameters AddLabels and RemoveLabels cannot contain the same labels. Make sure labels are not present in both parameters.'
+        }
+    }
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -319,21 +352,29 @@ function Set-TargetResource
 
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
-        $CreationParams = $PSBoundParameters
+        Write-Verbose "Creating new Sensitivity label policy '$Name'."
+
+        $CreationParams = ([Hashtable]$PSBoundParameters).Clone()
 
         if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
             $advanced = Convert-CIMToAdvancedSettings -AdvancedSettings $AdvancedSettings
             $CreationParams['AdvancedSettings'] = $advanced
         }
+
+        if ($PSBoundParameters.ContainsKey('AddLabels'))
+        {
+            $CreationParams['Labels'] = $AddLabels
+        }
+        $CreationParams.Remove('AddLabels') | Out-Null
+        $CreationParams.Remove('RemoveLabels') | Out-Null
+
         #Remove parameters not used in New-LabelPolicy
         $CreationParams.Remove('Ensure') | Out-Null
-        $CreationParams.Remove('AddLabels') | Out-Null
         $CreationParams.Remove('AddExchangeLocation') | Out-Null
         $CreationParams.Remove('AddExchangeLocationException') | Out-Null
         $CreationParams.Remove('AddModernGroupLocation') | Out-Null
         $CreationParams.Remove('AddModernGroupLocationException') | Out-Null
-        $CreationParams.Remove('RemoveLabels') | Out-Null
         $CreationParams.Remove('RemoveExchangeLocation') | Out-Null
         $CreationParams.Remove('RemoveExchangeLocationException') | Out-Null
         $CreationParams.Remove('RemoveModernGroupLocation') | Out-Null
@@ -349,8 +390,6 @@ function Set-TargetResource
         $CreationParams.Remove('ManagedIdentity') | Out-Null
         $CreationParams.Remove('ApplicationSecret') | Out-Null
 
-        Write-Verbose "Creating new Sensitivity label policy '$Name'."
-
         try
         {
             New-LabelPolicy @CreationParams
@@ -362,21 +401,27 @@ function Set-TargetResource
         try
         {
             Start-Sleep 5
-            $SetParams = $PSBoundParameters
+            Write-Verbose "Updating Sensitivity label policy '$Name' settings."
+            $SetParams = ([Hashtable]$PSBoundParameters).Clone()
 
             if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
             {
                 $advanced = Convert-CIMToAdvancedSettings -AdvancedSettings $AdvancedSettings
                 $SetParams['AdvancedSettings'] = $advanced
             }
+
             #Remove unused parameters for Set-Label cmdlet
             $SetParams.Remove('Ensure') | Out-Null
             $SetParams.Remove('Name') | Out-Null
             $SetParams.Remove('ExchangeLocationException') | Out-Null
-            $SetParams.Remove('Labels') | Out-Null
             $SetParams.Remove('ExchangeLocation') | Out-Null
             $SetParams.Remove('ModernGroupLocation') | Out-Null
             $SetParams.Remove('ModernGroupLocationException') | Out-Null
+
+            # Labels are already set during creation, removing parameters
+            $SetParams.Remove('Labels') | Out-Null
+            $SetParams.Remove('AddLabels') | Out-Null
+            $SetParams.Remove('RemoveLabels') | Out-Null
 
             # Remove authentication parameters
             $SetParams.Remove('Credential') | Out-Null
@@ -397,18 +442,54 @@ function Set-TargetResource
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
-        $SetParams = $PSBoundParameters
+        Write-Verbose "Updating existing Sensitivity label policy '$Name'."
+
+        $SetParams = ([Hashtable]$PSBoundParameters).Clone()
 
         if ($PSBoundParameters.ContainsKey('AdvancedSettings'))
         {
             $advanced = Convert-CIMToAdvancedSettings -AdvancedSettings $AdvancedSettings
             $SetParams['AdvancedSettings'] = $advanced
         }
+
+        if ($PSBoundParameters.ContainsKey('Labels'))
+        {
+            [array]$diffs = Compare-Object -ReferenceObject $CurrentPolicy.Labels -DifferenceObject $Labels
+            if ($diffs.Count -gt 0)
+            {
+                $add = @()
+                $remove = @()
+                foreach ($diff in $diffs)
+                {
+                    if ($diff.SideIndicator -eq '<=')
+                    {
+                        Write-Verbose "Removing label $($diff.InputObject) from policy $Name."
+                        $remove += $diff.InputObject
+                    }
+                    elseif ($diff.SideIndicator -eq '=>')
+                    {
+                        Write-Verbose "Adding label $($diff.InputObject) to policy $Name."
+                        $add += $diff.InputObject
+                    }
+                }
+
+                if ($add.Count -gt 0)
+                {
+                    $SetParams['AddLabels'] = $add
+                }
+
+                if ($remove.Count -gt 0)
+                {
+                    $SetParams['RemoveLabels'] = $remove
+                }
+            }
+            $SetParams.Remove('Labels') | Out-Null
+        }
+
         #Remove unused parameters for Set-Label cmdlet
         $SetParams.Remove('Ensure') | Out-Null
         $SetParams.Remove('Name') | Out-Null
         $SetParams.Remove('ExchangeLocationException') | Out-Null
-        $SetParams.Remove('Labels') | Out-Null
         $SetParams.Remove('ExchangeLocation') | Out-Null
         $SetParams.Remove('ModernGroupLocation') | Out-Null
         $SetParams.Remove('ModernGroupLocationException') | Out-Null
@@ -777,7 +858,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-LabelPolicy -ErrorAction Stop
+        [array]$policies = Get-LabelPolicy -ErrorAction Stop -WarningAction Ignore
 
         $dscContent = ''
         $i = 1
@@ -866,7 +947,7 @@ function Convert-StringToAdvancedSettings
 
             if ($settingKey -like '*defaultlabel*')
             {
-                if ($values -ne "None")
+                if ($values -ne 'None')
                 {
                     $label = Get-Label -Identity $values
                     $values = $label.DisplayName
@@ -901,14 +982,14 @@ function Convert-CIMToAdvancedSettings
         $settingsValues = ''
         if ($obj.Key -like '*defaultlabel*')
         {
-            if ($obj.Value -ne "None")
+            if ($obj.Value -ne 'None')
             {
                 $label = Get-Label | Where-Object -FilterScript { $_.DisplayName -eq $obj.Value }
                 $settingsValues = $label.ImmutableId.ToString()
             }
             else
             {
-                $settingsValues = "None"
+                $settingsValues = 'None'
             }
         }
         else

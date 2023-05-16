@@ -434,7 +434,7 @@ function Set-TargetResource
             $scopedRoleMemberSpecification = @()
             foreach ($roleMember in $CreateParameters.ScopedRoleMembers)
             {
-                Write-Verbose -Message "AU {$DisplayName} member: role '$($roleMember.RoleName)' type '$($roleMember.Type)' identity $($roleMember.Identity)"
+                Write-Verbose -Message "AU {$DisplayName} member: role '$($roleMember.RoleName)' type '$($roleMember.RoleMemberInfo.Type)' identity $($roleMember.RoleMemberInfo.Identity)"
                 try
                 {
                     $roleObject = Get-MgDirectoryRole -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction stop
@@ -462,15 +462,19 @@ function Set-TargetResource
                         throw "AU {$($DisplayName)}:  Scoped Role User {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
                     }
                 }
-                elseif ($roleMember.Type -eq 'Group')
+                elseif ($roleMember.RoleMemberInfo.Type -eq 'Group')
                 {
                     $roleMemberIdentity = Get-MgGroup -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
                     {
                         throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} does not exist"
                     }
+                    elseif ($roleMemberIdentity.IsAssignableToRole -eq $false)
+                    {
+                        throw "AU {$($DisplayName)}: Scoped Role Group {$($roleMember.RoleMemberInfo.Identity)} for role {$($roleMember.RoleName)} is not role-enabled"
+                    }
                 }
-                elseif ($roleMember.Type -eq 'ServicePrincipal')
+                elseif ($roleMember.RoleMemberInfo.Type -eq 'ServicePrincipal')
                 {
                     $roleMemberIdentity = Get-MgServicePrincipal -Filter "displayName eq '$($roleMember.RoleMemberInfo.Identity)'" -ErrorAction Stop
                     if ($null -eq $roleMemberIdentity)
@@ -555,7 +559,7 @@ function Set-TargetResource
 
         if ($MembershipType -ne 'Dynamic')
         {
-            if ($backCurrentMembers.Count -gt 0 -or $requestedMembers.Count -gt 0)
+            if ($PSBoundParameters.ContainsKey('Members') -and ($backCurrentMembers.Count -gt 0 -or $requestedMembers.Count -gt 0))
             {
                 $currentMembers = @()
                 foreach ($member in $backCurrentMembers)
@@ -616,7 +620,7 @@ function Set-TargetResource
             }
         }
 
-        if ($backCurrentScopedRoleMembers.Count -gt 0 -or $requestedScopedRoleMembers.Count -gt 0)
+        if ($PSBoundParameters.ContainsKey('ScopedRoleMembers') -and ($backCurrentScopedRoleMembers.Count -gt 0 -or $requestedScopedRoleMembers.Count -gt 0))
         {
             if ($backCurrentScopedRoleMembers.Length -ne 0)
             {
@@ -871,7 +875,7 @@ function Test-TargetResource
     # Visibility is currently not returned by Get-TargetResource
     $ValuesToCheck.Remove('Visibility') | Out-Null
 
-    if ($MembershipType -ne 'Dynamic' -and $CurrentValues.MembershipType -ne 'Dynamic')
+    if ($ValuesToCheck.ContainsKey('MembershipType') -and $MembershipType -ne 'Dynamic' -and $CurrentValues.MembershipType -ne 'Dynamic')
     {
         # MembershipType may be returned as null or Assigned with same effect. Only compare if Dynamic is specified or returned
         $ValuesToCheck.Remove('MembershipType') | Out-Null
