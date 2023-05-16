@@ -617,37 +617,18 @@ function Export-TargetResource
         $i = 1
         foreach ($QuarantinePolicy in $QuarantinePolicies)
         {
-            if ($QuarantinePolicy.QuarantinePolicyType -eq 'GlobalQuarantineTag')
-            {
-                Write-Host "    |---[$i/$($QuarantinePolicies.length)] $($QuarantinePolicy.Identity)" -NoNewline
+            Write-Host "    |---[$i/$($QuarantinePolicies.length)] $($QuarantinePolicy.Identity)" -NoNewline
 
-                $Params = @{
-                    Identity              = $QuarantinePolicy.Identity
-                    Credential            = $Credential
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                    CertificatePassword   = $CertificatePassword
-                    Managedidentity       = $ManagedIdentity.IsPresent
-                    CertificatePath       = $CertificatePath
-                    QuarantinePolicyType  = $QuarantinePolicy.QuarantinePolicyType
-                }
-            }
-            else
-            {
-                Write-Host "    |---[$i/$($QuarantinePolicies.length)] $($QuarantinePolicy.Identity)" -NoNewline
-
-                $Params = @{
-                    Identity              = $QuarantinePolicy.Identity
-                    Credential            = $Credential
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                    CertificatePassword   = $CertificatePassword
-                    Managedidentity       = $ManagedIdentity.IsPresent
-                    CertificatePath       = $CertificatePath
-                }
-
+            $Params = @{
+                Identity              = $QuarantinePolicy.Identity
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
+                CertificatePath       = $CertificatePath
+                QuarantinePolicyType  = $QuarantinePolicy.QuarantinePolicyType
             }
 
             $Results = Get-TargetResource @Params
