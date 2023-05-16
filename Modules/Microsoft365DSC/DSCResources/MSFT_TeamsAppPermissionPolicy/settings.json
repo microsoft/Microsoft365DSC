@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "TeamsAppPermissionPolicy",
+    "description": "Manages the Teams App Permission Policies.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}
