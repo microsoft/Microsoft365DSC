@@ -141,7 +141,7 @@ function Get-TargetResource
             {
                 $result = @{
                     CustomDisclaimer                            = $QuarantinePolicy.CustomDisclaimer
-                    EndUserSpamNotificationFrequency = $QuarantinePolicy.EndUserSpamNotificationFrequency
+                    EndUserSpamNotificationFrequency            = $QuarantinePolicy.EndUserSpamNotificationFrequency
                     EndUserSpamNotificationFrequencyInDays      = $QuarantinePolicy.EndUserSpamNotificationFrequencyInDays
                     EndUserSpamNotificationCustomFromAddress    = $QuarantinePolicy.EndUserSpamNotificationCustomFromAddress
                     MultiLanguageCustomDisclaimer               = $QuarantinePolicy.MultiLanguageCustomDisclaimer
@@ -150,15 +150,15 @@ function Get-TargetResource
                     MultiLanguageSetting                        = $QuarantinePolicy.MultiLanguageSetting
                     OrganizationBrandingEnabled                 = $QuarantinePolicy.OrganizationBrandingEnabled
                     QuarantinePolicyType                        = $QuarantinePolicy.QuarantinePolicyType
-                    Identity                                = $Identity
-                    Credential                              = $Credential
-                    Ensure                                  = 'Present'
-                    ApplicationId                           = $ApplicationId
-                    CertificateThumbprint                   = $CertificateThumbprint
-                    CertificatePath                         = $CertificatePath
-                    CertificatePassword                     = $CertificatePassword
-                    Managedidentity                         = $ManagedIdentity.IsPresent
-                    TenantId                                = $TenantId
+                    Identity                                    = $Identity
+                    Credential                                  = $Credential
+                    Ensure                                      = 'Present'
+                    ApplicationId                               = $ApplicationId
+                    CertificateThumbprint                       = $CertificateThumbprint
+                    CertificatePath                             = $CertificatePath
+                    CertificatePassword                         = $CertificatePassword
+                    Managedidentity                             = $ManagedIdentity.IsPresent
+                    TenantId                                    = $TenantId
                 }
             }
             else
@@ -630,7 +630,7 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
-                    QuarantinePolicyType                        = $QuarantinePolicy.QuarantinePolicyType
+                    QuarantinePolicyType  = $QuarantinePolicy.QuarantinePolicyType
                 }
             }
             else
