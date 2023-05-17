@@ -18,6 +18,9 @@
   * Initial release
 * TeamsAppSetupPolicy
   * Initial release.
+* EXOQuarantinePolicy
+  * Support exporting and importing global quarantine policy
+    FIXES [#3285](https://github.com/microsoft/Microsoft365DSC/issues/3285)
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.2.0
 * MISC
@@ -40,9 +43,7 @@
 * AADCrossTenantAccessPolicyConfigurationPartner
   * Initial release
     FIXES [#3253](https://github.com/microsoft/Microsoft365DSC/issues/3253)
-* EXOQuarantinePolicy
-  * Support exporting global quarantine policy
-    FIXES [#3285](https://github.com/microsoft/Microsoft365DSC/issues/3285)
+
 * IntuneSettingCatalogCustomPolicyWindows10
   * Initial release
   FIXES [#2692](https://github.com/microsoft/Microsoft365DSC/issues/2692),
