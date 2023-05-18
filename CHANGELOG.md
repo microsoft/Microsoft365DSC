@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.517.1
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
   * Fixes an issue where Reviewers and requestors weren't properly extracted.
@@ -23,6 +23,7 @@
     FIXES [#3285](https://github.com/microsoft/Microsoft365DSC/issues/3285)
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.2.0
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.165
 * MISC
   * Major performance improvements for the New-M365DSCDeltaReport cmdlet.
     FIXES [#3016](https://github.com/microsoft/Microsoft365DSC/issues/3016)
