@@ -11,6 +11,9 @@
 * IntuneSettingCatalogCustomPolicyWindows10
   * Add missing properties to schema
     FIXES [#3300](https://github.com/microsoft/Microsoft365DSC/issues/3300)
+* SCAutoSensitivityLabelRule
+  * Fixes an issue with the HeaderMatchesPatterns property not working as expected.
+    FIXES [#3315](https://github.com/microsoft/Microsoft365DSC/issues/3315)
 * SPOUserProfileProperty
   * Fixes and issue where the properties weren't properly set.
     FIXES [#3226](https://github.com/microsoft/Microsoft365DSC/issues/3226)
