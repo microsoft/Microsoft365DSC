@@ -1,6 +1,6 @@
 ﻿{
-    "resourceName": "TeamsCallHoldPolicy",
-    "description": "This resource configures an Creates a new Teams call hold policy in your tenant. The Teams call hold policy is used to customize the call hold experience for Teams clients.",
+    "resourceName": "TeamsAppPermissionPolicy",
+    "description": "Manages the Teams App Permission Policies.",
     "permissions": {
         "graph": {
             "delegated": {

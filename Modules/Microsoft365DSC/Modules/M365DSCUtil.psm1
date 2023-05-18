@@ -111,7 +111,7 @@ function Get-TeamByName
 
 <#
 .Description
-This function converts a parameter hastable to a string, for outputting to screen
+This function converts a parameter hashtable to a string, for outputting to screen
 
 .Functionality
 Internal
@@ -126,7 +126,7 @@ function Convert-M365DscHashtableToString
     )
 
     $values = @()
-    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', 'CertificateThumnbprint', 'CertificatePath', 'CertificatePassword', 'Credential')
+    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', 'CertificateThumbprint', 'CertificatePath', 'CertificatePassword', 'Credential')
     foreach ($pair in $Hashtable.GetEnumerator())
     {
         try
@@ -442,7 +442,7 @@ function Compare-PSCustomObjectArrays
         [System.Object[]]
         $CurrentValues
     )
-
+$VerbosePreference = 'Continue'
     $DriftedProperties = @()
     foreach ($DesiredEntry in $DesiredValues)
     {
@@ -466,15 +466,27 @@ function Compare-PSCustomObjectArrays
             {
                 $propertyName = $property.Name
 
-                if ($DesiredEntry.$PropertyName -ne $EquivalentEntryInCurrent.$PropertyName)
+                if ((-not [System.String]::IsNullOrEmpty($DesiredEntry.$PropertyName) -and -not [System.String]::IsNullOrEmpty($EquivalentEntryInCurrent.$PropertyName)) -and `
+                    $DesiredEntry.$PropertyName -ne $EquivalentEntryInCurrent.$PropertyName)
                 {
-                    $result = @{
-                        Property     = $DesiredEntry
-                        PropertyName = $PropertyName
-                        Desired      = $DesiredEntry.$PropertyName
-                        Current      = $EquivalentEntryInCurrent.$PropertyName
+                    $drift = $true
+                    if ($DesiredEntry.$PropertyName.Contains('$OrganizationName'))
+                    {
+                        if ($DesiredEntry.$PropertyName.Split('@')[0] -eq $EquivalentEntryInCurrent.$PropertyName.Split('@')[0])
+                        {
+                            $drift = $false
+                        }
                     }
-                    $DriftedProperties += $result
+                    if ($drift)
+                    {
+                        $result = @{
+                            Property     = $DesiredEntry
+                            PropertyName = $PropertyName
+                            Desired      = $DesiredEntry.$PropertyName
+                            Current      = $EquivalentEntryInCurrent.$PropertyName
+                        }
+                        $DriftedProperties += $result
+                    }
                 }
             }
         }
@@ -553,7 +565,7 @@ function Test-M365DSCParameterState
         [System.String]
         $Tenant
     )
-
+    $verbosePreference = 'Continue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Resource', "$Source")
@@ -638,20 +650,28 @@ function Test-M365DSCParameterState
                                     {
                                         $value = $null
                                     }
-                                    $currentEntry.Add($prop.Name, $value)
+                                    if (-not $currentEntry.ContainsKey($prop.Name))
+                                    {
+                                        $currentEntry.Add($prop.Name, $value)
+                                    }
                                 }
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
 
                             $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
                                 -DesiredValues $AllDesiredValuesAsArray
+
                             if ($null -ne $arrayCompare)
                             {
                                 foreach ($item in $arrayCompare)
                                 {
                                     $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
                                     $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
-                                    $DriftedParameters.Add($fieldName, $EventValue)
+
+                                    if (-not $DriftedParameters.ContainsKey($fieldName))
+                                    {
+                                        $DriftedParameters.Add($fieldName, $EventValue)
+                                    }
                                 }
                                 $returnValue = $false
                             }

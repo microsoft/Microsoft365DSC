@@ -46855,7 +46855,46 @@ function Get-CsOnlineVoicemailPolicy
         $Identity
     )
 }
+function Get-CsTeamsAppPermissionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Get-CsTeamsAppSetupPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
 function Get-CsTeamsCallHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Get-CsTeamsCallingPolicy
 {
     [CmdletBinding()]
     param(
@@ -46881,7 +46920,7 @@ function Get-CsTeamsChannelsPolicy
         $Identity
     )
 }
-function Get-CsTeamsComplianceRecordingPolicy
+function Get-CsTeamsEmergencyCallingPolicy
 {
     [CmdletBinding()]
     param(
@@ -46894,7 +46933,7 @@ function Get-CsTeamsComplianceRecordingPolicy
         $Identity
     )
 }
-function Get-CsTeamsEmergencyCallingPolicy
+function Get-CsTeamsEventsPolicy
 {
     [CmdletBinding()]
     param(
@@ -47083,6 +47122,96 @@ function New-CsOnlineVoicemailPolicy
         $EnableTranscriptionTranslation
     )
 }
+function New-CsTeamsAppPermissionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $GlobalCatalogAppsType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $PrivateCatalogAppsType,
+
+        [Parameter()]
+        [System.String]
+        $DefaultCatalogAppsType,
+
+        [Parameter()]
+        [PSObject]
+        $PrivateCatalogApps,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [PSObject]
+        $GlobalCatalogApps,
+
+        [Parameter()]
+        [PSObject]
+        $DefaultCatalogApps
+    )
+}
+function New-CsTeamsAppSetupPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $AppPresetList,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserPinning,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $PinnedMessageBarApps,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSideLoading,
+
+        [Parameter()]
+        [PSObject]
+        $AppPresetMeetingList,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [PSObject]
+        $PinnedAppBarApps
+    )
+}
 function New-CsTeamsCallHoldPolicy
 {
     [CmdletBinding()]
@@ -47114,6 +47243,115 @@ function New-CsTeamsCallHoldPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force
+    )
+}
+function New-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreventTollBypass,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCloudRecordingForCalls,
+
+        [Parameter()]
+        [System.String]
+        $AllowCallRedirect,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.String]
+        $SpamFilteringEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSIPDevicesCalling,
+
+        [Parameter()]
+        [System.String]
+        $PopoutAppPathForIncomingPstnCalls,
+
+        [Parameter()]
+        [System.String]
+        $BusyOnBusyEnabledType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $AllowVoicemail,
+
+        [Parameter()]
+        [System.String]
+        $PopoutForIncomingPstnCalls,
+
+        [Parameter()]
+        [System.String]
+        $MusicOnHoldEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToPhone,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateCalling,
+
+        [Parameter()]
+        [System.String]
+        $LiveCaptionsEnabledTypeForCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $CallRecordingExpirationDays,
+
+        [Parameter()]
+        [System.String]
+        $InboundPstnCallRoutingTreatment,
+
+        [Parameter()]
+        [System.String]
+        $InboundFederatedCallRoutingTreatment,
+
+        [Parameter()]
+        [System.String]
+        $AutoAnswerEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscriptionForCalling
     )
 }
 function New-CsTeamsChannelsPolicy
@@ -47155,47 +47393,6 @@ function New-CsTeamsChannelsPolicy
         [Parameter()]
         [System.Boolean]
         $AllowUserToParticipateInExternalSharedChannel,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
-    )
-}
-function New-CsTeamsComplianceRecordingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $RecordReroutedCalls,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableComplianceRecordingAudioNotificationForCalls,
-
-        [Parameter()]
-        [PSObject]
-        $ComplianceRecordingApplications,
-
-        [Parameter()]
-        [System.Boolean]
-        $WarnUserOnRemoval,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -47245,6 +47442,43 @@ function New-CsTeamsEmergencyCallingPolicy
         [Parameter()]
         [PSObject]
         $ExternalLocationLookupMode
+    )
+}
+function New-CsTeamsEventsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $AllowEmailEditing,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EventAccessType,
+
+        [Parameter()]
+        [System.String]
+        $AllowWebinars,
+
+        [Parameter()]
+        [System.String]
+        $AllowTownhalls
     )
 }
 function New-CsTeamsFeedbackPolicy
@@ -47339,10 +47573,6 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowWatermarkCustomizationForCameraVideo,
-
-        [Parameter()]
-        [System.String]
-        $ForceStreamingAttendeeMode,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -47727,6 +47957,10 @@ function New-CsTeamsMessagingPolicy
 
         [Parameter()]
         [System.Boolean]
+        $AllowGroupChatJoinLinks,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowSecurityEndUserReporting,
 
         [Parameter()]
@@ -47785,6 +48019,10 @@ function New-CsTeamsUpdateManagementPolicy
         [Parameter()]
         [System.Boolean]
         $AllowPreview,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockLegacyAuthorization,
 
         [Parameter()]
         [System.String]
@@ -47954,7 +48192,58 @@ function Remove-CsOnlineVoicemailPolicy
         $Identity
     )
 }
+function Remove-CsTeamsAppPermissionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Remove-CsTeamsAppSetupPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
 function Remove-CsTeamsCallHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Remove-CsTeamsCallingPolicy
 {
     [CmdletBinding()]
     param(
@@ -47988,7 +48277,7 @@ function Remove-CsTeamsChannelsPolicy
         $Identity
     )
 }
-function Remove-CsTeamsComplianceRecordingPolicy
+function Remove-CsTeamsEmergencyCallingPolicy
 {
     [CmdletBinding()]
     param(
@@ -48005,7 +48294,7 @@ function Remove-CsTeamsComplianceRecordingPolicy
         $Identity
     )
 }
-function Remove-CsTeamsEmergencyCallingPolicy
+function Remove-CsTeamsEventsPolicy
 {
     [CmdletBinding()]
     param(
@@ -48194,6 +48483,96 @@ function Set-CsOnlineVoicemailPolicy
         $EnableTranscriptionTranslation
     )
 }
+function Set-CsTeamsAppPermissionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $GlobalCatalogAppsType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $PrivateCatalogAppsType,
+
+        [Parameter()]
+        [System.String]
+        $DefaultCatalogAppsType,
+
+        [Parameter()]
+        [PSObject]
+        $PrivateCatalogApps,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [PSObject]
+        $GlobalCatalogApps,
+
+        [Parameter()]
+        [PSObject]
+        $DefaultCatalogApps
+    )
+}
+function Set-CsTeamsAppSetupPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $AppPresetList,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserPinning,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $PinnedMessageBarApps,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSideLoading,
+
+        [Parameter()]
+        [PSObject]
+        $AppPresetMeetingList,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [PSObject]
+        $PinnedAppBarApps
+    )
+}
 function Set-CsTeamsCallHoldPolicy
 {
     [CmdletBinding()]
@@ -48225,6 +48604,115 @@ function Set-CsTeamsCallHoldPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force
+    )
+}
+function Set-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $AllowWebPSTNCalling,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreventTollBypass,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCloudRecordingForCalls,
+
+        [Parameter()]
+        [System.String]
+        $AllowCallRedirect,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallGroups,
+
+        [Parameter()]
+        [System.String]
+        $SpamFilteringEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSIPDevicesCalling,
+
+        [Parameter()]
+        [System.String]
+        $PopoutAppPathForIncomingPstnCalls,
+
+        [Parameter()]
+        [System.String]
+        $BusyOnBusyEnabledType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $AllowVoicemail,
+
+        [Parameter()]
+        [System.String]
+        $PopoutForIncomingPstnCalls,
+
+        [Parameter()]
+        [System.String]
+        $MusicOnHoldEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowCallForwardingToPhone,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowPrivateCalling,
+
+        [Parameter()]
+        [System.String]
+        $LiveCaptionsEnabledTypeForCalling,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDelegation,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int64]]
+        $CallRecordingExpirationDays,
+
+        [Parameter()]
+        [System.String]
+        $InboundPstnCallRoutingTreatment,
+
+        [Parameter()]
+        [System.String]
+        $InboundFederatedCallRoutingTreatment,
+
+        [Parameter()]
+        [System.String]
+        $AutoAnswerEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscriptionForCalling
     )
 }
 function Set-CsTeamsChannelsPolicy
@@ -48266,47 +48754,6 @@ function Set-CsTeamsChannelsPolicy
         [Parameter()]
         [System.Boolean]
         $AllowUserToParticipateInExternalSharedChannel,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
-    )
-}
-function Set-CsTeamsComplianceRecordingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $RecordReroutedCalls,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableComplianceRecordingAudioNotificationForCalls,
-
-        [Parameter()]
-        [PSObject]
-        $ComplianceRecordingApplications,
-
-        [Parameter()]
-        [System.Boolean]
-        $WarnUserOnRemoval,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -48356,6 +48803,43 @@ function Set-CsTeamsEmergencyCallingPolicy
         [Parameter()]
         [PSObject]
         $ExternalLocationLookupMode
+    )
+}
+function Set-CsTeamsEventsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $AllowEmailEditing,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $EventAccessType,
+
+        [Parameter()]
+        [System.String]
+        $AllowWebinars,
+
+        [Parameter()]
+        [System.String]
+        $AllowTownhalls
     )
 }
 function Set-CsTeamsFeedbackPolicy
@@ -48450,10 +48934,6 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowWatermarkCustomizationForCameraVideo,
-
-        [Parameter()]
-        [System.String]
-        $ForceStreamingAttendeeMode,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -48838,6 +49318,10 @@ function Set-CsTeamsMessagingPolicy
 
         [Parameter()]
         [System.Boolean]
+        $AllowGroupChatJoinLinks,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowSecurityEndUserReporting,
 
         [Parameter()]
@@ -48896,6 +49380,10 @@ function Set-CsTeamsUpdateManagementPolicy
         [Parameter()]
         [System.Boolean]
         $AllowPreview,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockLegacyAuthorization,
 
         [Parameter()]
         [System.String]
@@ -49461,23 +49949,6 @@ function Get-CsTeamsAudioConferencingPolicy
         $MsftInternalProcessingMode
     )
 }
-function Get-CsTeamsCallingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
 function Get-CsTeamsCallParkPolicy
 {
     [CmdletBinding()]
@@ -49496,6 +49967,23 @@ function Get-CsTeamsCallParkPolicy
     )
 }
 function Get-CsTeamsClientConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
+function Get-CsTeamsComplianceRecordingPolicy
 {
     [CmdletBinding()]
     param(
@@ -49547,23 +50035,6 @@ function Get-CsTeamsEmergencyCallRoutingPolicy
     )
 }
 function Get-CsTeamsEnhancedEncryptionPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function Get-CsTeamsEventsPolicy
 {
     [CmdletBinding()]
     param(
@@ -50264,107 +50735,6 @@ function New-CsTeamsAudioConferencingPolicy
         $MsftInternalProcessingMode
     )
 }
-function New-CsTeamsCallingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Boolean]
-        $AllowWebPSTNCalling,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $PreventTollBypass,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCloudRecordingForCalls,
-
-        [Parameter()]
-        [System.String]
-        $AllowCallRedirect,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCallGroups,
-
-        [Parameter()]
-        [System.String]
-        $SpamFilteringEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSIPDevicesCalling,
-
-        [Parameter()]
-        [System.String]
-        $PopoutAppPathForIncomingPstnCalls,
-
-        [Parameter()]
-        [System.String]
-        $BusyOnBusyEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $AllowVoicemail,
-
-        [Parameter()]
-        [System.String]
-        $PopoutForIncomingPstnCalls,
-
-        [Parameter()]
-        [System.String]
-        $MusicOnHoldEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCallForwardingToUser,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCallForwardingToPhone,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPrivateCalling,
-
-        [Parameter()]
-        [System.String]
-        $LiveCaptionsEnabledTypeForCalling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDelegation,
-
-        [Parameter()]
-        [System.Int64]
-        $CallRecordingExpirationDays,
-
-        [Parameter()]
-        [System.String]
-        $AutoAnswerEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowTranscriptionForCalling
-    )
-}
 function New-CsTeamsCallParkPolicy
 {
     [CmdletBinding()]
@@ -50400,6 +50770,43 @@ function New-CsTeamsCallParkPolicy
         [Parameter()]
         [System.Int64]
         $PickupRangeStart
+    )
+}
+function New-CsTeamsComplianceRecordingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableComplianceRecordingAudioNotificationForCalls,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $ComplianceRecordingApplications,
+
+        [Parameter()]
+        [System.Boolean]
+        $WarnUserOnRemoval,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
     )
 }
 function New-CsTeamsCortanaPolicy
@@ -50512,39 +50919,6 @@ function New-CsTeamsEnhancedEncryptionPolicy
         [Parameter()]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function New-CsTeamsEventsPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $ForceStreamingAttendeeMode,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $EventAccessType,
-
-        [Parameter()]
-        [System.String]
-        $AllowWebinars,
 
         [Parameter()]
         [System.String]
@@ -51264,7 +51638,7 @@ function Remove-CsTeamsAudioConferencingPolicy
         $MsftInternalProcessingMode
     )
 }
-function Remove-CsTeamsCallingPolicy
+function Remove-CsTeamsCallParkPolicy
 {
     [CmdletBinding()]
     param(
@@ -51281,7 +51655,7 @@ function Remove-CsTeamsCallingPolicy
         $MsftInternalProcessingMode
     )
 }
-function Remove-CsTeamsCallParkPolicy
+function Remove-CsTeamsComplianceRecordingPolicy
 {
     [CmdletBinding()]
     param(
@@ -51333,23 +51707,6 @@ function Remove-CsTeamsEmergencyCallRoutingPolicy
     )
 }
 function Remove-CsTeamsEnhancedEncryptionPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function Remove-CsTeamsEventsPolicy
 {
     [CmdletBinding()]
     param(
@@ -51920,107 +52277,6 @@ function Set-CsTeamsAudioConferencingPolicy
         $MsftInternalProcessingMode
     )
 }
-function Set-CsTeamsCallingPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Boolean]
-        $AllowWebPSTNCalling,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $PreventTollBypass,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCloudRecordingForCalls,
-
-        [Parameter()]
-        [System.String]
-        $AllowCallRedirect,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCallGroups,
-
-        [Parameter()]
-        [System.String]
-        $SpamFilteringEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowSIPDevicesCalling,
-
-        [Parameter()]
-        [System.String]
-        $PopoutAppPathForIncomingPstnCalls,
-
-        [Parameter()]
-        [System.String]
-        $BusyOnBusyEnabledType,
-
-        [Parameter()]
-        [System.String]
-        $AllowVoicemail,
-
-        [Parameter()]
-        [System.String]
-        $PopoutForIncomingPstnCalls,
-
-        [Parameter()]
-        [System.String]
-        $MusicOnHoldEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCallForwardingToUser,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowCallForwardingToPhone,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowPrivateCalling,
-
-        [Parameter()]
-        [System.String]
-        $LiveCaptionsEnabledTypeForCalling,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowDelegation,
-
-        [Parameter()]
-        [System.Int64]
-        $CallRecordingExpirationDays,
-
-        [Parameter()]
-        [System.String]
-        $AutoAnswerEnabledType,
-
-        [Parameter()]
-        [System.Boolean]
-        $AllowTranscriptionForCalling
-    )
-}
 function Set-CsTeamsCallParkPolicy
 {
     [CmdletBinding()]
@@ -52135,6 +52391,43 @@ function Set-CsTeamsClientConfiguration
         $MsftInternalProcessingMode
     )
 }
+function Set-CsTeamsComplianceRecordingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableComplianceRecordingAudioNotificationForCalls,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $ComplianceRecordingApplications,
+
+        [Parameter()]
+        [System.Boolean]
+        $WarnUserOnRemoval,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode
+    )
+}
 function Set-CsTeamsCortanaPolicy
 {
     [CmdletBinding()]
@@ -52224,39 +52517,6 @@ function Set-CsTeamsEnhancedEncryptionPolicy
         [Parameter()]
         [System.String]
         $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
-function Set-CsTeamsEventsPolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $ForceStreamingAttendeeMode,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $EventAccessType,
-
-        [Parameter()]
-        [System.String]
-        $AllowWebinars,
 
         [Parameter()]
         [System.String]

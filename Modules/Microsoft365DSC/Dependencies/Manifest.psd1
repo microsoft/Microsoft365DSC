@@ -66,11 +66,11 @@
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
-            RequiredVersion = '2.0.163'
+            RequiredVersion = '2.0.165'
         },
         @{
             ModuleName      = 'MicrosoftTeams'
-            RequiredVersion = '5.1.0'
+            RequiredVersion = '5.2.0'
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"

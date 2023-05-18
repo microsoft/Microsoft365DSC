@@ -29,8 +29,8 @@ This function does not generate any output.
 | Credential | False | PSCredential |  |  | Specifies the credentials to be used for authentication. |
 | CertificatePassword | False | PSCredential |  |  | Specifies the password of the PFX file which is used for authentication. |
 | CertificatePath | False | String |  |  | Specifies the path of the PFX file which is used for authentication. |
-| ManagedIdentity | False | SwitchParameter |  |  | Specifies whether or not to use Managed Identity to authenticate. |
-| Validate | False | SwitchParameter |  | Specifies that we want the exported configuration to be validated for any conflicts. (e.g., duplicate primary keys) |
+| ManagedIdentity | False | SwitchParameter |  |  | Specifies use of managed identity for authentication. |
+| Validate | False | SwitchParameter |  |  | Specifies that the configuration needs to be validated for conflicts or issues after its extraction is completed. |
 
 ## Examples
 

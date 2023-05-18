@@ -146,6 +146,12 @@ function Get-TargetResource
         }
 
         $results += Get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
+
+        if ($null -ne $results.WindowsMobileRestriction)
+        {
+            $results.Remove('WindowsMobileRestriction') | Out-Null
+        }
+
         $AssignmentsValues = Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
@@ -293,6 +299,16 @@ function Set-TargetResource
 
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
+        if ($PSBoundParameters.Keys.Contains('WindowsMobileRestriction'))
+        {
+            if ($WindowsMobileRestriction.platformBlocked -eq $false)
+            {
+                Write-Verbose -Message 'Windows Mobile platform is deprecated and cannot be unblocked, reverting back to blocked'
+
+                $WindowsMobileRestriction.platformBlocked = $true
+            }
+        }
+
         $keys = (([Hashtable]$PSBoundParameters).clone()).Keys
         foreach ($key in $keys)
         {
@@ -342,6 +358,16 @@ function Set-TargetResource
         Write-Verbose -Message "Updating Device Enrollment Platform Restriction {$DisplayName}"
 
         $PSBoundParameters.Remove('Assignments') | Out-Null
+
+        if ($PSBoundParameters.Keys.Contains('WindowsMobileRestriction'))
+        {
+            if ($WindowsMobileRestriction.platformBlocked -eq $false)
+            {
+                Write-Verbose -Message 'Windows Mobile platform is deprecated and cannot be unblocked, reverting back to blocked'
+
+                $WindowsMobileRestriction.platformBlocked = $true
+            }
+        }
 
         $keys = (([Hashtable]$PSBoundParameters).clone()).Keys
         foreach ($key in $keys)
