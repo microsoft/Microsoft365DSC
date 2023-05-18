@@ -140,7 +140,7 @@
 
       # ReleaseNotes of this module
       ReleaseNotes = '* AADEntitlementManagementAccessPackageAssignmentPolicy
-      * Fixes an issue where Reviewers and requestors weren't properly extracted.
+      * Fixes an issue where Reviewers and requestors weren''t properly extracted.
         FIXES [#3255](https://github.com/microsoft/Microsoft365DSC/issues/3255)
     * IntuneDeviceEnrollmentPlatformRestriction
       * Ensure that Windows Mobile platform cannot be unblocked
@@ -149,7 +149,7 @@
       * Add missing properties to schema
         FIXES [#3300](https://github.com/microsoft/Microsoft365DSC/issues/3300)
     * SPOUserProfileProperty
-      * Fixes and issue where the properties weren't properly set.
+      * Fixes and issue where the properties weren''t properly set.
         FIXES [#3226](https://github.com/microsoft/Microsoft365DSC/issues/3226)
     * TeamsAppPermissionPolicy
       * Initial release
