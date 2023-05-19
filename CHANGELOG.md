@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.111
+
 # 1.23.517.1
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
