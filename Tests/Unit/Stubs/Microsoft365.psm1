@@ -50225,6 +50225,19 @@ function Get-CsTeamsNetworkRoamingPolicy
         $MsftInternalProcessingMode
     )
 }
+function Get-CsTeamsSettingsCustomApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
 function Get-CsTeamsShiftsPolicy
 {
     [CmdletBinding()]
@@ -52919,6 +52932,23 @@ function Set-CsTeamsNetworkRoamingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowIPVideo
+    )
+}
+function Set-CsTeamsSettingsCustomApp
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $isSideloadedAppsInteractionEnabled
     )
 }
 function Set-CsTeamsShiftsPolicy
