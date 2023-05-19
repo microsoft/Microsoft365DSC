@@ -565,7 +565,7 @@ function Test-M365DSCParameterState
         [System.String]
         $Tenant
     )
-    $verbosePreference = 'Continue'
+    $verbosePreference = 'SilentlyContinue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Resource', "$Source")
