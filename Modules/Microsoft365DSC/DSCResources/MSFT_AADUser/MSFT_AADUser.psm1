@@ -206,7 +206,7 @@ function Get-TargetResource
         }
         foreach ($assignedRole in $assignedRoles)
         {
-            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript {$_.UnifiedRoleDefinitionId -eq $assignedRole.RoleDefinitionId}
+            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript {$_.Id -eq $assignedRole.RoleDefinitionId}
             $rolesValue += $currentRoleInfo.DisplayName
         }
 
@@ -813,7 +813,8 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        $Script:M365DSCExportInstances = Get-MgUser -Filter $Filter -All:$true -ErrorAction Stop
+        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+        $Script:M365DSCExportInstances = Get-MgUser -Filter $Filter -All:$true -Property $propertiesToRetrieve -ErrorAction Stop
 
         $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
