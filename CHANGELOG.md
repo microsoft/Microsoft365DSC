@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADUser
+  * Performance improvements.
 * O365OrgSettings
   * Added support for the AdminCenterReportDisplayConcealedNames property.
 * DEPENDENCIES
