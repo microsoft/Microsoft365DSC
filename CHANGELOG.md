@@ -8,6 +8,7 @@
   * Added support for the AdminCenterReportDisplayConcealedNames property.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.111
+  * Updated ReverseDSC to version 2.0.0.15
 
 # 1.23.517.1
 
