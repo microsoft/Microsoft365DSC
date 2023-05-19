@@ -193,11 +193,20 @@ function Get-TargetResource
         }
         $passwordNeverExpires = $userPasswordPolicyInfo.PasswordNeverExpires
 
-        $assignedRoles = Get-MgRoleManagementDirectoryRoleAssignment -Filter "PrincipalId eq '$($user.Id)'"
+        if ($null -eq $Script:allDirectoryRoleAssignment)
+        {
+            $Script:allDirectoryRoleAssignment = Get-MgRoleManagementDirectoryRoleAssignment -All
+        }
+        $assignedRoles = $Script:allDirectoryRoleAssignment | Where-Object -FilterScript {$_.PrincipalId -eq $user.Id}
+
         $rolesValue = @()
+        if ($null -eq $Script:allAssignedRoles -and $assignedRoles.Length -gt 0)
+        {
+            $Script:allAssignedRoles = Get-MgRoleManagementDirectoryRoleDefinition -All
+        }
         foreach ($assignedRole in $assignedRoles)
         {
-            $currentRoleInfo = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $assignedRole.RoleDefinitionId
+            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript {$_.UnifiedRoleDefinitionId -eq $assignedRole.RoleDefinitionId}
             $rolesValue += $currentRoleInfo.DisplayName
         }
 
@@ -735,39 +744,17 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Office 365 User $UserPrincipalName"
-
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Testing configuration of Azure AD User $UserPrincipalName"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $ValuesToCheck = $PSBoundParameters
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('Ensure', `
-            'UserPrincipalName', `
-            'LicenseAssignment', `
-            'UsageLocation', `
-            'FirstName', `
-            'LastName', `
-            'DisplayName', `
-            'City', `
-            'Country', `
-            'Department', `
-            'Fax', `
-            'MobilePhone', `
-            'Office', `
-            'PasswordNeverExpires', `
-            'PhoneNumber', `
-            'PostalCode', `
-            'PreferredLanguage', `
-            'State', `
-            'StreetAddress', `
-            'Title', `
-            'UserType',
-        'Roles')
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
