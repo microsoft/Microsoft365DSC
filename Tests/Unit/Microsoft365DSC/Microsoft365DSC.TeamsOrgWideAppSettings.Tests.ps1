@@ -101,8 +101,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Credential                         = $Credential;
-                    IsSideloadedAppsInteractionEnabled = $False
-                    IsSingleInstance                   = "Yes";
                 }
 
                 Mock -CommandName Get-CsTeamsSettingsCustomApp -MockWith {
