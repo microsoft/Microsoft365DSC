@@ -3306,8 +3306,9 @@ function Get-M365DSCExportContentForResource
     $instanceName = $tempName
     $Global:M365DSCExportedResourceInstancesNames += $tempName
 
-    $content = "        $ResourceName `"$instanceName`"`r`n"
-    $content += "        {`r`n"
+    $content = [System.Text.StringBuilder]::New()
+    [void]$content.Append("        $ResourceName `"$instanceName`"`r`n")
+    [void]$content.Append("        {`r`n")
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
     # Test for both Credentials and CredentialsWithApplicationId
     if ($ConnectionMode -match 'Credentials')
@@ -3360,10 +3361,10 @@ function Get-M365DSCExportContentForResource
         $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName), "`$OrganizationName"
         $partialContent = $partialContent -ireplace [regex]::Escape('@' + $OrganizationName), "@`$OrganizationName"
     }
-    $content += $partialContent
-    $content += "        }`r`n"
+    [void]$content.Append($partialContent)
+    [void]$content.Append("        }`r`n")
 
-    return $content
+    return $content.ToString()
 }
 
 <#
