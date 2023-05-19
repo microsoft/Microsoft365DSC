@@ -2,7 +2,7 @@
     Dependencies = @(
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '1.3.0.6'
+            RequiredVersion = '1.3.0.9'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
@@ -10,71 +10,71 @@
         },
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Authentication'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.DeviceManagement'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.DeviceManagement.Administration'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.DeviceManagement.Enrolment'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Devices.CorporateManagement'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Groups'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Identity.DirectoryManagement'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Identity.Governance'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Identity.SignIns'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Planner'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Teams'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Users'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Users.Actions'
-            RequiredVersion = '1.23.0'
+            RequiredVersion = '1.27.0'
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
-            RequiredVersion = '2.0.156'
+            RequiredVersion = '2.0.165'
         },
         @{
             ModuleName      = 'MicrosoftTeams'
-            RequiredVersion = '5.1.0'
+            RequiredVersion = '5.2.0'
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.105"
+            RequiredVersion = "1.0.111"
         },
         @{
             ModuleName      = 'PnP.PowerShell'

@@ -1,0 +1,32 @@
+{
+    "resourceName": "AADAuthenticationMethodPolicyConfigurationDefault",
+    "description": "This resource configures an Azure AD Authentication Method Policy Configuration Default.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.CrossTenantAccess"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.CrossTenantAccess"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -202,10 +202,10 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -559,10 +559,10 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -644,10 +644,10 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' -and `
-                $_.displayName -eq $($DisplayName) }
+        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' `
+            }
 
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
@@ -671,10 +671,10 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' -and `
-                $_.displayName -eq $($DisplayName) }
+        $configDevicePolicy = Get-MgDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' `
+            }
 
         Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $configDevicePolicy.Id
     }
@@ -884,10 +884,10 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1142,18 +1142,20 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
-
-        if ($_.Exception -like '*401*')
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return ''
     }

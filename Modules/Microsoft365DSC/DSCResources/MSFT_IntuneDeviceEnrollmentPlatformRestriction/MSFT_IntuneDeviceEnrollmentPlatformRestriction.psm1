@@ -108,9 +108,7 @@ function Get-TargetResource
 
     try
     {
-
         $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction silentlyContinue
-
 
         <#
         Not using the DisplayName as a key due to android profiles
@@ -125,7 +123,6 @@ function Get-TargetResource
                     $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatform*Configuration' }
         }
         #>
-
 
         if ($null -eq $config)
         {
@@ -148,7 +145,13 @@ function Get-TargetResource
             Managedidentity                   = $ManagedIdentity.IsPresent
         }
 
-        $results += get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
+        $results += Get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
+
+        if ($null -ne $results.WindowsMobileRestriction)
+        {
+            $results.Remove('WindowsMobileRestriction') | Out-Null
+        }
+
         $AssignmentsValues = Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
@@ -296,6 +299,16 @@ function Set-TargetResource
 
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
+        if ($PSBoundParameters.Keys.Contains('WindowsMobileRestriction'))
+        {
+            if ($WindowsMobileRestriction.platformBlocked -eq $false)
+            {
+                Write-Verbose -Message 'Windows Mobile platform is deprecated and cannot be unblocked, reverting back to blocked'
+
+                $WindowsMobileRestriction.platformBlocked = $true
+            }
+        }
+
         $keys = (([Hashtable]$PSBoundParameters).clone()).Keys
         foreach ($key in $keys)
         {
@@ -345,6 +358,16 @@ function Set-TargetResource
         Write-Verbose -Message "Updating Device Enrollment Platform Restriction {$DisplayName}"
 
         $PSBoundParameters.Remove('Assignments') | Out-Null
+
+        if ($PSBoundParameters.Keys.Contains('WindowsMobileRestriction'))
+        {
+            if ($WindowsMobileRestriction.platformBlocked -eq $false)
+            {
+                Write-Verbose -Message 'Windows Mobile platform is deprecated and cannot be unblocked, reverting back to blocked'
+
+                $WindowsMobileRestriction.platformBlocked = $true
+            }
+        }
 
         $keys = (([Hashtable]$PSBoundParameters).clone()).Keys
         foreach ($key in $keys)
@@ -831,17 +854,20 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
-        if ($_.Exception -like '*401*')
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return ''
     }
@@ -984,7 +1010,6 @@ function Update-DeviceConfigurationPolicyAssignments
         $body = @{'enrollmentConfigurationAssignments' = $configurationPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
     }
     catch
     {

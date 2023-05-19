@@ -55,6 +55,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Start-Sleep -MockWith {
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -67,10 +70,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Name             = 'TestLabelPolicy'
                     Comment          = 'This is a test label policy'
                     Labels           = @('Personal', 'General')
-                    AdvancedSettings = (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                    AdvancedSettings = @(
+                        (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
                             Key   = 'LabelStatus'
                             Value = 'Enabled'
+                        } -ClientOnly),
+                        (New-CimInstance -ClassName MSFT_SCLabelSetting -Property @{
+                            Key   = 'DefaultLabelStatus'
+                            Value = 'None'
                         } -ClientOnly)
+                    )
                     Credential       = $Credential
                     Ensure           = 'Present'
                 }
@@ -170,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Credential = $Credential
                 }
-                Mock -CommandName Get-LabelPolicy  -MockWith {
+                Mock -CommandName Get-LabelPolicy -MockWith {
                     return @{
                         Name     = 'TestPolicy'
                         Settings = '{"Key": "LabelStatus",

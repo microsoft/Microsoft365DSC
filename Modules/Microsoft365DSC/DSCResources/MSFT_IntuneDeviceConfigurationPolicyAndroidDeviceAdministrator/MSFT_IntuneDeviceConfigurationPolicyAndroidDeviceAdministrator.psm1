@@ -289,20 +289,15 @@ function Get-TargetResource
         #region resource generator code
         if (-Not [string]::IsNullOrEmpty($DisplayName))
         {
-            $getValue = Get-MgDeviceManagementDeviceConfiguration `
-                -ErrorAction Stop | Where-Object `
-                -FilterScript { `
-                    $_.DisplayName -eq "$($DisplayName)" `
+            $getValue = Get-MgDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
+            -FilterScript { `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidGeneralDeviceConfiguration' `
             }
         }
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
-                -ErrorAction Stop | Where-Object `
-                -FilterScript { `
-                    $_.id -eq $id `
-            }
+            $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
         }
         #endregion
 
@@ -1236,7 +1231,7 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            Write-Host "    |---[$i/$($getValue.Count)] $($config.id)" -NoNewline
+            Write-Host "    |---[$i/$($getValue.Count)] $($config.DisplayName)" -NoNewline
             $params = @{
                 Id                    = $config.id
                 DisplayName           = $config.DisplayName
@@ -1399,13 +1394,20 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return ''
     }

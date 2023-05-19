@@ -1,0 +1,59 @@
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphRegistrationEnforcement
+{
+    [Write, Description("Run campaigns to remind users to setup targeted authentication methods."), EmbeddedInstance("MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign")] String AuthenticationMethodsRegistrationCampaign;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign
+{
+    [Write, Description("Users and groups of users that are excluded from being prompted to set up the authentication method."), EmbeddedInstance("MSFT_MicrosoftGraphExcludeTarget")] String ExcludeTargets[];
+    [Write, Description("Users and groups of users that are prompted to set up the authentication method."), EmbeddedInstance("MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget")] String IncludeTargets[];
+    [Write, Description("Specifies the number of days that the user sees a prompt again if they select 'Not now' and snoozes the prompt. Minimum 0 days. Maximum: 14 days. If the value is '0'  The user is prompted during every MFA attempt.")] UInt32 SnoozeDurationInDays;
+    [Write, Description("Enable or disable the feature. Possible values are: default, enabled, disabled, unknownFutureValue. The default value is used when the configuration hasn't been explicitly set and uses the default behavior of Azure AD for the setting. The default value is disabled."), ValueMap{"default","enabled","disabled","unknownFutureValue"}, Values{"default","enabled","disabled","unknownFutureValue"}] String State;
+};
+[ClassVersion("1.0.0")]
+class MSFT_AADAuthenticationMethodPolicyExcludeTarget
+{
+    [Write, Description("The object identifier of an Azure AD group.")] String Id;
+    [Write, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_AADAuthenticationMethodPolicyIncludeTarget
+{
+    [Write, Description("The ID of the entity targeted.")] String Id;
+    [Write, Description("The kind of entity targeted. Possible values are: user, group."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget
+{
+    [Write, Description("The object identifier of an Azure AD user or group.")] String Id;
+    [Write, Description("The authentication method that the user is prompted to register. The value must be microsoftAuthenticator.")] String TargetedAuthenticationMethod;
+    [Write, Description("The type of the authentication method target. Possible values are: user, group, unknownFutureValue."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
+};
+[ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphSystemCredentialPreferences
+{
+    [Write, Description("Users and groups excluded from the preferred authentication method experience of the system."), EmbeddedInstance("MSFT_AADAuthenticationMethodPolicyExcludeTarget")] String ExcludeTargets[];
+    [Write, Description("Users and groups included in the preferred authentication method experience of the system."), EmbeddedInstance("MSFT_AADAuthenticationMethodPolicyIncludeTarget")] String IncludeTargets[];
+    [Write, Description("Indicates whether the feature is enabled or disabled. Possible values are: default, enabled, disabled, unknownFutureValue. The default value is used when the configuration hasn't been explicitly set, and uses the default behavior of Azure Active Directory for the setting. The default value is disabled."), ValueMap{"default","enabled","disabled","unknownFutureValue"}, Values{"default","enabled","disabled","unknownFutureValue"}] String State;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("AADAuthenticationMethodPolicy")]
+class MSFT_AADAuthenticationMethodPolicy : OMI_BaseResource
+{
+    [Write, Description("A description of the policy.")] String Description;
+    [Required, Description("The name of the policy.")] String DisplayName;
+    [Write, Description("The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: premigration - means the authentication methods policy is used for authentication only, legacy policies are respected. migrationInProgress - means the authentication methods policy is used for both authenication and SSPR, legacy policies are respected. migrationComplete - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. unknownFutureValue - Evolvable enumeration sentinel value. Do not use."), ValueMap{"preMigration","migrationInProgress","migrationComplete","unknownFutureValue"}, Values{"preMigration","migrationInProgress","migrationComplete","unknownFutureValue"}] String PolicyMigrationState;
+    [Write, Description("The version of the policy in use.")] String PolicyVersion;
+    [Write, Description("Days before the user will be asked to reconfirm their method.")] UInt32 ReconfirmationInDays;
+    [Write, Description("Enforce registration at sign-in time. This property can be used to remind users to set up targeted authentication methods."), EmbeddedInstance("MSFT_MicrosoftGraphregistrationEnforcement")] String RegistrationEnforcement;
+    [Write, Description("Prompt users with their most-preferred credential for multifactor authentication."), EmbeddedInstance("MSFT_MicrosoftGraphsystemCredentialPreferences")] String SystemCredentialPreferences;
+    [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+};

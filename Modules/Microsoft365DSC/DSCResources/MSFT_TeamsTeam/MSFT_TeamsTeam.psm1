@@ -203,7 +203,7 @@ function Get-TargetResource
             Ensure                            = 'Present'
         }
 
-        if ($ConnectionMode -eq 'ServicePrincipal')
+        if ($ConnectionMode.StartsWith('ServicePrincipal'))
         {
             $result.Add('ApplicationId', $ApplicationId)
             $result.Add('TenantId', $TenantId)
@@ -408,11 +408,11 @@ function Set-TargetResource
             $CurrentParameters.Owner = [array](($Owner[0]).ToString())
         }
         Write-Verbose -Message "Connection mode: $ConnectionMode"
-        if ($ConnectionMode -eq 'ServicePrincipal')
+        if ($ConnectionMode.StartsWith('ServicePrincipal'))
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
-            $group = New-MgSGroup -DisplayName $DisplayName -GroupTypes 'Unified' -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
+            $group = New-MgGroup -DisplayName $DisplayName -GroupTypes 'Unified' -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
             $currentOwner = (($CurrentParameters.Owner)[0])
 
             Write-Verbose -Message "Retrieving Group Owner {$currentOwner}"
@@ -674,7 +674,7 @@ function Export-TargetResource
 
     try
     {
-        if ($ConnectionMode -eq 'ServicePrincipal')
+        if ($ConnectionMode.StartsWith('ServicePrincipal'))
         {
             $organization = Get-M365DSCTenantDomain -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
         }

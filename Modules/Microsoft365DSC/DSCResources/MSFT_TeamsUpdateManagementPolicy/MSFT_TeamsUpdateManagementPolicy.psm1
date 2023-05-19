@@ -22,7 +22,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
+        [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
@@ -39,7 +39,8 @@ function Get-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [System.Boolean]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [System.String]
         $UseNewTeamsClient,
 
         [Parameter()]
@@ -151,7 +152,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
+        [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
@@ -168,7 +169,8 @@ function Set-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [System.Boolean]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [System.String]
         $UseNewTeamsClient,
 
         [Parameter()]
@@ -267,7 +269,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
+        [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
@@ -284,7 +286,8 @@ function Test-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [System.Boolean]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [System.String]
         $UseNewTeamsClient,
 
         [Parameter()]
