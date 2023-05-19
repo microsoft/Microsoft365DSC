@@ -162,8 +162,9 @@ function Get-TargetResource
 
     try
     {
-        if (-not $Global:CurrentModeIsExport)
+        if (-not $Script:ExportMode)
         {
+            Write-Host "Ohoho"
             Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
             $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
             $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
@@ -172,6 +173,11 @@ function Get-TargetResource
                 Write-Verbose -Message "The specified User doesn't already exist."
                 return $nullReturn
             }
+        }
+        else
+        {
+            Write-Verbose -Message "Retrieving user from the exported instances"
+            $user = $Script:M365DSCExportInstances | Where-Object -FilterScript {$_.UserPrincipalName -eq $UserPrincipalName}
         }
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
@@ -819,39 +825,21 @@ function Export-TargetResource
 
     try
     {
-        $users = Get-MgUser -Filter $Filter -All:$true -ErrorAction Stop
+        $Script:ExportMode = $true
+        $Script:M365DSCExportInstances = Get-MgUser -Filter $Filter -All:$true -ErrorAction Stop
 
         $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         Write-Host "`r`n" -NoNewline
-        foreach ($user in $users)
+        foreach ($user in $Script:M365DSCExportInstances)
         {
-            Write-Host "    |---[$i/$($users.Length)] $($user.UserPrincipalName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:M365DSCExportInstances.Length)] $($user.UserPrincipalName)" -NoNewline
             $userUPN = $user.UserPrincipalName
             if (-not [System.String]::IsNullOrEmpty($userUPN))
             {
                 $Params = @{
                     UserPrincipalName     = $userUPN
-                    DisplayName           = $user.DisplayName
-                    FirstName             = $user.GivenName
-                    LastName              = $user.Surname
-                    UsageLocation         = $user.UsageLocation
-                    LicenseAssignment     = $currentLicenseAssignment
-                    City                  = $user.City
-                    Country               = $user.Country
-                    Department            = $user.Department
-                    Fax                   = $user.FacsimileTelephoneNumber
-                    MobilePhone           = $user.Mobile
-                    Office                = $user.OfficeLocation
-                    PasswordPolicies      = $user.PasswordPolicies
-                    PhoneNumber           = $user.TelephoneNumber
-                    PostalCode            = $user.PostalCode
-                    PreferredLanguage     = $user.PreferredLanguage
-                    State                 = $user.State
-                    StreetAddress         = $user.StreetAddress
-                    Title                 = $user.JobTitle
                     Credential            = $Credential
-                    Password              = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
