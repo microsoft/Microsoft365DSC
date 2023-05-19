@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* O365OrgSettings
+  * Added support for the AdminCenterReportDisplayConcealedNames property.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.111
 
