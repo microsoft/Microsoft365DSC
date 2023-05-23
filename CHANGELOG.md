@@ -6,6 +6,8 @@
   * Performance improvements.
 * O365OrgSettings
   * Added support for the AdminCenterReportDisplayConcealedNames property.
+* TeamsOrgWideAppSettings
+  * Initial release.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.111
   * Updated ReverseDSC to version 2.0.0.15
