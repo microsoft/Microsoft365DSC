@@ -6,6 +6,8 @@
   * Performance improvements.
 * O365OrgSettings
   * Added support for the AdminCenterReportDisplayConcealedNames property.
+* SCAutoSensitivityLabelRule
+  * Fixes an issue with the HeaderMatchesPatterns property not compiling when empty.
 * TeamsOrgWideAppSettings
   * Initial release.
 * DEPENDENCIES
