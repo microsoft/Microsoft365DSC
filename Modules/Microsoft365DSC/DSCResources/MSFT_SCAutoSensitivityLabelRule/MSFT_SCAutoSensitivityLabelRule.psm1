@@ -149,7 +149,7 @@ function Get-TargetResource
         $FromAddressMatchesPatterns,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $HeaderMatchesPatterns,
 
         [Parameter()]
@@ -277,9 +277,9 @@ function Get-TargetResource
             {
                 $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
             }
-            $HeaderMatchesPatternsValue = @{}
             if ($null -ne $HeaderMatchesPatterns -and $null -ne $HeaderMatchesPatterns.Name)
             {
+                $HeaderMatchesPatternsValue = @{}
                 foreach ($value in $HeaderMatchesPatterns[($HeaderMatchesPatterns.Name)])
                 {
                     if ($HeaderMatchesPatternsValue.ContainsKey($HeaderMatchesPatterns.Name))
@@ -534,7 +534,7 @@ function Set-TargetResource
         $FromAddressMatchesPatterns,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $HeaderMatchesPatterns,
 
         [Parameter()]
@@ -919,7 +919,7 @@ function Test-TargetResource
         $FromAddressMatchesPatterns,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $HeaderMatchesPatterns,
 
         [Parameter()]

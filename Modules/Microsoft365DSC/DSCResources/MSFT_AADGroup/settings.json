@@ -7,6 +7,9 @@
                 "read": [
                     {
                         "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "ReportSettings.Read.All"
                     }
                 ],
                 "update": [
@@ -27,6 +30,9 @@
                     },
                     {
                         "name": "User.Read.All"
+                    },
+                    {
+                        "name": "ReportSettings.ReadWrite.All"
                     }
                 ]
             },
@@ -34,6 +40,9 @@
                 "read": [
                     {
                         "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "ReportSettings.Read.All"
                     }
                 ],
                 "update": [
@@ -54,6 +63,9 @@
                     },
                     {
                         "name": "User.Read.All"
+                    },
+                    {
+                        "name": "ReportSettings.ReadWrite.All"
                     }
                 ]
             }

@@ -38,12 +38,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgServicePrincipal -MockWith {
             }
+
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                return @{
+                    "@odata.type"         = "#microsoft.graph.adminReportSettings"
+                    displayConcealedNames = $true
+                }
+            }
         }
 
         # Test contexts
         Context -Name 'When Org Settings are already in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AdminCenterReportDisplayConcealedNames     = $True;
                     IsSingleInstance                           = 'Yes'
                     M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
                     Ensure                                     = 'Present'
@@ -71,6 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When Org Settings NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AdminCenterReportDisplayConcealedNames     = $True;
                     IsSingleInstance                           = 'Yes'
                     M365WebEnableUsersToOpenFilesFrom3PStorage = $True;
                     Ensure                                     = 'Present'

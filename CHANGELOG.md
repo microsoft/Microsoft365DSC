@@ -1,5 +1,21 @@
 # Change log for Microsoft365DSC
 
+# 1.23.524.1
+
+* AADGroup
+  * Performance Improvements for export.
+* AADUser
+  * Performance improvements for export.
+* O365OrgSettings
+  * Added support for the AdminCenterReportDisplayConcealedNames property.
+* SCAutoSensitivityLabelRule
+  * Fixes an issue with the HeaderMatchesPatterns property not compiling when empty.
+* TeamsOrgWideAppSettings
+  * Initial release.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.111
+  * Updated ReverseDSC to version 2.0.0.15
+
 # 1.23.517.1
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
