@@ -2,8 +2,10 @@
 
 # 1.23.524.1
 
+* AADGroup
+  * Performance Improvements for export.
 * AADUser
-  * Performance improvements.
+  * Performance improvements for export.
 * O365OrgSettings
   * Added support for the AdminCenterReportDisplayConcealedNames property.
 * SCAutoSensitivityLabelRule
