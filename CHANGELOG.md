@@ -2,8 +2,10 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Performance Improvements for export.
 * AADUser
-  * Performance improvements.
+  * Performance improvements for export.
 * O365OrgSettings
   * Added support for the AdminCenterReportDisplayConcealedNames property.
 * DEPENDENCIES
