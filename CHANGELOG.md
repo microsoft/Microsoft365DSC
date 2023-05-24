@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.524.1
 
 * AADGroup
   * Performance Improvements for export.

@@ -164,7 +164,6 @@ function Get-TargetResource
     {
         if (-not $Script:ExportMode)
         {
-            Write-Host "Ohoho"
             Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
             $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
             $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
