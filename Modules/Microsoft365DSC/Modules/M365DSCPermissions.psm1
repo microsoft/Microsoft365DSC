@@ -1365,10 +1365,9 @@ function Update-M365DSCAzureAdApplication
     $resourceAppIdSharePoint = '00000003-0000-0ff1-ce00-000000000000'
     $resourceAppIdExchange = '00000002-0000-0ff1-ce00-000000000000'
 
-    $allPrincipals = Get-AzADServicePrincipal
-    $graphSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.AppId -eq $resourceAppIdMsGraph }
-    $spSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.AppId -eq $resourceAppIdSharePoint }
-    $exSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.AppId -eq $resourceAppIdExchange }
+    $graphSvcprincipal = Get-AzADServicePrincipal -Filter "appid eq '$resourceAppIdMsGraph'"
+    $spSvcprincipal = Get-AzADServicePrincipal -Filter "appid eq '$resourceAppIdSharePoint'"
+    $exSvcprincipal = Get-AzADServicePrincipal -Filter "appid eq '$resourceAppIdExchange'"
 
     Write-LogEntry ' '
     Write-LogEntry 'Checking existance of AD Application'
