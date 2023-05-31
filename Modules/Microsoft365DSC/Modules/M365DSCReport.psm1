@@ -499,7 +499,7 @@ function New-M365DSCReportFromConfiguration
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Excel', 'HTML', 'JSON')]
+        [ValidateSet('Excel', 'HTML', 'JSON', 'Markdown')]
         [System.String]
         $Type,
 
