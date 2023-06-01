@@ -314,7 +314,7 @@ function Set-TargetResource
         $CreationParams.Remove('Identity') | Out-Null
         New-HostedContentFilterRule @CreationParams
     }
-    elseif ($Ensure -eq 'Present' -and $CurrentValues -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
         $UpdateParams = [System.Collections.Hashtable]($PSBoundParameters)
         $UpdateParams.Remove('Ensure') | Out-Null
@@ -325,6 +325,7 @@ function Set-TargetResource
         $UpdateParams.Remove('CertificatePath') | Out-Null
         $UpdateParams.Remove('CertificatePassword') | Out-Null
         $UpdateParams.Remove('ManagedIdentity') | Out-Null
+        $UpdateParams.Remove('Enabled') | Out-Null
         Write-Verbose -Message "Updating HostedContentFilterRule {$Identity}"
         Set-HostedContentFilterRule @UpdateParams
     }
