@@ -326,6 +326,7 @@ function Set-TargetResource
         $UpdateParams.Remove('CertificatePassword') | Out-Null
         $UpdateParams.Remove('ManagedIdentity') | Out-Null
         $UpdateParams.Remove('Enabled') | Out-Null
+        $UpdateParams.Remove('HostedContentFilterPolicy') | Out-Null
         Write-Verbose -Message "Updating HostedContentFilterRule {$Identity}"
         Set-HostedContentFilterRule @UpdateParams
     }
