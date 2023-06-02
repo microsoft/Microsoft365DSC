@@ -413,7 +413,14 @@ function Set-TargetResource
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $QuarantinePolicy))
     {
         Write-Verbose -Message "Setting QuarantinePolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $QuarantinePolicyParams)"
-        Set-QuarantinePolicy @QuarantinePolicyParams
+        if ($QuarantinePolicyType -eq 'GlobalQuarantineTag') {
+            $QuarantinePolicyParams.Remove('Identity') | Out-Null
+            Get-QuarantinePolicy -QuarantinePolicyType GlobalQuarantinePolicy | Set-QuarantinePolicy @QuarantinePolicyParams
+        }
+        else
+        {
+            Set-QuarantinePolicy @QuarantinePolicyParams
+        }
     }
     elseif (('Absent' -eq $Ensure ) -and ($null -ne $QuarantinePolicy))
     {
