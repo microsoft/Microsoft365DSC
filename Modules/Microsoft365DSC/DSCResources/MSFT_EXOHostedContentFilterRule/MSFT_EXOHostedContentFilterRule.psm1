@@ -289,6 +289,12 @@ function Set-TargetResource
             "{$HostedContentFilterPolicy} doesn't exist. Make sure you either create it first or specify a valid policy."
     }
 
+    # Make sure that the associated Policy is not Default;
+    if ($AssociatedPolicy.IsDefault -eq $true )
+    {
+        throw "Policy $Identity is marked as the default. Creating a rule to apply the default policy is not allowed."
+    }
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
@@ -326,7 +332,10 @@ function Set-TargetResource
         $UpdateParams.Remove('CertificatePassword') | Out-Null
         $UpdateParams.Remove('ManagedIdentity') | Out-Null
         $UpdateParams.Remove('Enabled') | Out-Null
-        $UpdateParams.Remove('HostedContentFilterPolicy') | Out-Null
+        if ($CurrentValues.HostedContentFilterPolicy -eq $UpdateParams.HostedContentFilterPolicy )
+        {
+            $UpdateParams.Remove('HostedContentFilterPolicy') | Out-Null
+        }
         Write-Verbose -Message "Updating HostedContentFilterRule {$Identity}"
         Set-HostedContentFilterRule @UpdateParams
     }
