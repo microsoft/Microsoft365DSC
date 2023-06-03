@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOQuarantinePolicy
+  * Fixes an issue where GlobalQurantinePolicy properties can't be updated.
+
 # 1.23.524.1
 
 * AADGroup
