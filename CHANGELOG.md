@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fixes an issue for policies with template endpointSecurityAntivirus that had a templateId not expected by the code
+    FIXES [#3360](https://github.com/microsoft/Microsoft365DSC/issues/3360)
+
 # 1.23.524.1
 
 * AADGroup
