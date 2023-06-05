@@ -1,0 +1,46 @@
+[ClassVersion("1.0.0")]
+class MSFT_AADCrossTenantAccessPolicyTarget
+{
+    [Write, Description("The unique identifier of the user, group, or application; one of the following keywords: AllUsers and AllApplications; or for targets that are applications, you may use reserved values.")] String Target;
+    [Write, Description("The type of resource that you want to target. The possible values are: user, group, application, unknownFutureValue."), ValueMap{"user","group","application","unknownFutureValue"}, Values{"user","group","application","unknownFutureValue"}] String TargetType;
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_AADCrossTenantAccessPolicyTargetConfiguration
+{
+    [Write, Description("Defines whether access is allowed or blocked. The possible values are: allowed, blocked, unknownFutureValue."), ValueMap{"allowed","blocked","unknownFutureValue"}, Values{"allowed","blocked","unknownFutureValue"}] String AccessType;
+    [Write, Description("Specifies whether to target users, groups, or applications with this rule."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyTarget")] String Targets[];
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_AADCrossTenantAccessPolicyB2BSetting
+{
+    [Write, Description("The list of applications targeted with your cross-tenant access policy."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyTargetConfiguration")] String Applications;
+    [Write, Description("The list of users and groups targeted with your cross-tenant access policy."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyTargetConfiguration")] String UsersAndGroups;
+};
+
+[ClassVersion("1.0.0")]
+class MSFT_AADCrossTenantAccessPolicyInboundTrust
+{
+    [Write, Description("Specifies whether compliant devices from external Azure AD organizations are trusted.")] Boolean IsCompliantDeviceAccepted;
+    [Write, Description("Specifies whether hybrid Azure AD joined devices from external Azure AD organizations are trusted.")] Boolean IsHybridAzureADJoinedDeviceAccepted;
+    [Write, Description("Specifies whether MFA from external Azure AD organizations is trusted.")] Boolean IsMfaAccepted;
+};
+
+[ClassVersion("1.0.0.0"), FriendlyName("AADCrossTenantAccessPolicyConfigurationDefault")]
+class MSFT_AADCrossTenantAccessPolicyConfigurationDefault : OMI_BaseResource
+{
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Defines your partner-specific configuration for users from other organizations accessing your resources via Azure AD B2B collaboration."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BCollaborationInbound;
+    [Write, Description("Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B collaboration."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BCollaborationOutbound;
+    [Write, Description("Defines your partner-specific configuration for users from other organizations accessing your resources via Azure AD B2B direct connect."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BDirectConnectInbound;
+    [Write, Description("Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B direct connect."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BDirectConnectOutbound;
+    [Write, Description("Determines the partner-specific configuration for trusting other Conditional Access claims from external Azure AD organizations."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyInboundTrust")] String InboundTrust;
+    [Write, Description("Specify if the instance should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+};

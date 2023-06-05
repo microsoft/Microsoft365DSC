@@ -36,7 +36,7 @@
 | **ExceptIfSubjectMatchesPatterns** | Write | String | The ExceptIfSubjectMatchesPatterns parameter specifies an exception for the auto-labeling policy rule that looks for text patterns in the Subject field of messages by using regular expressions. | |
 | **FromAddressContainsWords** | Write | String | The FromAddressContainsWords parameter specifies a condition for the auto-labeling policy rule that looks for words or phrases in the sender's email address. You can specify multiple words or phrases separated by commas. | |
 | **FromAddressMatchesPatterns** | Write | String | The FromAddressMatchesPatterns parameter specifies a condition for the auto-labeling policy rule that looks for text patterns in the sender's email address by using regular expressions. | |
-| **HeaderMatchesPatterns** | Write | StringArray[] | The HeaderMatchesPatterns parameter specifies a condition for the auto-labeling policy rule that looks for text patterns in a header field by using regular expressions. | |
+| **HeaderMatchesPatterns** | Write | MSFT_SCHeaderPattern | The HeaderMatchesPatterns parameter specifies a condition for the auto-labeling policy rule that looks for text patterns in a header field by using regular expressions. | |
 | **ProcessingLimitExceeded** | Write | Boolean | The ProcessingLimitExceeded parameter specifies a condition for the auto-labeling policy rule that looks for files where scanning couldn't complete. You can use this condition to create rules that work together to identify and process messages where the content couldn't be fully scanned. | |
 | **RecipientDomainIs** | Write | StringArray[] | The RecipientDomainIs parameter specifies a condition for the auto-labeling policy rule that looks for recipients with email address in the specified domains. You can specify multiple domains separated by commas. | |
 | **ReportSeverityLevel** | Write | String | The ReportSeverityLevel parameter specifies the severity level of the incident report for content detections based on the rule. Valid values are: None, Low, Medium, High | `None`, `Low`, `Medium`, `High` |
@@ -54,6 +54,15 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
+
+### MSFT_SCHeaderPattern
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **Name** | Required | String | Name of the header pattern | |
+| **Values** | Required | StringArray[] | Regular expressions for the pattern | |
 
 ### MSFT_SCDLPSensitiveInformation
 

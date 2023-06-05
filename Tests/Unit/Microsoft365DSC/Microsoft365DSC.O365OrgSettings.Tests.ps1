@@ -44,6 +44,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Set-DefaultTenantMyAnalyticsFeatureConfig -MockWith {
             }
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                return @{
+                    "@odata.type"         = "#microsoft.graph.adminReportSettings"
+                    displayConcealedNames = $true
+                }
+            }
         }
 
         # Test contexts
@@ -51,6 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance                             = 'Yes'
+                    AdminCenterReportDisplayConcealedNames       = $True;
                     M365WebEnableUsersToOpenFilesFrom3PStorage   = $False
                     MicrosoftVivaBriefingEmail                   = $True
                     VivaInsightsWebExperience                    = $true
@@ -98,6 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     IsSingleInstance                             = 'Yes'
+                    AdminCenterReportDisplayConcealedNames       = $True;
                     M365WebEnableUsersToOpenFilesFrom3PStorage   = $True
                     MicrosoftVivaBriefingEmail                   = $True
                     VivaInsightsWebExperience                    = $true
@@ -106,6 +114,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     VivaInsightsScheduleSendSuggestions          = $true
                     Ensure                                       = 'Present'
                     Credential                                   = $Credential
+                    IsSingleInstance                           = 'Yes'
+                    M365WebEnableUsersToOpenFilesFrom3PStorage = $True;
+                    Ensure                                     = 'Present'
+                    Credential                                 = $Credential
                 }
 
                 Mock -CommandName Get-MgServicePrincipal -MockWith {

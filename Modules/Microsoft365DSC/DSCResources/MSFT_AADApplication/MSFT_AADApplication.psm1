@@ -920,7 +920,7 @@ function Get-M365DSCAzureADAppPermissionsAsString
     $StringContent = '@('
     foreach ($permission in $Permissions)
     {
-        $StringContent += "MSFT_AADApplicationPermission { `r`n"
+        $StringContent += "MSFT_AADApplicationPermission {`r`n"
         $StringContent += "                Name                = '" + $permission.Name + "'`r`n"
         $StringContent += "                Type                = '" + $permission.Type + "'`r`n"
         $StringContent += "                SourceAPI           = '" + $permission.SourceAPI + "'`r`n"

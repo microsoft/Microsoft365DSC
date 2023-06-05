@@ -38,6 +38,10 @@ function Get-TargetResource
         $VivaInsightsScheduleSendSuggestions,
 
         [Parameter()]
+        [System.Boolean]
+        $AdminCenterReportDisplayConcealedNames,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -114,11 +118,12 @@ function Get-TargetResource
 
         # Viva Insightss settings
         $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig
-
+        $AdminCenterReportDisplayConcealedNamesValue = Get-M365DSCOrgSettingsAdminCenterReport
         return @{
             IsSingleInstance                             = 'Yes'
             CortanaEnabled                               = $CortanaEnabledValue.AccountEnabled
             M365WebEnableUsersToOpenFilesFrom3PStorage   = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
+            AdminCenterReportDisplayConcealedNames       = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
             MicrosoftVivaBriefingEmail                   = $vivaBriefingEmailValue
             VivaInsightsWebExperience                    = $currentVivaInsightsSettings.IsDashboardEnabled
             VivaInsightsDigestEmail                      = $currentVivaInsightsSettings.IsDigestEmailEnabled
@@ -184,6 +189,10 @@ function Set-TargetResource
         $VivaInsightsScheduleSendSuggestions,
 
         [Parameter()]
+        [System.Boolean]
+        $AdminCenterReportDisplayConcealedNames,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -239,7 +248,7 @@ function Set-TargetResource
     $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
     if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled)
     {
-        Write-Verbose -Message "Setting the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
+        Write-Verbose -Message "Updating the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
         Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
             -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
     }
@@ -248,7 +257,7 @@ function Set-TargetResource
     $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
     if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled)
     {
-        Write-Verbose -Message "Setting the Cortana setting to {$CortanaEnabled}"
+        Write-Verbose -Message "Updating the Cortana setting to {$CortanaEnabled}"
         Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
             -AccountEnabled:$CortanaEnabled
     }
@@ -268,6 +277,14 @@ function Set-TargetResource
     Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Digest-email" -IsEnabled $VivaInsightsDigestEmail | Out-Null
     Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Add-In" -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
     Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Scheduled-send" -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
+
+    $AdminCenterReportDisplayConcealedNamesEnabled = Get-M365DSCOrgSettingsAdminCenterReport
+    Write-Verbose "$($AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames) = $AdminCenterReportDisplayConcealedNames"
+    if ($AdminCenterReportDisplayConcealedNames -ne $AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames)
+    {
+        Write-Verbose -Message "Updating the Admin Center Report Display Concealed Names setting to {$AdminCenterReportDisplayConcealedNames}"
+        Update-M365DSCOrgSettingsAdminCenterReport -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
+    }
 }
 
 function Test-TargetResource
@@ -308,6 +325,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $VivaInsightsScheduleSendSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $AdminCenterReportDisplayConcealedNames,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -459,6 +480,34 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-M365DSCOrgSettingsAdminCenterReport
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    $url = 'https://graph.microsoft.com/beta/admin/reportSettings'
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
+    return $results
+}
+
+function Update-M365DSCOrgSettingsAdminCenterReport
+{
+    [CmdletBinding()]
+    [OutputType([Void])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $DisplayConcealedNames
+    )
+    $url = 'https://graph.microsoft.com/beta/admin/reportSettings'
+    $body = @{
+        "@odata.context"      ="https://graph.microsoft.com/beta/$metadata#admin/reportSettings/$entity"
+        displayConcealedNames = $DisplayConcealedNames
+    }
+    Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $body | Out-Null
 }
 
 Export-ModuleMember -Function *-TargetResource

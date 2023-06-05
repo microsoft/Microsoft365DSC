@@ -17,6 +17,7 @@ Configuration Example
     {
         O365OrgSettings 'O365OrgSettings'
         {
+            AdminCenterReportDisplayConcealedNames     = $True;
             Credential                                 = $Credscredential;
             IsSingleInstance                           = "Yes";
             M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
