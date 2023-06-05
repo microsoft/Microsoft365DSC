@@ -5,6 +5,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue for policies with template endpointSecurityAntivirus that had a templateId not expected by the code
     FIXES [#3360](https://github.com/microsoft/Microsoft365DSC/issues/3360)
+* Intune Resources
+  * Fixes an issue with trailing charaters in the export job
+    FIXES [#3335](https://github.com/microsoft/Microsoft365DSC/issues/3335)
 
 # 1.23.524.1
 
