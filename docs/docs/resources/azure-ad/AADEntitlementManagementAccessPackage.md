@@ -4,10 +4,10 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | The Id of the access package. | |
+| **Id** | Key | String | The Id of the access package. | |
+| **DisplayName** | Required | String | The display name of the access package. | |
 | **CatalogId** | Write | String | Identifier of the access package catalog referencing this access package. | |
 | **Description** | Write | String | The description of the access package. | |
-| **DisplayName** | Write | String | The display name of the access package. | |
 | **IsHidden** | Write | Boolean | Whether the access package is hidden from the requestor. | |
 | **IsRoleScopesVisible** | Write | Boolean | Indicates whether role scopes are visible. | |
 | **AccessPackageResourceRoleScopes** | Write | MSFT_AccessPackageResourceRoleScope[] | The resources and roles included in the access package. | |
@@ -63,4 +63,47 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - EntitlementManagement.Read.All, EntitlementManagement.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADEntitlementManagementAccessPackage 'myAccessPackage'
+        {
+            Id                              = '0133f3f9-a2da-4043-b336-aa396bf94a9c'
+            DisplayName                     = 'General'
+            AccessPackageResourceRoleScopes = @(
+                MSFT_AccessPackageResourceRoleScope {
+                    Id                                   = 'e5b0c702-b949-4310-953e-2a51790722b8'
+                    AccessPackageResourceOriginId        = '8721d9fd-c6ef-46df-b1b2-bb6f818bce5b'
+                    AccessPackageResourceRoleDisplayName = 'AccessPackageRole'
+                }
+            )
+            CatalogId                       = '1b0e5aca-83e4-447b-84a8-3d8cffb4a331'
+            Description                     = 'Entitlement Access Package Example'
+            IsHidden                        = $false
+            IsRoleScopesVisible             = $true
+            IncompatibleAccessPackages      = @()
+            AccessPackagesIncompatibleWith  = @()
+            IncompatibleGroups              = @()
+            Ensure                          = 'Present'
+            Credential                      = $credsGlobalAdmin
+        }
+    }
+}
+```
 

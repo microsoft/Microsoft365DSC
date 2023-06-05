@@ -14,8 +14,8 @@
 | **GroupTypes** | Write | StringArray[] | Specifies that the group is a dynamic group. To create a dynamic group, specify a value of DynamicMembership. | |
 | **MembershipRule** | Write | String | Specifies the membership rule for a dynamic group. | |
 | **MembershipRuleProcessingState** | Write | String | Specifies the rule processing state. The acceptable values for this parameter are: On. Process the group rule or Paused. Stop processing the group rule. | `On`, `Paused` |
-| **SecurityEnabled** | Write | Boolean | Specifies whether the group is security enabled. For security groups, this value must be $True. | |
-| **MailEnabled** | Write | Boolean | Specifies whether this group is mail enabled. Currently, you cannot create mail enabled groups in Azure AD. | |
+| **SecurityEnabled** | Required | Boolean | Specifies whether the group is security enabled. For security groups, this value must be $True. | |
+| **MailEnabled** | Required | Boolean | Specifies whether this group is mail enabled. Currently, you cannot create mail enabled groups in Azure AD. | |
 | **IsAssignableToRole** | Write | Boolean | Specifies whether this group can be assigned a role. Only available when creating a group and can't be modified after group is created. | |
 | **AssignedToRole** | Write | StringArray[] | DisplayName values for the roles that the group is assigned to. | |
 | **Visibility** | Write | String | This parameter determines the visibility of the group's content and members list. | `Public`, `Private`, `HiddenMembership` |
@@ -51,21 +51,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Group.Read.All
+    - Group.Read.All, ReportSettings.Read.All
 
 - **Update**
 
-    - Group.Read.All, Group.ReadWrite.All, Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All
+    - Group.Read.All, Group.ReadWrite.All, Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, ReportSettings.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - Group.Read.All
+    - Group.Read.All, ReportSettings.Read.All
 
 - **Update**
 
-    - Group.Read.All, Group.ReadWrite.All, Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All
+    - Group.Read.All, Group.ReadWrite.All, Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, ReportSettings.ReadWrite.All
 
 ## Examples
 
@@ -158,6 +158,7 @@ Configuration Example
             DisplayName        = "DSCGroup"
             Description        = "Microsoft DSC Group"
             SecurityEnabled    = $True
+            MailEnabled        = $False
             GroupTypes         = @()
             MailNickname       = "M365DSCG"
             Ensure             = "Present"
@@ -168,6 +169,7 @@ Configuration Example
             DisplayName        = "DSCMemberGroup"
             Description        = "Microsoft DSC Editor"
             SecurityEnabled    = $True
+            MailEnabled        = $False
             GroupTypes         = @()
             MailNickname       = "M365DSCMG"
             Ensure             = "Present"

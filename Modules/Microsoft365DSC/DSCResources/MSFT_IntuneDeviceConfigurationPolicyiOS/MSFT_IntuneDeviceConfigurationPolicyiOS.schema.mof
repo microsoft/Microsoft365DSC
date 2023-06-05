@@ -81,9 +81,9 @@ class MSFT_MicrosoftGraphiosnetworkusagerule
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyIOS")]
 class MSFT_IntuneDeviceConfigurationPolicyIOS : OMI_BaseResource
 {
-    [Write, Description("Id of the Intune policy.")] String Id;
+    [Key, Description("Id of the Intune policy.")] String Id;
+    [Required, Description("Display name of the Intune policy.")] String DisplayName;
     [Write, Description("Description of the Intune policy.")] String Description;
-    [Write, Description("Display name of the Intune policy.")] String DisplayName;
     [Write, Description("Indicates whether or not to allow account modification when the device is in supervised mode.")] Boolean AccountBlockModification;
     [Write, Description("Activation Lock makes it harder for a lost or stolen device to be reactivated.")] Boolean ActivationLockAllowWhenSupervised;
     [Write, Description("Indicates whether or not to allow AirDrop when the device is in supervised mode.")] Boolean AirDropBlocked;
@@ -278,5 +278,5 @@ class MSFT_IntuneDeviceConfigurationPolicyIOS : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

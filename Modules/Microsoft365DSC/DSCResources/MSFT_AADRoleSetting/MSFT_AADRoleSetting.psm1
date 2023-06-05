@@ -8,7 +8,7 @@ function Get-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -349,8 +349,11 @@ function Get-TargetResource
             EligibleAssignmentAssigneeNotificationAdditionalRecipient = [System.String[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipient
             EligibleAssignmentAssigneeNotificationOnlyCritical        = $EligibleAssignmentAssigneeNotificationOnlyCritical
             Ensure                                                    = 'Present'
-            Managedidentity                                           = $ManagedIdentity.IsPresent
+            ApplicationId                                             = $ApplicationId
             TenantId                                                  = $TenantId
+            CertificateThumbprint                                     = $CertificateThumbprint
+            Credential                                                = $Credential
+            ManagedIdentity                                           = $ManagedIdentity.IsPresent
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
@@ -376,7 +379,7 @@ function Set-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -1056,8 +1059,6 @@ function Set-TargetResource
                     -UnifiedRoleManagementPolicyRuleId $role.id `
                     -BodyParameter $params `
                     -ErrorAction Stop
-
-
             }
             catch
             {
@@ -1078,7 +1079,7 @@ function Test-TargetResource
         [System.String]
         $Id,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Displayname,
 
@@ -1358,8 +1359,8 @@ function Export-TargetResource
     {
         if ($_ -match 'The tenant needs an AAD Premium 2 license')
         {
-            Write-Host -Message "`nWARNING: AAD Premium License is required to get the role" -ForegroundColor Yellow
-            continue
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) AAD Premium License is required to get the role."
+            return ''
         }
     }
     try
@@ -1373,6 +1374,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($roles.Count)] $($role.DisplayName)" -NoNewline
             $Params = @{
                 Id                    = $role.Id
+                DisplayName           = $role.DisplayName
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint

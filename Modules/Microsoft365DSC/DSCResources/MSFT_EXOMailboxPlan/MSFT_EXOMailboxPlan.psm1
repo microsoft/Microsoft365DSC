@@ -106,7 +106,7 @@ function Get-TargetResource
 
     try
     {
-        $MailboxPlan = Get-MailboxPlan $Identity -ErrorAction Stop
+        $MailboxPlan = Get-MailboxPlan -Identity $Identity -ErrorAction Stop
 
         if ($null -eq $MailboxPlan)
         {
@@ -253,7 +253,7 @@ function Set-TargetResource
     $MailboxPlanParams.Remove('CertificatePassword') | Out-Null
     $MailboxPlanParams.Remove('ManagedIdentity') | Out-Null
 
-    $MailboxPlan = Get-MailboxPlan $Identity
+    $MailboxPlan = Get-MailboxPlan -Identity $Identity
 
     if ($null -ne $MailboxPlan)
     {
@@ -441,7 +441,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($MailboxPlans.Count)] $($MailboxPlan.Identity.Split('-')[0])" -NoNewline
             $Params = @{
-                Identity              = $MailboxPlan.DisplayName
+                Identity              = $MailboxPlan.Identity
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

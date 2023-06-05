@@ -34,7 +34,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $GroupTypes = @('Unified'),
+        $GroupTypes,
 
         [Parameter()]
         [System.String]
@@ -45,11 +45,11 @@ function Get-TargetResource
         [System.String]
         $MembershipRuleProcessingState,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $SecurityEnabled,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $MailEnabled,
 
@@ -125,12 +125,26 @@ function Get-TargetResource
             Write-Verbose -Message 'GroupID was specified'
             try
             {
-                $Group = Get-MgGroup -GroupId $Id -ErrorAction Stop
+                if ($null -ne $Script:exportedGroups-and $Script:ExportMode)
+                {
+                    $Group = $Script:exportedGroups | Where-Object -FilterScript {$_.Id -eq $Id}
+                }
+                else
+                {
+                    $Group = Get-MgGroup -GroupId $Id -ErrorAction Stop
+                }
             }
             catch
             {
                 Write-Verbose -Message "Couldn't get group by ID, trying by name"
-                $Group = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                if ($null -ne $Script:exportedGroups-and $Script:ExportMode)
+                {
+                    $Group = $Script:exportedGroups | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                }
+                else
+                {
+                    $Group = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                }
                 if ($Group.Length -gt 1)
                 {
                     throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
@@ -141,7 +155,14 @@ function Get-TargetResource
         {
             Write-Verbose -Message 'Id was NOT specified'
             ## Can retreive multiple AAD Groups since displayname is not unique
-            $Group = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+            if ($null -ne $Script:exportedGroups-and $Script:ExportMode)
+            {
+                $Group = $Script:exportedGroups | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            }
+            else
+            {
+                $Group = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+            }
             if ($Group.Length -gt 1)
             {
                 throw "Duplicate AzureAD Groups named $DisplayName exist in tenant"
@@ -187,7 +208,7 @@ function Get-TargetResource
             [Array]$memberOf = Get-MgGroupMemberOf -GroupId $Group.Id -All # result also used for/by AssignedToRole
             $MemberOfValues = @()
             # Note: only process security-groups that this group is a member of and not directory roles (if any)
-            foreach ($member in ($memberOf  | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group' }))
+            foreach ($member in ($memberOf | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.group' }))
             {
                 if ($null -ne $member.AdditionalProperties.displayName)
                 {
@@ -308,11 +329,11 @@ function Set-TargetResource
         [System.String]
         $MembershipRuleProcessingState,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $SecurityEnabled,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $MailEnabled,
 
@@ -401,10 +422,6 @@ function Set-TargetResource
     {
         Write-Verbose -Message 'Cannot set mailenabled to false if GroupTypes is set to Unified when creating group.'
         throw 'Cannot set mailenabled to false if GroupTypes is set to Unified when creating a group.'
-    }
-    if (-not $GroupTypes -and $currentParameters.GroupTypes -eq $null)
-    {
-        $currentParameters.Add('GroupTypes', @('Unified'))
     }
 
     $currentValuesToCheck = @()
@@ -736,15 +753,16 @@ function Set-TargetResource
             {
                 $backCurrentAssignedToRole = @()
             }
-            $assignedToRoleDiff = Compare-Object -ReferenceObject $backCurrentAssignedToRole -DifferenceObject  $desiredAssignedToRoleValue
+            $assignedToRoleDiff = Compare-Object -ReferenceObject $backCurrentAssignedToRole -DifferenceObject $desiredAssignedToRoleValue
             foreach ($diff in $assignedToRoleDiff)
             {
                 try
                 {
                     $role = Get-MgDirectoryRole -Filter "DisplayName eq '$($diff.InputObject)'"
                     # If the role hasn't been activated, we need to get the role template ID to first activate the role
-                    if ($null -eq $role) {
-                        $adminRoleTemplate = Get-MgDirectoryRoleTemplate | Where-Object {$_.DisplayName -eq $diff.InputObject}
+                    if ($null -eq $role)
+                    {
+                        $adminRoleTemplate = Get-MgDirectoryRoleTemplate | Where-Object { $_.DisplayName -eq $diff.InputObject }
                         $role = New-MgDirectoryRole -RoleTemplateId $adminRoleTemplate.Id
                     }
                 }
@@ -824,11 +842,11 @@ function Test-TargetResource
         [System.String]
         $MembershipRuleProcessingState,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $SecurityEnabled,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $MailEnabled,
 
@@ -1019,20 +1037,25 @@ function Export-TargetResource
 
     try
     {
-        [array] $groups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
-        $groups = $groups | Where-Object -FilterScript {-not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and
-                                                        -not ($_.MailEnabled -and $_.SecurityEnabled)}
+        $Script:ExportMode = $true
+        [array] $Script:exportedGroups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
+        $Script:exportedGroups = $Script:exportedGroups | Where-Object -FilterScript {
+            -not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and `
+                -not ($_.MailEnabled -and $_.SecurityEnabled)
+        }
 
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
-        foreach ($group in $groups)
+        foreach ($group in $Script:exportedGroups)
         {
-            Write-Host "    |---[$i/$($groups.Count)] $($group.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedGroups.Count)] $($group.DisplayName)" -NoNewline
             $Params = @{
                 ApplicationSecret     = $ApplicationSecret
                 DisplayName           = $group.DisplayName
                 MailNickName          = $group.MailNickName
+                SecurityEnabled       = $true
+                MailEnabled           = $true
                 Id                    = $group.Id
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

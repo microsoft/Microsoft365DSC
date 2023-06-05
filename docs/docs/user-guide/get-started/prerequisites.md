@@ -2,7 +2,7 @@
 For Microsoft365DSC to function, you need to arrange the following components:
 
 ### PowerShell version
-Microsoft365DSC is supported for PowerShell version 5.1 and 7.1. Support for newer versions of PowerShell is not yet offered since these have now decoupled the DSC engine into its own separate module and require additional work from the team. It is however on the roadmap as a priority item for the later part of Calendar Year of 2022.
+Microsoft365DSC is supported for PowerShell version 5.1 and 7.3+. For additional details on how to leverage it with PowerShell 7, please refer to our [PowerShell 7+ Guide for Microsoft365DSC](https://microsoft365dsc.com/user-guide/get-started/powershell7-support/).
 
 ### Tooling
 To get the best experience running Microsoft365DSC cmdlets, it is recommended that you use the <a href="https://www.microsoft.com/en-ca/p/windows-terminal/9n0dx20hk701" target="_blank">Windows Terminal</a>. All screenshots provided in this article are using the Windows Terminal. This tool allows you to quickly switch between PowerShell versions and provide better support for icons and symbols that are used throughout Microsoft365DSC’s experience.

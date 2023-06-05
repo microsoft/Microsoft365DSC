@@ -4,28 +4,19 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **DisplayName** | Key | String | Display name of the device enrollment platform restriction. | |
+| **Identity** | Key | String | Identity of the device enrollment platform restriction. | |
+| **DisplayName** | Required | String | Display name of the device enrollment platform restriction. | |
 | **Description** | Write | String | Description of the device enrollment platform restriction. | |
-| **AndroidPlatformBlocked** | Write | Boolean | N/A | |
-| **AndroidPersonalDeviceEnrollmentBlocked** | Write | Boolean | N/A | |
-| **AndroidOSMinimumVersion** | Write | String | N/A | |
-| **AndroidOSMaximumVersion** | Write | String | N/A | |
-| **iOSPlatformBlocked** | Write | Boolean | N/A | |
-| **iOSPersonalDeviceEnrollmentBlocked** | Write | Boolean | N/A | |
-| **iOSOSMinimumVersion** | Write | String | N/A | |
-| **iOSOSMaximumVersion** | Write | String | N/A | |
-| **MacPlatformBlocked** | Write | Boolean | N/A | |
-| **MacPersonalDeviceEnrollmentBlocked** | Write | Boolean | N/A | |
-| **MacOSMinimumVersion** | Write | String | N/A | |
-| **MacOSMaximumVersion** | Write | String | N/A | |
-| **WindowsPlatformBlocked** | Write | Boolean | N/A | |
-| **WindowsPersonalDeviceEnrollmentBlocked** | Write | Boolean | N/A | |
-| **WindowsOSMinimumVersion** | Write | String | N/A | |
-| **WindowsOSMaximumVersion** | Write | String | N/A | |
-| **WindowsMobilePlatformBlocked** | Write | Boolean | N/A | |
-| **WindowsMobilePersonalDeviceEnrollmentBlocked** | Write | Boolean | N/A | |
-| **WindowsMobileOSMinimumVersion** | Write | String | N/A | |
-| **WindowsMobileOSMaximumVersion** | Write | String | N/A | |
+| **DeviceEnrollmentConfigurationType** | Write | String | Support for Enrollment Configuration Type Inherited from deviceEnrollmentConfiguration. | `singlePlatformRestriction`, `platformRestrictions` |
+| **IosRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Ios restrictions based on platform, platform operating system version, and device ownership. | |
+| **WindowsRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows restrictions based on platform, platform operating system version, and device ownership. | |
+| **WindowsHomeSkuRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows home Sku restrictions based on platform, platform operating system version, and device ownership. | |
+| **WindowsMobileRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows Mobile restrictions based on platform, platform operating system version, and device ownership. | |
+| **AndroidRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android Device Administrator restrictions based on platform, platform operating system version, and device ownership. | |
+| **AndroidForWorkRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android Enterprise restrictions based on platform, platform operating system version, and device ownership. | |
+| **MacRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac restrictions based on platform, platform operating system version, and device ownership. | |
+| **MacOSRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac OS restrictions based on platform, platform operating system version, and device ownership. | |
+| **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the policy. | |
 | **Ensure** | Write | String | Present ensures the restriction exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -33,6 +24,31 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+
+### MSFT_DeviceManagementConfigurationPolicyAssignments
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
+| **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
+| **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
+
+### MSFT_DeviceEnrollmentPlatformRestriction
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **PlatformBlocked** | Write | Boolean | Block the platform from enrolling. | |
+| **PersonalDeviceEnrollmentBlocked** | Write | Boolean | Block personally owned devices from enrolling. | |
+| **OsMinimumVersion** | Write | String | Min OS version supported. | |
+| **OsMaximumVersion** | Write | String | Max OS version supported. | |
+| **BlockedManufacturers** | Write | StringArray[] | Collection of blocked Manufacturers. | |
+| **BlockedSkus** | Write | StringArray[] | Collection of blocked Skus. | |
 
 
 ## Description
@@ -85,22 +101,49 @@ Configuration Example
     {
         IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
         {
-            AndroidPersonalDeviceEnrollmentBlocked       = $False
-            AndroidPlatformBlocked                       = $False
-            Description                                  = ""
-            DisplayName                                  = "My DSC Restriction"
-            iOSOSMaximumVersion                          = "11.0"
-            iOSOSMinimumVersion                          = "9.0"
-            iOSPersonalDeviceEnrollmentBlocked           = $False
-            iOSPlatformBlocked                           = $False
-            MacPersonalDeviceEnrollmentBlocked           = $False
-            MacPlatformBlocked                           = $True
-            WindowsMobilePersonalDeviceEnrollmentBlocked = $False
-            WindowsMobilePlatformBlocked                 = $True
-            WindowsPersonalDeviceEnrollmentBlocked       = $True
-            WindowsPlatformBlocked                       = $False
-            Ensure                                       = "Present"
-            Credential                                   = $credsGlobalAdmin
+            AndroidForWorkRestriction         = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            AndroidRestriction                = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            Assignments                       = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                });
+            Credential                        = $credsGlobalAdmin
+            Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
+            DeviceEnrollmentConfigurationType = "platformRestrictions";
+            DisplayName                       = "All users and all devices";
+            Ensure                            = "Present";
+            Identity                          = "5b0e1dba-4523-455e-9fdd-e36c833b57bf_DefaultPlatformRestrictions";
+            IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            MacOSRestriction                  = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            MacRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            WindowsHomeSkuRestriction         = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            WindowsMobileRestriction          = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $True
+                personalDeviceEnrollmentBlocked = $False
+            };
+            WindowsRestriction                = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
         }
     }
 }

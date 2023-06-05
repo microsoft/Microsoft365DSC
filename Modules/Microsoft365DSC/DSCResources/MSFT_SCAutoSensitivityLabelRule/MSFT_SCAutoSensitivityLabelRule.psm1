@@ -149,7 +149,7 @@ function Get-TargetResource
         $FromAddressMatchesPatterns,
 
         [Parameter()]
-        [System.String[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $HeaderMatchesPatterns,
 
         [Parameter()]
@@ -277,6 +277,28 @@ function Get-TargetResource
             {
                 $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
             }
+            if ($null -ne $HeaderMatchesPatterns -and $null -ne $HeaderMatchesPatterns.Name)
+            {
+                $HeaderMatchesPatternsValue = @{}
+                foreach ($value in $HeaderMatchesPatterns[($HeaderMatchesPatterns.Name)])
+                {
+                    if ($HeaderMatchesPatternsValue.ContainsKey($HeaderMatchesPatterns.Name))
+                    {
+                        $HeaderMatchesPatternsValue[$HeaderMatchesPatterns.Name] += $value
+                    }
+                    else
+                    {
+                        $HeaderMatchesPatternsValue.Add($HeaderMatchesPatterns.Name, @($value))
+                    }
+                }
+            }
+            foreach ($pattern in $PolicyRule.HeaderMatchesPatterns.Keys)
+            {
+                $HeaderMatchesPatternsValue += @{
+                    Name  = $pattern
+                    Value = $PolicyRule.HeaderMatchesPatterns.$pattern
+                }
+            }
 
             $result = @{
                 Name                                         = $PolicyRule.Name
@@ -312,7 +334,7 @@ function Get-TargetResource
                 ExceptIfSubjectMatchesPatterns               = $PolicyRule.ExceptIfSubjectMatchesPatterns
                 FromAddressContainsWords                     = $PolicyRule.FromAddressContainsWords
                 FromAddressMatchesPatterns                   = $PolicyRule.FromAddressMatchesPatterns
-                HeaderMatchesPatterns                        = $PolicyRule.HeaderMatchesPatterns
+                HeaderMatchesPatterns                        = $HeaderMatchesPatternsValue
                 ProcessingLimitExceeded                      = $PolicyRule.ProcessingLimitExceeded
                 RecipientDomainIs                            = $PolicyRule.RecipientDomainIs
                 ReportSeverityLevel                          = $PolicyRule.ReportSeverityLevel
@@ -324,6 +346,11 @@ function Get-TargetResource
                 SubjectMatchesPatterns                       = $PolicyRule.SubjectMatchesPatterns
                 Ensure                                       = 'Present'
                 Credential                                   = $Credential
+                ApplicationId                                = $ApplicationId
+                TenantId                                     = $TenantId
+                CertificateThumbprint                        = $CertificateThumbprint
+                CertificatePath                              = $CertificatePath
+                CertificatePassword                          = $CertificatePassword
             }
 
             $paramsToRemove = @()
@@ -346,6 +373,7 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Error $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -506,7 +534,7 @@ function Set-TargetResource
         $FromAddressMatchesPatterns,
 
         [Parameter()]
-        [System.String[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $HeaderMatchesPatterns,
 
         [Parameter()]
@@ -594,6 +622,11 @@ function Set-TargetResource
 
     $CurrentRule = Get-TargetResource @PSBoundParameters
 
+    $HeaderMatchesPatternsValue = @{}
+    if ($null -ne $HeaderMatchesPatterns -and $null -ne $HeaderMatchesPatterns.Name)
+    {
+        $HeaderMatchesPatternsValue.Add($HeaderMatchesPatterns.Name, $HeaderMatchesPatterns.Values)
+    }
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentRule.Ensure))
     {
         Write-Verbose "Rule {$($CurrentRule.Name)} doesn't exists but need to. Creating Rule."
@@ -632,8 +665,17 @@ function Set-TargetResource
             $CreationParams.ExceptIfContentContainsSensitiveInformation = $value
         }
 
-        $CreationParams.Remove('Credential')
         $CreationParams.Remove('Ensure')
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         Write-Verbose -Message 'Flipping the parent policy to Mode = TestWithoutNotification while we create the rule'
         $parentPolicy = Get-AutoSensitivityLabelPolicy -Identity $Policy
@@ -641,6 +683,10 @@ function Set-TargetResource
         Set-AutoSensitivityLabelPolicy -Identity $Policy -Mode 'TestWithoutNotifications'
 
         Write-Verbose -Message "Calling New-AutoSensitivityLabelRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
+        if ($null -ne $HeaderMatchesPatternsValue)
+        {
+            $CreationParams.HeaderMatchesPatterns = $HeaderMatchesPatternsValue
+        }
         New-AutoSensitivityLabelRule @CreationParams
 
         Write-Verbose -Message "Flipping the parent policy to Mode back to $currentMode while we create the rule"
@@ -685,17 +731,30 @@ function Set-TargetResource
             $UpdateParams.ExceptIfContentContainsSensitiveInformation = $value
         }
 
-        $UpdateParams.Remove('Credential') | Out-Null
         $UpdateParams.Remove('Ensure') | Out-Null
         $UpdateParams.Remove('Name') | Out-Null
         $UpdateParams.Remove('Policy') | Out-Null
         $UpdateParams.Add('Identity', $Name)
+
+        # Remove authentication parameters
+        $UpdateParams.Remove('Credential') | Out-Null
+        $UpdateParams.Remove('ApplicationId') | Out-Null
+        $UpdateParams.Remove('TenantId') | Out-Null
+        $UpdateParams.Remove('CertificatePath') | Out-Null
+        $UpdateParams.Remove('CertificatePassword') | Out-Null
+        $UpdateParams.Remove('CertificateThumbprint') | Out-Null
+        $UpdateParams.Remove('ManagedIdentity') | Out-Null
+        $UpdateParams.Remove('ApplicationSecret') | Out-Null
 
         Write-Verbose -Message 'Flipping the parent policy to Mode = TestWithoutNotification while we editing the rule'
         $parentPolicy = Get-AutoSensitivityLabelPolicy -Identity $Policy
         $currentMode = $parentPolicy.Mode
         Set-AutoSensitivityLabelPolicy -Identity $Policy -Mode 'TestWithoutNotifications'
 
+        if ($null -ne $HeaderMatchesPatternsValue)
+        {
+            $UpdateParams.HeaderMatchesPatterns = $HeaderMatchesPatternsValue
+        }
         Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
         Set-AutoSensitivityLabelRule @UpdateParams
 
@@ -860,7 +919,7 @@ function Test-TargetResource
         $FromAddressMatchesPatterns,
 
         [Parameter()]
-        [System.String[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $HeaderMatchesPatterns,
 
         [Parameter()]
@@ -947,7 +1006,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    # Remove authentication parameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     #region Test Sensitive Information Type
     # For each Desired SIT check to see if there is an existing rule with the same name
@@ -994,7 +1062,6 @@ function Test-TargetResource
     #endregion
     $ValuesToCheck.Remove('ContentContainsSensitiveInformation') | Out-Null
     $ValuesToCheck.Remove('ExceptIfContentContainsSensitiveInformation') | Out-Null
-
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1071,10 +1138,9 @@ function Export-TargetResource
             [Array]$workloads = $rule.Workload.Replace(' ', '').Split(',')
             foreach ($workload in $workloads)
             {
-
                 $Results = Get-TargetResource @PSBoundParameters `
                     -Name $rule.name `
-                    -Policy $rule.Policy `
+                    -Policy $rule.ParentPolicyName `
                     -Workload $workload
 
                 $IsCIMArray = $false
@@ -1114,6 +1180,12 @@ function Export-TargetResource
                     }
                 }
 
+                $IsHeaderPatternsCIMArray = $false
+                if ($null -ne $Results.HeaderMatchesPatterns -and $null -ne $Results.HeaderMatchesPatterns.Name)
+                {
+                    $Results.HeaderMatchesPatterns = ConvertTo-HeadersMatchesPatternString -Patterns $Results.HeaderMatchesPatterns
+                }
+
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -1130,6 +1202,10 @@ function Export-TargetResource
                 {
                     $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExceptIfContentContainsSensitiveInformation' -IsCIMArray $IsCIMArray
                 }
+                if ($null -ne $Results.HeaderMatchesPatterns)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'HeaderMatchesPatterns' -IsCIMArray $false
+                }
                 $dscContent += $currentDSCBlock
 
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -1145,7 +1221,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
@@ -1153,6 +1229,30 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function ConvertTo-HeadersMatchesPatternString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Patterns
+    )
+    $result = ''
+
+    $result = "`r`n                MSFT_SCHeaderPattern`r`n                {`r`n"
+    $result += "                        Name   = '$($Patterns.Name)'`r`n"
+    $result += "                        Values = @("
+    foreach ($value in $Patterns.Value)
+    {
+        $result += "'$($value.Replace("'", "''"))',"
+    }
+    $result = $result.Substring(0, $result.Length -1) + ")`r`n"
+    $result += "                }`r`n"
+    return $result
 }
 function ConvertTo-SCDLPSensitiveInformationStringGroup
 {
@@ -1356,6 +1456,22 @@ function Get-SCDLPSensitiveInformation
             $result.Add('maxcount', $item.maxcount)
         }
         $returnValue += $result
+    }
+    return $returnValue
+}
+
+function Get-SCHeaderPatternsAsObject
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.Object[]]
+        $Patterns
+    )
+    $returnValue = @{
+        $Patterns.Name = $Patterns.Value
     }
     return $returnValue
 }

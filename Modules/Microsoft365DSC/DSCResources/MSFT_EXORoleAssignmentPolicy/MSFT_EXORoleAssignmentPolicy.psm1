@@ -252,14 +252,16 @@ function Set-TargetResource
             if ($difference.SideIndicator -eq '=>')
             {
                 Write-Verbose -Message "Adding Role {$($difference.InputObject)} to Role Assignment Policy {$Name}"
-                New-ManagementRoleAssignment -Role $($difference.InputObject) -Policy $Name
+                New-ManagementRoleAssignment -Role $($difference.InputObject) -Policy $Name -Confirm:$false
             }
             elseif ($difference.SideIndicator -eq '<=')
             {
                 Write-Verbose -Message "Removing Role {$($difference.InputObject)} from Role Assignment Policy {$Name}"
-                Remove-ManagementRoleAssignment -Identity "$($difference.InputObject)-$Name"
+                Remove-ManagementRoleAssignment -Identity "$($difference.InputObject)-$Name" -Confirm:$false
             }
         }
+        # Update other attributes of role assignment policy
+        Set-RoleAssignmentPolicy -Identity $Name -Name $Name -Description $Description -IsDefault:$IsDefault -Confirm:$false
     }
 }
 
@@ -456,7 +458,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

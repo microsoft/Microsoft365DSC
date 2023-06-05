@@ -15,11 +15,11 @@ Configuration Example
     {
         IntuneDeviceEnrollmentLimitRestriction 'DeviceEnrollmentLimitRestriction'
         {
-            Description          = "My Restriction"
-            DisplayName          = "My DSC Limit"
-            Limit                = 12
-            Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            DisplayName = 'My DSC Limit'
+            Description = 'My Restriction'
+            Limit       = 12
+            Ensure      = 'Present'
+            Credential  = $credsGlobalAdmin
         }
     }
 }

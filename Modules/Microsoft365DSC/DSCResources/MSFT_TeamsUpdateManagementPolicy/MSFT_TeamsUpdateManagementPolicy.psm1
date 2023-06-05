@@ -22,7 +22,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
+        [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
@@ -37,6 +37,11 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $UpdateTimeOfDay,
+
+        [Parameter()]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [System.String]
+        $UseNewTeamsClient,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -90,7 +95,7 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found Teams Update Management Policy with Identity {$Identity}"
-        $results =  @{
+        $results = @{
             Identity              = $policy.Identity
             Description           = $policy.Description
             AllowManagedUpdates   = $policy.AllowManagedUpdates
@@ -98,6 +103,7 @@ function Get-TargetResource
             AllowPublicPreview    = $policy.AllowPublicPreview
             UpdateDayOfWeek       = $policy.UpdateDayOfWeek
             UpdateTime            = $policy.UpdateTime
+            UseNewTeamsClient     = $policy.UseNewTeamsClient
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -146,7 +152,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
+        [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
@@ -161,6 +167,11 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $UpdateTimeOfDay,
+
+        [Parameter()]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [System.String]
+        $UseNewTeamsClient,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -258,7 +269,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Disabled', 'Enabled', 'FollowOfficePreview')]
+        [ValidateSet('Disabled', 'Enabled', 'Forced', 'FollowOfficePreview')]
         $AllowPublicPreview,
 
         [Parameter()]
@@ -273,6 +284,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $UpdateTimeOfDay,
+
+        [Parameter()]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [System.String]
+        $UseNewTeamsClient,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

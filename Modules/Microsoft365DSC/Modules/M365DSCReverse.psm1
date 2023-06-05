@@ -84,7 +84,11 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [Switch]
+        $Validate
     )
 
     # Start by checking to see if a new Version of the tool is available in the
@@ -554,7 +558,7 @@ function Start-M365DSCConfigurationExtract
                 }
                 'ApplicationSecret'
                 {
-                    $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force));
+                    $applicationSecretValue = New-Object System.Management.Automation.PSCredential ('ApplicationSecret', (ConvertTo-SecureString $ApplicationSecret -AsPlainText -Force))
                     $parameters.Add('ApplicationSecret', $applicationSecretValue)
                 }
                 { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
@@ -696,6 +700,23 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
+        # Check if configuration validation needs to be performed
+        if ($Validate.IsPresent)
+        {
+            Write-Host "$($Global:M365DSCMagnifyingGlass) Starting configuration validation..." -NoNewline
+            [Array]$results = Get-M365DSCConfigurationConflict -ConfigurationContent $DSCContent.ToString()
+            Write-Host "Results:"
+            if ($results.Count -gt 0)
+            {
+                foreach ($issue in $results)
+                {
+                    Write-Host "    - [" -NoNewline
+                    Write-Host "$($issue.Reason)" -ForegroundColor Red -NoNewline
+                    Write-Host "]: $($issue.InstanceName)"
+                }
+            }
+        }
+
         $shouldOpenOutputDirectory = $false
         #region Prompt the user for a location to save the extract and generate the files
         if ([System.String]::IsNullOrEmpty($Path))
@@ -743,7 +764,7 @@ function Start-M365DSCConfigurationExtract
                 $Components.Contains('SPOApp')) -or
             $AllComponents -or ($null -ne $Workloads -and $Workloads.Contains('SPO')))
         {
-            if ($ConnectionMode -eq 'credential')
+            if ($AuthMethods -Contains 'Credentials')
             {
                 $filesToDownload = Get-AllSPOPackages -Credential $Credential
             }
@@ -832,9 +853,9 @@ function Start-M365DSCConfigurationExtract
     }
     catch
     {
-        Write-Host $_
         $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
         Write-Host "Partial Export file was saved at: $partialPath"
+        throw $_
     }
 }
 

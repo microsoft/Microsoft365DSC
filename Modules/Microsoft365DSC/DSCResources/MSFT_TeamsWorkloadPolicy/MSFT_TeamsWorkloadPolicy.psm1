@@ -77,7 +77,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-CsTeamsWorkloadPolicy -Identity $Identity -ErrorAction SilentlyContinue
+        $instance = Get-CsTeamsWorkLoadPolicy -Identity $Identity -ErrorAction SilentlyContinue
         if ($null -eq $instance)
         {
             return $nullResult
@@ -214,7 +214,7 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
-        New-CsTeamsWorkloadPolicy @CreateParameters | Out-Null
+        New-CsTeamsWorkLoadPolicy @CreateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -234,12 +234,12 @@ function Set-TargetResource
             }
         }
 
-        Set-CsTeamsWorkloadPolicy @UpdateParameters | Out-Null
+        Set-CsTeamsWorkLoadPolicy @UpdateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$Identity}"
-        Remove-CsTeamsWorkloadPolicy -Identity $currentInstance.Identity
+        Remove-CsTeamsWorkLoadPolicy -Identity $currentInstance.Identity
     }
 }
 
@@ -381,7 +381,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-   $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -398,7 +398,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-CsTeamsWorkloadPolicy -ErrorAction Stop
+        [array]$getValue = Get-CsTeamsWorkLoadPolicy -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -419,11 +419,11 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity = $config.Identity
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
+                Identity              = $config.Identity
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
 
             }

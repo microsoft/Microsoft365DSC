@@ -170,10 +170,10 @@ function Get-TargetResource
         [System.Boolean]
         $EncryptAppData,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -520,10 +520,10 @@ function Set-TargetResource
         [System.Boolean]
         $EncryptAppData,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -864,10 +864,10 @@ function Test-TargetResource
         [System.Boolean]
         $EncryptAppData,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1008,8 +1008,8 @@ function Test-TargetResource
     # remove thre ID from the values to check as it may not match
     $targetvalues.remove('ID') | Out-Null
 
-    Write-Verbose -Message "Current Values: $((Convert-M365DscHashtableToString -Hashtable $CurrentValues) -replace ';', "`r`n")"
-    Write-Verbose -Message "Target Values: $((Convert-M365DscHashtableToString -Hashtable $targetvalues) -replace ';', "`r`n")"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $targetvalues)"
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1116,7 +1116,7 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*')
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -1245,7 +1245,7 @@ function Set-AppsHash
     }
 
     $AppsHash = @{
-        'AppGroupType' = $AppGroupType;
+        'AppGroupType' = $AppGroupType
         'Apps'         = $appsarray
     }
 
@@ -1300,9 +1300,9 @@ function Set-ManagedBrowserValues
     }
 
     $ManagedBrowserHash = @{
-        'ManagedBrowser'                    = $ManagedBrowser;
-        'ManagedBrowserToOpenLinksRequired' = $ManagedBrowserToOpenLinksRequired;
-        'CustomBrowserDisplayName'          = $CustomBrowserDisplayName;
+        'ManagedBrowser'                    = $ManagedBrowser
+        'ManagedBrowserToOpenLinksRequired' = $ManagedBrowserToOpenLinksRequired
+        'CustomBrowserDisplayName'          = $CustomBrowserDisplayName
         'CustomBrowserPackageId'            = $CustomBrowserPackageId
     }
 
@@ -1312,54 +1312,54 @@ function Set-ManagedBrowserValues
 function Get-InputParameters
 {
     return @{
-        AllowedDataStorageLocations                     = @{Type = 'Parameter'        ; ExportFileType = 'Array'; };
-        AllowedInboundDataTransferSources               = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        AllowedOutboundClipboardSharingLevel            = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        AllowedOutboundDataTransferDestinations         = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        ApplicationId                                   = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        ApplicationSecret                               = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        AppGroupType                                    = @{Type = 'ComplexParameter' ; ExportFileType = 'String'; };
-        Apps                                            = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        Assignments                                     = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        CertificateThumbprint                           = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        Managedidentity                                 = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        ContactSyncBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        Credential                                      = @{Type = 'Credential'       ; ExportFileType = 'NA'; };
-        CustomBrowserDisplayName                        = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        CustomBrowserPackageId                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        DataBackupBlocked                               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        Description                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        DeviceComplianceRequired                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        DisableAppEncryptionIfDeviceEncryptionIsEnabled = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        DisableAppPinIfDevicePinIsSet                   = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        DisplayName                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        EncryptAppData                                  = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        Ensure                                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        ExcludedGroups                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        FingerprintBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        Id                                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        IsAssigned                                      = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        ManagedBrowser                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'String'; };
-        ManagedBrowserToOpenLinksRequired               = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; };
-        MaximumPinRetries                               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumPinLength                                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumRequiredAppVersion                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumRequiredOSVersion                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumRequiredPatchVersion                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumWarningAppVersion                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumWarningOSVersion                         = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        MinimumWarningPatchVersion                      = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        OrganizationalCredentialsRequired               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        PeriodBeforePinReset                            = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
-        PeriodOfflineBeforeAccessCheck                  = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
-        PeriodOfflineBeforeWipeIsEnforced               = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
-        PeriodOnlineBeforeAccessCheck                   = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; };
-        PinCharacterSet                                 = @{Type = 'Parameter'        ; ExportFileType = 'String'; };
-        PinRequired                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        PrintBlocked                                    = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        SaveAsBlocked                                   = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        ScreenCaptureBlocked                            = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
-        SimplePinBlocked                                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; };
+        AllowedDataStorageLocations                     = @{Type = 'Parameter'        ; ExportFileType = 'Array'; }
+        AllowedInboundDataTransferSources               = @{Type = 'Parameter'        ; ExportFileType = 'String'; }
+        AllowedOutboundClipboardSharingLevel            = @{Type = 'Parameter'        ; ExportFileType = 'String'; }
+        AllowedOutboundDataTransferDestinations         = @{Type = 'Parameter'        ; ExportFileType = 'String'; }
+        ApplicationId                                   = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
+        ApplicationSecret                               = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
+        AppGroupType                                    = @{Type = 'ComplexParameter' ; ExportFileType = 'String'; }
+        Apps                                            = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        Assignments                                     = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        CertificateThumbprint                           = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
+        Managedidentity                                 = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        ContactSyncBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        Credential                                      = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
+        CustomBrowserDisplayName                        = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        CustomBrowserPackageId                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        DataBackupBlocked                               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        Description                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        DeviceComplianceRequired                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        DisableAppEncryptionIfDeviceEncryptionIsEnabled = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        DisableAppPinIfDevicePinIsSet                   = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        DisplayName                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        EncryptAppData                                  = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        Ensure                                          = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        ExcludedGroups                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        FingerprintBlocked                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        Id                                              = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        IsAssigned                                      = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        ManagedBrowser                                  = @{Type = 'ComplexParameter' ; ExportFileType = 'String'; }
+        ManagedBrowserToOpenLinksRequired               = @{Type = 'ComplexParameter' ; ExportFileType = 'NA'; }
+        MaximumPinRetries                               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        MinimumPinLength                                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        MinimumRequiredAppVersion                       = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        MinimumRequiredOSVersion                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        MinimumRequiredPatchVersion                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        MinimumWarningAppVersion                        = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        MinimumWarningOSVersion                         = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        MinimumWarningPatchVersion                      = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        OrganizationalCredentialsRequired               = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        PeriodBeforePinReset                            = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; }
+        PeriodOfflineBeforeAccessCheck                  = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; }
+        PeriodOfflineBeforeWipeIsEnforced               = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; }
+        PeriodOnlineBeforeAccessCheck                   = @{Type = 'Parameter'        ; ExportFileType = 'Duration'; }
+        PinCharacterSet                                 = @{Type = 'Parameter'        ; ExportFileType = 'String'; }
+        PinRequired                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        PrintBlocked                                    = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        SaveAsBlocked                                   = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        ScreenCaptureBlocked                            = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        SimplePinBlocked                                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
         TenantId                                        = @{Type = 'Credential'       ; ExportFileType = 'NA'; }
     }
 }

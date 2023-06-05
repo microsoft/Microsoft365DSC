@@ -2,27 +2,27 @@
 param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\..\Unit" `
-                        -Resolve
+    -ChildPath '..\..\Unit' `
+    -Resolve
 $CmdletModule = (Join-Path -Path $M365DSCTestFolder `
-            -ChildPath "\Stubs\Microsoft365.psm1" `
-            -Resolve)
+        -ChildPath '\Stubs\Microsoft365.psm1' `
+        -Resolve)
 $GenericStubPath = (Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Generic.psm1" `
-    -Resolve)
+        -ChildPath '\Stubs\Generic.psm1' `
+        -Resolve)
 Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
-        -ChildPath "\UnitTestHelper.psm1" `
+        -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "AADEntitlementManagementAccessPackageAssignmentPolicy" -GenericStubModule $GenericStubPath
+    -DscResource 'AADEntitlementManagementAccessPackageAssignmentPolicy' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@mydomain.com", $secpasswd)
+            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -43,62 +43,69 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
-                return "Credentials"
+                return 'Credentials'
+            }
+
+            Mock -CommandName Select-MgProfile -MockWith {
+            }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
         }
         # Test contexts
-        Context -Name "The AADEntitlementManagementAccessPackageAssignmentPolicy should exist but it DOES NOT" -Fixture {
+        Context -Name 'The AADEntitlementManagementAccessPackageAssignmentPolicy should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                        AccessPackageId = "FakeStringValue"
-                        AccessReviewSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
-                            isEnabled = $True
-                            isAccessRecommendationEnabled = $True
+                    AccessPackageId         = 'FakeStringValue'
+                    AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
+                            isEnabled                       = $True
+                            isAccessRecommendationEnabled   = $True
                             isApprovalJustificationRequired = $True
-                            recurrenceType = "FakeStringValue"
-                            reviewerType = "FakeStringValue"
-                            durationInDays = 25
+                            recurrenceType                  = 'FakeStringValue'
+                            reviewerType                    = 'FakeStringValue'
+                            durationInDays                  = 25
                         } -ClientOnly)
-                        CanExtend = $True
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        DurationInDays = 25
-                        Id = "FakeStringValue"
-                        Questions =@(
+                    CanExtend               = $True
+                    Description             = 'FakeStringValue'
+                    DisplayName             = 'FakeStringValue'
+                    DurationInDays          = 25
+                    Id                      = 'FakeStringValue'
+                    Questions               = @(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphaccesspackagequestion -Property @{
-                                allowsMultipleSelection = $True
-                                isAnswerEditable = $True
-                                id = "FakeStringValue"
-                                regexPattern = "FakeStringValue"
-                                isSingleLineQuestion = $True
-                                isRequired = $True
-                                odataType = "#microsoft.graph.accessPackageMultipleChoiceQuestion"
-                                sequence = 25
-
-                            } -ClientOnly)
-                        )
-                        RequestApprovalSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
-                            approvalMode = "FakeStringValue"
-                            isRequestorJustificationRequired = $True
-                            isApprovalRequiredForExtension = $True
-                            isApprovalRequired = $True
+                            allowsMultipleSelection = $True
+                            isAnswerEditable        = $True
+                            id                      = 'FakeStringValue'
+                            regexPattern            = 'FakeStringValue'
+                            isSingleLineQuestion    = $True
+                            isRequired              = $True
+                            odataType               = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
+                            sequence                = 25
 
                         } -ClientOnly)
-                        RequestorSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
-                            scopeType = "FakeStringValue"
+                    )
+                    RequestApprovalSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
+                            approvalMode                     = 'FakeStringValue'
+                            isRequestorJustificationRequired = $True
+                            isApprovalRequiredForExtension   = $True
+                            isApprovalRequired               = $True
+
+                        } -ClientOnly)
+                    RequestorSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
+                            scopeType      = 'FakeStringValue'
                             acceptRequests = $True
 
                         } -ClientOnly)
 
-                    Ensure                        = "Present"
-                    Credential                    = $Credential;
+                    Ensure                  = 'Present'
+                    Credential              = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return $null
                 }
             }
-            It "Should return Values from the Get method" {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
             }
             It 'Should return false from the Test method' {
@@ -110,91 +117,91 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The AADEntitlementManagementAccessPackageAssignmentPolicy exists but it SHOULD NOT" -Fixture {
+        Context -Name 'The AADEntitlementManagementAccessPackageAssignmentPolicy exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                        AccessPackageId = "FakeStringValue"
-                        AccessReviewSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
-                            isEnabled = $True
-                            isAccessRecommendationEnabled = $True
+                    AccessPackageId         = 'FakeStringValue'
+                    AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
+                            isEnabled                       = $True
+                            isAccessRecommendationEnabled   = $True
                             isApprovalJustificationRequired = $True
-                            recurrenceType = "FakeStringValue"
-                            reviewerType = "FakeStringValue"
-                            durationInDays = 25
+                            recurrenceType                  = 'FakeStringValue'
+                            reviewerType                    = 'FakeStringValue'
+                            durationInDays                  = 25
                         } -ClientOnly)
-                        CanExtend = $True
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        DurationInDays = 25
-                        Id = "FakeStringValue"
-                        Questions =@(
+                    CanExtend               = $True
+                    Description             = 'FakeStringValue'
+                    DisplayName             = 'FakeStringValue'
+                    DurationInDays          = 25
+                    Id                      = 'FakeStringValue'
+                    Questions               = @(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphaccesspackagequestion -Property @{
-                                allowsMultipleSelection = $True
-                                isAnswerEditable = $True
-                                id = "FakeStringValue"
-                                isRequired = $True
-                                odataType = "#microsoft.graph.accessPackageMultipleChoiceQuestion"
-                                sequence = 25
-                            } -ClientOnly)
-                        )
-                        RequestApprovalSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
-                            approvalMode = "NoApproval"
-                            isRequestorJustificationRequired = $True
-                            isApprovalRequiredForExtension = $False
-                            isApprovalRequired = $False
+                            allowsMultipleSelection = $True
+                            isAnswerEditable        = $True
+                            id                      = 'FakeStringValue'
+                            isRequired              = $True
+                            odataType               = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
+                            sequence                = 25
                         } -ClientOnly)
-                        RequestorSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
-                            scopeType = "NoSubjects"
+                    )
+                    RequestApprovalSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
+                            approvalMode                     = 'NoApproval'
+                            isRequestorJustificationRequired = $True
+                            isApprovalRequiredForExtension   = $False
+                            isApprovalRequired               = $False
+                        } -ClientOnly)
+                    RequestorSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
+                            scopeType      = 'NoSubjects'
                             acceptRequests = $True
                         } -ClientOnly)
 
-                    Ensure                        = "Absent"
-                    Credential                    = $Credential;
+                    Ensure                  = 'Absent'
+                    Credential              = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return @{
-                        AccessPackageId = "FakeStringValue"
-                        AccessReviewSettings =@{
-                            isEnabled = $True
-                            isAccessRecommendationEnabled = $True
+                        AccessPackageId         = 'FakeStringValue'
+                        AccessReviewSettings    = @{
+                            isEnabled                       = $True
+                            isAccessRecommendationEnabled   = $True
                             isApprovalJustificationRequired = $True
-                            recurrenceType = "FakeStringValue"
-                            reviewerType = "FakeStringValue"
-                            durationInDays = 25
+                            recurrenceType                  = 'FakeStringValue'
+                            reviewerType                    = 'FakeStringValue'
+                            durationInDays                  = 25
                         }
-                        CanExtend = $True
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        DurationInDays = 25
-                        Id = "FakeStringValue"
-                        Questions =@(
+                        CanExtend               = $True
+                        Description             = 'FakeStringValue'
+                        DisplayName             = 'FakeStringValue'
+                        DurationInDays          = 25
+                        Id                      = 'FakeStringValue'
+                        Questions               = @(
                             @{
-                                isAnswerEditable = $True
-                                id = "FakeStringValue"
-                                isRequired = $True
-                                sequence = 25
-                                AdditionalProperties= @{
-                                    '@odata.type' = "#microsoft.graph.accessPackageMultipleChoiceQuestion"
+                                isAnswerEditable     = $True
+                                id                   = 'FakeStringValue'
+                                isRequired           = $True
+                                sequence             = 25
+                                AdditionalProperties = @{
+                                    '@odata.type'           = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
                                     allowsMultipleSelection = $True
                                 }
                             }
                         )
-                        RequestApprovalSettings =@{
-                            approvalMode = "NoApproval"
+                        RequestApprovalSettings = @{
+                            approvalMode                     = 'NoApproval'
                             isRequestorJustificationRequired = $True
-                            isApprovalRequiredForExtension = $False
-                            isApprovalRequired = $False
+                            isApprovalRequiredForExtension   = $False
+                            isApprovalRequired               = $False
                         }
-                        RequestorSettings =@{
-                            scopeType = "NoSubjects"
+                        RequestorSettings       = @{
+                            scopeType      = 'NoSubjects'
                             acceptRequests = $True
                         }
                     }
                 }
             }
 
-            It "Should return Values from the Get method" {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
@@ -207,116 +214,116 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgEntitlementManagementAccessPackageAssignmentPolicy -Exactly 1
             }
         }
-        Context -Name "The AADEntitlementManagementAccessPackageAssignmentPolicy Exists and Values are already in the desired state" -Fixture {
+        Context -Name 'The AADEntitlementManagementAccessPackageAssignmentPolicy Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                        AccessPackageId = "FakeStringValue"
-                        AccessReviewSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
-                            isEnabled = $True
-                            isAccessRecommendationEnabled = $True
+                    AccessPackageId         = 'FakeStringValue'
+                    AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
+                            isEnabled                       = $True
+                            isAccessRecommendationEnabled   = $True
                             isApprovalJustificationRequired = $True
-                            recurrenceType = "FakeStringValue"
-                            reviewerType = "FakeStringValue"
-                            durationInDays = 25
+                            recurrenceType                  = 'FakeStringValue'
+                            reviewerType                    = 'FakeStringValue'
+                            durationInDays                  = 25
                         } -ClientOnly)
-                        CanExtend = $True
-                        CustomExtensionHandlers =@(
+                    CanExtend               = $True
+                    CustomExtensionHandlers = @(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphcustomextensionhandler -Property @{
-                                CustomExtension = (New-CimInstance -ClassName MSFT_MicrosoftGraphcustomaccesspackageworkflowextension -Property @{
-                                    Id = "MyCustomExtensionId"
+                            CustomExtension = (New-CimInstance -ClassName MSFT_MicrosoftGraphcustomaccesspackageworkflowextension -Property @{
+                                    Id = 'MyCustomExtensionId'
                                 } -ClientOnly)
-                                Stage = "assignmentRequestCreated"
-                                Id = "MyCustomExtensionHandlersId"
-                            } -ClientOnly)
-                        )
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        DurationInDays = 25
-                        Id = "FakeStringValue"
-                        Questions =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphaccesspackagequestion -Property @{
-                                allowsMultipleSelection = $True
-                                isAnswerEditable = $True
-                                id = "FakeStringValue"
-                                isRequired = $True
-                                odataType = "#microsoft.graph.accessPackageMultipleChoiceQuestion"
-                                sequence = 25
-                            } -ClientOnly)
-                        )
-                        RequestApprovalSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
-                            approvalMode = "NoApproval"
-                            isRequestorJustificationRequired = $True
-                            isApprovalRequiredForExtension = $False
-                            isApprovalRequired = $False
+                            Stage           = 'assignmentRequestCreated'
+                            Id              = 'MyCustomExtensionHandlersId'
                         } -ClientOnly)
-                        RequestorSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
-                            scopeType = "NoSubjects"
+                    )
+                    Description             = 'FakeStringValue'
+                    DisplayName             = 'FakeStringValue'
+                    DurationInDays          = 25
+                    Id                      = 'FakeStringValue'
+                    Questions               = @(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphaccesspackagequestion -Property @{
+                            allowsMultipleSelection = $True
+                            isAnswerEditable        = $True
+                            id                      = 'FakeStringValue'
+                            isRequired              = $True
+                            odataType               = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
+                            sequence                = 25
+                        } -ClientOnly)
+                    )
+                    RequestApprovalSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
+                            approvalMode                     = 'NoApproval'
+                            isRequestorJustificationRequired = $True
+                            isApprovalRequiredForExtension   = $False
+                            isApprovalRequired               = $False
+                        } -ClientOnly)
+                    RequestorSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
+                            scopeType      = 'NoSubjects'
                             acceptRequests = $True
                         } -ClientOnly)
 
-                    Ensure                        = "Present"
-                    Credential                    = $Credential;
+                    Ensure                  = 'Present'
+                    Credential              = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return @{
-                        AccessPackageId = "FakeStringValue"
-                        AccessReviewSettings =@{
-                            isEnabled = $True
-                            isAccessRecommendationEnabled = $True
+                        AccessPackageId         = 'FakeStringValue'
+                        AccessReviewSettings    = @{
+                            isEnabled                       = $True
+                            isAccessRecommendationEnabled   = $True
                             isApprovalJustificationRequired = $True
-                            recurrenceType = "FakeStringValue"
-                            reviewerType = "FakeStringValue"
-                            durationInDays = 25
+                            recurrenceType                  = 'FakeStringValue'
+                            reviewerType                    = 'FakeStringValue'
+                            durationInDays                  = 25
                         }
-                        CanExtend = $True
-                        CustomExtensionHandlers =@(
+                        CanExtend               = $True
+                        CustomExtensionHandlers = @(
                             @{
                                 CustomExtension = @{
                                     AuthenticationConfiguration = @{
-                                        ResourceId = "MyResourceId"
+                                        ResourceId = 'MyResourceId'
                                     }
-                                    ClientConfiguration = @{
+                                    ClientConfiguration         = @{
                                         TimeoutInMilliseconds = 10
                                     }
-                                    Description = "MyCustomExtensionDescription"
-                                    DisplayName = "MyCustomExtensionDisplayName"
-                                    EndpointConfiguration = @{
-                                        LogicAppWorkflowName = "MyLogicAppWorkflowName"
-                                        ResourceGroupName = "MyResourceGroupName"
-                                        SubscriptionId = "MySubscriptionId"
+                                    Description                 = 'MyCustomExtensionDescription'
+                                    DisplayName                 = 'MyCustomExtensionDisplayName'
+                                    EndpointConfiguration       = @{
+                                        LogicAppWorkflowName = 'MyLogicAppWorkflowName'
+                                        ResourceGroupName    = 'MyResourceGroupName'
+                                        SubscriptionId       = 'MySubscriptionId'
                                     }
-                                    Id = "MyCustomExtensionId"
+                                    Id                          = 'MyCustomExtensionId'
                                 }
-                                Stage = "assignmentRequestCreated"
-                                Id = "MyCustomExtensionHandlersId"
+                                Stage           = 'assignmentRequestCreated'
+                                Id              = 'MyCustomExtensionHandlersId'
                             }
                         )
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        DurationInDays = 25
-                        Id = "FakeStringValue"
-                        Questions =@(
+                        Description             = 'FakeStringValue'
+                        DisplayName             = 'FakeStringValue'
+                        DurationInDays          = 25
+                        Id                      = 'FakeStringValue'
+                        Questions               = @(
                             @{
-                                isAnswerEditable = $True
-                                id = "FakeStringValue"
-                                isRequired = $True
-                                sequence = 25
-                                AdditionalProperties= @{
-                                    '@odata.type' = "#microsoft.graph.accessPackageMultipleChoiceQuestion"
+                                isAnswerEditable     = $True
+                                id                   = 'FakeStringValue'
+                                isRequired           = $True
+                                sequence             = 25
+                                AdditionalProperties = @{
+                                    '@odata.type'           = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
                                     allowsMultipleSelection = $True
                                 }
 
                             }
                         )
                         RequestApprovalSettings = @{
-                            approvalMode = "NoApproval"
+                            approvalMode                     = 'NoApproval'
                             isRequestorJustificationRequired = $True
-                            isApprovalRequiredForExtension = $False
-                            isApprovalRequired = $False
+                            isApprovalRequiredForExtension   = $False
+                            isApprovalRequired               = $False
                         }
-                        RequestorSettings = @{
-                            scopeType = "NoSubjects"
+                        RequestorSettings       = @{
+                            scopeType      = 'NoSubjects'
                             acceptRequests = $True
 
                         }
@@ -326,122 +333,122 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
             It 'Should return true from the Test method' {
-                Test-TargetResource @testParams| Should -Be $true
+                Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name "The AADEntitlementManagementAccessPackageAssignmentPolicy exists and values are NOT in the desired state" -Fixture {
+        Context -Name 'The AADEntitlementManagementAccessPackageAssignmentPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                        AccessPackageId = "FakeStringValue"
-                        AccessReviewSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
-                            isEnabled = $True
-                            isAccessRecommendationEnabled = $True
+                    AccessPackageId         = 'FakeStringValue'
+                    AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
+                            isEnabled                       = $True
+                            isAccessRecommendationEnabled   = $True
                             isApprovalJustificationRequired = $True
-                            recurrenceType = "FakeStringValue"
-                            reviewerType = "FakeStringValue"
-                            durationInDays = 25
+                            recurrenceType                  = 'FakeStringValue'
+                            reviewerType                    = 'FakeStringValue'
+                            durationInDays                  = 25
 
                         } -ClientOnly)
-                        CanExtend = $True
-                        CustomExtensionHandlers =@(
+                    CanExtend               = $True
+                    CustomExtensionHandlers = @(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphcustomextensionhandler -Property @{
                             isArray = $True
-                            CIMType = "MSFT_MicrosoftGraphcustomextensionhandler"
-
-                            } -ClientOnly)
-                        )
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        DurationInDays = 25
-                        Id = "FakeStringValue"
-                        Questions =@(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphaccesspackagequestion -Property @{
-                                allowsMultipleSelection = $True
-                                isAnswerEditable = $True
-                                id = "FakeStringValue"
-                                regexPattern = "FakeStringValue"
-                                isSingleLineQuestion = $True
-                                isRequired = $True
-                                odataType = "#microsoft.graph.accessPackageMultipleChoiceQuestion"
-                                sequence = 25
-
-                            } -ClientOnly)
-                        )
-                        RequestApprovalSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
-                            approvalMode = "FakeStringValue"
-                            isRequestorJustificationRequired = $True
-                            isApprovalRequiredForExtension = $True
-                            isApprovalRequired = $True
+                            CIMType = 'MSFT_MicrosoftGraphcustomextensionhandler'
 
                         } -ClientOnly)
-                        RequestorSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
-                            scopeType = "FakeStringValue"
+                    )
+                    Description             = 'FakeStringValue'
+                    DisplayName             = 'FakeStringValue'
+                    DurationInDays          = 25
+                    Id                      = 'FakeStringValue'
+                    Questions               = @(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphaccesspackagequestion -Property @{
+                            allowsMultipleSelection = $True
+                            isAnswerEditable        = $True
+                            id                      = 'FakeStringValue'
+                            regexPattern            = 'FakeStringValue'
+                            isSingleLineQuestion    = $True
+                            isRequired              = $True
+                            odataType               = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
+                            sequence                = 25
+
+                        } -ClientOnly)
+                    )
+                    RequestApprovalSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
+                            approvalMode                     = 'FakeStringValue'
+                            isRequestorJustificationRequired = $True
+                            isApprovalRequiredForExtension   = $True
+                            isApprovalRequired               = $True
+
+                        } -ClientOnly)
+                    RequestorSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
+                            scopeType      = 'FakeStringValue'
                             acceptRequests = $True
 
                         } -ClientOnly)
 
-                    Ensure                = "Present"
-                    Credential            = $Credential;
+                    Ensure                  = 'Present'
+                    Credential              = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return @{
-                        AdditionalProperties =@{
-                            '@odata.type' = "#microsoft.graph."
-                            AccessReviewSettings =@{
-                                isEnabled = $True
-                                isAccessRecommendationEnabled = $True
+                        AdditionalProperties = @{
+                            '@odata.type'           = '#microsoft.graph.'
+                            AccessReviewSettings    = @{
+                                isEnabled                       = $True
+                                isAccessRecommendationEnabled   = $True
                                 isApprovalJustificationRequired = $True
-                                recurrenceType = "FakeStringValue"
-                                reviewerType = "FakeStringValue"
-                                durationInDays = 25
+                                recurrenceType                  = 'FakeStringValue'
+                                reviewerType                    = 'FakeStringValue'
+                                durationInDays                  = 25
 
                             }
-                            DurationInDays = 7
-                            AccessPackageId = "FakeStringValue"
-                            RequestApprovalSettings =@{
-                                approvalMode = "FakeStringValue"
+                            DurationInDays          = 7
+                            AccessPackageId         = 'FakeStringValue'
+                            RequestApprovalSettings = @{
+                                approvalMode                     = 'FakeStringValue'
                                 isRequestorJustificationRequired = $True
-                                isApprovalRequiredForExtension = $True
-                                isApprovalRequired = $True
+                                isApprovalRequiredForExtension   = $True
+                                isApprovalRequired               = $True
 
                             }
-                            Questions =@(
+                            Questions               = @(
                                 @{
                                     allowsMultipleSelection = $True
-                                    isAnswerEditable = $True
-                                    id = "FakeStringValue"
-                                    regexPattern = "FakeStringValue"
-                                    isSingleLineQuestion = $True
-                                    '@odata.type' = "#microsoft.graph.accessPackageMultipleChoiceQuestion"
-                                    isRequired = $True
-                                    sequence = 25
+                                    isAnswerEditable        = $True
+                                    id                      = 'FakeStringValue'
+                                    regexPattern            = 'FakeStringValue'
+                                    isSingleLineQuestion    = $True
+                                    '@odata.type'           = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
+                                    isRequired              = $True
+                                    sequence                = 25
 
                                 }
                             )
-                            RequestorSettings =@{
-                                scopeType = "FakeStringValue"
+                            RequestorSettings       = @{
+                                scopeType      = 'FakeStringValue'
                                 acceptRequests = $True
 
                             }
-                            CustomExtensionHandlers =@(
+                            CustomExtensionHandlers = @(
                                 @{
-                                isArray = $True
+                                    isArray = $True
 
                                 }
                             )
 
                         }
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
+                        Description          = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        Id                   = 'FakeStringValue'
 
                     }
                 }
             }
 
-            It "Should return Values from the Get method" {
+            It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
@@ -449,62 +456,65 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It "Should call the Set method" {
+            It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Set-MgEntitlementManagementAccessPackageAssignmentPolicy -Exactly 1
             }
         }
 
-        Context -Name "ReverseDSC Tests" -Fixture {
+        Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
 
                 Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return @{
-                        AccessPackageId = "FakeStringValue"
-                        AccessReviewSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
-                            isEnabled = $True
-                            isAccessRecommendationEnabled = $True
-                            isApprovalJustificationRequired = $True
-                            recurrenceType = "FakeStringValue"
-                            reviewerType = "FakeStringValue"
-                            durationInDays = 25
-                        } -ClientOnly)
-                        CanExtend = $True
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        DurationInDays = 25
-                        Id = "FakeStringValue"
-                        Questions =@(
+                        AccessPackageId         = 'FakeStringValue'
+                        AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{
+                                isEnabled                       = $True
+                                isAccessRecommendationEnabled   = $True
+                                isApprovalJustificationRequired = $True
+                                recurrenceType                  = 'FakeStringValue'
+                                reviewerType                    = 'FakeStringValue'
+                                durationInDays                  = 25
+                            } -ClientOnly)
+                        CanExtend               = $True
+                        Description             = 'FakeStringValue'
+                        DisplayName             = 'FakeStringValue'
+                        DurationInDays          = 25
+                        Id                      = 'FakeStringValue'
+                        Questions               = @(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphaccesspackagequestion -Property @{
                                 allowsMultipleSelection = $True
-                                isAnswerEditable = $True
-                                id = "FakeStringValue"
-                                odataType = "#microsoft.graph.accessPackageMultipleChoiceQuestion"
-                                isRequired = $True
-                                sequence = 25
+                                isAnswerEditable        = $True
+                                id                      = 'FakeStringValue'
+                                odataType               = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
+                                isRequired              = $True
+                                sequence                = 25
                             } -ClientOnly)
                         )
-                        RequestApprovalSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
-                            approvalMode = "NoApproval"
-                            isRequestorJustificationRequired = $True
-                            isApprovalRequiredForExtension = $True
-                            isApprovalRequired = $True
+                        RequestApprovalSettings = (New-CimInstance -ClassName MSFT_MicrosoftGraphapprovalsettings -Property @{
+                                approvalMode                     = 'NoApproval'
+                                isRequestorJustificationRequired = $True
+                                isApprovalRequiredForExtension   = $True
+                                isApprovalRequired               = $True
 
-                        } -ClientOnly)
-                        RequestorSettings =(New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
-                            scopeType = "NoSubjects"
-                            acceptRequests = $True
-                        } -ClientOnly)
+                            } -ClientOnly)
+                        RequestorSettings       = (New-CimInstance -ClassName MSFT_MicrosoftGraphrequestorsettings -Property @{
+                                scopeType      = 'NoSubjects'
+                                acceptRequests = $True
+                            } -ClientOnly)
 
                     }
                 }
             }
-            It "Should Reverse Engineer resource from the Export method" {
-                Export-TargetResource @testParams
+
+            It 'Should Reverse Engineer resource from the Export method' {
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

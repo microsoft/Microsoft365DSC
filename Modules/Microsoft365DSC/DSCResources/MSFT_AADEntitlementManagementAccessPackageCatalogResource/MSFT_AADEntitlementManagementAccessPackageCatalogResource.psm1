@@ -5,9 +5,13 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -30,10 +34,6 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsPendingOnboarding,
 
@@ -52,13 +52,12 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Url,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -116,7 +115,7 @@ function Get-TargetResource
 
         #region resource generator code
         $getValue = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource `
-            -AccessPackageCatalogId  $CatalogId `
+            -AccessPackageCatalogId $CatalogId `
             -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
@@ -153,6 +152,7 @@ function Get-TargetResource
             }
             $hashAttributes += $hashAttribute
         }
+
         $results = [ordered]@{
             Id                    = $Id
             CatalogId             = $CatalogId
@@ -175,7 +175,6 @@ function Get-TargetResource
             ManagedIdentity       = $ManagedIdentity.IsPresent
         }
 
-
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -196,9 +195,13 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -221,10 +224,6 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsPendingOnboarding,
 
@@ -243,13 +242,12 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Url,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -351,9 +349,7 @@ function Set-TargetResource
         }
         #region resource generator code
         New-MgEntitlementManagementAccessPackageResourceRequest @resourceRequest
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -392,11 +388,8 @@ function Set-TargetResource
             AccessPackageresource = $resource
         }
         #region resource generator code
-        #write-verbose ($resourceRequest|convertTo-Json -depth 20)
         New-MgEntitlementManagementAccessPackageResourceRequest @resourceRequest
-
         #endregion
-
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -428,16 +421,13 @@ function Set-TargetResource
         $resource = Rename-M365DSCCimInstanceParameter -Properties $resource `
             -Mapping $mapping
 
-
         #region resource generator code
         $resourceRequest = @{
             CatalogId             = $CatalogId
             RequestType           = 'AdminRemove'
             AccessPackageresource = $resource
         }
-        #region resource generator code
         New-MgEntitlementManagementAccessPackageResourceRequest @resourceRequest
-
         #endregion
     }
 }
@@ -449,9 +439,13 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -474,10 +468,6 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
         [System.Boolean]
         $IsPendingOnboarding,
 
@@ -496,13 +486,12 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Url,
-
         #endregion
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -569,11 +558,10 @@ function Test-TargetResource
             if (-Not $testResult)
             {
                 $testResult = $false
-                break;
+                break
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -584,9 +572,10 @@ function Test-TargetResource
     $ValuesToCheck.Remove('AddedBy') | Out-Null
     $ValuesToCheck.Remove('AddedOn') | Out-Null
     $ValuesToCheck.Remove('IsPendingOnboarding') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     if ($testResult)
     {
@@ -676,7 +665,7 @@ function Export-TargetResource
 
             $catalogId = $catalog.id
 
-            [array]$resources = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId  $catalogId -ErrorAction Stop
+            [array]$resources = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId $catalogId -ErrorAction Stop
 
             $j = 1
             $dscContent = ''
@@ -695,7 +684,8 @@ function Export-TargetResource
                 Write-Host "        |---[$j/$($resources.Count)] $($resource.DisplayName)" -NoNewline
 
                 $params = @{
-                    id                    = $resource.id
+                    Id                    = $resource.id
+                    DisplayName           = $resource.displayName
                     CatalogId             = $catalogId
                     Ensure                = 'Present'
                     Credential            = $Credential
@@ -782,13 +772,20 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        if ($_.ErrorDetails.Message -like '*User is not authorized to perform the operation.*')
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return ''
     }

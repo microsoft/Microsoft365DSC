@@ -11,9 +11,9 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiConfigurationPolicyAndroidForWork")]
 class MSFT_IntuneWifiConfigurationPolicyAndroidForWork : OMI_BaseResource
 {
-    [Write, Description("Id of the Intune policy.")] String Id;
+    [Key, Description("Id of the Intune policy.")] String Id;
+    [Required, Description("Display name of the Intune policy.")] String DisplayName;
     [Write, Description("Description of the Intune policy.")] String Description;
-    [Write, Description("Display name of the Intune policy.")] String DisplayName;
     [Write, Description("Connect automatically")] Boolean ConnectAutomatically;
     [Write, Description("Connect when network name is hidden")] Boolean ConnectWhenNetworkNameIsHidden;
     [Write, Description("Network name")] String NetworkName;
@@ -26,5 +26,5 @@ class MSFT_IntuneWifiConfigurationPolicyAndroidForWork : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

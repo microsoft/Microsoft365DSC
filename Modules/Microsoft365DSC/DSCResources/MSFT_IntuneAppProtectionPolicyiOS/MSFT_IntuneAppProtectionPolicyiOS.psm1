@@ -4,11 +4,11 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -140,7 +140,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $MinimumWipeOsVersion,
+        $MinimumWipeOSVersion,
 
 
         [Parameter()]
@@ -228,10 +228,10 @@ function Get-TargetResource
         [System.String]
         $CustomBrowserProtocol,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -434,11 +434,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -570,7 +570,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $MinimumWipeOsVersion,
+        $MinimumWipeOSVersion,
 
 
         [Parameter()]
@@ -658,10 +658,10 @@ function Set-TargetResource
         [System.String]
         $CustomBrowserProtocol,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -812,11 +812,11 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -948,7 +948,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $MinimumWipeOsVersion,
+        $MinimumWipeOSVersion,
 
 
         [Parameter()]
@@ -1036,10 +1036,10 @@ function Test-TargetResource
         [System.String]
         $CustomBrowserProtocol,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
-        $Ensure = $true,
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -1085,7 +1085,7 @@ function Test-TargetResource
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    $ValuesToCheck.remove('Identity')
+    $ValuesToCheck.Remove('Identity')
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1163,6 +1163,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($policies.Count)] $($policy.displayName)" -NoNewline
             $params = @{
                 Identity              = $policy.id
+                DisplayName           = $policy.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationID         = $ApplicationId
@@ -1190,7 +1191,7 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*')
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

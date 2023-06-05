@@ -22,14 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -75,6 +68,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity = 'SomeOtherQuarantinePolicy'
                     }
                 }
+
+                Mock -CommandName Get-QuarantinePolicy -ParameterFilter { $QuarantinePolicyType -eq 'GlobalQuarantinePolicy' } -MockWith {
+                    return @{
+                        Identity = 'DefaultGlobalPolicy'
+                    }
+                }
             }
 
             It 'Should return Absent from the Get method' {
@@ -88,7 +87,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
             }
-
         }
 
         Context -Name 'QuarantinePolicy update not required.' -Fixture {
@@ -108,6 +106,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity                    = 'DefaultFullAccessPolicy'
                         OrganizationBrandingEnabled = $True
                         ESNEnabled                  = $False
+                    }
+                }
+
+                Mock -CommandName Get-QuarantinePolicy -ParameterFilter { $QuarantinePolicyType -eq 'GlobalQuarantinePolicy' } -MockWith {
+                    return @{
+                        Identity = 'DefaultGlobalPolicy'
                     }
                 }
             }
@@ -132,6 +136,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Ensure                      = 'Present'
                         Credential                  = $Credential
                         Identity                    = 'DefaultFullAccessPolicy'
+                        OrganizationBrandingEnabled = $False
+                        ESNEnabled                  = $False
+                    }
+                }
+
+                Mock -CommandName Get-QuarantinePolicy -ParameterFilter { $QuarantinePolicyType -eq 'GlobalQuarantinePolicy' } -MockWith {
+                    return @{
+                        Ensure                      = 'Present'
+                        Credential                  = $Credential
+                        Identity                    = 'DefaultGlobalPolicy'
                         OrganizationBrandingEnabled = $False
                         ESNEnabled                  = $False
                     }
@@ -167,6 +181,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
+                Mock -CommandName Get-QuarantinePolicy -ParameterFilter { $QuarantinePolicyType -eq 'GlobalQuarantinePolicy' } -MockWith {
+                    return @{
+                        Identity                    = 'DefaultGlobalPolicy'
+                    }
+                }
+
                 Mock -CommandName Remove-QuarantinePolicy -MockWith {
                     return @{
 
@@ -186,13 +206,31 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
+                }
+
+               Mock -CommandName Get-QuarantinePolicy -MockWith {
+                    return @{
+                        Identity                    = 'DefaultFullAccessPolicy'
+                        OrganizationBrandingEnabled = $False
+                        ESNEnabled                  = $False
+                    }
+                }
+
+                Mock -CommandName Get-QuarantinePolicy -ParameterFilter { $QuarantinePolicyType -eq 'GlobalQuarantinePolicy' } -MockWith {
+                    return @{
+                        Identity                    = 'DefaultGlobalPolicy'
+                        OrganizationBrandingEnabled = $False
+                        ESNEnabled                  = $False
+                    }
                 }
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

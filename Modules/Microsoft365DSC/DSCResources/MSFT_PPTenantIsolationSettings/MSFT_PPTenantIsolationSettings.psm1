@@ -675,6 +675,12 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
+            if ($null -ne $Results.Rules)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName 'Rules'
+            }
             $dscContent += $currentDSCBlock
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
@@ -712,7 +718,7 @@ function Get-M365TenantId
         $TenantName
     )
 
-    if ($TenantName -notmatch ".onmicrosoft.com$")
+    if ($TenantName -notmatch '.onmicrosoft.com$')
     {
         $TenantName += '.onmicrosoft.com'
     }
@@ -735,7 +741,7 @@ function Get-M365DSCTenantIsolationRule
     $StringContent = '@('
     foreach ($rule in $Rules)
     {
-        $StringContent += "ule {r`n"
+        $StringContent += "MSFT_PPTenantRule {`r`n"
         $StringContent += "                TenantName          = '" + $rule.TenantName + "'`r`n"
         $StringContent += "                Direction           = '" + $rule.Direction + "'`r`n"
         $StringContent += "            }`r`n"

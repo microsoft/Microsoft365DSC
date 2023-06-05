@@ -4,9 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -78,13 +79,13 @@ function Get-TargetResource
     {
         #Get-Resourceconfig do NOT accept ErrorAction parameter
         $ResourceConfiguration = Get-ResourceConfig 2>&1
-        if ($null -ne ($ResourceConfiguration | Where-Object { $_.gettype().Name -like '*ErrorRecord*' }))
+        if ($null -ne ($ResourceConfiguration | Where-Object { $_.GetType().Name -like '*ErrorRecord*' }))
         {
             throw $ResourceConfiguration
         }
 
         $result = @{
-            Identity               = $ResourceConfiguration.Identity
+            IsSingleInstance       = 'Yes'
             ResourcePropertySchema = $ResourceConfiguration.ResourcePropertySchema
             Credential             = $Credential
             Ensure                 = 'Present'
@@ -117,9 +118,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -184,7 +186,7 @@ function Set-TargetResource
     $ResourceConfigurationParams.Remove('CertificatePath') | Out-Null
     $ResourceConfigurationParams.Remove('CertificatePassword') | Out-Null
     $ResourceConfigurationParams.Remove('ManagedIdentity') | Out-Null
-    $ResourceConfigurationParams.Remove('Identity') | Out-Null
+    $ResourceConfigurationParams.Remove('IsSingleInstance') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $ResourceConfigurationParams))
     {
@@ -199,9 +201,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.String[]]
@@ -285,19 +288,6 @@ function Export-TargetResource
     param
     (
         [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String[]]
-        $ResourcePropertySchema,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
-        [System.String]
-        $Ensure = 'Present',
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -325,6 +315,7 @@ function Export-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -342,7 +333,7 @@ function Export-TargetResource
     try
     {
         $ResourceConfiguration = Get-ResourceConfig 2>&1
-        if ($null -ne ($ResourceConfiguration | Where-Object { $_.gettype().Name -like '*ErrorRecord*' }))
+        if ($null -ne ($ResourceConfiguration | Where-Object { $_.GetType().Name -like '*ErrorRecord*' }))
         {
             throw $ResourceConfiguration
         }
@@ -353,7 +344,7 @@ function Export-TargetResource
         Write-Host "    |---[1/1] $($ResourceConfiguration.Identity)" -NoNewline
 
         $Params = @{
-            Identity              = $ResourceConfiguration.Identity
+            IsSingleInstance      = 'Yes'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
@@ -381,7 +372,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

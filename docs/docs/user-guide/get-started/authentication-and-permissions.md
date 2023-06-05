@@ -7,7 +7,7 @@ It is also very important to understand the authentication process of Microsoft3
 1. A set of credentials for a user
 2. A Service Principal by specifying parameters such as an Azure Active Directory (AD) Application ID, Tenant ID and a Secret or Certificate.
 
-Currently, each Microsoft 365 workload can support a different combination of authentication methods because of the underlying modules only supporting those methods. For example: The Security and Compliance and Microsoft Teams modules do **not** support authenticating using a Service Principal. The table in the next paragraph shows which workload uses which module and therefore supports which authentication method.
+Currently, each Microsoft 365 workload can support a different combination of authentication methods because of the underlying modules only supporting those methods. The table in the next paragraph shows which workload uses which module and therefore supports which authentication method.
 
 **Important**: The recommendation is to use Service Principal whenever possible because:
 
@@ -51,6 +51,12 @@ It is also important to note that we have added logic inside of the commands tha
 ## Power Apps Permissions
 
 In order to authenticate to Power Apps using a Service Principal (Certificate Thumbprint or ApplicationSecret), you will first need to define your app as a Power App Management app. For details on how to proceed, please refer to the folloring link: <a href="https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application">https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application</a>
+
+Additionally, to be able to authenticate using a Certificate Thumbprint, the underlying Power Apps PowerShell module used by Microsoft365DSC requires the certificate's private key (.pfx) to be registered under the current user's certificate store at <strong>Cert:\CurrentUser\My\</strong>. Omitting to register the private key will result in Microsoft365DSC throwing the following error when trying to authenticate to the Power Platform:
+
+```
+Get-Item: Cannot find path 'Cert:\CurrentUser\My\****************************************' because it does not exist.
+```
 
 ## Microsoft Graph Permissions
 

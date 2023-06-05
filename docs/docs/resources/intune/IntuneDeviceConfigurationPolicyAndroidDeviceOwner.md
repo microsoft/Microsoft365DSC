@@ -4,9 +4,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Write | String | The Id of the policy. | |
+| **Id** | Key | String | The Id of the policy. | |
+| **DisplayName** | Required | String | The display name of hte policy. | |
 | **Description** | Write | String | The description of the policy. | |
-| **DisplayName** | Write | String | The display name of hte policy. | |
 | **AccountsBlockModification** | Write | Boolean | Block modification of accounts. Only supported on Dedicated devices. | |
 | **AppsAllowInstallFromUnknownSources** | Write | Boolean | When allowed, users can enable the 'unknown sources' setting to install apps from sources other than the Google Play Store. | |
 | **AppsAutoUpdatePolicy** | Write | String | Devices check for app updates daily. The default behavior is to let device users decide. They'll be able to set their preferences in the managed Google Play app. | `notConfigured`, `userChoice`, `never`, `wiFiOnly`, `always` |
@@ -292,4 +292,73 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - DeviceManagementConfiguration.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsGlobalAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationPolicyAndroidDeviceOwner 'myAndroidDeviceOwnerPolicy'
+        {
+            Id                                    = '57853b98-db50-4605-9292-3ade98e25bc3'
+            DisplayName                           = 'general confi - AndroidDeviceOwner'
+            Assignments                           = @()
+            AzureAdSharedDeviceDataClearApps      = @()
+            CameraBlocked                         = $True
+            CrossProfilePoliciesAllowDataSharing  = 'notConfigured'
+            EnrollmentProfile                     = 'notConfigured'
+            FactoryResetDeviceAdministratorEmails = @()
+            GlobalProxy                           = MSFT_MicrosoftGraphandroiddeviceownerglobalproxy {
+                odataType = '#microsoft.graph.androidDeviceOwnerGlobalProxyDirect'
+                host      = 'myproxy.com'
+                port      = 8083
+            }
+            KioskCustomizationStatusBar           = 'notConfigured'
+            KioskCustomizationSystemNavigation    = 'notConfigured'
+            KioskModeAppPositions                 = @()
+            KioskModeApps                         = @()
+            KioskModeManagedFolders               = @()
+            KioskModeUseManagedHomeScreenApp      = 'notConfigured'
+            KioskModeWifiAllowedSsids             = @()
+            MicrophoneForceMute                   = $True
+            NfcBlockOutgoingBeam                  = $True
+            PasswordBlockKeyguardFeatures         = @()
+            PasswordRequiredType                  = 'deviceDefault'
+            PasswordRequireUnlock                 = 'deviceDefault'
+            PersonalProfilePersonalApplications   = @()
+            PersonalProfilePlayStoreMode          = 'notConfigured'
+            ScreenCaptureBlocked                  = $True
+            SecurityRequireVerifyApps             = $True
+            StayOnModes                           = @()
+            StorageBlockExternalMedia             = $True
+            SystemUpdateFreezePeriods             = @(
+                MSFT_MicrosoftGraphandroiddeviceownersystemupdatefreezeperiod {
+                    startMonth = 12
+                    startDay   = 23
+                    endMonth   = 12
+                    endDay     = 30
+                })
+            VpnAlwaysOnLockdownMode               = $False
+            VpnAlwaysOnPackageIdentifier          = ''
+            WorkProfilePasswordRequiredType       = 'deviceDefault'
+            WorkProfilePasswordRequireUnlock      = 'deviceDefault'
+            Ensure                                = 'Present'
+            Credential                            = $credsGlobalAdmin
+        }
+    }
+}
+```
 

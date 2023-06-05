@@ -363,7 +363,7 @@ function Export-TargetResource
                 -InboundParameters $PSBoundParameters `
                 -Url $tenantAppCatalogUrl
 
-            if ($ConnectionMode -eq 'Credential')
+            if ($ConnectionMode -eq 'Credentials')
             {
                 $filesToDownload = Get-AllSPOPackages -Credential $Credential
             }
@@ -453,7 +453,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

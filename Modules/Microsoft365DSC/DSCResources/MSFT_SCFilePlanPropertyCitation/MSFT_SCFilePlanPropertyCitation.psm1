@@ -89,11 +89,16 @@ function Get-TargetResource
             Write-Verbose "Found existing SCFilePlanPropertyCitation $($Name)"
 
             $result = @{
-                Name                 = $property.Name
-                CitationUrl          = $property.CitationUrl
-                CitationJurisdiction = $property.CitationJurisdiction
-                Credential           = $Credential
-                Ensure               = 'Present'
+                Name                  = $property.Name
+                CitationUrl           = $property.CitationUrl
+                CitationJurisdiction  = $property.CitationJurisdiction
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePath       = $CertificatePath
+                CertificatePassword   = $CertificatePassword
+                Ensure                = 'Present'
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -181,8 +186,17 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $Current.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential') | Out-Null
         $CreationParams.Remove('Ensure') | Out-Null
+
+        # Remove authentication parameters
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('ApplicationSecret') | Out-Null
 
         New-FilePlanPropertyCitation @CreationParams
     }
@@ -206,7 +220,7 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry  -Message $_ `
+            New-M365DSCLogEntry -Message $_ `
                 -Exception $_ `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
@@ -278,7 +292,16 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
+
+    # Remove authentication parameters
     $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

@@ -14,6 +14,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
+        $EndpointDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $EndpointDlpLocationException,
+
+        [Parameter()]
+        [System.String[]]
         $ExchangeLocation,
 
         [Parameter()]
@@ -38,6 +46,22 @@ function Get-TargetResource
         $OneDriveLocationException,
 
         [Parameter()]
+        [System.String[]]
+        $OnPremisesScannerDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OnPremisesScannerDlpLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $PowerBIDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $PowerBIDlpLocationException,
+
+        [Parameter()]
         [System.UInt32]
         $Priority,
 
@@ -56,6 +80,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $TeamsLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $ThirdPartyAppDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ThirdPartyAppDlpLocationException,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -132,7 +164,7 @@ function Get-TargetResource
             {
                 foreach ($member in $PolicyObject.ExchangeSenderMemberOf)
                 {
-                    $ExchangeSenderMemberOfValue += (ConvertFrom-JSON $member).PrimarySmtpAddress
+                    $ExchangeSenderMemberOfValue += (ConvertFrom-Json $member).PrimarySmtpAddress
                 }
             }
 
@@ -141,25 +173,39 @@ function Get-TargetResource
             {
                 foreach ($member in $PolicyObject.ExchangeSenderMemberOfException)
                 {
-                    $ExchangeSenderMemberOfExceptionValue += (ConvertFrom-JSON $member).PrimarySmtpAddress
+                    $ExchangeSenderMemberOfExceptionValue += (ConvertFrom-Json $member).PrimarySmtpAddress
                 }
             }
 
             $result = @{
-                Ensure                          = 'Present'
-                Name                            = $PolicyObject.Name
-                Comment                         = $PolicyObject.Comment
-                ExchangeLocation                = $PolicyObject.ExchangeLocation.Name
-                ExchangeSenderMemberOf          = $ExchangeSenderMemberOfValue
-                ExchangeSenderMemberOfException = $ExchangeSenderMemberOfExceptionValue
-                Mode                            = $PolicyObject.Mode
-                OneDriveLocation                = $PolicyObject.OneDriveLocation.Name
-                OneDriveLocationException       = $PolicyObject.OneDriveLocationException
-                Priority                        = $PolicyObject.Priority
-                SharePointLocation              = $PolicyObject.SharePointLocation.Name
-                SharePointLocationException     = $PolicyObject.SharePointLocationException
-                TeamsLocation                   = $PolicyObject.TeamsLocation.Name
-                TeamsLocationException          = $PolicyObject.TeamsLocationException
+                Ensure                                = 'Present'
+                Name                                  = $PolicyObject.Name
+                Comment                               = $PolicyObject.Comment
+                EndpointDlpLocation                   = $PolicyObject.EndpointDlpLocation.Name
+                EndpointDlpLocationException          = $PolicyObject.EndpointDlpLocationException
+                ExchangeLocation                      = $PolicyObject.ExchangeLocation.Name
+                ExchangeSenderMemberOf                = $ExchangeSenderMemberOfValue
+                ExchangeSenderMemberOfException       = $ExchangeSenderMemberOfExceptionValue
+                Mode                                  = $PolicyObject.Mode
+                OneDriveLocation                      = $PolicyObject.OneDriveLocation.Name
+                OneDriveLocationException             = $PolicyObject.OneDriveLocationException
+                OnPremisesScannerDlpLocation          = $PolicyObject.OnPremisesScannerDlpLocation.Name
+                OnPremisesScannerDlpLocationException = $PolicyObject.OnPremisesScannerDlpLocationException
+                PowerBIDlpLocation                    = $PolicyObject.PowerBIDlpLocation.Name
+                PowerBIDlpLocationException           = $PolicyObject.PowerBIDlpLocationException
+                Priority                              = $PolicyObject.Priority
+                SharePointLocation                    = $PolicyObject.SharePointLocation.Name
+                SharePointLocationException           = $PolicyObject.SharePointLocationException
+                TeamsLocation                         = $PolicyObject.TeamsLocation.Name
+                TeamsLocationException                = $PolicyObject.TeamsLocationException
+                ThirdPartyAppDlpLocation              = $PolicyObject.ThirdPartyAppDlpLocation.Name
+                ThirdPartyAppDlpLocationException     = $PolicyObject.ThirdPartyAppDlpLocationException
+                Credential                            = $Credential
+                ApplicationId                         = $ApplicationId
+                TenantId                              = $TenantId
+                CertificateThumbprint                 = $CertificateThumbprint
+                CertificatePath                       = $CertificatePath
+                CertificatePassword                   = $CertificatePassword
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -180,7 +226,6 @@ function Get-TargetResource
 
 function Set-TargetResource
 {
-
     [CmdletBinding()]
     param
     (
@@ -191,6 +236,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $EndpointDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $EndpointDlpLocationException,
 
         [Parameter()]
         [System.String[]]
@@ -218,6 +271,22 @@ function Set-TargetResource
         $OneDriveLocationException,
 
         [Parameter()]
+        [System.String[]]
+        $OnPremisesScannerDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OnPremisesScannerDlpLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $PowerBIDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $PowerBIDlpLocationException,
+
+        [Parameter()]
         [System.UInt32]
         $Priority,
 
@@ -236,6 +305,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $TeamsLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $ThirdPartyAppDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ThirdPartyAppDlpLocationException,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -290,6 +367,11 @@ function Set-TargetResource
     {
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove('Credential')
+        $CreationParams.Remove('ApplicationId')
+        $CreationParams.Remove('TenantId')
+        $CreationParams.Remove('CertificateThumbprint')
+        $CreationParams.Remove('CertificatePath')
+        $CreationParams.Remove('CertificatePassword')
         $CreationParams.Remove('Ensure')
         New-DLPCompliancePolicy @CreationParams
     }
@@ -297,6 +379,11 @@ function Set-TargetResource
     {
         $CreationParams = $PSBoundParameters
         $CreationParams.Remove('Credential')
+        $CreationParams.Remove('ApplicationId')
+        $CreationParams.Remove('TenantId')
+        $CreationParams.Remove('CertificateThumbprint')
+        $CreationParams.Remove('CertificatePath')
+        $CreationParams.Remove('CertificatePassword')
         $CreationParams.Remove('Ensure')
         $CreationParams.Remove('Name')
         $CreationParams.Add('Identity', $Name)
@@ -307,14 +394,14 @@ function Set-TargetResource
                 $null -ne $SharePointLocation)
         {
             $ToBeRemoved = $CurrentPolicy.SharePointLocation | `
-                Where-Object { $SharePointLocation -NotContains $_ }
+                    Where-Object { $SharePointLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add('RemoveSharePointLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $SharePointLocation | `
-                Where-Object { $CurrentPolicy.SharePointLocation -NotContains $_ }
+                    Where-Object { $CurrentPolicy.SharePointLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add('AddSharePointLocation', $ToBeAdded)
@@ -329,14 +416,14 @@ function Set-TargetResource
                 $null -ne $ExchangeLocation)
         {
             $ToBeRemoved = $CurrentPolicy.ExchangeLocation | `
-                Where-Object { $ExchangeLocation -NotContains $_ }
+                    Where-Object { $ExchangeLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add('RemoveExchangeLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $ExchangeLocation | `
-                Where-Object { $CurrentPolicy.ExchangeLocation -NotContains $_ }
+                    Where-Object { $CurrentPolicy.ExchangeLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add('AddExchangeLocation', $ToBeAdded)
@@ -351,19 +438,128 @@ function Set-TargetResource
                 $null -ne $OneDriveLocation)
         {
             $ToBeRemoved = $CurrentPolicy.OneDriveLocation | `
-                Where-Object { $OneDriveLocation -NotContains $_ }
+                    Where-Object { $OneDriveLocation -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add('RemoveOneDriveLocation', $ToBeRemoved)
             }
 
             $ToBeAdded = $OneDriveLocation | `
-                Where-Object { $CurrentPolicy.OneDriveLocation -NotContains $_ }
+                    Where-Object { $CurrentPolicy.OneDriveLocation -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add('AddOneDriveLocation', $ToBeAdded)
             }
             $CreationParams.Remove('OneDriveLocation')
+        }
+
+        # Endpoint Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.EndpointDlpLocation -or `
+                $null -ne $EndpointDlpLocation)
+        {
+            $ToBeRemoved = $CurrentPolicy.EndpointDlpLocation | `
+                    Where-Object { $EndpointDlpLocation -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add('RemoveEndpointDlpLocation', $ToBeRemoved)
+            }
+
+            $ToBeAdded = $EndpointDlpLocation | `
+                    Where-Object { $CurrentPolicy.EndpointDlpLocation -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add('AddEndpointDlpLocation', $ToBeAdded)
+            }
+
+            $CreationParams.Remove('EndpointDlpLocation')
+        }
+
+        # On-Prem Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.OnPremisesScannerDlpLocation -or `
+                $null -ne $OnPremisesScannerDlpLocation)
+        {
+            $ToBeRemoved = $CurrentPolicy.OnPremisesScannerDlpLocation | `
+                    Where-Object { $OnPremisesScannerDlpLocation -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add('RemoveOnPremisesScannerDlpLocation', $ToBeRemoved)
+            }
+
+            $ToBeAdded = $OnPremisesScannerDlpLocation | `
+                    Where-Object { $CurrentPolicy.OnPremisesScannerDlpLocation -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add('AddOnPremisesScannerDlpLocation', $ToBeAdded)
+            }
+
+            $CreationParams.Remove('OnPremisesScannerDlpLocation')
+        }
+
+        # PowerBI Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.PowerBIDlpLocation -or `
+                $null -ne $PowerBIDlpLocation)
+        {
+            $ToBeRemoved = $CurrentPolicy.PowerBIDlpLocation | `
+                    Where-Object { $PowerBIDlpLocation -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add('RemovePowerBIDlpLocation', $ToBeRemoved)
+            }
+
+            $ToBeAdded = $PowerBIDlpLocation | `
+                    Where-Object { $CurrentPolicy.PowerBIDlpLocation -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add('AddPowerBIDlpLocation', $ToBeAdded)
+            }
+
+            $CreationParams.Remove('PowerBIDlpLocation')
+        }
+
+        # Teams Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.TeamsLocation -or `
+                $null -ne $TeamsLocation)
+        {
+            $ToBeRemoved = $CurrentPolicy.TeamsLocation | `
+                    Where-Object { $TeamsLocation -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add('RemoveTeamsLocation', $ToBeRemoved)
+            }
+
+            $ToBeAdded = $TeamsLocation | `
+                    Where-Object { $CurrentPolicy.TeamsLocation -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add('AddTeamsLocation', $ToBeAdded)
+            }
+            $CreationParams.Remove('TeamsLocation')
+        }
+
+        # 3rd party Location is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.ThirdPartyAppDlpLocation -or `
+                $null -ne $ThirdPartyAppDlpLocation)
+        {
+            $ToBeRemoved = $CurrentPolicy.ThirdPartyAppDlpLocation | `
+                    Where-Object { $ThirdPartyAppDlpLocation -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add('RemoveThirdPartyAppDlpLocation', $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ThirdPartyAppDlpLocation | `
+                    Where-Object { $CurrentPolicy.ThirdPartyAppDlpLocation -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add('AddThirdPartyAppDlpLocation', $ToBeAdded)
+            }
+
+            $CreationParams.Remove('ThirdPartyAppDlpLocation')
         }
 
         # OneDrive Location Exception is specified or already existing, we need to determine
@@ -372,14 +568,14 @@ function Set-TargetResource
                 $null -ne $OneDriveLocationException)
         {
             $ToBeRemoved = $CurrentPolicy.OneDriveLocationException | `
-                Where-Object { $OneDriveLocationException -NotContains $_ }
+                    Where-Object { $OneDriveLocationException -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add('RemoveOneDriveLocationException', $ToBeRemoved)
             }
 
             $ToBeAdded = $OneDriveLocationException | `
-                Where-Object { $CurrentPolicy.OneDriveLocationException -NotContains $_ }
+                    Where-Object { $CurrentPolicy.OneDriveLocationException -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add('AddOneDriveLocationException', $ToBeAdded)
@@ -393,40 +589,19 @@ function Set-TargetResource
                 $null -ne $SharePointLocationException)
         {
             $ToBeRemoved = $CurrentPolicy.SharePointLocationException | `
-                Where-Object { $SharePointLocationException -NotContains $_ }
+                    Where-Object { $SharePointLocationException -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add('RemoveSharePointLocationException', $ToBeRemoved)
             }
 
             $ToBeAdded = $SharePointLocationException | `
-                Where-Object { $CurrentPolicy.SharePointLocationException -NotContains $_ }
+                    Where-Object { $CurrentPolicy.SharePointLocationException -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add('AddSharePointLocationException', $ToBeAdded)
             }
             $CreationParams.Remove('SharePointLocationException')
-        }
-
-        # Teams Location is specified or already existing, we need to determine
-        # the delta.
-        if ($null -ne $CurrentPolicy.TeamsLocation -or `
-                $null -ne $TeamsLocation)
-        {
-            $ToBeRemoved = $CurrentPolicy.TeamsLocation | `
-                Where-Object { $TeamsLocation -NotContains $_ }
-            if ($null -ne $ToBeRemoved)
-            {
-                $CreationParams.Add('RemoveTeamsLocation', $ToBeRemoved)
-            }
-
-            $ToBeAdded = $TeamsLocation | `
-                Where-Object { $CurrentPolicy.TeamsLocation -NotContains $_ }
-            if ($null -ne $ToBeAdded)
-            {
-                $CreationParams.Add('AddTeamsLocation', $ToBeAdded)
-            }
-            $CreationParams.Remove('TeamsLocation')
         }
 
         # Teams Location Exception is specified or already existing, we need to determine
@@ -435,20 +610,105 @@ function Set-TargetResource
                 $null -ne $TeamsLocationException)
         {
             $ToBeRemoved = $CurrentPolicy.TeamsLocationException | `
-                Where-Object { $TeamsLocationException -NotContains $_ }
+                    Where-Object { $TeamsLocationException -NotContains $_ }
             if ($null -ne $ToBeRemoved)
             {
                 $CreationParams.Add('RemoveTeamsLocationException', $ToBeRemoved)
             }
 
             $ToBeAdded = $TeamsLocationException | `
-                Where-Object { $CurrentPolicy.TeamsLocationException -NotContains $_ }
+                    Where-Object { $CurrentPolicy.TeamsLocationException -NotContains $_ }
             if ($null -ne $ToBeAdded)
             {
                 $CreationParams.Add('AddTeamsLocationException', $ToBeAdded)
             }
             $CreationParams.Remove('TeamsLocationException')
         }
+
+        # Endpoint Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.EndpointDlpLocationException -or `
+                $null -ne $EndpointDlpLocationException)
+        {
+            $ToBeRemoved = $CurrentPolicy.EndpointDlpLocationException | `
+                    Where-Object { $EndpointDlpLocationException -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add('RemoveEndpointDlpLocationException', $ToBeRemoved)
+            }
+
+            $ToBeAdded = $EndpointDlpLocationException | `
+                    Where-Object { $CurrentPolicy.EndpointDlpLocationException -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add('AddEndpointDlpLocationException', $ToBeAdded)
+            }
+            $CreationParams.Remove('EndpointDlpLocationException')
+        }
+
+        # On-Prem Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.OnPremisesScannerDlpLocationException -or `
+                $null -ne $OnPremisesScannerDlpLocationException)
+        {
+            $ToBeRemoved = $CurrentPolicy.OnPremisesScannerDlpLocationException | `
+                    Where-Object { $OnPremisesScannerDlpLocationException -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add('RemoveOnPremisesScannerDlpLocationException', $ToBeRemoved)
+            }
+
+            $ToBeAdded = $OnPremisesScannerDlpLocationException | `
+                    Where-Object { $CurrentPolicy.OnPremisesScannerDlpLocationException -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add('AddOnPremisesScannerDlpLocationException', $ToBeAdded)
+            }
+            $CreationParams.Remove('OnPremisesScannerDlpLocationException')
+        }
+
+        # PowerBI Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.PowerBIDlpLocationException -or `
+                $null -ne $PowerBIDlpLocationException)
+        {
+            $ToBeRemoved = $CurrentPolicy.PowerBIDlpLocationException | `
+                    Where-Object { $PowerBIDlpLocationException -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add('RemovePowerBIDlpLocationException', $ToBeRemoved)
+            }
+
+            $ToBeAdded = $PowerBIDlpLocationException | `
+                    Where-Object { $CurrentPolicy.PowerBIDlpLocationException -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add('AddPowerBIDlpLocationException', $ToBeAdded)
+            }
+            $CreationParams.Remove('PowerBIDlpLocationException')
+        }
+
+        # 3rd party Location Exception is specified or already existing, we need to determine
+        # the delta.
+        if ($null -ne $CurrentPolicy.ThirdPartyAppDlpLocationException -or `
+                $null -ne $ThirdPartyAppDlpLocationException)
+        {
+            $ToBeRemoved = $CurrentPolicy.ThirdPartyAppDlpLocationException | `
+                    Where-Object { $ThirdPartyAppDlpLocationException -NotContains $_ }
+            if ($null -ne $ToBeRemoved)
+            {
+                $CreationParams.Add('RemoveThirdPartyAppDlpLocationException', $ToBeRemoved)
+            }
+
+            $ToBeAdded = $ThirdPartyAppDlpLocationException | `
+                    Where-Object { $CurrentPolicy.ThirdPartyAppDlpLocationException -NotContains $_ }
+            if ($null -ne $ToBeAdded)
+            {
+                $CreationParams.Add('AddThirdPartyAppDlpLocationException', $ToBeAdded)
+            }
+            $CreationParams.Remove('ThirdPartyAppDlpLocationException')
+        }
+
         Write-Verbose "Updating Policy with values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         Set-DLPCompliancePolicy @CreationParams
     }
@@ -469,7 +729,7 @@ function Set-TargetResource
         }
         catch
         {
-            New-M365DSCLogEntry  -Message $_ `
+            New-M365DSCLogEntry -Message $_ `
                 -Exception $_ `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
@@ -489,6 +749,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $EndpointDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $EndpointDlpLocationException,
 
         [Parameter()]
         [System.String[]]
@@ -516,6 +784,22 @@ function Test-TargetResource
         $OneDriveLocationException,
 
         [Parameter()]
+        [System.String[]]
+        $OnPremisesScannerDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $OnPremisesScannerDlpLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $PowerBIDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $PowerBIDlpLocationException,
+
+        [Parameter()]
         [System.UInt32]
         $Priority,
 
@@ -534,6 +818,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $TeamsLocationException,
+
+        [Parameter()]
+        [System.String[]]
+        $ThirdPartyAppDlpLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ThirdPartyAppDlpLocationException,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -584,7 +876,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

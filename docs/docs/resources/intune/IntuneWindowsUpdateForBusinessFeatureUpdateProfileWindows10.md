@@ -4,11 +4,11 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **DisplayName** | Required | String | The display name of the profile. | |
 | **Description** | Write | String | The description of the profile which is specified by the user. | |
-| **DisplayName** | Write | String | The display name of the profile. | |
 | **FeatureUpdateVersion** | Write | String | The feature update version that will be deployed to the devices targeted by this profile. The version could be any supported version for example 1709, 1803 or 1809 and so on. | |
 | **RolloutSettings** | Write | MSFT_MicrosoftGraphwindowsUpdateRolloutSettings | The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. | |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -71,4 +71,39 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - DeviceManagementConfiguration.ReadWrite.All
 
+## Examples
+
+### Example 1
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 'Example'
+        {
+            Id                   = 'b5d1020d-f641-42a0-a882-82f3358bf4c5'
+            DisplayName          = 'WUfB Feature -dsc'
+            Assignments          = @()
+            Description          = 'test 2'
+            FeatureUpdateVersion = 'Windows 10, version 22H2'
+            RolloutSettings = MSFT_MicrosoftGraphwindowsUpdateRolloutSettings {
+                OfferStartDateTimeInUTC = '2023-02-03T16:00:00.0000000+00:00'
+            }
+            Ensure               = 'Present'
+            Credential           = $Credscredential
+        }
+    }
+}
+```
 

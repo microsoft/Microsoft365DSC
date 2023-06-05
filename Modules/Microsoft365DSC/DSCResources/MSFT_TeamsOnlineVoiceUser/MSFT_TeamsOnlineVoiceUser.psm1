@@ -59,7 +59,7 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $instance = Get-CsOnlineVoiceUser -Identity $Identity `
+        $instance = Get-CsOnlineUser -Identity $Identity `
             -ErrorAction 'SilentlyContinue'
 
         if ($null -eq $instance)
@@ -68,10 +68,24 @@ function Get-TargetResource
             return $nullReturn
         }
         Write-Verbose -Message "Found Teams Online Voicemail Policy {$Identity}"
+        $telephoneNumberValue = $instance.LineUri
+
+        if (-not [System.String]::IsNullOrEmpty($telephoneNumberValue))
+        {
+            $telephoneNumberValue = $telephoneNumberValue.Replace('tel:+', '')
+        }
+
+        $numberAssignment = Get-CsPhoneNumberAssignment -AssignedPstnTargetId $Identity
+        $locationValue = $null
+        if ($null -ne $numberAssignment)
+        {
+            $locationValue = $numberAssignment.LocationId
+        }
+
         return @{
             Identity              = $Identity
-            LocationID            = $instance.Location
-            TelephoneNumber       = $instance.Number
+            LocationID            = $locationValue
+            TelephoneNumber       = $telephoneNumberValue
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -273,15 +287,16 @@ function Export-TargetResource
     try
     {
         $i = 1
-        [array]$users = Get-CsOnlineVoiceUser -ErrorAction Stop
+        [array]$users = Get-CsOnlineUser -Filter { (FeatureTypes -contains 'PhoneSystem') -and (AccountEnabled -eq $True) } `
+            -AccountType User `
+            -ErrorAction Stop
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
         foreach ($user in $users)
         {
-            Write-Host "    |---[$i/$($users.Count)] $($user.Name)" -NoNewline
-            $userEntry = Get-MgUser -UserId $user.Id
+            Write-Host "    |---[$i/$($users.Count)] $($user.UserPrincipalName)" -NoNewline
             $params = @{
-                Identity              = $userEntry.UserPrincipalName
+                Identity              = $user.UserPrincipalName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -307,7 +322,7 @@ function Export-TargetResource
     {
         Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message "Error during Export:" `
+        New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `

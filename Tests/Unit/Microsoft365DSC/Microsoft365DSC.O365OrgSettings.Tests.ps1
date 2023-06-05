@@ -23,14 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin', $secpasswd)
-
-            Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
-                return @{}
-            }
-
-            Mock -CommandName Get-M365DSCExportContentForResource -MockWith {
-            }
+            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -45,12 +38,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgServicePrincipal -MockWith {
             }
+
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+                return @{
+                    "@odata.type"         = "#microsoft.graph.adminReportSettings"
+                    displayConcealedNames = $true
+                }
+            }
         }
 
         # Test contexts
         Context -Name 'When Org Settings are already in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AdminCenterReportDisplayConcealedNames     = $True;
                     IsSingleInstance                           = 'Yes'
                     M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
                     Ensure                                     = 'Present'
@@ -78,6 +79,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When Org Settings NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AdminCenterReportDisplayConcealedNames     = $True;
                     IsSingleInstance                           = 'Yes'
                     M365WebEnableUsersToOpenFilesFrom3PStorage = $True;
                     Ensure                                     = 'Present'
@@ -108,6 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
@@ -119,7 +122,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AccountEnabled = $False
                     }
                 }
-                Export-TargetResource @testParams
+                $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

@@ -390,7 +390,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewline
             $Params = @{
-                Identity              = $CASMailboxPlan.DisplayName
+                Identity              = $CASMailboxPlan.Identity
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

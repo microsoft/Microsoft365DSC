@@ -42,6 +42,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowSmartCompose,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSmartReply,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowUserTranslation,
 
         [Parameter()]
@@ -55,6 +63,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteChat,
 
         [Parameter()]
         [System.String]
@@ -152,12 +164,15 @@ function Get-TargetResource
                 AllowUserChat                 = $policy.AllowUserChat
                 AllowUserDeleteMessage        = $policy.AllowUserDeleteMessage
                 AllowUserEditMessage          = $policy.AllowUserEditMessage
+                AllowSmartCompose             = $policy.AllowSmartCompose
+                AllowSmartReply               = $policy.AllowSmartReply
                 AllowUserTranslation          = $policy.AllowUserTranslation
                 GiphyRatingType               = $policy.GiphyRatingType
                 ReadReceiptsEnabledType       = $policy.ReadReceiptsEnabledType
                 AllowImmersiveReader          = $policy.AllowImmersiveReader
                 AllowRemoveUser               = $policy.AllowRemoveUser
                 AllowPriorityMessages         = $policy.AllowPriorityMessages
+                AllowUserDeleteChat           = $policy.AllowUserDeleteChat
                 ChannelsInChatListEnabledType = $policy.ChannelsInChatListEnabledType
                 AudioMessageEnabledType       = $policy.AudioMessageEnabledType
                 Description                   = $policy.Description
@@ -225,6 +240,14 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowSmartCompose,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSmartReply,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowUserTranslation,
 
         [Parameter()]
@@ -238,6 +261,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteChat,
 
         [Parameter()]
         [System.String]
@@ -373,6 +400,14 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowSmartCompose,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSmartReply,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowUserTranslation,
 
         [Parameter()]
@@ -386,6 +421,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowPriorityMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteChat,
 
         [Parameter()]
         [System.String]

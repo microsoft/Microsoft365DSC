@@ -20,9 +20,9 @@ class MSFT_MicrosoftGraphapplistitem
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator")]
 class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator : OMI_BaseResource
 {
-    [Write, Description("Id of the Intune policy.")] String Id;
+    [Key, Description("Id of the Intune policy.")] String Id;
+    [Required, Description("Display name of the Intune policy.")] String DisplayName;
     [Write, Description("Description of the Intune policy.")] String Description;
-    [Write, Description("Display name of the Intune policy.")] String DisplayName;
     [Write, Description("Block clipboard sharing between apps (Samsung KNOX Standard 4.0+).")] Boolean AppsBlockClipboardSharing;
     [Write, Description("Block copy and paste functionality.")] Boolean AppsBlockCopyPaste;
     [Write, Description("Block YouTube (Samsung KNOX Standard 4.0+).")] Boolean AppsBlockYouTube;
@@ -80,5 +80,5 @@ class MSFT_IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator : OMI_BaseR
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

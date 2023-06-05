@@ -58,9 +58,9 @@ class MSFT_MicrosoftGraphmacosappleeventreceiver
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyMacOS")]
 class MSFT_IntuneDeviceConfigurationPolicyMacOS : OMI_BaseResource
 {
-    [Write, Description("")] String Id;
+    [Key, Description("")] String Id;
+    [Required, Description("")] String DisplayName;
     [Write, Description("")] String Description;
-    [Write, Description("")] String DisplayName;
     [Write, Description("")] Boolean AddingGameCenterFriendsBlocked;
     [Write, Description("")] Boolean AirDropBlocked;
     [Write, Description("Blocks users from unlocking their Mac with Apple Watch.")] Boolean AppleWatchBlockAutoUnlock;
@@ -127,5 +127,5 @@ class MSFT_IntuneDeviceConfigurationPolicyMacOS : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
-	[Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };
