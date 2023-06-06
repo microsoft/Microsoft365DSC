@@ -691,9 +691,9 @@ function Export-TargetResource
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
             #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
-            $currentDSCBlock = $currentDSCBlock.replace("    ,`r`n" , "    `r`n" )
-            $currentDSCBlock = $currentDSCBlock.replace("`r`n;`r`n" , "`r`n" )
-            $currentDSCBlock = $currentDSCBlock.replace("`r`n,`r`n" , "`r`n" )
+            $currentDSCBlock = $currentDSCBlock.replace("    ,`r`n" , "    `r`n")
+            $currentDSCBlock = $currentDSCBlock.replace("`r`n;`r`n" , "`r`n")
+            $currentDSCBlock = $currentDSCBlock.replace("`r`n,`r`n" , "`r`n")
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

@@ -627,7 +627,7 @@ function Set-TargetResource
                 $assignmentsArray += set-JSONstring -id $_ -type 'Assignments'
             }
         }
-        $configstring += ( 'Assignments' + ":`r`n" + ($PSBoundParameters.Assignments | Out-String) + "`r`n" )
+        $configstring += ( 'Assignments' + ":`r`n" + ($PSBoundParameters.Assignments | Out-String) + "`r`n")
     }
     if ($PSBoundParameters.keys -contains 'ExcludedGroups' )
     {
@@ -637,7 +637,7 @@ function Set-TargetResource
                 $assignmentsArray += set-JSONstring -id $_ -type 'ExcludedGroups'
             }
         }
-        $configstring += ( 'ExcludedGroups' + ":`r`n" + ($PSBoundParameters.ExcludedGroups | Out-String) + "`r`n" )
+        $configstring += ( 'ExcludedGroups' + ":`r`n" + ($PSBoundParameters.ExcludedGroups | Out-String) + "`r`n")
 
     }
     # set the apps values
@@ -649,7 +649,7 @@ function Set-TargetResource
         }
     }
     $configstring += ('AppGroupType:' + $appshash.AppGroupType + "`r`n")
-    $configstring += ('Apps' + ":`r`n" + ($appshash.Apps | Out-String) + "`r`n" )
+    $configstring += ('Apps' + ":`r`n" + ($appshash.Apps | Out-String) + "`r`n")
 
     # Set the managedbrowser values
     $ManagedBrowserValuesHash = set-ManagedBrowserValues @PSBoundParameters

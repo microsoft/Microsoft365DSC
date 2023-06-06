@@ -937,7 +937,10 @@ function Export-TargetResource
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AccessPackageResourceRoleScopes' -IsCIMArray:$true
             }
-
+            #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
+            $currentDSCBlock = $currentDSCBlock.replace("    ,`r`n" , "    `r`n")
+            $currentDSCBlock = $currentDSCBlock.replace("`r`n;`r`n" , "`r`n")
+            $currentDSCBlock = $currentDSCBlock.replace("`r`n,`r`n" , "`r`n")
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
@@ -945,9 +948,6 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-
-        #Removing extra coma between items in cim instance array created by Convert-DSCStringParamToVariable
-        $dscContent = $dscContent.replace("            ,`r`n", '')
 
         return $dscContent
     }
