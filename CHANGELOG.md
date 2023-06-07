@@ -2,11 +2,13 @@
 
 # UNRELEASED
 
-* O365OrgSettings
-  * Added support for the Microsoft 365 installation options.
+* EXOQuarantinePolicy
+  * Fixes an issue where GlobalQurantinePolicy properties can't be updated.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue for policies with template endpointSecurityAntivirus that had a templateId not expected by the code
     FIXES [#3360](https://github.com/microsoft/Microsoft365DSC/issues/3360)
+* O365OrgSettings
+  * Added support for the Microsoft 365 installation options.
 
 # 1.23.524.1
 
