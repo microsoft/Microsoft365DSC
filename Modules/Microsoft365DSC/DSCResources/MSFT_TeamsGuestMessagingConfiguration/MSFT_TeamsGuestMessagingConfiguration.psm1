@@ -23,6 +23,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowUserDeleteChat,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowGiphy,
 
         [Parameter()]
@@ -89,6 +93,7 @@ function Get-TargetResource
             AllowUserEditMessage   = $config.AllowUserEditMessage
             AllowUserDeleteMessage = $config.AllowUserDeleteMessage
             AllowUserChat          = $config.AllowUserChat
+            AllowUserDeleteChat    = $config.AllowUserDeleteChat
             AllowGiphy             = $config.AllowGiphy
             GiphyRatingType        = $config.GiphyRatingType
             AllowMemes             = $config.AllowMemes
@@ -133,6 +138,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowUserChat,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteChat,
 
         [Parameter()]
         [System.Boolean]
@@ -236,6 +245,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowUserChat,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowUserDeleteChat,
 
         [Parameter()]
         [System.Boolean]

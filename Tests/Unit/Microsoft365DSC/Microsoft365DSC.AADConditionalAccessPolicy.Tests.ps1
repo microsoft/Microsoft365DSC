@@ -51,6 +51,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When Conditional Access Policy doesn't exist but should" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    AuthenticationStrength               = "Phishing-resistant MFA"
                     BuiltInControls                      = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
                     ClientAppTypes                       = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled            = $True
@@ -138,6 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ApplicationEnforcedRestrictionsIsEnabled = $True
+                    AuthenticationStrength                   = "Phishing-resistant MFA"
                     BuiltInControls                          = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
                     ClientAppTypes                           = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled                = $True
@@ -178,6 +180,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
                 }
 
+                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                    return @{
+                        Id          = "00000000-0000-0000-0000-000000000004"
+                        DisplayName = "Phishing-resistant MFA"
+                    }
+                }
+
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
                     return @{
                         Id              = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
@@ -216,6 +225,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GrantControls   = @{
                             _Operator       = 'AND'
                             BuiltInControls = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
+                            AuthenticationStrength = @{
+                                Id = "00000000-0000-0000-0000-000000000004"
+                            }
                         }
                         SessionControls = @{
                             ApplicationEnforcedRestrictions = @{
@@ -281,6 +293,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ApplicationEnforcedRestrictionsIsEnabled = $True
+                    AuthenticationStrength                   = "Phishing-resistant MFA"
                     BuiltInControls                          = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
                     ClientAppTypes                           = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled                = $True
@@ -319,6 +332,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UserRiskLevels                           = @('High')
                     DeviceFilterMode                         = 'exclude'
                     DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
+                }
+
+                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                    return @{
+                        Id          = "00000000-0000-0000-0000-000000000004"
+                        DisplayName = "Phishing-resistant MFA"
+                    }
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
@@ -379,8 +399,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             UserRiskLevels   = @('High')
                         }
                         GrantControls   = @{
-                            Operator        = 'AND'
-                            BuiltInControls = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
+                            Operator               = 'AND'
+                            BuiltInControls        = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
+                            AuthenticationStrength = @{
+                                Id = "00000000-0000-0000-0000-000000000004"
+                            }
                         }
                         SessionControls = @{
                             ApplicationEnforcedRestrictions = @{
@@ -441,6 +464,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ApplicationEnforcedRestrictionsIsEnabled = $True
+                    AuthenticationStrength                   = "Phishing-resistant MFA"
                     BuiltInControls                          = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
                     ClientAppTypes                           = @('Browser', 'MobileAppsAndDesktopClients')
                     CloudAppSecurityIsEnabled                = $True
@@ -473,6 +497,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     UserRiskLevels                           = @('High')
                     DeviceFilterMode                         = 'exclude'
                     DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
+                }
+
+                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                    return @{
+                        Id          = "00000000-0000-0000-0000-000000000004"
+                        DisplayName = "Phishing-resistant MFA"
+                    }
                 }
 
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
@@ -511,8 +542,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             UserRiskLevels   = @('High')
                         }
                         GrantControls   = @{
-                            Operator        = 'AND'
-                            BuiltInControls = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
+                            Operator               = 'AND'
+                            BuiltInControls        = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
+                            AuthenticationStrength = @{
+                                Id = "00000000-0000-0000-0000-000000000004"
+                            }
                         }
                         SessionControls = @{
                             ApplicationEnforcedRestrictions = @{
@@ -582,6 +616,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
+                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                    return @{
+                        Id          = "00000000-0000-0000-0000-000000000004"
+                        DisplayName = "Phishing-resistant MFA"
+                    }
+                }
+
                 Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
                     return @{
                         Id              = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
@@ -618,8 +659,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             UserRiskLevels   = @('High')
                         }
                         GrantControls   = @{
-                            _Operator       = 'AND'
-                            BuiltInControls = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
+                            _Operator              = 'AND'
+                            BuiltInControls        = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
+                            AuthenticationStrength = @{
+                                Id = "00000000-0000-0000-0000-000000000004"
+                            }
                         }
                         SessionControls = @{
                             ApplicationEnforcedRestrictions = @{
