@@ -60,13 +60,13 @@
 | **signatureupdatefilesharessources** | Write | StringArray[] | This policy setting allows you to configure UNC file share sources for downloading definition updates. | |
 | **signatureupdateinterval** | Write | SInt32 | Specifies the interval (in hours) that will be used to check for signatures, so instead of using the ScheduleDay and ScheduleTime the check for new signatures will be set according to the interval. | |
 | **submitsamplesconsent** | Write | String | Checks for the user consent level in Windows Defender to send data. (0: Always prompt, 1: Send safe samples automatically, 2: Never send, 3: Send all samples automatically) | `0`, `1`, `2`, `3` |
-| **disablelocaladminmerge** | Write | String | This policy setting controls whether or not complex list settings configured by a local administrator are merged with managed settings. (0: enable local admin merge, 1: disable local admin merge | `0`, `1` |
+| **disablelocaladminmerge** | Write | String | This policy setting controls whether or not complex list settings configured by a local administrator are merged with managed settings. (0: enable local admin merge, 1: disable local admin merge) | `0`, `1` |
 | **allowonaccessprotection** | Write | String | Allows or disallows Windows Defender On Access Protection functionality. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **lowseveritythreats** | Write | String | Allows an administrator to specify low severity threats corresponding action ID to take. | `clean`, `quarantine`, `remove`, `allow`, `userdefined`, `block` |
 | **moderateseveritythreats** | Write | String | Allows an administrator to specify moderate severity threats corresponding action ID to take. | `clean`, `quarantine`, `remove`, `allow`, `userdefined`, `block` |
 | **severethreats** | Write | String | Allows an administrator to specify high severity threats corresponding action ID to take. | `clean`, `quarantine`, `remove`, `allow`, `userdefined`, `block` |
 | **highseveritythreats** | Write | String | Allows an administrator to specify severe threats corresponding action ID to take. | `clean`, `quarantine`, `remove`, `allow`, `userdefined`, `block` |
-| **templateId** | Write | String | Template Id of the policy. | `d948ff9b-99cb-4ee0-8012-1fbc09685377_1`, `45fea5e9-280d-4da1-9792-fb5736da0ca9_1`, `804339ad-1553-4478-a742-138fb5807418_1` |
+| **templateId** | Write | String | Template Id of the policy. | `d948ff9b-99cb-4ee0-8012-1fbc09685377_1`, `e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1`, `45fea5e9-280d-4da1-9792-fb5736da0ca9_1`, `804339ad-1553-4478-a742-138fb5807418_1` |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
