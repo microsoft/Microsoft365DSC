@@ -7,11 +7,17 @@
                 "read": [
                     {
                         "name": "Application.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-Microsoft365Install.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Application.ReadWrite.All"
+                    },
+                    {
+                        "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
                     }
                 ]
             },
@@ -19,11 +25,17 @@
                 "read": [
                     {
                         "name": "Application.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-Microsoft365Install.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Application.ReadWrite.All"
+                    },
+                    {
+                        "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
                     }
                 ]
             }

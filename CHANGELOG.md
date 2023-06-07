@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* O365OrgSettings
+  * Added support for the Microsoft 365 installation options.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue for policies with template endpointSecurityAntivirus that had a templateId not expected by the code
     FIXES [#3360](https://github.com/microsoft/Microsoft365DSC/issues/3360)

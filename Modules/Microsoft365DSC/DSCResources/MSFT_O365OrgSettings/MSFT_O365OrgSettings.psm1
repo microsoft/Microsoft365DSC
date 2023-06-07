@@ -22,6 +22,21 @@ function Get-TargetResource
         $AdminCenterReportDisplayConcealedNames,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('current', 'monthlyEnterprise', 'semiAnnual')]
+        $InstallationOptionsUpdateChannel,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isVisioEnabled', 'isSkypeForBusinessEnabled', 'isProjectEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForWindows,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForMac,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -58,7 +73,7 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -102,11 +117,32 @@ function Get-TargetResource
 
         $AdminCenterReportDisplayConcealedNamesValue = Get-M365DSCOrgSettingsAdminCenterReport
 
+        $installationOptions = Get-M365DSCOrgSettingsInstallationOptions
+        $appsForWindowsValue = @()
+        foreach ($key in $installationOptions.appsForWindows.Keys)
+        {
+            if ($installationOptions.appsForWindows.$key)
+            {
+                $appsForWindowsValue += $key
+            }
+        }
+        $appsForMacValue = @()
+        foreach ($key in $installationOptions.appsForMac.Keys)
+        {
+            if ($installationOptions.appsForMac.$key)
+            {
+                $appsForMacValue += $key
+            }
+        }
+
         return @{
             IsSingleInstance                           = 'Yes'
             CortanaEnabled                             = $CortanaEnabledValue.AccountEnabled
             M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
             AdminCenterReportDisplayConcealedNames     = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
+            InstallationOptionsUpdateChannel           = $installationOptions.updateChannel
+            InstallationOptionsAppsForWindows          = $appsForWindowsValue
+            InstallationOptionsAppsForMac              = $appsForMacValue
             Ensure                                     = 'Present'
             Credential                                 = $Credential
             ApplicationId                              = $ApplicationId
@@ -149,6 +185,21 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AdminCenterReportDisplayConcealedNames,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('current', 'monthlyEnterprise', 'semiAnnual')]
+        $InstallationOptionsUpdateChannel,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isVisioEnabled', 'isSkypeForBusinessEnabled', 'isProjectEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForWindows,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForMac,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -200,11 +251,12 @@ function Set-TargetResource
     Write-Verbose -Message 'Setting configuration of Office 365 Settings'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName 'beta'
 
     $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
     $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
-    if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled)
+    if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled -and `
+        $M365WebEnableUsersToOpenFilesFrom3PStorage.Id -ne $null)
     {
         Write-Verbose -Message "Updating the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
         Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
@@ -213,7 +265,8 @@ function Set-TargetResource
 
     $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
     $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
-    if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled)
+    if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled -and `
+        $CortanaEnabledValue.Id -ne $null)
     {
         Write-Verbose -Message "Updating the Cortana setting to {$CortanaEnabled}"
         Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
@@ -226,6 +279,64 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Admin Center Report Display Concealed Names setting to {$AdminCenterReportDisplayConcealedNames}"
         Update-M365DSCOrgSettingsAdminCenterReport -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
+    }
+
+    if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows") -or $PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac"))
+    {
+        $InstallationOptions = Get-M365DSCOrgSettingsInstallationOptions
+        $InstallationOptionsToUpdate = @{
+            updateChannel = ""
+            appsForWindows = @{
+                isMicrosoft365AppsEnabled = $false
+                isProjectEnabled          = $false
+                isSkypeForBusinessEnabled = $false
+                isVisioEnabled            = $false
+            }
+            appsForMac = @{
+                isMicrosoft365AppsEnabled = $false
+                isSkypeForBusinessEnabled = $false
+            }
+        }
+
+        if ($PSBoundParameters.ContainsKey("InstallationOptionsUpdateChannel") -and `
+            ($InstallationOptionsUpdateChannel -ne $InstallationOptions.updateChannel))
+        {
+            $InstallationOptionsToUpdate.updateChannel = $InstallationOptionsUpdateChannel
+        }
+        else
+        {
+            $InstallationOptionsToUpdate.Remove('updateChannel') | Out-Null
+        }
+
+        if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows"))
+        {
+            foreach ($key in $InstallationOptionsAppsForWindows)
+            {
+                $InstallationOptionsToUpdate.appsForWindows.$key = $true
+            }
+        }
+        else
+        {
+            $InstallationOptionsToUpdate.Remove('appsForWindows') | Out-Null
+        }
+
+        if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac"))
+        {
+            foreach ($key in $InstallationOptionsAppsForMac)
+            {
+                $InstallationOptionsToUpdate.appsForMac.$key = $true
+            }
+        }
+        else
+        {
+            $InstallationOptionsToUpdate.Remove('appsForMac') | Out-Null
+        }
+
+        if ($InstallationOptionsToUpdate.Keys.Count -gt 0)
+        {
+            Write-Verbose -Message "Updating O365 Installation Options with $(Convert-M365DscHashtableToString -Hashtable $InstallationOptionsToUpdate)"
+            Update-M365DSCOrgSettingsInstallationOptions -Options $InstallationOptionsToUpdate
+        }
     }
 }
 
@@ -251,6 +362,21 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AdminCenterReportDisplayConcealedNames,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('current', 'monthlyEnterprise', 'semiAnnual')]
+        $InstallationOptionsUpdateChannel,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isVisioEnabled', 'isSkypeForBusinessEnabled', 'isProjectEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForWindows,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForMac,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -343,7 +469,7 @@ function Export-TargetResource
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -430,6 +556,30 @@ function Update-M365DSCOrgSettingsAdminCenterReport
         displayConcealedNames = $DisplayConcealedNames
     }
     Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $body | Out-Null
+}
+
+function Get-M365DSCOrgSettingsInstallationOptions
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
+    return $results
+}
+
+function Update-M365DSCOrgSettingsInstallationOptions
+{
+    [CmdletBinding()]
+    [OutputType([Void])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Options
+    )
+    $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
+    Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
 }
 
 Export-ModuleMember -Function *-TargetResource
