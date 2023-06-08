@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOQuarantinePolicy
+  * Fixes an issue where GlobalQurantinePolicy properties can't be updated.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue for policies with template endpointSecurityAntivirus that had a templateId not expected by the code
     FIXES [#3360](https://github.com/microsoft/Microsoft365DSC/issues/3360)
