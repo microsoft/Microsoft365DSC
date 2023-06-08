@@ -56,7 +56,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All, DeviceManagementConfiguration.ReadWrite.All
+    - DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -66,7 +66,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All, DeviceManagementConfiguration.ReadWrite.All
+    - DeviceManagementConfiguration.Read.All
 
 - **Update**
 
