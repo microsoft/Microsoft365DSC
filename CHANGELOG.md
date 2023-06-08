@@ -1,5 +1,20 @@
 # Change log for Microsoft365DSC
 
+# 1.23.607.1
+
+* AADAuthenticationStrengthPolicy
+  * Removed the validateset from the AllowedCombinations property due to incomplete full list of possible values.
+* EXOQuarantinePolicy
+  * Fixes an issue where GlobalQurantinePolicy properties can't be updated.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fixes an issue for policies with template endpointSecurityAntivirus that had a templateId not expected by the code
+    FIXES [#3360](https://github.com/microsoft/Microsoft365DSC/issues/3360)
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Fixes an issue with Set-TargetResource when an array is empty
+    FIXES [#3355](https://github.com/microsoft/Microsoft365DSC/issues/3355)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.166.
+
 # 1.23.524.1
 
 * AADGroup
