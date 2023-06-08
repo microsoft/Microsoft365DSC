@@ -7,6 +7,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue for policies with template endpointSecurityAntivirus that had a templateId not expected by the code
     FIXES [#3360](https://github.com/microsoft/Microsoft365DSC/issues/3360)
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Fixes an issue with Set-TargetResource when an array is empty
+    FIXES [#3355](https://github.com/microsoft/Microsoft365DSC/issues/3355)
 
 # 1.23.524.1
 
