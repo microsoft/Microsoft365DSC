@@ -7,7 +7,7 @@
 | **DisplayName** | Key | String | The name of the policy. | |
 | **Description** | Write | String | A description of the policy. | |
 | **Id** | Write | String | The unique identifier of the policy. | |
-| **AllowedCombinations** | Write | StringArray[] | The authentication method combinations allowed by this authentication strength policy. The possible values of this flagged enum are: password, voice, hardwareOath, softwareOath, sms, fido2, windowsHelloForBusiness, microsoftAuthenticatorPush, deviceBasedPush, temporaryAccessPassOneTime, temporaryAccessPassMultiUse, email, x509CertificateSingleFactor, x509CertificateMultiFactor, federatedSingleFactor, federatedMultiFactor, unknownFutureValue. | `password`, `voice`, `hardwareOath`, `softwareOath`, `sms`, `fido2`, `windowsHelloForBusiness`, `microsoftAuthenticatorPush`, `deviceBasedPush`, `temporaryAccessPassOneTime`, `temporaryAccessPassMultiUse`, `email`, `x509CertificateSingleFactor`, `x509CertificateMultiFactor`, `federatedSingleFactor`, `federatedMultiFactor`, `unknownFutureValue` |
+| **AllowedCombinations** | Write | StringArray[] | The authentication method combinations allowed by this authentication strength policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

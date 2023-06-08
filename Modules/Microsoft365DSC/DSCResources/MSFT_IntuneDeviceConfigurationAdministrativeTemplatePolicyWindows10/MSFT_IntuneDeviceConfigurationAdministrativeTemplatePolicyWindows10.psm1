@@ -455,8 +455,16 @@ function Set-TargetResource
         #endregion
 
         #Update DefinitionValues
-        [Array]$currentDefinitionValues = $currentInstance.DefinitionValues
-        [Array]$targetDefinitionValues = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $DefinitionValues
+        $currentDefinitionValues = @()
+        if ($null -ne $currentInstance.DefinitionValues)
+        {
+            [Array]$currentDefinitionValues = $currentInstance.DefinitionValues
+        }
+        $targetDefinitionValues = @()
+        if ($null -ne $DefinitionValues)
+        {
+            [Array]$targetDefinitionValues = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $DefinitionValues
+        }
 
         $comparedDefinitionValues = Compare-Object `
             -ReferenceObject ($currentDefinitionValues.Id) `
