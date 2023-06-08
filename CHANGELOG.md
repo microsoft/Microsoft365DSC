@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAuthenticationStrengthPolicy
+  * Removed the validateset from the AllowedCombinations property due to incomplete full list of possible values.
 * EXOQuarantinePolicy
   * Fixes an issue where GlobalQurantinePolicy properties can't be updated.
 * IntuneAntivirusPolicyWindows10SettingCatalog
