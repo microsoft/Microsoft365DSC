@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADNamedLocationPolicy
+  * Added support forthe CountryLookupMethod property
+    FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 1.28.0.
 
