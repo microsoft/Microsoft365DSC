@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.28.0.
+
 # 1.23.607.1
 
 * AADAuthenticationStrengthPolicy
