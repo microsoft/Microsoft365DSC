@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Removed dependency on the Az.Accounts module from the Update-M365DSCAzureAdApplication function.
+
 # 1.23.607.1
 
 * AADAuthenticationStrengthPolicy
