@@ -689,15 +689,12 @@ function Test-TargetResource
                         $presentationValue.remove('Id')
                     }
                 }
-                #write-verbose($source|convertto-json -depth 100)
-                #write-verbose($target|convertto-json -depth 100)
             }
 
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            write-verbose("$key eq $testResult")
             if (-Not $testResult)
             {
                 $testResult = $false
@@ -1039,7 +1036,7 @@ function Update-DeviceConfigurationGroupPolicyDefinitionValue
         -Source $($MyInvocation.MyCommand.Source)
         -TenantId $TenantId
         -Credential $Credential
-        exit
+
         return $null
     }
 }
@@ -1573,7 +1570,7 @@ function Compare-M365DSCComplexObject
         {
             $targetValue = 'Target is null'
         }
-        Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
+        #Write-Verbose -Message "Configuration drift - Complex object: {$sourceValue$targetValue}"
         return $false
     }
 
@@ -1581,7 +1578,7 @@ function Compare-M365DSCComplexObject
     {
         if ($source.count -ne $target.count)
         {
-            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
+            #Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
             return $false
         }
         if ($source.count -eq 0)
@@ -1606,7 +1603,7 @@ function Compare-M365DSCComplexObject
 
             if (-not $compareResult)
             {
-                Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
+                #Write-Verbose -Message 'Configuration drift - The complex array items are not identical'
                 return $false
             }
         }
@@ -1636,7 +1633,7 @@ function Compare-M365DSCComplexObject
                 $targetValue = 'null'
             }
 
-            Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
+            #Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
             return $false
         }
 
@@ -1652,7 +1649,7 @@ function Compare-M365DSCComplexObject
 
                 if (-not $compareResult)
                 {
-                    Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
+                    #Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
             }
@@ -1682,14 +1679,16 @@ function Compare-M365DSCComplexObject
 
                 if ($null -ne $compareResult)
                 {
-                    Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
+                    #Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
             }
         }
     }
     return $true
-}function Convert-M365DSCDRGComplexTypeToHashtable
+}
+
+function Convert-M365DSCDRGComplexTypeToHashtable
 {
     [CmdletBinding()]
     [OutputType([hashtable], [hashtable[]])]
