@@ -1354,27 +1354,19 @@ function Update-M365DSCAzureAdApplication
         return
     }
 
-    $context = Get-AzContext
-    if ($null -eq $context)
-    {
-        Connect-AzAccount
-        $context = Get-AzContext
-    }
-
     $resourceAppIdMsGraph = '00000003-0000-0000-c000-000000000000'
     $resourceAppIdSharePoint = '00000003-0000-0ff1-ce00-000000000000'
     $resourceAppIdExchange = '00000002-0000-0ff1-ce00-000000000000'
 
-    $allPrincipals = Get-AzADServicePrincipal
-    $graphSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.AppId -eq $resourceAppIdMsGraph }
-    $spSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.AppId -eq $resourceAppIdSharePoint }
-    $exSvcprincipal = $allPrincipals | Where-Object -FilterScript { $_.AppId -eq $resourceAppIdExchange }
+    $graphSvcprincipal = Get-MgServicePrincipal -Filter "AppId eq '$resourceAppIdMsGraph'"
+    $spSvcprincipal = Get-MgServicePrincipal -Filter "AppId eq '$resourceAppIdSharePoint'"
+    $exSvcprincipal = Get-MgServicePrincipal -Filter "AppId eq '$resourceAppIdExchange'"
 
     Write-LogEntry ' '
     Write-LogEntry 'Checking existance of AD Application'
-    if (-not ($azureADApp = Get-AzADApplication -Filter "DisplayName eq '$($ApplicationName)'" -ErrorAction SilentlyContinue))
+    if (-not ($azureADApp = Get-MgApplication -Filter "DisplayName eq '$($ApplicationName)'" -ErrorAction SilentlyContinue))
     {
-        $azureADApp = New-AzADApplication -DisplayName $ApplicationName
+        $azureADApp = New-MgApplication -DisplayName $ApplicationName
         Write-LogEntry "  New Azure AD application '$ApplicationName' created!"
     }
     else
@@ -1412,7 +1404,7 @@ function Update-M365DSCAzureAdApplication
                 }
             }
 
-            $appRole = $svcprincipal.AppRole | Where-Object -FilterScript { $_.Value -eq $permission.PermissionName }
+            $appRole = $svcprincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.PermissionName }
 
             if ($null -eq $appRole)
             {
