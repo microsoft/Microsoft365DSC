@@ -214,18 +214,18 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Description                      = $getValue.Description
-            DisplayName                      = $getValue.DisplayName
+            Description           = $getValue.Description
+            DisplayName           = $getValue.DisplayName
             #PolicyConfigurationIngestionType = $enumPolicyConfigurationIngestionType
-            DefinitionValues                 = $complexDefinitionValues
-            Id                               = $getValue.Id
-            Ensure                           = 'Present'
-            Credential                       = $Credential
-            ApplicationId                    = $ApplicationId
-            TenantId                         = $TenantId
-            ApplicationSecret                = $ApplicationSecret
-            CertificateThumbprint            = $CertificateThumbprint
-            Managedidentity                  = $ManagedIdentity.IsPresent
+            DefinitionValues      = $complexDefinitionValues
+            Id                    = $getValue.Id
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
             #endregion
         }
         $assignmentsValues = Get-MgDeviceManagementGroupPolicyConfigurationAssignment -GroupPolicyConfigurationId $Id
@@ -528,13 +528,13 @@ function Set-TargetResource
             {
                 foreach ($presentationValue in [Hashtable[]]$definitionValue.PresentationValues)
                 {
-                    $currentPresentationValue = $currentDefinitionValue.PresentationValues | where-object {$_.PresentationDefinitionId -eq $presentationValue.presentationDefinitionId}
+                    $currentPresentationValue = $currentDefinitionValue.PresentationValues | Where-Object { $_.PresentationDefinitionId -eq $presentationValue.presentationDefinitionId }
                     $value = $presentationValue.clone()
                     $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
                     $value.remove('PresentationDefinitionId')
                     $value.remove('PresentationDefinitionLabel')
                     $value.remove('id')
-                    $value.add('id',$currentPresentationValue.Id)
+                    $value.add('id', $currentPresentationValue.Id)
                     $complexPresentationValues += $value
                 }
             }
@@ -550,7 +550,7 @@ function Set-TargetResource
         $formattedDefinitionValuesToRemove = @()
         foreach ($definitionValueId in $definitionValuesToRemove)
         {
-            $formattedDefinitionValuesToremove += ($currentDefinitionValues | where-object {$_.definition.id -eq $definitionValueId}).id
+            $formattedDefinitionValuesToremove += ($currentDefinitionValues | Where-Object { $_.definition.id -eq $definitionValueId }).id
         }
 
         Update-DeviceConfigurationGroupPolicyDefinitionValue `
@@ -907,7 +907,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Message: Location header not present in redirection response.*")
+                $_.Exception -like '*Message: Location header not present in redirection response.*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -1371,7 +1371,7 @@ function Get-M365DSCDRGComplexTypeToString
                             -CIMInstanceName $hashPropertyType `
                             -IndentLevel $IndentLevel `
                             -ComplexTypeMapping $ComplexTypeMapping `
-                            -IsArray:$true
+                            -isArray:$true
                         if ([string]::IsNullOrWhiteSpace($nestedPropertyString))
                         {
                             $nestedPropertyString = "@()`r`n"
