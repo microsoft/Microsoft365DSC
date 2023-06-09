@@ -4,6 +4,8 @@
 
 * MISC
   * Removed dependency on the Az.Accounts module from the Update-M365DSCAzureAdApplication function.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.28.0.
 
 # 1.23.607.1
 
