@@ -7,6 +7,10 @@
     FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 1.28.0.
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Fixes an issue with Set-TargetResource when an array is empty
+  * Fixes presentationValue updates
+    FIXES [#3355](https://github.com/microsoft/Microsoft365DSC/issues/3355)
 
 # 1.23.607.1
 
