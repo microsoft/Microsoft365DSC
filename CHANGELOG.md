@@ -5,6 +5,9 @@
 * AADNamedLocationPolicy
   * Added support forthe CountryLookupMethod property
     FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
+* TeamsAppPermissionPolicy
+  * Fixes an issue where the wrong app types were trying to get assigned.
+    FIXES [#3373](https://github.com/microsoft/Microsoft365DSC/issues/3373)
 * MISC
   * Removed dependency on the Az.Accounts module from the Update-M365DSCAzureAdApplication function.
 * DEPENDENCIES

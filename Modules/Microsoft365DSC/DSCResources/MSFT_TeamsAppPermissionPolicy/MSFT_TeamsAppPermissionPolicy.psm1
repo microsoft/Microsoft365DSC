@@ -210,7 +210,7 @@ function Set-TargetResource
     {
         foreach ($appEntry in $PrivateCatalogApps)
         {
-            $PrivateCatalogAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.DefaultCatalogApp]::New($appEntry)
+            $PrivateCatalogAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.PrivateCatalogApp]::New($appEntry)
         }
     }
     $GlobalCatalogAppsValue = @()
@@ -218,7 +218,7 @@ function Set-TargetResource
     {
         foreach ($appEntry in $GlobalCatalogApps)
         {
-            $GlobalCatalogAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.DefaultCatalogApp]::New($appEntry)
+            $GlobalCatalogAppsValue += [Microsoft.Teams.Policy.Administration.Cmdlets.Core.GlobalCatalogApp]::New($appEntry)
         }
     }
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
