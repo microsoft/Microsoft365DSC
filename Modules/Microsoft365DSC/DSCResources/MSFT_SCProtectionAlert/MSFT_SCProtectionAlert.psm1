@@ -135,7 +135,6 @@ function Get-TargetResource
         $CertificatePassword
     )
 
-
     Write-Verbose -Message "Getting configuration of SCProtectionAlert for $Name"
 
     if ($Global:CurrentModeIsExport)
