@@ -108,6 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         ActiveSyncDebugLogging = $False
                         PopEnabled             = $False
+                        Identity               = 'john.smith'
                         EwsEnabled             = $True
                     }
                 }

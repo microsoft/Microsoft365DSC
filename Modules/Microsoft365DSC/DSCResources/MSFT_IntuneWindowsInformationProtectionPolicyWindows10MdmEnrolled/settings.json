@@ -7,23 +7,25 @@
                 "read": [
                     {
                         "name": "DeviceManagementApps.Read.All"
-                    },
+                    }
+                ],
+                "update": [
                     {
                         "name": "DeviceManagementApps.ReadWrite.All"
                     }
-                ],
-                "update": []
+                ]
             },
             "application": {
                 "read": [
                     {
                         "name": "DeviceManagementApps.Read.All"
-                    },
+                    }
+                ],
+                "update": [
                     {
                         "name": "DeviceManagementApps.ReadWrite.All"
                     }
-                ],
-                "update": []
+                ]
             }
         }
     }

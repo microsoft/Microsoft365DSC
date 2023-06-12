@@ -19,6 +19,12 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **EndUserSpamNotificationFrequency** | Write | String | The EndUserSpamNotificationFrequency parameter species how often quarantine notifications are sent to users. Valid values are: 04:00:00 (4 hours),1.00:00:00 (1 day),7.00:00:00 (7 days) | |
+| **QuarantinePolicyType** | Write | String | The QuarantinePolicyType parameter filters the results by the specified quarantine policy type. Valid values are: QuarantinePolicy, GlobalQuarantinePolicy | |
+| **EndUserSpamNotificationFrequencyInDays** | Write | String | This parameter is reserved for internal Microsoft use. | |
+| **CustomDisclaimer** | Write | String | This parameter is reserved for internal Microsoft use. | |
+| **EndUserSpamNotificationCustomFromAddress** | Write | String | The EndUserSpamNotificationCustomFromAddress specifies the email address of an existing internal sender to use as the sender for quarantine notifications. To set this parameter back to the default email address quarantine@messaging.microsoft.com, use the value $null. | |
+| **EsnCustomSubject** | Write | StringArray[] | The EsnCustomSubject parameter specifies the text to use in the Subject field of quarantine notifications.This setting is available only in the built-in quarantine policy named DefaultGlobalTag that controls global quarantine policy settings. | |
 
 ## Description
 

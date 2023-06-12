@@ -7,9 +7,6 @@
                 "read": [
                     {
                         "name": "DeviceManagementRBAC.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementRBAC.ReadWrite.All"
                     }
                 ],
                 "update": [
@@ -22,9 +19,6 @@
                 "read": [
                     {
                         "name": "DeviceManagementRBAC.Read.All"
-                    },
-                    {
-                        "name": "DeviceManagementRBAC.ReadWrite.All"
                     }
                 ],
                 "update": [

@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "TeamsAppSetupPolicy",
+    "description": "Manages Teams app setup policies in your tenant.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

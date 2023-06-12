@@ -162,13 +162,21 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
-        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
-        $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
-        if ($null -eq $user)
+        if (-not $Script:ExportMode)
         {
-            Write-Verbose -Message "The specified User doesn't already exist."
-            return $nullReturn
+            Write-Verbose -Message "Getting Office 365 User $UserPrincipalName"
+            $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+            $user = Get-MgUser -UserId $UserPrincipalName -Property $propertiesToRetrieve -ErrorAction SilentlyContinue
+            if ($null -eq $user)
+            {
+                Write-Verbose -Message "The specified User doesn't already exist."
+                return $nullReturn
+            }
+        }
+        else
+        {
+            Write-Verbose -Message "Retrieving user from the exported instances"
+            $user = $Script:M365DSCExportInstances | Where-Object -FilterScript {$_.UserPrincipalName -eq $UserPrincipalName}
         }
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
@@ -184,11 +192,20 @@ function Get-TargetResource
         }
         $passwordNeverExpires = $userPasswordPolicyInfo.PasswordNeverExpires
 
-        $assignedRoles = Get-MgRoleManagementDirectoryRoleAssignment -Filter "PrincipalId eq '$($user.Id)'"
+        if ($null -eq $Script:allDirectoryRoleAssignment)
+        {
+            $Script:allDirectoryRoleAssignment = Get-MgRoleManagementDirectoryRoleAssignment -All
+        }
+        $assignedRoles = $Script:allDirectoryRoleAssignment | Where-Object -FilterScript {$_.PrincipalId -eq $user.Id}
+
         $rolesValue = @()
+        if ($null -eq $Script:allAssignedRoles -and $assignedRoles.Length -gt 0)
+        {
+            $Script:allAssignedRoles = Get-MgRoleManagementDirectoryRoleDefinition -All
+        }
         foreach ($assignedRole in $assignedRoles)
         {
-            $currentRoleInfo = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $assignedRole.RoleDefinitionId
+            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript {$_.Id -eq $assignedRole.RoleDefinitionId}
             $rolesValue += $currentRoleInfo.DisplayName
         }
 
@@ -726,39 +743,17 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Office 365 User $UserPrincipalName"
-
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Testing configuration of Azure AD User $UserPrincipalName"
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $ValuesToCheck = $PSBoundParameters
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('Ensure', `
-            'UserPrincipalName', `
-            'LicenseAssignment', `
-            'UsageLocation', `
-            'FirstName', `
-            'LastName', `
-            'DisplayName', `
-            'City', `
-            'Country', `
-            'Department', `
-            'Fax', `
-            'MobilePhone', `
-            'Office', `
-            'PasswordNeverExpires', `
-            'PhoneNumber', `
-            'PostalCode', `
-            'PreferredLanguage', `
-            'State', `
-            'StreetAddress', `
-            'Title', `
-            'UserType',
-        'Roles')
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -816,21 +811,22 @@ function Export-TargetResource
 
     try
     {
-        $users = Get-MgUser -Filter $Filter -All:$true -ErrorAction Stop
+        $Script:ExportMode = $true
+        $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
+        $Script:M365DSCExportInstances = Get-MgUser -Filter $Filter -All:$true -Property $propertiesToRetrieve -ErrorAction Stop
 
         $dscContent = [System.Text.StringBuilder]::new()
         $i = 1
         Write-Host "`r`n" -NoNewline
-        foreach ($user in $users)
+        foreach ($user in $Script:M365DSCExportInstances)
         {
-            Write-Host "    |---[$i/$($users.Length)] $($user.UserPrincipalName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:M365DSCExportInstances.Length)] $($user.UserPrincipalName)" -NoNewline
             $userUPN = $user.UserPrincipalName
             if (-not [System.String]::IsNullOrEmpty($userUPN))
             {
                 $Params = @{
                     UserPrincipalName     = $userUPN
                     Credential            = $Credential
-                    Password              = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint

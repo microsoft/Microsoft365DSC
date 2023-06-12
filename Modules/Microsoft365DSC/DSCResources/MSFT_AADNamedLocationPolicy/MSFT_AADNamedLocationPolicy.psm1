@@ -30,6 +30,11 @@ function Get-TargetResource
         $CountriesAndRegions,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('clientIpAddress','authenticatorAppGps')]
+        $CountryLookupMethod,
+
+        [Parameter()]
         [System.Boolean]
         $IncludeUnknownCountriesAndRegions,
 
@@ -129,6 +134,7 @@ function Get-TargetResource
                 IpRanges                          = $NamedLocation.AdditionalProperties.ipRanges.cidrAddress
                 IsTrusted                         = $NamedLocation.AdditionalProperties.isTrusted
                 CountriesAndRegions               = [String[]]$NamedLocation.AdditionalProperties.countriesAndRegions
+                CountryLookupMethod               = $NamedLocation.AdditionalProperties.countryLookupMethod
                 IncludeUnknownCountriesAndRegions = $NamedLocation.AdditionalProperties.includeUnknownCountriesAndRegions
                 Ensure                            = 'Present'
                 ApplicationSecret                 = $ApplicationSecret
@@ -184,6 +190,11 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $CountriesAndRegions,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('clientIpAddress','authenticatorAppGps')]
+        $CountryLookupMethod,
 
         [Parameter()]
         [System.Boolean]
@@ -264,6 +275,7 @@ function Set-TargetResource
     {
         $desiredValues.Add('includeUnknownCountriesAndRegions', $IncludeUnknownCountriesAndRegions)
         $desiredValues.Add('countriesAndRegions', $CountriesAndRegions)
+        $desiredValues.Add('countryLookupMethod', $CountryLookupMethod)
     }
 
     # Named Location should exist but it doesn't
@@ -332,6 +344,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $CountriesAndRegions,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('clientIpAddress','authenticatorAppGps')]
+        $CountryLookupMethod,
 
         [Parameter()]
         [System.Boolean]
@@ -459,7 +476,6 @@ function Export-TargetResource
 
     try
     {
-
         $AADNamedLocations = Get-MgIdentityConditionalAccessNamedLocation -Filter $Filter -All:$true -ErrorAction Stop
         if ($AADNamedLocations.Length -eq 0)
         {

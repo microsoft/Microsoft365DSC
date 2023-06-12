@@ -1,5 +1,139 @@
 <#
 .Description
+This function creates a new Markdown document from the specified exported configuration
+
+.Functionality
+Internal, Hidden
+#>
+
+Function New-M365DSCConfigurationToMarkdown
+  {
+      [CmdletBinding()]
+      [OutputType([System.String])]
+      param
+      (
+          [Parameter()]
+          [Array]
+          $ParsedContent,
+  
+          [Parameter()]
+          [System.String]
+          $OutputPath,
+  
+          [Parameter()]
+          [System.String]
+          $TemplateName,
+  
+          [Parameter()]
+          [Switch]
+          $SortProperties
+      )
+  
+      $crlf = "`r`n"
+      if ([System.String]::IsNullOrEmpty($TemplateName))
+      {
+          $TemplateName = 'Configuration Report'
+      }
+  
+      Write-Output 'Generating Markdown report'
+      $fullMD = "# " + $TemplateName + $crlf
+  
+      $totalCount = $parsedContent.Count
+      $currentCount = 0
+      foreach ($resource in $parsedContent)
+      {
+          # Create a new table for each resource
+          $percentage = [math]::Round(($currentCount / $totalCount) * 100, 2)
+          Write-Progress -Activity 'Processing generated DSC Object' -Status ("{0:N2} completed - $($resource.ResourceName)" -f $percentage) -PercentComplete $percentage
+  
+          $fullMD += "## " + $resource.ResourceInstanceName + $crlf
+          $fullMD += "|Item|Value|`r`n"
+          $fullMD += "|:---|:---|`r`n"
+          if ($SortProperties)
+          {
+              $properties = $resource.Keys | Sort-Object
+          }
+          else
+          {
+              $properties = $resource.Keys
+          }
+  
+          foreach ($property in $properties)
+          {
+              if ($property -ne 'ResourceName' `
+              -and $property -ne 'ApplicationId' `
+              -and $property -ne 'CertificateThumbprint' `
+              -and $property -ne 'TenantId')
+              {
+                  # Create each row in the table
+                  # This first bit is the property in column 1
+                  $partMD += "|**" + $property + "**|"
+                  $value = "`$Null"
+                  # And then the value in column 2
+                  if ($null -ne $resource.$property)
+                  {
+                      if ($resource.$property.GetType().Name -eq 'Object[]')
+                      {
+                          if ($resource.$property -and ($resource.$property[0].GetType().Name -eq 'Hashtable' -or
+                                  $resource.$property[0].GetType().Name -eq 'OrderedDictionary'))
+                          {
+                              $value = ''
+                              foreach ($entry in $resource.$property)
+                              {
+                                  foreach ($key in $entry.Keys)
+                                  {
+                                      $value += "$key = $($entry.$key)<br>"
+                                  }
+                                  $value +=  '<br>'
+                              }
+                          }
+                          else
+                          {
+                              $temp = $resource.$property -join ','
+                              [array]$components = $temp.Split(',')
+                              if ($components.Length -gt 0 -and
+                                  -not [System.String]::IsNullOrEmpty($temp))
+                              {
+                                  $Value = ''
+                                  foreach ($comp in $components)
+                                  {
+                                      $value += "$comp<br>"
+                                  }
+                                  $value += '<br>'
+                              }
+                          }
+                      }
+                      else
+                      # strings are easy
+                      {
+                          if (-not [System.String]::IsNullOrEmpty($resource.$property))
+                          {
+                              $value = ($resource.$property).ToString() + "|"
+                          }
+                      }
+                  }
+                  $partMD += $value + $crlf
+              }
+          }
+  
+          $fullMD += $partMD + $crlf
+          $partMD = ""
+  
+          $currentCount++
+      }
+  
+      if (-not [System.String]::IsNullOrEmpty($OutputPath))
+      {
+          Write-Output 'Saving Markdown report'
+          $fullMD | Out-File $OutputPath
+      }
+  
+      Write-Output 'Completed generating Markdown report'
+  }
+
+
+<#
+.Description
 This function creates a new HTML document from the specified exported configuration
 
 .Functionality
@@ -365,7 +499,7 @@ function New-M365DSCReportFromConfiguration
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Excel', 'HTML', 'JSON')]
+        [ValidateSet('Excel', 'HTML', 'JSON', 'Markdown')]
         [System.String]
         $Type,
 
@@ -409,6 +543,12 @@ function New-M365DSCReportFromConfiguration
         {
             New-M365DSCConfigurationToJSON -ParsedContent $parsedContent -OutputPath $OutputPath
         }
+        'Markdown'
+        {
+            $template = Get-Item $ConfigurationPath
+            $templateName = $Template.Name.Split('.')[0]
+            New-M365DSCConfigurationToMarkdown -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
+        }
     }
 }
 
@@ -430,6 +570,9 @@ Array that contains the list of configuration components for the destination.
 
 .Parameter ExcludedProperties
 Array that contains the list of parameters to exclude.
+
+.Parameter ExcludedResources
+Array that contains the list of resources to exclude.
 
 .Parameter IsBlueprintAssessment
 Specifies whether or not we are currently comparing a configuration to a Blueprint.
@@ -471,6 +614,10 @@ function Compare-M365DSCConfigurations
         $ExcludedProperties,
 
         [Parameter()]
+        [Array]
+        $ExcludedResources,
+
+        [Parameter()]
         [System.Boolean]
         $IsBlueprintAssessment = $false
     )
@@ -498,13 +645,19 @@ function Compare-M365DSCConfigurations
         [Array] $DestinationObject = Initialize-M365DSCReporting -ConfigurationPath $Destination
     }
 
+    $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
     # Loop through all items in the source array
     $i = 1
     foreach ($sourceResource in $SourceObject)
     {
+        if ($sourceResource.ResourceName -in $ExcludedResources)
+        {
+            continue
+        }
+
         try
         {
-            [array]$key = Get-M365DSCResourceKey -Resource $sourceResource
+            [array]$key = Get-M365DSCResourceKey -Resource $sourceResource -DSCResourceInfo $dscResourceInfo
             Write-Progress -Activity "Scanning Source $Source...[$i/$($SourceObject.Count)]" -PercentComplete ($i / ($SourceObject.Count) * 100)
             [array]$destinationResource = $DestinationObject | Where-Object -FilterScript { $_.ResourceName -eq $sourceResource.ResourceName -and $_.($key[0]) -eq $sourceResource.($key[0]) }
 
@@ -840,7 +993,7 @@ function Compare-M365DSCConfigurations
         }
         catch
         {
-            Write-Verbose -Message "Error: $_"
+            Write-Host "Error: $_"
         }
         $i++
     }
@@ -855,7 +1008,7 @@ function Compare-M365DSCConfigurations
             try
             {
                 [System.Collections.HashTable]$currentDestinationResource = ([array]$destinationResource)[0]
-                $key = Get-M365DSCResourceKey -Resource $currentDestinationResource
+                $key = Get-M365DSCResourceKey -Resource $currentDestinationResource -DSCResourceInfo $dscResourceInfo
                 Write-Progress -Activity "Scanning Destination $Destination...[$i/$($DestinationObject.Count)]" -PercentComplete ($i / ($DestinationObject.Count) * 100)
                 $sourceResource = $SourceObject | Where-Object -FilterScript { $_.ResourceName -eq $currentDestinationResource.ResourceName -and `
                                                                                $_.($key[0]) -eq $currentDestinationResource.($key[0]) -and `
@@ -875,7 +1028,7 @@ function Compare-M365DSCConfigurations
                         ResourceInstanceName = $currentDestinationResource.ResourceInstanceName
                         Key                  = $keyName
                         KeyValue             = $currentDestinationResource."$keyName"
-                        Properties           = @(@{                                
+                        Properties           = @(@{
                             ParameterName      = '_IsInConfiguration_'
                             ValueInSource      = 'Absent'
                             ValueInDestination = 'Present'
@@ -894,7 +1047,7 @@ function Compare-M365DSCConfigurations
     }
     catch
     {
-        Write-Verbose -Message "Error: $_"
+        Write-Host "Error: $_"
     }
     Write-Progress -Activity 'Scanning Destination...' -Completed
 
@@ -969,9 +1122,13 @@ function Get-M365DSCResourceKey
     (
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
-        $Resource
+        $Resource,
+
+        [Parameter(Mandatory = $true)]
+        [Array]
+        $DSCResourceInfo
     )
-    $resourceInfo = Get-DscResource ("MSFT_$($Resource.ResourceName)") -Module 'Microsoft365DSC'
+    $resourceInfo = $DSCResourceInfo | Where-Object -FilterScript {$_.Name -eq $Resource.ResourceName}
     [Array]$mandatoryParameters = $resourceInfo.Properties | Where-Object -FilterScript { $_.IsMandatory }
     if ($Resource.Contains('IsSingleInstance') -and $mandatoryParameters.Name.Contains('IsSingleInstance'))
     {
@@ -1050,7 +1207,7 @@ function Get-M365DSCResourceKey
     }
     elseif ($mandatoryParameters.count -eq 0)
     {
-        throw "No mandatory parameters found for $($Resource.ResourceName)"
+        Write-Verbose -Message "No mandatory parameters found for $($Resource.ResourceName)"
     }
     else
     {
@@ -1087,6 +1244,9 @@ An array with difference, already compiled from another source.
 
 .Parameter ExcludedProperties
 Array that contains the list of parameters to exclude.
+
+.Parameter ExcludedResources
+Array that contains the list of resources to exclude.
 
 .Example
 New-M365DSCDeltaReport -Source 'C:\DSC\Source.ps1' -Destination 'C:\DSC\Destination.ps1' -OutputPath 'C:\Dsc\DeltaReport.html'
@@ -1137,7 +1297,11 @@ function New-M365DSCDeltaReport
 
         [Parameter()]
         [Array]
-        $ExcludedProperties
+        $ExcludedProperties,
+
+        [Parameter()]
+        [Array]
+        $ExcludedResources
     )
 
     # Validate that the latest version of the module is installed.
@@ -1155,7 +1319,7 @@ function New-M365DSCDeltaReport
         return
     }
 
-    if ($OutputPath -and (Test-Path -Path $OutputPath) -eq $false)
+    if ($OutputPath -and (Test-Path -Path $OutputPath) -eq $true)
     {
         Write-Warning "File specified in parameter OutputPath already exists and will be overwritten: $OutputPath"
         Write-Warning "Make sure you specify a file that not exists, if you don't want the file to be overwritten!"
@@ -1193,6 +1357,7 @@ function New-M365DSCDeltaReport
                 -DestinationObject $ParsedBlueprintWithMetadata `
                 -CaptureTelemetry $false `
                 -ExcludedProperties $ExcludedProperties `
+                -ExcludedResources $ExcludedResources `
                 -IsBluePrintAssessment $true
         }
         Else
@@ -1201,7 +1366,8 @@ function New-M365DSCDeltaReport
                 -Source $Source `
                 -Destination $Destination `
                 -CaptureTelemetry $false `
-                -ExcludedProperties $ExcludedProperties
+                -ExcludedProperties $ExcludedProperties `
+                -ExcludedResources $ExcludedResources
         }
     }
 
@@ -1474,8 +1640,8 @@ function New-M365DSCDeltaReport
                             elseif ($null -ne $drift.ValueInSource -and $null -eq $drift.ValueInDestination)
                             {
                                 $sourceValue = "<table width = '100%'>"
-                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"                                
-                                
+                                $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
+
                                 if ($drift.ValueInSource.GetType().Name -ne 'OrderedDictionary')
                                 {
                                     $valueForSource = $drift.ValueInSource
@@ -1510,8 +1676,8 @@ function New-M365DSCDeltaReport
                             elseif ($null -ne $drift.ValueInDestination -and $null -eq $drift.ValueInSource)
                             {
                                 $destinationValue = "<table width = '100%'>"
-                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"                                
-                                
+                                $destinationValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
+
                                 if ($drift.ValueInDestination.GetType().Name -ne 'OrderedDictionary')
                                 {
                                     $valueForDestination = $drift.ValueInSource

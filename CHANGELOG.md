@@ -2,8 +2,142 @@
 
 # UNRELEASED
 
- * IntuneDeviceConfigurationEditionUpgradePolicyWindows10
+* AADNamedLocationPolicy
+  * Added support forthe CountryLookupMethod property
+    FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
+* IntuneDeviceConfigurationEditionUpgradePolicyWindows10
   * Initial release
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 1.28.0.
+
+# 1.23.607.1
+
+* AADAuthenticationStrengthPolicy
+  * Removed the validateset from the AllowedCombinations property due to incomplete full list of possible values.
+* EXOQuarantinePolicy
+  * Fixes an issue where GlobalQurantinePolicy properties can't be updated.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fixes an issue for policies with template endpointSecurityAntivirus that had a templateId not expected by the code
+    FIXES [#3360](https://github.com/microsoft/Microsoft365DSC/issues/3360)
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Fixes an issue with Set-TargetResource when an array is empty
+    FIXES [#3355](https://github.com/microsoft/Microsoft365DSC/issues/3355)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.166.
+
+# 1.23.524.1
+
+* AADGroup
+  * Performance Improvements for export.
+* AADUser
+  * Performance improvements for export.
+* O365OrgSettings
+  * Added support for the AdminCenterReportDisplayConcealedNames property.
+* SCAutoSensitivityLabelRule
+  * Fixes an issue with the HeaderMatchesPatterns property not compiling when empty.
+* TeamsOrgWideAppSettings
+  * Initial release.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.111
+  * Updated ReverseDSC to version 2.0.0.15
+
+# 1.23.517.1
+
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Fixes an issue where Reviewers and requestors weren't properly extracted.
+    FIXES [#3255](https://github.com/microsoft/Microsoft365DSC/issues/3255)
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Ensure that Windows Mobile platform cannot be unblocked
+    FIXES [#3303](https://github.com/microsoft/Microsoft365DSC/issues/3303)
+* IntuneSettingCatalogCustomPolicyWindows10
+  * Add missing properties to schema
+    FIXES [#3300](https://github.com/microsoft/Microsoft365DSC/issues/3300)
+* SCAutoSensitivityLabelRule
+  * Fixes an issue with the HeaderMatchesPatterns property not working as expected.
+    FIXES [#3315](https://github.com/microsoft/Microsoft365DSC/issues/3315)
+* SPOUserProfileProperty
+  * Fixes and issue where the properties weren't properly set.
+    FIXES [#3226](https://github.com/microsoft/Microsoft365DSC/issues/3226)
+* TeamsAppPermissionPolicy
+  * Initial release
+* TeamsAppSetupPolicy
+  * Initial release.
+* EXOQuarantinePolicy
+  * Support exporting and importing global quarantine policy
+    FIXES [#3285](https://github.com/microsoft/Microsoft365DSC/issues/3285)
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 5.2.0
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.165
+* MISC
+  * Major performance improvements for the New-M365DSCDeltaReport cmdlet.
+    FIXES [#3016](https://github.com/microsoft/Microsoft365DSC/issues/3016)
+  * M365DSCUtil: Fix typo in order to obfuscate cert thumbprint
+
+# 1.23.510.1
+
+* AADAuthenticationStrengthPolicy
+  * Initial release
+* AADConditionalAccessPolicy
+  * Added support for the AuthenticationStrength parameter.
+* AADCrossTenantAccessPolicy
+  * Initial release
+    FIXES [#3251](https://github.com/microsoft/Microsoft365DSC/issues/3251)
+* AADCrossTenantAccessPolicyConfigurationDefault
+  * Initial release
+    FIXES [#3252](https://github.com/microsoft/Microsoft365DSC/issues/3252)
+* AADCrossTenantAccessPolicyConfigurationPartner
+  * Initial release
+    FIXES [#3253](https://github.com/microsoft/Microsoft365DSC/issues/3253)
+* IntuneSettingCatalogCustomPolicyWindows10
+  * Initial release
+  FIXES [#2692](https://github.com/microsoft/Microsoft365DSC/issues/2692),
+  FIXES [#2976](https://github.com/microsoft/Microsoft365DSC/issues/2976),
+  FIXES [#3070](https://github.com/microsoft/Microsoft365DSC/issues/3070),
+  FIXES [#3071](https://github.com/microsoft/Microsoft365DSC/issues/3071),
+  FIXES [#3156](https://github.com/microsoft/Microsoft365DSC/issues/3156)
+* TeamsMessagingPolicy
+  * Add support for new parameters: AllowSmartCompose, AllowSmartReply, AllowUserDeleteChat
+* TeamsGuestMessagingConfiguration
+  * Add support for AllowUserDeleteChat parameter
+* TeamsGuestMeetingConfiguration
+  * Add support for LiveCaptionsEnabledType parameter
+* TeamsTeam
+  * Fix group creation
+* DEPENDENCIES
+  * Updated DSCParser to version 1.0.9.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.1623.
+  * Updated MSCloudLoginAssistant to version 1.0.110.
+* MISC
+  * Added a new Get-M365DSCConfigurationConflict cmdlet to help validate configurations and added
+    the -Validate switch to the Export-M365DSCConfiguration cmdlet.
+
+# 1.23.503.1
+
+* IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationPkcsCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationSecureAssessmentPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationTrustedCertificatePolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationVpnPolicyWindows10
+  * Initial release
+* IntuneDeviceConfigurationWiredNetworkPolicyWindows10
+  * Initial release
+* DRG
+  * Fix issue with abstract type and additionalProperties
+* MISC
+  * Intune: changed the display or instances to show the display name instead of Id during extraction.
+  * M365DSCUtil: Fixed an issue on function Get-M365DSCExportContentForResource if ConnectionMode was set to anything but "Credentials*"
+  * Assert-M365DSCBlueprint, New-M365DSCDeltaReport, Compare-M365DSCConfigurations: Add support to exclude resources from being compared
+  * EXPORT: Multiple fixes for display and handling of invalid licenses.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.109.
 
 # 1.23.426.3
 
@@ -22,9 +156,27 @@
 
 # 1.23.426.1
 
-* AADCOnditionalAccessPolicy
+* AADConditionalAccessPolicy
   * Fix Couldn't find Location 00000000-0000-0000-0000-000000000000
     FIXES[#2974](https://github.com/microsoft/Microsoft365DSC/issues/2974)
+* AADAuthenticationMethodPolicy
+  * Initial release. Configure Authentication policy settings
+* AADAuthenticationMethodPolicyAuthenticator
+  * Initial release. Configure Authentication settings related to MicrosoftAuthenticator
+* AADAuthenticationMethodPolicyEmail
+  * Initial release. Configure Authentication settings related to Email
+* AADAuthenticationMethodPolicyFido2
+  * Initial release. Configure Authentication settings related to Fido2
+* AADAuthenticationMethodPolicySms
+  * Initial release. Configure Authentication settings related to Sms
+* AADAuthenticationMethodPolicySoftware
+  * Initial release. Configure Authentication settings related to SoftwareOath
+* AADAuthenticationMethodPolicyTemporary
+  * Initial release. Configure Authentication settings related to TemporaryAccessPass
+* AADAuthenticationMethodPolicyVoice
+  * Initial release. Configure Authentication settings related to Voice
+* AADAuthenticationMethodPolicyX509
+  * Initial release. Configure Authentication settings related to X509Certificate
 * AADAdministrativeUnit
   * Fix issue incorrectly removing existing Members and ScopedRoleMembers
     FIXES [#3194](https://github.com/microsoft/Microsoft365DSC/issues/3194)
