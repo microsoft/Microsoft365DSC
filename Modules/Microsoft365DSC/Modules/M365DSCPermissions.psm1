@@ -1246,9 +1246,28 @@ function Update-M365DSCAzureAdApplication
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
-    )
+        $Credential,
 
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
+    )
     function Write-LogEntry
     {
         param
@@ -1292,6 +1311,10 @@ function Update-M365DSCAzureAdApplication
 
         Write-Host @params
     }
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
     $requireWait = $false
     Write-LogEntry -Message 'Checking specified parameters'
     switch ($Type)
@@ -1350,12 +1373,6 @@ function Update-M365DSCAzureAdApplication
                 }
             }
         }
-    }
-
-    if ($null -eq (Get-Module -Name Az.Resources -ListAvailable))
-    {
-        Write-LogEntry "This function requires the Az.Resources module, which isn't currently installed. Please install before running this function." -Type Warning
-        return
     }
 
     $resourceAppIdMsGraph = '00000003-0000-0000-c000-000000000000'
