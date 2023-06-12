@@ -10,6 +10,7 @@
 | **IpRanges** | Write | StringArray[] | Specifies the IP ranges of the Named Location in Azure Active Directory | |
 | **IsTrusted** | Write | Boolean | Specifies the isTrusted value for the Named Location in Azure Active Directory | |
 | **CountriesAndRegions** | Write | StringArray[] | Specifies the countries and regions for the Named Location in Azure Active Directory | |
+| **CountryLookupMethod** | Write | String | Determines what method is used to decide which country the user is located in. Possible values are clientIpAddress(default) and authenticatorAppGps. | `clientIpAddress`, `authenticatorAppGps` |
 | **IncludeUnknownCountriesAndRegions** | Write | Boolean | Specifies the includeUnknownCountriesAndRegions value for the Named Location in Azure Active Directory | |
 | **Ensure** | Write | String | Specify if the Azure AD Named Location should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
