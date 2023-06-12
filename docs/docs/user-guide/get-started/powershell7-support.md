@@ -31,7 +31,7 @@ The PnP.PowerShell module, which is currently being used by the SharePoint Onlin
 Install-Module PnP.PowerShell -Force -Scope AllUsers
 ```
 
-The reason why this module needs to be loaded using WindowsPowerShell is because it tries to load its own version of the System.IdentityModel.Tokens assembly, which conflicts with the one used by the Microsoft.Graph.Authentication module. Microsoft365DSC often requires both modules to be loaded at the same time, which causes a conflict. By using the -UseWindowsPowerShell switch, we load the PnP.PowerShell module into its own separate runspace, which avoids the assembly conflicts. Having the PnP module installed under any path other than the Windows PowerShell one can result in oe of the issues listed below:
+The reason why this module needs to be loaded using WindowsPowerShell is because it tries to load its own version of the System.IdentityModel.Tokens assembly, which conflicts with the one used by the Microsoft.Graph.Authentication module. Microsoft365DSC often requires both modules to be loaded at the same time, which causes a conflict. By using the -UseWindowsPowerShell switch, we load the PnP.PowerShell module into its own separate runspace, which avoids the assembly conflicts. Having the PnP module installed under any path other than the Windows PowerShell one can result in one of the issues listed below:
 
 ```
 Exception: Powershell 7+ was detected. We need to load the PnP.PowerShell module using the -UseWindowsPowerShell switch which
