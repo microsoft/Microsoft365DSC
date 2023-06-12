@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADNamedLocationPolicy
+  * Added support forthe CountryLookupMethod property
+    FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
 * MISC
   * Removed dependency on the Az.Accounts module from the Update-M365DSCAzureAdApplication function.
 * DEPENDENCIES
