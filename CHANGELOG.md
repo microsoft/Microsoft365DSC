@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Adds support for specifying permissions by names or GUID.
 * AADNamedLocationPolicy
   * Added support forthe CountryLookupMethod property
     FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
