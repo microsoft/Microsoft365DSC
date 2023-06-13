@@ -15,6 +15,7 @@
 * DEPENDENCIES
   * Updated DSCParser to version 1.3.0.10.
   * Updated Microsoft.Graph dependencies to version 1.28.0.
+  * Updated MSCloudLoginAssistant to version 1.0.112.
 
 # 1.23.607.1
 
