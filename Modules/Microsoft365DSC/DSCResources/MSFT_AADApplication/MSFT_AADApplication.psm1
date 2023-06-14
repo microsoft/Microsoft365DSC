@@ -525,9 +525,22 @@ function Set-TargetResource
                 if ($permission.Type -eq 'Delegated')
                 {
                     $scope = $apiPrincipal.Oauth2PermissionScopes | Where-Object -FilterScript { $_.Value -eq $permission.Name }
-                    Write-Verbose -Message "Adding Delegated Permission {$($scope.Id)}"
+                    $scopeId = $null
+                    if ($null -eq $scope)
+                    {
+                        $ObjectGuid = [System.Guid]::empty
+                        if ([System.Guid]::TryParse($permission.Name,[System.Management.Automation.PSReference]$ObjectGuid))
+                        {
+                            $scopeId = $permission.Name
+                        }
+                    }
+                    else
+                    {
+                        $scopeId = $scope.Id
+                    }
+                    Write-Verbose -Message "Adding Delegated Permission {$($scopeId)}"
                     $delPermission = @{
-                        Id   = $scope.Id
+                        Id   = $scopeId
                         Type = 'Scope'
                     }
                     $currentAPIAccess.ResourceAccess += $delPermission
@@ -535,8 +548,21 @@ function Set-TargetResource
                 elseif ($permission.Type -eq 'AppOnly')
                 {
                     $role = $apiPrincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.Name }
+                    $roleId = $null
+                    if ($null -eq $role)
+                    {
+                        $ObjectGuid = [System.Guid]::empty
+                        if ([System.Guid]::TryParse($permission.Name,[System.Management.Automation.PSReference]$ObjectGuid))
+                        {
+                            $roleId = $permission.Name
+                        }
+                    }
+                    else
+                    {
+                        $roleId = $role.Id
+                    }
                     $appPermission = @{
-                        Id   = $role.Id
+                        Id   = $roleId
                         Type = 'Role'
                     }
                     $currentAPIAccess.ResourceAccess += $appPermission
@@ -858,8 +884,21 @@ function Get-M365DSCAzureADAppPermissions
             if ($resourceAccess.Type -eq 'Scope')
             {
                 $scopeInfo = $SourceAPI.Oauth2PermissionScopes | Where-Object -FilterScript { $_.Id -eq $resourceAccess.Id }
+                $scopeInfoValue = $null
+                if ($null -eq $scopeInfo)
+                {
+                    $ObjectGuid = [System.Guid]::empty
+                    if ([System.Guid]::TryParse($resourceAccess.Id,[System.Management.Automation.PSReference]$ObjectGuid))
+                    {
+                        $scopeInfoValue = $resourceAccess.Id
+                    }
+                }
+                else
+                {
+                    $scopeInfoValue = $scopeInfo.Value
+                }
                 $currentPermission.Add('Type', 'Delegated')
-                $currentPermission.Add('Name', $scopeInfo.Value)
+                $currentPermission.Add('Name', $scopeInfoValue)
                 $currentPermission.Add('AdminConsentGranted', $false)
 
                 $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
@@ -869,7 +908,7 @@ function Get-M365DSCAzureADAppPermissions
                     if ($null -ne $oAuth2grant)
                     {
                         $scopes = $oAuth2grant.Scope.Split(' ')
-                        if ($scopes.Contains($scopeInfo.Value))
+                        if ($scopes.Contains($scopeInfoValue.Value))
                         {
                             $currentPermission.AdminConsentGranted = $true
                         }
@@ -880,7 +919,20 @@ function Get-M365DSCAzureADAppPermissions
             {
                 $currentPermission.Add('Type', 'AppOnly')
                 $role = $SourceAPI.AppRoles | Where-Object -FilterScript { $_.Id -eq $resourceAccess.Id }
-                $currentPermission.Add('Name', $role.Value)
+                $roleValue = $null
+                if ($null -eq $role)
+                {
+                    $ObjectGuid = [System.Guid]::empty
+                    if ([System.Guid]::TryParse($resourceAccess.Id,[System.Management.Automation.PSReference]$ObjectGuid))
+                    {
+                        $roleValue = $resourceAccess.Id
+                    }
+                }
+                else
+                {
+                    $roleValue = $role.Value
+                }
+                $currentPermission.Add('Name', $roleValue)
                 $currentPermission.Add('AdminConsentGranted', $false)
 
                 $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
