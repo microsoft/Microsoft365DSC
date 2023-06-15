@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.614.1
 
 * AADApplication
   * Adds support for specifying permissions by names or GUID.
