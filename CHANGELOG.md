@@ -1,5 +1,22 @@
 # Change log for Microsoft365DSC
 
+# 1.23.614.1
+
+* AADApplication
+  * Adds support for specifying permissions by names or GUID.
+* AADNamedLocationPolicy
+  * Added support forthe CountryLookupMethod property
+    FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
+* TeamsAppPermissionPolicy
+  * Fixes an issue where the wrong app types were trying to get assigned.
+    FIXES [#3373](https://github.com/microsoft/Microsoft365DSC/issues/3373)
+* MISC
+  * Removed dependency on the Az.Accounts module from the Update-M365DSCAzureAdApplication function.
+* DEPENDENCIES
+  * Updated DSCParser to version 1.3.0.10.
+  * Updated Microsoft.Graph dependencies to version 1.28.0.
+  * Updated MSCloudLoginAssistant to version 1.0.112.
+
 # 1.23.607.1
 
 * AADAuthenticationStrengthPolicy
