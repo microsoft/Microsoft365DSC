@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SCProtectionAlert
+  * Prevents extracting system rules.
+    FIXES [#3224](https://github.com/microsoft/Microsoft365DSC/issues/3224)
+
 # 1.23.614.1
 
 * AADApplication
