@@ -1436,9 +1436,23 @@ function Update-M365DSCAzureAdApplication
                     ResourceAccess = @()
                 }
                 $role = $svcPrincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.PermissionName }
-                $appPermission = @{
-                    Id   = $role.Id
-                    Type = 'Role'
+                if ($null -eq $role)
+                {
+                    $ObjectGuid = [System.Guid]::empty
+                    if ([System.Guid]::TryParse($permission.PermissionName ,[System.Management.Automation.PSReference]$ObjectGuid))
+                    {
+                        $appPermission = @{
+                            Id   = $permission.PermissionName
+                            Type = 'Role'
+                        }
+                    }
+                }
+                else
+                {
+                    $appPermission = @{
+                        Id   = $role.Id
+                        Type = 'Role'
+                    }
                 }
                 $currentAPIAccess.ResourceAccess += $appPermission
                 $permissionsSet = $true
