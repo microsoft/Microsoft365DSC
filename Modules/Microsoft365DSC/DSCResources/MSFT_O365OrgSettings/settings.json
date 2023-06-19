@@ -7,11 +7,17 @@
                 "read": [
                     {
                         "name": "Application.Read.All"
+                    },
+                    {
+                        "name": "ReportSettings.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Application.ReadWrite.All"
+                    },
+                    {
+                        "name": "ReportSettings.ReadWrite.All"
                     }
                 ]
             },
@@ -19,11 +25,17 @@
                 "read": [
                     {
                         "name": "Application.Read.All"
+                    },
+                    {
+                        "name": "ReportSettings.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Application.ReadWrite.All"
+                    },
+                    {
+                        "name": "ReportSettings.ReadWrite.All"
                     }
                 ]
             }
@@ -31,6 +43,32 @@
         "exchange": {
             "requiredroles": [],
             "requiredrolegroups": []
+        },
+        "ProjectWorkManagement": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "OrgSettings-Planner.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "OrgSettings-Planner.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "OrgSettings-Planner.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "OrgSettings-Planner.ReadWrite.All"
+                    }
+                ]
+            }
         }
     }
 }
