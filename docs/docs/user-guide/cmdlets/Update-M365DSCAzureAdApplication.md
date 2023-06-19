@@ -40,6 +40,12 @@ This function does not generate any output.
 | CertificatePath | False | String |  |  |  |
 | CreateSelfSignedCertificate | False | SwitchParameter |  |  |  |
 | AdminConsent | False | SwitchParameter |  |  |  |
+| Credential | False | PSCredential |  |  |  |
+| ApplicationId | False | String |  |  |  |
+| TenantId | False | String |  |  |  |
+| ApplicationSecret | False | PSCredential |  |  |  |
+| CertificateThumbprint | False | String |  |  |  |
+| ManagedIdentity | False | SwitchParameter |  |  |  |
 | Message | True | String |  |  |  |
 | Type | False | String | Info | Error, Warning, Info |  |
 
@@ -47,14 +53,14 @@ This function does not generate any output.
 
 -------------------------- EXAMPLE 1 --------------------------
 
-`Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'}) -AdminConsent -Type Secret`
+`Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'}) -AdminConsent -Type Secret -Credential $creds`
 
 -------------------------- EXAMPLE 2 --------------------------
 
-`Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='Graph';PermissionName='Domain.Read.All'}) -AdminConsent -Type Certificate -CreateSelfSignedCertificate -CertificatePath c:\Temp\M365DSC.cer`
+`Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='Graph';PermissionName='Domain.Read.All'}) -AdminConsent  -Credential $creds -Type Certificate -CreateSelfSignedCertificate -CertificatePath c:\Temp\M365DSC.cer`
 
 -------------------------- EXAMPLE 3 --------------------------
 
-`Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'},@{Api='Graph';PermissionName='Group.ReadWrite.All'},@{Api='Exchange';PermissionName='Exchange.ManageAsApp'}) -AdminConsent -Type Certificate -CertificatePath c:\Temp\M365DSC.cer`
+`Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'},@{Api='Graph';PermissionName='Group.ReadWrite.All'},@{Api='Exchange';PermissionName='Exchange.ManageAsApp'}) -AdminConsent -Credential $creds -Type Certificate -CertificatePath c:\Temp\M365DSC.cer`
 
 
