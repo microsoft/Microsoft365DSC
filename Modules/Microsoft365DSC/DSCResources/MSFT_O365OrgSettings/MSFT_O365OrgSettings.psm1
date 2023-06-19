@@ -55,11 +55,6 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
-    {
-        throw 'This resource is not able to remove Org Settings settings and therefore only accepts Ensure=Present.'
-    }
-
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
         -ProfileName 'v1.0'
@@ -102,7 +97,6 @@ function Get-TargetResource
             M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
             PlannerAllowCalendarSharing                = $PlannerSettings.allowCalendarSharing
             AdminCenterReportDisplayConcealedNames     = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
-            Ensure                                     = 'Present'
             Credential                                 = $Credential
             ApplicationId                              = $ApplicationId
             TenantId                                   = $TenantId
@@ -212,10 +206,6 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Setting the Planner Allow Calendar Sharing setting to {$PlannerAllowCalendarSharing}"
         Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing
-
-        Write-Verbose -Message "Updating the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
-        Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
-            -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
     }
 
     $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
@@ -383,20 +373,17 @@ function Export-TargetResource
         $Results = Get-TargetResource @Params
 
         $dscContent = ''
-        if ($Results.Ensure -eq 'Present')
-        {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -Credential $Credential
+        $dscContent += $currentDSCBlock
 
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-        }
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
         Write-Host $Global:M365DSCEmojiGreenCheckMark
 
         return $dscContent
