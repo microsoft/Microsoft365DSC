@@ -62,6 +62,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
             }
+
+            Mock -CommandName Get-M365DSCO365OrgSettingsPlannerConfig -MockWith {
+                return @{
+                    allowCalendarSharing = $false
+                }
+            }
         }
 
         # Test contexts
@@ -74,7 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     InstallationOptionsAppsForMac              = @('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')
                     InstallationOptionsAppsForWindows          = @('isVisioEnabled', 'isMicrosoft365AppsEnabled', 'isProjectEnabled')
                     InstallationOptionsUpdateChannel           = 'current'
-                    Ensure                                     = 'Present'
+                    PlannerAllowCalendarSharing                = $False
                     Credential                                 = $Credential
                 }
 
@@ -86,7 +92,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
                 (Get-TargetResource @testParams).M365WebEnableUsersToOpenFilesFrom3PStorage | Should -Be $False
             }
 
@@ -102,7 +107,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AdminCenterReportDisplayConcealedNames     = $True;
                     IsSingleInstance                           = 'Yes'
                     M365WebEnableUsersToOpenFilesFrom3PStorage = $True;
-                    Ensure                                     = 'Present'
                     Credential                                 = $Credential
                 }
 
@@ -114,7 +118,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
                 (Get-TargetResource @testParams).M365WebEnableUsersToOpenFilesFrom3PStorage | Should -Be $False
             }
 

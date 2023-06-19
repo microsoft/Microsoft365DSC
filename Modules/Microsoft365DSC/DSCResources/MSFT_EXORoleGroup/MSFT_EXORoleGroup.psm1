@@ -208,7 +208,6 @@ function Set-TargetResource
     $NewRoleGroupParams = @{
         Name        = $Name
         Description = $Description
-        Members     = $Members
         Roles       = $Roles
         Confirm     = $false
     }
@@ -222,6 +221,10 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Role Group '$($Name)' does not exist but it should. Create and configure it."
         # Create Role Group
+        if ($Members.Length -gt 0)
+        {
+            $NewRoleGroupParams.Add("Members", $Members)
+        }
         New-RoleGroup @NewRoleGroupParams
     }
     # CASE: Role Group exists but it shouldn't;

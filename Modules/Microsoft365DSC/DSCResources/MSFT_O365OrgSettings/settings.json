@@ -9,7 +9,7 @@
                         "name": "Application.Read.All"
                     },
                     {
-                        "name": "OrgSettings-Microsoft365Install.Read.All"
+                        "name": "ReportSettings.Read.All"
                     }
                 ],
                 "update": [
@@ -17,7 +17,7 @@
                         "name": "Application.ReadWrite.All"
                     },
                     {
-                        "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
+                        "name": "ReportSettings.ReadWrite.All"
                     }
                 ]
             },
@@ -27,7 +27,7 @@
                         "name": "Application.Read.All"
                     },
                     {
-                        "name": "OrgSettings-Microsoft365Install.Read.All"
+                        "name": "ReportSettings.Read.All"
                     }
                 ],
                 "update": [
@@ -35,7 +35,10 @@
                         "name": "Application.ReadWrite.All"
                     },
                     {
-                        "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
+                        "name": "ReportSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "83f7232f-763c-47b2-a097-e35d2cbe1da5"
                     }
                 ]
             }
@@ -43,6 +46,32 @@
         "exchange": {
             "requiredroles": [],
             "requiredrolegroups": []
+        },
+        "ProjectWorkManagement": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "OrgSettings-Planner.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "OrgSettings-Planner.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "OrgSettings-Planner.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "OrgSettings-Planner.ReadWrite.All"
+                    }
+                ]
+            }
         }
     }
 }
