@@ -74,7 +74,7 @@ function Get-TargetResource
         -InboundParameters $PSBoundParameters `
         -ProfileName 'beta'
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'Tasks' `
+    $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -121,7 +121,7 @@ function Get-TargetResource
 
         $AdminCenterReportDisplayConcealedNamesValue = Get-M365DSCOrgSettingsAdminCenterReport
 
-        $installationOptions = Get-M365DSCOrgSettingsInstallationOptions
+        $installationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
         $appsForWindowsValue = @()
         foreach ($key in $installationOptions.appsForWindows.Keys)
         {
@@ -293,7 +293,9 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows") -or $PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac"))
     {
-        $InstallationOptions = Get-M365DSCOrgSettingsInstallationOptions
+        $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
+            -InboundParameters $PSBoundParameters
+        $InstallationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
         $InstallationOptionsToUpdate = @{
             updateChannel = ""
             appsForWindows = @{
@@ -345,7 +347,8 @@ function Set-TargetResource
         if ($InstallationOptionsToUpdate.Keys.Count -gt 0)
         {
             Write-Verbose -Message "Updating O365 Installation Options with $(Convert-M365DscHashtableToString -Hashtable $InstallationOptionsToUpdate)"
-            Update-M365DSCOrgSettingsInstallationOptions -Options $InstallationOptionsToUpdate
+            Update-M365DSCOrgSettingsInstallationOptions -Options $InstallationOptionsToUpdate `
+                -AuthenticationOption $ConnectionModeTasks
         }
     }
 }
@@ -607,10 +610,30 @@ function Get-M365DSCOrgSettingsInstallationOptions
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
-    param()
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AuthenticationOption
+    )
 
-    $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
-    $results = Invoke-MgGraphRequest -Method GET -Uri $url
+    try
+    {
+        $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
+        $results = Invoke-MgGraphRequest -Method GET -Uri $url
+    }
+    catch
+    {
+        if ($_.Exception.ToString().Contains('Forbidden (Forbidden)'))
+        {
+            if ($AuthenticationOption -eq 'Credentials')
+            {
+                $errorMessage = "You don't have the proper permissions to retrieve the Office 365 Apps Installation Options." `
+                    + " When using Credentials to authenticate, you need to grant permissions to the Microsoft Graph PowerShell SDK by running" `
+                    + " Connect-MgGraph -Scopes OrgSettings-Microsoft365Install.Read.All"
+                Write-Error -Message $errorMessage
+            }
+        }
+    }
     return $results
 }
 
@@ -621,10 +644,31 @@ function Update-M365DSCOrgSettingsInstallationOptions
     param(
         [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
-        $Options
+        $Options,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AuthenticationOption
     )
-    $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
-    Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+
+    try
+    {
+        $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+    }
+    catch
+    {
+        if ($_.Exception.ToString().Contains('Forbidden (Forbidden)'))
+        {
+            if ($AuthenticationOption -eq 'Credentials')
+            {
+                $errorMessage = "You don't have the proper permissions to retrieve the Office 365 Apps Installation Options." `
+                    + " When using Credentials to authenticate, you need to grant permissions to the Microsoft Graph PowerShell SDK by running" `
+                    + " Connect-MgGraph -Scopes OrgSettings-Microsoft365Install.ReadWrite.All"
+                Write-Error -Message $errorMessage
+            }
+        }
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource
