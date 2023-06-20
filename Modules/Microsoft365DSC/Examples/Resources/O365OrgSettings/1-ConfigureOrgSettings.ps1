@@ -21,6 +21,7 @@ Configuration Example
             Credential                                 = $Credscredential;
             IsSingleInstance                           = "Yes";
             M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
+            PlannerAllowCalendarSharing                = $False
         }
     }
 }

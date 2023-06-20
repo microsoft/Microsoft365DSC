@@ -19,6 +19,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $PlannerAllowCalendarSharing,
+
+        [Parameter()]
+        [System.Boolean]
         $MicrosoftVivaBriefingEmail,
 
         [Parameter()]
@@ -40,6 +44,21 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AdminCenterReportDisplayConcealedNames,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('current', 'monthlyEnterprise', 'semiAnnual')]
+        $InstallationOptionsUpdateChannel,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isVisioEnabled', 'isSkypeForBusinessEnabled', 'isProjectEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForWindows,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForMac,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -71,14 +90,12 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
-    {
-        throw 'This resource is not able to remove Org Settings settings and therefore only accepts Ensure=Present.'
-    }
-
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName 'beta'
+
+    $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
+        -InboundParameters $PSBoundParameters
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
@@ -105,6 +122,8 @@ function Get-TargetResource
         $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
         $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled'
 
+        $PlannerSettings = Get-M365DSCO365OrgSettingsPlannerConfig
+
         $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
         $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled'
 
@@ -118,18 +137,53 @@ function Get-TargetResource
 
         # Viva Insightss settings
         $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig
+        $MRODeviceManagerService = 'ebe0c285-db95-403f-a1a3-a793bd6d7767'
+        try
+        {
+            $servicePrincipal = Get-MgServicePrincipal -Filter "appid eq 'ebe0c285-db95-403f-a1a3-a793bd6d7767'"
+            if ($null -eq $servicePrincipal)
+            {
+                Write-Verbose -Message "Registering the MRO Device Manager Service Principal"
+                New-MgServicePrincipal -AppId 'ebe0c285-db95-403f-a1a3-a793bd6d7767' -ErrorAction Stop | Out-Null
+            }
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+
         $AdminCenterReportDisplayConcealedNamesValue = Get-M365DSCOrgSettingsAdminCenterReport
+
+        $installationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
+        $appsForWindowsValue = @()
+        foreach ($key in $installationOptions.appsForWindows.Keys)
+        {
+            if ($installationOptions.appsForWindows.$key)
+            {
+                $appsForWindowsValue += $key
+            }
+        }
+        $appsForMacValue = @()
+        foreach ($key in $installationOptions.appsForMac.Keys)
+        {
+            if ($installationOptions.appsForMac.$key)
+            {
+                $appsForMacValue += $key
+            }
+        }
+
         return @{
             IsSingleInstance                             = 'Yes'
             CortanaEnabled                               = $CortanaEnabledValue.AccountEnabled
-            M365WebEnableUsersToOpenFilesFrom3PStorage   = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
+            PlannerAllowCalendarSharing                  = $PlannerSettings.allowCalendarSharing
             AdminCenterReportDisplayConcealedNames       = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
-            MicrosoftVivaBriefingEmail                   = $vivaBriefingEmailValue
+            InstallationOptionsUpdateChannel             = $installationOptions.updateChannel
+            InstallationOptionsAppsForWindows            = $appsForWindowsValue
+            InstallationOptionsAppsForMac                = $appsForMacValue
             VivaInsightsWebExperience                    = $currentVivaInsightsSettings.IsDashboardEnabled
             VivaInsightsDigestEmail                      = $currentVivaInsightsSettings.IsDigestEmailEnabled
             VivaInsightsOutlookAddInAndInlineSuggestions = $currentVivaInsightsSettings.IsAddInEnabled
             VivaInsightsScheduleSendSuggestions          = $currentVivaInsightsSettings.IsScheduleSendEnabled
-            Ensure                                       = 'Present'
             Credential                                   = $Credential
             ApplicationId                                = $ApplicationId
             TenantId                                     = $TenantId
@@ -138,7 +192,6 @@ function Get-TargetResource
             Managedidentity                              = $ManagedIdentity.IsPresent
         }
     }
-    catch
     {
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
@@ -170,6 +223,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $PlannerAllowCalendarSharing,
+
+        [Parameter()]
+        [System.Boolean]
         $MicrosoftVivaBriefingEmail,
 
         [Parameter()]
@@ -191,6 +248,21 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AdminCenterReportDisplayConcealedNames,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('current', 'monthlyEnterprise', 'semiAnnual')]
+        $InstallationOptionsUpdateChannel,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isVisioEnabled', 'isSkypeForBusinessEnabled', 'isProjectEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForWindows,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForMac,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -240,22 +312,26 @@ function Set-TargetResource
     #endregion
 
     Write-Verbose -Message 'Setting configuration of Office 365 Settings'
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+    $currentValues = Get-TargetResource @PSBoundParameters
 
-    $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
-    $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
-    if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled)
+    if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $currentValues.M365WebEnableUsersToOpenFilesFrom3PStorage)
     {
-        Write-Verbose -Message "Updating the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
-        Update-MgServicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
+        Write-Verbose -Message "Setting the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
+        $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
+        $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled, Id'
+        Update-MgservicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
             -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
+    }
+    if ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing)
+    {
+        Write-Verbose -Message "Setting the Planner Allow Calendar Sharing setting to {$PlannerAllowCalendarSharing}"
+        Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing
     }
 
     $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
     $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
-    if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled)
+    if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled -and `
+        $CortanaEnabledValue.Id -ne $null)
     {
         Write-Verbose -Message "Updating the Cortana setting to {$CortanaEnabled}"
         Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
@@ -285,6 +361,67 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the Admin Center Report Display Concealed Names setting to {$AdminCenterReportDisplayConcealedNames}"
         Update-M365DSCOrgSettingsAdminCenterReport -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
     }
+
+    if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows") -or $PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac"))
+    {
+        $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
+            -InboundParameters $PSBoundParameters
+        $InstallationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
+        $InstallationOptionsToUpdate = @{
+            updateChannel = ""
+            appsForWindows = @{
+                isMicrosoft365AppsEnabled = $false
+                isProjectEnabled          = $false
+                isSkypeForBusinessEnabled = $false
+                isVisioEnabled            = $false
+            }
+            appsForMac = @{
+                isMicrosoft365AppsEnabled = $false
+                isSkypeForBusinessEnabled = $false
+            }
+        }
+
+        if ($PSBoundParameters.ContainsKey("InstallationOptionsUpdateChannel") -and `
+            ($InstallationOptionsUpdateChannel -ne $InstallationOptions.updateChannel))
+        {
+            $InstallationOptionsToUpdate.updateChannel = $InstallationOptionsUpdateChannel
+        }
+        else
+        {
+            $InstallationOptionsToUpdate.Remove('updateChannel') | Out-Null
+        }
+
+        if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows"))
+        {
+            foreach ($key in $InstallationOptionsAppsForWindows)
+            {
+                $InstallationOptionsToUpdate.appsForWindows.$key = $true
+            }
+        }
+        else
+        {
+            $InstallationOptionsToUpdate.Remove('appsForWindows') | Out-Null
+        }
+
+        if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac"))
+        {
+            foreach ($key in $InstallationOptionsAppsForMac)
+            {
+                $InstallationOptionsToUpdate.appsForMac.$key = $true
+            }
+        }
+        else
+        {
+            $InstallationOptionsToUpdate.Remove('appsForMac') | Out-Null
+        }
+
+        if ($InstallationOptionsToUpdate.Keys.Count -gt 0)
+        {
+            Write-Verbose -Message "Updating O365 Installation Options with $(Convert-M365DscHashtableToString -Hashtable $InstallationOptionsToUpdate)"
+            Update-M365DSCOrgSettingsInstallationOptions -Options $InstallationOptionsToUpdate `
+                -AuthenticationOption $ConnectionModeTasks
+        }
+    }
 }
 
 function Test-TargetResource
@@ -305,6 +442,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
+
+        [Parameter()]
+        [System.Boolean]
+        $PlannerAllowCalendarSharing,
 
         [Parameter()]
         [System.Boolean]
@@ -329,6 +470,21 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AdminCenterReportDisplayConcealedNames,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('current', 'monthlyEnterprise', 'semiAnnual')]
+        $InstallationOptionsUpdateChannel,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isVisioEnabled', 'isSkypeForBusinessEnabled', 'isProjectEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForWindows,
+
+        [Parameter()]
+        [System.String[]]
+        [ValidateSet('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')]
+        $InstallationOptionsAppsForMac,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -421,7 +577,7 @@ function Export-TargetResource
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -ProfileName 'beta'
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -450,20 +606,17 @@ function Export-TargetResource
         $Results = Get-TargetResource @Params
 
         $dscContent = ''
-        if ($Results.Ensure -eq 'Present')
-        {
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -Credential $Credential
+        $dscContent += $currentDSCBlock
 
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-        }
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
         Write-Host $Global:M365DSCEmojiGreenCheckMark
 
         return $dscContent
@@ -480,6 +633,40 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-M365DSCO365OrgSettingsPlannerConfig
+{
+    [CmdletBinding()]
+    param()
+    $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + "/taskAPI/tenantAdminSettings/Settings";
+    $results = Invoke-RestMethod -ContentType "application/json;odata.metadata=full" `
+        -Headers @{"Accept"="application/json"; "Authorization"=$Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; "Accept-Charset"="UTF-8"; "OData-Version"="4.0;NetFx"; "OData-MaxVersion"="4.0;NetFx"} `
+        -Method GET `
+        $Uri
+    return $results
+}
+
+function Set-M365DSCO365OrgSettingsPlannerConfig
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $AllowCalendarSharing
+    )
+
+    $flags = @{
+        allowCalendarSharing = $AllowCalendarSharing
+    }
+
+    $requestBody = $flags | ConvertTo-Json
+    $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + "/taskAPI/tenantAdminSettings/Settings";
+    $results = Invoke-RestMethod -ContentType "application/json;odata.metadata=full" `
+        -Headers @{"Accept"="application/json"; "Authorization"=$Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; "Accept-Charset"="UTF-8"; "OData-Version"="4.0;NetFx"; "OData-MaxVersion"="4.0;NetFx"} `
+        -Method PATCH `
+        -Body $requestBody `
+        $Uri
 }
 
 function Get-M365DSCOrgSettingsAdminCenterReport
@@ -508,6 +695,71 @@ function Update-M365DSCOrgSettingsAdminCenterReport
         displayConcealedNames = $DisplayConcealedNames
     }
     Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $body | Out-Null
+}
+
+function Get-M365DSCOrgSettingsInstallationOptions
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AuthenticationOption
+    )
+
+    try
+    {
+        $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
+        $results = Invoke-MgGraphRequest -Method GET -Uri $url
+    }
+    catch
+    {
+        if ($_.Exception.ToString().Contains('Forbidden (Forbidden)'))
+        {
+            if ($AuthenticationOption -eq 'Credentials')
+            {
+                $errorMessage = "You don't have the proper permissions to retrieve the Office 365 Apps Installation Options." `
+                    + " When using Credentials to authenticate, you need to grant permissions to the Microsoft Graph PowerShell SDK by running" `
+                    + " Connect-MgGraph -Scopes OrgSettings-Microsoft365Install.Read.All"
+                Write-Error -Message $errorMessage
+            }
+        }
+    }
+    return $results
+}
+
+function Update-M365DSCOrgSettingsInstallationOptions
+{
+    [CmdletBinding()]
+    [OutputType([Void])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Options,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $AuthenticationOption
+    )
+
+    try
+    {
+        $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+    }
+    catch
+    {
+        if ($_.Exception.ToString().Contains('Forbidden (Forbidden)'))
+        {
+            if ($AuthenticationOption -eq 'Credentials')
+            {
+                $errorMessage = "You don't have the proper permissions to retrieve the Office 365 Apps Installation Options." `
+                    + " When using Credentials to authenticate, you need to grant permissions to the Microsoft Graph PowerShell SDK by running" `
+                    + " Connect-MgGraph -Scopes OrgSettings-Microsoft365Install.ReadWrite.All"
+                Write-Error -Message $errorMessage
+            }
+        }
+    }
 }
 
 Export-ModuleMember -Function *-TargetResource

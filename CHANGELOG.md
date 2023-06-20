@@ -2,8 +2,54 @@
 
 # UNRELEASED
 
+* EXORoleGroup
+  * Fixes an issue where the role group wasn't getting created when members were null.
+    FIXES [#3217](https://github.com/microsoft/Microsoft365DSC/issues/3217)
 * O365OrgSettings
+  * Added support for the PlannerAllowCalendarSharing property for Planner.
+  * Added support for the Microsoft 365 installation options.
   * Added support for the Viva Insights and Briefing email settings.
+* SCProtectionAlert
+  * Prevents extracting system rules.
+    FIXES [#3224](https://github.com/microsoft/Microsoft365DSC/issues/3224)
+* MISC
+  * Fixes the display of arrays as property values for Excel based reports from New-M365DSCReportFromConfiguration.
+    FIXES [#3173](https://github.com/microsoft/Microsoft365DSC/issues/3173)
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 5.3.0.
+  * Updated MSCloudLoginAssistant to version 1.0.114.
+
+# 1.23.614.1
+
+* AADApplication
+  * Adds support for specifying permissions by names or GUID.
+* AADNamedLocationPolicy
+  * Added support forthe CountryLookupMethod property
+    FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
+* TeamsAppPermissionPolicy
+  * Fixes an issue where the wrong app types were trying to get assigned.
+    FIXES [#3373](https://github.com/microsoft/Microsoft365DSC/issues/3373)
+* MISC
+  * Removed dependency on the Az.Accounts module from the Update-M365DSCAzureAdApplication function.
+* DEPENDENCIES
+  * Updated DSCParser to version 1.3.0.10.
+  * Updated Microsoft.Graph dependencies to version 1.28.0.
+  * Updated MSCloudLoginAssistant to version 1.0.112.
+
+# 1.23.607.1
+
+* AADAuthenticationStrengthPolicy
+  * Removed the validateset from the AllowedCombinations property due to incomplete full list of possible values.
+* EXOQuarantinePolicy
+  * Fixes an issue where GlobalQurantinePolicy properties can't be updated.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fixes an issue for policies with template endpointSecurityAntivirus that had a templateId not expected by the code
+    FIXES [#3360](https://github.com/microsoft/Microsoft365DSC/issues/3360)
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Fixes an issue with Set-TargetResource when an array is empty
+    FIXES [#3355](https://github.com/microsoft/Microsoft365DSC/issues/3355)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.166.
 
 # 1.23.524.1
 

@@ -50,73 +50,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     displayConcealedNames = $true
                 }
             }
+
+            Mock -CommandName Get-M365DSCOrgSettingsInstallationOptions -MockWith {
+                return @{
+                    '@odata.context' = 'https://graph.microsoft.com/beta/$metadata#admin/microsoft365Apps/installationOptions/$entity'
+                    updateChannel = 'current'
+                    appsForMac = @{
+                        isSkypeForBusinessEnabled = $True
+                        isMicrosoft365AppsEnabled = $true
+                    }
+                    appsForWindows = @{
+                        isVisioEnabled            = $True
+                        isSkypeForBusinessEnabled = $False
+                        isMicrosoft365AppsEnabled = $true
+                        isProjectEnabled          = $true
+                    }
+                }
+            }
+
+            Mock -CommandName Get-M365DSCO365OrgSettingsPlannerConfig -MockWith {
+                return @{
+                    allowCalendarSharing = $false
+                }
+            }
         }
 
         # Test contexts
         Context -Name 'When Org Settings are already in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    IsSingleInstance                             = 'Yes'
-                    AdminCenterReportDisplayConcealedNames       = $True;
-                    M365WebEnableUsersToOpenFilesFrom3PStorage   = $False
-                    MicrosoftVivaBriefingEmail                   = $True
-                    VivaInsightsWebExperience                    = $true
-                    VivaInsightsDigestEmail                      = $true
-                    VivaInsightsOutlookAddInAndInlineSuggestions = $true
-                    VivaInsightsScheduleSendSuggestions          = $true
-                    Ensure                                       = 'Present'
-                    Credential                                   = $Credential
-                }
-
-                Mock -CommandName Get-MgServicePrincipal -MockWith {
-                    return @{
-                        AccountEnabled = $False
-                    }
-                }
-
-                Mock -CommandName Get-DefaultTenantBriefingConfig -MockWith {
-                    return @{
-                        PrivacyMode = 'opt-in'
-                    }
-                }
-
-                Mock -CommandName Get-DefaultTenantMyAnalyticsFeatureConfig -MockWith {
-                    return @{
-                        IsDashboardEnabled    = $true
-                        IsDigestEmailEnabled  = $true
-                        IsAddInEnabled        = $true
-                        IsScheduleSendEnabled = $true
-                    }
-                }
-            }
-
-            It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                (Get-TargetResource @testParams).M365WebEnableUsersToOpenFilesFrom3PStorage | Should -Be $False
-            }
-
-            It 'Should return false from the Test method' {
-                (Test-TargetResource @testParams) | Should -Be $true
-            }
-        }
-
-        # Test contexts
-        Context -Name 'When Org Settings NOT in the Desired State' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    IsSingleInstance                             = 'Yes'
-                    AdminCenterReportDisplayConcealedNames       = $True;
-                    M365WebEnableUsersToOpenFilesFrom3PStorage   = $True
-                    MicrosoftVivaBriefingEmail                   = $True
-                    VivaInsightsWebExperience                    = $true
-                    VivaInsightsDigestEmail                      = $true
-                    VivaInsightsOutlookAddInAndInlineSuggestions = $true
-                    VivaInsightsScheduleSendSuggestions          = $true
-                    Ensure                                       = 'Present'
-                    Credential                                   = $Credential
+                    AdminCenterReportDisplayConcealedNames     = $True;
                     IsSingleInstance                           = 'Yes'
-                    M365WebEnableUsersToOpenFilesFrom3PStorage = $True;
-                    Ensure                                     = 'Present'
+                    M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
+                    InstallationOptionsAppsForMac              = @('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')
+                    InstallationOptionsAppsForWindows          = @('isVisioEnabled', 'isMicrosoft365AppsEnabled', 'isProjectEnabled')
+                    InstallationOptionsUpdateChannel           = 'current'
+                    MicrosoftVivaBriefingEmail                   = $True
+                    VivaInsightsWebExperience                    = $true
+                    VivaInsightsDigestEmail                      = $true
+                    VivaInsightsOutlookAddInAndInlineSuggestions = $true
+                    VivaInsightsScheduleSendSuggestions          = $true
+                    PlannerAllowCalendarSharing                = $False
                     Credential                                 = $Credential
                 }
 
@@ -143,7 +117,56 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return Present from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+                (Get-TargetResource @testParams).M365WebEnableUsersToOpenFilesFrom3PStorage | Should -Be $False
+            }
+
+            It 'Should return false from the Test method' {
+                (Test-TargetResource @testParams) | Should -Be $true
+            }
+        }
+
+        # Test contexts
+        Context -Name 'When Org Settings NOT in the Desired State' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    IsSingleInstance                             = 'Yes'
+                    AdminCenterReportDisplayConcealedNames       = $True;
+                    M365WebEnableUsersToOpenFilesFrom3PStorage   = $True
+                    MicrosoftVivaBriefingEmail                   = $True
+                    VivaInsightsWebExperience                    = $true
+                    VivaInsightsDigestEmail                      = $true
+                    VivaInsightsOutlookAddInAndInlineSuggestions = $true
+                    VivaInsightsScheduleSendSuggestions          = $true
+                    Ensure                                       = 'Present'
+                    Credential                                   = $Credential
+                    IsSingleInstance                           = 'Yes'
+                    M365WebEnableUsersToOpenFilesFrom3PStorage = $True;
+                    Credential                                 = $Credential
+                }
+
+                Mock -CommandName Get-MgServicePrincipal -MockWith {
+                    return @{
+                        AccountEnabled = $False
+                    }
+                }
+
+                Mock -CommandName Get-DefaultTenantBriefingConfig -MockWith {
+                    return @{
+                        PrivacyMode = 'opt-in'
+                    }
+                }
+
+                Mock -CommandName Get-DefaultTenantMyAnalyticsFeatureConfig -MockWith {
+                    return @{
+                        IsDashboardEnabled    = $true
+                        IsDigestEmailEnabled  = $true
+                        IsAddInEnabled        = $true
+                        IsScheduleSendEnabled = $true
+                    }
+                }
+            }
+
+            It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).M365WebEnableUsersToOpenFilesFrom3PStorage | Should -Be $False
             }
 

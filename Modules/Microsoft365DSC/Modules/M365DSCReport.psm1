@@ -1,5 +1,139 @@
 <#
 .Description
+This function creates a new Markdown document from the specified exported configuration
+
+.Functionality
+Internal, Hidden
+#>
+
+Function New-M365DSCConfigurationToMarkdown
+  {
+      [CmdletBinding()]
+      [OutputType([System.String])]
+      param
+      (
+          [Parameter()]
+          [Array]
+          $ParsedContent,
+  
+          [Parameter()]
+          [System.String]
+          $OutputPath,
+  
+          [Parameter()]
+          [System.String]
+          $TemplateName,
+  
+          [Parameter()]
+          [Switch]
+          $SortProperties
+      )
+  
+      $crlf = "`r`n"
+      if ([System.String]::IsNullOrEmpty($TemplateName))
+      {
+          $TemplateName = 'Configuration Report'
+      }
+  
+      Write-Output 'Generating Markdown report'
+      $fullMD = "# " + $TemplateName + $crlf
+  
+      $totalCount = $parsedContent.Count
+      $currentCount = 0
+      foreach ($resource in $parsedContent)
+      {
+          # Create a new table for each resource
+          $percentage = [math]::Round(($currentCount / $totalCount) * 100, 2)
+          Write-Progress -Activity 'Processing generated DSC Object' -Status ("{0:N2} completed - $($resource.ResourceName)" -f $percentage) -PercentComplete $percentage
+  
+          $fullMD += "## " + $resource.ResourceInstanceName + $crlf
+          $fullMD += "|Item|Value|`r`n"
+          $fullMD += "|:---|:---|`r`n"
+          if ($SortProperties)
+          {
+              $properties = $resource.Keys | Sort-Object
+          }
+          else
+          {
+              $properties = $resource.Keys
+          }
+  
+          foreach ($property in $properties)
+          {
+              if ($property -ne 'ResourceName' `
+              -and $property -ne 'ApplicationId' `
+              -and $property -ne 'CertificateThumbprint' `
+              -and $property -ne 'TenantId')
+              {
+                  # Create each row in the table
+                  # This first bit is the property in column 1
+                  $partMD += "|**" + $property + "**|"
+                  $value = "`$Null"
+                  # And then the value in column 2
+                  if ($null -ne $resource.$property)
+                  {
+                      if ($resource.$property.GetType().Name -eq 'Object[]')
+                      {
+                          if ($resource.$property -and ($resource.$property[0].GetType().Name -eq 'Hashtable' -or
+                                  $resource.$property[0].GetType().Name -eq 'OrderedDictionary'))
+                          {
+                              $value = ''
+                              foreach ($entry in $resource.$property)
+                              {
+                                  foreach ($key in $entry.Keys)
+                                  {
+                                      $value += "$key = $($entry.$key)<br>"
+                                  }
+                                  $value +=  '<br>'
+                              }
+                          }
+                          else
+                          {
+                              $temp = $resource.$property -join ','
+                              [array]$components = $temp.Split(',')
+                              if ($components.Length -gt 0 -and
+                                  -not [System.String]::IsNullOrEmpty($temp))
+                              {
+                                  $Value = ''
+                                  foreach ($comp in $components)
+                                  {
+                                      $value += "$comp<br>"
+                                  }
+                                  $value += '<br>'
+                              }
+                          }
+                      }
+                      else
+                      # strings are easy
+                      {
+                          if (-not [System.String]::IsNullOrEmpty($resource.$property))
+                          {
+                              $value = ($resource.$property).ToString() + "|"
+                          }
+                      }
+                  }
+                  $partMD += $value + $crlf
+              }
+          }
+  
+          $fullMD += $partMD + $crlf
+          $partMD = ""
+  
+          $currentCount++
+      }
+  
+      if (-not [System.String]::IsNullOrEmpty($OutputPath))
+      {
+          Write-Output 'Saving Markdown report'
+          $fullMD | Out-File $OutputPath
+      }
+  
+      Write-Output 'Completed generating Markdown report'
+  }
+
+
+<#
+.Description
 This function creates a new HTML document from the specified exported configuration
 
 .Functionality
@@ -278,7 +412,7 @@ function New-M365DSCConfigurationToExcel
                     {
                         if ($resource.$property.GetType().Name -eq 'Object[]')
                         {
-                            $value = $resource.$property -join ','
+                            $value = $resource.$property | Out-String
                             $report.Cells.Item($row, 3) = $value
                         }
                         else
@@ -365,7 +499,7 @@ function New-M365DSCReportFromConfiguration
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidateSet('Excel', 'HTML', 'JSON')]
+        [ValidateSet('Excel', 'HTML', 'JSON', 'Markdown')]
         [System.String]
         $Type,
 
@@ -408,6 +542,12 @@ function New-M365DSCReportFromConfiguration
         'JSON'
         {
             New-M365DSCConfigurationToJSON -ParsedContent $parsedContent -OutputPath $OutputPath
+        }
+        'Markdown'
+        {
+            $template = Get-Item $ConfigurationPath
+            $templateName = $Template.Name.Split('.')[0]
+            New-M365DSCConfigurationToMarkdown -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
         }
     }
 }
