@@ -9,6 +9,9 @@
 | **M365WebEnableUsersToOpenFilesFrom3PStorage** | Write | Boolean | Let users open files stored in third-party storage services in Microsoft 365 on the Web. | |
 | **PlannerAllowCalendarSharing** | Write | Boolean | Allow Planner users to publish their plans and assigned tasks to Outlook or other calendars through iCalendar feeds. | |
 | **AdminCenterReportDisplayConcealedNames** | Write | Boolean | Controls whether or not the Admin Center reports will conceale user, group and site names. | |
+| **InstallationOptionsUpdateChannel** | Write | String | Defines how often you want your users to get feature updates for Microsoft 365 apps installed on devices running Windows | `current`, `monthlyEnterprise`, `semiAnnual` |
+| **InstallationOptionsAppsForWindows** | Write | StringArray[] | Defines the apps users can install on Windows and mobile devices. | `isVisioEnabled`, `isSkypeForBusinessEnabled`, `isProjectEnabled`, `isMicrosoft365AppsEnabled` |
+| **InstallationOptionsAppsForMac** | Write | StringArray[] | Defines the apps users can install on Mac devices. | `isSkypeForBusinessEnabled`, `isMicrosoft365AppsEnabled` |
 | **Credential** | Write | PSCredential | Credentials of the Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
