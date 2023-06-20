@@ -46,6 +46,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
+            Mock -CommandName Get-M365DSCOrgSettingsInstallationOptions -MockWith {
+                return @{
+                    '@odata.context' = 'https://graph.microsoft.com/beta/$metadata#admin/microsoft365Apps/installationOptions/$entity'
+                    updateChannel = 'current'
+                    appsForMac = @{
+                        isSkypeForBusinessEnabled = $True
+                        isMicrosoft365AppsEnabled = $true
+                    }
+                    appsForWindows = @{
+                        isVisioEnabled            = $True
+                        isSkypeForBusinessEnabled = $False
+                        isMicrosoft365AppsEnabled = $true
+                        isProjectEnabled          = $true
+                    }
+                }
+            }
+
             Mock -CommandName Get-M365DSCO365OrgSettingsPlannerConfig -MockWith {
                 return @{
                     allowCalendarSharing = $false
@@ -60,6 +77,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AdminCenterReportDisplayConcealedNames     = $True;
                     IsSingleInstance                           = 'Yes'
                     M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
+                    InstallationOptionsAppsForMac              = @('isSkypeForBusinessEnabled', 'isMicrosoft365AppsEnabled')
+                    InstallationOptionsAppsForWindows          = @('isVisioEnabled', 'isMicrosoft365AppsEnabled', 'isProjectEnabled')
+                    InstallationOptionsUpdateChannel           = 'current'
                     PlannerAllowCalendarSharing                = $False
                     Credential                                 = $Credential
                 }

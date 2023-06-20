@@ -7,6 +7,7 @@
     FIXES [#3217](https://github.com/microsoft/Microsoft365DSC/issues/3217)
 * O365OrgSettings
   * Added support for the PlannerAllowCalendarSharing property for Planner.
+  * Added support for the Microsoft 365 installation options.
 * SCProtectionAlert
   * Prevents extracting system rules.
     FIXES [#3224](https://github.com/microsoft/Microsoft365DSC/issues/3224)
