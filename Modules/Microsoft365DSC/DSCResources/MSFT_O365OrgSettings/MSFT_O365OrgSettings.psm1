@@ -130,7 +130,7 @@ function Get-TargetResource
         # Microsoft Viva Briefing Email
         $vivaBriefingEmailValue = $false
         $currentBriefingConfig = Get-DefaultTenantBriefingConfig
-        if ($currentBriefingConfig.PrivacyMode -eq 'opt-in')
+        if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
         {
             $vivaBriefingEmailValue = $true
         }
@@ -180,6 +180,8 @@ function Get-TargetResource
             InstallationOptionsUpdateChannel             = $installationOptions.updateChannel
             InstallationOptionsAppsForWindows            = $appsForWindowsValue
             InstallationOptionsAppsForMac                = $appsForMacValue
+            MicrosoftVivaBriefingEmail                   = $vivaBriefingEmailValue
+            M365WebEnableUsersToOpenFilesFrom3PStorage   = $M365WebEnableUsersToOpenFilesFrom3PStorageValue
             VivaInsightsWebExperience                    = $currentVivaInsightsSettings.IsDashboardEnabled
             VivaInsightsDigestEmail                      = $currentVivaInsightsSettings.IsDigestEmailEnabled
             VivaInsightsOutlookAddInAndInlineSuggestions = $currentVivaInsightsSettings.IsAddInEnabled

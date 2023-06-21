@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-DefaultTenantBriefingConfig -MockWith {
                     return @{
-                        PrivacyMode = 'opt-in'
+                        IsEnabledByDefault = 'opt-in'
                     }
                 }
 
@@ -149,7 +149,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-DefaultTenantBriefingConfig -MockWith {
                     return @{
-                        PrivacyMode = 'opt-in'
+                        IsEnabledByDefault = 'opt-in'
                     }
                 }
 
@@ -194,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-DefaultTenantBriefingConfig -MockWith {
                     return @{
-                        PrivacyMode = 'opt-in'
+                        IsEnabledByDefault = 'opt-in'
                     }
                 }
 
