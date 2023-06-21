@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fixes an issue where the domain part of the user name was handled as a string when using credentials to authenticate.
 * EXORoleGroup
   * Fixes an issue where the role group wasn't getting created when members were null.
     FIXES [#3217](https://github.com/microsoft/Microsoft365DSC/issues/3217)
