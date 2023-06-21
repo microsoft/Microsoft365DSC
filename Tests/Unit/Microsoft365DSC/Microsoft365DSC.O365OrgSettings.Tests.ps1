@@ -139,9 +139,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     VivaInsightsScheduleSendSuggestions          = $true
                     Ensure                                       = 'Present'
                     Credential                                   = $Credential
-                    IsSingleInstance                           = 'Yes'
-                    M365WebEnableUsersToOpenFilesFrom3PStorage = $True;
-                    Credential                                 = $Credential
                 }
 
                 Mock -CommandName Get-MgServicePrincipal -MockWith {
