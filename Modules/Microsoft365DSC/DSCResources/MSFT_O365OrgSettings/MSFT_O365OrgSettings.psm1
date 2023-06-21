@@ -192,6 +192,7 @@ function Get-TargetResource
             Managedidentity                              = $ManagedIdentity.IsPresent
         }
     }
+    catch
     {
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
