@@ -181,7 +181,7 @@ function Get-TargetResource
             InstallationOptionsAppsForWindows            = $appsForWindowsValue
             InstallationOptionsAppsForMac                = $appsForMacValue
             MicrosoftVivaBriefingEmail                   = $vivaBriefingEmailValue
-            M365WebEnableUsersToOpenFilesFrom3PStorage   = $M365WebEnableUsersToOpenFilesFrom3PStorageValue
+            M365WebEnableUsersToOpenFilesFrom3PStorage   = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
             VivaInsightsWebExperience                    = $currentVivaInsightsSettings.IsDashboardEnabled
             VivaInsightsDigestEmail                      = $currentVivaInsightsSettings.IsDigestEmailEnabled
             VivaInsightsOutlookAddInAndInlineSuggestions = $currentVivaInsightsSettings.IsAddInEnabled
