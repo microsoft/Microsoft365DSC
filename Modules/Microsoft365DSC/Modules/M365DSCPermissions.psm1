@@ -63,8 +63,22 @@ function Get-M365DSCCompiledPermissionList
     }
 
     $results = @{
-        Read               = @()
-        Update             = @()
+        Read               = @(
+            @{
+                Permission = @{
+                    Name = "Organization.Read.All"
+                    Type = "Application"
+                }
+            }
+        )
+        Update             = @(
+            @{
+                Permission = @{
+                    Name = "Organization.Read.All"
+                    Type = "Application"
+                }
+            }
+        )
         RequiredRoles      = @()
         RequiredRoleGroups = @()
     }

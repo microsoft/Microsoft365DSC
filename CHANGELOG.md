@@ -20,6 +20,8 @@
 * MISC
   * Fixes the display of arrays as property values for Excel based reports from New-M365DSCReportFromConfiguration.
     FIXES [#3173](https://github.com/microsoft/Microsoft365DSC/issues/3173)
+  * Added the Organization.Read.All permission by default in the Get-M365DSCCompiledPermisisonList cmdlet return values.
+    FIXES [#3292](https://github.com/microsoft/Microsoft365DSC/issues/3292)
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.3.0.
   * Updated MSCloudLoginAssistant to version 1.0.114.
