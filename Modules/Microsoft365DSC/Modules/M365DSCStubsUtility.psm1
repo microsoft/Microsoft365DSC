@@ -48,7 +48,8 @@ function New-M365DSCStubFiles
     if ($null -eq $Workloads)
     {
         $workloads = @(
-            @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' },
+            @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement';}, # This is the main EXO module with new cmdlets.
+            @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' }, # This is the EXO Proxy
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement'; },
@@ -207,20 +208,15 @@ function New-M365DSCStubFiles
                             {
                                 $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft.Teams.') -or `
-                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier``1[Microsoft."))
-                            {
-                                $ParamType = 'PSObject'
-                            }
                             elseif ($ParamType.StartsWith('Microsoft.Rtc.'))
                             {
                                 $ParamType = 'PSObject'
                             }
-                            elseif ($ParamType.StartsWith('Microsoft.SharePoint.') -or `
-                                    $ParamType.StartsWith('Microsoft.Online') -or `
+                            elseif ($ParamType.StartsWith('Microsoft.') -or `
                                     $ParamType.StartsWith('PnP.') -or `
                                     $ParamType.StartsWith("System.Nullable``1[Microsoft.") -or `
-                                    $ParamType.StartsWith("System.Nullable``1[PnP."))
+                                    $ParamType.StartsWith("System.Nullable``1[PnP.") -or `
+                                    $ParamType.StartsWith("System.Management.Automation.PSListModifier``1[Microsoft."))
                             {
                                 $ParamType = 'PSObject'
                             }

@@ -1,5 +1,32 @@
 # Change log for Microsoft365DSC
 
+# 1.23.621.1
+
+* AADAdministrativeUnit
+  * Fixes an issue where the domain part of the user name was handled as a string when using credentials to authenticate.
+* EXORoleGroup
+  * Fixes an issue where the role group wasn't getting created when members were null.
+    FIXES [#3217](https://github.com/microsoft/Microsoft365DSC/issues/3217)
+* O365OrgSettings
+  * Added support for the PlannerAllowCalendarSharing property for Planner.
+  * Added support for the Microsoft 365 installation options.
+  * Added support for the Viva Insights and Briefing email settings.
+* PPTenantIsolationSettings & PPTenantSettings
+  * Handles the case where required permissions are not provided when using SPN authentication.
+    FIXES [#3179](https://github.com/microsoft/Microsoft365DSC/issues/3179)
+* SCProtectionAlert
+  * Prevents extracting system rules.
+    FIXES [#3224](https://github.com/microsoft/Microsoft365DSC/issues/3224)
+* MISC
+  * Fixes the display of arrays as property values for Excel based reports from New-M365DSCReportFromConfiguration.
+    FIXES [#3173](https://github.com/microsoft/Microsoft365DSC/issues/3173)
+  * Added the Organization.Read.All permission by default in the Get-M365DSCCompiledPermisisonList cmdlet return values.
+    FIXES [#3292](https://github.com/microsoft/Microsoft365DSC/issues/3292)
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.2.0.
+  * Updated MicrosoftTeams to version 5.3.0.
+  * Updated MSCloudLoginAssistant to version 1.0.114.
+
 # 1.23.614.1
 
 * AADApplication
@@ -95,7 +122,6 @@
 * AADCrossTenantAccessPolicyConfigurationPartner
   * Initial release
     FIXES [#3253](https://github.com/microsoft/Microsoft365DSC/issues/3253)
-
 * IntuneSettingCatalogCustomPolicyWindows10
   * Initial release
   FIXES [#2692](https://github.com/microsoft/Microsoft365DSC/issues/2692),

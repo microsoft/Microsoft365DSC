@@ -412,7 +412,7 @@ function New-M365DSCConfigurationToExcel
                     {
                         if ($resource.$property.GetType().Name -eq 'Object[]')
                         {
-                            $value = $resource.$property -join ','
+                            $value = $resource.$property | Out-String
                             $report.Cells.Item($row, 3) = $value
                         }
                         else

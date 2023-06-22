@@ -28,7 +28,12 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
         $settings = ConvertFrom-Json -InputObject $json
         foreach ($permission in $settings.permissions.graph.delegated.read)
         {
-            $permission.Name | Should -BeIn $allPermissions
+            # Only validate non-GUID (hidden) permissions.
+            $ObjectGuid = [System.Guid]::empty
+            if (-not [System.Guid]::TryParse($permission.Name  ,[System.Management.Automation.PSReference]$ObjectGuid))
+            {
+                $permission.Name | Should -BeIn $allPermissions
+            }
         }
     }
 }
