@@ -11,12 +11,17 @@
   * Added support for the PlannerAllowCalendarSharing property for Planner.
   * Added support for the Microsoft 365 installation options.
   * Added support for the Viva Insights and Briefing email settings.
+* PPTenantIsolationSettings & PPTenantSettings
+  * Handles the case where required permissions are not provided when using SPN authentication.
+    FIXES [#3179](https://github.com/microsoft/Microsoft365DSC/issues/3179)
 * SCProtectionAlert
   * Prevents extracting system rules.
     FIXES [#3224](https://github.com/microsoft/Microsoft365DSC/issues/3224)
 * MISC
   * Fixes the display of arrays as property values for Excel based reports from New-M365DSCReportFromConfiguration.
     FIXES [#3173](https://github.com/microsoft/Microsoft365DSC/issues/3173)
+  * Added the Organization.Read.All permission by default in the Get-M365DSCCompiledPermisisonList cmdlet return values.
+    FIXES [#3292](https://github.com/microsoft/Microsoft365DSC/issues/3292)
 * DEPENDENCIES
   * Updated ExchangeOnlineManagement to version 3.2.0.
   * Updated MicrosoftTeams to version 5.3.0.

@@ -45,12 +45,12 @@
             "application": {
                 "read": [
                     {
-                        "name": "NotSupported"
+                        "name": "Policy.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "NotSupported"
+                        "name": "Policy.ReadWrite.ConditionalAccess"
                     }
                 ]
             }
