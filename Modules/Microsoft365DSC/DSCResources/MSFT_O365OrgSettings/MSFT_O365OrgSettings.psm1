@@ -499,7 +499,7 @@ function Set-TargetResource
     {
         $briefingValue = 'opt-in'
     }
-    Set-DefaultTenantBriefingConfig -PrivacyMode $briefingValue | Out-Null
+    Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue | Out-Null
 
     # Viva Insights
     Write-Verbose -Message "Updating Viva Insights settings."
@@ -1098,6 +1098,7 @@ function Update-M365DSCOrgSettingsForms
 
     try
     {
+        Write-Verbose -Message "Updating Forms Settings"
         $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
         #Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
@@ -1139,6 +1140,7 @@ function Update-M365DSCOrgSettingsDynamicsCustomerVoice
 
     try
     {
+        Write-Verbose -Message "Updating Dynamics Customer Voice Settings"
         $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
         #Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
@@ -1179,6 +1181,7 @@ function Update-M365DSCOrgSettingsAppsAndServices
 
     try
     {
+        Write-Verbose -Message "Updating App & Services Settings"
         $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
         #Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
@@ -1219,6 +1222,7 @@ function Update-M365DSCOrgSettingsToDo
 
     try
     {
+        Write-Verbose -Message "Updating To Do Settings"
         $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
         #Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
