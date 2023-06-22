@@ -18,6 +18,7 @@
   * Fixes the display of arrays as property values for Excel based reports from New-M365DSCReportFromConfiguration.
     FIXES [#3173](https://github.com/microsoft/Microsoft365DSC/issues/3173)
 * DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.2.0.
   * Updated MicrosoftTeams to version 5.3.0.
   * Updated MSCloudLoginAssistant to version 1.0.114.
 
