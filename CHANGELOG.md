@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.621.1
 
 * AADAdministrativeUnit
   * Fixes an issue where the domain part of the user name was handled as a string when using credentials to authenticate.
@@ -23,6 +23,7 @@
   * Added the Organization.Read.All permission by default in the Get-M365DSCCompiledPermisisonList cmdlet return values.
     FIXES [#3292](https://github.com/microsoft/Microsoft365DSC/issues/3292)
 * DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.2.0.
   * Updated MicrosoftTeams to version 5.3.0.
   * Updated MSCloudLoginAssistant to version 1.0.114.
 
