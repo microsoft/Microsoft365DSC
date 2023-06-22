@@ -427,6 +427,11 @@ function Export-TargetResource
     try
     {
         $settings = Get-TenantSettings -ErrorAction Stop
+
+        if ($settings.StatusCode -eq 403)
+        {
+            throw "Invalid permission for the application. If you are using a custom app registration to authenticate, make sure it is defined as a Power Platform admin management application."
+        }
         $dscContent = ''
 
         $Params = @{
