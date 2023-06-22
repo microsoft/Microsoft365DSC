@@ -11,6 +11,9 @@
   * Added support for the PlannerAllowCalendarSharing property for Planner.
   * Added support for the Microsoft 365 installation options.
   * Added support for the Viva Insights and Briefing email settings.
+* PPTenantIsolationSettings & PPTenantSettings
+  * Handles the case where required permissions are not provided when using SPN authentication.
+    FIXES [#3179](https://github.com/microsoft/Microsoft365DSC/issues/3179)
 * SCProtectionAlert
   * Prevents extracting system rules.
     FIXES [#3224](https://github.com/microsoft/Microsoft365DSC/issues/3224)
