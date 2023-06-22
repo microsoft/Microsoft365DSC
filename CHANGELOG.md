@@ -10,6 +10,7 @@
 * O365OrgSettings
   * Added support for the PlannerAllowCalendarSharing property for Planner.
   * Added support for the Microsoft 365 installation options.
+  * Added support for the Viva Insights and Briefing email settings.
 * SCProtectionAlert
   * Prevents extracting system rules.
     FIXES [#3224](https://github.com/microsoft/Microsoft365DSC/issues/3224)
@@ -115,7 +116,6 @@
 * AADCrossTenantAccessPolicyConfigurationPartner
   * Initial release
     FIXES [#3253](https://github.com/microsoft/Microsoft365DSC/issues/3253)
-
 * IntuneSettingCatalogCustomPolicyWindows10
   * Initial release
   FIXES [#2692](https://github.com/microsoft/Microsoft365DSC/issues/2692),

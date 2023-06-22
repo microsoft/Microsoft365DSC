@@ -4,6 +4,11 @@ class MSFT_O365OrgSettings : OMI_BaseResource
     [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'"), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Allow Cortana in windows 10 (version 1909 and earlier), and the Cortana app on iOS and Android, to access Microsoft-hosted data on behalf of people in your organization.")] Boolean CortanaEnabled;
     [Write, Description("Let users open files stored in third-party storage services in Microsoft 365 on the Web.")] Boolean M365WebEnableUsersToOpenFilesFrom3PStorage;
+    [Write, Description("Specifies whether or not to let people in your organization receive Briefing email from Microsoft Viva.")] Boolean MicrosoftVivaBriefingEmail;
+    [Write, Description("Specifies whether or not to allow users to have access to use the Viva Insights web experience.")] Boolean VivaInsightsWebExperience;
+    [Write, Description("Specifies whether or not to allow users to have access to use the Viva Insights digest email feature.")] Boolean VivaInsightsDigestEmail;
+    [Write, Description("Specifies whether or not to allow users to have access to use the Viva Insights Outlook add-in and inline suggestions.")] Boolean VivaInsightsOutlookAddInAndInlineSuggestions;
+    [Write, Description("Specifies whether or not to allow users to have access to use the Viva Insights schedule send suggestions feature.")] Boolean VivaInsightsScheduleSendSuggestions;
     [Write, Description("Allow Planner users to publish their plans and assigned tasks to Outlook or other calendars through iCalendar feeds.")] Boolean PlannerAllowCalendarSharing;
     [Write, Description("Controls whether or not the Admin Center reports will conceale user, group and site names.")] Boolean AdminCenterReportDisplayConcealedNames;
     [Write, Description("Defines how often you want your users to get feature updates for Microsoft 365 apps installed on devices running Windows"), ValueMap{"current","monthlyEnterprise","semiAnnual"}, Values{"current","monthlyEnterprise","semiAnnual"}] String InstallationOptionsUpdateChannel;
