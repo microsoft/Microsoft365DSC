@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.621.1
 
 * AADAdministrativeUnit
   * Fixes an issue where the domain part of the user name was handled as a string when using credentials to authenticate.
