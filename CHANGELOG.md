@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOAvailabilityConfig
+  * Fixes an error where an error was thrown when the OrgWideAccount wasn't set.
+    FIXES [#3402](https://github.com/microsoft/Microsoft365DSC/issues/3402)
 * DEPENDENCIES
   * Updated ReverseDSC to version 2.0.0.16.
 
