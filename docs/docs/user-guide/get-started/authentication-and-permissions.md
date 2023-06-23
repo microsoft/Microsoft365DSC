@@ -213,7 +213,7 @@ If you want to leverage Service Principal Authentication (using an App Registrat
 <li><p><strong>Create a new Service Principal and associate it with your app registration:</strong></p>
 <p>Start by connecting to the Security and Compliance PowerShell module and run the following line to create the service principal. The cmdlets refer below won't be available if you don't connect first (use the Connect-IPPSsession cmdlet). The AppID and ObjectID represent the application id and its object id. You can retrieve these by navigating to your app instance on the Azure Portal or by leveraging the Get-MgApplication cmdlet from the Graph PowerShell SDK. In my case, my custom App Registration in Azure AD is named "MySCApp" and I am giving the name SC-SPN to the new service principal I am creating.</p>
 
-<a href="/Images/AppIDRetrieval.png"><img src="/Images/AppIDRetrieval.png" alt="Retrieving an app registration id from the Azure portal." /></a>
+<a href="/Images/AppIdRetrieval.png"><img src="/Images/AppIdRetrieval.png" alt="Retrieving an app registration id from the Azure portal." /></a>
 
 <a href="/Images/CreatingNewSPForSC.png"><img src="/Images/CreatingNewSPForSC.png" alt="PowerShell Script to create a service principal" /></a>
 
@@ -233,7 +233,6 @@ $SPN = Get-ServicePrincipal -Identity "SC-SPN"
 Add-RoleGroupMember -Identity eDiscoveryManager -Member $SPN.ObjectId
 ```
 </li>
-</ol>
 
 <li>
 <p><strong>Add the Service Principal as a case admin:</strong>
@@ -248,13 +247,13 @@ Add-eDiscoveryCaseAdmin -User $SPN.Name
 ```
 </p>
 </li>
-
 <li><p><strong>Grant your app registration the Compliance Administrator role:</strong></p>
 <p>The last required step is to add your app registration to the Compliance Administrator role.</p>
 
 <a href="/Images/AddComplianceAdmin.png"><img src="/Images/AddComplianceAdmin.png" alt="Add your app registration to the compliance administrator role." /></a>
 </li>
 
+</ol>
 <p>We are now ready to authenticate using our app registration to test and confirm that all is working as expected. To do so, you can use the Connect-M365Tenant cmdlet and pass it the information related to your app registration. Below is an example using our app registration. Replace the appid, tenantid and certificatethumbprint parameters by your own. If you are getting an error connecting, you probably haven't granted the Exchange ManageAsApp permission to your app as described in the following article: <a href="https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#step-2-assign-api-permissions-to-the-application">https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#step-2-assign-api-permissions-to-the-application</a></p>
 
 <a href="/Images/GetComplianceCase.png"><img src="/Images/GetComplianceCase.png" alt="Connecting using your app registration and retrieving cases." /></a>
