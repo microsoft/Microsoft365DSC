@@ -49,7 +49,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
             }
-
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
         }
         # Test contexts
         Context -Name 'The IntuneSettingCatalogCustomPolicyWindows10 should exist but it DOES NOT' -Fixture {

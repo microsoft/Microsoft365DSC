@@ -784,9 +784,10 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $CreateParameters
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
 
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
+        <#$AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -794,7 +795,7 @@ function Set-TargetResource
                 $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
                 $CreateParameters.remove($keyName)
             }
-        }
+        }#>
 
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
@@ -807,13 +808,13 @@ function Set-TargetResource
             }
         }
 
-        if ($AdditionalProperties)
+        <#if ($AdditionalProperties)
         {
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
-        }
+        }#>
 
         #region resource generator code
-        $policy = New-MgDeviceManagementDeviceConfiguration @CreateParameters
+        $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -834,9 +835,10 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+        $UpdateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $UpdateParameters
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
-        $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
+        <#$AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($UpdateParameters)
         foreach ($key in $AdditionalProperties.keys)
         {
             if ($key -ne '@odata.type')
@@ -844,7 +846,7 @@ function Set-TargetResource
                 $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
                 $UpdateParameters.remove($keyName)
             }
-        }
+        }#>
 
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
@@ -857,13 +859,14 @@ function Set-TargetResource
             }
         }
 
-        if ($AdditionalProperties)
+        <#if ($AdditionalProperties)
         {
             $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
-        }
+        }#>
 
         #region resource generator code
-        Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
+        Update-MgDeviceManagementDeviceConfiguration `
+            -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)

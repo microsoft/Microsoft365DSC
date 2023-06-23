@@ -300,8 +300,81 @@ function Get-TargetResource
             $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
         }
         #endregion
-
-
+        $complexAppsHideList = @()
+        $currentValueArray = $getValue.AdditionalProperties.appsHideList
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexAppsHideList += $currentHash
+            }
+        }
+        $complexAppsLaunchBlockList = @()
+        $currentValueArray = $getValue.AdditionalProperties.appsLaunchBlockList
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexAppsLaunchBlockList += $currentHash
+            }
+        }
+        $complexAppsInstallAllowList = @()
+        $currentValueArray = $getValue.AdditionalProperties.appsInstallAllowList
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexAppsInstallAllowList += $currentHash
+            }
+        }
+        $complexCompliantAppsList = @()
+        $currentValueArray = $getValue.AdditionalProperties.compliantAppsList
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexCompliantAppsList += $currentHash
+            }
+        }
+        $complexKioskModeApps = @()
+        $currentValueArray = $getValue.AdditionalProperties.kioskModeApps
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexKioskModeApps += $currentHash
+            }
+        }
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Nothing with id {$id} was found"
@@ -315,6 +388,10 @@ function Get-TargetResource
             Id                                             = $getValue.Id
             Description                                    = $getValue.Description
             DisplayName                                    = $getValue.DisplayName
+            AppsHideList                                   = $complexAppsHideList
+            AppsInstallAllowList                           = $complexAppsInstallAllowList
+            AppsLaunchBlockList                            = $complexAppsLaunchBlockList
+            KioskModeApps                                  = $complexKioskModeApps
             AppsBlockClipboardSharing                      = $getValue.AdditionalProperties.appsBlockClipboardSharing
             AppsBlockCopyPaste                             = $getValue.AdditionalProperties.appsBlockCopyPaste
             AppsBlockYouTube                               = $getValue.AdditionalProperties.appsBlockYouTube
@@ -324,6 +401,7 @@ function Get-TargetResource
             CellularBlockMessaging                         = $getValue.AdditionalProperties.cellularBlockMessaging
             CellularBlockVoiceRoaming                      = $getValue.AdditionalProperties.cellularBlockVoiceRoaming
             CellularBlockWiFiTethering                     = $getValue.AdditionalProperties.cellularBlockWiFiTethering
+            CompliantAppsList                              = $complexCompliantAppsList
             CompliantAppListType                           = $getValue.AdditionalProperties.compliantAppListType
             DateAndTimeBlockChanges                        = $getValue.AdditionalProperties.dateAndTimeBlockChanges
             DeviceSharingAllowed                           = $getValue.AdditionalProperties.deviceSharingAllowed
@@ -360,8 +438,6 @@ function Get-TargetResource
             WebBrowserBlockPopups                          = $getValue.AdditionalProperties.webBrowserBlockPopups
             WebBrowserCookieSettings                       = $getValue.AdditionalProperties.webBrowserCookieSettings
             WiFiBlocked                                    = $getValue.AdditionalProperties.wiFiBlocked
-
-
             Ensure                                         = 'Present'
             Credential                                     = $Credential
             ApplicationId                                  = $ApplicationId
@@ -369,26 +445,6 @@ function Get-TargetResource
             ApplicationSecret                              = $ApplicationSecret
             CertificateThumbprint                          = $CertificateThumbprint
             Managedidentity                                = $ManagedIdentity.IsPresent
-        }
-        if ($getValue.additionalProperties.appsHideList)
-        {
-            $results.Add('AppsHideList', $getValue.additionalProperties.appsHideList)
-        }
-        if ($getValue.additionalProperties.appsInstallAllowList)
-        {
-            $results.Add('AppsInstallAllowList', $getValue.additionalProperties.appsInstallAllowList)
-        }
-        if ($getValue.additionalProperties.appsLaunchBlockList)
-        {
-            $results.Add('AppsLaunchBlockList', $getValue.additionalProperties.appsLaunchBlockList)
-        }
-        if ($getValue.additionalProperties.compliantAppsList)
-        {
-            $results.Add('CompliantAppsList', $getValue.additionalProperties.compliantAppsList)
-        }
-        if ($getValue.additionalProperties.kioskModeApps)
-        {
-            $results.Add('KioskModeApps', $getValue.additionalProperties.kioskModeApps)
         }
 
         $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
@@ -1103,35 +1159,19 @@ function Test-TargetResource
     }
     $testResult = $true
 
+    #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
     {
-        if ($PSBoundParameters[$key].getType().Name -like '*CimInstance*')
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($source.getType().Name -like '*CimInstance*')
         {
+            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            $CIMArraySource = @()
-            $CIMArrayTarget = @()
-            $CIMArraySource += $PSBoundParameters[$key]
-            $CIMArrayTarget += $CurrentValues.$key
-            if ($CIMArraySource.count -ne $CIMArrayTarget.count)
-            {
-                Write-Verbose -Message "Configuration drift:Number of items does not match: Source=$($CIMArraySource.count) Target=$($CIMArrayTarget.count)"
-                $testResult = $false
-                break
-            }
-            $i = 0
-            foreach ($item in $CIMArraySource )
-            {
-                $testResult = Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $CIMArraySource[$i]) `
-                    -Target ($CIMArrayTarget[$i])
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target) -verbose
 
-                $i++
-                if (-Not $testResult)
-                {
-                    $testResult = $false
-                    break
-                }
-            }
             if (-Not $testResult)
             {
                 $testResult = $false
@@ -1142,27 +1182,14 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Id') | Out-Null
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    #Convert any DateTime to String
-    foreach ($key in $ValuesToCheck.Keys)
-    {
-        if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
-        {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
-        }
-    }
-
     if ($testResult)
     {
+        $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+        $ValuesToCheck.Remove('Id') | Out-Null
+
+        Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+        Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `

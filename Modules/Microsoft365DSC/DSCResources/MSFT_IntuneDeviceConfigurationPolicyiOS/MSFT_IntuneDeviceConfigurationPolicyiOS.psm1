@@ -1042,19 +1042,117 @@ function Get-TargetResource
             CertificateThumbprint                          = $CertificateThumbprint
         }
 
-        $results.Add('AppsSingleAppModeList', $getValue.additionalProperties.appsSingleAppModeList)
-        $results.Add('AppsVisibilityList', $getValue.additionalProperties.appsVisibilityList)
-        $results.Add('CompliantAppsList', $getValue.additionalProperties.compliantAppsList)
-        $results.Add('MediaContentRatingAustralia', $getValue.additionalProperties.mediaContentRatingAustralia)
-        $results.Add('MediaContentRatingCanada', $getValue.additionalProperties.mediaContentRatingCanada)
+        $complexAppsSingleAppModeList = @()
+        $currentValueArray = $getValue.AdditionalProperties.appsSingleAppModeList
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexAppsSingleAppModeList += $currentHash
+            }
+        }
+        $results.Add('AppsSingleAppModeList', $complexAppsSingleAppModeList)
+
+        $complexAppsVisibilityList= @()
+        $currentValueArray = $getValue.AdditionalProperties.appsVisibilityList
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexAppsVisibilityList += $currentHash
+            }
+        }
+        $results.Add('AppsVisibilityList', $complexAppsVisibilityList)
+
+        $complexCompliantAppsList = @()
+        $currentValueArray = $getValue.AdditionalProperties.compliantAppsList
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexCompliantAppsList += $currentHash
+            }
+        }
+        $results.Add('CompliantAppsList', $complexCompliantAppsList)
+
+        $ratingCountries = @(
+            'Australia'
+            'Canada'
+            'France'
+            'Germany'
+            'Ireland'
+            'Japan'
+            'NewZealand'
+            'UnitedKingdom'
+            'UnitedStates'
+        )
+        foreach ($country in $ratingCountries)
+        {
+            $complexMediaContentRating= @{}
+            $currentValue = $getValue.AdditionalProperties."mediaContentRating$country"
+            if ($null -ne $currentValue)
+            {
+                $complexMediaContentRating.Add('MovieRating',$currentValue.movieRating.toString())
+                $complexMediaContentRating.Add('TvRating',$currentValue.tvRating.toString())
+            }
+            $results.Add("MediaContentRating$country", $complexMediaContentRating)
+        }
+        <#$results.Add('MediaContentRatingCanada', $getValue.additionalProperties.mediaContentRatingCanada)
         $results.Add('MediaContentRatingFrance', $getValue.additionalProperties.mediaContentRatingFrance)
         $results.Add('MediaContentRatingGermany', $getValue.additionalProperties.mediaContentRatingGermany)
         $results.Add('MediaContentRatingIreland', $getValue.additionalProperties.mediaContentRatingIreland)
         $results.Add('MediaContentRatingJapan', $getValue.additionalProperties.mediaContentRatingJapan)
         $results.Add('MediaContentRatingNewZealand', $getValue.additionalProperties.mediaContentRatingNewZealand)
         $results.Add('MediaContentRatingUnitedKingdom', $getValue.additionalProperties.mediaContentRatingUnitedKingdom)
-        $results.Add('MediaContentRatingUnitedStates', $getValue.additionalProperties.mediaContentRatingUnitedStates)
-        $results.Add('NetworkUsageRules', $getValue.additionalProperties.networkUsageRules)
+        $results.Add('MediaContentRatingUnitedStates', $getValue.additionalProperties.mediaContentRatingUnitedStates)#>
+
+        $complexNetworkUsageRules = @()
+        $currentValueArray = $getValue.AdditionalProperties.networkUsageRules
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentValueHash = @{}
+                $currentValueHash.Add('CellularDataBlocked',$currentValue.cellularDataBlocked)
+                $currentValueHash.Add('CellularDataBlockWhenRoaming',$currentValue.cellularDataBlockWhenRoaming)
+                $complexManagedApps = @()
+                $currentValueChildArray = $currentValue.managedApps
+                if ($null -ne $currentValueChildArray -and $currentValueChildArray.count -gt 0 )
+                {
+                    foreach($currentChildValue in $currentValueChildArray)
+                    {
+                        $currentHash = @{}
+                        $currentHash.add('AppId',$currentValue.appid)
+                        $currentHash.add('Publisher',$currentValue.publisher)
+                        $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                        $currentHash.add('Name',$currentValue.name)
+                        $currentHash.add('oDataType',$currentValue.'@odata.type')
+                        $complexManagedApps += $currentHash
+                    }
+                }
+                $currentValueHash.Add('ManagedApps',$complexManagedApps)
+                $complexNetworkUsageRules += $currentValueHash
+            }
+        }
+        $results.Add('NetworkUsageRules', $complexNetworkUsageRules)
 
         $returnAssignments = @()
         $returnAssignments += Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
@@ -2866,10 +2964,11 @@ function Test-TargetResource
 
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
-                -Target ($target)
+                -Target ($target) -verbose
 
             if (-Not $testResult)
             {
+                Write-Verbose -Message "Drift detected for the complex object key: $key"
                 $testResult = $false
                 break
             }
@@ -2878,33 +2977,19 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Id') | Out-Null
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    #Convert any DateTime to String
-    foreach ($key in $ValuesToCheck.Keys)
-    {
-        if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
-        {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
-        }
-    }
-
     if ($testResult)
     {
+        $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+        $ValuesToCheck.Remove('Id') | Out-Null
+
+        Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+        Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
             -ValuesToCheck $ValuesToCheck.Keys
     }
-
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
     return $testResult

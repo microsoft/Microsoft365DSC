@@ -419,7 +419,7 @@ function Set-TargetResource
             questionText = 'text'
         }
         $resource = Rename-M365DSCCimInstanceParameter -Properties $resource `
-            -Mapping $mapping
+            -KeyMapping $mapping
 
         #region resource generator code
         $resourceRequest = @{

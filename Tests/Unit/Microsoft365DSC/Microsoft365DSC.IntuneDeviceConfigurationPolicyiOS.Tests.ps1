@@ -42,7 +42,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Remove-MgDeviceManagementDeviceConfiguration -MockWith {
             }
-
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
@@ -71,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AppleWatchBlockPairing                         = $True
                     AppleWatchForceWristDetection                  = $True
                     AppRemovalBlocked                              = $True
-                    AppsSingleAppModeList                          = @(
+                    AppsSingleAppModeList                          = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -86,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AppStoreBlockInAppPurchases                    = $True
                     AppStoreBlockUIAppInstallation                 = $True
                     AppStoreRequirePassword                        = $True
-                    AppsVisibilityList                             = @(
+                    AppsVisibilityList                             = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -116,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClassroomForceRequestPermissionToLeaveClasses  = $True
                     ClassroomForceUnpromptedAppAndDeviceLock       = $True
                     CompliantAppListType                           = 'none'
-                    CompliantAppsList                              = @(
+                    CompliantAppsList                              = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -249,7 +250,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             tvRating    = 'allAllowed'
                         } -ClientOnly)
                     MessagesBlocked                                = $True
-                    NetworkUsageRules                              = @(
+                    NetworkUsageRules                              = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphiosnetworkusagerule -Property @{
                             cellularDataBlocked          = $True
                             cellularDataBlockWhenRoaming = $True
@@ -346,7 +347,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AppleWatchBlockPairing                         = $True
                     AppleWatchForceWristDetection                  = $True
                     AppRemovalBlocked                              = $True
-                    AppsSingleAppModeList                          = @(
+                    AppsSingleAppModeList                          = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -361,7 +362,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AppStoreBlockInAppPurchases                    = $True
                     AppStoreBlockUIAppInstallation                 = $True
                     AppStoreRequirePassword                        = $True
-                    AppsVisibilityList                             = @(
+                    AppsVisibilityList                             = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -391,7 +392,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClassroomForceRequestPermissionToLeaveClasses  = $True
                     ClassroomForceUnpromptedAppAndDeviceLock       = $True
                     CompliantAppListType                           = 'none'
-                    CompliantAppsList                              = @(
+                    CompliantAppsList                              = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -876,7 +877,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AppleWatchBlockPairing                         = $True
                     AppleWatchForceWristDetection                  = $True
                     AppRemovalBlocked                              = $True
-                    AppsSingleAppModeList                          = @(
+                    AppsSingleAppModeList                          = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -891,7 +892,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AppStoreBlockInAppPurchases                    = $True
                     AppStoreBlockUIAppInstallation                 = $True
                     AppStoreRequirePassword                        = $True
-                    AppsVisibilityList                             = @(
+                    AppsVisibilityList                             = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -921,7 +922,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClassroomForceRequestPermissionToLeaveClasses  = $True
                     ClassroomForceUnpromptedAppAndDeviceLock       = $True
                     CompliantAppListType                           = 'none'
-                    CompliantAppsList                              = @(
+                    CompliantAppsList                              = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -1054,7 +1055,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             tvRating    = 'allAllowed'
                         } -ClientOnly)
                     MessagesBlocked                                = $True
-                    NetworkUsageRules                              = @(
+                    NetworkUsageRules                              = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphiosnetworkusagerule -Property @{
                             cellularDataBlocked          = $True
                             cellularDataBlockWhenRoaming = $True
@@ -1399,7 +1400,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AppleWatchBlockPairing                         = $True
                     AppleWatchForceWristDetection                  = $True
                     AppRemovalBlocked                              = $True
-                    AppsSingleAppModeList                          = @(
+                    AppsSingleAppModeList                          = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -1414,7 +1415,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AppStoreBlockInAppPurchases                    = $True
                     AppStoreBlockUIAppInstallation                 = $True
                     AppStoreRequirePassword                        = $True
-                    AppsVisibilityList                             = @(
+                    AppsVisibilityList                             = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -1444,7 +1445,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ClassroomForceRequestPermissionToLeaveClasses  = $True
                     ClassroomForceUnpromptedAppAndDeviceLock       = $True
                     CompliantAppListType                           = 'none'
-                    CompliantAppsList                              = @(
+                    CompliantAppsList                              = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphapplistitem -Property @{
                             appId       = 'FakeStringValue'
                             publisher   = 'FakeStringValue'
@@ -1577,7 +1578,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             tvRating    = 'allAllowed'
                         } -ClientOnly)
                     MessagesBlocked                                = $True
-                    NetworkUsageRules                              = @(
+                    NetworkUsageRules                              = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphiosnetworkusagerule -Property @{
                             cellularDataBlocked          = $True
                             cellularDataBlockWhenRoaming = $True

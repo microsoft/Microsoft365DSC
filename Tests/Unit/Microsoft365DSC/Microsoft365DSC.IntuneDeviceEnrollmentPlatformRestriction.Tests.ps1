@@ -45,7 +45,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
-
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
             Mock -CommandName Update-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
 

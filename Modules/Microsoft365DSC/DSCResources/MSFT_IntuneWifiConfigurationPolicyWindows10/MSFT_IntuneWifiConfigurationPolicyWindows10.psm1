@@ -399,7 +399,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceManagementPolicyId $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -447,7 +447,7 @@ function Set-TargetResource
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-DeviceConfigurationPolicyAssignment -DeviceManagementPolicyId $currentInstance.id `
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceConfigurations'
         #endregion

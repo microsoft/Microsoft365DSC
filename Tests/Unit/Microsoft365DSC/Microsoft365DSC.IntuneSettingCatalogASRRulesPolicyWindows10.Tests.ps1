@@ -48,7 +48,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     TemplateId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
                 }
             }
-
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }

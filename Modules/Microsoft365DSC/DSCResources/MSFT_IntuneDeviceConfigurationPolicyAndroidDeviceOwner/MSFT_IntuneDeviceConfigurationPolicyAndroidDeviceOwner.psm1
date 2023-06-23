@@ -661,6 +661,145 @@ function Get-TargetResource
         }
 
         Write-Verbose -Message "Found something with id {$id}"
+
+        $complexAzureAdSharedDeviceDataClearApps = @()
+        $currentValueArray = $getValue.AdditionalProperties.azureAdSharedDeviceDataClearApps
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{
+                    appId       = $currentValue.appId
+                    publisher   = $currentValue.publisher
+                    appStoreUrl = $currentValue.appStoreUrl
+                    name        = $currentValue.name
+                    odataType   = $currentValue.'@odata.type'
+                }
+                $complexAzureAdSharedDeviceDataClearApps += $currentHash
+            }
+        }
+
+        $complexDetailedHelpText = @{}
+        $currentValue = $getValue.AdditionalProperties.detailedHelpText
+        if ($null -ne $currentValue)
+        {
+            $complexDetailedHelpText.Add('DefaultMessage',$currentValue.defaultMessage)
+            $complexLocalizedMessages = @()
+            $currentValueArray = $currentValue.localizedMessages
+            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+            {
+                foreach($currentChildValue in $currentValueArray)
+                {
+                    $currentHash = @{
+                        Name = $currentChildValue.name
+                        Value = $currentChildValue.value
+                    }
+                    $complexLocalizedMessages += $currentHash
+                }
+            }
+            $complexDetailedHelpText.Add('LocalizedMessages',$complexLocalizedMessages)
+        }
+
+        $complexDeviceOwnerLockScreenMessage = @{}
+        $currentValue = $getValue.AdditionalProperties.deviceOwnerLockScreenMessage
+        if ($null -ne $currentValue)
+        {
+            $complexDeviceOwnerLockScreenMessage.Add('DefaultMessage',$currentValue.defaultMessage)
+            $complexLocalizedMessages = @()
+            $currentValueArray = $currentValue.localizedMessages
+            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+            {
+                foreach($currentChildValue in $currentValueArray)
+                {
+                    $currentHash = @{
+                        Name = $currentChildValue.name
+                        Value = $currentChildValue.value
+                    }
+                    $complexLocalizedMessages += $currentHash
+                }
+            }
+            $complexDeviceOwnerLockScreenMessage.Add('LocalizedMessages',$complexLocalizedMessages)
+        }
+
+        $complexGlobalProxy = @{}
+        $currentValue = $getValue.AdditionalProperties.globalProxy
+        if ($null -ne $currentValue)
+        {
+            $complexGlobalProxy.Add('ProxyAutoConfigURL',$currentValue.proxyAutoConfigURL)
+            $complexGlobalProxy.Add('ExcludedHosts',$currentValue.excludedHosts)
+            $complexGlobalProxy.Add('Host',$currentValue.host)
+            $complexGlobalProxy.Add('Port',$currentValue.port)
+            $complexGlobalProxy.Add('oDataType',$currentValue.'@odata.type')
+        }
+
+        $complexKioskModeApps = @()
+        $currentValueArray = $getValue.AdditionalProperties.kioskModeApps
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexKioskModeApps += $currentHash
+            }
+        }
+
+        $complexPersonalProfilePersonalApplications = @()
+        $currentValueArray = $getValue.AdditionalProperties.personalProfilePersonalApplications
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.add('AppId',$currentValue.appid)
+                $currentHash.add('Publisher',$currentValue.publisher)
+                $currentHash.add('AppStoreUrl',$currentValue.appStoreUrl)
+                $currentHash.add('Name',$currentValue.name)
+                $currentHash.add('oDataType',$currentValue.'@odata.type')
+                $complexPersonalProfilePersonalApplications += $currentHash
+            }
+        }
+
+        $complexShortHelpText = @{}
+        $currentValue = $getValue.AdditionalProperties.shortHelpText
+        if ($null -ne $currentValue)
+        {
+            $complexShortHelpText.Add('DefaultMessage',$currentValue.defaultMessage)
+            $complexLocalizedMessages = @()
+            $currentValueArray = $currentValue.localizedMessages
+            if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+            {
+                foreach($currentChildValue in $currentValueArray)
+                {
+                    $currentHash = @{
+                        Name = $currentChildValue.name
+                        Value = $currentChildValue.value
+                    }
+                    $complexLocalizedMessages += $currentHash
+                }
+            }
+            $complexShortHelpText.Add('LocalizedMessages',$complexLocalizedMessages)
+        }
+
+        $complexSystemUpdateFreezePeriods = @()
+        $currentValueArray = $getValue.AdditionalProperties.systemUpdateFreezePeriods
+        if ($null -ne $currentValueArray -and $currentValueArray.count -gt 0 )
+        {
+            foreach($currentValue in $currentValueArray)
+            {
+                $currentHash = @{}
+                $currentHash.Add('StartDay',$currentValue.startDay)
+                $currentHash.Add('EndDay',$currentValue.endDay)
+                $currentHash.Add('StartMonth',$currentValue.startMonth)
+                $currentHash.Add('EndMonth',$currentValue.endMonth)
+                $complexSystemUpdateFreezePeriods += $currentHash
+            }
+        }
+
         $results = @{
 
             #region resource generator code
@@ -678,7 +817,7 @@ function Get-TargetResource
             AppsAutoUpdatePolicy                                     = $getValue.AdditionalProperties.appsAutoUpdatePolicy
             AppsDefaultPermissionPolicy                              = $getValue.AdditionalProperties.appsDefaultPermissionPolicy
             AppsRecommendSkippingFirstUseHints                       = $getValue.AdditionalProperties.appsRecommendSkippingFirstUseHints
-            AzureAdSharedDeviceDataClearApps                         = $getValue.AdditionalProperties.azureAdSharedDeviceDataClearApps
+            AzureAdSharedDeviceDataClearApps                         = $complexAzureAdSharedDeviceDataClearApps
             BluetoothBlockConfiguration                              = $getValue.AdditionalProperties.bluetoothBlockConfiguration
             BluetoothBlockContactSharing                             = $getValue.AdditionalProperties.bluetoothBlockContactSharing
             CameraBlocked                                            = $getValue.AdditionalProperties.cameraBlocked
@@ -689,12 +828,12 @@ function Get-TargetResource
             CrossProfilePoliciesShowWorkContactsInPersonalProfile    = $getValue.AdditionalProperties.crossProfilePoliciesShowWorkContactsInPersonalProfile
             DataRoamingBlocked                                       = $getValue.AdditionalProperties.dataRoamingBlocked
             DateTimeConfigurationBlocked                             = $getValue.AdditionalProperties.dateTimeConfigurationBlocked
-            DetailedHelpText                                         = $getValue.AdditionalProperties.detailedHelpText
-            DeviceOwnerLockScreenMessage                             = $getValue.additionalProperties.deviceOwnerLockScreenMessage
+            DetailedHelpText                                         = $complexDetailedHelpText
+            DeviceOwnerLockScreenMessage                             = $complexDeviceOwnerLockScreenMessage
             EnrollmentProfile                                        = $getValue.AdditionalProperties.enrollmentProfile
             FactoryResetBlocked                                      = $getValue.AdditionalProperties.factoryResetBlocked
             FactoryResetDeviceAdministratorEmails                    = $getValue.AdditionalProperties.factoryResetDeviceAdministratorEmails
-            GlobalProxy                                              = $getValue.AdditionalProperties.globalProxy
+            GlobalProxy                                              = $complexGlobalProxy
             GoogleAccountsBlocked                                    = $getValue.AdditionalProperties.googleAccountsBlocked
             KioskCustomizationDeviceSettingsBlocked                  = $getValue.AdditionalProperties.kioskCustomizationDeviceSettingsBlocked
             KioskCustomizationPowerButtonActionsBlocked              = $getValue.AdditionalProperties.kioskCustomizationPowerButtonActionsBlocked
@@ -703,7 +842,7 @@ function Get-TargetResource
             KioskCustomizationSystemNavigation                       = $getValue.AdditionalProperties.kioskCustomizationSystemNavigation
             KioskModeAppOrderEnabled                                 = $getValue.AdditionalProperties.kioskModeAppOrderEnabled
             KioskModeAppPositions                                    = $getValue.AdditionalProperties.kioskModeAppPositions
-            KioskModeApps                                            = $getValue.AdditionalProperties.kioskModeApps
+            KioskModeApps                                            = $complexKioskModeApps
             KioskModeAppsInFolderOrderedByName                       = $getValue.AdditionalProperties.kioskModeAppsInFolderOrderedByName
             KioskModeBluetoothConfigurationEnabled                   = $getValue.AdditionalProperties.kioskModeBluetoothConfigurationEnabled
             KioskModeDebugMenuEasyAccessEnabled                      = $getValue.AdditionalProperties.kioskModeDebugMenuEasyAccessEnabled
@@ -769,7 +908,7 @@ function Get-TargetResource
             PasswordSignInFailureCountBeforeFactoryReset             = $getValue.AdditionalProperties.passwordSignInFailureCountBeforeFactoryReset
             PersonalProfileAppsAllowInstallFromUnknownSources        = $getValue.AdditionalProperties.personalProfileAppsAllowInstallFromUnknownSources
             PersonalProfileCameraBlocked                             = $getValue.AdditionalProperties.personalProfileCameraBlocked
-            PersonalProfilePersonalApplications                      = $getValue.AdditionalProperties.personalProfilePersonalApplications
+            PersonalProfilePersonalApplications                      = $complexPersonalProfilePersonalApplications
             PersonalProfilePlayStoreMode                             = $getValue.AdditionalProperties.personalProfilePlayStoreMode
             PersonalProfileScreenCaptureBlocked                      = $getValue.AdditionalProperties.personalProfileScreenCaptureBlocked
             PlayStoreMode                                            = $getValue.AdditionalProperties.playStoreMode
@@ -777,13 +916,13 @@ function Get-TargetResource
             SecurityCommonCriteriaModeEnabled                        = $getValue.AdditionalProperties.securityCommonCriteriaModeEnabled
             SecurityDeveloperSettingsEnabled                         = $getValue.AdditionalProperties.securityDeveloperSettingsEnabled
             SecurityRequireVerifyApps                                = $getValue.AdditionalProperties.securityRequireVerifyApps
-            ShortHelpText                                            = $getValue.additionalProperties.shortHelpText
+            ShortHelpText                                            = $complexShortHelpText
             StatusBarBlocked                                         = $getValue.AdditionalProperties.statusBarBlocked
             StayOnModes                                              = $getValue.AdditionalProperties.stayOnModes
             StorageAllowUsb                                          = $getValue.AdditionalProperties.storageAllowUsb
             StorageBlockExternalMedia                                = $getValue.AdditionalProperties.storageBlockExternalMedia
             StorageBlockUsbFileTransfer                              = $getValue.AdditionalProperties.storageBlockUsbFileTransfer
-            SystemUpdateFreezePeriods                                = $getValue.AdditionalProperties.systemUpdateFreezePeriods
+            SystemUpdateFreezePeriods                                = $complexSystemUpdateFreezePeriods
             SystemUpdateInstallType                                  = $getValue.AdditionalProperties.systemUpdateInstallType
             SystemUpdateWindowEndMinutesAfterMidnight                = $getValue.AdditionalProperties.systemUpdateWindowEndMinutesAfterMidnight
             SystemUpdateWindowStartMinutesAfterMidnight              = $getValue.AdditionalProperties.systemUpdateWindowStartMinutesAfterMidnight
@@ -807,13 +946,6 @@ function Get-TargetResource
             WorkProfilePasswordRequiredType                          = $getValue.AdditionalProperties.workProfilePasswordRequiredType
             WorkProfilePasswordRequireUnlock                         = $getValue.AdditionalProperties.workProfilePasswordRequireUnlock
             WorkProfilePasswordSignInFailureCountBeforeFactoryReset  = $getValue.AdditionalProperties.workProfilePasswordSignInFailureCountBeforeFactoryReset
-            #            Assignments                                              = $getValue.AdditionalProperties.assignments
-            #            DeviceSettingStateSummaries                              = $getValue.AdditionalProperties.deviceSettingStateSummaries
-            #            DeviceStatuses                                           = $getValue.AdditionalProperties.deviceStatuses
-            #            DeviceStatusOverview                                     = $getValue.AdditionalProperties.deviceStatusOverview
-            #            GroupAssignments                                         = $getValue.AdditionalProperties.groupAssignments
-            #            UserStatuses                                             = $getValue.AdditionalProperties.userStatuses
-            #            UserStatusOverview                                       = $getValue.AdditionalProperties.userStatusOverview
             Ensure                                                   = 'Present'
             Credential                                               = $Credential
             ApplicationId                                            = $ApplicationId
@@ -842,6 +974,7 @@ function Get-TargetResource
     }
     catch
     {
+        write-verbose $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -2221,7 +2354,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -2239,10 +2372,11 @@ function Test-TargetResource
 
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
-                -Target ($target)
+                -Target ($target) -verbose
 
             if (-Not $testResult)
             {
+                Write-Verbose -Message "Drift detected for the complex object key: $key"
                 $testResult = $false
                 break
             }
@@ -2251,34 +2385,19 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Id') | Out-Null
-
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    #Convert any DateTime to String
-    foreach ($key in $ValuesToCheck.Keys)
-    {
-        if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].getType().Name -eq 'DateTime'))
-        {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
-        }
-    }
-
-    #Compare basic parameters
     if ($testResult)
     {
+        $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+        $ValuesToCheck.Remove('Id') | Out-Null
+
+        Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+        Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
             -ValuesToCheck $ValuesToCheck.Keys
     }
-
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
     return $testResult

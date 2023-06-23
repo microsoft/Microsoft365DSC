@@ -666,7 +666,7 @@ function Set-TargetResource
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
         Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentInstance.id `
+            -DeviceConfigurationPolicyId $configDevicePolicy.id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceConfigurations'
         #endregion
