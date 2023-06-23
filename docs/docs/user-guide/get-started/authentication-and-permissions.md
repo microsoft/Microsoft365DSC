@@ -205,6 +205,65 @@ Then make sure your service account is a member of the specified Role Group or h
 
 **NOTE:** There are resources, like the <a href="../../../resources/exchange/EXOAddressList/" target="_blank">EXOAddressList</a> which roles by default are not granted to any of the default role groups. Make sure you grant these permissions correctly before using them.
 
+## Security and Compliance Center Permissions
+
+If you want to leverage Service Principal Authentication (using an App Registration) for Security and Compliance Center, there are a few extra configuration steps that need to be followed to grant proper permission to your app. Failure to follow these steps will results in the the cmdlets returning empty results.
+
+<ol>
+<li><p><strong>Create a new Service Principal and associate it with your app registration:</strong></p>
+<p>Start by connecting to the Security and Compliance PowerShell module and run the following line to create the service principal. The cmdlets refer below won't be available if you don't connect first (use the Connect-IPPSsession cmdlet). The AppID and ObjectID represent the application id and its object id. You can retrieve these by navigating to your app instance on the Azure Portal or by leveraging the Get-MgApplication cmdlet from the Graph PowerShell SDK. In my case, my custom App Registration in Azure AD is named "MySCApp" and I am giving the name SC-SPN to the new service principal I am creating.</p>
+
+<a href="/Images/AppIDRetrieval.png"><img src="/Images/AppIDRetrieval.png" alt="Retrieving an app registration id from the Azure portal." /></a>
+
+<a href="/Images/CreatingNewSPForSC.png"><img src="/Images/CreatingNewSPForSC.png" alt="PowerShell Script to create a service principal" /></a>
+
+``` powershell
+$App = Get-MgApplication -Filter "DisplayName eq 'MySCApp'"
+New-ServicePrincipal -AppId $App.AppId -ServiceId $App.Id -DisplayName "SC-SPN"
+```
+</li>
+
+<li><p><strong>Grant the eDiscovery Manager role to your new Service Principal:</strong></p>
+<p>Run the following PowerShell command to grant the eDiscovery Manager role to your new Service Principal. The ID passed is the Object ID of the Service Principal you created at the previous step. If you don't have it handy, you can use the Get-ServicePrincipal cmdlet to retrieve it.</p>
+
+<a href="/Images/AddSPNeDiscoveryRole.png"><img src="/Images/AddSPNeDiscoveryRole.png" alt="Grant the eDiscovery Manager role to your service principal" /></a>
+
+``` PowerShell
+$SPN = Get-ServicePrincipal -Identity "SC-SPN"
+Add-RoleGroupMember -Identity eDiscoveryManager -Member $SPN.ObjectId
+```
+</li>
+</ol>
+
+<li>
+<p><strong>Add the Service Principal as a case admin:</strong>
+
+<p>The Service Principal requires one last permission in order to be able to retrieve values from the Security and COmpliance center cmdlets. Run the following PowerShell command to add it as a case admin:</p>
+
+<a href="/Images/Add-eDiscoveryCaseAdmin.png"><img src="/Images/Add-eDiscoveryCaseAdmin.png" alt="Grant the eDiscovery Case Admin role to your service principal" /></a>
+
+``` PowerShell
+$SPN = Get-ServicePrincipal -Identity "SC-SPN"
+Add-eDiscoveryCaseAdmin -User $SPN.Name
+```
+</p>
+</li>
+
+<li><p><strong>Grant your app registration the Compliance Administrator role:</strong></p>
+<p>The last required step is to add your app registration to the Compliance Administrator role.</p>
+
+<a href="/Images/AddComplianceAdmin.png"><img src="/Images/AddComplianceAdmin.png" alt="Add your app registration to the compliance administrator role." /></a>
+</li>
+
+<p>We are now ready to authenticate using our app registration to test and confirm that all is working as expected. To do so, you can use the Connect-M365Tenant cmdlet and pass it the information related to your app registration. Below is an example using our app registration. Replace the appid, tenantid and certificatethumbprint parameters by your own. If you are getting an error connecting, you probably haven't granted the Exchange ManageAsApp permission to your app as described in the following article: <a href="https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#step-2-assign-api-permissions-to-the-application">https://learn.microsoft.com/en-us/powershell/exchange/app-only-auth-powershell-v2?view=exchange-ps#step-2-assign-api-permissions-to-the-application</a></p>
+
+<a href="/Images/GetComplianceCase.png"><img src="/Images/GetComplianceCase.png" alt="Connecting using your app registration and retrieving cases." /></a>
+
+``` PowerShell
+Connect-M365Tenant -ApplicationId '8154ba3e-3e73-450e-8690-53cfc0eb0d66' -TenantId 'xxxx.onmicrosoft.com' -CertificateThumbprint 'xxx-xxx-xxx-xxx-xxx' -Workload 'SecurityComplianceCenter'
+Get-ComplianceCase
+```
+
 ## Using Authentication in DSC configurations
 
 See the next chapter to see how to use the Authentication options in DSC configurations
