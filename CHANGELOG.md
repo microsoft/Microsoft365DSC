@@ -34,6 +34,10 @@
 * AADNamedLocationPolicy
   * Added support forthe CountryLookupMethod property
     FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Fixes an issue with Set-TargetResource when an array is empty
+  * Fixes presentationValue updates
+    FIXES [#3355](https://github.com/microsoft/Microsoft365DSC/issues/3355)
 * TeamsAppPermissionPolicy
   * Fixes an issue where the wrong app types were trying to get assigned.
     FIXES [#3373](https://github.com/microsoft/Microsoft365DSC/issues/3373)
