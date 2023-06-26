@@ -110,20 +110,6 @@ function Get-TargetResource
     {
         $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction silentlyContinue
 
-        <#
-        Not using the DisplayName as a key due to android profiles
-        Android profile are generated using 2 singlePlatformRestriction policies: 1 for android and 1 for androidForWork
-        Both policies have the same name
-
-        if ($null -eq $config)
-        {
-            Write-Verbose -Message "No Device Enrollment Platform Restriction {$Identity} was found"
-
-            $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" -ErrorAction silentlyContinue| Where-Object -FilterScript { `
-                    $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatform*Configuration' }
-        }
-        #>
-
         if ($null -eq $config)
         {
             Write-Verbose -Message "No Device Enrollment Platform Restriction {$Identity} was found"
@@ -536,7 +522,7 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($source.getType().Name -like '*CimInstance*' -and $key -ne 'WindowsMobileRestriction')
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
@@ -551,7 +537,6 @@ function Test-TargetResource
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -560,9 +545,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
-
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    $ValuesToCheck.Remove('WindowsMobileRestriction') | Out-Null
 
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
@@ -574,9 +557,12 @@ function Test-TargetResource
         }
     }
 
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
     #Compare basic parameters
     if ($testResult)
     {
+        Write-Verbose -Message "Comparing the current values with the desired ones"
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
@@ -959,8 +945,6 @@ function Get-DevicePlatformRestrictionSetting
                 }
             }
             $results.add($keyName, $hash)
-
-            #$results.add($keyName,[Hashtable]::new($platformRestrictions.$key))
         }
     }
 
