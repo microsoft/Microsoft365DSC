@@ -299,11 +299,7 @@ function Get-M365DSCDRGComplexTypeToString
     $CIMInstanceName = $CIMInstanceName.replace('MSFT_', '')
     $currentProperty += "MSFT_$CIMInstanceName{`r`n"
     $IndentLevel++
-    $indent = ''
-    for ($i = 0; $i -lt $IndentLevel ; $i++)
-    {
-        $indent += '    '
-    }
+    $indent = '    ' * $IndentLevel
     $keyNotNull = 0
 
     if ($ComplexObject.Keys.count -eq 0)
@@ -420,10 +416,7 @@ function Get-M365DSCDRGComplexTypeToString
         }
     }
     $indent = ''
-    for ($i = 0; $i -lt $IndentLevel - 1 ; $i++)
-    {
-        $indent += '    '
-    }
+    $indent = '    ' * ($IndentLevel -1)
     $currentProperty += "$indent}"
     if ($isArray -or $IndentLevel -gt 4)
     {
@@ -433,11 +426,7 @@ function Get-M365DSCDRGComplexTypeToString
     #Indenting last parenthese when the cim instance is an array
     if ($IndentLevel -eq 5)
     {
-        $indent = ''
-        for ($i = 0; $i -lt $IndentLevel - 2 ; $i++)
-        {
-            $indent += '    '
-        }
+        $indent = '    ' * ($IndentLevel -2)
         $currentProperty += $indent
     }
 
@@ -446,7 +435,7 @@ function Get-M365DSCDRGComplexTypeToString
     {
         $currentProperty = $null
     }
-    return $currentProperty
+    return $currentProperty.TrimEnd()
 }
 
 Function Get-M365DSCDRGSimpleObjectTypeToString

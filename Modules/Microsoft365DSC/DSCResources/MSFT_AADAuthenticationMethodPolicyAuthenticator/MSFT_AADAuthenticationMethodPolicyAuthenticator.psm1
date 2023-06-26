@@ -898,43 +898,13 @@ function Export-TargetResource
                         IsRequired      = $False
                     }
                     @{
-                        Name            = 'ExcludeTarget'
-                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
-                        IsRequired      = $False
-                    }
-                    @{
-                        Name            = 'IncludeTarget'
-                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
-                        IsRequired      = $False
-                    }
-                    @{
                         Name            = 'DisplayLocationInformationRequiredState'
                         CimInstanceName = 'MicrosoftGraphAuthenticationMethodFeatureConfiguration'
                         IsRequired      = $False
                     }
                     @{
-                        Name            = 'ExcludeTarget'
-                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
-                        IsRequired      = $False
-                    }
-                    @{
-                        Name            = 'IncludeTarget'
-                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
-                        IsRequired      = $False
-                    }
-                    @{
                         Name            = 'NumberMatchingRequiredState'
                         CimInstanceName = 'MicrosoftGraphAuthenticationMethodFeatureConfiguration'
-                        IsRequired      = $False
-                    }
-                    @{
-                        Name            = 'ExcludeTarget'
-                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
-                        IsRequired      = $False
-                    }
-                    @{
-                        Name            = 'IncludeTarget'
-                        CimInstanceName = 'AADAuthenticationMethodPolicyAuthenticatorFeatureTarget'
                         IsRequired      = $False
                     }
                 )
@@ -998,6 +968,7 @@ function Export-TargetResource
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IncludeTargets' -IsCIMArray:$True
             }
+            $currentDSCBlock = Remove-M365DSCCimInstanceTrailingCharacterFromExport -DSCBlock $currentDSCBlock
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
