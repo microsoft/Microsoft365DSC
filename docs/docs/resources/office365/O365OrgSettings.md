@@ -7,6 +7,11 @@
 | **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
 | **CortanaEnabled** | Write | Boolean | Allow Cortana in windows 10 (version 1909 and earlier), and the Cortana app on iOS and Android, to access Microsoft-hosted data on behalf of people in your organization. | |
 | **M365WebEnableUsersToOpenFilesFrom3PStorage** | Write | Boolean | Let users open files stored in third-party storage services in Microsoft 365 on the Web. | |
+| **MicrosoftVivaBriefingEmail** | Write | Boolean | Specifies whether or not to let people in your organization receive Briefing email from Microsoft Viva. | |
+| **VivaInsightsWebExperience** | Write | Boolean | Specifies whether or not to allow users to have access to use the Viva Insights web experience. | |
+| **VivaInsightsDigestEmail** | Write | Boolean | Specifies whether or not to allow users to have access to use the Viva Insights digest email feature. | |
+| **VivaInsightsOutlookAddInAndInlineSuggestions** | Write | Boolean | Specifies whether or not to allow users to have access to use the Viva Insights Outlook add-in and inline suggestions. | |
+| **VivaInsightsScheduleSendSuggestions** | Write | Boolean | Specifies whether or not to allow users to have access to use the Viva Insights schedule send suggestions feature. | |
 | **PlannerAllowCalendarSharing** | Write | Boolean | Allow Planner users to publish their plans and assigned tasks to Outlook or other calendars through iCalendar feeds. | |
 | **AdminCenterReportDisplayConcealedNames** | Write | Boolean | Controls whether or not the Admin Center reports will conceale user, group and site names. | |
 | **InstallationOptionsUpdateChannel** | Write | String | Defines how often you want your users to get feature updates for Microsoft 365 apps installed on devices running Windows | `current`, `monthlyEnterprise`, `semiAnnual` |

@@ -23,6 +23,26 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $MicrosoftVivaBriefingEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsWebExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsDigestEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsOutlookAddInAndInlineSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsScheduleSendSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
         $AdminCenterReportDisplayConcealedNames,
 
         [Parameter()]
@@ -77,6 +97,9 @@ function Get-TargetResource
     $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
         -InboundParameters $PSBoundParameters
 
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -104,6 +127,16 @@ function Get-TargetResource
         $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
         $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled'
 
+        # Microsoft Viva Briefing Email
+        $vivaBriefingEmailValue = $false
+        $currentBriefingConfig = Get-DefaultTenantBriefingConfig
+        if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
+        {
+            $vivaBriefingEmailValue = $true
+        }
+
+        # Viva Insightss settings
+        $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig
         $MRODeviceManagerService = 'ebe0c285-db95-403f-a1a3-a793bd6d7767'
         try
         {
@@ -140,20 +173,25 @@ function Get-TargetResource
         }
 
         return @{
-            IsSingleInstance                           = 'Yes'
-            CortanaEnabled                             = $CortanaEnabledValue.AccountEnabled
-            M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
-            PlannerAllowCalendarSharing                = $PlannerSettings.allowCalendarSharing
-            AdminCenterReportDisplayConcealedNames     = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
-            InstallationOptionsUpdateChannel           = $installationOptions.updateChannel
-            InstallationOptionsAppsForWindows          = $appsForWindowsValue
-            InstallationOptionsAppsForMac              = $appsForMacValue
-            Credential                                 = $Credential
-            ApplicationId                              = $ApplicationId
-            TenantId                                   = $TenantId
-            ApplicationSecret                          = $ApplicationSecret
-            CertificateThumbprint                      = $CertificateThumbprint
-            Managedidentity                            = $ManagedIdentity.IsPresent
+            IsSingleInstance                             = 'Yes'
+            CortanaEnabled                               = $CortanaEnabledValue.AccountEnabled
+            PlannerAllowCalendarSharing                  = $PlannerSettings.allowCalendarSharing
+            AdminCenterReportDisplayConcealedNames       = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
+            InstallationOptionsUpdateChannel             = $installationOptions.updateChannel
+            InstallationOptionsAppsForWindows            = $appsForWindowsValue
+            InstallationOptionsAppsForMac                = $appsForMacValue
+            MicrosoftVivaBriefingEmail                   = $vivaBriefingEmailValue
+            M365WebEnableUsersToOpenFilesFrom3PStorage   = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
+            VivaInsightsWebExperience                    = $currentVivaInsightsSettings.IsDashboardEnabled
+            VivaInsightsDigestEmail                      = $currentVivaInsightsSettings.IsDigestEmailEnabled
+            VivaInsightsOutlookAddInAndInlineSuggestions = $currentVivaInsightsSettings.IsAddInEnabled
+            VivaInsightsScheduleSendSuggestions          = $currentVivaInsightsSettings.IsScheduleSendEnabled
+            Credential                                   = $Credential
+            ApplicationId                                = $ApplicationId
+            TenantId                                     = $TenantId
+            ApplicationSecret                            = $ApplicationSecret
+            CertificateThumbprint                        = $CertificateThumbprint
+            Managedidentity                              = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -189,6 +227,26 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $PlannerAllowCalendarSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftVivaBriefingEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsWebExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsDigestEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsOutlookAddInAndInlineSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsScheduleSendSuggestions,
 
         [Parameter()]
         [System.Boolean]
@@ -283,6 +341,22 @@ function Set-TargetResource
             -AccountEnabled:$CortanaEnabled
     }
 
+    # Microsoft Viva Briefing Email
+    Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
+    $briefingValue = 'opt-out'
+    if ($MicrosoftVivaBriefingEmail)
+    {
+        $briefingValue = 'opt-in'
+    }
+    Set-DefaultTenantBriefingConfig -PrivacyMode $briefingValue | Out-Null
+
+    # Viva Insights
+    Write-Verbose -Message "Updating Viva Insights settings."
+    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Dashboard" -IsEnabled $VivaInsightsWebExperience | Out-Null
+    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Digest-email" -IsEnabled $VivaInsightsDigestEmail | Out-Null
+    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Add-In" -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
+    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Scheduled-send" -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
+
     $AdminCenterReportDisplayConcealedNamesEnabled = Get-M365DSCOrgSettingsAdminCenterReport
     Write-Verbose "$($AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames) = $AdminCenterReportDisplayConcealedNames"
     if ($AdminCenterReportDisplayConcealedNames -ne $AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames)
@@ -375,6 +449,26 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PlannerAllowCalendarSharing,
+
+        [Parameter()]
+        [System.Boolean]
+        $MicrosoftVivaBriefingEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsWebExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsDigestEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsOutlookAddInAndInlineSuggestions,
+
+        [Parameter()]
+        [System.Boolean]
+        $VivaInsightsScheduleSendSuggestions,
 
         [Parameter()]
         [System.Boolean]

@@ -6,7 +6,7 @@
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
-            RequiredVersion = '3.1.0'
+            RequiredVersion = '3.2.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
@@ -82,7 +82,7 @@
         },
         @{
             ModuleName      = 'ReverseDSC'
-            RequiredVersion = '2.0.0.15'
+            RequiredVersion = '2.0.0.16'
         }
     )
 }
