@@ -323,6 +323,7 @@ function Set-TargetResource
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('Credential') | Out-Null
     $currentParameters.Remove('ManagedIdentity') | Out-Null
+    $currentParameters.Remove('AppId') | Out-Null
     $backCurrentOwners = $currentAADApp.Owners
     $currentParameters.Remove('Owners') | Out-Null
 

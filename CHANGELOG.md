@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Updated the Test function to ignore the AppId parameter.
+    FIXES [#3390](https://github.com/microsoft/Microsoft365DSC/issues/3390)
 * AADAuthenticationMethodPolicyAuthenticator
   * Deprecated the NumberMatchingRequiredState Feature Setting.
     FIXES [#3406](https://github.com/microsoft/Microsoft365DSC/issues/3406)
