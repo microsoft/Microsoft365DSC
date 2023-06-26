@@ -8,7 +8,6 @@
 * IntuneDeviceEnrollmentPlatformRestriction
   * Fixes an error where the WindowsMobileRestriction property was still being assessed dispite it being deprecated.
     FIXES [#3407](https://github.com/microsoft/Microsoft365DSC/issues/3407)
-
 * DEPENDENCIES
   * Updated ReverseDSC to version 2.0.0.16.
 
