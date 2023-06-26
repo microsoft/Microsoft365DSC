@@ -1414,8 +1414,7 @@ function Update-M365DSCAzureAdApplication
     {
         Write-LogEntry ' '
         Write-LogEntry 'Checking app permissions'
-        $permissionsSet = $false
-        $allRequiredAccess = @()
+        $allRequiredAccess = @{}
         foreach ($permission in $Permissions)
         {
             if ($permission.Api -eq $null -or $permission.Api -notin @('Graph', 'SharePoint', 'Exchange'))
@@ -1445,9 +1444,11 @@ function Update-M365DSCAzureAdApplication
 
             if ($null -eq $appRole)
             {
-                $currentAPIAccess = @{
-                    ResourceAppId  = $svcprincipal.AppId
-                    ResourceAccess = @()
+                $currentAPIAccess = $allRequiredAccess.($svcprincipal.AppId)
+
+                if ($null -eq $currentAPIAccess)
+                {
+                    $allRequiredAccess.Add(($svcprincipal.AppId), @())
                 }
                 $role = $svcPrincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.PermissionName }
                 if ($null -eq $role)
@@ -1468,13 +1469,7 @@ function Update-M365DSCAzureAdApplication
                         Type = 'Role'
                     }
                 }
-                $currentAPIAccess.ResourceAccess += $appPermission
-                $permissionsSet = $true
-
-                if ($null -ne $currentAPIAccess)
-                {
-                    $allRequiredAccess += $currentAPIAccess
-                }
+                $allRequiredAccess.($svcprincipal.AppId) += $appPermission
             }
             else
             {
@@ -1482,8 +1477,27 @@ function Update-M365DSCAzureAdApplication
             }
         }
 
+        $requiredResourceAccess = @()
+        foreach ($provider in $allRequiredAccess.Keys)
+        {
+            $valueToAdd = @{
+                ResourceAppId  = $provider
+                ResourceAccess = @()
+            }
+
+            foreach ($permissionEntry in $allRequiredAccess.$provider)
+            {
+                $permissionToAdd = @{
+                    Type = $permissionEntry.Type
+                    Id   = $permissionEntry.Id
+                }
+                $valueToAdd.ResourceAccess += $permissionToAdd
+            }
+            $requiredResourceAccess += $valueToAdd
+        }
+
         Update-MgApplication -ApplicationId ($azureADApp.Id) `
-            -RequiredResourceAccess $allRequiredAccess | Out-Null
+            -RequiredResourceAccess $requiredResourceAccess | Out-Null
 
         Write-LogEntry '    Permission updated for application'
 
