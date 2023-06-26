@@ -78,7 +78,7 @@ function Get-TargetResource
         {
             $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $OrgWideAccount })
         }
-        else
+        if ($null -eq $AvailabilityConfig)
         {
             Write-Verbose -Message "Availability config for $($OrgWideAccount) does not exist."
             return $nullReturn
