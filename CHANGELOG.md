@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicyAuthenticator
+  * Deprecated the NumberMatchingRequiredState Feature Setting.
+    FIXES [#3406](https://github.com/microsoft/Microsoft365DSC/issues/3406)
 * EXOAvailabilityConfig
   * Fixes an error where an error was thrown when the OrgWideAccount wasn't set.
     FIXES [#3402](https://github.com/microsoft/Microsoft365DSC/issues/3402)
