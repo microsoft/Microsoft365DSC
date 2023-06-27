@@ -4076,7 +4076,34 @@ function Update-M365DSCModule
 {
     [CmdletBinding()]
     param()
-    Update-Module -Name 'Microsoft365DSC'
+    try
+    {
+        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop
+    }
+    catch
+    {
+        if ($_.Exception.Message -like "*Module 'Microsoft365DSC' was not installed by using Install-Module")
+        {
+            Write-Verbose -Message "The Microsoft365DSC module was not installed from the PowerShell Gallery and therefore cannot be updated."
+        }
+    }
+    try
+    {
+        Write-Verbose -Message "Unloading all instances of the Microsoft365DSC module from the current PowerShell session."
+        Remove-Module Microsoft365DSC -Force
+
+        Write-Verbose -Message "Retrieving all versions of the Microsoft365DSC installed on the machine."
+        [Array]$instances = Get-Module Microsoft365DSC -ListAvailable | Sort-Object -Property Version -Descending
+        if ($instances.Length -gt 0)
+        {
+            Write-Verbose -Message "Loading version {$($instances[0].Version.ToString())} of the Microsoft365DSC module from {$($instances[0].ModuleBase)}"
+            Import-Module Microsoft365DSC -RequiredVersion $instances[0].Version.ToString() -Force
+        }
+    }
+    catch
+    {
+        throw $_
+    }
     Update-M365DSCDependencies
     Uninstall-M365DSCOutdatedDependencies
 }
