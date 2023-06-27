@@ -247,6 +247,18 @@ function Get-TargetResource
         $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
     }
 
+    if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($Displayname))
+    {
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $Displayname}
+        }
+        else
+        {
+            $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
+        }
+    }
+
     #get Policyrule
     $role = Get-MgPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
 
