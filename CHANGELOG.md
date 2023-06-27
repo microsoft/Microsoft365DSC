@@ -2,9 +2,15 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Updated the Set and Test function to ignore the AppId parameter.
+    FIXES [#3390](https://github.com/microsoft/Microsoft365DSC/issues/3390)
 * AADAuthenticationMethodPolicyAuthenticator
   * Deprecated the NumberMatchingRequiredState Feature Setting.
     FIXES [#3406](https://github.com/microsoft/Microsoft365DSC/issues/3406)
+* AADServicePrincipal
+  * Updated the Set and Test function to ignore the AppId parameter.
+    FIXES [#3390](https://github.com/microsoft/Microsoft365DSC/issues/3390)
 * EXOAvailabilityConfig
   * Fixes an error where an error was thrown when the OrgWideAccount wasn't set.
     FIXES [#3402](https://github.com/microsoft/Microsoft365DSC/issues/3402)
@@ -15,13 +21,10 @@
   * Added required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
 * MISC
   * Added API to the Organization.Read.All permission in the Get-M365DSCCompiledPermisisonList cmdlet
-  * Fixed Update-M365DSCAzureAdApplication where an error was thrown when multiple permissions were specified
-    for the same API.
-* DEPENDENCIES
-  * Updated ReverseDSC to version 2.0.0.16.
-* MISC
   * Fixes an issue with Update-M365DSCAzureAdApplication where it was throwing an error complaining about duplicate keys.
     FIXES #3417
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.16.
 
 # 1.23.621.1
 
