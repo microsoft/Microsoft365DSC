@@ -2,6 +2,7 @@
     "resourceName": "TeamsNetworkRoamingPolicy",
     "description": "This resource configures an New-CsTeamsNetworkRoamingPolicy allows IT Admins to create policies for Network Roaming and Bandwidth Control experiences in Microsoft Teams..",
     "permissions": {
+        "graph": {
             "delegated": {
                 "read": [],
                 "update": []

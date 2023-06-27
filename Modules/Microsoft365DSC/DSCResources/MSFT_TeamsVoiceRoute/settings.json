@@ -2,6 +2,7 @@
     "resourceName": "TeamsVoiceRoute",
     "description": "",
     "permissions": {
+        "graph": {
             "delegated": {
                 "read": [],
                 "update": []

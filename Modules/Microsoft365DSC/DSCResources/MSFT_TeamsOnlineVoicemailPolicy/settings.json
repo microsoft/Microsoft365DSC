@@ -2,6 +2,7 @@
     "resourceName": "TeamsOnlineVoicemailPolicy",
     "description": "",
     "permissions": {
+        "graph": {
             "delegated": {
                 "read": [],
                 "update": []

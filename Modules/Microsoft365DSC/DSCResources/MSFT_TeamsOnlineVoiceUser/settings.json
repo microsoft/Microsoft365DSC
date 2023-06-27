@@ -2,6 +2,7 @@
     "resourceName": "TeamsOnlineVoiceUser",
     "description": "",
     "permissions": {
+        "graph": {
             "delegated": {
                 "read": [],
                 "update": []

@@ -2,6 +2,7 @@
     "resourceName": "TeamsMobilityPolicy",
     "description": "This resource configures an The TeamsMobilityPolicy allows Admins to control Teams mobile usage for users..",
     "permissions": {
+        "graph": {
             "delegated": {
                 "read": [],
                 "update": []

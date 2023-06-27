@@ -2,6 +2,7 @@
     "resourceName": "TeamsCortanaPolicy",
     "description": "This resource configures an The CsTeamsCortanaPolicy resources enable administrators to control settings for Cortana voice assistant in Microsoft Teams..",
     "permissions": {
+        "graph": {
             "delegated": {
                 "read": [],
                 "update": []
