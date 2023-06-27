@@ -14,7 +14,7 @@
 * DEPENDENCIES
   * Updated ReverseDSC to version 2.0.0.16.
 * MISC
-  * Fixes an issue with Update-M365DSCAzureAdApplication where it was throwing an eroor complaining about duplicate keys.
+  * Fixes an issue with Update-M365DSCAzureAdApplication where it was throwing an error complaining about duplicate keys.
     FIXES #3417
 
 # 1.23.621.1
