@@ -2,15 +2,23 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Improved export performance.
 * AADApplication
   * Updated the Set and Test function to ignore the AppId parameter.
     FIXES [#3390](https://github.com/microsoft/Microsoft365DSC/issues/3390)
+  * Improved export performance.
 * AADAuthenticationMethodPolicyAuthenticator
   * Deprecated the NumberMatchingRequiredState Feature Setting.
     FIXES [#3406](https://github.com/microsoft/Microsoft365DSC/issues/3406)
+* AADRoleDefinition
+  * Improved export performance.
+* AADRoleSetting
+  * Improved export performance.
 * AADServicePrincipal
   * Updated the Set and Test function to ignore the AppId parameter.
     FIXES [#3390](https://github.com/microsoft/Microsoft365DSC/issues/3390)
+  * Improved export performance.
 * EXOAvailabilityConfig
   * Fixes an error where an error was thrown when the OrgWideAccount wasn't set.
     FIXES [#3402](https://github.com/microsoft/Microsoft365DSC/issues/3402)

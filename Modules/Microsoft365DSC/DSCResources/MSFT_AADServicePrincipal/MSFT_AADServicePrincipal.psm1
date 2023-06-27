@@ -119,8 +119,15 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($ObjectID))
             {
-                $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
-                    -ErrorAction Stop
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                }
+                else
+                {
+                    $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
+                        -ErrorAction Stop
+                }
             }
         }
         catch
@@ -130,7 +137,14 @@ function Get-TargetResource
 
         if ($null -eq $AADServicePrincipal)
         {
-            $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript {$_.AppId -eq $AppId}
+            }
+            else
+            {
+                $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
+            }
         }
         if ($null -eq $AADServicePrincipal)
         {
@@ -512,10 +526,11 @@ function Export-TargetResource
     {
         $i = 1
         Write-Host "`r`n" -NoNewline
-        $AADServicePrincipals = Get-MgServicePrincipal -All:$true -Filter $Filter -ErrorAction Stop
-        foreach ($AADServicePrincipal in $AADServicePrincipals)
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-MgServicePrincipal -All:$true -Filter $Filter -ErrorAction Stop
+        foreach ($AADServicePrincipal in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($AADServicePrincipals.Count)] $($AADServicePrincipal.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADServicePrincipal.DisplayName)" -NoNewline
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
