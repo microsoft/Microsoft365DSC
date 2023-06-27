@@ -65,6 +65,7 @@ function Get-M365DSCCompiledPermissionList
     $results = @{
         Read               = @(
             @{
+                API        = 'Graph'
                 Permission = @{
                     Name = "Organization.Read.All"
                     Type = "Application"
@@ -73,6 +74,7 @@ function Get-M365DSCCompiledPermissionList
         )
         Update             = @(
             @{
+                API        = 'Graph'
                 Permission = @{
                     Name = "Organization.Read.All"
                     Type = "Application"
@@ -1415,7 +1417,22 @@ function Update-M365DSCAzureAdApplication
         Write-LogEntry ' '
         Write-LogEntry 'Checking app permissions'
         $permissionsSet = $false
+        $alreadyAddedPermissions = @()
         $allRequiredAccess = @()
+
+        $graphAPIAccess = @{
+            ResourceAppId  = $graphSvcprincipal.AppId
+            ResourceAccess = @()
+        }
+        $sharePointAPIAccess = @{
+            ResourceAppId  = $spSvcprincipal.AppId
+            ResourceAccess = @()
+        }
+        $exchangeAPIAccess = @{
+            ResourceAppId  = $exSvcprincipal.AppId
+            ResourceAccess = @()
+        }
+
         foreach ($permission in $Permissions)
         {
             if ($permission.Api -eq $null -or $permission.Api -notin @('Graph', 'SharePoint', 'Exchange'))
@@ -1424,6 +1441,12 @@ function Update-M365DSCAzureAdApplication
                 continue
             }
             Write-LogEntry "  Checking permission '$($permission.Api)\$($permission.PermissionName)'"
+
+            if ($null -ne ($alreadyAddedPermissions | Where-Object { $_.API -eq $permission.API -and $_.PermissionName -eq $permission.PermissionName }))
+            {
+                Write-LogEntry "    Skipping permission. Already in the list!"
+                continue
+            }
 
             switch ($permission.Api)
             {
@@ -1445,10 +1468,6 @@ function Update-M365DSCAzureAdApplication
 
             if ($null -eq $appRole)
             {
-                $currentAPIAccess = @{
-                    ResourceAppId  = $svcprincipal.AppId
-                    ResourceAccess = @()
-                }
                 $role = $svcPrincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.PermissionName }
                 if ($null -eq $role)
                 {
@@ -1460,6 +1479,10 @@ function Update-M365DSCAzureAdApplication
                             Type = 'Role'
                         }
                     }
+                    else
+                    {
+                        continue
+                    }
                 }
                 else
                 {
@@ -1468,12 +1491,29 @@ function Update-M365DSCAzureAdApplication
                         Type = 'Role'
                     }
                 }
-                $currentAPIAccess.ResourceAccess += $appPermission
+
+                switch ($permission.Api)
+                {
+                    'Graph'
+                    {
+                        $graphAPIAccess.ResourceAccess += $appPermission
+                    }
+                    'SharePoint'
+                    {
+                        $sharePointAPIAccess.ResourceAccess += $appPermission
+                    }
+                    'Exchange'
+                    {
+                        $exchangeAPIAccess.ResourceAccess += $appPermission
+                    }
+                }
+
                 $permissionsSet = $true
 
-                if ($null -ne $currentAPIAccess)
-                {
-                    $allRequiredAccess += $currentAPIAccess
+                # Code to track already added permissions
+                $alreadyAddedPermissions += @{
+                    API            = $permissions.API
+                    PermissionName = $permission.PermissionName
                 }
             }
             else
@@ -1482,10 +1522,28 @@ function Update-M365DSCAzureAdApplication
             }
         }
 
-        Update-MgApplication -ApplicationId ($azureADApp.Id) `
-            -RequiredResourceAccess $allRequiredAccess | Out-Null
+        if ($graphAPIAccess.ResourceAccess.Count -ne 0)
+        {
+            $allRequiredAccess += $graphAPIAccess
+        }
 
-        Write-LogEntry '    Permission updated for application'
+        if ($sharePointAPIAccess.ResourceAccess.Count -ne 0)
+        {
+            $allRequiredAccess += $sharePointAPIAccess
+        }
+
+        if ($exchangeAPIAccess.ResourceAccess.Count -ne 0)
+        {
+            $allRequiredAccess += $exchangeAPIAccess
+        }
+
+        if ($permissionsSet)
+        {
+            Update-MgApplication -ApplicationId ($azureADApp.Id) `
+                -RequiredResourceAccess $allRequiredAccess | Out-Null
+
+            Write-LogEntry '    Permission updated for application'
+        }
 
         if ($AdminConsent)
         {

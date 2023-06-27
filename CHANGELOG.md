@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* Teams resources
+  * Added required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
+* MISC
+  * Added API to the Organization.Read.All permission in the Get-M365DSCCompiledPermisisonList cmdlet
+  * Fixed Update-M365DSCAzureAdApplication where an error was thrown when multiple permissions were specified
+    for the same API.
 * DEPENDENCIES
   * Updated ReverseDSC to version 2.0.0.16.
 
