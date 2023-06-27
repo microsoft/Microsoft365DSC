@@ -23,6 +23,8 @@
   * Added API to the Organization.Read.All permission in the Get-M365DSCCompiledPermisisonList cmdlet
   * Fixes an issue with Update-M365DSCAzureAdApplication where it was throwing an error complaining about duplicate keys.
     FIXES #3417
+  * Update-M365DSCModule now forces a reload of the latest version of the Microsoft365DSC module.
+    FIXES [#3326](https://github.com/microsoft/Microsoft365DSC/issues/3326)
 * DEPENDENCIES
   * Updated ReverseDSC to version 2.0.0.16.
 
