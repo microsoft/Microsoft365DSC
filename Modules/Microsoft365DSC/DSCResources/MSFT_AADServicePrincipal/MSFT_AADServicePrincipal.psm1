@@ -301,6 +301,7 @@ function Set-TargetResource
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('ObjectID') | Out-Null
     $currentParameters.Remove('ApplicationSecret') | Out-Null
+    $currentParameters.Remove('AppId') | Out-Null
 
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
@@ -444,6 +445,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('AppId') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
