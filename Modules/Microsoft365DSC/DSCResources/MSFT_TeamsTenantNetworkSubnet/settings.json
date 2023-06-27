@@ -2,14 +2,63 @@
     "resourceName": "TeamsTenantNetworkSubnet",
     "description": "As an Admin, you can use the Windows PowerShell command, New-CsTenantNetworkSubnet to define network subnets and assign them to network sites. Each internal subnet may only be associated with one site. Tenant network subnet is used for Location Based Routing..",
     "permissions": {
-        "graph": {
             "delegated": {
                 "read": [],
                 "update": []
             },
             "application": {
-                "read": [],
-                "update": []
+                "read": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ]
             }
         }
     }

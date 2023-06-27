@@ -65,6 +65,7 @@ function Get-M365DSCCompiledPermissionList
     $results = @{
         Read               = @(
             @{
+                API        = 'Graph'
                 Permission = @{
                     Name = "Organization.Read.All"
                     Type = "Application"
@@ -73,6 +74,7 @@ function Get-M365DSCCompiledPermissionList
         )
         Update             = @(
             @{
+                API        = 'Graph'
                 Permission = @{
                     Name = "Organization.Read.All"
                     Type = "Application"
@@ -1460,6 +1462,10 @@ function Update-M365DSCAzureAdApplication
                             Id   = $permission.PermissionName
                             Type = 'Role'
                         }
+                    }
+                    else
+                    {
+                        continue
                     }
                 }
                 else

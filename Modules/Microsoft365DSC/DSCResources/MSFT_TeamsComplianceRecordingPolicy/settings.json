@@ -2,14 +2,63 @@
     "resourceName": "TeamsComplianceRecordingPolicy",
     "description": "This resource configures an Creates a new Teams recording policy for governing automatic policy-based recording in your tenant. Automatic policy-based recording is only applicable to Microsoft Teams users..",
     "permissions": {
-        "graph": {
             "delegated": {
                 "read": [],
                 "update": []
             },
             "application": {
-                "read": [],
-                "update": []
+                "read": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ]
             }
         }
     }
