@@ -14,10 +14,16 @@
 * IntuneDeviceEnrollmentPlatformRestriction
   * Fixes an error where the WindowsMobileRestriction property was still being assessed dispite it being deprecated.
     FIXES [#3407](https://github.com/microsoft/Microsoft365DSC/issues/3407)
+* Teams resources
+  * Added required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
+* MISC
+  * Added API to the Organization.Read.All permission in the Get-M365DSCCompiledPermisisonList cmdlet
+  * Fixed Update-M365DSCAzureAdApplication where an error was thrown when multiple permissions were specified
+    for the same API.
 * DEPENDENCIES
   * Updated ReverseDSC to version 2.0.0.16.
 * MISC
-  * Fixes an issue with Update-M365DSCAzureAdApplication where it was throwing an eroor complaining about duplicate keys.
+  * Fixes an issue with Update-M365DSCAzureAdApplication where it was throwing an error complaining about duplicate keys.
     FIXES #3417
 
 # 1.23.621.1
