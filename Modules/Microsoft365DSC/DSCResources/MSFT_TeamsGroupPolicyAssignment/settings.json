@@ -1,6 +1,6 @@
 ﻿{
-    "resourceName": "TeamsCallQueue",
-    "description": "This resource is used to manage Call Queue in your Skype for Business Online organization.",
+    "resourceName": "TeamsGroupPolicyAssignment",
+    "description": "",
     "permissions": {
         "graph": {
             "delegated": {
