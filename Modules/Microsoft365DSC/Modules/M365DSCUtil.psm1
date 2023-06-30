@@ -3464,75 +3464,82 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
         [Parameter()]
         [System.String[]]
         [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'CredentialsWithApplicationId', 'ManagedIdentity')]
-        $AuthenticationMethod
+        $AuthenticationMethod,
+
+        [Parameter()]
+        [System.String[]]
+        $Resources
     )
 
     $modules = Get-ChildItem -Path ($PSScriptRoot + '\..\DSCResources\') -Recurse -Filter '*.psm1'
     $Components = @()
     foreach ($resource in $modules)
     {
-        Import-Module $resource.FullName -Force
-        $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
+        if ($Resources.Contains($resource.Name.Replace('.psm1', '').Replace('MSFT_', '')))
+        {
+            Import-Module $resource.FullName -Force
+            $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
 
-        #Case - Resource supports CertificateThumbprint
-        if ($AuthenticationMethod.Contains('CertificateThumbprint') -and `
-                $parameters.Contains('ApplicationId') -and `
-                $parameters.Contains('CertificateThumbprint') -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'CertificateThumbprint'
+            #Case - Resource supports CertificateThumbprint
+            if ($AuthenticationMethod.Contains('CertificateThumbprint') -and `
+                    $parameters.Contains('ApplicationId') -and `
+                    $parameters.Contains('CertificateThumbprint') -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'CertificateThumbprint'
+                }
             }
-        }
 
-        # Case - Resource supports CertificatePath
-        elseif ($AuthenticationMethod.Contains('CertificatePath') -and `
-                $parameters.Contains('ApplicationId') -and `
-                $parameters.Contains('CertificatePath') -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'CertificatePath'
+            # Case - Resource supports CertificatePath
+            elseif ($AuthenticationMethod.Contains('CertificatePath') -and `
+                    $parameters.Contains('ApplicationId') -and `
+                    $parameters.Contains('CertificatePath') -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'CertificatePath'
+                }
             }
-        }
 
-        # Case - Resource supports ApplicationSecret
-        elseif ($AuthenticationMethod.Contains('ApplicationWithSecret') -and `
-                $parameters.Contains('ApplicationId') -and `
-                $parameters.Contains('ApplicationSecret') -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'ApplicationSecret'
+            # Case - Resource supports ApplicationSecret
+            elseif ($AuthenticationMethod.Contains('ApplicationWithSecret') -and `
+                    $parameters.Contains('ApplicationId') -and `
+                    $parameters.Contains('ApplicationSecret') -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'ApplicationSecret'
+                }
             }
-        }
-        # Case - Resource supports Credential using CredentialsWithApplicationId
-        elseif ($AuthenticationMethod.Contains('CredentialsWithApplicationId') -and `
-                $parameters.Contains('Credential'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'CredentialsWithApplicationId'
+            # Case - Resource supports Credential using CredentialsWithApplicationId
+            elseif ($AuthenticationMethod.Contains('CredentialsWithApplicationId') -and `
+                    $parameters.Contains('Credential'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'CredentialsWithApplicationId'
+                }
             }
-        }
-        # Case - Resource supports Credential
-        elseif ($AuthenticationMethod.Contains('Credentials') -and `
-                $parameters.Contains('Credential'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'Credentials'
+            # Case - Resource supports Credential
+            elseif ($AuthenticationMethod.Contains('Credentials') -and `
+                    $parameters.Contains('Credential'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'Credentials'
+                }
             }
-        }
-        elseif ($AuthenticationMethod.Contains('ManagedIdentity') -and `
-                $parameters.Contains('ManagedIdentity'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'ManagedIdentity'
+            elseif ($AuthenticationMethod.Contains('ManagedIdentity') -and `
+                    $parameters.Contains('ManagedIdentity'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'ManagedIdentity'
+                }
             }
         }
     }
@@ -4050,7 +4057,7 @@ function Test-M365DSCModuleValidity
     $InformationPreference = 'Continue'
 
     # validate only one installation of the module is present (and it's the latest version available from the psgallery)
-    $latestVersion = (Find-Module -Name 'Microsoft365DSC').Version
+    $latestVersion = (Find-Module -Name 'Microsoft365DSC' -Repository 'PSGallery' -Includes 'DSCResource').Version
     $localVersion = (Get-Module -Name 'Microsoft365DSC').Version
 
     if ($latestVersion -gt $localVersion)
@@ -4076,7 +4083,34 @@ function Update-M365DSCModule
 {
     [CmdletBinding()]
     param()
-    Update-Module -Name 'Microsoft365DSC'
+    try
+    {
+        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop
+    }
+    catch
+    {
+        if ($_.Exception.Message -like "*Module 'Microsoft365DSC' was not installed by using Install-Module")
+        {
+            Write-Verbose -Message "The Microsoft365DSC module was not installed from the PowerShell Gallery and therefore cannot be updated."
+        }
+    }
+    try
+    {
+        Write-Verbose -Message "Unloading all instances of the Microsoft365DSC module from the current PowerShell session."
+        Remove-Module Microsoft365DSC -Force
+
+        Write-Verbose -Message "Retrieving all versions of the Microsoft365DSC installed on the machine."
+        [Array]$instances = Get-Module Microsoft365DSC -ListAvailable | Sort-Object -Property Version -Descending
+        if ($instances.Length -gt 0)
+        {
+            Write-Verbose -Message "Loading version {$($instances[0].Version.ToString())} of the Microsoft365DSC module from {$($instances[0].ModuleBase)}"
+            Import-Module Microsoft365DSC -RequiredVersion $instances[0].Version.ToString() -Force
+        }
+    }
+    catch
+    {
+        throw $_
+    }
     Update-M365DSCDependencies
     Uninstall-M365DSCOutdatedDependencies
 }

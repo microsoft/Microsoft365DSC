@@ -1,5 +1,48 @@
 # Change log for Microsoft365DSC
 
+# 1.23.628.1
+
+* AADAdministrativeUnit
+  * Improved export performance.
+* AADApplication
+  * Updated the Set and Test function to ignore the AppId parameter.
+    FIXES [#3390](https://github.com/microsoft/Microsoft365DSC/issues/3390)
+  * Improved export performance.
+* AADAuthenticationMethodPolicyAuthenticator
+  * Deprecated the NumberMatchingRequiredState Feature Setting.
+    FIXES [#3406](https://github.com/microsoft/Microsoft365DSC/issues/3406)
+* AADRoleDefinition
+  * Improved export performance.
+* AADRoleSetting
+  * Improved export performance.
+* AADServicePrincipal
+  * Updated the Set and Test function to ignore the AppId parameter.
+    FIXES [#3390](https://github.com/microsoft/Microsoft365DSC/issues/3390)
+  * Improved export performance.
+* EXOAvailabilityConfig
+  * Fixes an error where an error was thrown when the OrgWideAccount wasn't set.
+    FIXES [#3402](https://github.com/microsoft/Microsoft365DSC/issues/3402)
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Fixes an error where the WindowsMobileRestriction property was still being assessed dispite it being deprecated.
+    FIXES [#3407](https://github.com/microsoft/Microsoft365DSC/issues/3407)
+* O365OrgSettings
+  * Added support for Forms, Dynamics Customer Voice, To Do and Apps & Services settings.
+* TeamsCallQueue
+  * Initial release.
+* Teams resources
+  * Added required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
+* MISC
+  * Added API to the Organization.Read.All permission in the Get-M365DSCCompiledPermisisonList cmdlet
+  * Fixes an issue with Update-M365DSCAzureAdApplication where it was throwing an error complaining about duplicate keys.
+    FIXES #3417
+  * Update-M365DSCModule now forces a reload of the latest version of the Microsoft365DSC module.
+    FIXES [#3326](https://github.com/microsoft/Microsoft365DSC/issues/3326)
+  * Update-M365DSCAyureADApplication
+    Added retry logic to catch the "Key credential end date is invalid" error when updating the application certificate.
+    FIXES [#3426](https://github.com/microsoft/Microsoft365DSC/issues/3426)
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.16.
+
 # 1.23.621.1
 
 * AADAdministrativeUnit
@@ -34,6 +77,10 @@
 * AADNamedLocationPolicy
   * Added support forthe CountryLookupMethod property
     FIXES [#3345](https://github.com/microsoft/Microsoft365DSC/issues/3345)
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Fixes an issue with Set-TargetResource when an array is empty
+  * Fixes presentationValue updates
+    FIXES [#3355](https://github.com/microsoft/Microsoft365DSC/issues/3355)
 * TeamsAppPermissionPolicy
   * Fixes an issue where the wrong app types were trying to get assigned.
     FIXES [#3373](https://github.com/microsoft/Microsoft365DSC/issues/3373)

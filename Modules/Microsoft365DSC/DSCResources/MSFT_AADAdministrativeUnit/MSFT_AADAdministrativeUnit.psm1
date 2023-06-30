@@ -100,16 +100,29 @@ function Get-TargetResource
         #region resource generator code
         if (-not [string]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction SilentlyContinue
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            }
+            else
+            {
+                $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction SilentlyContinue
+            }
         }
 
         if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($DisplayName))
         {
             Write-Verbose -Message "Could not find an Azure AD Administrative Unit with Id {$Id}"
-
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                }
+                else
+                {
+                    $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                }
             }
         }
         #endregion
@@ -946,14 +959,15 @@ function Export-TargetResource
 
     try
     {
+        $Script:ExportMode = $true
         #region resource generator code
-        [array]$getValue = Get-MgDirectoryAdministrativeUnit -All `
+        [array] $Script:exportedInstances = Get-MgDirectoryAdministrativeUnit -All `
             -ErrorAction Stop
         #endregion
 
         $i = 1
         $dscContent = ''
-        if ($getValue.Length -eq 0)
+        if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -961,14 +975,14 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($config in $getValue)
+        foreach ($config in $Script:exportedInstances)
         {
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
                 DisplayName           = $config.DisplayName
                 Id                    = $config.Id

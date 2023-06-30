@@ -1,0 +1,66 @@
+﻿{
+    "resourceName": "TeamsCallQueue",
+    "description": "This resource is used to manage Call Queue in your Skype for Business Online organization.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}
