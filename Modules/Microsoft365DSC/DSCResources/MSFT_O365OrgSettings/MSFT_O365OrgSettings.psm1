@@ -611,6 +611,7 @@ function Set-TargetResource
     }
     if ($FormsParametersToUpdate.Keys.Count -gt 0)
     {
+        Write-Verbose -Message "Updating the Microsoft Forms settings with values:$(Convert-M365DscHashtableToString -Hashtable $FormsParametersToUpdate)"
         Update-M365DSCOrgSettingsForms -Options $FormsParametersToUpdate
     }
 
@@ -618,18 +619,19 @@ function Set-TargetResource
     $DynamicsCustomerVoiceParametersToUpdate = @{}
     if ($DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled -ne $currentValues.DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled)
     {
-        $DynamicsCustomerVoiceParametersToUpdate.Add('isRestrictedSurveyAccessEnabled', $currentValues.DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled)
+        $DynamicsCustomerVoiceParametersToUpdate.Add('isRestrictedSurveyAccessEnabled', $DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled)
     }
     if ($DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled -ne $currentValues.DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled)
     {
-        $DynamicsCustomerVoiceParametersToUpdate.Add('isRecordIdentityByDefaultEnabled', $currentValues.DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled)
+        $DynamicsCustomerVoiceParametersToUpdate.Add('isRecordIdentityByDefaultEnabled', $DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled)
     }
     if ($DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled -ne $currentValues.DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled)
     {
-        $DynamicsCustomerVoiceParametersToUpdate.Add('isInOrgFormsPhishingScanEnabled', $currentValues.DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled)
+        $DynamicsCustomerVoiceParametersToUpdate.Add('isInOrgFormsPhishingScanEnabled', $DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled)
     }
     if ($DynamicsCustomerVoiceParametersToUpdate.Keys.Count -gt 0)
     {
+        Write-Verbose -Message "Updating the Dynamics 365 Customer Voice settings with values:$(Convert-M365DscHashtableToString -Hashtable $DynamicsCustomerVoiceParametersToUpdate)"
         Update-M365DSCOrgSettingsDynamicsCustomerVoice -Options $DynamicsCustomerVoiceParametersToUpdate
     }
 
@@ -637,14 +639,15 @@ function Set-TargetResource
     $AppsAndServicesParametersToUpdate = @{}
     if ($AppsAndServicesIsOfficeStoreEnabled -ne $currentValues.AppsAndServicesIsOfficeStoreEnabled)
     {
-        $AppsAndServicesParametersToUpdate.Add('isOfficeStoreEnabled', $currentValues.AppsAndServicesIsOfficeStoreEnabled)
+        $AppsAndServicesParametersToUpdate.Add('isOfficeStoreEnabled', $AppsAndServicesIsOfficeStoreEnabled)
     }
     if ($AppsAndServicesIsAppAndServicesTrialEnabled -ne $currentValues.AppsAndServicesIsAppAndServicesTrialEnabled)
     {
-        $AppsAndServicesParametersToUpdate.Add('isAppAndServicesTrialEnabled', $currentValues.AppsAndServicesIsAppAndServicesTrialEnabled)
+        $AppsAndServicesParametersToUpdate.Add('isAppAndServicesTrialEnabled', $AppsAndServicesIsAppAndServicesTrialEnabled)
     }
     if ($AppsAndServicesParametersToUpdate.Keys.Count -gt 0)
     {
+        Write-Verbose -Message "Updating the Apps & Settings settings with values:$(Convert-M365DscHashtableToString -Hashtable $AppsAndServicesParametersToUpdate)"
         Update-M365DSCOrgSettingsAppsAndServices -Options $AppsAndServicesParametersToUpdate
     }
 
@@ -652,18 +655,19 @@ function Set-TargetResource
     $ToDoParametersToUpdate = @{}
     if ($ToDoIsPushNotificationEnabled -ne $currentValues.ToDoIsPushNotificationEnabled)
     {
-        $ToDoParametersToUpdate.Add('isPushNotificationEnabled', $currentValues.ToDoIsPushNotificationEnabled)
+        $ToDoParametersToUpdate.Add('isPushNotificationEnabled', $ToDoIsPushNotificationEnabled)
     }
     if ($ToDoIsExternalJoinEnabled -ne $currentValues.ToDoIsExternalJoinEnabled)
     {
-        $ToDoParametersToUpdate.Add('isExternalJoinEnabled', $currentValues.ToDoIsExternalJoinEnabled)
+        $ToDoParametersToUpdate.Add('isExternalJoinEnabled', $ToDoIsExternalJoinEnabled)
     }
     if ($ToDoIsExternalShareEnabled -ne $currentValues.ToDoIsExternalShareEnabled)
     {
-        $ToDoParametersToUpdate.Add('isExternalShareEnabled', $currentValues.ToDoIsExternalShareEnabled)
+        $ToDoParametersToUpdate.Add('isExternalShareEnabled', $ToDoIsExternalShareEnabled)
     }
     if ($ToDoParametersToUpdate.Keys.Count -gt 0)
     {
+        Write-Verbose -Message "Updating the To Do settings with values:$(Convert-M365DscHashtableToString -Hashtable $ToDoParametersToUpdate)"
         Update-M365DSCOrgSettingsToDo -Options $ToDoParametersToUpdate
     }
 }
@@ -1073,16 +1077,7 @@ function Get-M365DSCOrgSettingsForms
     param()
 
     $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
-    #$results = Invoke-MgGraphRequest -Method GET -Uri $url
-    $results = @{
-        isExternalSendFormEnabled           = $true
-        isExternalShareCollaborationEnabled = $true
-        isExternalShareResultEnabled        = $false
-        isExternalShareTemplateEnabled      = $false
-        isRecordIdentityByDefaultEnabled    = $false
-        isBingImageSearchEnabled            = $false
-        isInOrgFormsPhishingScanEnabled     = $false
-    }
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
     return $results
 }
 
@@ -1100,7 +1095,7 @@ function Update-M365DSCOrgSettingsForms
     {
         Write-Verbose -Message "Updating Forms Settings"
         $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
-        #Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
     {
@@ -1119,12 +1114,7 @@ function Get-M365DSCOrgSettingsDynamicsCustomerVoice
     param()
 
     $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
-    #$results = Invoke-MgGraphRequest -Method GET -Uri $url
-    $results = @{
-        isRestrictedSurveyAccessEnabled  = $true
-        isRecordIdentityByDefaultEnabled = $false
-        isInOrgFormsPhishingScanEnabled  = $false
-    }
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
     return $results
 }
 
@@ -1142,7 +1132,7 @@ function Update-M365DSCOrgSettingsDynamicsCustomerVoice
     {
         Write-Verbose -Message "Updating Dynamics Customer Voice Settings"
         $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
-        #Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
     {
@@ -1161,11 +1151,7 @@ function Get-M365DSCOrgSettingsAppsAndServices
     param()
 
     $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
-    #$results = Invoke-MgGraphRequest -Method GET -Uri $url
-    $results = @{
-        isOfficeStoreEnabled         = $true
-        isAppAndServicesTrialEnabled = $false
-    }
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
     return $results
 }
 
@@ -1183,7 +1169,7 @@ function Update-M365DSCOrgSettingsAppsAndServices
     {
         Write-Verbose -Message "Updating App & Services Settings"
         $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
-        #Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
     {
@@ -1201,12 +1187,7 @@ function Get-M365DSCOrgSettingsToDo
     param()
 
     $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
-    #$results = Invoke-MgGraphRequest -Method GET -Uri $url
-    $results = @{
-        isPushNotificationEnabled = $true
-        isExternalJoinEnabled     = $true
-        isExternalShareEnabled    = $false
-    }
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
     return $results
 }
 
@@ -1224,7 +1205,7 @@ function Update-M365DSCOrgSettingsToDo
     {
         Write-Verbose -Message "Updating To Do Settings"
         $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
-        #Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
     {
