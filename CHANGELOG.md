@@ -25,6 +25,8 @@
 * IntuneDeviceEnrollmentPlatformRestriction
   * Fixes an error where the WindowsMobileRestriction property was still being assessed dispite it being deprecated.
     FIXES [#3407](https://github.com/microsoft/Microsoft365DSC/issues/3407)
+* TeamsCallQueue
+  * Initial release.
 * Teams resources
   * Added required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
 * MISC
