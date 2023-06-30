@@ -178,8 +178,6 @@ function Start-M365DSCConfigurationExtract
 
         Write-Host -Object ' '
 
-        $allSupportedResourcesWithMostSecureAuthMethod = Get-M365DSCComponentsWithMostSecureAuthenticationType -AuthenticationMethod $AuthMethods
-
         # If some resources are not supported based on the Authentication parameters
         # received, write a warning.
         if ($Components.Length -eq 0)
@@ -197,6 +195,9 @@ function Start-M365DSCConfigurationExtract
         {
             $selectedResources = $Components
         }
+
+        $allSupportedResourcesWithMostSecureAuthMethod = Get-M365DSCComponentsWithMostSecureAuthenticationType -AuthenticationMethod $AuthMethods `
+            -Resources $selectedResources
 
         try
         {

@@ -65,17 +65,19 @@ function Get-M365DSCCompiledPermissionList
     $results = @{
         Read               = @(
             @{
+                API        = 'Graph'
                 Permission = @{
-                    Name = "Organization.Read.All"
-                    Type = "Application"
+                    Name = 'Organization.Read.All'
+                    Type = 'Application'
                 }
             }
         )
         Update             = @(
             @{
+                API        = 'Graph'
                 Permission = @{
-                    Name = "Organization.Read.All"
-                    Type = "Application"
+                    Name = 'Organization.Read.All'
+                    Type = 'Application'
                 }
             }
         )
@@ -1414,11 +1416,10 @@ function Update-M365DSCAzureAdApplication
     {
         Write-LogEntry ' '
         Write-LogEntry 'Checking app permissions'
-        $permissionsSet = $false
-        $allRequiredAccess = @()
+        $allRequiredAccess = @{}
         foreach ($permission in $Permissions)
         {
-            if ($permission.Api -eq $null -or $permission.Api -notin @('Graph', 'SharePoint', 'Exchange'))
+            if ($null -eq $permission.Api -or $permission.Api -notin @('Graph', 'SharePoint', 'Exchange'))
             {
                 Write-LogEntry "Specified permission is invalid $(Convert-M365DscHashtableToString -Hashtable $permission)" -Type Warning
                 continue
@@ -1445,20 +1446,26 @@ function Update-M365DSCAzureAdApplication
 
             if ($null -eq $appRole)
             {
-                $currentAPIAccess = @{
-                    ResourceAppId  = $svcprincipal.AppId
-                    ResourceAccess = @()
+                $currentAPIAccess = $allRequiredAccess.($svcprincipal.AppId)
+
+                if ($null -eq $currentAPIAccess)
+                {
+                    $allRequiredAccess.Add(($svcprincipal.AppId), @())
                 }
                 $role = $svcPrincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.PermissionName }
                 if ($null -eq $role)
                 {
                     $ObjectGuid = [System.Guid]::empty
-                    if ([System.Guid]::TryParse($permission.PermissionName ,[System.Management.Automation.PSReference]$ObjectGuid))
+                    if ([System.Guid]::TryParse($permission.PermissionName , [System.Management.Automation.PSReference]$ObjectGuid))
                     {
                         $appPermission = @{
                             Id   = $permission.PermissionName
                             Type = 'Role'
                         }
+                    }
+                    else
+                    {
+                        continue
                     }
                 }
                 else
@@ -1468,13 +1475,7 @@ function Update-M365DSCAzureAdApplication
                         Type = 'Role'
                     }
                 }
-                $currentAPIAccess.ResourceAccess += $appPermission
-                $permissionsSet = $true
-
-                if ($null -ne $currentAPIAccess)
-                {
-                    $allRequiredAccess += $currentAPIAccess
-                }
+                $allRequiredAccess.($svcprincipal.AppId) += $appPermission
             }
             else
             {
@@ -1482,14 +1483,33 @@ function Update-M365DSCAzureAdApplication
             }
         }
 
+        $requiredResourceAccess = @()
+        foreach ($provider in $allRequiredAccess.Keys)
+        {
+            $valueToAdd = @{
+                ResourceAppId  = $provider
+                ResourceAccess = @()
+            }
+
+            foreach ($permissionEntry in $allRequiredAccess.$provider)
+            {
+                $permissionToAdd = @{
+                    Type = $permissionEntry.Type
+                    Id   = $permissionEntry.Id
+                }
+                $valueToAdd.ResourceAccess += $permissionToAdd
+            }
+            $requiredResourceAccess += $valueToAdd
+        }
+
         Update-MgApplication -ApplicationId ($azureADApp.Id) `
-            -RequiredResourceAccess $allRequiredAccess | Out-Null
+            -RequiredResourceAccess $requiredResourceAccess | Out-Null
 
         Write-LogEntry '    Permission updated for application'
 
         if ($AdminConsent)
         {
-            if (-not $PSBoundParameters.ContainsKey("Credential"))
+            if (-not $PSBoundParameters.ContainsKey('Credential'))
             {
                 Write-LogEntry '[ERROR] You need to provide admin credentials when specifying the AdminConsent parameter.'
             }
@@ -1512,18 +1532,18 @@ function Update-M365DSCAzureAdApplication
                 $password = $Credential.GetNetworkCredential().password
 
                 $url = "https://main.iam.ad.ext.azure.com/api/Directories/$($tenant.tenantId)/Details"
-                $uri = "https://login.microsoftonline.com/{0}/oauth2/token" -f $tenantid
-                $body = "resource=74658136-14ec-4630-ad9b-26e160ff0fc6&client_id=1950a258-227b-4e31-a9cf-717495945fc2&grant_type=password&username={1}&password={0}" -f [System.Web.HttpUtility]::UrlEncode($password), $username
+                $uri = 'https://login.microsoftonline.com/{0}/oauth2/token' -f $tenantid
+                $body = 'resource=74658136-14ec-4630-ad9b-26e160ff0fc6&client_id=1950a258-227b-4e31-a9cf-717495945fc2&grant_type=password&username={1}&password={0}' -f [System.Web.HttpUtility]::UrlEncode($password), $username
                 $token = Invoke-RestMethod $uri `
                     -Method POST `
                     -Body $body `
-                    -ContentType "application/x-www-form-urlencoded" `
+                    -ContentType 'application/x-www-form-urlencoded' `
                     -ErrorAction SilentlyContinue
 
                 $headers = @{
-                    Authorization = "Bearer $($token.access_token)";
-                    "x-ms-client-request-id" = [guid]::NewGuid().ToString();
-                    "x-ms-client-session-id" = [guid]::NewGuid().ToString()
+                    Authorization            = "Bearer $($token.access_token)"
+                    'x-ms-client-request-id' = [guid]::NewGuid().ToString()
+                    'x-ms-client-session-id' = [guid]::NewGuid().ToString()
                 }
 
                 $applicationId = $azureADApp.AppId
@@ -1576,8 +1596,8 @@ function Update-M365DSCAzureAdApplication
                     $passwordCred = @{
                         displayName = 'Created by Microsoft365DSC'
                         endDateTime = $endDate
-                     }
-                    $appCred = Add-MgApplicationPassword -ApplicationId $azureADApp.Id -PasswordCredential  $passwordCred
+                    }
+                    $appCred = Add-MgApplicationPassword -ApplicationId $azureADApp.Id -PasswordCredential $passwordCred
                 }
             }
             'Certificate'
@@ -1640,12 +1660,46 @@ function Update-M365DSCAzureAdApplication
 
                     Write-LogEntry "    Certificate details: $($cerCert.Subject) ($($cerCert.Thumbprint))"
                     $params = @{
-                        Type = "AsymmetricX509Cert"
-                        Usage = "Verify"
-                        Key = $cerCert.GetRawCertData()
+                        Type        = 'AsymmetricX509Cert'
+                        Usage       = 'Verify'
+                        Key         = $cerCert.GetRawCertData()
                         EndDateTime = $endDate
                     }
-                    $appCred = Update-MgApplication -ApplicationId $azureAdApp.Id -KeyCredentials $params
+
+                    $maxRetries = 3
+                    $retryCount = 0
+                    $retryDelay = 10 # seconds
+
+                    do
+                    {
+                        try
+                        {
+                            $appCred = Update-MgApplication -ApplicationId $azureAdApp.Id -KeyCredentials $params
+                            break # exit the loop if the operation succeeds
+                        }
+                        catch
+                        {
+                            if ($_.Exception.Message -match 'Key credential end date is invalid')
+                            {
+                                Write-Host "Caught error: $($_.Exception.Message)"
+                                if ($retryCount -lt $maxRetries)
+                                {
+                                    $retryCount++
+                                    Write-Host "Retrying in $retryDelay seconds..."
+                                    Start-Sleep -Seconds $retryDelay
+                                }
+                                else
+                                {
+                                    Write-Host 'Maximum number of retries reached.'
+                                    throw # re-throw the exception if the maximum number of retries is reached
+                                }
+                            }
+                            else
+                            {
+                                throw # re-throw the exception if it's not the expected error
+                            }
+                        }
+                    } while ($true)
                 }
             }
         }
