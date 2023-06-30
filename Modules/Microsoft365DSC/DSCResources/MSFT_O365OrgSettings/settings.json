@@ -10,6 +10,18 @@
                     },
                     {
                         "name": "ReportSettings.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-Forms.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-Todo.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-AppsAndServices.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-DynamicsVoice.Read.All"
                     }
                 ],
                 "update": [
@@ -18,6 +30,18 @@
                     },
                     {
                         "name": "ReportSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "OrgSettings-Forms.ReadWrite.All"
+                    },
+                    {
+                        "name": "OrgSettings-Todo.ReadWrite.All"
+                    },
+                    {
+                        "name": "OrgSettings-AppsAndServices.ReadWrite.All"
+                    },
+                    {
+                        "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
                     }
                 ]
             },
@@ -28,6 +52,18 @@
                     },
                     {
                         "name": "ReportSettings.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-Forms.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-Todo.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-AppsAndServices.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-DynamicsVoice.Read.All"
                     }
                 ],
                 "update": [
@@ -39,6 +75,18 @@
                     },
                     {
                         "name": "83f7232f-763c-47b2-a097-e35d2cbe1da5"
+                    },
+                    {
+                        "name": "OrgSettings-Forms.ReadWrite.All"
+                    },
+                    {
+                        "name": "OrgSettings-Todo.ReadWrite.All"
+                    },
+                    {
+                        "name": "OrgSettings-AppsAndServices.ReadWrite.All"
+                    },
+                    {
+                        "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
                     }
                 ]
             }

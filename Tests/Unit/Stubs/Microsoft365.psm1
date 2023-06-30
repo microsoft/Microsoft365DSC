@@ -27,7 +27,11 @@ function Set-DefaultTenantBriefingConfig
 
         [Parameter()]
         [PSObject]
-        $ResultSize
+        $ResultSize,
+
+        [Parameter()]
+        [System.String]
+        $IsEnabledByDefault
     )
 }
 function Set-DefaultTenantMyAnalyticsFeatureConfig

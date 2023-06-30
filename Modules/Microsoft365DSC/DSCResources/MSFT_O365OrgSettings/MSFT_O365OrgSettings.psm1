@@ -15,6 +15,54 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AppsAndServicesIsOfficeStoreEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsAndServicesIsAppAndServicesTrialEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalSendFormEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalShareCollaborationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalShareResultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalShareTemplateEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsRecordIdentityByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsBingImageSearchEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsInOrgFormsPhishingScanEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
 
         [Parameter()]
@@ -24,6 +72,18 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $MicrosoftVivaBriefingEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $ToDoIsPushNotificationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ToDoIsExternalJoinEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ToDoIsExternalShareEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -122,8 +182,10 @@ function Get-TargetResource
         $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
         $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled'
 
+        # Planner iCal settings
         $PlannerSettings = Get-M365DSCO365OrgSettingsPlannerConfig
 
+        # Cortana settings
         $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
         $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled'
 
@@ -152,8 +214,10 @@ function Get-TargetResource
             Write-Verbose -Message $_
         }
 
+        # Reports Display Settings
         $AdminCenterReportDisplayConcealedNamesValue = Get-M365DSCOrgSettingsAdminCenterReport
 
+        # Installation Options
         $installationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
         $appsForWindowsValue = @()
         foreach ($key in $installationOptions.appsForWindows.Keys)
@@ -172,26 +236,53 @@ function Get-TargetResource
             }
         }
 
+        # Forms
+        $FormsSettings = Get-M365DSCOrgSettingsForms
+
+        # DynamicsCustomerVoice
+        $DynamicCustomerVoiceSettings = Get-M365DSCOrgSettingsDynamicsCustomerVoice
+
+        # Apps and Services
+        $AppsAndServicesSettings = Get-M365DSCOrgSettingsAppsAndServices
+
+        # To do
+        $ToDoSettings = Get-M365DSCOrgSettingsToDo
+
         return @{
-            IsSingleInstance                             = 'Yes'
-            CortanaEnabled                               = $CortanaEnabledValue.AccountEnabled
-            PlannerAllowCalendarSharing                  = $PlannerSettings.allowCalendarSharing
-            AdminCenterReportDisplayConcealedNames       = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
-            InstallationOptionsUpdateChannel             = $installationOptions.updateChannel
-            InstallationOptionsAppsForWindows            = $appsForWindowsValue
-            InstallationOptionsAppsForMac                = $appsForMacValue
-            MicrosoftVivaBriefingEmail                   = $vivaBriefingEmailValue
-            M365WebEnableUsersToOpenFilesFrom3PStorage   = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
-            VivaInsightsWebExperience                    = $currentVivaInsightsSettings.IsDashboardEnabled
-            VivaInsightsDigestEmail                      = $currentVivaInsightsSettings.IsDigestEmailEnabled
-            VivaInsightsOutlookAddInAndInlineSuggestions = $currentVivaInsightsSettings.IsAddInEnabled
-            VivaInsightsScheduleSendSuggestions          = $currentVivaInsightsSettings.IsScheduleSendEnabled
-            Credential                                   = $Credential
-            ApplicationId                                = $ApplicationId
-            TenantId                                     = $TenantId
-            ApplicationSecret                            = $ApplicationSecret
-            CertificateThumbprint                        = $CertificateThumbprint
-            Managedidentity                              = $ManagedIdentity.IsPresent
+            IsSingleInstance                                      = 'Yes'
+            AdminCenterReportDisplayConcealedNames                = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
+            AppsAndServicesIsOfficeStoreEnabled                   = $AppsAndServicesSettings.isOfficeStoreEnabled
+            AppsAndServicesIsAppAndServicesTrialEnabled           = $AppsAndServicesSettings.IsAppAndServicesTrialEnabled
+            CortanaEnabled                                        = $CortanaEnabledValue.AccountEnabled
+            DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled  = $DynamicCustomerVoiceSettings.isRestrictedSurveyAccessEnabled
+            DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled = $DynamicCustomerVoiceSettings.isRecordIdentityByDefaultEnabled
+            DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled  = $DynamicCustomerVoiceSettings.isInOrgFormsPhishingScanEnabled
+            FormsIsExternalSendFormEnabled                        = $FormsSettings.isExternalSendFormEnabled
+            FormsIsExternalShareCollaborationEnabled              = $FormsSettings.isExternalShareCollaborationEnabled
+            FormsIsExternalShareResultEnabled                     = $FormsSettings.isExternalShareResultEnabled
+            FormsIsExternalShareTemplateEnabled                   = $FormsSettings.isExternalShareTemplateEnabled
+            FormsIsRecordIdentityByDefaultEnabled                 = $FormsSettings.isRecordIdentityByDefaultEnabled
+            FormsIsBingImageSearchEnabled                         = $FormsSettings.isBingImageSearchEnabled
+            FormsIsInOrgFormsPhishingScanEnabled                  = $FormsSettings.isInOrgFormsPhishingScanEnabled
+            InstallationOptionsUpdateChannel                      = $installationOptions.updateChannel
+            InstallationOptionsAppsForWindows                     = $appsForWindowsValue
+            InstallationOptionsAppsForMac                         = $appsForMacValue
+            MicrosoftVivaBriefingEmail                            = $vivaBriefingEmailValue
+            M365WebEnableUsersToOpenFilesFrom3PStorage            = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
+            PlannerAllowCalendarSharing                           = $PlannerSettings.allowCalendarSharing
+            ToDoIsPushNotificationEnabled                         = $ToDoSettings.IsPushNotificationEnabled
+            ToDoIsExternalJoinEnabled                             = $ToDoSettings.IsExternalJoinEnabled
+            ToDoIsExternalShareEnabled                            = $ToDoSettings.IsExternalShareEnabled
+            VivaInsightsDigestEmail                               = $currentVivaInsightsSettings.IsDigestEmailEnabled
+            VivaInsightsOutlookAddInAndInlineSuggestions          = $currentVivaInsightsSettings.IsAddInEnabled
+            VivaInsightsScheduleSendSuggestions                   = $currentVivaInsightsSettings.IsScheduleSendEnabled
+            VivaInsightsWebExperience                             = $currentVivaInsightsSettings.IsDashboardEnabled
+            Credential                                            = $Credential
+            ApplicationId                                         = $ApplicationId
+            TenantId                                              = $TenantId
+            ApplicationSecret                                     = $ApplicationSecret
+            CertificateThumbprint                                 = $CertificateThumbprint
+            Managedidentity                                       = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -222,6 +313,54 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AppsAndServicesIsOfficeStoreEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsAndServicesIsAppAndServicesTrialEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalSendFormEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalShareCollaborationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalShareResultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalShareTemplateEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsRecordIdentityByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsBingImageSearchEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsInOrgFormsPhishingScanEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
 
         [Parameter()]
@@ -231,6 +370,18 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $MicrosoftVivaBriefingEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $ToDoIsPushNotificationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ToDoIsExternalJoinEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ToDoIsExternalShareEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -348,7 +499,7 @@ function Set-TargetResource
     {
         $briefingValue = 'opt-in'
     }
-    Set-DefaultTenantBriefingConfig -PrivacyMode $briefingValue | Out-Null
+    Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue | Out-Null
 
     # Viva Insights
     Write-Verbose -Message "Updating Viva Insights settings."
@@ -357,6 +508,7 @@ function Set-TargetResource
     Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Add-In" -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
     Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Scheduled-send" -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
 
+    # Reports Display Names
     $AdminCenterReportDisplayConcealedNamesEnabled = Get-M365DSCOrgSettingsAdminCenterReport
     Write-Verbose "$($AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames) = $AdminCenterReportDisplayConcealedNames"
     if ($AdminCenterReportDisplayConcealedNames -ne $AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames)
@@ -365,6 +517,7 @@ function Set-TargetResource
         Update-M365DSCOrgSettingsAdminCenterReport -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
     }
 
+    # Apps Installation
     if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows") -or $PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac"))
     {
         $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
@@ -425,6 +578,98 @@ function Set-TargetResource
                 -AuthenticationOption $ConnectionModeTasks
         }
     }
+
+    # Forms
+    $FormsParametersToUpdate = @{}
+    if ($FormsIsExternalSendFormEnabled -ne $currentValues.FormsIsExternalSendFormEnabled)
+    {
+        $FormsParametersToUpdate.Add('isExternalSendFormEnabled', $FormsIsExternalSendFormEnabled)
+    }
+    if ($FormsIsExternalShareCollaborationEnabled -ne $currentValues.FormsIsExternalShareCollaborationEnabled)
+    {
+        $FormsParametersToUpdate.Add('isExternalShareCollaborationEnabled', $FormsIsExternalShareCollaborationEnabled)
+    }
+    if ($FormsIsExternalShareResultEnabled -ne $currentValues.FormsIsExternalShareResultEnabled)
+    {
+        $FormsParametersToUpdate.Add('isExternalShareResultEnabled', $FormsIsExternalShareResultEnabled)
+    }
+    if ($FormsIsExternalShareTemplateEnabled -ne $currentValues.FormsIsExternalShareTemplateEnabled)
+    {
+        $FormsParametersToUpdate.Add('isExternalShareTemplateEnabled', $FormsIsExternalShareTemplateEnabled)
+    }
+    if ($FormsIsRecordIdentityByDefaultEnabled -ne $currentValues.FormsIsRecordIdentityByDefaultEnabled)
+    {
+        $FormsParametersToUpdate.Add('isRecordIdentityByDefaultEnabled', $FormsIsRecordIdentityByDefaultEnabled)
+    }
+    if ($FormsIsBingImageSearchEnabled -ne $currentValues.FormsIsBingImageSearchEnabled)
+    {
+        $FormsParametersToUpdate.Add('isBingImageSearchEnabled', $FormsIsBingImageSearchEnabled)
+    }
+    if ($FormsIsInOrgFormsPhishingScanEnabled -ne $currentValues.FormsIsInOrgFormsPhishingScanEnabled)
+    {
+        $FormsParametersToUpdate.Add('isInOrgFormsPhishingScanEnabled', $FormsIsInOrgFormsPhishingScanEnabled)
+    }
+    if ($FormsParametersToUpdate.Keys.Count -gt 0)
+    {
+        Write-Verbose -Message "Updating the Microsoft Forms settings with values:$(Convert-M365DscHashtableToString -Hashtable $FormsParametersToUpdate)"
+        Update-M365DSCOrgSettingsForms -Options $FormsParametersToUpdate
+    }
+
+    # Dynamics Customer Voice Settings
+    $DynamicsCustomerVoiceParametersToUpdate = @{}
+    if ($DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled -ne $currentValues.DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled)
+    {
+        $DynamicsCustomerVoiceParametersToUpdate.Add('isRestrictedSurveyAccessEnabled', $DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled)
+    }
+    if ($DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled -ne $currentValues.DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled)
+    {
+        $DynamicsCustomerVoiceParametersToUpdate.Add('isRecordIdentityByDefaultEnabled', $DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled)
+    }
+    if ($DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled -ne $currentValues.DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled)
+    {
+        $DynamicsCustomerVoiceParametersToUpdate.Add('isInOrgFormsPhishingScanEnabled', $DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled)
+    }
+    if ($DynamicsCustomerVoiceParametersToUpdate.Keys.Count -gt 0)
+    {
+        Write-Verbose -Message "Updating the Dynamics 365 Customer Voice settings with values:$(Convert-M365DscHashtableToString -Hashtable $DynamicsCustomerVoiceParametersToUpdate)"
+        Update-M365DSCOrgSettingsDynamicsCustomerVoice -Options $DynamicsCustomerVoiceParametersToUpdate
+    }
+
+    # Apps And Services
+    $AppsAndServicesParametersToUpdate = @{}
+    if ($AppsAndServicesIsOfficeStoreEnabled -ne $currentValues.AppsAndServicesIsOfficeStoreEnabled)
+    {
+        $AppsAndServicesParametersToUpdate.Add('isOfficeStoreEnabled', $AppsAndServicesIsOfficeStoreEnabled)
+    }
+    if ($AppsAndServicesIsAppAndServicesTrialEnabled -ne $currentValues.AppsAndServicesIsAppAndServicesTrialEnabled)
+    {
+        $AppsAndServicesParametersToUpdate.Add('isAppAndServicesTrialEnabled', $AppsAndServicesIsAppAndServicesTrialEnabled)
+    }
+    if ($AppsAndServicesParametersToUpdate.Keys.Count -gt 0)
+    {
+        Write-Verbose -Message "Updating the Apps & Settings settings with values:$(Convert-M365DscHashtableToString -Hashtable $AppsAndServicesParametersToUpdate)"
+        Update-M365DSCOrgSettingsAppsAndServices -Options $AppsAndServicesParametersToUpdate
+    }
+
+    # To Do
+    $ToDoParametersToUpdate = @{}
+    if ($ToDoIsPushNotificationEnabled -ne $currentValues.ToDoIsPushNotificationEnabled)
+    {
+        $ToDoParametersToUpdate.Add('isPushNotificationEnabled', $ToDoIsPushNotificationEnabled)
+    }
+    if ($ToDoIsExternalJoinEnabled -ne $currentValues.ToDoIsExternalJoinEnabled)
+    {
+        $ToDoParametersToUpdate.Add('isExternalJoinEnabled', $ToDoIsExternalJoinEnabled)
+    }
+    if ($ToDoIsExternalShareEnabled -ne $currentValues.ToDoIsExternalShareEnabled)
+    {
+        $ToDoParametersToUpdate.Add('isExternalShareEnabled', $ToDoIsExternalShareEnabled)
+    }
+    if ($ToDoParametersToUpdate.Keys.Count -gt 0)
+    {
+        Write-Verbose -Message "Updating the To Do settings with values:$(Convert-M365DscHashtableToString -Hashtable $ToDoParametersToUpdate)"
+        Update-M365DSCOrgSettingsToDo -Options $ToDoParametersToUpdate
+    }
 }
 
 function Test-TargetResource
@@ -444,6 +689,54 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AppsAndServicesIsOfficeStoreEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $AppsAndServicesIsAppAndServicesTrialEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalSendFormEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalShareCollaborationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalShareResultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsExternalShareTemplateEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsRecordIdentityByDefaultEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsBingImageSearchEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $FormsIsInOrgFormsPhishingScanEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $M365WebEnableUsersToOpenFilesFrom3PStorage,
 
         [Parameter()]
@@ -453,6 +746,18 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $MicrosoftVivaBriefingEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $ToDoIsPushNotificationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ToDoIsExternalJoinEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ToDoIsExternalShareEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -762,6 +1067,153 @@ function Update-M365DSCOrgSettingsInstallationOptions
                 Write-Error -Message $errorMessage
             }
         }
+    }
+}
+
+function Get-M365DSCOrgSettingsForms
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
+    return $results
+}
+
+function Update-M365DSCOrgSettingsForms
+{
+    [CmdletBinding()]
+    [OutputType([Void])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Options
+    )
+
+    try
+    {
+        Write-Verbose -Message "Updating Forms Settings"
+        $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating O365OrgSettings Forms Settings' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+    }
+}
+
+function Get-M365DSCOrgSettingsDynamicsCustomerVoice
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
+    return $results
+}
+
+function Update-M365DSCOrgSettingsDynamicsCustomerVoice
+{
+    [CmdletBinding()]
+    [OutputType([Void])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Options
+    )
+
+    try
+    {
+        Write-Verbose -Message "Updating Dynamics Customer Voice Settings"
+        $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating O365OrgSettings Dynamics Customer Voice Settings' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+    }
+}
+
+function Get-M365DSCOrgSettingsAppsAndServices
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
+    return $results
+}
+
+function Update-M365DSCOrgSettingsAppsAndServices
+{
+    [CmdletBinding()]
+    [OutputType([Void])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Options
+    )
+
+    try
+    {
+        Write-Verbose -Message "Updating App & Services Settings"
+        $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating O365OrgSettings Apps and Services Settings' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+    }
+}
+function Get-M365DSCOrgSettingsToDo
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+
+    $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
+    $results = Invoke-MgGraphRequest -Method GET -Uri $url
+    return $results
+}
+
+function Update-M365DSCOrgSettingsToDo
+{
+    [CmdletBinding()]
+    [OutputType([Void])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $Options
+    )
+
+    try
+    {
+        Write-Verbose -Message "Updating To Do Settings"
+        $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error updating O365OrgSettings To Do Settings' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
     }
 }
 

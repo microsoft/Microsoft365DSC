@@ -25,6 +25,8 @@
 * IntuneDeviceEnrollmentPlatformRestriction
   * Fixes an error where the WindowsMobileRestriction property was still being assessed dispite it being deprecated.
     FIXES [#3407](https://github.com/microsoft/Microsoft365DSC/issues/3407)
+* O365OrgSettings
+  * Added support for Forms, Dynamics Customer Voice, To Do and Apps & Services settings.
 * TeamsCallQueue
   * Initial release.
 * Teams resources
