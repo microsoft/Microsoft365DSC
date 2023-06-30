@@ -1,5 +1,5 @@
-# TeamsGroupPolicyAssignment
+# TeamsCallQueue
 
 ## Description
 
-This resource is used to assign Teams policy to a specified group
+This resource is used to manage Call Queue in your Skype for Business Online organization.
