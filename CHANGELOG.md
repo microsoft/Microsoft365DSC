@@ -27,6 +27,8 @@
     FIXES [#3407](https://github.com/microsoft/Microsoft365DSC/issues/3407)
 * O365OrgSettings
   * Added support for Forms, Dynamics Customer Voice, To Do and Apps & Services settings.
+* TeamsCallQueue
+  * Initial release.
 * Teams resources
   * Added required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
 * MISC
