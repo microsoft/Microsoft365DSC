@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOMailboxPlan
+  * Support comparing instances without the GUID in the name.
+    FIXES [#3314](https://github.com/microsoft/Microsoft365DSC/issues/3314)
+
 # 1.23.628.1
 
 * AADAdministrativeUnit

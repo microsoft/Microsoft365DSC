@@ -111,33 +111,36 @@ function Get-TargetResource
         if ($null -eq $MailboxPlan)
         {
             Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
-            return $nullResult
-        }
-        else
-        {
-            $result = @{
-                Identity                 = $Identity
-                IssueWarningQuota        = $MailboxPlan.IssueWarningQuota
-                MaxReceiveSize           = $MailboxPlan.MaxReceiveSize
-                MaxSendSize              = $MailboxPlan.MaxSendSize
-                ProhibitSendQuota        = $MailboxPlan.ProhibitSendQuota
-                ProhibitSendReceiveQuota = $MailboxPlan.ProhibitSendReceiveQuota
-                RetainDeletedItemsFor    = $MailboxPlan.RetainDeletedItemsFor
-                RetentionPolicy          = $MailboxPlan.RetentionPolicy
-                RoleAssignmentPolicy     = $MailboxPlan.RoleAssignmentPolicy
-                Credential               = $Credential
-                ApplicationId            = $ApplicationId
-                CertificateThumbprint    = $CertificateThumbprint
-                CertificatePath          = $CertificatePath
-                CertificatePassword      = $CertificatePassword
-                Managedidentity          = $ManagedIdentity.IsPresent
-                TenantId                 = $TenantId
-            }
 
-            Write-Verbose -Message "Found MailboxPlan $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            $MailboxPlan = Get-MailboxPlan -Filter "Name like '$($Identity.Split('-')[0])*'"
+            if ($null -eq $MailboxPlan)
+            {
+                return $nullResult
+            }
         }
+
+        $result = @{
+            Identity                 = $Identity
+            IssueWarningQuota        = $MailboxPlan.IssueWarningQuota
+            MaxReceiveSize           = $MailboxPlan.MaxReceiveSize
+            MaxSendSize              = $MailboxPlan.MaxSendSize
+            ProhibitSendQuota        = $MailboxPlan.ProhibitSendQuota
+            ProhibitSendReceiveQuota = $MailboxPlan.ProhibitSendReceiveQuota
+            RetainDeletedItemsFor    = $MailboxPlan.RetainDeletedItemsFor
+            RetentionPolicy          = $MailboxPlan.RetentionPolicy
+            RoleAssignmentPolicy     = $MailboxPlan.RoleAssignmentPolicy
+            Credential               = $Credential
+            ApplicationId            = $ApplicationId
+            CertificateThumbprint    = $CertificateThumbprint
+            CertificatePath          = $CertificatePath
+            CertificatePassword      = $CertificatePassword
+            Managedidentity          = $ManagedIdentity.IsPresent
+            TenantId                 = $TenantId
+        }
+
+        Write-Verbose -Message "Found MailboxPlan $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
