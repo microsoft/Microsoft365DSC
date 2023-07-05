@@ -150,7 +150,8 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph'
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
         -InboundParameters $PSBoundParameters
