@@ -18,7 +18,6 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("password","voice","hardwareOath","softwareOath","sms","fido2","windowsHelloForBusiness","microsoftAuthenticatorPush","deviceBasedPush","temporaryAccessPassOneTime","temporaryAccessPassMultiUse","email","x509CertificateSingleFactor","x509CertificateMultiFactor","federatedSingleFactor","federatedMultiFactor","unknownFutureValue")]
         [System.String[]]
         $AllowedCombinations,
 
@@ -136,7 +135,6 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("password","voice","hardwareOath","softwareOath","sms","fido2","windowsHelloForBusiness","microsoftAuthenticatorPush","deviceBasedPush","temporaryAccessPassOneTime","temporaryAccessPassMultiUse","email","x509CertificateSingleFactor","x509CertificateMultiFactor","federatedSingleFactor","federatedMultiFactor","unknownFutureValue")]
         [System.String[]]
         $AllowedCombinations,
 
@@ -232,7 +230,6 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [ValidateSet("password","voice","hardwareOath","softwareOath","sms","fido2","windowsHelloForBusiness","microsoftAuthenticatorPush","deviceBasedPush","temporaryAccessPassOneTime","temporaryAccessPassMultiUse","email","x509CertificateSingleFactor","x509CertificateMultiFactor","federatedSingleFactor","federatedMultiFactor","unknownFutureValue")]
         [System.String[]]
         $AllowedCombinations,
 

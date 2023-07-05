@@ -215,14 +215,14 @@ function Get-TargetResource
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
 
-    #get role
-    [string]$Filter = $null
-    $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '" + $Id + "'"
-    #$Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter
-
     try
     {
-        $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter -ErrorAction Stop
+        if ($null -eq $Script:PolicyAssignments)
+        {
+            $allFilter = "scopeId eq '/' and scopeType eq 'DirectoryRole'"
+            $Script:PolicyAssignments = Get-MgPolicyRoleManagementPolicyAssignment -Filter $allFilter -All
+        }
+        $Policy = $Script:PolicyAssignments | Where-Object -FilterScript {$_.RoleDefinitionId -eq $Id}
     }
     catch
     {
@@ -237,12 +237,31 @@ function Get-TargetResource
     {
         return $nullReturn
     }
-    $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
+    if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+    {
+        $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+    }
+    else
+    {
+        $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
+    }
+
+    if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($Displayname))
+    {
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $Displayname}
+        }
+        else
+        {
+            $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
+        }
+    }
 
     #get Policyrule
     $role = Get-MgPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
 
-    $Displayname = $RoleDefinition.DisplayName
+    $DisplayName = $RoleDefinition.DisplayName
     $ActivationMaxDuration = ($role | Where-Object { $_.Id -eq 'Expiration_EndUser_Assignment' }).AdditionalProperties.maximumDuration
     $ActivationReqJustification = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Justification'
     $ActivationReqTicket = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Ticketing'
@@ -308,7 +327,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found configuration of Rule $($Displayname)"
         $result = @{
             Id                                                        = $Id
-            Displayname                                               = $Displayname
+            DisplayName                                               = $DisplayName
             ActivationMaxDuration                                     = $ActivationMaxDuration
             ActivationReqJustification                                = $ActivationReqJustification
             ActivationReqTicket                                       = $ActivationReqTicket
@@ -1363,13 +1382,14 @@ function Export-TargetResource
     }
     try
     {
-        [array]$roles = Get-MgRoleManagementDirectoryRoleDefinition -Filter $Filter -ErrorAction Stop
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-MgRoleManagementDirectoryRoleDefinition -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
-        foreach ($role in $roles)
+        foreach ($role in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($roles.Count)] $($role.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($role.DisplayName)" -NoNewline
             $Params = @{
                 Id                    = $role.Id
                 DisplayName           = $role.DisplayName

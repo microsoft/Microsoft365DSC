@@ -296,7 +296,7 @@ function Get-TargetResource
         $highseveritythreats,
 
         [Parameter()]
-        [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1')]
+        [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', 'e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1')]
         [System.String]
         $templateId,
 
@@ -756,7 +756,7 @@ function Set-TargetResource
         $highseveritythreats,
 
         [Parameter()]
-        [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1')]
+        [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', 'e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1')]
         [System.String]
         $templateId,
 
@@ -1177,7 +1177,7 @@ function Test-TargetResource
         $highseveritythreats,
 
         [Parameter()]
-        [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1')]
+        [ValidateSet('d948ff9b-99cb-4ee0-8012-1fbc09685377_1', 'e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1', '45fea5e9-280d-4da1-9792-fb5736da0ca9_1', '804339ad-1553-4478-a742-138fb5807418_1')]
         [System.String]
         $templateId,
 

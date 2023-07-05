@@ -1,0 +1,66 @@
+﻿{
+    "resourceName": "TeamsAppSetupPolicy",
+    "description": "Manages Teams app setup policies in your tenant.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

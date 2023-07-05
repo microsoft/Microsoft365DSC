@@ -2,11 +2,11 @@
     Dependencies = @(
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '1.3.0.9'
+            RequiredVersion = '1.3.0.10'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
-            RequiredVersion = '3.1.0'
+            RequiredVersion = '3.2.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
@@ -75,18 +75,19 @@
         @{
             ModuleName      = 'Microsoft.Graph.Users.Actions'
             RequiredVersion = '2.0.0'
+
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
-            RequiredVersion = '2.0.162'
+            RequiredVersion = '2.0.166'
         },
         @{
             ModuleName      = 'MicrosoftTeams'
-            RequiredVersion = '5.1.0'
+            RequiredVersion = '5.3.0'
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.110"
+            RequiredVersion = "1.0.115"
         },
         @{
             ModuleName      = 'PnP.PowerShell'
@@ -94,7 +95,7 @@
         },
         @{
             ModuleName      = 'ReverseDSC'
-            RequiredVersion = '2.0.0.14'
+            RequiredVersion = '2.0.0.16'
         }
     )
 }

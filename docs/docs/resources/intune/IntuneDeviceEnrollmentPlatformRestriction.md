@@ -13,7 +13,7 @@
 | **WindowsHomeSkuRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows home Sku restrictions based on platform, platform operating system version, and device ownership. | |
 | **WindowsMobileRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows Mobile restrictions based on platform, platform operating system version, and device ownership. | |
 | **AndroidRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android Device Administrator restrictions based on platform, platform operating system version, and device ownership. | |
-| **AndroidForWorkRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android Entreprise restrictions based on platform, platform operating system version, and device ownership. | |
+| **AndroidForWorkRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android Enterprise restrictions based on platform, platform operating system version, and device ownership. | |
 | **MacRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac restrictions based on platform, platform operating system version, and device ownership. | |
 | **MacOSRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac OS restrictions based on platform, platform operating system version, and device ownership. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the policy. | |

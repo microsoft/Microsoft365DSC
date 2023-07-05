@@ -94,17 +94,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
-                            numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                                    state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
-                                            targetType = 'group'
-                                            id         = 'Fakegroup'
-                                        } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
-                                            targetType = 'group'
-                                            id         = 'Fakegroup'
-                                        } -ClientOnly)
-                                } -ClientOnly)
                         } -ClientOnly)
                     Id                    = 'MicrosoftAuthenticator'
                     isSoftwareOathEnabled = $True
@@ -175,17 +164,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                         } -ClientOnly)
                                 } -ClientOnly)
                             displayLocationInformationRequiredState = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                                    state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
-                                            targetType = 'group'
-                                            id         = 'Fakegroup'
-                                        } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
-                                            targetType = 'group'
-                                            id         = 'Fakegroup'
-                                        } -ClientOnly)
-                                } -ClientOnly)
-                            numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
                                     state         = 'default'
                                     includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
                                             targetType = 'group'
@@ -337,17 +315,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
-                            numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                                    state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
-                                            targetType = 'group'
-                                            id         = 'Fakegroup'
-                                        } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
-                                            targetType = 'group'
-                                            id         = 'Fakegroup'
-                                        } -ClientOnly)
-                                } -ClientOnly)
                         } -ClientOnly)
                     Id                    = 'MicrosoftAuthenticator'
                     isSoftwareOathEnabled = $True
@@ -396,17 +363,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     }
                                 }
                                 displayLocationInformationRequiredState = @{
-                                    state         = 'default'
-                                    includeTarget = @{
-                                        targetType = 'group'
-                                        id         = 'Fakegroup'
-                                    }
-                                    excludeTarget = @{
-                                        targetType = 'group'
-                                        id         = 'Fakegroup'
-                                    }
-                                }
-                                numberMatchingRequiredState             = @{
                                     state         = 'default'
                                     includeTarget = @{
                                         targetType = 'group'
@@ -489,17 +445,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                             id         = 'Fakegroup'
                                         } -ClientOnly)
                                 } -ClientOnly)
-                            numberMatchingRequiredState             = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodFeatureConfiguration -Property @{
-                                    state         = 'default'
-                                    includeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
-                                            targetType = 'group'
-                                            id         = 'Fakegroup'
-                                        } -ClientOnly)
-                                    excludeTarget = (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget -Property @{
-                                            targetType = 'group'
-                                            id         = 'Fakegroup'
-                                        } -ClientOnly)
-                                } -ClientOnly)
                         } -ClientOnly)
                     Id                    = 'MicrosoftAuthenticator'
                     isSoftwareOathEnabled = $True
@@ -549,17 +494,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     }
                                 }
                                 displayLocationInformationRequiredState = @{
-                                    state         = 'default'
-                                    includeTarget = @{
-                                        targetType = 'group'
-                                        id         = 'Fakegroup'
-                                    }
-                                    excludeTarget = @{
-                                        targetType = 'group'
-                                        id         = 'Fakegroup'
-                                    }
-                                }
-                                numberMatchingRequiredState             = @{
                                     state         = 'default'
                                     includeTarget = @{
                                         targetType = 'group'
@@ -639,17 +573,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     }
                                 }
                                 displayLocationInformationRequiredState = @{
-                                    state         = 'default'
-                                    includeTarget = @{
-                                        targetType = 'group'
-                                        id         = 'Fakegroup'
-                                    }
-                                    excludeTarget = @{
-                                        targetType = 'group'
-                                        id         = 'Fakegroup'
-                                    }
-                                }
-                                numberMatchingRequiredState             = @{
                                     state         = 'default'
                                     includeTarget = @{
                                         targetType = 'group'

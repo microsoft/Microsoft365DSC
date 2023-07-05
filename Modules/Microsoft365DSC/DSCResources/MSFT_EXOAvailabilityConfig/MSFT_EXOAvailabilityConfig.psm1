@@ -74,34 +74,29 @@ function Get-TargetResource
     {
         $AvailabilityConfigs = Get-AvailabilityConfig -ErrorAction Stop
 
-        if ($null -ne $AvailabilityConfigs)
+        if ($null -ne $AvailabilityConfigs -and $null -ne $AvailabilityConfigs.OrgWideAccount)
         {
             $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $OrgWideAccount })
         }
-
         if ($null -eq $AvailabilityConfig)
         {
             Write-Verbose -Message "Availability config for $($OrgWideAccount) does not exist."
-
             return $nullReturn
         }
-        else
-        {
-            $result = @{
-                OrgWideAccount        = $AvailabilityConfig.OrgWideAccount
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-                TenantId              = $TenantId
-            }
-
-            Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"
-            return $result
+        $result = @{
+            OrgWideAccount        = $AvailabilityConfig.OrgWideAccount
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
         }
+
+        Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"
+        return $result
     }
     catch
     {
@@ -348,8 +343,13 @@ function Export-TargetResource
             return ''
         }
 
+        $OrgWideValue = "NotConfigured"
+        if ($null -ne $AvailabilityConfig.OrgWideAccount)
+        {
+            $OrgWideValue = $AvailabilityConfig.OrgWideAccount.ToString()
+        }
         $Params = @{
-            OrgWideAccount        = $AvailabilityConfig.OrgWideAccount.ToString()
+            OrgWideAccount        = $OrgWideValue
             Credential            = $Credential
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId

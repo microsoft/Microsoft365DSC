@@ -84,7 +84,11 @@ function Start-M365DSCConfigurationExtract
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [Switch]
+        $Validate
     )
 
     # Start by checking to see if a new Version of the tool is available in the
@@ -174,8 +178,6 @@ function Start-M365DSCConfigurationExtract
 
         Write-Host -Object ' '
 
-        $allSupportedResourcesWithMostSecureAuthMethod = Get-M365DSCComponentsWithMostSecureAuthenticationType -AuthenticationMethod $AuthMethods
-
         # If some resources are not supported based on the Authentication parameters
         # received, write a warning.
         if ($Components.Length -eq 0)
@@ -193,6 +195,9 @@ function Start-M365DSCConfigurationExtract
         {
             $selectedResources = $Components
         }
+
+        $allSupportedResourcesWithMostSecureAuthMethod = Get-M365DSCComponentsWithMostSecureAuthenticationType -AuthenticationMethod $AuthMethods `
+            -Resources $selectedResources
 
         try
         {
@@ -693,6 +698,23 @@ function Start-M365DSCConfigurationExtract
             catch
             {
                 Write-Verbose -Message $_
+            }
+        }
+
+        # Check if configuration validation needs to be performed
+        if ($Validate.IsPresent)
+        {
+            Write-Host "$($Global:M365DSCMagnifyingGlass) Starting configuration validation..." -NoNewline
+            [Array]$results = Get-M365DSCConfigurationConflict -ConfigurationContent $DSCContent.ToString()
+            Write-Host "Results:"
+            if ($results.Count -gt 0)
+            {
+                foreach ($issue in $results)
+                {
+                    Write-Host "    - [" -NoNewline
+                    Write-Host "$($issue.Reason)" -ForegroundColor Red -NoNewline
+                    Write-Host "]: $($issue.InstanceName)"
+                }
             }
         }
 

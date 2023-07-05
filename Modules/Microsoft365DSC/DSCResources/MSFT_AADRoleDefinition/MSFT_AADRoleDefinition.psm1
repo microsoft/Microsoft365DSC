@@ -90,7 +90,14 @@ function Get-TargetResource
         {
             if (($null -ne $Id) -and ($Id -ne ''))
             {
-                $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "Id eq '$($Id)'"
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $AADRoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                }
+                else
+                {
+                    $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "Id eq '$($Id)'"
+                }
             }
         }
         catch
@@ -99,7 +106,14 @@ function Get-TargetResource
         }
         if ($null -eq $AADRoleDefinition)
         {
-            $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $AADRoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            }
+            else
+            {
+                $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
+            }
         }
         if ($null -eq $AADRoleDefinition)
         {
@@ -416,14 +430,15 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$AADRoleDefinitions = Get-MgRoleManagementDirectoryRoleDefinition -Filter $Filter -All:$true -ErrorAction Stop
-        if ($AADRoleDefinitions.Length -gt 0)
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-MgRoleManagementDirectoryRoleDefinition -Filter $Filter -All:$true -ErrorAction Stop
+        if ($Script:exportedInstances.Length -gt 0)
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($AADRoleDefinition in $AADRoleDefinitions)
+        foreach ($AADRoleDefinition in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($AADRoleDefinitions.Count)] $($AADRoleDefinition.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADRoleDefinition.DisplayName)" -NoNewline
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

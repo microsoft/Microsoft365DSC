@@ -1,6 +1,6 @@
 ﻿{
     "resourceName": "TeamsCallHoldPolicy",
-    "description": "This resource configures an Creates a new Teams call hold policy in your tenant. The Teams call hold policy is used to customize the call hold experience for Teams clients..",
+    "description": "This resource configures an Creates a new Teams call hold policy in your tenant. The Teams call hold policy is used to customize the call hold experience for Teams clients.",
     "permissions": {
         "graph": {
             "delegated": {
@@ -8,8 +8,58 @@
                 "update": []
             },
             "application": {
-                "read": [],
-                "update": []
+                "read": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    },
+                    {
+                        "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "AppCatalog.ReadWrite.All"
+                    },
+                    {
+                        "name": "TeamSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.ReadWrite.All"
+                    },
+                    {
+                        "name": "ChannelMember.ReadWrite.All"
+                    }
+                ]
             }
         }
     }

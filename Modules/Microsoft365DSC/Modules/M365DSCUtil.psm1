@@ -111,7 +111,7 @@ function Get-TeamByName
 
 <#
 .Description
-This function converts a parameter hastable to a string, for outputting to screen
+This function converts a parameter hashtable to a string, for outputting to screen
 
 .Functionality
 Internal
@@ -126,7 +126,7 @@ function Convert-M365DscHashtableToString
     )
 
     $values = @()
-    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', 'CertificateThumnbprint', 'CertificatePath', 'CertificatePassword', 'Credential')
+    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', 'CertificateThumbprint', 'CertificatePath', 'CertificatePassword', 'Credential')
     foreach ($pair in $Hashtable.GetEnumerator())
     {
         try
@@ -442,7 +442,7 @@ function Compare-PSCustomObjectArrays
         [System.Object[]]
         $CurrentValues
     )
-
+$VerbosePreference = 'Continue'
     $DriftedProperties = @()
     foreach ($DesiredEntry in $DesiredValues)
     {
@@ -466,15 +466,27 @@ function Compare-PSCustomObjectArrays
             {
                 $propertyName = $property.Name
 
-                if ($DesiredEntry.$PropertyName -ne $EquivalentEntryInCurrent.$PropertyName)
+                if ((-not [System.String]::IsNullOrEmpty($DesiredEntry.$PropertyName) -and -not [System.String]::IsNullOrEmpty($EquivalentEntryInCurrent.$PropertyName)) -and `
+                    $DesiredEntry.$PropertyName -ne $EquivalentEntryInCurrent.$PropertyName)
                 {
-                    $result = @{
-                        Property     = $DesiredEntry
-                        PropertyName = $PropertyName
-                        Desired      = $DesiredEntry.$PropertyName
-                        Current      = $EquivalentEntryInCurrent.$PropertyName
+                    $drift = $true
+                    if ($DesiredEntry.$PropertyName.Contains('$OrganizationName'))
+                    {
+                        if ($DesiredEntry.$PropertyName.Split('@')[0] -eq $EquivalentEntryInCurrent.$PropertyName.Split('@')[0])
+                        {
+                            $drift = $false
+                        }
                     }
-                    $DriftedProperties += $result
+                    if ($drift)
+                    {
+                        $result = @{
+                            Property     = $DesiredEntry
+                            PropertyName = $PropertyName
+                            Desired      = $DesiredEntry.$PropertyName
+                            Current      = $EquivalentEntryInCurrent.$PropertyName
+                        }
+                        $DriftedProperties += $result
+                    }
                 }
             }
         }
@@ -553,7 +565,7 @@ function Test-M365DSCParameterState
         [System.String]
         $Tenant
     )
-
+    $verbosePreference = 'SilentlyContinue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Resource', "$Source")
@@ -638,20 +650,28 @@ function Test-M365DSCParameterState
                                     {
                                         $value = $null
                                     }
-                                    $currentEntry.Add($prop.Name, $value)
+                                    if (-not $currentEntry.ContainsKey($prop.Name))
+                                    {
+                                        $currentEntry.Add($prop.Name, $value)
+                                    }
                                 }
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
 
                             $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
                                 -DesiredValues $AllDesiredValuesAsArray
+
                             if ($null -ne $arrayCompare)
                             {
                                 foreach ($item in $arrayCompare)
                                 {
                                     $EventValue = "<CurrentValue>[$($item.PropertyName)]$($item.CurrentValue)</CurrentValue>"
                                     $EventValue += "<DesiredValue>[$($item.PropertyName)]$($item.DesiredValue)</DesiredValue>"
-                                    $DriftedParameters.Add($fieldName, $EventValue)
+
+                                    if (-not $DriftedParameters.ContainsKey($fieldName))
+                                    {
+                                        $DriftedParameters.Add($fieldName, $EventValue)
+                                    }
                                 }
                                 $returnValue = $false
                             }
@@ -1001,8 +1021,11 @@ Specifies the path of the PFX file which is used for authentication.
 .Parameter Filters
 Specifies resource level filters to apply in order to reduce the number of instances exported.
 
-.Parameter Identity
-Specifies use of managed identity for authentication
+.Parameter ManagedIdentity
+Specifies use of managed identity for authentication.
+
+.Parameter Validate
+Specifies that the configuration needs to be validated for conflicts or issues after its extraction is completed.
 
 .Example
 Export-M365DSCConfiguration -Components @("AADApplication", "AADConditionalAccessPolicy", "AADGroupsSettings") -Credential $Credential
@@ -1125,7 +1148,11 @@ function Export-M365DSCConfiguration
 
         [Parameter(ParameterSetName = 'Export')]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter(ParameterSetName = 'Export')]
+        [Switch]
+        $Validate
     )
 
     # Define the exported resource instances' names Global variable
@@ -1272,7 +1299,8 @@ function Export-M365DSCConfiguration
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity `
             -GenerateInfo $GenerateInfo `
-            -Filters $Filters
+            -Filters $Filters `
+            -Validate:$Validate
     }
     elseif ($null -ne $Components)
     {
@@ -1290,7 +1318,8 @@ function Export-M365DSCConfiguration
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity `
             -GenerateInfo $GenerateInfo `
-            -Filters $Filters
+            -Filters $Filters `
+            -Validate:$Validate
     }
     elseif ($null -ne $Mode)
     {
@@ -1309,7 +1338,8 @@ function Export-M365DSCConfiguration
             -ManagedIdentity:$ManagedIdentity `
             -GenerateInfo $GenerateInfo `
             -AllComponents `
-            -Filters $Filters
+            -Filters $Filters `
+            -Validate:$Validate
     }
 
     # Clear the exported resource instances' names Global variable
@@ -1567,7 +1597,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet('ExchangeOnline', 'Intune', `
                 'SecurityComplianceCenter', 'PnP', 'PowerPlatforms', `
-                'MicrosoftTeams', 'MicrosoftGraph')]
+                'MicrosoftTeams', 'MicrosoftGraph', 'Tasks')]
         [System.String]
         $Workload,
 
@@ -3191,8 +3221,9 @@ function Get-M365DSCExportContentForResource
     $instanceName = $tempName
     $Global:M365DSCExportedResourceInstancesNames += $tempName
 
-    $content = "        $ResourceName `"$instanceName`"`r`n"
-    $content += "        {`r`n"
+    $content = [System.Text.StringBuilder]::New()
+    [void]$content.Append("        $ResourceName `"$instanceName`"`r`n")
+    [void]$content.Append("        {`r`n")
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
     # Test for both Credentials and CredentialsWithApplicationId
     if ($ConnectionMode -match 'Credentials')
@@ -3245,10 +3276,10 @@ function Get-M365DSCExportContentForResource
         $partialContent = $partialContent -ireplace [regex]::Escape($OrganizationName), "`$OrganizationName"
         $partialContent = $partialContent -ireplace [regex]::Escape('@' + $OrganizationName), "@`$OrganizationName"
     }
-    $content += $partialContent
-    $content += "        }`r`n"
+    [void]$content.Append($partialContent)
+    [void]$content.Append("        }`r`n")
 
-    return $content
+    return $content.ToString()
 }
 
 <#
@@ -3348,75 +3379,82 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
         [Parameter()]
         [System.String[]]
         [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'CredentialsWithApplicationId', 'ManagedIdentity')]
-        $AuthenticationMethod
+        $AuthenticationMethod,
+
+        [Parameter()]
+        [System.String[]]
+        $Resources
     )
 
     $modules = Get-ChildItem -Path ($PSScriptRoot + '\..\DSCResources\') -Recurse -Filter '*.psm1'
     $Components = @()
     foreach ($resource in $modules)
     {
-        Import-Module $resource.FullName -Force
-        $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
+        if ($Resources.Contains($resource.Name.Replace('.psm1', '').Replace('MSFT_', '')))
+        {
+            Import-Module $resource.FullName -Force
+            $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys
 
-        #Case - Resource supports CertificateThumbprint
-        if ($AuthenticationMethod.Contains('CertificateThumbprint') -and `
-                $parameters.Contains('ApplicationId') -and `
-                $parameters.Contains('CertificateThumbprint') -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'CertificateThumbprint'
+            #Case - Resource supports CertificateThumbprint
+            if ($AuthenticationMethod.Contains('CertificateThumbprint') -and `
+                    $parameters.Contains('ApplicationId') -and `
+                    $parameters.Contains('CertificateThumbprint') -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'CertificateThumbprint'
+                }
             }
-        }
 
-        # Case - Resource supports CertificatePath
-        elseif ($AuthenticationMethod.Contains('CertificatePath') -and `
-                $parameters.Contains('ApplicationId') -and `
-                $parameters.Contains('CertificatePath') -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'CertificatePath'
+            # Case - Resource supports CertificatePath
+            elseif ($AuthenticationMethod.Contains('CertificatePath') -and `
+                    $parameters.Contains('ApplicationId') -and `
+                    $parameters.Contains('CertificatePath') -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'CertificatePath'
+                }
             }
-        }
 
-        # Case - Resource supports ApplicationSecret
-        elseif ($AuthenticationMethod.Contains('ApplicationWithSecret') -and `
-                $parameters.Contains('ApplicationId') -and `
-                $parameters.Contains('ApplicationSecret') -and `
-                $parameters.Contains('TenantId'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'ApplicationSecret'
+            # Case - Resource supports ApplicationSecret
+            elseif ($AuthenticationMethod.Contains('ApplicationWithSecret') -and `
+                    $parameters.Contains('ApplicationId') -and `
+                    $parameters.Contains('ApplicationSecret') -and `
+                    $parameters.Contains('TenantId'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'ApplicationSecret'
+                }
             }
-        }
-        # Case - Resource supports Credential using CredentialsWithApplicationId
-        elseif ($AuthenticationMethod.Contains('CredentialsWithApplicationId') -and `
-                $parameters.Contains('Credential'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'CredentialsWithApplicationId'
+            # Case - Resource supports Credential using CredentialsWithApplicationId
+            elseif ($AuthenticationMethod.Contains('CredentialsWithApplicationId') -and `
+                    $parameters.Contains('Credential'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'CredentialsWithApplicationId'
+                }
             }
-        }
-        # Case - Resource supports Credential
-        elseif ($AuthenticationMethod.Contains('Credentials') -and `
-                $parameters.Contains('Credential'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'Credentials'
+            # Case - Resource supports Credential
+            elseif ($AuthenticationMethod.Contains('Credentials') -and `
+                    $parameters.Contains('Credential'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'Credentials'
+                }
             }
-        }
-        elseif ($AuthenticationMethod.Contains('ManagedIdentity') -and `
-                $parameters.Contains('ManagedIdentity'))
-        {
-            $Components += @{
-                Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
-                AuthMethod = 'ManagedIdentity'
+            elseif ($AuthenticationMethod.Contains('ManagedIdentity') -and `
+                    $parameters.Contains('ManagedIdentity'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'ManagedIdentity'
+                }
             }
         }
     }
@@ -3934,7 +3972,7 @@ function Test-M365DSCModuleValidity
     $InformationPreference = 'Continue'
 
     # validate only one installation of the module is present (and it's the latest version available from the psgallery)
-    $latestVersion = (Find-Module -Name 'Microsoft365DSC').Version
+    $latestVersion = (Find-Module -Name 'Microsoft365DSC' -Repository 'PSGallery' -Includes 'DSCResource').Version
     $localVersion = (Get-Module -Name 'Microsoft365DSC').Version
 
     if ($latestVersion -gt $localVersion)
@@ -3960,7 +3998,34 @@ function Update-M365DSCModule
 {
     [CmdletBinding()]
     param()
-    Update-Module -Name 'Microsoft365DSC'
+    try
+    {
+        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop
+    }
+    catch
+    {
+        if ($_.Exception.Message -like "*Module 'Microsoft365DSC' was not installed by using Install-Module")
+        {
+            Write-Verbose -Message "The Microsoft365DSC module was not installed from the PowerShell Gallery and therefore cannot be updated."
+        }
+    }
+    try
+    {
+        Write-Verbose -Message "Unloading all instances of the Microsoft365DSC module from the current PowerShell session."
+        Remove-Module Microsoft365DSC -Force
+
+        Write-Verbose -Message "Retrieving all versions of the Microsoft365DSC installed on the machine."
+        [Array]$instances = Get-Module Microsoft365DSC -ListAvailable | Sort-Object -Property Version -Descending
+        if ($instances.Length -gt 0)
+        {
+            Write-Verbose -Message "Loading version {$($instances[0].Version.ToString())} of the Microsoft365DSC module from {$($instances[0].ModuleBase)}"
+            Import-Module Microsoft365DSC -RequiredVersion $instances[0].Version.ToString() -Force
+        }
+    }
+    catch
+    {
+        throw $_
+    }
     Update-M365DSCDependencies
     Uninstall-M365DSCOutdatedDependencies
 }
@@ -4087,6 +4152,67 @@ function Remove-M365DSCAuthenticationParameter
     return $BoundParameters
 }
 
+<#
+.Description
+This function analyzes an M365DSC configuration file and returns information about potential issues (e.g., duplicate primary keys).
+
+.Example
+Get-M365DSCConfigurationConflict -ConfigurationContent "content"
+
+.Functionality
+Public
+#>
+function Get-M365DSCConfigurationConflict
+{
+    [CmdletBinding()]
+    [OutputType([Array])]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $ConfigurationContent
+    )
+
+    $results = @()
+    Write-Verbose -Message "Converting configuration's content into a PowerShell Object using DSCParser"
+    $parsedContent = ConvertTo-DSCObject -Content $ConfigurationContent
+
+    $resourcesPrimaryIdentities = @()
+    $resourcesInModule = Get-DSCResource -Module 'Microsoft365DSC'
+    foreach ($component in $parsedContent)
+    {
+        $resourceDefinition = $resourcesInModule | Where-Object -FilterScript {$_.Name -eq $component.ResourceName}
+        [Array]$mandatoryProperties = $resourceDefinition.Properties | Where-Object -FilterScript {$_.IsMandatory}
+        $primaryKeyValues = ""
+        foreach ($mandatoryKey in $mandatoryProperties.Name)
+        {
+            $primaryKeyValues += "$($component.$mandatoryKey)|"
+        }
+        $entryValue = "[$($component.ResourceName)]$primaryKeyValues"
+        if ($resourcesPrimaryIdentities.Contains($entryValue))
+        {
+            Write-Verbose -Message "Found primary key conflict in resource {$($component.ResourceInstanceName)}"
+            $currentEntry = @{
+                ResourceName         = $component.ResourceName
+                InstanceName         = $component.ResourceInstanceName
+                AdditionalProperties = @{}
+                Reason               = "DuplicatePrimaryKey"
+            }
+
+            foreach ($mandatoryKey in $mandatoryProperties.Name)
+            {
+                $currentEntry.AdditionalProperties.Add($mandatoryKey, $component.$mandatoryKey)
+            }
+            $results += $currentEntry
+        }
+        else
+        {
+            $resourcesPrimaryIdentities += $entryValue
+        }
+    }
+    return $results
+}
+
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
     'Confirm-ImportedCmdletIsAvailable',
@@ -4099,6 +4225,7 @@ Export-ModuleMember -Function @(
     'Get-M365DSCAuthenticationMode',
     'Get-M365DSCComponentsForAuthenticationType',
     'Get-M365DSCComponentsWithMostSecureAuthenticationType',
+    'Get-M365DSCConfigurationConflict',
     'Get-M365DSCExportContentForResource',
     'Get-M365DSCOrganization',
     'Get-M365DSCTenantDomain',

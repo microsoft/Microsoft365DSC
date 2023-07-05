@@ -110,7 +110,14 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($AppId))
             {
-                $AADApp = Get-MgApplication -Filter "AppId eq '$AppId'"
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $AADApp = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $AppId}
+                }
+                else
+                {
+                    $AADApp = Get-MgApplication -Filter "AppId eq '$AppId'"
+                }
             }
         }
         catch
@@ -121,11 +128,19 @@ function Get-TargetResource
         if ($null -eq $AADApp)
         {
             Write-Verbose -Message "Attempting to retrieve Azure AD Application by DisplayName {$DisplayName}"
-            $AADApp = Get-MgApplication -Filter "DisplayName eq '$($DisplayName)'"
+
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $AADApp = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            }
+            else
+            {
+                $AADApp = Get-MgApplication -Filter "DisplayName eq '$($DisplayName)'"
+            }
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
         {
-            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
+            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. These apps will not be exported."
         }
         elseif ($null -eq $AADApp)
         {
@@ -525,9 +540,22 @@ function Set-TargetResource
                 if ($permission.Type -eq 'Delegated')
                 {
                     $scope = $apiPrincipal.Oauth2PermissionScopes | Where-Object -FilterScript { $_.Value -eq $permission.Name }
-                    Write-Verbose -Message "Adding Delegated Permission {$($scope.Id)}"
+                    $scopeId = $null
+                    if ($null -eq $scope)
+                    {
+                        $ObjectGuid = [System.Guid]::empty
+                        if ([System.Guid]::TryParse($permission.Name,[System.Management.Automation.PSReference]$ObjectGuid))
+                        {
+                            $scopeId = $permission.Name
+                        }
+                    }
+                    else
+                    {
+                        $scopeId = $scope.Id
+                    }
+                    Write-Verbose -Message "Adding Delegated Permission {$($scopeId)}"
                     $delPermission = @{
-                        Id   = $scope.Id
+                        Id   = $scopeId
                         Type = 'Scope'
                     }
                     $currentAPIAccess.ResourceAccess += $delPermission
@@ -535,8 +563,21 @@ function Set-TargetResource
                 elseif ($permission.Type -eq 'AppOnly')
                 {
                     $role = $apiPrincipal.AppRoles | Where-Object -FilterScript { $_.Value -eq $permission.Name }
+                    $roleId = $null
+                    if ($null -eq $role)
+                    {
+                        $ObjectGuid = [System.Guid]::empty
+                        if ([System.Guid]::TryParse($permission.Name,[System.Management.Automation.PSReference]$ObjectGuid))
+                        {
+                            $roleId = $permission.Name
+                        }
+                    }
+                    else
+                    {
+                        $roleId = $role.Id
+                    }
                     $appPermission = @{
-                        Id   = $role.Id
+                        Id   = $roleId
                         Type = 'Role'
                     }
                     $currentAPIAccess.ResourceAccess += $appPermission
@@ -773,10 +814,11 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     try
     {
-        $AADApplications = Get-MgApplication -Filter $Filter -All -ErrorAction Stop
-        foreach ($AADApp in $AADApplications)
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-MgApplication -Filter $Filter -All -ErrorAction Stop
+        foreach ($AADApp in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADApp.DisplayName)" -NoNewline
             $Params = @{
                 ApplicationId         = $ApplicationId
                 AppId                 = $AADApp.AppId
@@ -858,8 +900,21 @@ function Get-M365DSCAzureADAppPermissions
             if ($resourceAccess.Type -eq 'Scope')
             {
                 $scopeInfo = $SourceAPI.Oauth2PermissionScopes | Where-Object -FilterScript { $_.Id -eq $resourceAccess.Id }
+                $scopeInfoValue = $null
+                if ($null -eq $scopeInfo)
+                {
+                    $ObjectGuid = [System.Guid]::empty
+                    if ([System.Guid]::TryParse($resourceAccess.Id,[System.Management.Automation.PSReference]$ObjectGuid))
+                    {
+                        $scopeInfoValue = $resourceAccess.Id
+                    }
+                }
+                else
+                {
+                    $scopeInfoValue = $scopeInfo.Value
+                }
                 $currentPermission.Add('Type', 'Delegated')
-                $currentPermission.Add('Name', $scopeInfo.Value)
+                $currentPermission.Add('Name', $scopeInfoValue)
                 $currentPermission.Add('AdminConsentGranted', $false)
 
                 $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
@@ -869,7 +924,7 @@ function Get-M365DSCAzureADAppPermissions
                     if ($null -ne $oAuth2grant)
                     {
                         $scopes = $oAuth2grant.Scope.Split(' ')
-                        if ($scopes.Contains($scopeInfo.Value))
+                        if ($scopes.Contains($scopeInfoValue.Value))
                         {
                             $currentPermission.AdminConsentGranted = $true
                         }
@@ -880,7 +935,20 @@ function Get-M365DSCAzureADAppPermissions
             {
                 $currentPermission.Add('Type', 'AppOnly')
                 $role = $SourceAPI.AppRoles | Where-Object -FilterScript { $_.Id -eq $resourceAccess.Id }
-                $currentPermission.Add('Name', $role.Value)
+                $roleValue = $null
+                if ($null -eq $role)
+                {
+                    $ObjectGuid = [System.Guid]::empty
+                    if ([System.Guid]::TryParse($resourceAccess.Id,[System.Management.Automation.PSReference]$ObjectGuid))
+                    {
+                        $roleValue = $resourceAccess.Id
+                    }
+                }
+                else
+                {
+                    $roleValue = $role.Value
+                }
+                $currentPermission.Add('Name', $roleValue)
                 $currentPermission.Add('AdminConsentGranted', $false)
 
                 $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
@@ -920,7 +988,7 @@ function Get-M365DSCAzureADAppPermissionsAsString
     $StringContent = '@('
     foreach ($permission in $Permissions)
     {
-        $StringContent += "MSFT_AADApplicationPermission { `r`n"
+        $StringContent += "MSFT_AADApplicationPermission {`r`n"
         $StringContent += "                Name                = '" + $permission.Name + "'`r`n"
         $StringContent += "                Type                = '" + $permission.Type + "'`r`n"
         $StringContent += "                SourceAPI           = '" + $permission.SourceAPI + "'`r`n"
