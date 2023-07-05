@@ -20,13 +20,22 @@ jobs:
         shell: pwsh
         run: |
           Install-Module ReverseDSC -Force -Scope AllUsers
+          Install-Module MSCloudLoginAssistant -Force -Scope AllUsers
           Install-Module PSDesiredStateConfiguration -Force -Scope AllUsers
           Install-Module Pester -Force -SkipPublisherCheck -Scope AllUsers
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
       - name: Run Quality Checks
+        env:
+          PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
+          PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
         shell: pwsh
         run: |
           Import-Module './Tests/TestHarness.psm1' -Force;
+          Import-Module MSCloudLoginAssistant -Force
+          $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
+          $CredSecret = ConvertTo-SecureString $env:APPLICATIONSECRET -AsPlainText -Force
+          $Credential = New-Object System.Management.Automation.PSCredential($env:PUBLIC_USERNAME, $CredPassword)
+          Connect-M365Tenant -Workload MicrosoftGraph -Credential $Credential
           $MaximumFunctionCount = 9999
 
           try
