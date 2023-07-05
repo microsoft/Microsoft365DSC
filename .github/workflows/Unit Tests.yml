@@ -25,7 +25,7 @@ jobs:
           Install-Module Pester -Force -SkipPublisherCheck -Scope AllUsers
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
       - name: Run Quality Checks
-        shell: pwsh        
+        shell: powershell        
         env:
           PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
           PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
