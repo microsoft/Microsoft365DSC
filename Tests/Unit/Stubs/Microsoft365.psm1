@@ -1,7 +1,5 @@
-<<<<<<< HEAD
+
 #region ExchangeOnlineManagement
-=======
-#region ExchangeOnline
 function Get-DefaultTenantBriefingConfig
 {
     [CmdletBinding()]
@@ -65,7 +63,6 @@ function Set-DefaultTenantMyAnalyticsFeatureConfig
 #endregion
 
 #region ExchangeOnline
->>>>>>> upstream/dev
 function Add-AvailabilityAddressSpace
 {
     [CmdletBinding()]
