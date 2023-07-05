@@ -6,7 +6,7 @@
   * Support comparing instances without the GUID in the name.
     FIXES [#3314](https://github.com/microsoft/Microsoft365DSC/issues/3314)
 * MISC
-  * Updated QA tests to dynamically retrieve the permissions list.
+  * Updated QA tests to dynamically retrieve the permission list.
 
 # 1.23.628.1
 
