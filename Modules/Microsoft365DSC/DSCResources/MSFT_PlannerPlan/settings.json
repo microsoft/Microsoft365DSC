@@ -30,7 +30,7 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "Tasks.Read"
+                        "name": "Tasks.Read.All"
                     }
                 ],
                 "update": [
@@ -38,10 +38,10 @@
                         "name": "Group.Read.All"
                     },
                     {
-                        "name": "Tasks.Read"
+                        "name": "Tasks.Read.All"
                     },
                     {
-                        "name": "Tasks.ReadWrite"
+                        "name": "Tasks.ReadWrite.All"
                     }
                 ]
             }
