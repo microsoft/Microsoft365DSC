@@ -87,8 +87,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -114,8 +113,8 @@ function Get-TargetResource
         $getValue = $null
 
         #region resource generator code
-        $getValue = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource `
-            -AccessPackageCatalogId $CatalogId `
+        $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
+            -AccessPackageCatalogId  $CatalogId `
             -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
@@ -277,8 +276,7 @@ function Set-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -348,7 +346,8 @@ function Set-TargetResource
             AccessPackageresource = $resource
         }
         #region resource generator code
-        New-MgEntitlementManagementAccessPackageResourceRequest @resourceRequest
+        New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
+
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -388,7 +387,9 @@ function Set-TargetResource
             AccessPackageresource = $resource
         }
         #region resource generator code
-        New-MgEntitlementManagementAccessPackageResourceRequest @resourceRequest
+        #write-verbose ($resourceRequest|convertTo-Json -depth 20)
+        New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
+
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -427,7 +428,9 @@ function Set-TargetResource
             RequestType           = 'AdminRemove'
             AccessPackageresource = $resource
         }
-        New-MgEntitlementManagementAccessPackageResourceRequest @resourceRequest
+        #region resource generator code
+        New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
+
         #endregion
     }
 }
@@ -565,10 +568,6 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('AddedBy') | Out-Null
     $ValuesToCheck.Remove('AddedOn') | Out-Null
     $ValuesToCheck.Remove('IsPendingOnboarding') | Out-Null
@@ -621,8 +620,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -640,7 +638,7 @@ function Export-TargetResource
     {
         #region resource generator code
         $catalogs = @()
-        $catalogs += Get-MgEntitlementManagementAccessPackageCatalog -All -ErrorAction Stop
+        $catalogs += Get-MgBetaEntitlementManagementAccessPackageCatalog -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -665,7 +663,7 @@ function Export-TargetResource
 
             $catalogId = $catalog.id
 
-            [array]$resources = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId $catalogId -ErrorAction Stop
+            [array]$resources = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId  $catalogId -ErrorAction Stop
 
             $j = 1
             $dscContent = ''

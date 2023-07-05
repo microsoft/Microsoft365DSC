@@ -27,13 +27,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Update-MgPolicyAuthenticationStrengthPolicy -MockWith {
+            Mock -CommandName Update-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-MgPolicyAuthenticationStrengthPolicy -MockWith {
+            Mock -CommandName Remove-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
             }
 
-            Mock -CommandName Update-MgPolicyAuthenticationStrengthPolicyAllowedCombination -MockWith {
+            Mock -CommandName Update-MgBetaPolicyAuthenticationStrengthPolicyAllowedCombination -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -55,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential           = $Credential;
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
                     return $null
                 }
             }
@@ -77,7 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential           = $Credential;
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
                     return @{
                         AllowedCombinations  = @("windowsHelloForBusiness","fido2","x509CertificateMultiFactor","deviceBasedPush");
                         Description          = "This is an example";
@@ -97,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgPolicyAuthenticationStrengthPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaPolicyAuthenticationStrengthPolicy -Exactly 1
             }
         }
         Context -Name "The policy Exists and Values are already in the desired state" -Fixture {
@@ -110,7 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential           = $Credential;
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
                     return @{
                         AllowedCombinations  = @("windowsHelloForBusiness","fido2","x509CertificateMultiFactor","deviceBasedPush");
                         Description          = "This is an example";
@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential           = $Credential;
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
                     return @{
                         AllowedCombinations  = @("windowsHelloForBusiness","fido2","x509CertificateMultiFactor"); # Drift
                         Description          = "This is an example";
@@ -155,7 +155,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgPolicyAuthenticationStrengthPolicy -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaPolicyAuthenticationStrengthPolicy -Exactly 1
             }
         }
 
@@ -171,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential           = $Credential;
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
                     return @{
                         AllowedCombinations  = @("windowsHelloForBusiness","fido2","x509CertificateMultiFactor","deviceBasedPush");
                         Description          = "This is an example";

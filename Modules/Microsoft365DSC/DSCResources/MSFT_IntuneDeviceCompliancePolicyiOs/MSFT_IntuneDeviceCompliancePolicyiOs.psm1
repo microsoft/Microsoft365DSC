@@ -127,8 +127,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for the Intune Device Compliance iOS Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -146,7 +145,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
+        $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -190,7 +189,7 @@ function Get-TargetResource
         }
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId $devicePolicy.Id
+        $returnAssignments += Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -347,7 +346,7 @@ function Set-TargetResource
     Write-Verbose -Message "Intune Device Compliance iOS Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName beta
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -394,7 +393,7 @@ function Set-TargetResource
             $AdditionalProperties.add('restrictedApps', (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $RestrictedApps))
         }
 
-        $policy = New-MgDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
+        $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties `
             -ScheduledActionsForRule $scheduledActionsForRule
@@ -415,7 +414,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentDeviceiOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Device Compliance iOS Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
+        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -431,7 +430,7 @@ function Set-TargetResource
             $AdditionalProperties.add('restrictedApps', (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $RestrictedApps))
         }
 
-        Update-MgDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
+        Update-MgBetaDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceCompliancePolicyId $configDevicePolicy.Id
         #region Assignments
@@ -448,12 +447,12 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentDeviceiOsPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Device Compliance iOS Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
+        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-MgDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
+        Remove-MgBetaDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
     }
 }
 
@@ -690,7 +689,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName beta
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -706,7 +705,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceiOsPolicies = Get-MgDeviceManagementDeviceCompliancePolicy `
+        [array]$configDeviceiOsPolicies = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCompliancePolicy' }
         $i = 1
@@ -888,7 +887,6 @@ function Update-DeviceCompliancePolicyAssignments
         $body = @{'assignments' = $configurationPolicyAssignments } | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
     }
     catch
     {

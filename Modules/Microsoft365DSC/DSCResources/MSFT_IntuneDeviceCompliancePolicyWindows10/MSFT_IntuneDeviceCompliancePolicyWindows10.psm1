@@ -178,8 +178,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for the Intune Device Compliance Windows 10 Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -197,7 +196,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $devicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
+        $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -254,7 +253,7 @@ function Get-TargetResource
         }
 
         $myAssignments = @()
-        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $devicePolicy.id -repository 'deviceCompliancePolicies'
+        $myAssignments += Get-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $devicePolicy.id -repository 'deviceCompliancePolicies'
         $results.Add('Assignments', $myAssignments)
         return [System.Collections.Hashtable] $results
     }
@@ -450,8 +449,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "Intune Device Compliance Windows 10 Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -492,7 +490,7 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $policy = New-MgDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
+        $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties $AdditionalProperties `
             -ScheduledActionsForRule $scheduledActionsForRule
@@ -503,7 +501,7 @@ function Set-TargetResource
             $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
 
         }
-        Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
+        Update-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
             -Targets $assignmentsHash `
             -Repository deviceCompliancePolicies
 
@@ -511,7 +509,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
+        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -521,7 +519,7 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        Update-MgDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
+        Update-MgBetaDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
             -Description $Description `
             -DeviceCompliancePolicyId $configDevicePolicy.Id
 
@@ -531,19 +529,19 @@ function Set-TargetResource
             $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
 
         }
-        Update-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $configDevicePolicy.id `
+        Update-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $configDevicePolicy.id `
             -Targets $assignmentsHash `
             -Repository deviceCompliancePolicies
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgDeviceManagementDeviceCompliancePolicy `
+        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-MgDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
+        Remove-MgBetaDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
     }
 }
 
@@ -878,8 +876,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -895,7 +892,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configDeviceWindowsPolicies = Get-MgDeviceManagementDeviceCompliancePolicy `
+        [array]$configDeviceWindowsPolicies = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' }
         $i = 1
@@ -1085,7 +1082,7 @@ function Get-M365DSCAssignmentsAsHashtable
     }
     return $CIMAssignmentAsHash
 }
-function Get-MgDeviceManagementPolicyAssignments
+function Get-MgBetaDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     param (
@@ -1144,7 +1141,7 @@ function Get-MgDeviceManagementPolicyAssignments
     }
 }
 
-function Update-MgDeviceManagementPolicyAssignments
+function Update-MgBetaDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]

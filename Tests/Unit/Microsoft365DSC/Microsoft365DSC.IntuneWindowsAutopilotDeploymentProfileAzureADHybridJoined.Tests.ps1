@@ -33,20 +33,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
 
-            Mock -CommandName Get-MgDeviceManagementWindowAutopilotDeploymentProfileAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -MockWith {
+            }
+
+            Mock -CommandName Write-Host -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -89,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                             = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -MockWith {
                     return $null
                 }
             }
@@ -101,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgDeviceManagementWindowAutopilotDeploymentProfile -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -Exactly 1
             }
         }
 
@@ -139,7 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                             = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -MockWith {
                     return @{
                         AdditionalProperties           = @{
                             hybridAzureADJoinSkipConnectivityCheck = $True
@@ -186,7 +189,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementWindowAutopilotDeploymentProfile -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -Exactly 1
             }
         }
         Context -Name 'The IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined Exists and Values are already in the desired state' -Fixture {
@@ -223,7 +226,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                             = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -MockWith {
                     return @{
                         AdditionalProperties           = @{
                             hybridAzureADJoinSkipConnectivityCheck = $True
@@ -300,7 +303,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                             = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -MockWith {
                     return @{
                         Description                    = 'FakeStringValue'
                         DeviceNameTemplate             = 'FakeStringValue'
@@ -331,7 +334,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementWindowAutopilotDeploymentProfile -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -Exactly 1
             }
         }
 
@@ -343,7 +346,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementWindowAutopilotDeploymentProfile -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -MockWith {
                     return @{
                         AdditionalProperties           = @{
                             hybridAzureADJoinSkipConnectivityCheck = $True

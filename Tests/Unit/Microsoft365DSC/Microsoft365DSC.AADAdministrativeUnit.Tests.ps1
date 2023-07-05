@@ -37,9 +37,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Select-MgProfile -MockWith {
-            }
-
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
 
@@ -67,7 +64,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgDirectoryAdministrativeUnitScopedRoleMember -MockWith {
             }
             Mock -CommandName New-M365DSCConnection -MockWith {
-                # Select-MgProfile beta # not anymore
                 return 'Credentials'
             }
 

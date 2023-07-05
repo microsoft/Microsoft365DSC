@@ -146,7 +146,7 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta' -ErrorAction Stop
+        -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -167,14 +167,14 @@ function Get-TargetResource
     {
         #Retrieve policy general settings
 
-        $policy = Get-MgDeviceManagementIntent -DeviceManagementIntentId $Identity -ErrorAction SilentlyContinue
+        $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy with identity {$Identity} was found"
             if (-not [String]::IsNullOrEmpty($DisplayName))
             {
-                $policy = Get-MgDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
             }
         }
         if ($null -eq $policy)
@@ -184,7 +184,7 @@ function Get-TargetResource
         }
 
         #Retrieve policy specific settings
-        [array]$settings = Get-MgDeviceManagementIntentSetting `
+        [array]$settings = Get-MgBetaDeviceManagementIntentSetting `
             -DeviceManagementIntentId $policy.Id `
             -ErrorAction Stop
 
@@ -212,7 +212,7 @@ function Get-TargetResource
         $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgDeviceManagementIntentAssignment -DeviceManagementIntentId $policy.Id
+        $returnAssignments += Get-MgBetaDeviceManagementIntentAssignment -DeviceManagementIntentId $policy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -384,8 +384,7 @@ function Set-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -427,7 +426,7 @@ function Set-TargetResource
         $createParameters.add('Description', $Description)
         $createParameters.add('Settings', $settings)
         $createParameters.add('TemplateId', $policyTemplateID)
-        $policy = New-MgDeviceManagementIntent -BodyParameter $createParameters
+        $policy = New-MgBetaDeviceManagementIntent -BodyParameter $createParameters
 
         #region Assignments
         $assignmentsHash = @()
@@ -459,7 +458,7 @@ function Set-TargetResource
         $updateParameters = @{}
         $updateParameters.add('DisplayName', $DisplayName)
         $updateParameters.add('Description', $Description)
-        Update-MgDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -BodyParameter $updateParameters
+        Update-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -BodyParameter $updateParameters
 
         #Update-MgDeviceManagementIntent does not support updating the property settings
         #Update-MgDeviceManagementIntentSetting only support updating a single setting at a time
@@ -482,7 +481,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
-        Remove-MgDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -Confirm:$false
+        Remove-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -Confirm:$false
     }
 }
 
@@ -764,8 +763,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -785,7 +783,7 @@ function Export-TargetResource
     try
     {
         $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
-        [array]$policies = Get-MgDeviceManagementIntent `
+        [array]$policies = Get-MgBetaDeviceManagementIntent `
             -Filter "TemplateId eq '$policyTemplateID'" `
             -ErrorAction Stop `
             -All:$true
@@ -897,8 +895,8 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
         $TemplateId
     )
 
-    $templateCategoryId = (Get-MgDeviceManagementTemplateCategory -DeviceManagementTemplateId $TemplateId).Id
-    $templateSettings = Get-MgDeviceManagementTemplateCategoryRecommendedSetting `
+    $templateCategoryId = (Get-MgBetaDeviceManagementTemplateCategory -DeviceManagementTemplateId $TemplateId).Id
+    $templateSettings = Get-MgBetaDeviceManagementTemplateCategoryRecommendedSetting `
         -DeviceManagementTemplateId $TemplateId `
         -DeviceManagementTemplateSettingCategoryId $templateCategoryId
 
