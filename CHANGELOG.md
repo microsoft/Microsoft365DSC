@@ -5,6 +5,8 @@
 * EXOMailboxPlan
   * Support comparing instances without the GUID in the name.
     FIXES [#3314](https://github.com/microsoft/Microsoft365DSC/issues/3314)
+* DEPENDENCIES
+  * Updated all Microsoft.Graph modules to version 2.0.0.
 * MISC
   * Updated QA tests to dynamically retrieve the permission list.
 
