@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Install Modules
-        shell: pwsh
+        shell: powershell
         run: |
           Install-Module ReverseDSC -Force -Scope AllUsers
           Install-Module MSCloudLoginAssistant -Force -Scope AllUsers
