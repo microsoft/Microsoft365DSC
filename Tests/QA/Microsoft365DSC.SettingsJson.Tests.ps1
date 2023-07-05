@@ -18,7 +18,7 @@ Describe -Name 'Successfully import Settings.json files' {
 Describe -Name 'Successfully validate all used permissions in Settings.json files' {
     BeforeAll {
         $data = Invoke-WebRequest -Uri 'https://graphpermissions.azurewebsites.net/api/GetPermissionList'
-        $allPermissions = $data.Split(',')
+        $allPermissions = $data.Content.Split(',')
     }
 
      It "Permissions used in settings.json file for '<ResourceName>' should exist" -TestCases $settingsFiles {
