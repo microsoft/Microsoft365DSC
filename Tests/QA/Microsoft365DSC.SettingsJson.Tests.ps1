@@ -1,4 +1,4 @@
-﻿BeforeDiscovery {
+BeforeDiscovery {
     $resourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\Microsoft365DSC\DSCResources'
     $settingsFiles = Get-ChildItem -Path $resourcesPath -Filter '*.json' -Recurse | ForEach-Object {
         @{
@@ -17,9 +17,23 @@ Describe -Name 'Successfully import Settings.json files' {
 
 Describe -Name 'Successfully validate all used permissions in Settings.json files' {
     BeforeAll {
-        $data = Invoke-WebRequest -Uri 'https://graphpermissions.merill.net/permissions.csv'
-        $permissions = ConvertFrom-Csv -InputObject $data.Content
+        $ServicePrincipals = @(
+            '00000003-0000-0000-c000-000000000000', #Graph
+            '00000003-0000-0ff1-ce00-000000000000' #SharePoint
+        )
 
+        $allPermissions = @()
+        foreach ($SPN in $ServicePrincipals)
+        {
+            $provider = Get-MgServicePrincipal -Filter "AppId eq '$SPN'"
+            foreach ($role in $provider.AppRoles)
+            {
+                if (-not $allPermissions.Contains($role.Value))
+                {
+                    $allPermissions += $role.Value
+                }
+            }
+        }
         $allPermissions = $permissions.PermissionName
     }
 
