@@ -468,8 +468,7 @@ function Set-TargetResource
         $ExceptionMessage += "Please update your configuration."
         Write-Verbose -Message $ExceptionMessage
 
-        New-M365DSCLogEntry -Message 'Error updating data:' `
-            -Exception $ExceptionMessage `
+        New-M365DSCLogEntry -Message $ExceptionMessage `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
