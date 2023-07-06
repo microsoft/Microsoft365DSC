@@ -110,8 +110,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -139,7 +138,7 @@ function Get-TargetResource
         #region resource generator code
         if (-Not [string]::IsNullOrEmpty($DisplayName))
         {
-            $getValue = Get-MgDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsWifiConfiguration' `
             }
@@ -147,7 +146,7 @@ function Get-TargetResource
 
         if (-not $getValue)
         {
-            $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
         }
         #endregion
 
@@ -185,7 +184,7 @@ function Get-TargetResource
             Managedidentity                = $ManagedIdentity.IsPresent
         }
 
-        $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -325,8 +324,7 @@ function Set-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -390,7 +388,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $policy = New-MgDeviceManagementDeviceConfiguration @CreateParameters
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration @CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -440,7 +438,7 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        Update-MgDeviceManagementDeviceConfiguration @UpdateParameters `
+        Update-MgBetaDeviceManagementDeviceConfiguration @UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
@@ -457,7 +455,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing {$DisplayName}"
 
         #region resource generator code
-        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -697,8 +695,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -715,7 +712,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windowsWifiConfiguration'  `

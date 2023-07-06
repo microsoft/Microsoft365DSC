@@ -110,7 +110,14 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($AppId))
             {
-                $AADApp = Get-MgApplication -Filter "AppId eq '$AppId'"
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $AADApp = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $AppId}
+                }
+                else
+                {
+                    $AADApp = Get-MgApplication -Filter "AppId eq '$AppId'"
+                }
             }
         }
         catch
@@ -121,11 +128,19 @@ function Get-TargetResource
         if ($null -eq $AADApp)
         {
             Write-Verbose -Message "Attempting to retrieve Azure AD Application by DisplayName {$DisplayName}"
-            $AADApp = Get-MgApplication -Filter "DisplayName eq '$($DisplayName)'"
+
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $AADApp = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            }
+            else
+            {
+                $AADApp = Get-MgApplication -Filter "DisplayName eq '$($DisplayName)'"
+            }
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
         {
-            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. Aborting."
+            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. These apps will not be exported."
         }
         elseif ($null -eq $AADApp)
         {
@@ -799,10 +814,11 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     try
     {
-        $AADApplications = Get-MgApplication -Filter $Filter -All -ErrorAction Stop
-        foreach ($AADApp in $AADApplications)
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-MgApplication -Filter $Filter -All -ErrorAction Stop
+        foreach ($AADApp in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($AADApplications.Count)] $($AADApp.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADApp.DisplayName)" -NoNewline
             $Params = @{
                 ApplicationId         = $ApplicationId
                 AppId                 = $AADApp.AppId

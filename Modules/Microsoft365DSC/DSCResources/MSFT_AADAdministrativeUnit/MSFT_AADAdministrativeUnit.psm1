@@ -74,23 +74,44 @@ function Get-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
+            -InboundParameters $PSBoundParameters
+    }
+    catch
+    {
+        Write-Verbose -Message ($_)
+    }
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $nullResult = $PSBoundParameters
+    $nullResult.Ensure = 'Absent'
+    try
+    {
+        $getValue = $null
+
+        #region resource generator code
+        if (-Not [string]::IsNullOrEmpty($Id))
+        {
+            $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction Stop
+        }
+
+        if (-not $getValue -and -Not [string]::IsNullOrEmpty($DisplayName))
+        {
+            $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+        }
         #endregion
 
         $nullResult = $PSBoundParameters
@@ -100,16 +121,29 @@ function Get-TargetResource
         #region resource generator code
         if (-not [string]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction SilentlyContinue
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+            }
+            else
+            {
+                $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction SilentlyContinue
+            }
         }
 
         if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($DisplayName))
         {
             Write-Verbose -Message "Could not find an Azure AD Administrative Unit with Id {$Id}"
-
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $getValue = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                }
+                else
+                {
+                    $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                }
             }
         }
         #endregion
@@ -321,6 +355,15 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
+    try
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters `
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -554,7 +597,9 @@ function Set-TargetResource
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
 
         #region resource generator code
-        Update-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id -BodyParameter $UpdateParameters
+        Update-MgDirectoryAdministrativeUnit @UpdateParameters `
+            -AdministrativeUnitId $currentInstance.Id
+
         #endregion
 
         if ($MembershipType -ne 'Dynamic')
@@ -622,7 +667,8 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey('ScopedRoleMembers') -and ($backCurrentScopedRoleMembers.Count -gt 0 -or $requestedScopedRoleMembers.Count -gt 0))
         {
-            if ($backCurrentScopedRoleMembers.Length -ne 0)
+            $currentScopedRoleMembersValue = @()
+            if ($currentInstance.ScopedRoleMembers.Length -ne 0)
             {
                 $currentScopedRoleMembersValue = $backCurrentScopedRoleMembers
             }
@@ -733,7 +779,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Azure AD Administrative Unit with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Removing AU {$DisplayName}"
         #region resource generator code
         Remove-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
         #endregion
@@ -929,8 +975,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -946,14 +991,15 @@ function Export-TargetResource
 
     try
     {
+        $Script:ExportMode = $true
         #region resource generator code
-        [array]$getValue = Get-MgDirectoryAdministrativeUnit -All `
+        [array] $Script:exportedInstances = Get-MgDirectoryAdministrativeUnit -All `
             -ErrorAction Stop
         #endregion
 
         $i = 1
         $dscContent = ''
-        if ($getValue.Length -eq 0)
+        if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -961,14 +1007,14 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($config in $getValue)
+        foreach ($config in $Script:exportedInstances)
         {
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
             }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
             $params = @{
                 DisplayName           = $config.DisplayName
                 Id                    = $config.Id

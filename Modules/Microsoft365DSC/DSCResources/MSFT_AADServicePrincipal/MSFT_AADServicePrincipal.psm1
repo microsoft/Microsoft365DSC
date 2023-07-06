@@ -96,8 +96,7 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting configuration of Azure AD ServicePrincipal'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'Beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -119,8 +118,15 @@ function Get-TargetResource
         {
             if (-not [System.String]::IsNullOrEmpty($ObjectID))
             {
-                $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
-                    -ErrorAction Stop
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                }
+                else
+                {
+                    $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
+                        -ErrorAction Stop
+                }
             }
         }
         catch
@@ -130,7 +136,14 @@ function Get-TargetResource
 
         if ($null -eq $AADServicePrincipal)
         {
-            $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $AADServicePrincipal = $Script:exportedInstances | Where-Object -FilterScript {$_.AppId -eq $AppId}
+            }
+            else
+            {
+                $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
+            }
         }
         if ($null -eq $AADServicePrincipal)
         {
@@ -275,7 +288,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "1 - There are now {$((Get-ChildItem function: | Measure-Object).Count) functions}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
+        -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "2 - There are now {$((Get-ChildItem function: | Measure-Object).Count) functions}"
     Write-Verbose -Message 'Setting configuration of Azure AD ServicePrincipal'
@@ -301,6 +314,7 @@ function Set-TargetResource
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('ObjectID') | Out-Null
     $currentParameters.Remove('ApplicationSecret') | Out-Null
+    $currentParameters.Remove('AppId') | Out-Null
 
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
@@ -444,6 +458,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('AppId') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -490,8 +505,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -510,10 +524,11 @@ function Export-TargetResource
     {
         $i = 1
         Write-Host "`r`n" -NoNewline
-        $AADServicePrincipals = Get-MgServicePrincipal -All:$true -Filter $Filter -ErrorAction Stop
-        foreach ($AADServicePrincipal in $AADServicePrincipals)
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-MgServicePrincipal -All:$true -Filter $Filter -ErrorAction Stop
+        foreach ($AADServicePrincipal in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($AADServicePrincipals.Count)] $($AADServicePrincipal.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADServicePrincipal.DisplayName)" -NoNewline
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

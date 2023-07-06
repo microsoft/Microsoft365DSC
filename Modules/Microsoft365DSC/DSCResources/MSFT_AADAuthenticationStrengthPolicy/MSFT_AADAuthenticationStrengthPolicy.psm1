@@ -54,8 +54,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -76,12 +75,12 @@ function Get-TargetResource
 
         if (-not [System.String]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Id
+            $getValue = Get-MgBetaPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Id
         }
 
         if ($null -eq $getValue)
         {
-            $getValue = Get-MgPolicyAuthenticationStrengthPolicy | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName} -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaPolicyAuthenticationStrengthPolicy | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName} -ErrorAction SilentlyContinue
         }
 
         if ($null -eq $getValue)
@@ -189,7 +188,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating new Azure AD AuthenticationStrengthPolicy {$DisplayName}"
         $BoundParameters.Remove("Id") | Out-Null
-        New-MgPolicyAuthenticationStrengthPolicy @BoundParameters
+        New-MgBetaPolicyAuthenticationStrengthPolicy @BoundParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -198,16 +197,16 @@ function Set-TargetResource
         $BoundParameters.Remove("Id") | Out-Null
         $combinations = $BoundParameters.AllowedCombinations
         $BoundParameters.Remove("AllowedCombinations") | Out-Null
-        Update-MgPolicyAuthenticationStrengthPolicy @BoundParameters
+        Update-MgBetaPolicyAuthenticationStrengthPolicy @BoundParameters
 
         Write-Verbose -Message "Updating the Azure AD Authentication Strength Policy allowed combination with DisplayName {$DisplayName}"
-        Update-MgPolicyAuthenticationStrengthPolicyAllowedCombination -AuthenticationStrengthPolicyId $currentInstance.Id `
+        Update-MgBetaPolicyAuthenticationStrengthPolicyAllowedCombination -AuthenticationStrengthPolicyId $currentInstance.Id `
             -AllowedCombinations $AllowedCombinations
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the Azure AD Authentication Method Policy with Id {$($currentInstance.Id)}"
-        Remove-MgPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $currentInstance.Id
+        Remove-MgBetaPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $currentInstance.Id
     }
 }
 
@@ -336,8 +335,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -354,7 +352,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgPolicyAuthenticationStrengthPolicy `
+        [array]$getValue = Get-MgBetaPolicyAuthenticationStrengthPolicy `
             -ErrorAction Stop
         #endregion
 

@@ -204,7 +204,7 @@ function Get-TargetResource
         $Id
     )
     Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -227,7 +227,7 @@ function Get-TargetResource
         if ($id -ne '')
         {
             Write-Verbose -Message "Searching for Policy using Id {$Id}"
-            $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "Id eq '$Id'" -ExpandProperty Apps, assignments `
+            $policyInfo = Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -Filter "Id eq '$Id'" -ExpandProperty Apps, assignments `
                 -ErrorAction Stop
             if ($null -eq $policyInfo)
             {
@@ -238,7 +238,7 @@ function Get-TargetResource
         if ($null -eq $policyInfo)
         {
             Write-Verbose -Message "Searching for Policy using DisplayName {$DisplayName}"
-            $policyInfo = Get-MgDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" -ExpandProperty Apps, assignments `
+            $policyInfo = Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" -ExpandProperty Apps, assignments `
                 -ErrorAction Stop
         }
         if ($null -eq $policyInfo)
@@ -579,9 +579,9 @@ function Set-TargetResource
     if (($Ensure -eq 'Absent') -and ($currentPolicy.Ensure -eq 'Present'))
     {
         Write-Verbose -Message "Removing Android App Protection Policy {$DisplayName}"
-        Remove-MgDeviceAppManagementAndroidManagedAppProtection -AndroidManagedAppProtectionId $currentPolicy.id
+        Remove-MgBetaDeviceAppManagementAndroidManagedAppProtection -AndroidManagedAppProtectionId $currentPolicy.id
         # then exit
-        return $true
+        return
     }
 
     $setParams = @{}
@@ -669,7 +669,7 @@ function Set-TargetResource
             Write-Verbose -Message 'ID in Configuration Document will be ignored, Policy will be created with a new ID'
         }
         $setParams.add('Assignments', $assignmentsArray)
-        $newpolicy = New-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+        $newpolicy = New-MgBetaDeviceAppManagementAndroidManagedAppProtection @setParams
         $setParams.add('AndroidManagedAppProtectionId', $newpolicy.Id)
 
     }
@@ -681,15 +681,15 @@ function Set-TargetResource
             Write-Verbose -Message ("id in configuration document and returned policy do not match - updating policy with matching Displayname {$displayname} - ID {" + $currentPolicy.id + '}')
         }
         $setParams.add('AndroidManagedAppProtectionId', $currentPolicy.id)
-        Update-MgDeviceAppMgtAndroidManagedAppProtection @setParams
+        Update-MgBetaDeviceAppManagementAndroidManagedAppProtection @setParams
 
         Write-Verbose -Message 'Setting Group Assignments...'
-        Set-MgDeviceAppMgtTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
+        Set-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Assignments $assignmentsArray
 
     }
     # now we need to set up the apps
     Write-Verbose -Message ('Setting Application values of type: ' + $AppsHash.AppGroupType)
-    Invoke-MgTargetDeviceAppMgtTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppsHash.AppGroupType
+    Invoke-MgBetaTargetDeviceAppManagementTargetedManagedAppConfigurationApp -TargetedManagedAppConfigurationId $setParams.AndroidManagedAppProtectionId -Apps $appsarray -AppGroupType $AppsHash.AppGroupType
 }
 
 function Test-TargetResource
@@ -900,9 +900,6 @@ function Test-TargetResource
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -ProfileName beta `
-        -InboundParameters $PSBoundParameters
-
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
@@ -917,9 +914,7 @@ function Test-TargetResource
 
     if ($CurrentValues.Ensure -eq 'ERROR')
     {
-
         Throw 'Error when searching for current policy details - Please check verbose output for further detail'
-
     }
 
     if ($Ensure -eq 'Absent')
@@ -981,7 +976,7 @@ function Test-TargetResource
     }
     else
     {
-        Write-Host 'Unspecified Parameter in Config: Assignments - Current Value is:' $CurrentValues.Assignments `
+        Write-Verbose -Message 'Unspecified Parameter in Config: Assignments - Current Value is:' $CurrentValues.Assignments `
             "`r`nNOTE: Assignments interacts with other values - not specifying may lead to unexpected output"
     }
 
@@ -991,7 +986,7 @@ function Test-TargetResource
     }
     else
     {
-        Write-Host 'Unspecified Parameter in Config: ExcludedGroups - Current Value is:' $CurrentValues.ExcludedGroups `
+        Write-Verbose -Message 'Unspecified Parameter in Config: ExcludedGroups - Current Value is:' $CurrentValues.ExcludedGroups `
             "`r`nNOTE: ExcludedGroups interacts with other values - not specifying may lead to unexpected output"
     }
 
@@ -1073,7 +1068,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MgDeviceAppManagementAndroidManagedAppProtection -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$policies = Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -All:$true -Filter $Filter -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($policies.Length -eq 0)

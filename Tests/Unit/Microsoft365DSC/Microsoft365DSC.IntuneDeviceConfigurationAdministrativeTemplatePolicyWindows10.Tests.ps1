@@ -36,17 +36,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Write-Host -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceManagementGroupPolicyConfiguration -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementGroupPolicyConfiguration -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementGroupPolicyConfiguration -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementGroupPolicyConfiguration -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
 
-            Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment -MockWith {
                 return @(@{
                         target = @{
                             deviceAndAppManagementAssignmentFilterType = 'none'
@@ -105,11 +105,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfiguration -MockWith {
                     return $null
                 }
 
-                Mock -CommandName New-MgDeviceManagementGroupPolicyConfiguration -MockWith {
+                Mock -CommandName New-MgBetaDeviceManagementGroupPolicyConfiguration -MockWith {
                     return @{
                         id          = 'fakeNewId'
                         displayName = 'fakeNewDisplayName'
@@ -124,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgDeviceManagementGroupPolicyConfiguration -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceManagementGroupPolicyConfiguration -Exactly 1
                 Should -Invoke -CommandName Update-DeviceConfigurationPolicyAssignment -Exactly 1
             }
         }
@@ -174,7 +174,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfiguration -MockWith {
                     return @{
                         AdditionalProperties             = @{
                             '@odata.type' = '#microsoft.graph.GroupPolicyConfiguration'
@@ -186,7 +186,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValue -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue -MockWith {
                     return @(
                         @{
                             ConfigurationType                = 'fakeConfigurationType'
@@ -197,7 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition -MockWith {
                     return @{
                         Id           = '37ab8b81-47d7-46d8-8b99-81d9cecdcce9'
                         DisplayName  = 'Configure allowed app/extension types'
@@ -208,7 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue -MockWith {
                     return @{
                         AdditionalProperties             = @{
                             '@odata.type' = '#microsoft.graph.groupPolicyPresentationValueList'
@@ -238,7 +238,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementGroupPolicyConfiguration -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementGroupPolicyConfiguration -Exactly 1
             }
         }
         Context -Name 'The IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 Exists and Values are already in the desired state' -Fixture {
@@ -286,7 +286,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfiguration -MockWith {
                     return @{
                         AdditionalProperties             = @{
                             '@odata.type' = '#microsoft.graph.GroupPolicyConfiguration'
@@ -298,7 +298,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValue -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue -MockWith {
                     return @(
                         @{
                             Enabled           = $true
@@ -308,7 +308,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition -MockWith {
                     return @{
                         Id           = '37ab8b81-47d7-46d8-8b99-81d9cecdcce9'
                         DisplayName  = 'Configure allowed app/extension types'
@@ -319,7 +319,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = '#microsoft.graph.groupPolicyPresentationValueList'
@@ -388,7 +388,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfiguration -MockWith {
                     return @{
                         AdditionalProperties             = @{
                             '@odata.type' = '#microsoft.graph.GroupPolicyConfiguration'
@@ -400,7 +400,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValue -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue -MockWith {
                     return @(
                         @{
                             Enabled           = $true
@@ -410,7 +410,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition -MockWith {
                     return @{
                         Id           = '37ab8b81-47d7-46d8-8b99-81d9cecdcce9'
                         DisplayName  = 'Configure allowed app/extension types'
@@ -421,7 +421,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = '#microsoft.graph.groupPolicyPresentationValueList'
@@ -450,7 +450,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementGroupPolicyConfiguration -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementGroupPolicyConfiguration -Exactly 1
                 Should -Invoke -CommandName Update-DeviceConfigurationPolicyAssignment -Exactly 1
                 Should -Invoke -CommandName Update-DeviceConfigurationGroupPolicyDefinitionValue -Exactly 1
             }
@@ -463,7 +463,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfiguration -MockWith {
                     return @(@{
                             AdditionalProperties             = @{
                                 '@odata.type' = '#microsoft.graph.GroupPolicyConfiguration'
@@ -475,7 +475,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         })
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValue -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue -MockWith {
                     return @(
                         @{
                             ConfigurationType                = 'fakeConfigurationType'
@@ -486,7 +486,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     )
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition -MockWith {
                     return @{
                         Id           = '37ab8b81-47d7-46d8-8b99-81d9cecdcce9'
                         DisplayName  = 'Configure allowed app/extension types'
@@ -497,7 +497,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue -MockWith {
                     return @{
                         AdditionalProperties             = @{
                             '@odata.type' = '#microsoft.graph.groupPolicyPresentationValueList'

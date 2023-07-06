@@ -32,13 +32,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Update-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
@@ -57,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Limit       = 15
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return $null
                 }
             }
@@ -72,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the restriction from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceManagementDeviceEnrollmentConfiguration' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceManagementDeviceEnrollmentConfiguration' -Exactly 1
             }
         }
 
@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Limit       = 15
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
@@ -107,7 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the restriction from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
             }
         }
 
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Limit       = 15
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
@@ -146,7 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Limit       = 15
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
@@ -168,7 +168,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the restriction from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Exactly 1
             }
         }
 
@@ -180,7 +180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return @{AdditionalProperties = @{
                             '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
                             Limit         = 12

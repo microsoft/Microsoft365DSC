@@ -156,7 +156,7 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta' -ErrorAction Stop
+        -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -178,12 +178,12 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction silentlyContinue
+        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction silentlyContinue
 
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$Identity} was found"
-            $policy = Get-MgDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" } -ErrorAction silentlyContinue
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" }  -ErrorAction silentlyContinue
         }
 
         if ($null -eq $policy)
@@ -194,7 +194,7 @@ function Get-TargetResource
 
 
         #Retrieve policy specific settings
-        [array]$settings = Get-MgDeviceManagementConfigurationPolicySetting `
+        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
             -DeviceManagementConfigurationPolicyId $policy.Id `
             -ErrorAction Stop
 
@@ -235,7 +235,7 @@ function Get-TargetResource
         }
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
+        $returnAssignments += Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -427,8 +427,7 @@ function Set-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -521,7 +520,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
-        Remove-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity
+        Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity
     }
 }
 
@@ -812,8 +811,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -833,7 +831,7 @@ function Export-TargetResource
     try
     {
         $policyTemplateID = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
-        [array]$policies = Get-MgDeviceManagementConfigurationPolicy `
+        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
             -ErrorAction Stop `
             -All:$true
 
@@ -1055,7 +1053,7 @@ function Format-M365DSCIntuneSettingCatalogASRRulesPolicySettings
 
     $settings = @()
 
-    $templateSettings = Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
+    $templateSettings = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
 
     $simpleSettings = @()
     $simpleSettings += $templateSettings.SettingInstanceTemplate | Where-Object -FilterScript `

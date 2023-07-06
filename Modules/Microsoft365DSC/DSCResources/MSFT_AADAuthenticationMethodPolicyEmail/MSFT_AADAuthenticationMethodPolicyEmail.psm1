@@ -62,8 +62,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -82,7 +81,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id -ErrorAction SilentlyContinue
 
         #endregion
         if ($null -eq $getValue)
@@ -300,7 +299,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $CreateParameters.Add('@odata.type', '#microsoft.graph.emailAuthenticationMethodConfiguration')
-        $policy = New-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -BodyParameter $CreateParameters
+        $policy = New-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -BodyParameter $CreateParameters
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -346,7 +345,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.emailAuthenticationMethodConfiguration')
-        Update-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
+        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
             -AuthenticationMethodConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion
@@ -355,7 +354,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Azure AD Authentication Method Policy Email with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $currentInstance.Id
+        Remove-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -522,8 +521,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -540,7 +538,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
+        [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId Email `
             -ErrorAction Stop
         #endregion

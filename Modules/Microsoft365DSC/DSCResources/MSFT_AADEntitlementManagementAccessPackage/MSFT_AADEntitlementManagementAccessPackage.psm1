@@ -79,8 +79,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -106,7 +105,7 @@ function Get-TargetResource
         $getValue = $null
 
         #region resource generator code
-        $getValue = Get-MgEntitlementManagementAccessPackage -AccessPackageId $id `
+        $getValue = Get-MgBetaEntitlementManagementAccessPackage -AccessPackageId $id `
             -ExpandProperty "accessPackageResourceRoleScopes(`$expand=accessPackageResourceRole,accessPackageResourceScope)" `
             -ErrorAction SilentlyContinue
 
@@ -116,7 +115,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgEntitlementManagementAccessPackage `
+                $getValue = Get-MgBetaEntitlementManagementAccessPackage `
                     -Filter "displayName eq '$DisplayName'" `
                     -ExpandProperty "accessPackageResourceRoleScopes(`$expand=accessPackageResourceRole,accessPackageResourceScope)" `
                     -ErrorAction SilentlyContinue
@@ -143,7 +142,7 @@ function Get-TargetResource
         }
 
         $getIncompatibleAccessPackages = @()
-        [Array]$query = Get-MgEntitlementManagementAccessPackageIncompatibleAccessPackage -AccessPackageId $getValue.id
+        [Array]$query = Get-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackage -AccessPackageId $getValue.id
         if ($query.count -gt 0)
         {
             $getIncompatibleAccessPackages += $query.id
@@ -151,14 +150,14 @@ function Get-TargetResource
 
 
         $getAccessPackagesIncompatibleWith = @()
-        [Array]$query = Get-MgEntitlementManagementAccessPackageIncompatibleWith -AccessPackageId $getValue.id
+        [Array]$query = Get-MgBetaEntitlementManagementAccessPackageIncompatibleWith -AccessPackageId $getValue.id
         if ($query.count -gt 0)
         {
             $getIncompatibleAccessPackages += $query.id
         }
 
         $getIncompatibleGroups = @()
-        [Array]$query = Get-MgEntitlementManagementAccessPackageIncompatibleGroup -AccessPackageId $getValue.id
+        [Array]$query = Get-MgBetaEntitlementManagementAccessPackageIncompatibleGroup -AccessPackageId $getValue.id
         if ($query.count -gt 0)
         {
             $getIncompatibleGroups += $query.id
@@ -278,8 +277,7 @@ function Set-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -322,7 +320,7 @@ function Set-TargetResource
         $CreateParameters.Remove('AccessPackagesIncompatibleWith') | Out-Null
         $CreateParameters.Remove('IncompatibleGroups') | Out-Null
 
-        $accessPackage = New-MgEntitlementManagementAccessPackage `
+        $accessPackage = New-MgBetaEntitlementManagementAccessPackage `
             -BodyParameter $CreateParameters
 
         #endregion
@@ -334,7 +332,7 @@ function Set-TargetResource
                 '@odata.id' = "https://graph.microsoft.com/beta/identityGovernance/entitlementManagement/accessPackages/$incompatibleAccessPackage"
             }
 
-            New-MgEntitlementManagementAccessPackageIncompatibleAccessPackageByRef `
+            New-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageByRef `
                 -AccessPackageId $accessPackage.Id `
                 -OdataId $ref.'@odata.id'
         }
@@ -347,7 +345,7 @@ function Set-TargetResource
                 '@odata.id' = "https://graph.microsoft.com/beta/groups/$IncompatibleGroup"
             }
 
-            New-MgEntitlementManagementAccessPackageIncompatibleGroupByRef `
+            New-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef `
                 -AccessPackageId $accessPackage.Id `
                 -OdataId $ref.'@odata.id'
         }
@@ -362,12 +360,12 @@ function Set-TargetResource
 
             Write-Verbose -Message "Adding roleScope {$originId`:$roleName} to access package with Id {$($accessPackage.Id)}"
 
-            $resourceScope = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource `
+            $resourceScope = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
                 -AccessPackageCatalogId $CatalogId `
                 -Filter "originId eq '$originId'" `
                 -ExpandProperty 'accessPackageResourceScopes'
 
-            $resourceRole = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResourceRole `
+            $resourceRole = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourceRole `
                 -AccessPackageCatalogId $CatalogId `
                 -Filter "(accessPackageResource/Id eq '$($resourceScope.id)' and displayname eq '$roleName' and originSystem eq '$($resourceScope.originSystem)')" `
                 -ExpandProperty 'accessPackageResource'
@@ -408,7 +406,7 @@ function Set-TargetResource
 
                 Write-Verbose -Message ("package id {$($accessPackage.Id)}")
                 Write-Verbose -Message ($params | ConvertTo-Json -Depth 20)
-                New-MgEntitlementManagementAccessPackageResourceRoleScope -AccessPackageId $accessPackage.Id -BodyParameter $params
+                New-MgBetaEntitlementManagementAccessPackageResourceRoleScope -AccessPackageId $accessPackage.Id -BodyParameter $params
             }
         }
         #endregion
@@ -428,7 +426,7 @@ function Set-TargetResource
         $UpdateParameters.Remove('AccessPackagesIncompatibleWith') | Out-Null
         $UpdateParameters.Remove('IncompatibleGroups') | Out-Null
 
-        Update-MgEntitlementManagementAccessPackage -BodyParameter $UpdateParameters `
+        Update-MgBetaEntitlementManagementAccessPackage -BodyParameter $UpdateParameters `
             -AccessPackageId $currentInstance.Id
         #endregion
 
@@ -454,7 +452,7 @@ function Set-TargetResource
                 '@odata.id' = "https://graph.microsoft.com/beta/identityGovernance/entitlementManagement/accessPackages/$incompatibleAccessPackage"
             }
 
-            New-MgEntitlementManagementAccessPackageIncompatibleAccessPackageByRef `
+            New-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageByRef `
                 -AccessPackageId $currentInstance.Id `
                 -OdataId $ref.'@odata.id'
         }
@@ -463,7 +461,7 @@ function Set-TargetResource
 
         foreach ($incompatibleAccessPackage in $toBeRemoved.InputObject)
         {
-            Remove-MgEntitlementManagementAccessPackageIncompatibleAccessPackageByRef `
+            Remove-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageByRef `
                 -AccessPackageId $currentInstance.Id `
                 -AccessPackageId1 $incompatibleAccessPackage
         }
@@ -491,7 +489,7 @@ function Set-TargetResource
                 '@odata.id' = "https://graph.microsoft.com/beta/groups/$incompatibleGroup"
             }
 
-            New-MgEntitlementManagementAccessPackageIncompatibleGroupByRef `
+            New-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef `
                 -AccessPackageId $currentInstance.Id `
                 -OdataId $ref.'@odata.id'
         }
@@ -500,7 +498,7 @@ function Set-TargetResource
 
         foreach ($IncompatibleGroup in $toBeRemoved.InputObject)
         {
-            Remove-MgEntitlementManagementAccessPackageIncompatibleGroupByRef `
+            Remove-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef `
                 -AccessPackageId $currentInstance.Id `
                 -GroupId $incompatibleGroup
         }
@@ -518,12 +516,12 @@ function Set-TargetResource
 
                 Write-Verbose -Message "Adding roleScope {$originId`:$roleName} to access package with Id {$($currentInstance.Id)}"
 
-                $resourceScope = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource `
+                $resourceScope = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
                     -AccessPackageCatalogId $CatalogId `
                     -Filter "originId eq '$originId'" `
                     -ExpandProperty 'accessPackageResourceScopes'
 
-                $resourceRole = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResourceRole `
+                $resourceRole = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourceRole `
                     -AccessPackageCatalogId $CatalogId `
                     -Filter "(accessPackageResource/Id eq '$($resourceScope.id)' and displayname eq '$roleName' and originSystem eq '$($resourceScope.originSystem)')" `
                     -ExpandProperty 'accessPackageResource'
@@ -562,7 +560,7 @@ function Set-TargetResource
                         }
                     }
 
-                    New-MgEntitlementManagementAccessPackageResourceRoleScope -AccessPackageId $currentInstance.Id -BodyParameter $params
+                    New-MgBetaEntitlementManagementAccessPackageResourceRoleScope -AccessPackageId $currentInstance.Id -BodyParameter $params
                 }
                 #endregion
             }
@@ -579,12 +577,12 @@ function Set-TargetResource
 
                     Write-Verbose -Message "Updating role {$roleName} from access package rolescope with Id {$($accessPackageResourceRoleScope.id)}"
 
-                    $resourceScope = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource `
+                    $resourceScope = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
                         -AccessPackageCatalogId $CatalogId `
                         -Filter "originId eq '$originId'" `
                         -ExpandProperty 'accessPackageResourceScopes'
 
-                    $resourceRole = Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResourceRole `
+                    $resourceRole = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResourceRole `
                         -AccessPackageCatalogId $CatalogId `
                         -Filter "(accessPackageResource/Id eq '$($resourceScope.id)' and displayname eq '$roleName' and originSystem eq '$($resourceScope.originSystem)')" `
                         -ExpandProperty 'accessPackageResource'
@@ -623,11 +621,13 @@ function Set-TargetResource
                             }
                         }
 
-                        Remove-MgEntitlementManagementAccessPackageResourceRoleScope `
+                        #write-verbose -message ($params|convertTo-json -depth 20)
+
+                        Remove-MgBetaEntitlementManagementAccessPackageResourceRoleScope `
                             -AccessPackageId $currentInstance.Id  `
                             -AccessPackageResourceRoleScopeId $currentRole.Id
 
-                        New-MgEntitlementManagementAccessPackageResourceRoleScope `
+                        New-MgBetaEntitlementManagementAccessPackageResourceRoleScope `
                             -AccessPackageId $currentInstance.Id `
                             -BodyParameter $params
 
@@ -648,7 +648,7 @@ function Set-TargetResource
 
             Write-Verbose -Message "Removing RoleScope with originId {$originId} from access package {$($currentInstance.Id)}"
 
-            Remove-MgEntitlementManagementAccessPackageResourceRoleScope `
+            Remove-MgBetaEntitlementManagementAccessPackageResourceRoleScope `
                 -AccessPackageId $currentInstance.Id  `
                 -AccessPackageResourceRoleScopeId $currentRoleScope.Id
         }
@@ -660,7 +660,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing access package with id {$id} and displayName {$DisplayName}"
 
         #region resource generator code
-        Remove-MgEntitlementManagementAccessPackage -AccessPackageId $currentInstance.Id
+        Remove-MgBetaEntitlementManagementAccessPackage -AccessPackageId $currentInstance.Id
         #endregion
     }
 }
@@ -800,14 +800,10 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('AccessPackagesIncompatibleWith') | Out-Null #read-only
 
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
     if ($testResult)
     {
@@ -854,8 +850,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -873,7 +868,7 @@ function Export-TargetResource
     {
 
         #region resource generator code
-        [array]$getValue = Get-MgEntitlementManagementAccessPackage `
+        [array]$getValue = Get-MgBetaEntitlementManagementAccessPackage `
             -All `
             -ErrorAction Stop
 

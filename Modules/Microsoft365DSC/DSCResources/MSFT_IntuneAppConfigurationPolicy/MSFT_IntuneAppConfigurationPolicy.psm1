@@ -52,8 +52,7 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of Intune App Configuration Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -73,7 +72,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
+        $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
 
         if ($null -eq $configPolicy)
@@ -97,7 +96,7 @@ function Get-TargetResource
         }
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
+        $returnAssignments += Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -207,7 +206,7 @@ function Set-TargetResource
             [System.Object[]]$customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
             $creationParams.Add('customSettings', $customSettingsValue)
         }
-        $policy = New-MgDeviceAppManagementTargetedManagedAppConfiguration @creationParams
+        $policy = New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration @creationParams
 
         #region Assignments
         $assignmentsHash = @()
@@ -227,7 +226,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
-        $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'"
+        $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'"
 
         $updateParams = @{
             targetedManagedAppConfigurationId = $configPolicy.Id
@@ -239,7 +238,7 @@ function Set-TargetResource
             $customSettingsValue = ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings -Settings $CustomSettings
             $updateParams.Add('customSettings', $customSettingsValue)
         }
-        Update-MgDeviceAppManagementTargetedManagedAppConfiguration @updateParams
+        Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration @updateParams
 
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
@@ -253,8 +252,8 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune App Configuration Policy {$DisplayName}"
-        $configPolicy = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'"
-        Remove-MgDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $configPolicy.id
+        $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'"
+        Remove-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $configPolicy.id
     }
 }
 
@@ -473,7 +472,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configPolicies = Get-MgDeviceAppManagementTargetedManagedAppConfiguration -All:$true -Filter $Filter -ErrorAction Stop
+        [array]$configPolicies = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All:$true -Filter $Filter -ErrorAction Stop
         $i = 1
         $dscContent = ''
         if ($configPolicies.Length -eq 0)

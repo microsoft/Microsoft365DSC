@@ -49,6 +49,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
@@ -120,12 +124,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsTenantNetworkSubnet Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description   = 'Nik Test'
-                    Identity      = '192.168.0.0'
-                    MaskBits      = 24
-                    NetworkSiteID = 'Nik'
-                    Ensure        = 'Present'
-                    Credential    = $Credential
+                    Description          = "Nik Test";
+                    Identity             = "192.168.0.0";
+                    MaskBits             = 24;
+                    NetworkSiteID        = "Nik";
+                    Ensure = "Present"
+                    Credential = $Credential;
                 }
 
                 Mock -CommandName Get-CsTenantNetworkSubnet -MockWith {

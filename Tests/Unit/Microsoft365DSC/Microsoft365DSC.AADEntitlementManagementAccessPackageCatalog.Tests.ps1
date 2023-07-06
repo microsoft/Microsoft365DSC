@@ -33,13 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgEntitlementManagementAccessPackageCatalog -MockWith {
+            Mock -CommandName Update-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
             }
 
-            Mock -CommandName New-MgEntitlementManagementAccessPackageCatalog -MockWith {
+            Mock -CommandName New-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
             }
 
-            Mock -CommandName Remove-MgEntitlementManagementAccessPackageCatalog -MockWith {
+            Mock -CommandName Remove-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -66,7 +66,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
                     return $null
                 }
             }
@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgEntitlementManagementAccessPackageCatalog -Exactly 1
+                Should -Invoke -CommandName New-MgBetaEntitlementManagementAccessPackageCatalog -Exactly 1
             }
         }
 
@@ -96,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
                     return @{
                         CatalogStatus       = 'FakeStringValue'
                         CatalogType         = 'UserManaged'
@@ -119,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgEntitlementManagementAccessPackageCatalog -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaEntitlementManagementAccessPackageCatalog -Exactly 1
             }
         }
         Context -Name 'The AADEntitlementManagementAccessPackageCatalog Exists and Values are already in the desired state' -Fixture {
@@ -136,7 +136,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
                     return @{
                         CatalogStatus       = 'FakeStringValue'
                         CatalogType         = 'UserManaged'
@@ -169,7 +169,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
                     return @{
                         CatalogStatus       = 'FakeStringValue'
                         CatalogType         = 'UserManaged'
@@ -191,7 +191,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgEntitlementManagementAccessPackageCatalog -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaEntitlementManagementAccessPackageCatalog -Exactly 1
             }
         }
 
@@ -203,7 +203,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackage -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackage -MockWith {
                     return @([PSCustomObject]@{
                         Catalog = @{
                             CatalogStatus       = 'FakeStringValue'

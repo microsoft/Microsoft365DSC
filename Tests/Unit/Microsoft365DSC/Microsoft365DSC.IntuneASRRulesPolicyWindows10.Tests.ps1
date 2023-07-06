@@ -35,13 +35,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-MgDeviceManagementIntent -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementIntent -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceManagementIntent -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementIntent -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementIntent -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementIntent -MockWith {
             }
 
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
@@ -83,13 +83,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                      = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
                     return $null
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return $null
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @()
                 }
             }
@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceManagementIntent' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceManagementIntent' -Exactly 1
             }
         }
 
@@ -137,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                      = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         Description = 'This is a test'
@@ -146,7 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return @(
                         @{
                             Id                   = '12345-12345-12345-12345-12345'
@@ -194,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @()
                 }
             }
@@ -209,7 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementIntent -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementIntent -Exactly 1
             }
         }
 
@@ -228,7 +228,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     BlockPersistenceThroughWmiType      = 'block'
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         Description = 'This is a test'
@@ -237,7 +237,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return @(
                         @{
                             Id                   = '12345-12345-12345-12345-12345'
@@ -285,7 +285,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @()
                 }
             }
@@ -324,7 +324,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                      = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         Description = 'This is a test'
@@ -333,7 +333,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return @(
                         @{
                             Id                   = '12345-12345-12345-12345-12345'
@@ -381,7 +381,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @()
                 }
             }
@@ -396,7 +396,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementIntent -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementIntent -Exactly 1
             }
         }
 
@@ -408,7 +408,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
                     return @{
                         Id          = '12345-12345-12345-12345-12345'
                         Description = 'This is a test'
@@ -417,7 +417,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return @(
                         @{
                             Id                   = '12345-12345-12345-12345-12345'
@@ -465,7 +465,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     )
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @()
                 }
             }

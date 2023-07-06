@@ -73,8 +73,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -93,7 +92,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -101,13 +100,13 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($Name))
             {
-                $getValue = Get-MgDeviceManagementConfigurationPolicy `
+                $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
                     -Filter "Name eq '$Name' and Platforms eq 'windows10'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript {[String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId)}
                 if ($null -ne $getValue)
                 {
-                    $getValue = Get-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $getValue.id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
+                    $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $getValue.id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
                 }
             }
         }
@@ -169,7 +168,7 @@ function Get-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -311,7 +310,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $CreateParameters.Add('@odata.type', '#microsoft.graph.DeviceManagementConfigurationPolicy')
-        $policy = New-MgDeviceManagementConfigurationPolicy -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -364,7 +363,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Setting Catalog Custom Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentInstance.Id
+        Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentInstance.Id
         #endregion
     }
 }
@@ -538,8 +537,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -556,7 +554,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementConfigurationPolicy `
+        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
             -All `
             -Filter "Platforms eq 'windows10'" `
             -ErrorAction Stop | Where-Object { [String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId) }

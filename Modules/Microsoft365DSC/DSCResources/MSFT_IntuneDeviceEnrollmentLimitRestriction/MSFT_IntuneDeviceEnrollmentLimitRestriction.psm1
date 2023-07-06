@@ -68,7 +68,7 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
 
         if ($null -eq $config)
@@ -171,7 +171,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Device Enrollment Limit Restriction {$DisplayName}"
-        New-MgDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
+        New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DisplayName $DisplayName `
             -Description $Description `
             -AdditionalProperties @{
             '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
@@ -181,10 +181,10 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Device Enrollment Limit Restriction {$DisplayName}"
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
 
-        Update-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id `
+        Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id `
             -Description $Description `
             -AdditionalProperties @{
             '@odata.type' = '#microsoft.graph.deviceEnrollmentLimitConfiguration'
@@ -194,10 +194,10 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Enrollment Limit Restriction {$DisplayName}"
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
 
-        Remove-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id | Out-Null
+        Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id | Out-Null
     }
 }
 
@@ -334,7 +334,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
+        [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentLimitConfiguration' }
         $i = 1
         $dscContent = ''

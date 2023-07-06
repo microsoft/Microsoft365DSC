@@ -1,4 +1,4 @@
-﻿BeforeDiscovery {
+BeforeDiscovery {
     $resourcesPath = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Modules\Microsoft365DSC\DSCResources'
     $settingsFiles = Get-ChildItem -Path $resourcesPath -Filter '*.json' -Recurse | ForEach-Object {
         @{
@@ -17,22 +17,21 @@ Describe -Name 'Successfully import Settings.json files' {
 
 Describe -Name 'Successfully validate all used permissions in Settings.json files' {
     BeforeAll {
-        $data = Invoke-WebRequest -Uri 'https://graphpermissions.merill.net/permissions.csv'
-        $permissions = ConvertFrom-Csv -InputObject $data.Content
-
-        $allPermissions = $permissions.PermissionName
+        $data = Invoke-WebRequest -Uri 'https://graphpermissions.azurewebsites.net/api/GetPermissionList'
+        $roles = $data.Content.Split('|')[0].Split(',')
+        $delegated = $data.Content.Split('|')[1].Split(',')
     }
 
-    It "Permissions used in settings.json file for '<ResourceName>' should exist" -TestCases $settingsFiles {
+     It "Permissions used in settings.json file for '<ResourceName>' should exist" -TestCases $settingsFiles {
         $json = Get-Content -Path $FullName -Raw
         $settings = ConvertFrom-Json -InputObject $json
-        foreach ($permission in $settings.permissions.graph.delegated.read)
+        foreach ($permission in $settings.permissions.graph.application.read)
         {
             # Only validate non-GUID (hidden) permissions.
             $ObjectGuid = [System.Guid]::empty
             if (-not [System.Guid]::TryParse($permission.Name  ,[System.Management.Automation.PSReference]$ObjectGuid))
             {
-                $permission.Name | Should -BeIn $allPermissions
+                $permission.Name | Should -BeIn $roles
             }
         }
     }

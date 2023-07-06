@@ -21,34 +21,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
+            $secpasswd = ConvertTo-SecureString "test@password1" -AsPlainText -Force
+            $Credential = New-Object System.Management.Automation.PSCredential ("tenantadmin@mydomain.com", $secpasswd)
 
+            $Global:PartialExportFileName = 'c:\TestPath'
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Get-PSSession -MockWith {
+            Mock -CommandName Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-PSSession -MockWith {
+            Mock -CommandName New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
             }
 
-            Mock -CommandName Set-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
-            }
-
-            Mock -CommandName New-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
-            }
-
-            Mock -CommandName Remove-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
+            Mock -CommandName Remove-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
 
-            Mock -CommandName Select-MgProfile -MockWith {
+            # Mock Write-Host to hide output during the tests
+            Mock -CommandName Write-Host -MockWith {
             }
-
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -101,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential              = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return $null
                 }
             }
@@ -113,7 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgEntitlementManagementAccessPackageAssignmentPolicy -Exactly 1
+                Should -Invoke -CommandName New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -Exactly 1
             }
         }
 
@@ -159,7 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential              = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return @{
                         AccessPackageId         = 'FakeStringValue'
                         AccessReviewSettings    = @{
@@ -211,7 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgEntitlementManagementAccessPackageAssignmentPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -Exactly 1
             }
         }
         Context -Name 'The AADEntitlementManagementAccessPackageAssignmentPolicy Exists and Values are already in the desired state' -Fixture {
@@ -265,7 +260,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential              = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return @{
                         AccessPackageId         = 'FakeStringValue'
                         AccessReviewSettings    = @{
@@ -392,7 +387,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential              = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return @{
                         AdditionalProperties = @{
                             '@odata.type'           = '#microsoft.graph.'
@@ -458,7 +453,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Set-MgEntitlementManagementAccessPackageAssignmentPolicy -Exactly 1
+                Should -Invoke -CommandName Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -Exactly 1
             }
         }
 
@@ -470,7 +465,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return @{
                         AccessPackageId         = 'FakeStringValue'
                         AccessReviewSettings    = (New-CimInstance -ClassName MSFT_MicrosoftGraphassignmentreviewsettings -Property @{

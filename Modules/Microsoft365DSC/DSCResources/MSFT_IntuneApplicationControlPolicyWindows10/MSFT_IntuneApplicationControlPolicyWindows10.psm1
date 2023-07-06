@@ -61,12 +61,8 @@ function Get-TargetResource
 
     Write-Verbose -Message "Checking for the Intune Endpoint Protection Application Control Policy {$DisplayName}"
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -ProfileName 'beta' -ErrorAction Stop
-    $context = Get-MgContext
-    if ($null -eq $context)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -ErrorAction Stop -ProfileName 'beta'
-    }
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -86,7 +82,7 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgDeviceManagementIntent -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
+        $policy = Get-MgBetaDeviceManagementIntent -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
 
         if ($null -eq $policy)
         {
@@ -95,7 +91,7 @@ function Get-TargetResource
         }
 
         #Retrieve policy specific settings
-        [array]$settings = Get-MgDeviceManagementIntentSetting -DeviceManagementIntentId $policy.Id -ErrorAction Stop
+        [array]$settings = Get-MgBetaDeviceManagementIntentSetting -DeviceManagementIntentId $policy.Id -ErrorAction Stop
         $settingAppLockerApplicationControl = ($settings | Where-Object -FilterScript { $_.DefinitionId -like '*appLockerApplicationControl' }).ValueJson.Replace("`"", '')
         $settingSmartScreenBlockOverrideForFiles = [System.Convert]::ToBoolean(($settings | Where-Object -FilterScript { $_.DefinitionId -like '*smartScreenBlockOverrideForFiles' }).ValueJson)
         $settingSmartScreenEnableInShell = [System.Convert]::ToBoolean(($settings | Where-Object -FilterScript { $_.DefinitionId -like '*smartScreenEnableInShell' }).ValueJson)
@@ -116,7 +112,7 @@ function Get-TargetResource
         }
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgDeviceManagementIntentAssignment -DeviceManagementIntentId $policy.Id
+        $returnAssignments += Get-MgBetaDeviceManagementIntentAssignment -DeviceManagementIntentId $policy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -204,8 +200,7 @@ function Set-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -235,7 +230,7 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $Settings = Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $policy = New-MgDeviceManagementIntent -DisplayName $DisplayName `
+        $policy = New-MgBetaDeviceManagementIntent -DisplayName $DisplayName `
             -Description $Description `
             -TemplateId '63be6324-e3c9-4c97-948a-e7f4b96f0f20' `
             -Settings $Settings
@@ -257,7 +252,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Endpoint Protection Application Control Policy {$DisplayName}"
-        $appControlPolicy = Get-MgDeviceManagementIntent `
+        $appControlPolicy = Get-MgBetaDeviceManagementIntent `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' -and `
                 $_.displayName -eq $($DisplayName) }
@@ -267,16 +262,16 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
         $Settings = Get-M365DSCIntuneEndpointProtectionPolicyWindowsSettings -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        Update-MgDeviceManagementIntent -ErrorAction Stop `
+        Update-MgBetaDeviceManagementIntent -ErrorAction Stop `
             -Description $Description `
             -DeviceManagementIntentId $appControlPolicy.Id
 
-        $currentSettings = Get-MgDeviceManagementIntentSetting -DeviceManagementIntentId $appControlPolicy.Id -ErrorAction Stop
+        $currentSettings = Get-MgBetaDeviceManagementIntentSetting -DeviceManagementIntentId $appControlPolicy.Id -ErrorAction Stop
         foreach ($setting in $Settings)
         {
             $s = $currentSettings | Where-Object { $_.DefinitionId -eq $setting.DefinitionId }
 
-            Update-MgDeviceManagementIntentSetting -ErrorAction Stop `
+            Update-MgBetaDeviceManagementIntentSetting -ErrorAction Stop `
                 -DeviceManagementIntentId $appControlPolicy.Id `
                 -DeviceManagementSettingInstanceId $s.Id `
                 -ValueJson ($setting.value | ConvertTo-Json) `
@@ -297,12 +292,12 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Endpoint Protection Application Control Policy {$DisplayName}"
-        $appControlPolicy = Get-MgDeviceManagementIntent `
+        $appControlPolicy = Get-MgBetaDeviceManagementIntent `
             -ErrorAction Stop | Where-Object `
             -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' -and `
                 $_.displayName -eq $($DisplayName) }
 
-        Remove-MgDeviceManagementIntent -DeviceManagementIntentId $appControlPolicy.Id -ErrorAction Stop
+        Remove-MgBetaDeviceManagementIntent -DeviceManagementIntentId $appControlPolicy.Id -ErrorAction Stop
     }
 }
 
@@ -493,7 +488,8 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters -SkipModuleReload:$true -ProfileName 'beta'
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -512,7 +508,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$policies = Get-MgDeviceManagementIntent -All:$true -Filter $Filter `
+        [array]$policies = Get-MgBetaDeviceManagementIntent -All:$true -Filter $Filter `
             -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
         if ($policies.Length -eq 0)
         {

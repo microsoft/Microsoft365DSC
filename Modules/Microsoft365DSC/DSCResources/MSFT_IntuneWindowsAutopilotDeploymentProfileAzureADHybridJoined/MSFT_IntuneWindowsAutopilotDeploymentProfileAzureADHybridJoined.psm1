@@ -92,8 +92,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -112,7 +111,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementWindowAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -120,7 +119,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDeviceManagementWindowAutopilotDeploymentProfile `
+                $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -198,7 +197,7 @@ function Get-TargetResource
             Managedidentity                        = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgDeviceManagementWindowAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -359,8 +358,8 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile')
-        $policy = New-MgDeviceManagementWindowAutopilotDeploymentProfile -BodyParameter $CreateParameters
+        $CreateParameters.Add("@odata.type", "#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile")
+        $policy = New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -394,8 +393,8 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add('@odata.type', '#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile')
-        Update-MgDeviceManagementWindowAutopilotDeploymentProfile  `
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile")
+        Update-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile  `
             -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
@@ -413,7 +412,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgDeviceManagementWindowAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $currentInstance.Id
+        Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $currentInstance.Id
         #endregion
     }
 }
@@ -609,8 +608,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -627,7 +625,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementWindowAutopilotDeploymentProfile `
+        [array]$getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile `
             -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `

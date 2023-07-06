@@ -62,8 +62,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -90,7 +89,7 @@ function Get-TargetResource
         $getValue = $null
 
         #region resource generator code
-        $getValue = Get-MgEntitlementManagementAccessPackageCatalog -AccessPackageId $id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -98,7 +97,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgEntitlementManagementAccessPackageCatalog `
+                $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalog `
                     -ErrorAction Stop | Where-Object `
                     -FilterScript { `
                         $_.DisplayName -eq "$($DisplayName)" `
@@ -208,8 +207,7 @@ function Set-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
     }
     catch
     {
@@ -249,7 +247,7 @@ function Set-TargetResource
         $CreateParameters.add('@odata.type', '#microsoft.graph.accessPackageCatalog')
 
         #region resource generator code
-        $policy = New-MgEntitlementManagementAccessPackageCatalog -BodyParameter $CreateParameters
+        $policy = New-MgBetaEntitlementManagementAccessPackageCatalog -BodyParameter $CreateParameters
 
         #endregion
 
@@ -266,7 +264,7 @@ function Set-TargetResource
         $UpdateParameters.add('@odata.type', '#microsoft.graph.accessPackageCatalog')
 
         #region resource generator code
-        Update-MgEntitlementManagementAccessPackageCatalog -BodyParameter $UpdateParameters `
+        Update-MgBetaEntitlementManagementAccessPackageCatalog -BodyParameter $UpdateParameters `
             -AccessPackageCatalogId $currentInstance.Id
 
         #endregion
@@ -276,9 +274,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing {$DisplayName}"
 
-        Remove-MgEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $currentInstance.Id
-        #endregion
-
+        Remove-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $currentInstance.Id
     }
 }
 
@@ -367,12 +363,6 @@ function Test-TargetResource
     }
     $testResult = $true
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Id') | Out-Null
-
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
@@ -421,8 +411,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

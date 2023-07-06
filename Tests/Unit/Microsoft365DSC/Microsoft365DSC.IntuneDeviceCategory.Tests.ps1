@@ -32,13 +32,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Update-MGDeviceManagementDeviceCategory -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementDeviceCategory -MockWith {
             }
 
-            Mock -CommandName New-MGDeviceManagementDeviceCategory -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementDeviceCategory -MockWith {
             }
 
-            Mock -CommandName Remove-MGDeviceManagementDeviceCategory -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementDeviceCategory -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCategory -MockWith {
                     return $null
                 }
             }
@@ -71,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the category from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceManagementDeviceCategory' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceManagementDeviceCategory' -Exactly 1
             }
         }
 
@@ -84,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = 'Different Value'
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the category from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementDeviceCategory -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceCategory -Exactly 1
             }
         }
 
@@ -116,7 +116,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = 'Test Definition'
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = 'Test Definition'
@@ -158,7 +158,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the category from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceCategory -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceCategory -Exactly 1
             }
         }
 
@@ -170,7 +170,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceCategory -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceCategory -MockWith {
                     return @{
                         DisplayName = 'Test Category'
                         Description = 'Test Definition'

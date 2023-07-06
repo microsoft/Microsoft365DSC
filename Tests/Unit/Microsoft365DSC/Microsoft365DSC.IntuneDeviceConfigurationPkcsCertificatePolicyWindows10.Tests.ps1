@@ -27,19 +27,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Get-PSSession -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -MockWith {
             }
 
-            Mock -CommandName Remove-PSSession -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementDeviceConfiguration -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceManagementDeviceConfiguration -MockWith {
-            }
-
-            Mock -CommandName New-MgDeviceManagementDeviceConfiguration -MockWith {
-            }
-
-            Mock -CommandName Remove-MgDeviceManagementDeviceConfiguration -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -50,7 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Write-Host -MockWith {
             }
 
-            Mock -CommandName Get-MgDeviceManagementDeviceConfigurationAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementDeviceConfigurationAssignment -MockWith {
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
@@ -90,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return $null
                 }
             }
@@ -102,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgDeviceManagementDeviceConfiguration -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
 
@@ -140,7 +134,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
                             subjectAlternativeNameType = "none"
@@ -187,7 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceConfiguration -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
         Context -Name "The IntuneDeviceConfigurationPkcsCertificatePolicyWindows10 Exists and Values are already in the desired state" -Fixture {
@@ -224,7 +218,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
                             subjectAlternativeNameType = "none"
@@ -301,7 +295,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
                             subjectAlternativeNameType = "none"
@@ -347,7 +341,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementDeviceConfiguration -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
 
@@ -359,7 +353,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
                             subjectAlternativeNameType = "none"
