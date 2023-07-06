@@ -52,6 +52,10 @@ function Get-TargetResource
         $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
+        [System.Uint32]
+        $ExternalUserExpireInDays,
+
+        [Parameter()]
         [System.String[]]
         $SharingAllowedDomainList,
 
@@ -72,6 +76,10 @@ function Get-TargetResource
         [Parameter()]
         [System.boolean]
         $PreventExternalUsersFromResharing,
+
+        [Parameter()]
+        [System.boolean]
+        $ExternalUserExpirationRequired,
 
         [Parameter()]
         [System.boolean]
@@ -198,6 +206,8 @@ function Get-TargetResource
             BccExternalSharingInvitations              = $SPOSharingSettings.BccExternalSharingInvitations
             BccExternalSharingInvitationsList          = $SPOSharingSettings.BccExternalSharingInvitationsList
             RequireAnonymousLinksExpireInDays          = $SPOSharingSettings.RequireAnonymousLinksExpireInDays
+            ExternalUserExpireInDays                   = $SPOCCSharingSettings.ExternalUserExpireInDays
+            ExternalUserExpirationRequired             = $SPOCCSharingSettings.ExternalUserExpirationRequired
             SharingAllowedDomainList                   = $allowDomains
             SharingBlockedDomainList                   = $blockDomains
             SharingDomainRestrictionMode               = $SPOSharingSettings.SharingDomainRestrictionMode
@@ -290,6 +300,10 @@ function Set-TargetResource
         $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
+        [System.Uint32]
+        $ExternalUserExpireInDays,
+
+        [Parameter()]
         [System.String[]]
         $SharingAllowedDomainList,
 
@@ -310,6 +324,10 @@ function Set-TargetResource
         [Parameter()]
         [System.boolean]
         $PreventExternalUsersFromResharing,
+
+        [Parameter()]
+        [System.boolean]
+        $ExternalUserExpirationRequired,
 
         [Parameter()]
         [System.boolean]
@@ -428,6 +446,11 @@ function Set-TargetResource
     {
         Write-Verbose -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured'
         $CurrentParameters.Remove('RequireAnonymousLinksExpireInDays') | Out-Null
+    }
+    if ($SharingCapability -ne 'ExternalUserExpirationRequired')
+    {
+        Write-Verbose -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserExpirationRequired for that the ExternalUserExpireInDays property cannot be configured'
+        $CurrentParameters.Remove('ExternalUserExpireInDays') | Out-Null
     }
     if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
     {
@@ -551,6 +574,10 @@ function Test-TargetResource
         $RequireAnonymousLinksExpireInDays,
 
         [Parameter()]
+        [System.Uint32]
+        $ExternalUserExpireInDays,
+
+        [Parameter()]
         [System.String[]]
         $SharingAllowedDomainList,
 
@@ -571,6 +598,10 @@ function Test-TargetResource
         [Parameter()]
         [System.boolean]
         $PreventExternalUsersFromResharing,
+
+        [Parameter()]
+        [System.boolean]
+        $ExternalUserExpirationRequired,
 
         [Parameter()]
         [System.boolean]
