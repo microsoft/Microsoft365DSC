@@ -433,6 +433,50 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
+    $IncorrectParameters = @{
+        BlockPersistenceThroughWmiType                  = @("userDefined", "warn")
+        OfficeAppsOtherProcessInjectionType             = "userDefined"
+        OfficeAppsLaunchChildProcessType                = "userDefined"
+        OfficeAppsExecutableContentCreationOrLaunchType = "userDefined"
+        OfficeMacroCodeAllowWin32ImportsType            = "userDefined"
+        OfficeCommunicationAppsLaunchChildProcess       = "disable"
+        ScriptObfuscatedMacroCodeType                   = "userDefined"
+        ScriptDownloadedPayloadExecutionType            = @("userDefined", "warn")
+        ProcessCreationType                             = "userDefined"
+        UntrustedUSBProcessType                         = "userDefined"
+        UntrustedExecutableType                         = "userDefined"
+        EmailContentExecutionType                       = "userDefined"
+        GuardMyFoldersType                              = "userDefined"
+    }
+
+    $ExceptionMessage = $null
+    foreach ($Key in $PSBoundParameters.Keys)
+    {
+        $InvalidValue = $IncorrectParameters[$Key]
+        if (![string]::IsNullOrEmpty($InvalidValue))
+        {
+            $Value = $PSBoundParameters.$Key
+            if ($Value -in $InvalidValue)
+            {
+                $ExceptionMessage += "Property {0} set to invalid value {1}`n" -f $Key, $Value
+            }
+        }
+    }
+
+    if (![string]::IsNullOrEmpty($ExceptionMessage))
+    {
+        $ExceptionMessage += "Please update your configuration."
+        Write-Verbose -Message $ExceptionMessage
+
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $ExceptionMessage `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+
     $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
