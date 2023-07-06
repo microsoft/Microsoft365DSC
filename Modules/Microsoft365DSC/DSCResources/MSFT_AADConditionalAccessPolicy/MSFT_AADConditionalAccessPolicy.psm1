@@ -213,8 +213,7 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting configuration of AzureAD Conditional Access Policy'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -233,12 +232,12 @@ function Get-TargetResource
         Write-Verbose -Message 'PolicyID was specified'
         try
         {
-            $Policy = Get-MgIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $Id -ErrorAction Stop
+            $Policy = Get-MgBetaIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $Id -ErrorAction Stop
         }
         catch
         {
             Write-Verbose -Message "Couldn't find existing policy by ID {$Id}"
-            $Policy = Get-MgIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
+            $Policy = Get-MgBetaIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
             if ($Policy.Length -gt 1)
             {
                 throw "Duplicate CA Policies named $DisplayName exist in tenant"
@@ -249,7 +248,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message 'Id was NOT specified'
         ## Can retreive multiple CA Policies since displayname is not unique
-        $Policy = Get-MgIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
+        $Policy = Get-MgBetaIdentityConditionalAccessPolicy -Filter "DisplayName eq '$DisplayName'"
         if ($Policy.Length -gt 1)
         {
             throw "Duplicate CA Policies named $DisplayName exist in tenant"
@@ -454,7 +453,7 @@ function Get-TargetResource
             Write-Verbose -Message 'Get-TargetResource: Location condition defined, processing'
             #build Location translation table
             $Locationlookup = @{}
-            foreach ($Location in Get-MgIdentityConditionalAccessNamedLocation)
+            foreach ($Location in Get-MgBetaIdentityConditionalAccessNamedLocation)
             {
                 $Locationlookup[$Location.Id] = $Location.DisplayName
             }
@@ -562,7 +561,7 @@ function Get-TargetResource
         if ($null -ne $Policy.GrantControls -and $null -ne $Policy.GrantControls.AuthenticationStrength -and `
             $null -ne $Policy.GrantControls.AuthenticationStrength.Id)
         {
-            $strengthPolicy = Get-MgPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Policy.GrantControls.AuthenticationStrength.Id
+            $strengthPolicy = Get-MgBetaPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Policy.GrantControls.AuthenticationStrength.Id
             if ($null -ne $strengthPolicy)
             {
                 $AuthenticationStrengthValue = $strengthPolicy.DisplayName
@@ -1237,7 +1236,7 @@ function Set-TargetResource
             Write-Verbose -Message 'Set-Targetresource: locations specified'
             #create and provision Location condition object if used, translate Location names to guid
             $LocationLookup = @{}
-            foreach ($Location in Get-MgIdentityConditionalAccessNamedLocation)
+            foreach ($Location in Get-MgBetaIdentityConditionalAccessNamedLocation)
             {
                 $LocationLookup[$Location.DisplayName] = $Location.Id
             }
@@ -1367,7 +1366,7 @@ function Set-TargetResource
             }
             if ($AuthenticationStrength)
             {
-                $strengthPolicy = Get-MgPolicyAuthenticationStrengthPolicy | Where-Object -FilterScript {$_.DisplayName -eq $AuthenticationStrength} -ErrorAction SilentlyContinue
+                $strengthPolicy = Get-MgBetaPolicyAuthenticationStrengthPolicy | Where-Object -FilterScript {$_.DisplayName -eq $AuthenticationStrength} -ErrorAction SilentlyContinue
                 if ($null -ne $strengthPolicy)
                 {
                     $authenticationStrengthInstance = @{
@@ -1456,7 +1455,7 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message "Updating existing policy with values: $(Convert-M365DscHashtableToString -Hashtable $NewParameters)"
-            Update-MgIdentityConditionalAccessPolicy @NewParameters
+            Update-MgBetaIdentityConditionalAccessPolicy @NewParameters
         }
         catch
         {
@@ -1476,7 +1475,7 @@ function Set-TargetResource
         Write-Verbose -Message (Convert-M365DscHashtableToString $NewParameters)
         try
         {
-            New-MgIdentityConditionalAccessPolicy @NewParameters
+            New-MgBetaIdentityConditionalAccessPolicy @NewParameters
         }
         catch
         {
@@ -1494,7 +1493,7 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: delete policy $DisplayName"
         try
         {
-            Remove-MgIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $currentPolicy.ID
+            Remove-MgBetaIdentityConditionalAccessPolicy -ConditionalAccessPolicyId $currentPolicy.ID
         }
         catch
         {
@@ -1794,12 +1793,11 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     try
     {
-        [array] $Policies = Get-MgIdentityConditionalAccessPolicy -Filter $Filter -All:$true -ErrorAction Stop
+        [array] $Policies = Get-MgBetaIdentityConditionalAccessPolicy -Filter $Filter -All:$true -ErrorAction Stop
         $i = 1
         $dscContent = ''
 

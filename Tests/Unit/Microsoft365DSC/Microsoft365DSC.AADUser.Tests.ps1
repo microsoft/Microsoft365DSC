@@ -33,10 +33,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Update-MgUser -MockWith {
             }
-
-            Mock -CommandName Update-MgUserLicenseDetail -MockWith {
-            }
-
             Mock -CommandName Get-MgRoleManagementDirectoryRoleAssignment -MockWith {
                 return @()
             }

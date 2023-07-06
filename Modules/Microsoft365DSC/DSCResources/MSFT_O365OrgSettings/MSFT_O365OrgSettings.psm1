@@ -151,8 +151,7 @@ function Get-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
         -InboundParameters $PSBoundParameters
@@ -466,6 +465,8 @@ function Set-TargetResource
     #endregion
 
     Write-Verbose -Message 'Setting configuration of Office 365 Settings'
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
 
     if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $currentValues.M365WebEnableUsersToOpenFilesFrom3PStorage)
@@ -884,8 +885,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

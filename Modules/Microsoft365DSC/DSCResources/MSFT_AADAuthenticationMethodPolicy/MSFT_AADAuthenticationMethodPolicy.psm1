@@ -73,8 +73,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -93,7 +92,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgPolicyAuthenticationMethodPolicy  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -101,7 +100,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgPolicyAuthenticationMethodPolicy `
+                $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
                         $_.DisplayName -eq "$($DisplayName)" `
@@ -359,14 +358,14 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.AuthenticationMethodsPolicy")
-        Update-MgPolicyAuthenticationMethodPolicy -BodyParameter $UpdateParameters
+        Update-MgBetaPolicyAuthenticationMethodPolicy -BodyParameter $UpdateParameters
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the Azure AD Authentication Method Policy with Id {$($currentInstance.Id)}"
         #region resource generator code
-Remove-MgPolicyAuthenticationMethodPolicy
+        Remove-MgBetaPolicyAuthenticationMethodPolicy
         #endregion
     }
 }
@@ -544,8 +543,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -562,7 +560,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgPolicyAuthenticationMethodPolicy `
+        [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicy `
             -ErrorAction Stop
         #endregion
 

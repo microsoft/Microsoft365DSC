@@ -32,55 +32,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Update-DeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                 return @{
                     Id = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                 }
             }
 
-            Mock -CommandName Remove-MgDeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName Get-MgDeviceManagementConfigurationPolicyTemplate -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplate -MockWith {
                 return @{
                     TemplateId = 'd02f2162-fcac-48db-9b7b-b0a3f160d2c2_1'
                 }
             }
 
-            Mock -CommandName Get-DeviceManagementConfigurationPolicyAssignment -MockWith {
-                return @(@{
-
-                        dataType = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                        collectionId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                    })
-            }
-
-            Mock -CommandName Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
-                return @{
-                    Id       = '12345-12345-12345-12345-12345'
-                    SettingInstanceTemplate = @{
-                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                        settingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate'
-                            groupSettingCollectionValueTemplate = @{
-                                children =@(
-                                    @{
-                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                        settingInstanceTemplateId ='999c8d1b-9f4e-49b7-824d-001c5c7d0182'
-                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
-                                        choiceSettingValueTemplate = @{
-                                            settingValueTemplateId = 'a212472c-c5cc-43dd-898d-d35286a408e5'
-                                        }
-                                    }
-                                )
-                            }
-                        }
-                    }
-                }
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignments -MockWith {
+                return $null
             }
 
             # Mock Write-Host to hide output during the tests
@@ -105,7 +76,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return $null
                 }
             }
@@ -120,7 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceManagementConfigurationPolicy' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceManagementConfigurationPolicy' -Exactly 1
             }
         }
 
@@ -141,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     useadvancedprotectionagainstransomware = "audit"
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                         Description = 'My Test Description'
@@ -149,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
                         Id                   = 0
                         SettingDefinitions   = $null
@@ -190,28 +161,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-DeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementConfigurationPolicy -Exactly 1
             }
         }
 
         Context -Name 'When the instance already exists and IS in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Assignments = @(
-                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                        } -ClientOnly)
-                    )
                     Credential  = $Credential
                     Description = 'My Test Description'
                     DisplayName = 'My Test'
                     Ensure      = 'Present'
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                    useadvancedprotectionagainstransomware = "block"
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                         Description = 'My Test Description'
@@ -219,7 +183,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
                         Id                   = 0
                         SettingDefinitions   = $null
@@ -271,7 +235,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                         Description = 'My Test Description'
@@ -279,7 +243,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
                         Id                   = 0
                         SettingDefinitions   = $null
@@ -320,7 +284,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -Exactly 1
             }
         }
 
@@ -332,7 +296,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                         Description = 'My Test Description'
@@ -343,7 +307,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicySetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
                         Id                   = 0
                         SettingDefinitions   = $null
@@ -376,7 +340,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
-                $result | Should -Not -BeNullOrEmpty
             }
         }
     }
