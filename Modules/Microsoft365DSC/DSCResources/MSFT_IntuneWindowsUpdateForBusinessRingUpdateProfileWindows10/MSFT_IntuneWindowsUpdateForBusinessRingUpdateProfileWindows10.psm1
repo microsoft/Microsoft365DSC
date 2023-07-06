@@ -202,7 +202,7 @@ function Get-TargetResource
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
-        Select-MgProfile -Name beta
+
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies

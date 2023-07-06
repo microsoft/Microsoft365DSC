@@ -812,7 +812,7 @@ function Set-TargetResource
         {
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }#>
-
+        $CreateParameters.add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
         #region resource generator code
         $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
@@ -863,11 +863,17 @@ function Set-TargetResource
         {
             $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
         }#>
+        $UpdateParameters.add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+        #$UpdateParameters.remove('emailInDomainSuffixes')
+        #$UpdateParameters.remove('updateDelayPolicy')
 
         #region resource generator code
+        write-verbose ($UpdateParameters | convertTo-Json -depth 100)
+
         Update-MgDeviceManagementDeviceConfiguration `
             -BodyParameter $UpdateParameters `
             -DeviceConfigurationId $currentInstance.Id
+
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {

@@ -439,9 +439,8 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgEntitlementManagementAccessPackageCatalog -All -ErrorAction Stop
+        [array]$getValue = (Get-MgEntitlementManagementAccessPackage -all -ExpandProperty "Catalog"  -ErrorAction Stop)| Select-Object -Unique Catalog |Select-Object -ExpandProperty Catalog
         #endregion
-
         $i = 1
         $dscContent = ''
         if ($getValue.Length -eq 0)

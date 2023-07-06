@@ -1028,9 +1028,12 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                     -SettingValueType $childSettingValueType `
                     -SettingValueTemplateId $childSettingValueTemplateId
 
-                $childSettingValue.add('settingDefinitionId', $childDefinition.settingDefinitionId)
-                $childSettingValue.add('@odata.type', $childSettingType )
-                $groupSettingCollectionValueChildren += $childSettingValue
+                if ($null -ne $childSettingValue)
+                {
+                    $childSettingValue.add('settingDefinitionId', $childDefinition.settingDefinitionId)
+                    $childSettingValue.add('@odata.type', $childSettingType )
+                    $groupSettingCollectionValueChildren += $childSettingValue
+                }
             }
             $groupSettingCollectionValue.add('children', $groupSettingCollectionValueChildren)
             $settingValueReturn.Add('groupSettingCollectionValue', @($groupSettingCollectionValue))
@@ -1078,6 +1081,10 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 $settingValue.Add('settingValueTemplateReference', @{'settingValueTemplateId' = $settingValueTemplateId })
             }
             $settingValue.add('value', $value)
+            if ($null -eq $value)
+            {
+                return $null
+            }
             $settingValueReturn.Add($settingValueName, $settingValue)
         }
     }
@@ -1131,7 +1138,7 @@ function New-DeviceManagementConfigurationPolicy
     Invoke-MgGraphRequest -Method POST `
         -Uri $Uri `
         -ContentType 'application/json' `
-        -Body ($policy | ConvertTo-Json -Depth 20)
+        -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
 }
 
 function Update-DeviceManagementConfigurationPolicy
@@ -1186,7 +1193,7 @@ function Update-DeviceManagementConfigurationPolicy
     Invoke-MgGraphRequest -Method PUT `
         -Uri $Uri `
         -ContentType 'application/json' `
-        -Body ($policy | ConvertTo-Json -Depth 20)
+        -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
 }
 
 function Remove-DeviceManagementConfigurationPolicy
@@ -1200,7 +1207,7 @@ function Remove-DeviceManagementConfigurationPolicy
 
     $Uri = "https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$Identity"
 
-    Invoke-MgGraphRequest -Method DELETE -Uri $Uri
+    Invoke-MgGraphRequest -Method DELETE -Uri $Uri 4> out-null
 }
 
 function Get-DeviceManagementConfigurationPolicyAssignment
@@ -1218,7 +1225,7 @@ function Get-DeviceManagementConfigurationPolicyAssignment
         $configurationPolicyAssignments = @()
 
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
+        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop 4> out-null
         foreach ($result in $results.value.target)
         {
             $configurationPolicyAssignments += @{
@@ -1233,7 +1240,7 @@ function Get-DeviceManagementConfigurationPolicyAssignment
         while ($results.'@odata.nextLink')
         {
             $Uri = $results.'@odata.nextLink'
-            $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
+            $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop 4> out-null
             foreach ($result in $results.value.target)
             {
                 $configurationPolicyAssignments += @{

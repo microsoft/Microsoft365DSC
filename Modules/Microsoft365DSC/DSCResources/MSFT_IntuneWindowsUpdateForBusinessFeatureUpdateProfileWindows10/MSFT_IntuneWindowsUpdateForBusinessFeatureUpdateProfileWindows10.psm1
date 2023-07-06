@@ -66,7 +66,7 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters `
             -ProfileName 'beta'
 
-        Select-MgProfile -Name beta
+
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 

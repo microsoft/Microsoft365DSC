@@ -326,6 +326,8 @@ function Get-M365DSCDRGComplexTypeToString
                 {
                     $hashPropertyType = ([Array]($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName)[0]
                     $hashProperty = $ComplexObject[$key]
+                    $currentProperty += "`r`n"
+
                 }
                 else
                 {
@@ -417,11 +419,16 @@ function Get-M365DSCDRGComplexTypeToString
     }
     $indent = ''
     $indent = '    ' * ($IndentLevel -1)
-    $currentProperty += "$indent}"
-    if ($isArray -or $IndentLevel -gt 4)
+    if ($key -in $ComplexTypeMapping.Name)
     {
         $currentProperty += "`r`n"
     }
+
+    $currentProperty += "$indent}"
+    #if ($isArray -or $IndentLevel -gt 4)
+    #{
+        $currentProperty += "`r`n"
+    #}
 
     #Indenting last parenthese when the cim instance is an array
     if ($IndentLevel -eq 5)
@@ -435,7 +442,7 @@ function Get-M365DSCDRGComplexTypeToString
     {
         $currentProperty = $null
     }
-    return $currentProperty.TrimEnd()
+    return $currentProperty
 }
 
 Function Get-M365DSCDRGSimpleObjectTypeToString
