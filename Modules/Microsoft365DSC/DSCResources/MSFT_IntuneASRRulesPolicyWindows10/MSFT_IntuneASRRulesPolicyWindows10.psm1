@@ -16,8 +16,9 @@ function Get-TargetResource
         [System.String]
         $Description,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
@@ -26,33 +27,39 @@ function Get-TargetResource
         [System.String]
         $AdvancedRansomewareProtectionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode' , 'disable' in next breaking change, don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
+        # In next Breaking Change set it to 'notConfigured', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -60,23 +67,27 @@ function Get-TargetResource
         [System.String[]]
         $AttackSurfaceReductionExcludedPaths,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
+        # In next Breaking Change set it to 'notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -89,8 +100,9 @@ function Get-TargetResource
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
@@ -99,8 +111,9 @@ function Get-TargetResource
         [System.String]
         $PreventCredentialStealingType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -257,8 +270,9 @@ function Set-TargetResource
         [System.String]
         $Description,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
@@ -267,33 +281,39 @@ function Set-TargetResource
         [System.String]
         $AdvancedRansomewareProtectionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode' , 'disable' in next breaking change, don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
+        # In next Breaking Change set it to 'notConfigured', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -301,23 +321,27 @@ function Set-TargetResource
         [System.String[]]
         $AttackSurfaceReductionExcludedPaths,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
+        # In next Breaking Change set it to 'notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -330,8 +354,9 @@ function Set-TargetResource
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
@@ -340,8 +365,9 @@ function Set-TargetResource
         [System.String]
         $PreventCredentialStealingType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -504,8 +530,9 @@ function Test-TargetResource
         [System.String]
         $Description,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
@@ -514,33 +541,39 @@ function Test-TargetResource
         [System.String]
         $AdvancedRansomewareProtectionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode' , 'disable' in next breaking change, don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
+        # In next Breaking Change set it to 'notConfigured', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -548,23 +581,27 @@ function Test-TargetResource
         [System.String[]]
         $AttackSurfaceReductionExcludedPaths,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
+        # In next Breaking Change set it to 'notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -577,8 +614,9 @@ function Test-TargetResource
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
@@ -587,8 +625,9 @@ function Test-TargetResource
         [System.String]
         $PreventCredentialStealingType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 

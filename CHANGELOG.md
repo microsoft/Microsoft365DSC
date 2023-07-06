@@ -5,6 +5,9 @@
 * EXOMailboxPlan
   * Support comparing instances without the GUID in the name.
     FIXES [#3314](https://github.com/microsoft/Microsoft365DSC/issues/3314)
+* IntuneASRRulesPolicyWindows10
+  * Fix possible values for several properties both in the module and its schema
+    FIXES [#3434](https://github.com/microsoft/Microsoft365DSC/issues/3434)
 
 # 1.23.628.1
 
