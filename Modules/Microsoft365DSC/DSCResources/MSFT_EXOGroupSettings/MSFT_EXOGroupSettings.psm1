@@ -271,7 +271,14 @@ function Get-TargetResource
 
     try
     {
-        [Array]$group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties -ErrorAction Stop
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            [Array]$group = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+        }
+        else
+        {
+            [Array]$group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties -ErrorAction Stop
+        }
         if ($group.Length -gt 1)
         {
             Write-Warning -Message "Multiple instances of a group named {$DisplayName} was discovered which could result in inconsistencies retrieving its values."
@@ -948,10 +955,11 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    [array]$groups = Get-UnifiedGroup
+    $Script:ExportMode = $true
+    [array] $Script:exportedInstances = Get-UnifiedGroup
 
     $i = 1
-    if ($groups.Length -eq 0)
+    if ($Script:exportedInstances.Length -eq 0)
     {
         Write-Host $Global:M365DSCEmojiGreenCheckMark
     }
@@ -959,10 +967,10 @@ function Export-TargetResource
     {
         Write-Host "`r`n"-NoNewline
     }
-    $dscContent = ''
-    foreach ($group in $groups)
+    $dscContent = [System.Text.StringBuilder]::New()
+    foreach ($group in $Script:exportedInstances)
     {
-        Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName)" -NoNewline
+        Write-Host "    |---[$i/$($Script:exportedInstances.Length)] $($group.DisplayName)" -NoNewline
         $groupName = $group.DisplayName
         if (-not [System.String]::IsNullOrEmpty($groupName))
         {
@@ -987,7 +995,7 @@ function Export-TargetResource
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
-                $dscContent += $currentDSCBlock
+                $dscContent.Append($currentDSCBlock) | Out-Null
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
 
@@ -1001,7 +1009,7 @@ function Export-TargetResource
 
         $i++
     }
-    return $dscContent
+    return $dscContent.ToString()
 }
 
 Export-ModuleMember -Function *-TargetResource

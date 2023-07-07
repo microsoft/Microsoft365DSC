@@ -92,7 +92,14 @@ function Get-TargetResource
 
     try
     {
-        $DataClassification = Get-DataClassification -Identity $Identity -ErrorAction Stop
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            $DataClassification = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+        }
+        else
+        {
+            $DataClassification = Get-DataClassification -Identity $Identity -ErrorAction Stop
+        }
         if ($null -eq $DataClassification)
         {
             Write-Verbose -Message "Data classification $($Identity) does not exist."
@@ -427,10 +434,12 @@ function Export-TargetResource
     #endregion
     try
     {
-        [Array]$DataClassifications = Get-DataClassification -ErrorAction Stop
+        $Script:ExportMode = $true
+        #region resource generator code
+        [array] $Script:exportedInstances = Get-DataClassification -ErrorAction Stop
         $dscContent = [System.Text.StringBuilder]::new()
 
-        if ($DataClassifications.Length -eq 0)
+        if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -439,9 +448,9 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        foreach ($DataClassification in $DataClassifications)
+        foreach ($DataClassification in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($DataClassifications.Length)] $($DataClassification.Name)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Length)] $($DataClassification.Name)" -NoNewline
 
             $Params = @{
                 Identity              = $DataClassification.Identity

@@ -2,9 +2,25 @@
 
 # UNRELEASED
 
+* EXOAddressList
+  * Improved export performance.
+* EXOCASMailboxSettings
+  * Improved export performance.
+* EXODataClassification
+  * Improved export performance.
+* EXODistributionGroup
+  * Improved export performance.
+* EXOGroupSettings
+  * Improved export performance.
 * EXOMailboxPlan
   * Support comparing instances without the GUID in the name.
     FIXES [#3314](https://github.com/microsoft/Microsoft365DSC/issues/3314)
+* EXOManagementRole
+  * Improved export performance.
+* EXOManagementRoleAssignment
+  * Improved export performance.
+* EXORoleGroup
+  * Improved export performance.
 * DEPENDENCIES
   * Updated all Microsoft.Graph modules to version 2.0.0.
   * Updated all MSCloudLoginAssistant modules to version 1.0.116.
