@@ -1024,8 +1024,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -1044,7 +1043,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -1052,7 +1051,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -2619,7 +2618,7 @@ function Get-TargetResource
             Managedidentity                                                              = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -3714,10 +3713,10 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EndpointProtectionConfiguration')
-        $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10EndpointProtectionConfiguration")
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
+        foreach($assignment in $Assignments)
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
@@ -3749,8 +3748,8 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10EndpointProtectionConfiguration')
-        Update-MgDeviceManagementDeviceConfiguration  `
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windows10EndpointProtectionConfiguration")
+        Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
@@ -3767,7 +3766,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Device Configuration Endpoint Protection Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -4896,8 +4895,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -4914,7 +4912,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
@@ -6107,7 +6105,73 @@ function Export-TargetResource
         return ''
     }
 }
-function Update-DeviceConfigurationPolicyAssignment
+    function Update-DeviceConfigurationPolicyAssignment
+    {
+        [CmdletBinding()]
+        [OutputType([System.Collections.Hashtable])]
+        param (
+            [Parameter(Mandatory = 'true')]
+            [System.String]
+            $DeviceConfigurationPolicyId,
+
+            [Parameter()]
+            [Array]
+            $Targets,
+
+            [Parameter()]
+            [System.String]
+            $Repository='deviceManagement/configurationPolicies',
+
+            [Parameter()]
+            [ValidateSet('v1.0','beta')]
+            [System.String]
+            $APIVersion='beta'
+        )
+        try
+        {
+            $deviceManagementPolicyAssignments=@()
+
+            $Uri="https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+
+            foreach($target in $targets)
+            {
+                $formattedTarget=@{"@odata.type"=$target.dataType}
+                if($target.groupId)
+                {
+                    $formattedTarget.Add('groupId',$target.groupId)
+                }
+                if($target.collectionId)
+                {
+                    $formattedTarget.Add('collectionId',$target.collectionId)
+                }
+                if($target.deviceAndAppManagementAssignmentFilterType)
+                {
+                    $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType',$target.deviceAndAppManagementAssignmentFilterType)
+                }
+                if($target.deviceAndAppManagementAssignmentFilterId)
+                {
+                    $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId',$target.deviceAndAppManagementAssignmentFilterId)
+                }
+                $deviceManagementPolicyAssignments+=@{'target'= $formattedTarget}
+            }
+            $body = @{'assignments'=$deviceManagementPolicyAssignments}|ConvertTo-Json -Depth 20
+
+            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
+
+        }
+        catch
+        {
+            New-M365DSCLogEntry -Message 'Error updating data:'
+                -Exception $_
+                -Source $($MyInvocation.MyCommand.Source)
+                -TenantId $TenantId
+                -Credential $Credential
+
+            return $null
+        }
+    }
+
+function Rename-M365DSCCimInstanceParameter
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]

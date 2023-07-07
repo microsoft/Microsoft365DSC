@@ -1,5 +1,32 @@
 # Change log for Microsoft365DSC
 
+# 1.23.705.1
+
+* EXOAddressList
+  * Improved export performance.
+* EXOCASMailboxSettings
+  * Improved export performance.
+* EXODataClassification
+  * Improved export performance.
+* EXODistributionGroup
+  * Improved export performance.
+* EXOGroupSettings
+  * Improved export performance.
+* EXOMailboxPlan
+  * Support comparing instances without the GUID in the name.
+    FIXES [#3314](https://github.com/microsoft/Microsoft365DSC/issues/3314)
+* EXOManagementRole
+  * Improved export performance.
+* EXOManagementRoleAssignment
+  * Improved export performance.
+* EXORoleGroup
+  * Improved export performance.
+* DEPENDENCIES
+  * Updated all Microsoft.Graph modules to version 2.0.0.
+  * Updated all MSCloudLoginAssistant modules to version 1.0.116.
+* MISC
+  * Updated QA tests to dynamically retrieve the permission list.
+
 # 1.23.628.1
 
 * AADAdministrativeUnit
@@ -471,12 +498,9 @@
   * Fixed issue in the Export where an error was displayed in Verbose mode when Credentials were specified
     and the apps were not exported.
 * SPOTenantSettings
-  * [BREAKING CHANGE] Remove deprecated parameter RequireAcceptingAccountMatchInvitedAccount
   * Fixes how we are extracting the DisabledWebPartIds parameter.
     FIXES [#3066](https://github.com/microsoft/Microsoft365DSC/issues/3066)
-* TeamsGroupPolicyAssignment change of key and required parameters
-  * [BREAKING CHANGE] Setting GroupId and PolicyType as Key parameters
-    FIXES [#3054](https://github.com/microsoft/Microsoft365DSC/issues/3054)
+  * [BREAKING CHANGE] Remove deprecated parameter RequireAcceptingAccountMatchInvitedAccount
 * TeamsMeetingPolicy
   * [BREAKING CHANGE] Remove deprecated parameter RecordingStorageMode
 * TeamsUpdateManagementPolicy
@@ -493,7 +517,7 @@
   * Added a QA check to test for the presence of a Key parameter and fixes
     resources where this was not the case.
     FIXES [#2925](https://github.com/microsoft/Microsoft365DSC/issues/2925)
-  * Major changes to the export process where resource instances will now be assigned a meaningful nam
+  * Major changes to the export process where resource instances will now be assigned a meaningful name
     that will follow the ResourceName-PrimaryKey convention.
   * Added a fix making sure that the progress bar "Scanning dependencies" is no longer displayed after the operation is completed.
   * Added a new Set-M365DSCLoggingOption function to enable logging information about non-drifted resources in Event Viewer.

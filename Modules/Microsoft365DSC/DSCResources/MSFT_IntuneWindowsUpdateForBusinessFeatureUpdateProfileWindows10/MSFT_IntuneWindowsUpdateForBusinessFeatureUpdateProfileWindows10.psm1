@@ -63,10 +63,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
-
-        Select-MgProfile -Name beta
+            -InboundParameters $PSBoundParameters
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
@@ -84,7 +81,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementWindowFeatureUpdateProfile -WindowsFeatureUpdateProfileId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -WindowsFeatureUpdateProfileId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -92,7 +89,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDeviceManagementWindowFeatureUpdateProfile `
+                $getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -139,7 +136,7 @@ function Get-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgDeviceManagementWindowFeatureUpdateProfileAssignment -WindowsFeatureUpdateProfileId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfileAssignment -WindowsFeatureUpdateProfileId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -272,10 +269,10 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.WindowsFeatureUpdateProfile')
-        $policy = New-MgDeviceManagementWindowFeatureUpdateProfile -BodyParameter $CreateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
+        $CreateParameters.Add("@odata.type", "#microsoft.graph.WindowsFeatureUpdateProfile")
+        $policy=New-MgBetaDeviceManagementWindowsFeatureUpdateProfile -BodyParameter $CreateParameters
+        $assignmentsHash=@()
+        foreach($assignment in $Assignments)
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
@@ -308,9 +305,9 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $UpdateParameters.Add('@odata.type', '#microsoft.graph.WindowsFeatureUpdateProfile')
-        Write-Verbose ($updateparameters | ConvertTo-Json -Depth 20)
-        Update-MgDeviceManagementWindowFeatureUpdateProfile  `
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.WindowsFeatureUpdateProfile")
+        write-verbose ($updateparameters|convertto-json -depth 20)
+        Update-MgBetaDeviceManagementWindowsFeatureUpdateProfile  `
             -WindowsFeatureUpdateProfileId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
@@ -327,7 +324,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Windows Update For Business Feature Update Profile for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgDeviceManagementWindowFeatureUpdateProfile -WindowsFeatureUpdateProfileId $currentInstance.Id
+        Remove-MgBetaDeviceManagementWindowsFeatureUpdateProfile -WindowsFeatureUpdateProfileId $currentInstance.Id
         #endregion
     }
 }
@@ -495,8 +492,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -513,7 +509,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementWindowFeatureUpdateProfile `
+        [array]$getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile `
             -All `
             -ErrorAction Stop
         #endregion

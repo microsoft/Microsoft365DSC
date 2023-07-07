@@ -33,10 +33,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName New-MgEntitlementManagementAccessPackageResourceRequest -MockWith {
+            Mock -CommandName New-MgBetaEntitlementManagementAccessPackageResourceRequest -MockWith {
             }
 
-            Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalog -MockWith {
+            Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
                 return @{
                     id          = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
                     displayName = 'MyCatalog'
@@ -71,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
                     return $null
                 }
             }
@@ -83,7 +83,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgEntitlementManagementAccessPackageResourceRequest -Exactly 1
+                Should -Invoke -CommandName New-MgBetaEntitlementManagementAccessPackageResourceRequest -Exactly 1
             }
         }
 
@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
                     return @{
                         AddedBy             = 'myAdmin'
                         AddedOn             = '25/10/2022 18:47:28'
@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgEntitlementManagementAccessPackageResourceRequest -Exactly 1
+                Should -Invoke -CommandName New-MgBetaEntitlementManagementAccessPackageResourceRequest -Exactly 1
             }
         }
 
@@ -158,7 +158,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
                     return @{
                         AddedBy             = 'myAdmin'
                         AddedOn             = '25/10/2022 18:47:28'
@@ -201,7 +201,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential          = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
                     return @{
                         AddedBy             = 'myAdmin'
                         AddedOn             = '25/10/2022 18:47:28'
@@ -229,7 +229,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgEntitlementManagementAccessPackageResourceRequest -Exactly 1
+                Should -Invoke -CommandName New-MgBetaEntitlementManagementAccessPackageResourceRequest -Exactly 1
             }
         }
 
@@ -241,7 +241,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -MockWith {
                     return @{
                         AddedBy             = 'myAdmin'
                         AddedOn             = '25/10/2022 18:47:28'

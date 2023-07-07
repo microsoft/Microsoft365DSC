@@ -205,13 +205,20 @@ function Get-TargetResource
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+        if ($Script:ExportMode)
+        {
+            throw $_
+        }
+        else
+        {
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
 
-        return $nullReturn
+            return $nullReturn
+        }
     }
 }
 
@@ -808,7 +815,7 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
-
+    
     $dscContent = [System.Text.StringBuilder]::new()
     $i = 1
     Write-Host "`r`n" -NoNewline
@@ -830,33 +837,43 @@ function Export-TargetResource
                 Credential            = $Credential
                 Managedidentity       = $ManagedIdentity.IsPresent
             }
-            $Results = Get-TargetResource @Params
-
-            if ($Results.Ensure -eq 'Present')
+            try
             {
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-                if ($Results.Permissions.Count -gt 0)
+                $Results = Get-TargetResource @Params
+                if ($Results.Ensure -eq 'Present')
                 {
-                    $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
-                }
-                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                    if ($Results.Permissions.Count -gt 0)
+                    {
+                        $Results.Permissions = Get-M365DSCAzureADAppPermissionsAsString $Results.Permissions
+                    }
+                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -Credential $Credential
 
-                if ($null -ne $Results.Permissions)
+                    if ($null -ne $Results.Permissions)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                            -ParameterName 'Permissions'
+                    }
+
+                    $dscContent.Append($currentDSCBlock) | Out-Null
+                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                        -FileName $Global:PartialExportFileName
+                    Write-Host $Global:M365DSCEmojiGreenCheckMark
+                    $i++
+                }
+            }
+            catch
+            {
+                if ($_.Exception.Message -like "*Multiple AAD Apps with the Displayname*")
                 {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
-                        -ParameterName 'Permissions'
+                    Write-Host "`r`n        $($Global:M365DSCEmojiYellowCircle)" -NoNewline
+                    Write-Host " Multiple app instances wth name {$($AADApp.DisplayName)} were found. We will skip exporting these instances."
                 }
-
-                $dscContent.Append($currentDSCBlock) | Out-Null
-                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
-                $i++
             }
         }
         return $dscContent.ToString()
@@ -920,7 +937,7 @@ function Get-M365DSCAzureADAppPermissions
                 $appServicePrincipal = Get-MgServicePrincipal -Filter "AppId eq '$($app.AppId)'" -All:$true
                 if ($null -ne $appServicePrincipal)
                 {
-                    $oAuth2grant = Get-MgOauth2PermissionGrant -Filter "ClientId eq '$($appServicePrincipal.Id)'"
+                    $oAuth2grant = Get-MgBetaOauth2PermissionGrant -Filter "ClientId eq '$($appServicePrincipal.Id)'"
                     if ($null -ne $oAuth2grant)
                     {
                         $scopes = $oAuth2grant.Scope.Split(' ')

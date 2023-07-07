@@ -27,7 +27,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Update-MgPolicyCrossTenantAccessPolicyDefault -MockWith {
+            Mock -CommandName Update-MgBetaPolicyCrossTenantAccessPolicyDefault -MockWith {
             }
 
             Mock -CommandName Get-MgUser -MockWith {
@@ -108,7 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance         = "Yes";
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicyDefault -MockWith {
+                Mock -CommandName Get-MgBetaPolicyCrossTenantAccessPolicyDefault -MockWith {
                     return @{
                         B2BCollaborationInbound = @{
                             applications = @{
@@ -237,7 +237,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance         = "Yes";
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicyDefault -MockWith {
+                Mock -CommandName Get-MgBetaPolicyCrossTenantAccessPolicyDefault -MockWith {
                     return @{
                         B2BCollaborationInbound = @{
                             applications = @{
@@ -310,7 +310,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgPolicyCrossTenantAccessPolicyDefault -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaPolicyCrossTenantAccessPolicyDefault -Exactly 1
             }
         }
 
@@ -322,7 +322,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicyDefault -MockWith {
+                Mock -CommandName Get-MgBetaPolicyCrossTenantAccessPolicyDefault -MockWith {
                     return @{
                         B2BCollaborationInbound = @{
                             applications = @{

@@ -78,7 +78,7 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = Get-MgPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId `
+        $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId `
                         -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
@@ -251,19 +251,19 @@ function Set-TargetResource
         Write-Verbose -Message (Convert-M365DscHashtableToString -Hashtable $OperationParams)
         $OperationParams.Add('TenantId', $PartnerTenantId)
         $OperationParams.Remove('PartnerTenantId') | Out-Null
-        New-MgPolicyCrossTenantAccessPolicyPartner @OperationParams
+        New-MgBetaPolicyCrossTenantAccessPolicyPartner @OperationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Cross Tenant Access Policy Configuration Partner entry with TenantId {$PartnerTenantId}"
         $OperationParams.Add('-CrossTenantAccessPolicyConfigurationPartnerTenantId', $PartnerTenantId)
         $OperationParams.Remove('PartnerTenantId') | Out-Null
-        Update-MgPolicyCrossTenantAccessPolicyPartner @OperationParams
+        Update-MgBetaPolicyCrossTenantAccessPolicyPartner @OperationParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Cross Tenant Access Policy Configuration Partner entry with TenantId {$PartnerTenantId}"
-        Remove-MgPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId
+        Remove-MgBetaPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId
     }
 }
 
@@ -440,7 +440,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $getValue = Get-MgPolicyCrossTenantAccessPolicyPartner -ErrorAction Stop
+        [array] $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -ErrorAction Stop
 
         $i = 1
         $dscContent = ''

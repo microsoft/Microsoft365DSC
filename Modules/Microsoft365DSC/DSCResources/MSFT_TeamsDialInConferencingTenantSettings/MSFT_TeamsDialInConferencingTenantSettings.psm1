@@ -86,7 +86,7 @@ function Get-TargetResource
 
     try
     {
-        $instance = Get-CsOnlineDialInConferencingTenantSettings
+        $instance = Get-CsOnlineDialInConferencingTenantSettings -ErrorAction SilentlyContinue
 
         return @{
             IsSingleInstance                 = 'Yes'

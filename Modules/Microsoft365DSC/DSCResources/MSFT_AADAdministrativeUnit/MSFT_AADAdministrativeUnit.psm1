@@ -74,23 +74,44 @@ function Get-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'v1.0'
+            -InboundParameters $PSBoundParameters
+    }
+    catch
+    {
+        Write-Verbose -Message ($_)
+    }
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
 
-        #region Telemetry
-        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-        $CommandName = $MyInvocation.MyCommand
-        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-            -CommandName $CommandName `
-            -Parameters $PSBoundParameters
-        Add-M365DSCTelemetryEvent -Data $data
+    #region Telemetry
+    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $CommandName = $MyInvocation.MyCommand
+    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+        -CommandName $CommandName `
+        -Parameters $PSBoundParameters
+    Add-M365DSCTelemetryEvent -Data $data
+    #endregion
+
+    $nullResult = $PSBoundParameters
+    $nullResult.Ensure = 'Absent'
+    try
+    {
+        $getValue = $null
+
+        #region resource generator code
+        if (-Not [string]::IsNullOrEmpty($Id))
+        {
+            $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction Stop
+        }
+
+        if (-not $getValue -and -Not [string]::IsNullOrEmpty($DisplayName))
+        {
+            $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+        }
         #endregion
 
         $nullResult = $PSBoundParameters
@@ -334,6 +355,15 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
+    try
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters `
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -567,7 +597,9 @@ function Set-TargetResource
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
 
         #region resource generator code
-        Update-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id -BodyParameter $UpdateParameters
+        Update-MgDirectoryAdministrativeUnit @UpdateParameters `
+            -AdministrativeUnitId $currentInstance.Id
+
         #endregion
 
         if ($MembershipType -ne 'Dynamic')
@@ -635,7 +667,8 @@ function Set-TargetResource
 
         if ($PSBoundParameters.ContainsKey('ScopedRoleMembers') -and ($backCurrentScopedRoleMembers.Count -gt 0 -or $requestedScopedRoleMembers.Count -gt 0))
         {
-            if ($backCurrentScopedRoleMembers.Length -ne 0)
+            $currentScopedRoleMembersValue = @()
+            if ($currentInstance.ScopedRoleMembers.Length -ne 0)
             {
                 $currentScopedRoleMembersValue = $backCurrentScopedRoleMembers
             }
@@ -746,7 +779,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Azure AD Administrative Unit with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Removing AU {$DisplayName}"
         #region resource generator code
         Remove-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
         #endregion
@@ -942,8 +975,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1042,8 +1074,10 @@ function Export-TargetResource
             }
             if ($null -ne $Results.Members)
             {
+                $currentDSCBlock = $currentDSCBlock.Replace("`",`"`r`n", "")
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Members' -IsCIMArray $true
                 $currentDSCBlock = $currentDSCBlock.Replace(",`r`n", '').Replace("`");`r`n", ");`r`n")
+                $currentDSCBlock = $currentDSCBlock.Replace("Members              = @(`"", "Members              = @(")
                 $currentDSCBlock = $currentDSCBlock.Replace("`$OrganizationName'", "' + `$OrganizationName")
             }
             $dscContent += $currentDSCBlock

@@ -71,8 +71,7 @@ function Get-TargetResource
     Write-Verbose -Message 'Getting configuration of AAD Named Location'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -94,7 +93,7 @@ function Get-TargetResource
         {
             if ($Id)
             {
-                $NamedLocation = Get-MgIdentityConditionalAccessNamedLocation -NamedLocationId $Id -ErrorAction Stop
+                $NamedLocation = Get-MgBetaIdentityConditionalAccessNamedLocation -NamedLocationId $Id -ErrorAction Stop
             }
         }
         catch
@@ -105,7 +104,7 @@ function Get-TargetResource
         {
             try
             {
-                $NamedLocation = Get-MgIdentityConditionalAccessNamedLocation -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
+                $NamedLocation = Get-MgBetaIdentityConditionalAccessNamedLocation -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
                 if ($NamedLocation.Length -gt 1)
                 {
                     throw "More than one instance of a Named Location Policy with name {$DisplayName} was found. Please provide the ID parameter."
@@ -310,7 +309,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AAD Named Location {$Displayname)}"
-        Remove-MgIdentityConditionalAccessNamedLocation -NamedLocationId $currentAADNamedLocation.ID
+        Remove-MgBetaIdentityConditionalAccessNamedLocation -NamedLocationId $currentAADNamedLocation.ID
     }
 }
 
@@ -456,8 +455,7 @@ function Export-TargetResource
     )
     #$ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -476,7 +474,7 @@ function Export-TargetResource
 
     try
     {
-        $AADNamedLocations = Get-MgIdentityConditionalAccessNamedLocation -Filter $Filter -All:$true -ErrorAction Stop
+        $AADNamedLocations = Get-MgBetaIdentityConditionalAccessNamedLocation -Filter $Filter -All:$true -ErrorAction Stop
         if ($AADNamedLocations.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark

@@ -33,10 +33,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementConfigurationPolicy -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -47,7 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Write-Host -MockWith {
             }
 
-            Mock -CommandName Get-MgDeviceManagementConfigurationPolicyAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
             }
 
         }
@@ -133,7 +133,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential   = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return $null
                 }
             }
@@ -145,7 +145,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgDeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceManagementConfigurationPolicy -Exactly 1
             }
         }
 
@@ -230,7 +230,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential   = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Description  = 'FakeStringValue'
                         Id           = 'FakeStringValue'
@@ -331,7 +331,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -Exactly 1
             }
         }
         Context -Name 'The IntuneSettingCatalogCustomPolicyWindows10 Exists and Values are already in the desired state' -Fixture {
@@ -417,7 +417,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential   = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Description  = 'FakeStringValue'
                         Id           = 'FakeStringValue'
@@ -598,7 +598,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential   = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Description  = 'FakeStringValue'
                         Id           = 'FakeStringValue'
@@ -715,7 +715,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return @{
                         Description  = 'FakeStringValue'
                         Id           = 'FakeStringValue'

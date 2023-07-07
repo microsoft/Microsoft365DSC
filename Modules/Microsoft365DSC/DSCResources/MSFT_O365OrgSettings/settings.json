@@ -38,10 +38,10 @@
                         "name": "OrgSettings-Todo.ReadWrite.All"
                     },
                     {
-                        "name": "OrgSettings-AppsAndServices.ReadWrite.All"
+                        "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
                     },
                     {
-                        "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
+                        "name": "OrgSettings-AppsAndServices.Read.All"
                     }
                 ]
             },

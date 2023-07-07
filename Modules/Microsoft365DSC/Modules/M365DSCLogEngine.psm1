@@ -139,7 +139,7 @@ function New-M365DSCLogEntry
         }
         else
         {
-            Write-Host "Error Log created at {file://$LogFileName}" -ForegroundColor Cyan
+            Write-Host " Error Log created at {file://$LogFileName}" -ForegroundColor Red
         }
         #endregion
     }
@@ -729,6 +729,7 @@ function Get-M365DSCLoggingOption
 
 Export-ModuleMember -Function @(
     'Add-M365DSCEvent',
+    'Assert-M365DSCIsNonInteractiveShell',
     'Export-M365DSCDiagnosticData',
     'Get-M365DSCLoggingOption',
     'New-M365DSCLogEntry',

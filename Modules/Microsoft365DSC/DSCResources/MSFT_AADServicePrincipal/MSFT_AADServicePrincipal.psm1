@@ -96,8 +96,7 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting configuration of Azure AD ServicePrincipal'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'Beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -289,7 +288,7 @@ function Set-TargetResource
 
     Write-Verbose -Message "1 - There are now {$((Get-ChildItem function: | Measure-Object).Count) functions}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName 'Beta'
+        -InboundParameters $PSBoundParameters
 
     Write-Verbose -Message "2 - There are now {$((Get-ChildItem function: | Measure-Object).Count) functions}"
     Write-Verbose -Message 'Setting configuration of Azure AD ServicePrincipal'
@@ -506,8 +505,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies

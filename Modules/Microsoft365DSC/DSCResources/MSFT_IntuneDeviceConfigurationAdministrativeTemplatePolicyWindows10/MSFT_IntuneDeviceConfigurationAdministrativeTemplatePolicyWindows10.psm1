@@ -64,8 +64,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -84,7 +83,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementGroupPolicyConfiguration -GroupPolicyConfigurationId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementGroupPolicyConfiguration -GroupPolicyConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -92,7 +91,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDeviceManagementGroupPolicyConfiguration `
+                $getValue = Get-MgBetaDeviceManagementGroupPolicyConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
             }
@@ -115,7 +114,7 @@ function Get-TargetResource
         #endregion
 
         #region
-        $settings = Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValue `
+        $settings = Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValue `
             -GroupPolicyConfigurationId $Id
 
         $complexDefinitionValues = @()
@@ -128,7 +127,7 @@ function Get-TargetResource
                 $definitionValue.Add('ConfigurationType', $setting.ConfigurationType.toString())
             }
             $definitionValue.Add('Enabled', $setting.Enabled)
-            $definition = Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition `
+            $definition = Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValueDefinition `
                 -GroupPolicyConfigurationId $Id `
                 -GroupPolicyDefinitionValueId $setting.Id
 
@@ -154,7 +153,7 @@ function Get-TargetResource
 
             $definitionValue.Add('Definition', $complexDefinition)
 
-            $presentationValues = Get-MgDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue `
+            $presentationValues = Get-MgBetaDeviceManagementGroupPolicyConfigurationDefinitionValuePresentationValue `
                 -GroupPolicyConfigurationId $Id `
                 -GroupPolicyDefinitionValueId $setting.Id `
                 -ExpandProperty 'presentation'
@@ -228,7 +227,7 @@ function Get-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgDeviceManagementGroupPolicyConfigurationAssignment -GroupPolicyConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment -GroupPolicyConfigurationId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -246,12 +245,22 @@ function Get-TargetResource
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
-
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
+        {
+            if (Assert-M365DSCIsNonInteractiveShell)
+            {
+                Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            }
+        }
+        else
+        {
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
         return $nullResult
     }
 }
@@ -367,7 +376,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $policy = New-MgDeviceManagementGroupPolicyConfiguration -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementGroupPolicyConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -440,7 +449,7 @@ function Set-TargetResource
         #region resource generator code
         #Update Core policy
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.GroupPolicyConfiguration')
-        Update-MgDeviceManagementGroupPolicyConfiguration  `
+        Update-MgBetaDeviceManagementGroupPolicyConfiguration  `
             -GroupPolicyConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
 
@@ -564,7 +573,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Device Configuration Administrative Template Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgDeviceManagementGroupPolicyConfiguration -GroupPolicyConfigurationId $currentInstance.Id
+        Remove-MgBetaDeviceManagementGroupPolicyConfiguration -GroupPolicyConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -764,8 +773,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -782,7 +790,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementGroupPolicyConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementGroupPolicyConfiguration `
             -All `
             -ErrorAction Stop
         #endregion
@@ -907,7 +915,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-                $_.Exception -like '*Message: Location header not present in redirection response.*')
+                $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
