@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.705.1
 
 * EXOAddressList
   * Improved export performance.
