@@ -57,14 +57,6 @@
             RequiredVersion = '2.0.0'
         },
         @{
-            ModuleName      = 'Microsoft.Graph.Identity.DirectoryManagement'
-            RequiredVersion = '2.0.0'
-        },
-        @{
-            ModuleName      = 'Microsoft.Graph.Identity.Governance'
-            RequiredVersion = '2.0.0'
-        },
-        @{
             ModuleName      = 'Microsoft.Graph.Planner'
             RequiredVersion = '2.0.0'
         },
@@ -75,7 +67,6 @@
         @{
             ModuleName      = 'Microsoft.Graph.Users.Actions'
             RequiredVersion = '2.0.0'
-
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
@@ -87,7 +78,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.115"
+            RequiredVersion = "1.0.116"
         },
         @{
             ModuleName      = 'PnP.PowerShell'

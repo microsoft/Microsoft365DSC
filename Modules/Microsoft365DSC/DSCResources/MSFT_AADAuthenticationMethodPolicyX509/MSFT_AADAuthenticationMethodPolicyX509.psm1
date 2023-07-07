@@ -705,6 +705,8 @@ function Export-TargetResource
             if ($Results.CertificateUserBindings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'CertificateUserBindings' -IsCIMArray:$True
+                $currentDSCBlock = $currentDSCBlock.Replace('CertificateUserBindings         = @("', 'CertificateUserBindings         = @(')
+                $currentDSCBlock = $currentDSCBlock.Replace("            `",`"`r`n", '')
             }
             if ($Results.ExcludeTargets)
             {
