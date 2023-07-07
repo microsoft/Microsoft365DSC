@@ -70,7 +70,7 @@ function Get-TargetResource
     $nullReturn = $PSBoundParameters
     try
     {
-        $defaults = Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy
+        $defaults = Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy
 
         $result = @{
             IsSingleInstance      = 'Yes'
@@ -181,7 +181,7 @@ function Set-TargetResource
         Id        = $DisplayName
         IsEnabled = $IsEnabled
     }
-    Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy @UpdateParameters | Out-Null
+    Update-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy @UpdateParameters | Out-Null
 }
 
 function Test-TargetResource

@@ -1155,6 +1155,8 @@ function Export-M365DSCConfiguration
         $Validate
     )
 
+    $Global:MaximumFunctionCount = 16000
+
     # Define the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = @()
 
@@ -1658,7 +1660,7 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
-
+    $Global:MaximumFunctionCount = 16000
     if ($Workload -eq 'MicrosoftTeams')
     {
         try
@@ -2383,14 +2385,25 @@ function Get-AllSPOPackages
 
         if ($null -ne $tenantAppCatalogUrl)
         {
-            $spfxFiles = Find-PnPFile -List 'AppCatalog' -Match '*.sppkg'
-            $appFiles = Find-PnPFile -List 'AppCatalog' -Match '*.app'
-
-            $allFiles = $spfxFiles + $appFiles
-
-            foreach ($file in $allFiles)
+            try
             {
-                $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+                $spfxFiles = Find-PnPFile -List 'AppCatalog' -Match '*.sppkg' -ErrorAction Stop
+                $appFiles = Find-PnPFile -List 'AppCatalog' -Match '*.app' -ErrorAction Stop
+
+                $allFiles = $spfxFiles + $appFiles
+
+                foreach ($file in $allFiles)
+                {
+                    $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+                }
+            }
+            catch
+            {
+                New-M365DSCLogEntry -Message $_.Exception.Message `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
             }
         }
         return $filesToDownload

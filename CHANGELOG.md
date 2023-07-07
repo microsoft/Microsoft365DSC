@@ -7,6 +7,7 @@
     FIXES [#3314](https://github.com/microsoft/Microsoft365DSC/issues/3314)
 * DEPENDENCIES
   * Updated all Microsoft.Graph modules to version 2.0.0.
+  * Updated all MSCloudLoginAssistant modules to version 1.0.116.
 * MISC
   * Updated QA tests to dynamically retrieve the permission list.
 

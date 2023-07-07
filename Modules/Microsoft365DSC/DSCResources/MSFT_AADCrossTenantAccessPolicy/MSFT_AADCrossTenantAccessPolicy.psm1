@@ -68,7 +68,7 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = Get-MgPolicyCrossTenantAccessPolicy -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaPolicyCrossTenantAccessPolicy -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -182,7 +182,7 @@ function Set-TargetResource
         {
             $UpdateParams.Add("AllowedCloudEndpoints", $AllowedCloudEndpoints)
         }
-        Update-MgPolicyCrossTenantAccessPolicy -BodyParameter $UpdateParams
+        Update-MgBetaPolicyCrossTenantAccessPolicy -BodyParameter $UpdateParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {

@@ -190,10 +190,24 @@ function Get-TargetResource
 
         # Microsoft Viva Briefing Email
         $vivaBriefingEmailValue = $false
-        $currentBriefingConfig = Get-DefaultTenantBriefingConfig
-        if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
+        try
         {
-            $vivaBriefingEmailValue = $true
+            $currentBriefingConfig = Get-DefaultTenantBriefingConfig
+            if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
+            {
+                $vivaBriefingEmailValue = $true
+            }
+        }
+        catch
+        {
+            if ($_.Exception.Message -like "*Unexpected character encountered while parsing value*")
+            {
+                $vivaBriefingEmailValue = $true
+            }
+            else
+            {
+                throw $_
+            }
         }
 
         # Viva Insightss settings
