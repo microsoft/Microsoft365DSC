@@ -27,7 +27,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Update-MgPolicyCrossTenantAccessPolicy -MockWith {
+            Mock -CommandName Update-MgBetaCrossTenantAccessPolicy -MockWith {
             }
 
 
@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance      = "Yes";
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicy -MockWith {
+                Mock -CommandName Get-MgBetaCrossTenantAccessPolicy -MockWith {
                     return @{
                         AllowedCloudEndpoints = @("microsoftonline.us");
                         DisplayName           = "MyXTAPPolicy";
@@ -75,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance      = "Yes";
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicy -MockWith {
+                Mock -CommandName Get-MgBetaCrossTenantAccessPolicy -MockWith {
                     return @{
                         AllowedCloudEndpoints = @("microsoftonline.com"); #drift
                         DisplayName           = "MyXTAPPolicy";
@@ -91,7 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Update-MgPolicyCrossTenantAccessPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgBetaCrossTenantAccessPolicy' -Exactly 1
             }
         }
 
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicy -MockWith {
+                Mock -CommandName Get-MgBetaCrossTenantAccessPolicy -MockWith {
                     return @{
                         AllowedCloudEndpoints = @("microsoftonline.com"); #drift
                         DisplayName           = "MyXTAPPolicy";

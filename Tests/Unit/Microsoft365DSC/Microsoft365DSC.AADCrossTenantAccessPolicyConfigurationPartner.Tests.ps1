@@ -27,11 +27,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName New-MgPolicyCrossTenantAccessPolicyPartner -MockWith {
+            Mock -CommandName New-MgBetaCrossTenantAccessPolicyPartner -MockWith {
             }
-            Mock -CommandName Update-MgPolicyCrossTenantAccessPolicyPartner -MockWith {
+            Mock -CommandName Update-MgBetaCrossTenantAccessPolicyPartner -MockWith {
             }
-            Mock -CommandName Remove-MgPolicyCrossTenantAccessPolicyPartner -MockWith {
+            Mock -CommandName Remove-MgBetaCrossTenantAccessPolicyPartner -MockWith {
             }
 
             Mock -CommandName Get-MgUser -MockWith {
@@ -112,7 +112,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PartnerTenantId          = "12345-12345-12345-12345-12345";
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicyPartner -MockWith {
+                Mock -CommandName Get-MgBetaCrossTenantAccessPolicyPartner -MockWith {
                     return $null
                 }
             }
@@ -125,7 +125,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgPolicyCrossTenantAccessPolicyPartner -Exactly 1
+                Should -Invoke -CommandName New-MgBetaCrossTenantAccessPolicyPartner -Exactly 1
             }
         }
         Context -Name "The policy is already in the desired state" -Fixture {
@@ -184,7 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PartnerTenantId          = "12345-12345-12345-12345-12345";
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicyPartner -MockWith {
+                Mock -CommandName Get-MgBetaCrossTenantAccessPolicyPartner -MockWith {
                     return @{
                         TenantId = "12345-12345-12345-12345-12345"
                         B2BCollaborationInbound = @{
@@ -314,7 +314,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PartnerTenantId          = "12345-12345-12345-12345-12345";
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicyPartner -MockWith {
+                Mock -CommandName Get-MgBetaCrossTenantAccessPolicyPartner -MockWith {
                     return @{
                         TenantId = "12345-12345-12345-12345-12345"
                         B2BCollaborationInbound = @{
@@ -388,7 +388,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgPolicyCrossTenantAccessPolicyPartner -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaCrossTenantAccessPolicyPartner -Exactly 1
             }
         }
 
@@ -448,7 +448,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PartnerTenantId          = "12345-12345-12345-12345-12345";
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicyPartner -MockWith {
+                Mock -CommandName Get-MgBetaCrossTenantAccessPolicyPartner -MockWith {
                     return @{
                         TenantId = "12345-12345-12345-12345-12345"
                         B2BCollaborationInbound = @{
@@ -522,7 +522,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgPolicyCrossTenantAccessPolicyPartner -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaCrossTenantAccessPolicyPartner -Exactly 1
             }
         }
 
@@ -534,7 +534,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgPolicyCrossTenantAccessPolicyPartner -MockWith {
+                Mock -CommandName Get-MgBetaCrossTenantAccessPolicyPartner -MockWith {
                     return @{
                         TenantId = "12345-12345-12345-12345-12345"
                         B2BCollaborationInbound = @{

@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgBEtaIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return $null
                 }
             }
@@ -113,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-MgIdentityConditionalAccessNamedLocation' -Exactly 1
+                Should -Invoke -CommandName 'Remove-MgBetaIdentityConditionalAccessNamedLocation' -Exactly 1
             }
         }
 
@@ -128,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $credsGlobalAdmin
                 }
 
-                Mock -CommandName BEta -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         DisplayName          = 'Company Network'
                         Id                   = '046956df-2367-4dd4-b7fd-c6175ec11cd5'
