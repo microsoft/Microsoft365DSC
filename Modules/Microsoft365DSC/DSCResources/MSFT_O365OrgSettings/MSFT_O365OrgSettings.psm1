@@ -192,7 +192,7 @@ function Get-TargetResource
         $vivaBriefingEmailValue = $false
         try
         {
-            $currentBriefingConfig = Get-DefaultTenantBriefingConfig
+            $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop
             if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
             {
                 $vivaBriefingEmailValue = $true
