@@ -718,6 +718,8 @@ function Set-TargetResource
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.windowsUpdateForBusinessConfiguration")
         Update-MgBetaDeviceManagementDeviceConfiguration  `
+            -DeviceConfigurationId $currentInstance.id `
+            -BodyParameter $UpdateParameters
 
         $assignmentsHash = @()
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `

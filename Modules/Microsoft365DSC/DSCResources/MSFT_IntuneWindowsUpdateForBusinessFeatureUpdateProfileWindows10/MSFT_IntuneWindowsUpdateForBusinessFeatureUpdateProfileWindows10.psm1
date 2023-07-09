@@ -306,10 +306,10 @@ function Set-TargetResource
 
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.WindowsFeatureUpdateProfile")
-        write-verbose ($updateparameters|convertto-json -depth 20)
         Update-MgBetaDeviceManagementWindowsFeatureUpdateProfile  `
             -WindowsFeatureUpdateProfileId $currentInstance.Id `
             -BodyParameter $UpdateParameters
+
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
