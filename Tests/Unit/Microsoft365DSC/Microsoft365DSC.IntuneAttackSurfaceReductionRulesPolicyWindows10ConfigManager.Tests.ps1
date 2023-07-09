@@ -59,7 +59,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
-            Mock -CommandName Get-MgDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
                 return @{
                     Id       = '12345-12345-12345-12345-12345'
                     SettingInstanceTemplate = @{
@@ -128,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When the instance already exists and is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Assignments = @(
+                    Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
@@ -203,6 +203,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = 'My Test'
                     Ensure      = 'Present'
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                        } -ClientOnly)
+                    )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {

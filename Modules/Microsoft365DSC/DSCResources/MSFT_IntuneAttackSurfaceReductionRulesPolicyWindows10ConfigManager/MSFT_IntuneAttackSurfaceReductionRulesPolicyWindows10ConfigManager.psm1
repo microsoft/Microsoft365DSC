@@ -252,7 +252,7 @@ function Get-TargetResource
 
         }
         $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $Identity
+        $returnAssignments += Get-DeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity
         $returnHashtable.Add('Assignments', $returnAssignments)
 
         Write-Verbose -Message "Found Endpoint Protection Policy {$($policy.name)}"
@@ -491,14 +491,28 @@ function Set-TargetResource
             -TemplateId $templateReferenceId
 
         $Template = Get-MgBetaDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
-        Update-DeviceManagementConfigurationPolicy `
+
+        $updateParameters = @{
+            Name              = $DisplayName
+            Description       = $Description
+            #TemplateReference = @{templateId = $templateReferenceId }
+            #Platforms         = $platforms
+            #Technologies      = $technologies
+            Settings          = $settings
+        }
+
+        Update-MgBetaDeviceManagementConfigurationPolicy `
+            -DeviceManagementConfigurationPolicyId $Identity `
+            -BodyParameter $updateParameters
+
+        <#Update-DeviceManagementConfigurationPolicy `
             -DeviceManagementConfigurationPolicyId $Identity `
             -Name $DisplayName `
             -Description $Description `
             -TemplateReference $Template `
             -Platforms $platforms `
             -Technologies $technologies `
-            -Settings $settings
+            -Settings $settings#>
 
         #region update policy assignments
         $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
@@ -1139,43 +1153,41 @@ function New-DeviceManagementConfigurationPolicy
         -ContentType 'application/json' `
         -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
 }
-
 function Update-DeviceManagementConfigurationPolicy
 {
     [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
     param (
+
         [Parameter(Mandatory = 'true')]
         [System.String]
-        $DeviceManagementConfigurationPolicyId
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $TemplateReferenceId,
+
+        [Parameter()]
+        [System.String]
+        $Platforms,
+
+        [Parameter()]
+        [System.String]
+        $Technologies,
+
+        [Parameter()]
+        [System.Array]
+        $Settings
     )
-    try
-    {
-        $configurationPolicySettings = @()
 
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/settings"
-        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-        $configurationPolicySettings += $results.value.settingInstance
-        while ($results.'@odata.nextLink')
-        {
-            $Uri = $results.'@odata.nextLink'
-            $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-            $configurationPolicySettings += $results.value.settingInstance
-        }
-        return $configurationPolicySettings
-    }
-    catch
-    {
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
-
-        return $null
+    $templateReference = @{
+        'templateId' = $TemplateReferenceId
     }
 
-    $Uri = "https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$Identity"
+    $Uri = "https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$DeviceManagementConfigurationPolicyId"
     $policy = [ordered]@{
         'name'              = $DisplayName
         'description'       = $Description
@@ -1184,28 +1196,13 @@ function Update-DeviceManagementConfigurationPolicy
         'templateReference' = $templateReference
         'settings'          = $Settings
     }
-
     #write-verbose (($policy|ConvertTo-Json -Depth 20))
-
-    Invoke-MgGraphRequest -Method PUT `
+    Invoke-MgGraphRequest -Method POST `
         -Uri $Uri `
         -ContentType 'application/json' `
         -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
 }
 
-function Remove-DeviceManagementConfigurationPolicy
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $Identity
-    )
-
-    $Uri = "https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies/$Identity"
-
-    Invoke-MgGraphRequest -Method DELETE -Uri $Uri 4> out-null
-}
 
 function Get-DeviceManagementConfigurationPolicyAssignment
 {

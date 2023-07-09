@@ -173,9 +173,20 @@ function Get-TargetResource
             Managedidentity                = $ManagedIdentity.IsPresent
         }
 
-        $myAssignments = @()
-        $myAssignments += Get-MgDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -Repository 'deviceConfigurations'
-        $results.Add('Assignments', $myAssignments)
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
 
         return [System.Collections.Hashtable] $results
     }

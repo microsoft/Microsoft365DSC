@@ -402,7 +402,7 @@ function Set-TargetResource
         $formattedDefinitionValuesToAdd = @()
         foreach ($definitionValue in $targetDefinitionValues)
         {
-            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue
+            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue -KeyMapping $keyToRename
             $enumConfigurationType = $null
             if ($null -ne $definitionValue.ConfigurationType)
             {
@@ -414,6 +414,7 @@ function Set-TargetResource
                 foreach ($presentationValue in [Hashtable[]]$definitionValue.PresentationValues)
                 {
                     $value = $presentationValue.clone()
+                    $value = Rename-M365DSCCimInstanceParameter -Properties $value -KeyMapping $keyToRename
                     $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
                     $value.remove('PresentationDefinitionId')
                     $value.remove('PresentationDefinitionLabel')
@@ -501,7 +502,7 @@ function Set-TargetResource
         foreach ($definitionValueId in $definitionValuesToAdd)
         {
             $definitionValue = $targetDefinitionValues | Where-Object -FilterScript { $_.Definition.Id -eq $definitionValueId }
-            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue
+            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue -KeyMapping $keyToRename
             $enumConfigurationType = $null
             if ($null -ne $definitionValue.ConfigurationType)
             {
@@ -513,6 +514,7 @@ function Set-TargetResource
                 foreach ($presentationValue in [Hashtable[]]$definitionValue.PresentationValues)
                 {
                     $value = $presentationValue.clone()
+                    $value = Rename-M365DSCCimInstanceParameter -Properties $value -KeyMapping $keyToRename
                     $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
                     $value.remove('PresentationDefinitionId')
                     $value.remove('PresentationDefinitionLabel')
@@ -533,7 +535,7 @@ function Set-TargetResource
         {
             $definitionValue = $targetDefinitionValues | Where-Object -FilterScript { $_.Definition.Id -eq $definitionValueId }
             $currentDefinitionValue = $currentDefinitionValues | Where-Object -FilterScript { $_.definition.id -eq $definitionValueId }
-            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue
+            $definitionValue = Rename-M365DSCCimInstanceParameter -Properties $definitionValue -KeyMapping $keyToRename
             $enumConfigurationType = $null
             if ($null -ne $definitionValue.ConfigurationType)
             {
@@ -546,6 +548,7 @@ function Set-TargetResource
                 {
                     $currentPresentationValue = $currentDefinitionValue.PresentationValues | Where-Object { $_.PresentationDefinitionId -eq $presentationValue.presentationDefinitionId }
                     $value = $presentationValue.clone()
+                    $value = Rename-M365DSCCimInstanceParameter -Properties $value -KeyMapping $keyToRename
                     $value.add('presentation@odata.bind', "https://graph.microsoft.com/beta/deviceManagement/groupPolicyDefinitions('$($definitionValue.Definition.Id)')/presentations('$($presentationValue.presentationDefinitionId)')")
                     $value.remove('PresentationDefinitionId')
                     $value.remove('PresentationDefinitionLabel')
@@ -977,7 +980,7 @@ function Update-DeviceConfigurationGroupPolicyDefinitionValue
             'updated'    = $DefinitionValueToUpdate
             'deletedIds' = $DefinitionValueToRemoveIds
         }
-        #Write-Verbose -Message ($body | ConvertTo-Json -Depth 20)
+        #Write-Verbose -Message ($body | ConvertTo-Json -Depth 100)
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ErrorAction Stop 4> Out-Null
     }
     catch

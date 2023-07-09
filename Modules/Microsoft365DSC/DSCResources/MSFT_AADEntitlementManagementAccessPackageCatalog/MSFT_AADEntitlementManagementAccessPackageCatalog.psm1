@@ -428,7 +428,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = (Get-MgEntitlementManagementAccessPackage -all -ExpandProperty "Catalog"  -ErrorAction Stop)| Select-Object -Unique Catalog |Select-Object -ExpandProperty Catalog
+        [array]$getValue = (Get-MgBetaEntitlementManagementAccessPackage -all -ErrorAction Stop)| Select-Object -Unique CatalogId |Select-Object -ExpandProperty CatalogId
         #endregion
         $i = 1
         $dscContent = ''
@@ -441,8 +441,9 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
 
-        foreach ($config in $getValue)
+        foreach ($catalogId in $getValue)
         {
+            $config = Get-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $catalogId
             $displayedKey = $config.id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
