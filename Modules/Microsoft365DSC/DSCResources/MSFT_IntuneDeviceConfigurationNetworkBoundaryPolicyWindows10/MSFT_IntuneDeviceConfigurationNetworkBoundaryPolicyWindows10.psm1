@@ -82,7 +82,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -90,7 +90,7 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgDeviceManagementDeviceConfiguration `
+                $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object -FilterScript { `
                         $_.AdditionalProperties -eq '#microsoft.graph.windows10NetworkBoundaryConfiguration' `
@@ -165,7 +165,7 @@ function Get-TargetResource
             Managedidentity               = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -298,7 +298,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10NetworkBoundaryConfiguration')
-        $policy = New-MgDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -333,7 +333,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10NetworkBoundaryConfiguration')
-        Update-MgDeviceManagementDeviceConfiguration  `
+        Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
@@ -351,7 +351,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Device Configuration Network Boundary Policy for Windows10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
+        Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -535,7 +535,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgDeviceManagementDeviceConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `

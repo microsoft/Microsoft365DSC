@@ -2,7 +2,7 @@
     Intune = @(
         @{
             ResourceName             = 'IntuneDeviceConfigurationPolicyiOS'
-            CmdletNoun               = 'MgDeviceManagementDeviceConfiguration'
+            CmdletNoun               = 'MgBetaDeviceManagementDeviceConfiguration'
             APIVersion               = 'beta'
             SelectionFilter          = @{
                 AdditionalPropertiesType = 'iosGeneralDeviceConfiguration'
@@ -10,7 +10,7 @@
         },
         @{
             ResourceName             = 'IntuneDeviceConfigurationPolicyWindows10'
-            CmdletNoun               = 'MgDeviceManagementDeviceConfiguration'
+            CmdletNoun               = 'MgBetaDeviceManagementDeviceConfiguration'
             APIVersion               = 'beta'
             SelectionFilter          = @{
                 AdditionalPropertiesType = 'windows10GeneralConfiguration'
@@ -26,7 +26,7 @@
         },
         @{
             ResourceName             = 'IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner'
-            CmdletNoun               = 'MgDeviceManagementDeviceConfiguration'
+            CmdletNoun               = 'MgBetaDeviceManagementDeviceConfiguration'
             APIVersion               = 'beta'
             SelectionFilter          = @{
                 AdditionalPropertiesType = 'androidWorkProfileEnterpriseWiFiConfiguration'

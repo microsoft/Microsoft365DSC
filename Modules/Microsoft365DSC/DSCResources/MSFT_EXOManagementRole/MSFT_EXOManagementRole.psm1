@@ -81,7 +81,14 @@ function Get-TargetResource
 
     try
     {
-        $AllManagementRoles = Get-ManagementRole -ErrorAction Stop
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            $AllManagementRoles = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Name}
+        }
+        else
+        {
+            $AllManagementRoles = Get-ManagementRole -ErrorAction Stop
+        }
 
         $ManagementRole = $AllManagementRoles | Where-Object -FilterScript { $_.Name -eq $Name }
 
@@ -367,11 +374,12 @@ function Export-TargetResource
 
     try
     {
-        [array]$AllManagementRoles = Get-ManagementRole | Where-Object -FilterScript { $_.Parent -ne $null }
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-ManagementRole | Where-Object -FilterScript { $_.Parent -ne $null }
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::New()
 
-        if ($AllManagementRoles.Length -eq 0)
+        if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -380,9 +388,9 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        foreach ($ManagementRole in $AllManagementRoles)
+        foreach ($ManagementRole in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($AllManagementRoles.Count)] $($ManagementRole.Name)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($ManagementRole.Name)" -NoNewline
 
             $Params = @{
                 Name                  = $ManagementRole.Name
@@ -403,13 +411,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            $dscContent.Append($currentDSCBlock) | Out-Null
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

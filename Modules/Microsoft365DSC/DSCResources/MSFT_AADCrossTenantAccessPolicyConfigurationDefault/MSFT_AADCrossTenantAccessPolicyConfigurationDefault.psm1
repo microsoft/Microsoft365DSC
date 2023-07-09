@@ -79,7 +79,7 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = Get-MgPolicyCrossTenantAccessPolicyDefault -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyDefault -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -250,7 +250,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Cross Tenant Access Policy Configuration Default"
-        Update-MgPolicyCrossTenantAccessPolicyDefault @OperationParams
+        Update-MgBetaPolicyCrossTenantAccessPolicyDefault @OperationParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {

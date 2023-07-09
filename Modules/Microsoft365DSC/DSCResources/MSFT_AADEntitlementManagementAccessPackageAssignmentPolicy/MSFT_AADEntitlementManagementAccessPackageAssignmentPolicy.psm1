@@ -129,7 +129,7 @@ function Get-TargetResource
         $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
         if($null -ne $formattedAccessReviewSettings)
         {
-            $formattedAccessReviewSettings.remove('additionalProperties')
+            $formattedAccessReviewSettings.remove('additionalProperties') | Out-Null
         }
         if ($null -ne $formattedAccessReviewSettings.Reviewers -and $formattedAccessReviewSettings.Reviewers.count -gt 0 )
         {
@@ -138,7 +138,7 @@ function Get-TargetResource
                 $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
                 if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
-                    $user = Get-MgUser -UserId $setting.AdditionalProperties.Id -ErrorAction SilentlyContinue
+                    $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
                     if ($null -ne $user)
                     {
                         $setting.add('Id', $user.UserPrincipalName)
@@ -148,7 +148,7 @@ function Get-TargetResource
                 {
                     $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                 }
-                $setting.remove('additionalProperties')
+                $setting.remove('additionalProperties') | Out-Null
             }
         }
         #endregion
@@ -157,7 +157,7 @@ function Get-TargetResource
         $formattedRequestApprovalSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestApprovalSettings
         if ($null -ne $formattedRequestApprovalSettings)
         {
-            $formattedRequestApprovalSettings.remove('additionalProperties')
+            $formattedRequestApprovalSettings.remove('additionalProperties') | Out-Null
         }
         if ($null -ne $formattedRequestApprovalSettings.approvalStages -and $formattedRequestApprovalSettings.approvalStages.count -gt 0 )
         {
@@ -176,7 +176,7 @@ function Get-TargetResource
                         {
                             $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                         }
-                        $setting.remove('additionalProperties')
+                        $setting.remove('additionalProperties') | Out-Null
                     }
                 }
 
@@ -193,10 +193,10 @@ function Get-TargetResource
                         {
                             $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                         }
-                        $setting.remove('additionalProperties')
+                        $setting.remove('additionalProperties') | Out-Null
                     }
                 }
-                $approvalStage.remove('additionalProperties')
+                $approvalStage.remove('additionalProperties') | Out-Null
             }
         }
         #endregion
@@ -205,7 +205,7 @@ function Get-TargetResource
         $formattedRequestorSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestorSettings
         if ($null -ne $formattedRequestorSettings)
         {
-            $formattedRequestorSettings.remove('additionalProperties')
+            $formattedRequestorSettings.remove('additionalProperties') | Out-Null
         }
         if ($null -ne $formattedRequestorSettings.allowedRequestors -and $formattedRequestorSettings.allowedRequestors.count -gt 0 )
         {
@@ -217,7 +217,7 @@ function Get-TargetResource
                 }
                 if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
-                    $user = Get-MgUser -UserId $setting.AdditionalProperties.Id -ErrorAction SilentlyContinue
+                    $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
                     if ($null -ne $user)
                     {
                         $setting.add('Id', $user.UserPrincipalName)
@@ -227,7 +227,7 @@ function Get-TargetResource
                 {
                     $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                 }
-                $setting.remove('additionalProperties')
+                $setting.remove('additionalProperties') | Out-Null
             }
         }
         #endregion
@@ -243,11 +243,11 @@ function Get-TargetResource
             if ($null -ne $question.Text)
             {
                 $question.add('QuestionText', $question.Text)
-                $question.remove('Text')
-                $question.QuestionText.remove('additionalProperties')
+                $question.remove('Text') | Out-Null
+                $question.QuestionText.remove('additionalProperties') | Out-Null
                 foreach ($localizedText in $question.QuestionText.localizedTexts)
                 {
-                    $localizedText.remove('additionalProperties')
+                    $localizedText.remove('additionalProperties') | Out-Null
                 }
             }
             if ($null -ne $question.AdditionalProperties.isSingleLineQuestion)
@@ -262,7 +262,7 @@ function Get-TargetResource
             {
                 $question.add('AllowsMultipleSelection', $question.AdditionalProperties.allowsMultipleSelection)
             }
-            $question.remove('additionalProperties')
+            $question.remove('additionalProperties') | Out-Null
         }
         #endregion
 

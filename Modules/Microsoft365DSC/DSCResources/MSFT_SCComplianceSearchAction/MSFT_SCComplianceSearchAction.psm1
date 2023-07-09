@@ -716,7 +716,7 @@ function Get-CurrentAction
 
     if ($null -eq $currentAction)
     {
-        $currentAction = Get-ComplianceSearchAction -Details | Where-Object { $_.SearchName -eq $SearchName -and $_.Action -eq $Action }
+        $currentAction = Get-ComplianceSearchAction | Where-Object { $_.SearchName -eq $SearchName -and $_.Action -eq $Action }
     }
 
     if ('Purge' -ne $Action -and $null -ne $currentAction)
