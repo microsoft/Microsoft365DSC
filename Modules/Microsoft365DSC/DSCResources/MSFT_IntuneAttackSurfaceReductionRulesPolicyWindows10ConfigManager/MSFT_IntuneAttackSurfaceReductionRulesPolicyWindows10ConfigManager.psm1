@@ -490,29 +490,14 @@ function Set-TargetResource
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
             -TemplateId $templateReferenceId
 
-        $Template = Get-MgBetaDeviceManagementConfigurationPolicyTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
-
-        $updateParameters = @{
-            Name              = $DisplayName
-            Description       = $Description
-            #TemplateReference = @{templateId = $templateReferenceId }
-            #Platforms         = $platforms
-            #Technologies      = $technologies
-            Settings          = $settings
-        }
-
-        Update-MgBetaDeviceManagementConfigurationPolicy `
-            -DeviceManagementConfigurationPolicyId $Identity `
-            -BodyParameter $updateParameters
-
-        <#Update-DeviceManagementConfigurationPolicy `
-            -DeviceManagementConfigurationPolicyId $Identity `
-            -Name $DisplayName `
+        Update-DeviceManagementConfigurationPolicy `
+            -DeviceManagementConfigurationPolicyId $currentPolicy.Identity `
+            -DisplayName $DisplayName `
             -Description $Description `
-            -TemplateReference $Template `
+            -TemplateReference $templateReferenceId `
             -Platforms $platforms `
             -Technologies $technologies `
-            -Settings $settings#>
+            -Settings $settings
 
         #region update policy assignments
         $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
@@ -1157,6 +1142,9 @@ function Update-DeviceManagementConfigurationPolicy
 {
     [CmdletBinding()]
     param (
+        [Parameter(Mandatory = 'true')]
+        [System.String]
+        $DeviceManagementConfigurationPolicyId,
 
         [Parameter(Mandatory = 'true')]
         [System.String]
@@ -1197,7 +1185,7 @@ function Update-DeviceManagementConfigurationPolicy
         'settings'          = $Settings
     }
     #write-verbose (($policy|ConvertTo-Json -Depth 20))
-    Invoke-MgGraphRequest -Method POST `
+    Invoke-MgGraphRequest -Method PUT `
         -Uri $Uri `
         -ContentType 'application/json' `
         -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
