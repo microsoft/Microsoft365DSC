@@ -1512,7 +1512,7 @@ function Get-M365DSCTenantDomain
 
         try
         {
-            $tenantDetails = Get-MgBetaOrganization -ErrorAction 'Stop'
+            $tenantDetails = Get-MgOrganization -ErrorAction 'Stop'
             $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.IsInitial }
 
             return $defaultDomain.Name

@@ -1,5 +1,15 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+  * General cleanup from generated resources from DRG
+    * Added module M365DSCDRGUtil.psm1
+    * Fix issues on several resources
+    * Fix assignment from several resources
+    * Fix unit test on several resources
+    * Removed helper resources centralized in M365DSCDRGUtil from all resources
+      FIXES [#3309](https://github.com/microsoft/Microsoft365DSC/issues/3309)
+
 # 1.23.705.1
 
 * EXOAddressList
