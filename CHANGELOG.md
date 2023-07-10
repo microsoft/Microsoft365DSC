@@ -26,6 +26,9 @@
   * Updated all MSCloudLoginAssistant modules to version 1.0.116.
 * MISC
   * Updated QA tests to dynamically retrieve the permission list.
+* IntuneASRRulesPolicyWindows10
+  * Fix possible values for several properties both in the module and its schema
+    FIXES [#3434](https://github.com/microsoft/Microsoft365DSC/issues/3434)
 
 # 1.23.628.1
 
