@@ -90,7 +90,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
                     return @()
                 }
-                Mock -CommandName Get-MgDirectoryObject -MockWith {
+                Mock -CommandName Get-MgBetaDirectoryObject -MockWith {
                     return @{
                         Id                   = '12345678-1234-1234-1234-123456789012'
                         AdditionalProperties = @{

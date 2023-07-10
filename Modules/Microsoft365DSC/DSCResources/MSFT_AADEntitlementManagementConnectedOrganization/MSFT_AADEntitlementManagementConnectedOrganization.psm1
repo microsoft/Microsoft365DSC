@@ -318,7 +318,7 @@ function Set-TargetResource
 
         foreach ($sponsor in $ExternalSponsors)
         {
-            $directoryObject = Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
@@ -332,7 +332,7 @@ function Set-TargetResource
 
         foreach ($sponsor in $InternalSponsors)
         {
-            $directoryObject = Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
                 "@odata.id" = "https://graph.microsoft.com/beta/$($directoryObjectType)s/$($sponsor)"
@@ -374,7 +374,7 @@ function Set-TargetResource
         $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
         foreach ($sponsor in $sponsorsToAdd)
         {
-            $directoryObject = Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{
@@ -399,7 +399,7 @@ function Set-TargetResource
         $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
         foreach ($sponsor in $sponsorsToAdd)
         {
-            $directoryObject = Get-MgDirectoryObject -DirectoryObjectId $sponsor
+            $directoryObject = Get-MgBetaDirectoryObject -DirectoryObjectId $sponsor
             $directoryObjectType=$directoryObject.AdditionalProperties."@odata.type"
             $directoryObjectType=($directoryObject.AdditionalProperties."@odata.type").split(".")|select-object -last 1
             $directoryObjectRef=@{

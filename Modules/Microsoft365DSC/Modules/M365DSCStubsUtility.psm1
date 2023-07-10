@@ -60,7 +60,7 @@ function New-M365DSCStubFiles
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Identity.SignIns';},
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Teams'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Administration'; },
-            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DirectoryObjects'; },
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.DirectoryObjects'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Groups'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.DirectoryManagement'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Identity.Governance'; },
