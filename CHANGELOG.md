@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationEditionUpgradePolicyWindows10
+  * Initial release
+
 # 1.23.705.1
 
 * EXOAddressList
