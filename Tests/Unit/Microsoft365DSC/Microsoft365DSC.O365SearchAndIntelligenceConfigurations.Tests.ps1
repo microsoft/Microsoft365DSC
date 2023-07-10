@@ -36,13 +36,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Write-Host -MockWith {
             }
 
-            Mock -CommandName Update-MgOrganizationSettingItemInsight -MockWith {
+            Mock -CommandName Update-MgBetaOrganizationSettingItemInsight -MockWith {
             }
 
-            Mock -CommandName Update-MgOrganizationSettingPersonInsight -MockWith {
+            Mock -CommandName Update-MgBetaOrganizationSettingPersonInsight -MockWith {
             }
 
-            Mock -CommandName Get-MGGroup -MockWith {
+            Mock -CommandName Get-MgGroup -MockWith {
                 return @{
                     Id          = "12345-12345-12345-12345-12345"
                     DisplayName = "TestGroup"
@@ -61,14 +61,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                            = $Credential
                 }
 
-                Mock -CommandName Get-MgOrganizationSettingItemInsight -MockWith {
+                Mock -CommandName Get-MgBetaOrganizationSettingItemInsight -MockWith {
                     return @{
                         IsEnabledInOrganization = $True
                         DisabledForGroup        = "12345-12345-12345-12345-12345"
                     }
                 }
 
-                Mock -CommandName Get-MgOrganizationSettingPersonInsight -MockWith {
+                Mock -CommandName Get-MgBetaOrganizationSettingPersonInsight -MockWith {
                     return @{
                         IsEnabledInOrganization = $True
                         DisabledForGroup        = $null
@@ -96,14 +96,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                            = $Credential
                 }
 
-                Mock -CommandName Get-MgOrganizationSettingItemInsight -MockWith {
+                Mock -CommandName Get-MgBetaOrganizationSettingItemInsight -MockWith {
                     return @{
                         IsEnabledInOrganization = $True
                         DisabledForGroup        = "12345-12345-12345-12345-12345"
                     }
                 }
 
-                Mock -CommandName Get-MgOrganizationSettingPersonInsight -MockWith {
+                Mock -CommandName Get-MgBetaOrganizationSettingPersonInsight -MockWith {
                     return @{
                         IsEnabledInOrganization = $True
                         DisabledForGroup        = $null
@@ -133,14 +133,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Reverse Engineer resource from the Export method' {
 
-                Mock -CommandName Get-MgOrganizationSettingItemInsight -MockWith {
+                Mock -CommandName Get-MgBetaOrganizationSettingItemInsight -MockWith {
                     return @{
                         IsEnabledInOrganization = $True
                         DisabledForGroup        = "12345-12345-12345-12345-12345"
                     }
                 }
 
-                Mock -CommandName Get-MgOrganizationSettingPersonInsight -MockWith {
+                Mock -CommandName Get-MgBetaOrganizationSettingPersonInsight -MockWith {
                     return @{
                         IsEnabledInOrganization = $True
                         DisabledForGroup        = $null

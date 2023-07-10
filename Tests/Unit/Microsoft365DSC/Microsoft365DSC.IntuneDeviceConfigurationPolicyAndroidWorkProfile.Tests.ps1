@@ -32,19 +32,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Select-MGProfile -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementDeviceConfiguration -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementDeviceConfiguration -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceManagementDeviceConfiguration -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementDeviceConfiguration -MockWith {
-            }
-
-            Mock -CommandName Get-MgDeviceManagementDeviceConfigurationAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementDeviceConfigurationAssignment -MockWith {
                 return @()
             }
 
@@ -97,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                                = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return $null
                 }
             }
@@ -112,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the policy from the Set method' {
                 Set-TargetResource @TestParams
-                Should -Invoke -CommandName 'New-MgDeviceManagementDeviceConfiguration' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceManagementDeviceConfiguration' -Exactly 1
             }
         }
 
@@ -159,7 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                                = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         id                                                        = '12345-12345-12345-12345-12345'
                         AdditionalProperties                                      = @{
@@ -215,7 +212,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the policy from the Set method' {
                 Set-TargetResource @TestParams
-                Should -Invoke -CommandName Update-MgDeviceManagementDeviceConfiguration -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
 
@@ -263,7 +260,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                                                = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         id                   = '12345-12345-12345-12345-12345'
                         displayName          = 'Android Work Profile - Device Restrictions - Standard'
@@ -322,7 +319,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         id                   = '12345-12345-12345-12345-12345'
                         displayName          = 'Android Work Profile - Device Restrictions - Standard'
@@ -378,7 +375,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementDeviceConfiguration -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
 
@@ -390,7 +387,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementDeviceConfiguration -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         id                   = '12345-12345-12345-12345-12345'
                         displayName          = 'Android Work Profile - Device Restrictions - Standard'

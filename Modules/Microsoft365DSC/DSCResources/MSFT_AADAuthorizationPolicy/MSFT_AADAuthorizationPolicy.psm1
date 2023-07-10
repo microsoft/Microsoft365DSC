@@ -92,8 +92,7 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting configuration of AzureAD Authorization Policy'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -113,7 +112,7 @@ function Get-TargetResource
 
     try
     {
-        $Policy = Get-MgPolicyAuthorizationPolicy -ErrorAction Stop
+        $Policy = Get-MgBetaPolicyAuthorizationPolicy -ErrorAction Stop
     }
     catch
     {
@@ -155,12 +154,8 @@ function Get-TargetResource
             DefaultUserRoleAllowedToCreateApps                = $Policy.DefaultUserRolePermissions.AllowedToCreateApps
             DefaultUserRoleAllowedToCreateSecurityGroups      = $Policy.DefaultUserRolePermissions.AllowedToCreateSecurityGroups
             DefaultUserRoleAllowedToReadOtherUsers            = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
-            #v1.0 profile
             PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.DefaultUserRolePermissions.PermissionGrantPoliciesAssigned
-            #beta-profile
-            #PermissionGrantPolicyIdsAssignedToDefaultUserRole = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
             GuestUserRole                                     = Get-GuestUserRoleNameFromId -GuestUserRoleId $Policy.GuestUserRoleId
-            #Standard part
             Ensure                                            = 'Present'
             Credential                                        = $Credential
             ApplicationSecret                                 = $ApplicationSecret
@@ -355,7 +350,7 @@ function Set-TargetResource
     try
     {
         Write-Verbose -Message "Updating existing authorization policy with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
-        $response = Update-MgPolicyAuthorizationPolicy @updateParameters -ErrorAction Stop
+        $response = Update-MgBetaPolicyAuthorizationPolicy @updateParameters -ErrorAction Stop
     }
     catch
     {
@@ -525,8 +520,7 @@ function Export-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'v1.0'
+        -InboundParameters $PSBoundParameters
 
     try
     {

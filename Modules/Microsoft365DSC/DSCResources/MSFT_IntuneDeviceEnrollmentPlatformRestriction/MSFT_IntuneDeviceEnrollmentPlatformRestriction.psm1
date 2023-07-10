@@ -88,8 +88,7 @@ function Get-TargetResource
     )
     Write-Verbose -Message "Checking for the Intune Device Enrollment Restriction {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName beta
-    Select-MgProfile -Name beta
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -108,21 +107,7 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction silentlyContinue
-
-        <#
-        Not using the DisplayName as a key due to android profiles
-        Android profile are generated using 2 singlePlatformRestriction policies: 1 for android and 1 for androidForWork
-        Both policies have the same name
-
-        if ($null -eq $config)
-        {
-            Write-Verbose -Message "No Device Enrollment Platform Restriction {$Identity} was found"
-
-            $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" -ErrorAction silentlyContinue| Where-Object -FilterScript { `
-                    $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatform*Configuration' }
-        }
-        #>
+        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction silentlyContinue
 
         if ($null -eq $config)
         {
@@ -152,7 +137,7 @@ function Get-TargetResource
             $results.Remove('WindowsMobileRestriction') | Out-Null
         }
 
-        $AssignmentsValues = Get-MgDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
+        $AssignmentsValues = Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -337,7 +322,7 @@ function Set-TargetResource
 
         Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
 
-        $policy = New-MgDeviceManagementDeviceEnrollmentConfiguration `
+        $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -BodyParameter $PSBoundParameters
 
         #Assignments from DefaultPolicy are not editable and will raise an alert
@@ -393,7 +378,7 @@ function Set-TargetResource
         }
         $PSBoundParameters.add('@odata.type', $policyType)
         Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
-        Update-MgDeviceManagementDeviceEnrollmentConfiguration `
+        Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -BodyParameter $PSBoundParameters `
             -DeviceEnrollmentConfigurationId $Identity
 
@@ -413,10 +398,10 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Enrollment Platform Restriction {$DisplayName}"
-        $config = Get-MgDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
+        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
 
-        Remove-MgDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id
+        Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id
     }
 }
 
@@ -536,7 +521,7 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($source.getType().Name -like '*CimInstance*' -and $key -ne 'WindowsMobileRestriction')
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
@@ -551,7 +536,6 @@ function Test-TargetResource
             }
 
             $ValuesToCheck.Remove($key) | Out-Null
-
         }
     }
 
@@ -560,9 +544,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
-
-    #Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    #Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    $ValuesToCheck.Remove('WindowsMobileRestriction') | Out-Null
 
     #Convert any DateTime to String
     foreach ($key in $ValuesToCheck.Keys)
@@ -574,9 +556,12 @@ function Test-TargetResource
         }
     }
 
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
     #Compare basic parameters
     if ($testResult)
     {
+        Write-Verbose -Message "Comparing the current values with the desired ones"
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
@@ -623,8 +608,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters -ProfileName beta
-    Select-MgProfile -Name beta
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -640,7 +624,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-MgDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
+        [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
         | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatform*Configuration' }
 
         $i = 1
@@ -959,8 +943,6 @@ function Get-DevicePlatformRestrictionSetting
                 }
             }
             $results.add($keyName, $hash)
-
-            #$results.add($keyName,[Hashtable]::new($platformRestrictions.$key))
         }
     }
 

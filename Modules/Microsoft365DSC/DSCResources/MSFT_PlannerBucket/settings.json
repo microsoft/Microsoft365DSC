@@ -18,12 +18,12 @@
             "application": {
                 "read": [
                     {
-                        "name": "Tasks.Read"
+                        "name": "Tasks.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Tasks.ReadWrite"
+                        "name": "Tasks.ReadWrite.All"
                     }
                 ]
             }

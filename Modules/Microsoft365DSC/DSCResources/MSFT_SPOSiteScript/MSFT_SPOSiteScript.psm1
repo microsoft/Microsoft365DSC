@@ -299,8 +299,11 @@ function Set-TargetResource
             }
 
             ##### End of Check
-            $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
-            Set-PnPSiteScript @UpdateParams -ErrorAction Stop
+            if ($null -ne $UpdateParams)
+            {
+                $UpdateParams = Remove-NullEntriesFromHashtable -Hash $UpdateParams
+                Set-PnPSiteScript @UpdateParams -ErrorAction Stop
+            }
         }
         catch
         {

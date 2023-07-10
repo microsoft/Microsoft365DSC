@@ -640,7 +640,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$Alerts = Get-ProtectionAlert -ErrorAction Stop
+        [array]$Alerts = Get-ProtectionAlert -ErrorAction Stop | Where-Object -FilterScript {-not $_.IsSystemRule}
 
         $totalAlerts = $Alerts.Length
         if ($null -eq $totalAlerts)

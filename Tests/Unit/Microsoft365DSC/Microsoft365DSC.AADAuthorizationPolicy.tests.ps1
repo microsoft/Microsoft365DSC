@@ -71,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName New-M365DSCConnection -MockWith {
                     return 'Credentials'
                 }
-                Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
                         Id                                        = 'authorizationPolicy'
                         DisplayName                               = 'Authorization Policy'
@@ -95,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgPolicyAuthorizationPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaPolicyAuthorizationPolicy' -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -127,7 +127,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return 'Credentials'
                 }
 
-                Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
                         Id                                        = 'authorizationPolicy'
                         DisplayName                               = 'Authorization Policy'
@@ -149,14 +149,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
 
-                Mock -CommandName Update-MgPolicyAuthorizationPolicy -MockWith {
+                Mock -CommandName Update-MgBetaPolicyAuthorizationPolicy -MockWith {
                 }
 
             }
 
             It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgPolicyAuthorizationPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaPolicyAuthorizationPolicy' -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -165,7 +165,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Update-MgPolicyAuthorizationPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgBetaPolicyAuthorizationPolicy' -Exactly 1
             }
         }
 
@@ -181,7 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return 'Credentials'
                 }
 
-                Mock -CommandName Get-MgPolicyAuthorizationPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
                         DisplayName                               = 'Authorization Policy'
                         Description                               = 'something'

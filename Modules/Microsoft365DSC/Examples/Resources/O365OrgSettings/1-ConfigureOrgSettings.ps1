@@ -19,9 +19,9 @@ Configuration Example
         {
             AdminCenterReportDisplayConcealedNames     = $True;
             Credential                                 = $Credscredential;
-            Ensure                                     = "Present";
             IsSingleInstance                           = "Yes";
             M365WebEnableUsersToOpenFilesFrom3PStorage = $False;
+            PlannerAllowCalendarSharing                = $False
         }
     }
 }

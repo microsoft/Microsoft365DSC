@@ -103,8 +103,8 @@ Update-MgAdministrativeUnit,AdministrativeUnit.ReadWrite.All,AdministrativeUnit.
 Update-MgApplication,Application.ReadWrite.All,Application.ReadWrite.All
 Update-MgDirectoryAdministrativeUnitExtension,AdministrativeUnit.ReadWrite.All,AdministrativeUnit.ReadWrite.All
 Update-MgDirectorySetting,Directory.ReadWrite.All,Directory.ReadWrite.All
-Update-MgEntitlementManagementAccessPackage,EntitlementManagement.ReadWrite.All,EntitlementManagement.ReadWrite.All
-Update-MgEntitlementManagementAccessPackageCatalog,EntitlementManagement.ReadWrite.All,EntitlementManagement.ReadWrite.All
+Update-MgBetaEntitlementManagementAccessPackage,EntitlementManagement.ReadWrite.All,EntitlementManagement.ReadWrite.All
+Update-MgBetaEntitlementManagementAccessPackageCatalog,EntitlementManagement.ReadWrite.All,EntitlementManagement.ReadWrite.All
 Update-MgGroup,Group.ReadWrite.All,Group.ReadWrite.All
 Update-MgGroupLifecyclePolicy,Directory.ReadWrite.All,Directory.ReadWrite.All
 Update-MgIdentityConditionalAccessPolicy,Policy.Read.All/Policy.ReadWrite.ConditionalAccess,Policy.Read.All/Policy.ReadWrite.ConditionalAccess

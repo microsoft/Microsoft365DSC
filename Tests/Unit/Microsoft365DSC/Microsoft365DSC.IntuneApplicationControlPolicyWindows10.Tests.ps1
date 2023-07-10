@@ -33,13 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Remove-MgDeviceManagementIntent -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementIntent -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementIntent -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementIntent -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceManagementIntent -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementIntent -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -57,10 +57,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return $null
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return $null
                 }
             }
@@ -75,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the App Configuration Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgDeviceManagementIntent' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDeviceManagementIntent' -Exactly 1
             }
         }
 
@@ -94,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
                     return @{
                         Id          = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
                         TemplateId  = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description = 'Different Value'
                     }
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return @{
                         DisplayName  = 'Test App Configuration Policy'
                         Description  = 'Different Value'
@@ -111,7 +111,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ValueJSON    = "'true'"
                     }
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @(
                         @{
                             Target = @{
@@ -137,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the App Configuration Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementIntent -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementIntent -Exactly 1
             }
         }
 
@@ -156,7 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Test Definition'
@@ -165,7 +165,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return @{
                         DisplayName  = 'Test App Configuration Policy'
                         Description  = 'Test Definition'
@@ -174,7 +174,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ValueJSON    = "'true'"
                     }
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @(
                         @{
                             Target = @{
@@ -210,7 +210,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Test Definition'
@@ -219,7 +219,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return @{
                         DisplayName  = 'Test App Configuration Policy'
                         Description  = 'Test Definition'
@@ -228,7 +228,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ValueJSON    = "'true'"
                     }
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @(
                         @{
                             Target = @{
@@ -254,7 +254,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the App Configuration Policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementIntent -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementIntent -Exactly 1
             }
         }
 
@@ -266,7 +266,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntent -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
                     return @{
                         DisplayName = 'Test App Configuration Policy'
                         Description = 'Test Definition'
@@ -275,7 +275,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDeviceManagementIntentSetting -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
                     return @{
                         DisplayName  = 'Test App Configuration Policy'
                         Description  = 'Test Definition'
@@ -284,7 +284,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         ValueJSON    = "'true'"
                     }
                 }
-                Mock -CommandName Get-MgDeviceManagementIntentAssignment -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @(
                         @{
                             Target = @{

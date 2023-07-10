@@ -85,10 +85,7 @@ function Get-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters `
-            -ProfileName 'beta'
-
-        Select-MgProfile 'beta'
+            -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.
         Confirm-M365DSCDependencies
@@ -106,7 +103,7 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         $getValue = $null
-        $getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
+        $getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -AccessPackageAssignmentPolicyId $id `
             -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
             -ErrorAction SilentlyContinue
@@ -114,7 +111,7 @@ function Get-TargetResource
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "The access package assignment policy with id {$id} was not found"
-            $getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
+            $getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
                 -DisplayNameEq $DisplayName `
                 -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
                 -ErrorAction SilentlyContinue
@@ -130,9 +127,9 @@ function Get-TargetResource
 
         #region Format AccessReviewSettings
         $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
-        if ($null -ne $formattedAccessReviewSettings)
+        if($null -ne $formattedAccessReviewSettings)
         {
-            $formattedAccessReviewSettings.remove('additionalProperties')
+            $formattedAccessReviewSettings.remove('additionalProperties') | Out-Null
         }
         if ($null -ne $formattedAccessReviewSettings.Reviewers -and $formattedAccessReviewSettings.Reviewers.count -gt 0 )
         {
@@ -141,7 +138,7 @@ function Get-TargetResource
                 $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
                 if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
-                    $user = Get-MgUser -UserId $setting.AdditionalProperties.Id -ErrorAction SilentlyContinue
+                    $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
                     if ($null -ne $user)
                     {
                         $setting.add('Id', $user.UserPrincipalName)
@@ -151,7 +148,7 @@ function Get-TargetResource
                 {
                     $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                 }
-                $setting.remove('additionalProperties')
+                $setting.remove('additionalProperties') | Out-Null
             }
         }
         #endregion
@@ -160,7 +157,7 @@ function Get-TargetResource
         $formattedRequestApprovalSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestApprovalSettings
         if ($null -ne $formattedRequestApprovalSettings)
         {
-            $formattedRequestApprovalSettings.remove('additionalProperties')
+            $formattedRequestApprovalSettings.remove('additionalProperties') | Out-Null
         }
         if ($null -ne $formattedRequestApprovalSettings.approvalStages -and $formattedRequestApprovalSettings.approvalStages.count -gt 0 )
         {
@@ -179,7 +176,7 @@ function Get-TargetResource
                         {
                             $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                         }
-                        $setting.remove('additionalProperties')
+                        $setting.remove('additionalProperties') | Out-Null
                     }
                 }
 
@@ -196,10 +193,10 @@ function Get-TargetResource
                         {
                             $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                         }
-                        $setting.remove('additionalProperties')
+                        $setting.remove('additionalProperties') | Out-Null
                     }
                 }
-                $approvalStage.remove('additionalProperties')
+                $approvalStage.remove('additionalProperties') | Out-Null
             }
         }
         #endregion
@@ -208,16 +205,19 @@ function Get-TargetResource
         $formattedRequestorSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.RequestorSettings
         if ($null -ne $formattedRequestorSettings)
         {
-            $formattedRequestorSettings.remove('additionalProperties')
+            $formattedRequestorSettings.remove('additionalProperties') | Out-Null
         }
         if ($null -ne $formattedRequestorSettings.allowedRequestors -and $formattedRequestorSettings.allowedRequestors.count -gt 0 )
         {
             foreach ($setting in $formattedRequestorSettings.allowedRequestors)
             {
-                $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
-                if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
+                if (-not $setting.ContainsKey("odataType"))
                 {
-                    $user = Get-MgUser -UserId $setting.AdditionalProperties.Id -ErrorAction SilentlyContinue
+                    $setting.add('odataType',$setting.AdditionalProperties."@odata.type")
+                }
+                if(-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
+                {
+                    $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
                     if ($null -ne $user)
                     {
                         $setting.add('Id', $user.UserPrincipalName)
@@ -227,7 +227,7 @@ function Get-TargetResource
                 {
                     $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                 }
-                $setting.remove('additionalProperties')
+                $setting.remove('additionalProperties') | Out-Null
             }
         }
         #endregion
@@ -236,15 +236,18 @@ function Get-TargetResource
         $formattedQuestions = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.Questions
         foreach ($question in $formattedQuestions)
         {
-            $question.add('odataType', $question.AdditionalProperties.'@odata.type')
+            if (-not $question.ContainsKey("odataType"))
+            {
+                $question.add("odataType",$question.AdditionalProperties."@odata.type")
+            }
             if ($null -ne $question.Text)
             {
                 $question.add('QuestionText', $question.Text)
-                $question.remove('Text')
-                $question.QuestionText.remove('additionalProperties')
+                $question.remove('Text') | Out-Null
+                $question.QuestionText.remove('additionalProperties') | Out-Null
                 foreach ($localizedText in $question.QuestionText.localizedTexts)
                 {
-                    $localizedText.remove('additionalProperties')
+                    $localizedText.remove('additionalProperties') | Out-Null
                 }
             }
             if ($null -ne $question.AdditionalProperties.isSingleLineQuestion)
@@ -259,7 +262,7 @@ function Get-TargetResource
             {
                 $question.add('AllowsMultipleSelection', $question.AdditionalProperties.allowsMultipleSelection)
             }
-            $question.remove('additionalProperties')
+            $question.remove('additionalProperties') | Out-Null
         }
         #endregion
 
@@ -398,10 +401,7 @@ function Set-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
-
-    Select-MgProfile 'beta' -ErrorAction Stop
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -472,7 +472,7 @@ function Set-TargetResource
                 }
             }
         }
-        New-MgEntitlementManagementAccessPackageAssignmentPolicy `
+        New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -BodyParameter $CreateParameters
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -524,14 +524,14 @@ function Set-TargetResource
                 }
             }
         }
-        Set-MgEntitlementManagementAccessPackageAssignmentPolicy `
+        Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -BodyParameter $UpdateParameters `
             -AccessPackageAssignmentPolicyId $currentInstance.Id
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the access package assignment policy {$DisplayName}"
-        Remove-MgEntitlementManagementAccessPackageAssignmentPolicy -AccessPackageAssignmentPolicyId $currentInstance.Id
+        Remove-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -AccessPackageAssignmentPolicyId $currentInstance.Id
     }
 }
 
@@ -720,9 +720,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
-    Select-MgProfile 'beta' -ErrorAction Stop
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -738,7 +736,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-MgEntitlementManagementAccessPackageAssignmentPolicy `
+        [array]$getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -All `
             -ErrorAction Stop
 
@@ -1024,7 +1022,7 @@ function Rename-M365DSCCimInstanceParameter
             $property = $hashProperties.$key
             if ($null -ne $property)
             {
-                $hashProperties.Remove($key)
+                $hashProperties.Remove($key) | Out-Null
                 $hashProperties.add($keyName, (Rename-M365DSCCimInstanceParameter $property))
             }
         }

@@ -33,13 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-MgIdentityConditionalAccessPolicy -MockWith {
+            Mock -CommandName New-MgBetaIdentityConditionalAccessPolicy -MockWith {
             }
 
-            Mock -CommandName Update-MgIdentityConditionalAccessPolicy -MockWith {
+            Mock -CommandName Update-MgBetaIdentityConditionalAccessPolicy -MockWith {
             }
 
-            Mock -CommandName Remove-MGIdentityConditionalAccessPolicy -MockWith {
+            Mock -CommandName Remove-MgBetaIdentityConditionalAccessPolicy -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -92,7 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DeviceFilterRule                     = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
                 }
 
-                Mock -CommandName Get-MGIdentityConditionalAccessPolicy -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
                     return $null
                 }
                 Mock -CommandName Get-MgUser -MockWith {
@@ -107,16 +107,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Group 01'
                     }
                 }
-                Mock -CommandName Get-MGDirectoryRoleTemplate -MockWith {
+                Mock -CommandName Get-MgDirectoryRoleTemplate -MockWith {
                     return @{
                         Id          = '17315797-102d-40b4-93e0-432062caca18'
                         DisplayName = 'Compliance Administrator'
                     }
                 }
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         Id          = '9e4ca5f3-0ba9-4257-b906-74d3038ac970'
                         DisplayName = 'Contoso LAN'
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
+                    return @{
+                        Id          = "00000000-0000-0000-0000-000000000004"
+                        DisplayName = "Phishing-resistant MFA"
                     }
                 }
             }
@@ -131,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the policy in the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgIdentityConditionalAccessPolicy -Exactly 1
+                Should -Invoke -CommandName New-MgBetaIdentityConditionalAccessPolicy -Exactly 1
             }
         }
 
@@ -180,14 +187,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
                     return @{
                         Id          = "00000000-0000-0000-0000-000000000004"
                         DisplayName = "Phishing-resistant MFA"
                     }
                 }
 
-                Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
                     return @{
                         Id              = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
                         DisplayName     = 'Allin'
@@ -249,25 +256,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
-                Mock -CommandName Get-MGUser -MockWith {
+                Mock -CommandName Get-MgUser -MockWith {
                     return @{
                         Id                = '76d3c3f6-8269-462b-9385-37435cb33f1e'
                         UserPrincipalName = 'alexw@contoso.com'
                     }
                 }
-                Mock -CommandName Get-MGGroup -MockWith {
+                Mock -CommandName Get-MgGroup -MockWith {
                     return @{
                         Id          = 'f1eb1a09-c0c2-4df4-9e69-fee01f00db31'
                         DisplayName = 'Group 01'
                     }
                 }
-                Mock -CommandName Get-MGDirectoryRoleTemplate -MockWith {
+                Mock -CommandName Get-MgDirectoryRoleTemplate -MockWith {
                     return @{
                         Id          = '17315797-102d-40b4-93e0-432062caca18'
                         DisplayName = 'Compliance Administrator'
                     }
                 }
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         Id          = '9e4ca5f3-0ba9-4257-b906-74d3038ac970'
                         DisplayName = 'Contoso LAN'
@@ -285,7 +292,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the settings from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgIdentityConditionalAccessPolicy -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaIdentityConditionalAccessPolicy -Exactly 1
             }
         }
 
@@ -334,14 +341,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
                     return @{
                         Id          = "00000000-0000-0000-0000-000000000004"
                         DisplayName = "Phishing-resistant MFA"
                     }
                 }
 
-                Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
                     return @{
                         Id              = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
                         DisplayName     = 'Allin'
@@ -443,7 +450,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Compliance Administrator'
                     }
                 }
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         Id          = '9e4ca5f3-0ba9-4257-b906-74d3038ac970'
                         DisplayName = 'Contoso LAN'
@@ -499,14 +506,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DeviceFilterRule                         = 'device.isCompliant -eq True -or device.trustType -eq "ServerAD"'
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
                     return @{
                         Id          = "00000000-0000-0000-0000-000000000004"
                         DisplayName = "Phishing-resistant MFA"
                     }
                 }
 
-                Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
                     return @{
                         Id              = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
                         DisplayName     = 'Allin'
@@ -586,7 +593,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Compliance Administrator'
                     }
                 }
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         Id          = '9e4ca5f3-0ba9-4257-b906-74d3038ac970'
                         DisplayName = 'Contoso LAN'
@@ -604,7 +611,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgIdentityConditionalAccessPolicy -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaIdentityConditionalAccessPolicy -Exactly 1
             }
         }
 
@@ -616,14 +623,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgPolicyAuthenticationStrengthPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyAuthenticationStrengthPolicy -MockWith {
                     return @{
                         Id          = "00000000-0000-0000-0000-000000000004"
                         DisplayName = "Phishing-resistant MFA"
                     }
                 }
 
-                Mock -CommandName Get-MgIdentityConditionalAccessPolicy -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
                     return @{
                         Id              = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
                         DisplayName     = 'Allin'
@@ -703,7 +710,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Compliance Administrator'
                     }
                 }
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         Id          = '9e4ca5f3-0ba9-4257-b906-74d3038ac970'
                         DisplayName = 'Contoso LAN'

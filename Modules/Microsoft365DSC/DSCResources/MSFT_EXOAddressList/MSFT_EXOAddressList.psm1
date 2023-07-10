@@ -162,8 +162,15 @@ function Get-TargetResource
         {
             return $nullReturn
         }
-        $AddressLists = Get-AddressList -ErrorAction Stop
-        $AddressList = $AddressLists | Where-Object -FilterScript { $_.Name -eq $Name }
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            $AddressLists = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+        }
+        else
+        {
+            $AddressLists = Get-AddressList -ErrorAction Stop
+            $AddressList = $AddressLists | Where-Object -FilterScript { $_.Name -eq $Name }
+        }
 
         if ($null -eq $AddressList)
         {
@@ -705,8 +712,9 @@ function Export-TargetResource
             return ''
         }
         $dscContent = ''
-        [array]$addressLists = Get-Addresslist -ErrorAction Stop
-        if ($addressLists.Length -eq 0)
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-Addresslist -ErrorAction Stop
+        if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -716,9 +724,9 @@ function Export-TargetResource
         }
         $i = 1
 
-        foreach ($addressList in $addressLists)
+        foreach ($addressList in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($addressLists.Count)] $($addressList.Name)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($addressList.Name)" -NoNewline
             $params = @{
                 Name                  = $addressList.Name
                 Credential            = $Credential

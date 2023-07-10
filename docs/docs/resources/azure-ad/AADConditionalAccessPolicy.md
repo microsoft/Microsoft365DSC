@@ -76,11 +76,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - NotSupported
+    - Policy.Read.All
 
 - **Update**
 
-    - NotSupported
+    - Policy.ReadWrite.ConditionalAccess
 
 ## Examples
 

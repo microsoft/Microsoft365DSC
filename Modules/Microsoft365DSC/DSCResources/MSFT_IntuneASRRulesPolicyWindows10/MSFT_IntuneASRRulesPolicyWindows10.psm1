@@ -16,8 +16,9 @@ function Get-TargetResource
         [System.String]
         $Description,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
@@ -26,33 +27,39 @@ function Get-TargetResource
         [System.String]
         $AdvancedRansomewareProtectionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode' , 'disable' in next breaking change, don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
+        # In next Breaking Change set it to 'notConfigured', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -60,23 +67,27 @@ function Get-TargetResource
         [System.String[]]
         $AttackSurfaceReductionExcludedPaths,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
+        # In next Breaking Change set it to 'notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -89,8 +100,9 @@ function Get-TargetResource
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
@@ -99,8 +111,9 @@ function Get-TargetResource
         [System.String]
         $PreventCredentialStealingType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -146,7 +159,7 @@ function Get-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta' -ErrorAction Stop
+        -ErrorAction Stop
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -167,14 +180,14 @@ function Get-TargetResource
     {
         #Retrieve policy general settings
 
-        $policy = Get-MgDeviceManagementIntent -DeviceManagementIntentId $Identity -ErrorAction SilentlyContinue
+        $policy = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy with identity {$Identity} was found"
             if (-not [String]::IsNullOrEmpty($DisplayName))
             {
-                $policy = Get-MgDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+                $policy = Get-MgBetaDeviceManagementIntent -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
             }
         }
         if ($null -eq $policy)
@@ -184,7 +197,7 @@ function Get-TargetResource
         }
 
         #Retrieve policy specific settings
-        [array]$settings = Get-MgDeviceManagementIntentSetting `
+        [array]$settings = Get-MgBetaDeviceManagementIntentSetting `
             -DeviceManagementIntentId $policy.Id `
             -ErrorAction Stop
 
@@ -212,7 +225,7 @@ function Get-TargetResource
         $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgDeviceManagementIntentAssignment -DeviceManagementIntentId $policy.Id
+        $returnAssignments += Get-MgBetaDeviceManagementIntentAssignment -DeviceManagementIntentId $policy.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $returnAssignments)
         {
@@ -230,11 +243,22 @@ function Get-TargetResource
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
+        {
+            if (Assert-M365DSCIsNonInteractiveShell)
+            {
+                Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+            }
+        }
+        else
+        {
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return $nullResult
     }
@@ -257,8 +281,9 @@ function Set-TargetResource
         [System.String]
         $Description,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
@@ -267,33 +292,39 @@ function Set-TargetResource
         [System.String]
         $AdvancedRansomewareProtectionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode' , 'disable' in next breaking change, don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
+        # In next Breaking Change set it to 'notConfigured', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -301,23 +332,27 @@ function Set-TargetResource
         [System.String[]]
         $AttackSurfaceReductionExcludedPaths,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
+        # In next Breaking Change set it to 'notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -330,8 +365,9 @@ function Set-TargetResource
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
@@ -340,8 +376,9 @@ function Set-TargetResource
         [System.String]
         $PreventCredentialStealingType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -384,8 +421,7 @@ function Set-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -408,6 +444,49 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
+    $IncorrectParameters = @{
+        BlockPersistenceThroughWmiType                  = @("userDefined", "warn")
+        OfficeAppsOtherProcessInjectionType             = "userDefined"
+        OfficeAppsLaunchChildProcessType                = "userDefined"
+        OfficeAppsExecutableContentCreationOrLaunchType = "userDefined"
+        OfficeMacroCodeAllowWin32ImportsType            = "userDefined"
+        OfficeCommunicationAppsLaunchChildProcess       = "disable"
+        ScriptObfuscatedMacroCodeType                   = "userDefined"
+        ScriptDownloadedPayloadExecutionType            = @("userDefined", "warn")
+        ProcessCreationType                             = "userDefined"
+        UntrustedUSBProcessType                         = "userDefined"
+        UntrustedExecutableType                         = "userDefined"
+        EmailContentExecutionType                       = "userDefined"
+        GuardMyFoldersType                              = "userDefined"
+    }
+
+    $ExceptionMessage = $null
+    foreach ($Key in $PSBoundParameters.Keys)
+    {
+        $InvalidValue = $IncorrectParameters[$Key]
+        if (![string]::IsNullOrEmpty($InvalidValue))
+        {
+            $Value = $PSBoundParameters.$Key
+            if ($Value -in $InvalidValue)
+            {
+                $ExceptionMessage += "Property {0} set to invalid value {1}`n" -f $Key, $Value
+            }
+        }
+    }
+
+    if (![string]::IsNullOrEmpty($ExceptionMessage))
+    {
+        $ExceptionMessage += "Please update your configuration."
+        Write-Verbose -Message $ExceptionMessage
+
+        New-M365DSCLogEntry -Message $ExceptionMessage `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+
     $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
@@ -427,7 +506,7 @@ function Set-TargetResource
         $createParameters.add('Description', $Description)
         $createParameters.add('Settings', $settings)
         $createParameters.add('TemplateId', $policyTemplateID)
-        $policy = New-MgDeviceManagementIntent -BodyParameter $createParameters
+        $policy = New-MgBetaDeviceManagementIntent -BodyParameter $createParameters
 
         #region Assignments
         $assignmentsHash = @()
@@ -459,7 +538,7 @@ function Set-TargetResource
         $updateParameters = @{}
         $updateParameters.add('DisplayName', $DisplayName)
         $updateParameters.add('Description', $Description)
-        Update-MgDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -BodyParameter $updateParameters
+        Update-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -BodyParameter $updateParameters
 
         #Update-MgDeviceManagementIntent does not support updating the property settings
         #Update-MgDeviceManagementIntentSetting only support updating a single setting at a time
@@ -482,7 +561,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
-        Remove-MgDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -Confirm:$false
+        Remove-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -Confirm:$false
     }
 }
 
@@ -504,8 +583,9 @@ function Test-TargetResource
         [System.String]
         $Description,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
@@ -514,33 +594,39 @@ function Test-TargetResource
         [System.String]
         $AdvancedRansomewareProtectionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode' , 'disable' in next breaking change, don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
+        # In next Breaking Change set it to 'notConfigured', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -548,23 +634,27 @@ function Test-TargetResource
         [System.String[]]
         $AttackSurfaceReductionExcludedPaths,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
+        # In next Breaking Change set it to 'notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -577,8 +667,9 @@ function Test-TargetResource
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
@@ -587,8 +678,9 @@ function Test-TargetResource
         [System.String]
         $PreventCredentialStealingType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -764,8 +856,7 @@ function Export-TargetResource
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -785,7 +876,7 @@ function Export-TargetResource
     try
     {
         $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
-        [array]$policies = Get-MgDeviceManagementIntent `
+        [array]$policies = Get-MgBetaDeviceManagementIntent `
             -Filter "TemplateId eq '$policyTemplateID'" `
             -ErrorAction Stop `
             -All:$true
@@ -863,7 +954,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Message: Location header not present in redirection response.*")
+        $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -897,8 +988,8 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
         $TemplateId
     )
 
-    $templateCategoryId = (Get-MgDeviceManagementTemplateCategory -DeviceManagementTemplateId $TemplateId).Id
-    $templateSettings = Get-MgDeviceManagementTemplateCategoryRecommendedSetting `
+    $templateCategoryId = (Get-MgBetaDeviceManagementTemplateCategory -DeviceManagementTemplateId $TemplateId).Id
+    $templateSettings = Get-MgBetaDeviceManagementTemplateCategoryRecommendedSetting `
         -DeviceManagementTemplateId $TemplateId `
         -DeviceManagementTemplateSettingCategoryId $templateCategoryId
 

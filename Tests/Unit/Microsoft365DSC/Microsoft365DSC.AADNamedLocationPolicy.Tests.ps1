@@ -32,13 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgIdentityConditionalAccessNamedLocation -MockWith {
-            }
-
-            Mock -CommandName Remove-MgIdentityConditionalAccessNamedLocation -MockWith {
-            }
-
-            Mock -CommandName New-MgIdentityConditionalAccessNamedLocation -MockWith {
+            Mock -CommandName Remove-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -66,14 +60,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return $null
                 }
             }
 
             It 'Should return values from the get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName 'Get-MgIdentityConditionalAccessNamedLocation' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaIdentityConditionalAccessNamedLocation' -Exactly 1
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
@@ -93,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         DisplayName          = 'Company Network'
                         Id                   = '046956df-2367-4dd4-b7fd-c6175ec11cd5'
@@ -110,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName 'Get-MgIdentityConditionalAccessNamedLocation' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaIdentityConditionalAccessNamedLocation' -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -119,7 +113,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-MgIdentityConditionalAccessNamedLocation' -Exactly 1
+                Should -Invoke -CommandName 'Remove-MgBetaIdentityConditionalAccessNamedLocation' -Exactly 1
             }
         }
 
@@ -134,7 +128,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         DisplayName          = 'Company Network'
                         Id                   = '046956df-2367-4dd4-b7fd-c6175ec11cd5'
@@ -151,7 +145,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgIdentityConditionalAccessNamedLocation' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaIdentityConditionalAccessNamedLocation' -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -170,7 +164,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential  = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         DisplayName          = 'Company Network'
                         Id                   = '046956df-2367-4dd4-b7fd-c6175ec11cd5'
@@ -185,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgIdentityConditionalAccessNamedLocation' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaIdentityConditionalAccessNamedLocation' -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -205,7 +199,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgIdentityConditionalAccessNamedLocation -MockWith {
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
                     return @{
                         DisplayName          = 'Company Network'
                         Id                   = '046956df-2367-4dd4-b7fd-c6175ec11cd5'

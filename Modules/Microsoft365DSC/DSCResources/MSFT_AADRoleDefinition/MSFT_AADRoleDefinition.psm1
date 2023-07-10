@@ -68,8 +68,7 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting configuration of Azure AD role definition'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -91,7 +90,14 @@ function Get-TargetResource
         {
             if (($null -ne $Id) -and ($Id -ne ''))
             {
-                $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "Id eq '$($Id)'"
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $AADRoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                }
+                else
+                {
+                    $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "Id eq '$($Id)'"
+                }
             }
         }
         catch
@@ -100,7 +106,14 @@ function Get-TargetResource
         }
         if ($null -eq $AADRoleDefinition)
         {
-            $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
+            if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+            {
+                $AADRoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            }
+            else
+            {
+                $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
+            }
         }
         if ($null -eq $AADRoleDefinition)
         {
@@ -351,11 +364,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('TemplateId') | Out-Null
 
@@ -404,8 +412,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters `
-        -ProfileName 'Beta'
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -423,14 +430,15 @@ function Export-TargetResource
     $i = 1
     try
     {
-        [array]$AADRoleDefinitions = Get-MgRoleManagementDirectoryRoleDefinition -Filter $Filter -All:$true -ErrorAction Stop
-        if ($AADRoleDefinitions.Length -gt 0)
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-MgRoleManagementDirectoryRoleDefinition -Filter $Filter -All:$true -ErrorAction Stop
+        if ($Script:exportedInstances.Length -gt 0)
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($AADRoleDefinition in $AADRoleDefinitions)
+        foreach ($AADRoleDefinition in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($AADRoleDefinitions.Count)] $($AADRoleDefinition.DisplayName)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADRoleDefinition.DisplayName)" -NoNewline
             $Params = @{
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

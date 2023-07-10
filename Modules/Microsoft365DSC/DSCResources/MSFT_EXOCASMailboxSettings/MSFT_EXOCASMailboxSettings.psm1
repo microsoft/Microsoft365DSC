@@ -210,7 +210,14 @@ function Get-TargetResource
 
     try
     {
-        $mailboxCasSettings = Get-CASMailbox -Identity $Identity -ErrorAction Stop
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            $mailboxCasSettings = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+        }
+        else
+        {
+            $mailboxCasSettings = Get-CASMailbox -Identity $Identity -ErrorAction Stop
+        }
     }
     catch
     {
@@ -747,10 +754,11 @@ function Export-TargetResource
 
     try
     {
-        [array]$mailboxes = Get-CASMailbox -ResultSize 'Unlimited'
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-CASMailbox -ResultSize 'Unlimited'
 
         $i = 1
-        if ($mailboxes.Length -eq 0)
+        if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -759,9 +767,9 @@ function Export-TargetResource
             Write-Host "`r`n"-NoNewline
         }
         $dscContent = ''
-        foreach ($mailbox in $mailboxes)
+        foreach ($mailbox in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Length)] $($mailbox.Name)" -NoNewline
             $mailboxName = $mailbox.Identity
             if (![System.String]::IsNullOrEmpty($mailboxName))
             {

@@ -358,7 +358,7 @@ function New-M365DSCConnection
         [Parameter(Mandatory = $true)]
         [ValidateSet('ExchangeOnline', 'Intune', `
                 'SecurityComplianceCenter', 'MSOnline', 'PnP', 'PowerPlatforms', `
-                'MicrosoftTeams', 'MicrosoftGraph')]
+                'MicrosoftTeams', 'MicrosoftGraph', 'Tasks')]
         [System.String]
         $Workload,
 
@@ -372,12 +372,7 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.Boolean]
-        $SkipModuleReload,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('v1.0', 'beta')]
-        $ProfileName = 'v1.0'
+        $SkipModuleReload
     )
 }
 
