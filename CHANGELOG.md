@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Fixes cmdlet to use Get-MgBetaOrganization in the Get-M365DSCTenantDomain function.
+    FIXES [#3449](https://github.com/microsoft/Microsoft365DSC/issues/3449)
+
 # 1.23.705.1
 
 * EXOAddressList
