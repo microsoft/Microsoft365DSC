@@ -2,6 +2,7 @@
 
 # UNRELEASED
 
+* DRG
   * General cleanup from generated resources from DRG
     * Added module M365DSCDRGUtil.psm1
     * Fix issues on several resources
@@ -9,6 +10,9 @@
     * Fix unit test on several resources
     * Removed helper resources centralized in M365DSCDRGUtil from all resources
       FIXES [#3309](https://github.com/microsoft/Microsoft365DSC/issues/3309)
+* MISC
+  * Fixes cmdlet to use Get-MgBetaOrganization in the Get-M365DSCTenantDomain function.
+    FIXES [#3449](https://github.com/microsoft/Microsoft365DSC/issues/3449)
 
 # 1.23.705.1
 
@@ -36,6 +40,9 @@
   * Updated all MSCloudLoginAssistant modules to version 1.0.116.
 * MISC
   * Updated QA tests to dynamically retrieve the permission list.
+* IntuneASRRulesPolicyWindows10
+  * Fix possible values for several properties both in the module and its schema
+    FIXES [#3434](https://github.com/microsoft/Microsoft365DSC/issues/3434)
 
 # 1.23.628.1
 
