@@ -445,16 +445,16 @@ function Get-M365DSCDRGComplexTypeToString
     return $currentProperty
 }
 
-Function Get-M365DSCDRGSimpleObjectTypeToString
+function Get-M365DSCDRGSimpleObjectTypeToString
 {
     [CmdletBinding()]
     [OutputType([System.String])]
     param(
-        [Parameter(Mandatory = 'true')]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Key,
 
-        [Parameter(Mandatory = 'true')]
+        [Parameter(Mandatory = $true)]
         $Value,
 
         [Parameter()]
@@ -682,7 +682,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     [CmdletBinding()]
     [OutputType([hashtable], [hashtable[]])]
     param(
-        [Parameter(Mandatory = 'true')]
+        [Parameter(Mandatory = $true)]
         $ComplexObject
     )
 
@@ -879,11 +879,11 @@ function Get-SettingCatalogPolicySettingsFromTemplate
     [OutputType([System.Array])]
     param
     (
-        [Parameter(Mandatory = 'true')]
+        [Parameter(Mandatory = $true)]
         [System.Collections.Hashtable]
         $DSCParams,
 
-        [Parameter(Mandatory = 'true')]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $templateReferenceId
     )
@@ -978,7 +978,7 @@ function New-IntuneSettingCatalogPolicy
     param
     (
 
-        [Parameter(Mandatory = 'true')]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Name,
 
@@ -1037,7 +1037,7 @@ function Update-IntuneSettingCatalogPolicy
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = 'true')]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DeviceConfigurationPolicyId,
 
@@ -1099,7 +1099,7 @@ function Update-DeviceConfigurationPolicyAssignment
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param (
-        [Parameter(Mandatory = 'true')]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DeviceConfigurationPolicyId,
 
