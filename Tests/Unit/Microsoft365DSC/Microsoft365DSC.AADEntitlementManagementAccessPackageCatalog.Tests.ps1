@@ -205,15 +205,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaEntitlementManagementAccessPackage -MockWith {
                     return @([PSCustomObject]@{
-                        Catalog = @{
+                        CatalogId = 'FakeStringValue'
+                        })
+                }
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
+                    return [PSCustomObject]@{
                             CatalogStatus       = 'FakeStringValue'
                             CatalogType         = 'UserManaged'
                             Description         = 'FakeStringValue'
                             DisplayName         = 'FakeStringValue'
                             Id                  = 'FakeStringValue'
                             IsExternallyVisible = $True
-                        }
-                    })
+                    }
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

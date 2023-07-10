@@ -179,6 +179,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdditionalProperties = $null
                     }
                 }
+                Mock -CommandName Update-DeviceManagementConfigurationPolicy -MockWith {
+                }
             }
 
             It 'Should return Present from the Get method' {
@@ -191,7 +193,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Update-DeviceManagementConfigurationPolicy -Exactly 1
             }
         }
 
