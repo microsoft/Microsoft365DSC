@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* O365OrgSettings
+  * Introduced a workaround to fix an issue with the ExchangeOnlineManagement module where if connected to Security and Compliance center
+    an error about an invalid token would get thrown when calling the Get-DefaultTenantMyAnalyticsFeatureConfig cmdlet.
 * SPOApp
   * Fixes an issue where the extraction was complaining about op_addition failing.
 * DRG
