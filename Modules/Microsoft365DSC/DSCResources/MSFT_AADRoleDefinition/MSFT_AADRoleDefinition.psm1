@@ -96,7 +96,7 @@ function Get-TargetResource
                 }
                 else
                 {
-                    $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "Id eq '$($Id)'"
+                    $AADRoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "Id eq '$($Id)'"
                 }
             }
         }
@@ -112,7 +112,7 @@ function Get-TargetResource
             }
             else
             {
-                $AADRoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
+                $AADRoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($DisplayName)'"
             }
         }
         if ($null -eq $AADRoleDefinition)
@@ -259,7 +259,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating New AzureAD role defition {$DisplayName}"
         $currentParameters.Remove('Id') | Out-Null
-        New-MgRoleManagementDirectoryRoleDefinition @currentParameters
+        New-MgBetaRoleManagementDirectoryRoleDefinition @currentParameters
     }
     # Role definition should exist and will be configured to desired state
     if ($Ensure -eq 'Present' -and $currentAADRoleDef.Ensure -eq 'Present')
@@ -267,13 +267,13 @@ function Set-TargetResource
         Write-Verbose -Message "Updating existing AzureAD role definition {$DisplayName}"
         $currentParameters.Add('UnifiedRoleDefinitionId', $currentAADRoleDef.Id)
         $currentParameters.Remove('Id') | Out-Null
-        Update-MgRoleManagementDirectoryRoleDefinition @currentParameters
+        Update-MgBetaRoleManagementDirectoryRoleDefinition @currentParameters
     }
     # Role definition exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADRoleDef.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AzureAD role definition {$DisplayName}"
-        Remove-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $currentAADRoleDef.Id
+        Remove-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $currentAADRoleDef.Id
     }
 }
 
@@ -431,7 +431,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgRoleManagementDirectoryRoleDefinition -Filter $Filter -All:$true -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter $Filter -All:$true -ErrorAction Stop
         if ($Script:exportedInstances.Length -gt 0)
         {
             Write-Host "`r`n" -NoNewline

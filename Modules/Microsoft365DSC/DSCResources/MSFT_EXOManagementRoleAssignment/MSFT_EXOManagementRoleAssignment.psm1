@@ -138,7 +138,7 @@ function Get-TargetResource
             {
                 $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                     -InboundParameters $PSBoundParameters
-                $adminUnit = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $roleAssignment.CustomRecipientWriteScope
+                $adminUnit = Get-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $roleAssignment.CustomRecipientWriteScope
 
                 if ($RecipientAdministrativeUnitScope -eq $adminUnit.Id)
                 {
@@ -324,10 +324,10 @@ function Set-TargetResource
         $NewManagementRoleParams.Remove('CustomRecipientWriteScope') | Out-Null
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
-        $adminUnit = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $RecipientAdministrativeUnitScope -ErrorAction SilentlyContinue
+        $adminUnit = Get-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $RecipientAdministrativeUnitScope -ErrorAction SilentlyContinue
         if ($null -eq $adminUnit)
         {
-            $adminUnit = Get-MgDirectoryAdministrativeUnit -All | Where-Object -FilterScript { $_.DisplayName -eq $RecipientAdministrativeUnitScope }
+            $adminUnit = Get-MgBetaDirectoryAdministrativeUnit -All | Where-Object -FilterScript { $_.DisplayName -eq $RecipientAdministrativeUnitScope }
         }
         $NewManagementRoleParams.RecipientAdministrativeUnitScope = $adminUnit.Id
     }

@@ -253,7 +253,7 @@ function Get-TargetResource
         }
 
         $myAssignments = @()
-        $myAssignments += Get-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $devicePolicy.id -repository 'deviceCompliancePolicies'
+        $myAssignments += Get-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $devicePolicy.id -repository 'deviceCompliancePolicies'
         $results.Add('Assignments', $myAssignments)
         return [System.Collections.Hashtable] $results
     }
@@ -501,7 +501,7 @@ function Set-TargetResource
             $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
 
         }
-        Update-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
+        Update-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
             -Targets $assignmentsHash `
             -Repository deviceCompliancePolicies
 
@@ -529,7 +529,7 @@ function Set-TargetResource
             $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
 
         }
-        Update-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $configDevicePolicy.id `
+        Update-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $configDevicePolicy.id `
             -Targets $assignmentsHash `
             -Repository deviceCompliancePolicies
     }
@@ -1082,7 +1082,7 @@ function Get-M365DSCAssignmentsAsHashtable
     }
     return $CIMAssignmentAsHash
 }
-function Get-MgBetaDeviceManagementPolicyAssignments
+function Get-M365DSCDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     param (
@@ -1141,7 +1141,7 @@ function Get-MgBetaDeviceManagementPolicyAssignments
     }
 }
 
-function Update-MgBetaDeviceManagementPolicyAssignments
+function Update-M365DSCDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]

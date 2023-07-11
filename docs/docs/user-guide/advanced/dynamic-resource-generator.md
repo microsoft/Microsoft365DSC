@@ -12,7 +12,7 @@ The DRG files are located at the root of the project under the /ResourceGenerato
 ---|---|---|---|
 |ResourceName|**True**|String|The name of the resource to be generated. E.g., AADDomain, IntuneResourcex, etc.|
 |Workload|**True**|String. Any of: "ExchangeOnline", "Intune", "MicrosoftGraph", "MicrosoftTeams", "PnP", "PowerPlatforms", "SecurityComplianceCenter"|The name of the Microsoft 365 workload associated with the resource to be generated|
-|CmdLetNoun|False|String|The noun part of the cmdlet associated with the resource. E.g., for the AADDomain resource, the associated cmdlets is Get-MgDomain. Therefore the value for this property is 'MgDomain'.|
+|CmdLetNoun|False|String|The noun part of the cmdlet associated with the resource. E.g., for the AADDomain resource, the associated cmdlets is Get-MgBetaDomain. Therefore the value for this property is 'MgDomain'.|
 |Path|False|String|Local path to the root DSCResources folder where all the DSC Resources are being stored (e.g., C:\Github\Microsoft365DSC\Modules\Microsoft365DSC\DSCResources)|
 |UnitTestPath|False|String|Local path to the root of the unit test folder (e.g., C:\GitHub\Microsoft365DSC\Tests\Unit\Microsoft365DSC)|
 |ExampleFilePath|False|String|Local path to the root of the examples Ressources' folder (e.g. C:\GitHub\Microsoft365DSC\Modules\Microsoft365DSC\Examples\Resources)|

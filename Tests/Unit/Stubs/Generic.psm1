@@ -191,7 +191,7 @@ function New-MGServicePrincipal
     )
 }
 
-function New-MgRoleManagementDirectoryRoleDefinition
+function New-MgBetaRoleManagementDirectoryRoleDefinition
 {
     [CmdletBinding()]
     param(
@@ -229,7 +229,7 @@ function New-MgRoleManagementDirectoryRoleDefinition
     )
 }
 
-function Update-MgRoleManagementDirectoryRoleDefinition
+function Update-MgBetaRoleManagementDirectoryRoleDefinition
 {
     [CmdletBinding()]
     param(
@@ -271,7 +271,7 @@ function Update-MgRoleManagementDirectoryRoleDefinition
     )
 }
 
-function Remove-MgRoleManagementDirectoryRoleDefinition
+function Remove-MgBetaRoleManagementDirectoryRoleDefinition
 {
     [CmdletBinding()]
     param(
