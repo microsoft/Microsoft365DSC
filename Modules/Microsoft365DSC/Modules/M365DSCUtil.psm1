@@ -2387,8 +2387,8 @@ function Get-AllSPOPackages
         {
             try
             {
-                $spfxFiles = Find-PnPFile -List 'AppCatalog' -Match '*.sppkg' -ErrorAction Stop
-                $appFiles = Find-PnPFile -List 'AppCatalog' -Match '*.app' -ErrorAction Stop
+                [Array]$spfxFiles = Find-PnPFile -List 'AppCatalog' -Match '*.sppkg' -ErrorAction Stop
+                [Array]$appFiles = Find-PnPFile -List 'AppCatalog' -Match '*.app' -ErrorAction Stop
 
                 $allFiles = $spfxFiles + $appFiles
 

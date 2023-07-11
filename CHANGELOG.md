@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* SPOApp
+  * Fixes an issue where the extraction was complaining about op_addition failing.
 * DRG
   * General cleanup from generated resources from DRG
     * Added module M365DSCDRGUtil.psm1
