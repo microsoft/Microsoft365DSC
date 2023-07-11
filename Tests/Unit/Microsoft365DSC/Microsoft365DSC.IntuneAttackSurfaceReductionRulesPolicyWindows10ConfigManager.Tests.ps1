@@ -50,13 +50,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignments -MockWith {
-                return $null
-            }
-
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
         }
 
         # Test contexts

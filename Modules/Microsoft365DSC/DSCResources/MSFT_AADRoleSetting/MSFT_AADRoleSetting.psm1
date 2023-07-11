@@ -220,7 +220,7 @@ function Get-TargetResource
         if ($null -eq $Script:PolicyAssignments)
         {
             $allFilter = "scopeId eq '/' and scopeType eq 'DirectoryRole'"
-            $Script:PolicyAssignments = Get-MgPolicyRoleManagementPolicyAssignment -Filter $allFilter -All
+            $Script:PolicyAssignments = Get-MgBetaPolicyRoleManagementPolicyAssignment -Filter $allFilter -All
         }
         $Policy = $Script:PolicyAssignments | Where-Object -FilterScript {$_.RoleDefinitionId -eq $Id}
     }
@@ -243,7 +243,7 @@ function Get-TargetResource
     }
     else
     {
-        $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
+        $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
     }
 
     if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($Displayname))
@@ -254,12 +254,12 @@ function Get-TargetResource
         }
         else
         {
-            $RoleDefinition = Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
+            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
         }
     }
 
     #get Policyrule
-    $role = Get-MgPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
+    $role = Get-MgBetaPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
 
     $DisplayName = $RoleDefinition.DisplayName
     $ActivationMaxDuration = ($role | Where-Object { $_.Id -eq 'Expiration_EndUser_Assignment' }).AdditionalProperties.maximumDuration
@@ -600,9 +600,9 @@ function Set-TargetResource
     #get role
     [string]$Filter = $null
     $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '" + $Id + "'"
-    $Policy = Get-MgPolicyRoleManagementPolicyAssignment -Filter $Filter
+    $Policy = Get-MgBetaPolicyRoleManagementPolicyAssignment -Filter $Filter
     #get Policyrule
-    $roles = Get-MgPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
+    $roles = Get-MgBetaPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
 
     foreach ($role in $roles)
     {
@@ -1072,7 +1072,7 @@ function Set-TargetResource
         {
             try
             {
-                Update-MgPolicyRoleManagementPolicyRule `
+                Update-MgBetaPolicyRoleManagementPolicyRule `
                     -UnifiedRoleManagementPolicyId $Policy.Policyid `
                     -UnifiedRoleManagementPolicyRuleId $role.id `
                     -BodyParameter $params `
@@ -1370,7 +1370,7 @@ function Export-TargetResource
 
     try
     {
-        Get-MgPolicyRoleManagementPolicyAssignment -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'" -ErrorAction Stop | Out-Null
+        Get-MgBetaPolicyRoleManagementPolicyAssignment -Filter "scopeId eq '/' and scopeType eq 'DirectoryRole'" -ErrorAction Stop | Out-Null
     }
     catch
     {
@@ -1383,7 +1383,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgRoleManagementDirectoryRoleDefinition -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaRoleManagementDirectoryRoleDefinition -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline

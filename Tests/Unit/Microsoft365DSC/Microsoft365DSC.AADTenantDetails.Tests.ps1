@@ -32,7 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgOrganization -MockWith {
+            Mock -CommandName Update-MgBetaOrganization -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance                     = 'Yes'
                 }
 
-                Mock -CommandName Get-MgOrganization -MockWith {
+                Mock -CommandName Get-MgBetaOrganization -MockWith {
                     $result = @{
                         MarketingNotificationEmails          = ''
                         SecurityComplianceNotificationMails  = ''
@@ -82,7 +82,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance                     = 'Yes'
                 }
 
-                Mock -CommandName Get-MgOrganization -MockWith {
+                Mock -CommandName Get-MgBetaOrganization -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name MarketingNotificationEmails -Value '' #should not be
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value ''
@@ -108,7 +108,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance                     = 'Yes'
                 }
 
-                Mock -CommandName Get-MgOrganization -MockWith {
+                Mock -CommandName Get-MgBetaOrganization -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name MarketingNotificationEmails -Value 'exapmle@contoso.com'
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value 'exapmle@contoso.com'
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgOrganization' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaOrganization' -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance                     = 'Yes'
                 }
 
-                Mock -CommandName Get-MgOrganization -MockWith {
+                Mock -CommandName Get-MgBetaOrganization -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name MarketingNotificationEmails -Value 'exapmle@contoso.com'
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name SecurityComplianceNotificationMails -Value 'exapmle@contoso.com'
@@ -152,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgOrganization' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaOrganization' -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -161,7 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Update-MgOrganization' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgBetaOrganization' -Exactly 1
             }
         }
 
@@ -173,7 +173,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgOrganization -MockWith {
+                Mock -CommandName Get-MgBetaOrganization -MockWith {
                     $AADTenantDetails = New-Object PSCustomObject
                     $AADTenantDetails | Add-Member -MemberType NoteProperty -Name IsSingleInstance -Value 'Yes'
                     return $AADTenantDetails

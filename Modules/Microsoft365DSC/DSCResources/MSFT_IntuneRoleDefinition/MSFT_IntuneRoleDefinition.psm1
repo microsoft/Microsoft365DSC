@@ -246,7 +246,7 @@ function Set-TargetResource
             $ScopeRoleTags = @()
             foreach ($roleScopeTagId in $roleScopeTagIds)
             {
-                $Tag = Get-MgDeviceManagementRoleScopeTag -RoleScopeTagId $roleScopeTagId -ErrorAction SilentlyContinue
+                $Tag = Get-MgBetaDeviceManagementRoleScopeTag -RoleScopeTagId $roleScopeTagId -ErrorAction SilentlyContinue
                 if ($null -ne $Tag)
                 {
                     $ScopeRoleTags += $Tag.Id
@@ -282,7 +282,7 @@ function Set-TargetResource
             $ScopeRoleTags = @()
             foreach ($roleScopeTagId in $roleScopeTagIds)
             {
-                $Tag = Get-MgDeviceManagementRoleScopeTag -RoleScopeTagId $roleScopeTagId -ErrorAction SilentlyContinue
+                $Tag = Get-MgBetaDeviceManagementRoleScopeTag -RoleScopeTagId $roleScopeTagId -ErrorAction SilentlyContinue
                 if ($null -ne $Tag)
                 {
                     $ScopeRoleTags += $Tag.Id

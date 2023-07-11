@@ -460,7 +460,7 @@ function Set-TargetResource
     $licensesToRemove = @()
     [Array]$AllLicenses = Get-M365DSCCombinedLicenses -DesiredLicenses $AssignedLicenses -CurrentLicenses $currentGroup.AssignedLicenses
 
-    $allSkus = Get-MgSubscribedSku
+    $allSkus = Get-MgBetaSubscribedSku
     # Create complete list of all Service Plans
     $allServicePlans = @()
     Write-Verbose -Message 'Getting all Service Plans'
@@ -758,12 +758,12 @@ function Set-TargetResource
             {
                 try
                 {
-                    $role = Get-MgDirectoryRole -Filter "DisplayName eq '$($diff.InputObject)'"
+                    $role = Get-MgBetaDirectoryRole -Filter "DisplayName eq '$($diff.InputObject)'"
                     # If the role hasn't been activated, we need to get the role template ID to first activate the role
                     if ($null -eq $role)
                     {
-                        $adminRoleTemplate = Get-MgDirectoryRoleTemplate | Where-Object { $_.DisplayName -eq $diff.InputObject }
-                        $role = New-MgDirectoryRole -RoleTemplateId $adminRoleTemplate.Id
+                        $adminRoleTemplate = Get-MgBetaDirectoryRoleTemplate | Where-Object { $_.DisplayName -eq $diff.InputObject }
+                        $role = New-MgBetaDirectoryRole -RoleTemplateId $adminRoleTemplate.Id
                     }
                 }
                 catch
@@ -782,12 +782,12 @@ function Set-TargetResource
                         $DirObject = @{
                             '@odata.id' = "https://graph.microsoft.com/v1.0/directoryObjects/$($currentGroup.Id)"
                         }
-                        New-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -BodyParameter $DirObject | Out-Null
+                        New-MgBetaDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -BodyParameter $DirObject | Out-Null
                     }
                     elseif ($diff.SideIndicator -eq '<=')
                     {
                         Write-Verbose -Message "Removing AAD group {$($currentGroup.DisplayName)} from Directory Role {$($role.DisplayName)}"
-                        Remove-MgDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
+                        Remove-MgBetaDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
                     }
                 }
             }
@@ -1113,7 +1113,7 @@ function Get-M365DSCAzureADGroupLicenses
     )
 
     $returnValue = @()
-    $allSkus = Get-MgSubscribedSku
+    $allSkus = Get-MgBetaSubscribedSku
 
     # Create complete list of all Service Plans
     $allServicePlans = @()

@@ -33,7 +33,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Update-MgUser -MockWith {
             }
-            Mock -CommandName Get-MgRoleManagementDirectoryRoleAssignment -MockWith {
+            Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleAssignment -MockWith {
                 return @()
             }
 
@@ -62,7 +62,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgSubscribedSku -MockWith {
+                Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
                     return @{
                         SkuPartNumber = 'ENTERPRISE_PREMIUM'
                         SkuID         = '12345-12345-12345-12345-12345'
@@ -115,7 +115,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         })
                 }
 
-                Mock -CommandName Get-MgSubscribedSku -MockWith {
+                Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
                     return @{
                         SkuPartNumber = 'ENTERPRISE_PREMIUM'
                         SkuID         = '12345-12345-12345-12345-12345'
@@ -165,7 +165,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         })
                 }
 
-                Mock -CommandName Get-MgSubscribedSku -MockWith {
+                Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
                     return @{
                         SkuPartNumber = 'ENTERPRISE_PREMIUM'
                         SkuID         = '12345-12345-12345-12345-12345'
@@ -206,7 +206,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgSubscribedSku -MockWith {
+                Mock -CommandName Get-MgBetaSubscribedSku -MockWith {
                     return @{
                         SkuPartNumber = 'ENTERPRISE_PREMIUM'
                         SkuID         = '12345-12345-12345-12345-12345'

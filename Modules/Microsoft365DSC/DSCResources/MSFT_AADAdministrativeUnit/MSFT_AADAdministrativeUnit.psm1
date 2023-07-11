@@ -105,12 +105,12 @@ function Get-TargetResource
         #region resource generator code
         if (-Not [string]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction Stop
+            $getValue = Get-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction Stop
         }
 
         if (-not $getValue -and -Not [string]::IsNullOrEmpty($DisplayName))
         {
-            $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+            $getValue = Get-MgBetaDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
         }
         #endregion
 
@@ -127,7 +127,7 @@ function Get-TargetResource
             }
             else
             {
-                $getValue = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction SilentlyContinue
+                $getValue = Get-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction SilentlyContinue
             }
         }
 
@@ -142,7 +142,7 @@ function Get-TargetResource
                 }
                 else
                 {
-                    $getValue = Get-MgDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                    $getValue = Get-MgBetaDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
                 }
             }
         }
@@ -187,7 +187,7 @@ function Get-TargetResource
         if ($results.MembershipType -ne 'Dynamic')
         {
             Write-Verbose -Message "AU {$DisplayName} get Members"
-            [array]$auMembers = Get-MgDirectoryAdministrativeUnitMember -AdministrativeUnitId $getValue.Id -All
+            [array]$auMembers = Get-MgBetaDirectoryAdministrativeUnitMember -AdministrativeUnitId $getValue.Id -All
             if ($auMembers.Count -gt 0)
             {
                 Write-Verbose -Message "AU {$DisplayName} process $($auMembers.Count) members"
@@ -221,7 +221,7 @@ function Get-TargetResource
 
         Write-Verbose -Message "AU {$DisplayName} get Scoped Role Members"
         $ErrorActionPreference = 'Stop'
-        [array]$auScopedRoleMembers = Get-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId $getValue.Id -All
+        [array]$auScopedRoleMembers = Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId $getValue.Id -All
         if ($auScopedRoleMembers.Count -gt 0)
         {
             Write-Verbose -Message "AU {$DisplayName} process $($auScopedRoleMembers.Count) scoped role members"
@@ -229,7 +229,7 @@ function Get-TargetResource
             foreach ($auScopedRoleMember in $auScopedRoleMembers)
             {
                 Write-Verbose -Message "AU {$DisplayName} verify RoleId {$($auScopedRoleMember.RoleId)}"
-                $roleObject = Get-MgDirectoryRole -DirectoryRoleId $auScopedRoleMember.RoleId -ErrorAction Stop
+                $roleObject = Get-MgBetaDirectoryRole -DirectoryRoleId $auScopedRoleMember.RoleId -ErrorAction Stop
                 Write-Verbose -Message "Found DirectoryRole '$($roleObject.DisplayName)' with id $($roleObject.Id)"
                 $scopedRoleMember = [ordered]@{
                     RoleName       = $roleObject.DisplayName
@@ -447,7 +447,7 @@ function Set-TargetResource
                 }
                 elseif ($member.Type -eq 'Device')
                 {
-                    $memberIdentity = Get-MgDevice -Filter "DisplayName eq '$($member.Identity)'" -ErrorAction Stop
+                    $memberIdentity = Get-MgBetaDevice -Filter "DisplayName eq '$($member.Identity)'" -ErrorAction Stop
                     if ($memberIdentity)
                     {
                         if ($memberIdentity.Count -gt 1)
@@ -480,17 +480,17 @@ function Set-TargetResource
                 Write-Verbose -Message "AU {$DisplayName} member: role '$($roleMember.RoleName)' type '$($roleMember.RoleMemberInfo.Type)' identity $($roleMember.RoleMemberInfo.Identity)"
                 try
                 {
-                    $roleObject = Get-MgDirectoryRole -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction stop
+                    $roleObject = Get-MgBetaDirectoryRole -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction stop
                     Write-Verbose -Message "AU {$DisplayName} role is enabled"
                 }
                 catch
                 {
                     Write-Verbose -Message "Azure AD role {$($rolemember.RoleName)} is not enabled"
-                    $roleTemplate = Get-MgDirectoryRoleTemplate -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction Stop
+                    $roleTemplate = Get-MgBetaDirectoryRoleTemplate -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction Stop
                     if ($null -ne $roleTemplate)
                     {
                         Write-Verbose -Message "Enable Azure AD role {$($rolemember.RoleName)} with id {$($roleTemplate.Id)}"
-                        $roleObject = New-MgDirectoryRole -RoleTemplateId $roleTemplate.Id -ErrorAction Stop
+                        $roleObject = New-MgBetaDirectoryRole -RoleTemplateId $roleTemplate.Id -ErrorAction Stop
                     }
                 }
                 if ($null -eq $roleObject)
@@ -551,7 +551,7 @@ function Set-TargetResource
         Write-Verbose -Message "Creating an Azure AD Administrative Unit with DisplayName {$DisplayName}"
 
         #region resource generator code
-        $policy = New-MgDirectoryAdministrativeUnit -BodyParameter $CreateParameters
+        $policy = New-MgBetaDirectoryAdministrativeUnit -BodyParameter $CreateParameters
 
         if ($MembershipType -ne 'Dynamic')
         {
@@ -561,13 +561,13 @@ function Set-TargetResource
                     '@odata.id' = "https://graph.microsoft.com/v1.0/$($member.Type)/$($member.Id)"
                 }
 
-                New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId $policy.Id -BodyParameter $memberBodyParam
+                New-MgBetaDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId $policy.Id -BodyParameter $memberBodyParam
             }
         }
 
         foreach ($scopedRoleMember in $scopedRoleMemberSpecification)
         {
-            New-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId $policy.Id -BodyParameter $scopedRoleMember
+            New-MgBetaDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId $policy.Id -BodyParameter $scopedRoleMember
         }
 
 
@@ -597,7 +597,7 @@ function Set-TargetResource
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
 
         #region resource generator code
-        Update-MgDirectoryAdministrativeUnit @UpdateParameters `
+        Update-MgBetaDirectoryAdministrativeUnit @UpdateParameters `
             -AdministrativeUnitId $currentInstance.Id
 
         #endregion
@@ -631,7 +631,7 @@ function Set-TargetResource
                     }
                     elseif ($diff.Type -eq 'Device')
                     {
-                        $memberObject = Get-MgDevice -Filter "DisplayName eq '$($diff.Identity)'"
+                        $memberObject = Get-MgBetaDevice -Filter "DisplayName eq '$($diff.Identity)'"
                         $membertype = 'devices'
                     }
                     else
@@ -654,12 +654,12 @@ function Set-TargetResource
                         $memberBodyParam = @{
                             '@odata.id' = "https://graph.microsoft.com/v1.0/$memberType/$($memberObject.Id)"
                         }
-                        New-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $memberBodyParam | Out-Null
+                        New-MgBetaDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $memberBodyParam | Out-Null
                     }
                     else
                     {
                         Write-Verbose -Message "Administrative Unit {$DisplayName} Removing member {$($diff.Identity)}, type {$($diff.Type)}"
-                        Remove-MgDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -DirectoryObjectId ($memberObject.Id) | Out-Null
+                        Remove-MgBetaDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -DirectoryObjectId ($memberObject.Id) | Out-Null
                     }
                 }
             }
@@ -746,7 +746,7 @@ function Set-TargetResource
                 }
                 if ($diff.SideIndicator -ne '==')
                 {
-                    $roleObject = Get-MgDirectoryRole -Filter "DisplayName eq '$($diff.RoleName)'"
+                    $roleObject = Get-MgBetaDirectoryRole -Filter "DisplayName eq '$($diff.RoleName)'"
                     if ($null -eq $roleObject)
                     {
                         throw "AU {$DisplayName} Scoped Role {$($diff.RoleName)} does not exist as an Azure AD role"
@@ -763,15 +763,15 @@ function Set-TargetResource
                         }
                     }
                     # addition of scoped rolemember may throw if role is not supported as a scoped role
-                    New-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $scopedRoleMemberParam -ErrorAction Stop | Out-Null
+                    New-MgBetaDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $scopedRoleMemberParam -ErrorAction Stop | Out-Null
                 }
                 else
                 {
                     if (-not [string]::IsNullOrEmpty($diff.Rolename))
                     {
                         Write-Verbose -Message "Removing scoped role {$($diff.RoleName)} member {$($diff.Identity)}, type {$($diff.Type)} from Administrative Unit {$DisplayName}"
-                        $scopedRoleMemberObject = Get-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -All | Where-Object -FilterScript { $_.RoleId -eq $roleObject.Id -and $_.RoleMemberInfo.Id -eq $memberObject.Id }
-                        Remove-MgDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -ScopedRoleMembershipId $scopedRoleMemberObject.Id -ErrorAction Stop | Out-Null
+                        $scopedRoleMemberObject = Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -All | Where-Object -FilterScript { $_.RoleId -eq $roleObject.Id -and $_.RoleMemberInfo.Id -eq $memberObject.Id }
+                        Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember -AdministrativeUnitId ($currentInstance.Id) -ScopedRoleMembershipId $scopedRoleMemberObject.Id -ErrorAction Stop | Out-Null
                     }
                 }
             }
@@ -781,7 +781,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing AU {$DisplayName}"
         #region resource generator code
-        Remove-MgDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
+        Remove-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
         #endregion
     }
 }
@@ -993,7 +993,7 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
         #region resource generator code
-        [array] $Script:exportedInstances = Get-MgDirectoryAdministrativeUnit -All `
+        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit -All `
             -ErrorAction Stop
         #endregion
 

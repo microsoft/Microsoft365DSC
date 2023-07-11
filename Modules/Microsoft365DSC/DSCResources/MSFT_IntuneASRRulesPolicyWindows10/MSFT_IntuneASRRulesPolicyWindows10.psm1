@@ -540,8 +540,8 @@ function Set-TargetResource
         $updateParameters.add('Description', $Description)
         Update-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -BodyParameter $updateParameters
 
-        #Update-MgDeviceManagementIntent does not support updating the property settings
-        #Update-MgDeviceManagementIntentSetting only support updating a single setting at a time
+        #Update-MgBetaDeviceManagementIntent does not support updating the property settings
+        #Update-MgBetaDeviceManagementIntentSetting only support updating a single setting at a time
         #Using Rest to reduce the number of calls
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/intents/$($currentPolicy.Identity)/updateSettings"
         $body = @{'settings' = $settings }

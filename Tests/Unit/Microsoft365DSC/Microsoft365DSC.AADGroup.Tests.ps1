@@ -61,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgGroupMember -MockWith {
             }
 
-            Mock -CommandName New-MgDirectoryRoleMemberByRef -MockWith {
+            Mock -CommandName New-MgBetaDirectoryRoleMemberByRef -MockWith {
             }
 
             Mock -CommandName Remove-MgGroupOwnerByRef -MockWith {
@@ -70,7 +70,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgGroupMemberByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgDirectoryRoleMemberByRef -MockWith {
+            Mock -CommandName Remove-MgBetaDirectoryRoleMemberByRef -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -463,7 +463,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                Mock -CommandName Get-MgBetaDirectoryRole -MockWith {
                     return @{
                         DisplayName = 'AADRole'
                         ID          = '12345-12345-12345-12345'
@@ -483,8 +483,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
-                Should -Invoke -CommandName 'Get-MgDirectoryRole' -Exactly 1
-                Should -Invoke -CommandName 'New-MgDirectoryRoleMemberByRef' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaDirectoryRole' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaDirectoryRoleMemberByRef' -Exactly 1
             }
         }
 
@@ -530,7 +530,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
-                Mock -CommandName Get-MgDirectoryRole -MockWith {
+                Mock -CommandName Get-MgBetaDirectoryRole -MockWith {
                     return @{
                         DisplayName = 'AADRole'
                         ID          = '12345-12345-12345-12345'
@@ -551,8 +551,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
-                Should -Invoke -CommandName 'Get-MgDirectoryRole' -Exactly 1
-                Should -Invoke -CommandName 'Remove-MgDirectoryRoleMemberByRef' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaDirectoryRole' -Exactly 1
+                Should -Invoke -CommandName 'Remove-MgBetaDirectoryRoleMemberByRef' -Exactly 1
             }
         }
 

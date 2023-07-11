@@ -34,13 +34,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgRoleManagementDirectoryRoleDefinition -MockWith {
+            Mock -CommandName Update-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
             }
 
-            Mock -CommandName Remove-MgRoleManagementDirectoryRoleDefinition -MockWith {
+            Mock -CommandName Remove-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
             }
 
-            Mock -CommandName New-MgRoleManagementDirectoryRoleDefinition -MockWith {
+            Mock -CommandName New-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -66,21 +66,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential      = $Credential
                 }
 
-                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                     return $null
                 }
             }
 
             It 'Should return values from the get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-                Should -Invoke -CommandName 'Get-MgRoleManagementDirectoryRoleDefinition' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaRoleManagementDirectoryRoleDefinition' -Exactly 1
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should create the role definition from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgRoleManagementDirectoryRoleDefinition' -Exactly 1
+                Should -Invoke -CommandName 'New-MgBetaRoleManagementDirectoryRoleDefinition' -Exactly 1
             }
         }
 
@@ -102,7 +102,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return 'Credentials'
                 }
 
-                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                     $AADRoleDef = New-Object PSCustomObject
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'Role1'
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value 'Role description'
@@ -117,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-                Should -Invoke -CommandName 'Get-MgRoleManagementDirectoryRoleDefinition' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaRoleManagementDirectoryRoleDefinition' -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -126,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the app from the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-MgRoleManagementDirectoryRoleDefinition' -Exactly 1
+                Should -Invoke -CommandName 'Remove-MgBetaRoleManagementDirectoryRoleDefinition' -Exactly 1
             }
         }
         Context -Name 'The role definition exists and values are already in the desired state' -Fixture {
@@ -146,7 +146,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return 'Credentials'
                 }
 
-                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                     $AADRoleDef = New-Object PSCustomObject
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'Role1'
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value 'This is a custom role'
@@ -160,7 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return Values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgRoleManagementDirectoryRoleDefinition' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaRoleManagementDirectoryRoleDefinition' -Exactly 1
             }
 
             It 'Should return true from the test method' {
@@ -185,7 +185,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return 'Credentials'
                 }
 
-                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                     $AADRoleDef = New-Object PSCustomObject
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'Role1'
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value 'This is a custom role'
@@ -199,7 +199,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgRoleManagementDirectoryRoleDefinition' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaRoleManagementDirectoryRoleDefinition' -Exactly 1
             }
 
             It 'Should return false from the test method' {
@@ -208,7 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Update-MgRoleManagementDirectoryRoleDefinition' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgBetaRoleManagementDirectoryRoleDefinition' -Exactly 1
             }
         }
 
@@ -224,7 +224,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return 'Credentials'
                 }
 
-                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                     $AADRoleDef = New-Object PSCustomObject
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'Role1'
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Description -Value 'This is a custom role'

@@ -50,6 +50,22 @@ function New-M365DSCStubFiles
         $workloads = @(
             @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement';}, # This is the main EXO module with new cmdlets.
             @{Name = 'ExchangeOnline'; ModuleName = 'ExchangeOnlineManagement'; CommandName = 'Get-Mailbox' }, # This is the EXO Proxy
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.DeviceManagement'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Devices.CorporateManagement'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.DeviceManagement.Administration'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.DeviceManagement.Enrollment'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Identity.DirectoryManagement'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Identity.Governance'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Identity.SignIns'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.Teams'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DeviceManagement.Administration'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.DirectoryObjects'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Groups'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Planner'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users'},
+            @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Users.Actions'},
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Applications'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Authentication'; },
             @{Name = 'MicrosoftGraph'; ModuleName = 'Microsoft.Graph.Beta.DeviceManagement'; },

@@ -194,14 +194,14 @@ function Get-TargetResource
 
         if ($null -eq $Script:allDirectoryRoleAssignment)
         {
-            $Script:allDirectoryRoleAssignment = Get-MgRoleManagementDirectoryRoleAssignment -All
+            $Script:allDirectoryRoleAssignment = Get-MgBetaRoleManagementDirectoryRoleAssignment -All
         }
         $assignedRoles = $Script:allDirectoryRoleAssignment | Where-Object -FilterScript {$_.PrincipalId -eq $user.Id}
 
         $rolesValue = @()
         if ($null -eq $Script:allAssignedRoles -and $assignedRoles.Length -gt 0)
         {
-            $Script:allAssignedRoles = Get-MgRoleManagementDirectoryRoleDefinition -All
+            $Script:allAssignedRoles = Get-MgBetaRoleManagementDirectoryRoleDefinition -All
         }
         foreach ($assignedRole in $assignedRoles)
         {
@@ -452,7 +452,7 @@ function Set-TargetResource
             {
                 $licenses = @{AddLicenses = @(); RemoveLicenses = @(); }
 
-                $SubscribedSku = Get-MgSubscribedSku
+                $SubscribedSku = Get-MgBetaSubscribedSku
                 foreach ($licenseSkuPart in $LicenseAssignment)
                 {
                     Write-Verbose -Message "Adding License {$licenseSkuPart} to the Queue"
@@ -578,22 +578,22 @@ function Set-TargetResource
 
             foreach ($roleDifference in $diffRoles)
             {
-                $roleDefinitionId = (Get-MgRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($roleDifference.InputObject)'").Id
+                $roleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$($roleDifference.InputObject)'").Id
                 $userId = (Get-MgUser -UserId $UserPrincipalName).Id
 
                 # Roles to remove
                 if ($roleDifference.SideIndicator -eq '=>')
                 {
-                    $currentAssignment = Get-MgRoleManagementDirectoryRoleAssignment -Filter "PrincipalId eq '$userId' and RoleDefinitionId eq '$roleDefinitionId'"
+                    $currentAssignment = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "PrincipalId eq '$userId' and RoleDefinitionId eq '$roleDefinitionId'"
 
                     Write-Verbose -Message "Removing role assignment for user {$($user.UserPrincipalName)} for role {$($roleDifference.InputObject)}"
-                    Remove-MgRoleManagementDirectoryRoleAssignment -UnifiedRoleAssignmentId $currentAssignment.Id | Out-Null
+                    Remove-MgBetaRoleManagementDirectoryRoleAssignment -UnifiedRoleAssignmentId $currentAssignment.Id | Out-Null
                 }
                 # Roles to add
                 elseif ($roleDifference.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Creating role assignment for user {$($user.UserPrincipalName) for role {$($roleDifference.InputObject)}"
-                    New-MgRoleManagementDirectoryRoleAssignment -PrincipalId $userId `
+                    New-MgBetaRoleManagementDirectoryRoleAssignment -PrincipalId $userId `
                         -RoleDefinitionId $roleDefinitionId `
                         -DirectoryScopeId '/' | Out-Null
                 }
