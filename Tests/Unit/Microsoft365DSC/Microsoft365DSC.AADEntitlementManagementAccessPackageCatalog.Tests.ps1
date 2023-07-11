@@ -203,15 +203,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackage -MockWith {
+                    return @([PSCustomObject]@{
+                        CatalogId = 'FakeStringValue'
+                        })
+                }
                 Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
-                    return @{
-                        CatalogStatus       = 'FakeStringValue'
-                        CatalogType         = 'UserManaged'
-                        Description         = 'FakeStringValue'
-                        DisplayName         = 'FakeStringValue'
-                        Id                  = 'FakeStringValue'
-                        IsExternallyVisible = $True
-
+                    return [PSCustomObject]@{
+                            CatalogStatus       = 'FakeStringValue'
+                            CatalogType         = 'UserManaged'
+                            Description         = 'FakeStringValue'
+                            DisplayName         = 'FakeStringValue'
+                            Id                  = 'FakeStringValue'
+                            IsExternallyVisible = $True
                     }
                 }
             }

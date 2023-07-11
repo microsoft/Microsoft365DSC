@@ -53,7 +53,11 @@
             RequiredVersion = '2.0.0'
         },
         @{
-            ModuleName      = 'Microsoft.Graph.DirectoryObjects'
+            ModuleName      = 'Microsoft.Graph.Identity.DirectoryManagement'
+            RequiredVersion = '2.0.0'
+        },
+        @{
+            ModuleName      = 'Microsoft.Graph.Beta.DirectoryObjects'
             RequiredVersion = '2.0.0'
         },
         @{

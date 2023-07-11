@@ -76,6 +76,7 @@
     'modules\M365DSCStubsUtility.psm1',
     'modules\M365DSCTelemetryEngine.psm1',
     'modules\M365DSCUtil.psm1',
+    'modules\M365DSCDRGUtil.psm1',
     'modules\EncodingHelpers\M365DSCEmojis.psm1',
     'modules\EncodingHelpers\M365DSCStringEncoding.psm1'
   )
