@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
+  * Fixes an issue where the Get-TargetResource function was defining the parameter as Identity and all othe methods and schema had it defined to Id.
 * O365OrgSettings
   * Introduced a workaround to fix an issue with the ExchangeOnlineManagement module where if connected to Security and Compliance center
     an error about an invalid token would get thrown when calling the Get-DefaultTenantMyAnalyticsFeatureConfig cmdlet.
