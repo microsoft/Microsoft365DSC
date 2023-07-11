@@ -252,7 +252,7 @@ function Get-TargetResource
 
         }
         $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $Identity
+        $returnAssignments += Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity
         $returnHashtable.Add('Assignments', $returnAssignments)
 
         Write-Verbose -Message "Found Endpoint Protection Policy {$($policy.name)}"
@@ -476,7 +476,7 @@ function Set-TargetResource
         New-MgBetaDeviceManagementConfigurationPolicy -bodyParameter $createParameters
 
         $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
-        Update-MgBetaDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $Identity -Targets $assignmentsHash
+        Update-M365DSCDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity -Targets $assignmentsHash
 
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
@@ -500,7 +500,7 @@ function Set-TargetResource
 
         #region update policy assignments
         $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
-        Update-MgBetaDeviceManagementConfigurationPolicyAssignments -DeviceManagementConfigurationPolicyId $currentPolicy.Identity -Targets $assignmentsHash
+        Update-M365DSCDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $currentPolicy.Identity -Targets $assignmentsHash
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
@@ -1117,7 +1117,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicySetting
 
 }
 
-function Get-MgBetaDeviceManagementConfigurationPolicyAssignments
+function Get-M365DSCDeviceManagementConfigurationPolicyAssignments
 {
     [CmdletBinding()]
     param
@@ -1173,7 +1173,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicyAssignments
     }
 }
 
-function Update-MgBetaDeviceManagementConfigurationPolicyAssignments
+function Update-M365DSCDeviceManagementConfigurationPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -1219,36 +1219,6 @@ function Update-MgBetaDeviceManagementConfigurationPolicyAssignments
         #write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
-    }
-    catch
-    {
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
-
-        return $null
-    }
-}
-
-function Get-MgBetaDeviceManagementConfigurationSettingDefinition
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity
-    )
-
-    try
-    {
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/ConfigurationSettings/$($Identity.tolower())"
-        $configurationPolicySetting = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-        return $configurationPolicySetting
     }
     catch
     {

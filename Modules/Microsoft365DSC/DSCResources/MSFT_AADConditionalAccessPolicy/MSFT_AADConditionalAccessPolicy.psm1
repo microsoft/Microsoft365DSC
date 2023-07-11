@@ -398,7 +398,7 @@ function Get-TargetResource
             Write-Verbose -Message 'Get-TargetResource: Role condition defined, processing'
             #build role translation table
             $rolelookup = @{}
-            foreach ($role in Get-MgDirectoryRoleTemplate)
+            foreach ($role in Get-MgBetaDirectoryRoleTemplate)
             {
                 $rolelookup[$role.Id] = $role.DisplayName
             }
@@ -550,7 +550,7 @@ function Get-TargetResource
         $termsOfUseName = $null
         if ($Policy.GrantControls.TermsOfUse)
         {
-            $termofUse = Get-MgAgreement | Where-Object -FilterScript { $_.Id -eq $Policy.GrantControls.TermsOfUse }
+            $termofUse = Get-MgBetaAgreement | Where-Object -FilterScript { $_.Id -eq $Policy.GrantControls.TermsOfUse }
             if ($termOfUse)
             {
                 $termOfUseName = $termOfUse.DisplayName
@@ -1090,7 +1090,7 @@ function Set-TargetResource
         {
             #translate role names to template guid if defined
             $rolelookup = @{}
-            foreach ($role in Get-MgDirectoryRoleTemplate)
+            foreach ($role in Get-MgBetaDirectoryRoleTemplate)
             {
                 $rolelookup[$role.DisplayName] = $role.Id
             }
@@ -1119,7 +1119,7 @@ function Set-TargetResource
         {
             #translate role names to template guid if defined
             $rolelookup = @{}
-            foreach ($role in Get-MgDirectoryRoleTemplate)
+            foreach ($role in Get-MgBetaDirectoryRoleTemplate)
             {
                 $rolelookup[$role.DisplayName] = $role.Id
             }
@@ -1380,7 +1380,7 @@ function Set-TargetResource
             if ($TermsOfUse)
             {
                 Write-Verbose -Message "Gettign Terms of Use {$TermsOfUse}"
-                $TermsOfUseObj = Get-MgAgreement | Where-Object -FilterScript { $_.DisplayName -eq $TermsOfUse }
+                $TermsOfUseObj = Get-MgBetaAgreement | Where-Object -FilterScript { $_.DisplayName -eq $TermsOfUse }
                 $GrantControls.Add('TermsOfUse', $TermsOfUseObj.Id)
             }
 

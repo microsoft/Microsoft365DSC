@@ -25,6 +25,10 @@
             RequiredVersion = '2.0.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.DeviceManagement.Administration'
+            RequiredVersion = '2.0.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Beta.DeviceManagement.Enrollment'
             RequiredVersion = '2.0.0'
         },

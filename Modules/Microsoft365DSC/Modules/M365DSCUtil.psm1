@@ -2043,7 +2043,7 @@ function Get-SPOAdministrationUrl
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message 'Getting SharePoint Online admin URL...'
-    [Array]$defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de' -or $_.Id -like '*.onmicrosoft.us') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    [Array]$defaultDomain = Get-MgBetaDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de' -or $_.Id -like '*.onmicrosoft.us') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].Id -like '*.onmicrosoft.com*')
     {
@@ -2091,7 +2091,7 @@ function Get-M365TenantName
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message 'Getting SharePoint Online admin URL...'
-    [Array]$defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    [Array]$defaultDomain = Get-MgBetaDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].Id -like '*.onmicrosoft.com*')
     {
@@ -2382,7 +2382,7 @@ function Get-AllSPOPackages
             -Url $tenantAppCatalogUrl
 
         $filesToDownload = @()
-
+        $allFiles = @()
         if ($null -ne $tenantAppCatalogUrl)
         {
             try

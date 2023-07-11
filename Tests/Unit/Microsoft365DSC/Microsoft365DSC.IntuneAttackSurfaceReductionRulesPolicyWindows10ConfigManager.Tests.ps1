@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignments -MockWith {
+            Mock -CommandName Get-M365DSCDeviceManagementConfigurationPolicyAssignments -MockWith {
                 return $null
             }
 

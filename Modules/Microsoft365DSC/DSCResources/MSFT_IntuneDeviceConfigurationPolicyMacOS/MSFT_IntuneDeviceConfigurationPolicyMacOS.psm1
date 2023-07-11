@@ -423,7 +423,7 @@ function Get-TargetResource
         }
 
         $myAssignments = @()
-        $myAssignments += Get-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -repository 'deviceConfigurations'
+        $myAssignments += Get-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $getValue.Id -repository 'deviceConfigurations'
         $results.Add('Assignments', $myAssignments)
 
         return [System.Collections.Hashtable] $results
@@ -809,7 +809,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
+            Update-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository deviceConfigurations
         }
@@ -857,7 +857,7 @@ function Set-TargetResource
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-MgBetaDeviceManagementPolicyAssignments -DeviceManagementPolicyId $currentInstance.id `
+        Update-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
             -Repository deviceConfigurations
         #endregion
@@ -2047,7 +2047,7 @@ function Convert-M365DSCDRGComplexTypeToHashtable
     return $results
 }
 
-function Get-MgBetaDeviceManagementPolicyAssignments
+function Get-M365DSCDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     param
@@ -2114,7 +2114,7 @@ function Get-MgBetaDeviceManagementPolicyAssignments
     }
 }
 
-function Update-MgBetaDeviceManagementPolicyAssignments
+function Update-M365DSCDeviceManagementPolicyAssignments
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
