@@ -457,7 +457,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-MgDevice -MockWith {
+                Mock -CommandName Get-MgBetaDevice -MockWith {
                     return [pscustomobject]@{
                         Id                = '1234567890'
                         DisplayName       = 'DSCAUMemberDevice'

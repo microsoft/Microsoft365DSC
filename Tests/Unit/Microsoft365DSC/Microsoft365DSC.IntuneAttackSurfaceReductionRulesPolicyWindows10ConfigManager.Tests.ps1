@@ -50,13 +50,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-M365DSCDeviceManagementConfigurationPolicyAssignments -MockWith {
+            Mock -CommandName Get-M365DSCDeviceManagementConfigurationPolicyAssignment -MockWith {
                 return $null
             }
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
         }
 
         # Test contexts

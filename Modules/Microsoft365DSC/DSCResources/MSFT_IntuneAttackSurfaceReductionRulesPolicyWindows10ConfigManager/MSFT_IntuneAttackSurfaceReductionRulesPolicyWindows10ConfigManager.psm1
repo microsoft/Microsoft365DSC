@@ -1117,63 +1117,7 @@ function Get-MgBetaDeviceManagementConfigurationPolicySetting
 
 }
 
-function Get-M365DSCDeviceManagementConfigurationPolicyAssignments
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DeviceManagementConfigurationPolicyId
-    )
-
-    try
-    {
-        $configurationPolicyAssignments = @()
-
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-        foreach ($result in $results.value.target)
-        {
-            $configurationPolicyAssignments += @{
-                dataType                                   = $result.'@odata.type'
-                groupId                                    = $result.groupId
-                collectionId                               = $result.collectionId
-                deviceAndAppManagementAssignmentFilterType = $result.deviceAndAppManagementAssignmentFilterType
-                deviceAndAppManagementAssignmentFilterId   = $result.deviceAndAppManagementAssignmentFilterId
-            }
-        }
-
-        while ($results.'@odata.nextLink')
-        {
-            $Uri = $results.'@odata.nextLink'
-            $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-            foreach ($result in $results.value.target)
-            {
-                $configurationPolicyAssignments += @{
-                    dataType                                   = $result.'@odata.type'
-                    groupId                                    = $result.groupId
-                    collectionId                               = $result.collectionId
-                    deviceAndAppManagementAssignmentFilterType = $result.deviceAndAppManagementAssignmentFilterType
-                    deviceAndAppManagementAssignmentFilterId   = $result.deviceAndAppManagementAssignmentFilterId
-                }
-            }
-        }
-        return $configurationPolicyAssignments
-    }
-    catch
-    {
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
-
-        return $null
-    }
-}
-
-function Update-M365DSCDeviceManagementConfigurationPolicyAssignments
+function Update-M365DSCDeviceManagementConfigurationPolicyAssignment
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
