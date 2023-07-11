@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* SPOApp
+  * Fixes an issue where the extraction was complaining about op_addition failing.
 * MISC
   * Fixes cmdlet to use Get-MgBetaOrganization in the Get-M365DSCTenantDomain function.
     FIXES [#3449](https://github.com/microsoft/Microsoft365DSC/issues/3449)
