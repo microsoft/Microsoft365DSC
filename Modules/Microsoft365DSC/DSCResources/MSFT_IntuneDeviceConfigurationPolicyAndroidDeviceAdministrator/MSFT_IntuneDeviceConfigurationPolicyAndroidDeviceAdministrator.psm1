@@ -7,7 +7,7 @@ function Get-TargetResource
         #region resource generator code
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
+        $Id,
 
         [Parameter(Mandatory = $true)]
         [System.String]
