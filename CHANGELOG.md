@@ -1,9 +1,11 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.712.1
 
 * SPOApp
   * Fixes an issue where the extraction was complaining about op_addition failing.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.167.
 * DRG
   * General cleanup from generated resources from DRG
     * Added module M365DSCDRGUtil.psm1
