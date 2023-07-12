@@ -34,14 +34,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Get-MgPolicyRoleManagementPolicyAssignment -MockWith {
+            Mock -CommandName Get-MgBetaPolicyRoleManagementPolicyAssignment -MockWith {
                 return @{
                     PolicyId = 'DirectoryRole_1e1b61e9-1bad-4b5f-aca3-973feb8d36e0_2d3a49e9-4a0b-4456-b381-3311753988a8'
                     RoleDefinitionId = 'fe930be7-5e62-47db-91af-98c3a49a38b1'
                 }
             }
 
-            Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
+            Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                 return @{
                     DisplayName = 'User administrator'
                 }
@@ -497,7 +497,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 ]
 '@
             $mockRole = $json | ConvertFrom-Json
-            Mock -CommandName Get-MgPolicyRoleManagementPolicyRule -MockWith {
+            Mock -CommandName Get-MgBetaPolicyRoleManagementPolicyRule -MockWith {
                 return $mockRole
             }
 
@@ -621,7 +621,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return 'Credentials'
                 }
 
-                Mock -CommandName Update-MgPolicyRoleManagementPolicyRule -MockWith {
+                Mock -CommandName Update-MgBetaPolicyRoleManagementPolicyRule -MockWith {
                 }
             }
 
@@ -631,7 +631,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Update-MgPolicyRoleManagementPolicyRule' -Exactly 15
+                Should -Invoke -CommandName 'Update-MgBetaPolicyRoleManagementPolicyRule' -Exactly 15
             }
         }
 
@@ -645,7 +645,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return 'Credentials'
                 }
 
-                Mock -CommandName Get-MgRoleManagementDirectoryRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                     $AADRoleDef = New-Object PSCustomObject
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name Id -Value 'fe930be7-5e62-47db-91af-98c3a49a38b1'
                     $AADRoleDef | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'Role1'

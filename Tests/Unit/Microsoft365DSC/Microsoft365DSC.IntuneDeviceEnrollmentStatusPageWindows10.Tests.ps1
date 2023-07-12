@@ -47,7 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @()
             }
 
-            Mock Update-DeviceEnrollmentConfigurationAssignment {
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 
             Mock Update-DeviceEnrollmentConfigurationPriority {

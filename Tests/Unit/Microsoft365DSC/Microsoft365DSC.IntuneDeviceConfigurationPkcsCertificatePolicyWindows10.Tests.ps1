@@ -46,7 +46,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfigurationAssignment -MockWith {
             }
-
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
         }
         # Test contexts
         Context -Name "The IntuneDeviceConfigurationPkcsCertificatePolicyWindows10 should exist but it DOES NOT" -Fixture {

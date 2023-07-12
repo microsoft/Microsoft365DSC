@@ -25,6 +25,10 @@
             RequiredVersion = '2.0.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.DeviceManagement.Administration'
+            RequiredVersion = '2.0.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Beta.DeviceManagement.Enrollment'
             RequiredVersion = '2.0.0'
         },
@@ -49,7 +53,7 @@
             RequiredVersion = '2.0.0'
         },
         @{
-            ModuleName      = 'Microsoft.Graph.DirectoryObjects'
+            ModuleName      = 'Microsoft.Graph.Beta.DirectoryObjects'
             RequiredVersion = '2.0.0'
         },
         @{
@@ -70,7 +74,7 @@
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
-            RequiredVersion = '2.0.166'
+            RequiredVersion = '2.0.167'
         },
         @{
             ModuleName      = 'MicrosoftTeams'

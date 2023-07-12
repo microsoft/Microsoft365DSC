@@ -16,8 +16,9 @@ function Get-TargetResource
         [System.String]
         $Description,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
@@ -26,33 +27,39 @@ function Get-TargetResource
         [System.String]
         $AdvancedRansomewareProtectionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode' , 'disable' in next breaking change, don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
+        # In next Breaking Change set it to 'notConfigured', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -60,23 +67,27 @@ function Get-TargetResource
         [System.String[]]
         $AttackSurfaceReductionExcludedPaths,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
+        # In next Breaking Change set it to 'notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -89,8 +100,9 @@ function Get-TargetResource
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
@@ -99,8 +111,9 @@ function Get-TargetResource
         [System.String]
         $PreventCredentialStealingType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -268,8 +281,9 @@ function Set-TargetResource
         [System.String]
         $Description,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
@@ -278,33 +292,39 @@ function Set-TargetResource
         [System.String]
         $AdvancedRansomewareProtectionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode' , 'disable' in next breaking change, don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
+        # In next Breaking Change set it to 'notConfigured', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -312,23 +332,27 @@ function Set-TargetResource
         [System.String[]]
         $AttackSurfaceReductionExcludedPaths,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
+        # In next Breaking Change set it to 'notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -341,8 +365,9 @@ function Set-TargetResource
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
@@ -351,8 +376,9 @@ function Set-TargetResource
         [System.String]
         $PreventCredentialStealingType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -418,6 +444,49 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
+    $IncorrectParameters = @{
+        BlockPersistenceThroughWmiType                  = @("userDefined", "warn")
+        OfficeAppsOtherProcessInjectionType             = "userDefined"
+        OfficeAppsLaunchChildProcessType                = "userDefined"
+        OfficeAppsExecutableContentCreationOrLaunchType = "userDefined"
+        OfficeMacroCodeAllowWin32ImportsType            = "userDefined"
+        OfficeCommunicationAppsLaunchChildProcess       = "disable"
+        ScriptObfuscatedMacroCodeType                   = "userDefined"
+        ScriptDownloadedPayloadExecutionType            = @("userDefined", "warn")
+        ProcessCreationType                             = "userDefined"
+        UntrustedUSBProcessType                         = "userDefined"
+        UntrustedExecutableType                         = "userDefined"
+        EmailContentExecutionType                       = "userDefined"
+        GuardMyFoldersType                              = "userDefined"
+    }
+
+    $ExceptionMessage = $null
+    foreach ($Key in $PSBoundParameters.Keys)
+    {
+        $InvalidValue = $IncorrectParameters[$Key]
+        if (![string]::IsNullOrEmpty($InvalidValue))
+        {
+            $Value = $PSBoundParameters.$Key
+            if ($Value -in $InvalidValue)
+            {
+                $ExceptionMessage += "Property {0} set to invalid value {1}`n" -f $Key, $Value
+            }
+        }
+    }
+
+    if (![string]::IsNullOrEmpty($ExceptionMessage))
+    {
+        $ExceptionMessage += "Please update your configuration."
+        Write-Verbose -Message $ExceptionMessage
+
+        New-M365DSCLogEntry -Message $ExceptionMessage `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+
     $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
@@ -447,8 +516,9 @@ function Set-TargetResource
         }
         if ($policy.id)
         {
-            Update-DeviceManagementIntentAssignments -DeviceManagementIntentId $policy.id `
-                -Targets $assignmentsHash
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/intents'
         }
         #endregion
 
@@ -471,8 +541,8 @@ function Set-TargetResource
         $updateParameters.add('Description', $Description)
         Update-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentPolicy.Identity -BodyParameter $updateParameters
 
-        #Update-MgDeviceManagementIntent does not support updating the property settings
-        #Update-MgDeviceManagementIntentSetting only support updating a single setting at a time
+        #Update-MgBetaDeviceManagementIntent does not support updating the property settings
+        #Update-MgBetaDeviceManagementIntentSetting only support updating a single setting at a time
         #Using Rest to reduce the number of calls
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/intents/$($currentPolicy.Identity)/updateSettings"
         $body = @{'settings' = $settings }
@@ -484,9 +554,10 @@ function Set-TargetResource
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-DeviceManagementIntentAssignments `
-            -DeviceManagementIntentId $currentPolicy.Identity `
-            -Targets $assignmentsHash
+
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $currentPolicy.Identity `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/intents'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
@@ -514,8 +585,9 @@ function Test-TargetResource
         [System.String]
         $Description,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ProcessCreationType,
 
@@ -524,33 +596,39 @@ function Test-TargetResource
         [System.String]
         $AdvancedRansomewareProtectionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode' , 'disable' in next breaking change, don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $BlockPersistenceThroughWmiType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptObfuscatedMacroCodeType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeMacroCodeAllowWin32ImportsType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsLaunchChildProcessType,
 
+        # In next Breaking Change set it to 'notConfigured', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'blockDiskModification', 'auditDiskModification')]
         [System.String]
         $GuardMyFoldersType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedUSBProcessType,
 
@@ -558,23 +636,27 @@ function Test-TargetResource
         [System.String[]]
         $AttackSurfaceReductionExcludedPaths,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $UntrustedExecutableType,
 
+        # In next Breaking Change set it to 'notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('notConfigured', 'enable', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'enable', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeCommunicationAppsLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $EmailContentExecutionType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $ScriptDownloadedPayloadExecutionType,
 
@@ -587,8 +669,9 @@ function Test-TargetResource
         [System.String]
         $AdobeReaderLaunchChildProcess,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsExecutableContentCreationOrLaunchType,
 
@@ -597,8 +680,9 @@ function Test-TargetResource
         [System.String]
         $PreventCredentialStealingType,
 
+        # In next Breaking Change set it to 'notConfigured', 'block', 'auditMode', 'warn', 'disable', don't forget to update the schema as well
         [Parameter()]
-        [ValidateSet('userDefined', 'block', 'auditMode', 'warn', 'disable')]
+        [ValidateSet('notConfigured', 'userDefined', 'block', 'auditMode', 'warn', 'disable')]
         [System.String]
         $OfficeAppsOtherProcessInjectionType,
 
@@ -951,495 +1035,12 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
             {
                 $settingValue = $setting.ValueJson
             }
-        }
-
-
-
-        $result.Add('@odata.type', $settingType)
+        }        $result.Add('@odata.type', $settingType)
         $result.Add('Id', $setting.Id)
         $result.Add('definitionId', $setting.DefinitionId)
         $result.Add('valueJson', ($settingValue ))
 
         $results += $result
-    }
-    return $results
-}
-
-function Update-DeviceManagementIntentAssignments
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DeviceManagementIntentId,
-
-        [Parameter()]
-        [Array]
-        $Targets
-    )
-
-    try
-    {
-        $configurationPolicyAssignments = @()
-
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/intents/$DeviceManagementIntentId/assign"
-
-        foreach ($target in $targets)
-        {
-            $formattedTarget = @{'@odata.type' = $target.dataType }
-            if ($target.groupId)
-            {
-                $formattedTarget.Add('groupId', $target.groupId)
-            }
-            if ($target.collectionId)
-            {
-                $formattedTarget.Add('collectionId', $target.collectionId)
-            }
-            if ($target.deviceAndAppManagementAssignmentFilterType)
-            {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
-            }
-            if ($target.deviceAndAppManagementAssignmentFilterId)
-            {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
-            }
-            $configurationPolicyAssignments += @{'target' = $formattedTarget }
-        }
-        $body = @{'assignments' = $configurationPolicyAssignments } | ConvertTo-Json -Depth 20
-        #write-verbose -Message $body
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
-    }
-    catch
-    {
-        New-M365DSCLogEntry -Message 'Error updating data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
-
-        return $null
-    }
-}
-
-function Get-M365DSCDRGComplexTypeToHashtable
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter()]
-        $ComplexObject
-    )
-
-    if ($null -eq $ComplexObject)
-    {
-        return $null
-    }
-
-    if ($ComplexObject.gettype().fullname -like '*[[\]]')
-    {
-        $results = @()
-
-        foreach ($item in $ComplexObject)
-        {
-            if ($item)
-            {
-                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-                $results += $hash
-            }
-        }
-        if ($results.count -eq 0)
-        {
-            return $null
-        }
-        return $results
-    }
-
-    $results = @{}
-    $keys = $ComplexObject | Get-Member | Where-Object -FilterScript { $_.MemberType -eq 'Property' -and $_.Name -ne 'AdditionalProperties' }
-
-    foreach ($key in $keys)
-    {
-        if ($ComplexObject.$($key.Name))
-        {
-            $results.Add($key.Name, $ComplexObject.$($key.Name))
-        }
-    }
-    if ($results.count -eq 0)
-    {
-        return $null
-    }
-    return $results
-}
-
-function Get-M365DSCDRGComplexTypeToString
-{
-    [CmdletBinding()]
-    #[OutputType([System.String])]
-    param
-    (
-        [Parameter()]
-        $ComplexObject,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $CIMInstanceName,
-
-        [Parameter()]
-        [System.String]
-        $Whitespace = '',
-
-        [Parameter()]
-        [switch]
-        $isArray = $false
-    )
-
-    if ($null -eq $ComplexObject)
-    {
-        return $null
-    }
-
-    #If ComplexObject  is an Array
-    if ($ComplexObject.GetType().FullName -like '*[[\]]')
-    {
-        $currentProperty = @()
-        foreach ($item in $ComplexObject)
-        {
-            $currentProperty += Get-M365DSCDRGComplexTypeToString `
-                -ComplexObject $item `
-                -isArray:$true `
-                -CIMInstanceName $CIMInstanceName `
-                -Whitespace '                '
-
-        }
-        if ([string]::IsNullOrEmpty($currentProperty))
-        {
-            return $null
-        }
-
-        return $currentProperty
-    }
-
-    #If ComplexObject is a single CIM Instance
-    if (-Not (Test-M365DSCComplexObjectHasValues -ComplexObject $ComplexObject))
-    {
-        return $null
-    }
-    $currentProperty = ''
-    if ($isArray)
-    {
-        $currentProperty += "`r`n"
-    }
-    $currentProperty += "$whitespace`MSFT_$CIMInstanceName{`r`n"
-    $keyNotNull = 0
-    foreach ($key in $ComplexObject.Keys)
-    {
-        if ($ComplexObject[$key])
-        {
-            $keyNotNull++
-
-            if ($ComplexObject[$key].GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
-            {
-                $hashPropertyType = $ComplexObject[$key].GetType().Name.tolower()
-                $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
-
-                if (Test-M365DSCComplexObjectHasValues -ComplexObject $hashProperty)
-                {
-                    $Whitespace += '            '
-                    if (-not $isArray)
-                    {
-                        $currentProperty += '                ' + $key + ' = '
-                    }
-                    $currentProperty += Get-M365DSCDRGComplexTypeToString `
-                        -ComplexObject $hashProperty `
-                        -CIMInstanceName $hashPropertyType `
-                        -Whitespace $Whitespace
-                }
-            }
-            else
-            {
-                if (-not $isArray)
-                {
-                    $Whitespace = '            '
-                }
-                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($Whitespace + '    ')
-            }
-        }
-    }
-    $currentProperty += '            }'
-
-    if ($keyNotNull -eq 0)
-    {
-        $currentProperty = $null
-    }
-
-    return $currentProperty
-}
-
-function Test-M365DSCComplexObjectHasValues
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Collections.Hashtable]
-        $ComplexObject
-    )
-
-    $keys = $ComplexObject.keys
-    $hasValue = $false
-    foreach ($key in $keys)
-    {
-        if ($ComplexObject[$key])
-        {
-            if ($ComplexObject[$key].GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*')
-            {
-                $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject[$key]
-                if (-Not $hash)
-                {
-                    return $false
-                }
-                $hasValue = Test-M365DSCComplexObjectHasValues -ComplexObject ($hash)
-            }
-            else
-            {
-                $hasValue = $true
-                return $hasValue
-            }
-        }
-    }
-    return $hasValue
-}
-
-function Get-M365DSCDRGSimpleObjectTypeToString
-{
-    [CmdletBinding()]
-    [OutputType([System.String])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $Key,
-
-        [Parameter(Mandatory = 'true')]
-        $Value,
-
-        [Parameter()]
-        [System.String]
-        $Space = '                '
-    )
-
-    $returnValue = ''
-    switch -Wildcard ($Value.GetType().Fullname )
-    {
-        '*.Boolean'
-        {
-            $returnValue = $Space + $Key + " = `$" + $Value.ToString() + "`r`n"
-        }
-        '*.String'
-        {
-            if ($key -eq '@odata.type')
-            {
-                $key = 'odataType'
-            }
-            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
-        }
-        '*.DateTime'
-        {
-            $returnValue = $Space + $Key + " = '" + $Value + "'`r`n"
-        }
-        '*[[\]]'
-        {
-            $returnValue = $Space + $key + ' = @('
-            $whitespace = ''
-            $newline = ''
-            if ($Value.count -gt 1)
-            {
-                $returnValue += "`r`n"
-                $whitespace = $Space + '    '
-                $newline = "`r`n"
-            }
-            foreach ($item in $Value)
-            {
-                switch -Wildcard ($item.GetType().Fullname )
-                {
-                    '*.String'
-                    {
-                        $returnValue += "$whitespace'$item'$newline"
-                    }
-                    '*.DateTime'
-                    {
-                        $returnValue += "$whitespace'$item'$newline"
-                    }
-                    Default
-                    {
-                        $returnValue += "$whitespace$item$newline"
-                    }
-                }
-            }
-            if ($Value.count -gt 1)
-            {
-                $returnValue += "$Space)`r`n"
-            }
-            else
-            {
-                $returnValue += ")`r`n"
-
-            }
-        }
-        Default
-        {
-            $returnValue = $Space + $Key + ' = ' + $Value + "`r`n"
-        }
-    }
-    return $returnValue
-}
-function Compare-M365DSCComplexObject
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param
-    (
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $Source,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $Target
-    )
-
-    $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
-    foreach ($key in $keys)
-    {
-        $skey = $key
-        if ($key -eq 'odataType')
-        {
-            $skey = '@odata.type'
-        }
-
-        #Marking Target[key] to null if empty complex object or array
-        if ($null -ne $Target[$key])
-        {
-            switch -Wildcard ($Target[$key].getType().Fullname )
-            {
-                'Microsoft.Graph.PowerShell.Models.*'
-                {
-                    $hashProperty = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target[$key]
-                    if (-not (Test-M365DSCComplexObjectHasValues -ComplexObject $hashProperty))
-                    {
-                        $Target[$key] = $null
-                    }
-                }
-                '*[[\]]'
-                {
-                    if ($Target[$key].count -eq 0)
-                    {
-                        $Target[$key] = $null
-                    }
-                }
-            }
-        }
-        $sourceValue = $Source[$key]
-        $targetValue = $Target[$key]
-        #One of the item is null
-        if (($null -eq $Source[$skey]) -xor ($null -eq $Target[$key]))
-        {
-            if ($null -eq $Source[$skey])
-            {
-                $sourceValue = 'null'
-            }
-
-            if ($null -eq $Target[$key])
-            {
-                $targetValue = 'null'
-            }
-            Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
-            return $false
-        }
-        #Both source and target aren't null or empty
-        if (($null -ne $Source[$skey]) -and ($null -ne $Target[$key]))
-        {
-            if ($Source[$skey].getType().FullName -like '*CimInstance*')
-            {
-                #Recursive call for complex object
-                $compareResult = Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source[$skey]) `
-                    -Target (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target[$key])
-
-                if (-not $compareResult)
-                {
-                    Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
-                    return $false
-                }
-            }
-            else
-            {
-                #Simple object comparison
-                $referenceObject = $Target[$key]
-                $differenceObject = $Source[$skey]
-
-                $compareResult = Compare-Object `
-                    -ReferenceObject ($referenceObject) `
-                    -DifferenceObject ($differenceObject)
-
-                if ($null -ne $compareResult)
-                {
-                    Write-Verbose -Message "Configuration drift - key: $key Source{$sourceValue} Target{$targetValue}"
-                    return $false
-                }
-            }
-        }
-    }
-
-    return $true
-}
-
-function Convert-M365DSCDRGComplexTypeToHashtable
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        $ComplexObject
-    )
-
-    if ($ComplexObject.getType().Fullname -like '*[[\]]')
-    {
-        $results = @()
-        foreach ($item in $ComplexObject)
-        {
-            $hash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
-            if (Test-M365DSCComplexObjectHasValues -ComplexObject $hash)
-            {
-                $results += $hash
-            }
-        }
-        if ($results.count -eq 0)
-        {
-            return $null
-        }
-        return $Results
-    }
-    $hashComplexObject = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject
-    if ($hashComplexObject)
-    {
-        $results = $hashComplexObject.clone()
-        $keys = $hashComplexObject.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
-        foreach ($key in $keys)
-        {
-            if (($null -ne $hashComplexObject[$key]) -and ($hashComplexObject[$key].getType().Fullname -like '*CimInstance*'))
-            {
-                $results[$key] = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $hashComplexObject[$key]
-            }
-            if ($null -eq $results[$key])
-            {
-                $results.remove($key) | Out-Null
-            }
-        }
     }
     return $results
 }

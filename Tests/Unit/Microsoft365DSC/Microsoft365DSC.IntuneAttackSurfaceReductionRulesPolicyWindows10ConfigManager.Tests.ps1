@@ -50,13 +50,44 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignments -MockWith {
-                return $null
+            Mock -CommandName Get-DeviceManagementConfigurationPolicyAssignment -MockWith {
+                return @(@{
+
+                        dataType = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                        collectionId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                    })
+            }
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
+                return @{
+                    Id       = '12345-12345-12345-12345-12345'
+                    SettingInstanceTemplate = @{
+                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
+                        settingInstanceTemplateId = 'd770fcd1-62cd-4217-9b20-9ee2a12062ff'
+                        AdditionalProperties = @{
+                            '@odata.type' = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate'
+                            groupSettingCollectionValueTemplate = @{
+                                children =@(
+                                    @{
+                                        '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
+                                        settingInstanceTemplateId ='999c8d1b-9f4e-49b7-824d-001c5c7d0182'
+                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
+                                        choiceSettingValueTemplate = @{
+                                            settingValueTemplateId = 'a212472c-c5cc-43dd-898d-d35286a408e5'
+                                        }
+                                    }
+                                )
+                            }
+                        }
+                    }
+                }
             }
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
         }
 
         # Test contexts
@@ -98,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When the instance already exists and is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Assignments = @(
+                    Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
@@ -149,6 +180,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdditionalProperties = $null
                     }
                 }
+                Mock -CommandName Update-DeviceManagementConfigurationPolicy -MockWith {
+                }
             }
 
             It 'Should return Present from the Get method' {
@@ -161,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Update-DeviceManagementConfigurationPolicy -Exactly 1
             }
         }
 
@@ -173,6 +206,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName = 'My Test'
                     Ensure      = 'Present'
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                        } -ClientOnly)
+                    )
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {

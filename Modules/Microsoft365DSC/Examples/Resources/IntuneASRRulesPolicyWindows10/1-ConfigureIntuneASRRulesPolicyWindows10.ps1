@@ -23,7 +23,7 @@ Configuration Example
             AdvancedRansomewareProtectionType               = 'enable'
             Assignments                                     = @()
             AttackSurfaceReductionExcludedPaths             = @('c:\Novo')
-            BlockPersistenceThroughWmiType                  = 'userDefined'
+            BlockPersistenceThroughWmiType                  = 'auditMode'
             Description                                     = ''
             EmailContentExecutionType                       = 'auditMode'
             GuardedFoldersAllowedAppPaths                   = @()
