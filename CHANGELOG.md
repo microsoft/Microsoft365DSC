@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.712.1
 
 * IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
   * Fixes an issue where the Get-TargetResource function was defining the parameter as Identity and all othe methods and schema had it defined to Id.
@@ -9,6 +9,8 @@
     an error about an invalid token would get thrown when calling the Get-DefaultTenantMyAnalyticsFeatureConfig cmdlet.
 * SPOApp
   * Fixes an issue where the extraction was complaining about op_addition failing.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.167.
 * DRG
   * General cleanup from generated resources from DRG
     * Added module M365DSCDRGUtil.psm1
