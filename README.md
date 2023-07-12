@@ -25,8 +25,7 @@ We are using Azure DevOps for project management. You can access our backlog and
 
 [![codecov](https://codecov.io/gh/Microsoft/Microsoft365DSC/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/Microsoft365DSC)
 
-This is the branch containing the latest release -
-no contributions should be made directly to this branch.
+This is the branch containing the latest release. No contributions should be made directly to this branch.
 
 ### dev
 
