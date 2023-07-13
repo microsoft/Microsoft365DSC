@@ -1,6 +1,14 @@
 {
     "resourceName": "AADAuthenticationMethodPolicyX509",
     "description": "This resource configures an Azure AD Authentication Method Policy X509.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Authentication Policy Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

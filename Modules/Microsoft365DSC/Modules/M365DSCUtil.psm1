@@ -3403,7 +3403,7 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
     $Components = @()
     foreach ($resource in $modules)
     {
-        if ($Resources.Contains($resource.Name.Replace('.psm1', '').Replace('MSFT_', '')))
+        if ($Resources -contains ($resource.Name.Replace('.psm1', '').Replace('MSFT_', '')))
         {
             Import-Module $resource.FullName -Force
             $parameters = (Get-Command 'Set-TargetResource').Parameters.Keys

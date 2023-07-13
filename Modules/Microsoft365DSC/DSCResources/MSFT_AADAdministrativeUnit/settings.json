@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "AADAdministrativeUnit",
     "description": "This resource configures an Azure Active Directory administrative unit.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Privileged Role Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {
