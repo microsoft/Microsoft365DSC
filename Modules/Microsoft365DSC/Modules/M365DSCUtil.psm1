@@ -2795,7 +2795,8 @@ function Update-M365DSCDependencies
         }
         catch
         {
-            Write-Host "Could not update {$($dependency.ModuleName)}"
+            Write-Host "Could not update or import {$($dependency.ModuleName)}"
+            Write-Host "Error-Mesage: $($_.Exception.Message)"
         }
         $i++
     }
