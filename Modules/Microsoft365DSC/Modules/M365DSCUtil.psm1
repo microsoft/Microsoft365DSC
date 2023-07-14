@@ -1665,8 +1665,6 @@ function New-M365DSCConnection
 
     $Global:MaximumFunctionCount = 16000
 
-    Write-Verbose  "Current value for Maxmimum Function Count: §($global:MaximumFunctionCount)"
-
     if ($Workload -eq 'MicrosoftTeams')
     {
         try
@@ -2763,9 +2761,6 @@ function Update-M365DSCDependencies
 
 
     $Global:MaximumFunctionCount = 16000
-
-    Write-Verbose  "Current value for Maxmimum Function Count: §($global:MaximumFunctionCount)"
-
 
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
