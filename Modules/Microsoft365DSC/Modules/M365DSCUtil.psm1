@@ -1157,6 +1157,8 @@ function Export-M365DSCConfiguration
 
     $Global:MaximumFunctionCount = 16000
 
+    Write-Verbose  "Current value for Maxmimum Function Count: §($global:MaximumFunctionCount)"
+
     # Define the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = @()
 
@@ -1660,7 +1662,11 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
+
     $Global:MaximumFunctionCount = 16000
+
+    Write-Verbose  "Current value for Maxmimum Function Count: §($global:MaximumFunctionCount)"
+
     if ($Workload -eq 'MicrosoftTeams')
     {
         try
