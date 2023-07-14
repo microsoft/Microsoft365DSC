@@ -2761,6 +2761,12 @@ function Update-M365DSCDependencies
         $ValidateOnly
     )
 
+
+    $Global:MaximumFunctionCount = 16000
+
+    Write-Verbose  "Current value for Maxmimum Function Count: §($global:MaximumFunctionCount)"
+
+
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
