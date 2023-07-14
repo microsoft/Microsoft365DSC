@@ -49,9 +49,8 @@ This is the branch containing the latest release. No contributions should be mad
 
 [![Unit Tests](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Unit%20Tests.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/Unit%20Tests.yml)
 
-This is the development branch
-to which contributions should be proposed by contributors as pull requests.
-This development branch will periodically be merged to the master branch,
+Contributors are encouraged to propose their contributions as pull requests to this development branch.
+This branch will periodically be merged to the master branch,
 and be released to [PowerShell Gallery](https://www.powershellgallery.com/).
 
 ## How to Install
