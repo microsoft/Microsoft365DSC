@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated all Microsoft.Graph modules to version 2.1.0.
+* MISC
+  * Added a more meaningful exception message to Update-M365DSCDependencies if the module is not installed or imported successfully
+
 # 1.23.712.1
 
 * IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
