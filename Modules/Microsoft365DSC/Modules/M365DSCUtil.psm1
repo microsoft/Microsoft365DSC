@@ -1157,8 +1157,6 @@ function Export-M365DSCConfiguration
 
     $Global:MaximumFunctionCount = 16000
 
-    Write-Verbose  "Current value for Maxmimum Function Count: §($global:MaximumFunctionCount)"
-
     # Define the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = @()
 
@@ -2759,8 +2757,6 @@ function Update-M365DSCDependencies
         $ValidateOnly
     )
 
-
-    $Global:MaximumFunctionCount = 16000
 
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
