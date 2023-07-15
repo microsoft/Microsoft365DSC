@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* SPOExternalUserExpireInDays
+  * Added the External User Expiration setting in the config.
+
 * EXOMailboxPlan
   * Support comparing instances without the GUID in the name.
     FIXES [#3314](https://github.com/microsoft/Microsoft365DSC/issues/3314)
