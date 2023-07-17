@@ -109,7 +109,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
     </td>
 </tr>
 <tr>
-<td width="25%" rowspan="2"><img src="../Images/Personas/SecurityAdmin.jpg"/></td>
+<td width="25%" rowspan="2"><img src="../Images/Personas/ExchangeAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
 <td><p>The Exchange Administrators are responsible for ensuring the proper functioning of mail and calendar functionality as well as securing communications between internal employees and with external entities. They are dealing with components such as:</p>
 <ul>
@@ -147,9 +147,9 @@ This article describes the personas we've identified for Microsoft365DSC and pro
     </td>
 </tr>
 <tr>
-<td width="25%" rowspan="2"><img src="../Images/Personas/SecurityAdmin.jpg"/></td>
+<td width="25%" rowspan="2"><img src="../Images/Personas/CollabAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
-<td><p>The Teams Collaboration Administrators are responsible for ensuring the proper functioning the Teams collaboration features, such as managine channel, managing teams, etc. and for their associated policies (e.g., Teams Channel Policies, Teams Messaging Policies, etc.). They are dealing with components such as:</p>
+<td><p>The Teams Collaboration Administrators are responsible for ensuring the proper functioning the Teams collaboration features, such as managing channel, managing teams, etc. and for their associated policies (e.g., Teams Channel Policies, Teams Messaging Policies, etc.). They are dealing with components such as:</p>
 <ul>
     <li>TeamsAppPermissionPolicy</li>
     <li>TeamsChannel</li>
@@ -163,13 +163,47 @@ This article describes the personas we've identified for Microsoft365DSC and pro
 <tr><td style="text-align:right"><strong>Associated Azure AD Roles:</strong></td>
 <td>
 <p><strong>Create & Update:</strong><ul>
-<li>Exchange Administrator</li>
+<li>Teams Administrator</li>
 </ul></p>
 
 <p><strong>Export & Monitor:</strong>
 <ul>
 <li>Global Reader</li>
-<li>Security Reader</li>
+</ul></p>
+</td>
+</tr>
+</table>
+
+<!--- Teams Voice Admin --->
+<table width="100%">
+<tr>
+    <td width="10%" colspan="3">
+        <strong>Teams Voice Administrator</strong>
+    </td>
+</tr>
+<tr>
+<td width="25%" rowspan="2"><img src="../Images/Personas/CollabAdmin.jpg"/></td>
+<td style="text-align:right"><strong>Description:</strong></td>
+<td><p>The Teams Voice Administrators are responsible for ensuring the proper functioning the voice features in Teams, such as managing IP Phone policies, Voicemail settings, Dial plans, etc. They are dealing with components such as:</p>
+<ul>
+    <li>TeamsEmergencyCallingPolicy</li>
+    <li>TeamsIPPhonePolicy</li>
+    <li>TeamsOnlineVoicemailPolicy</li>
+    <li>TeamsTenantDialPlan</li>
+    <li>Etc.</li>
+</ul>
+</td>
+</tr>
+
+<tr><td style="text-align:right"><strong>Associated Azure AD Roles:</strong></td>
+<td>
+<p><strong>Create & Update:</strong><ul>
+<li>Teams Administrator</li>
+</ul></p>
+
+<p><strong>Export & Monitor:</strong>
+<ul>
+<li>Global Reader</li>
 </ul></p>
 </td>
 </tr>
