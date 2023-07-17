@@ -95,6 +95,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return True from the Test method' {
                 Test-TargetResource @testParams | Should -Be $True
             }
+            It 'Should return false from the Test method' {
+                $testParams.PrimarySMTPAddress = 'test@contoso1.onmicrosoft.com'
+                Test-TargetResource @testParams | Should -Be $False
+            }
         }
 
         Context -Name 'Alias is Contained in the PrimarySMTP Address' -Fixture {
