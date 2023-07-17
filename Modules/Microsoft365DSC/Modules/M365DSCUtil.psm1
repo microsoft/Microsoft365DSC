@@ -1660,7 +1660,9 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
+
     $Global:MaximumFunctionCount = 16000
+
     if ($Workload -eq 'MicrosoftTeams')
     {
         try
@@ -2755,6 +2757,7 @@ function Update-M365DSCDependencies
         $ValidateOnly
     )
 
+
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
@@ -2795,7 +2798,8 @@ function Update-M365DSCDependencies
         }
         catch
         {
-            Write-Host "Could not update {$($dependency.ModuleName)}"
+            Write-Host "Could not update or import {$($dependency.ModuleName)}"
+            Write-Host "Error-Mesage: $($_.Exception.Message)"
         }
         $i++
     }
