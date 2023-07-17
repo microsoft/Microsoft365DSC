@@ -1,5 +1,12 @@
 ﻿{
+    "resourceName": "AADTenantDetails",
     "description": "This resource configures the Azure AD Tenant Details.",
+    "roles": {
+        "read": [],
+        "update": [
+            "Billing Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

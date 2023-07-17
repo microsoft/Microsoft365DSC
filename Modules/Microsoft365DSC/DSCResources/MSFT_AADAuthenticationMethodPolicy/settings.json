@@ -1,6 +1,14 @@
 {
     "resourceName": "AADAuthenticationMethodPolicy",
     "description": "This resource configures an Azure AD Authentication Method Policy.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Authentication Policy Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

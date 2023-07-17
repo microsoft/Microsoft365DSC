@@ -92,7 +92,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {

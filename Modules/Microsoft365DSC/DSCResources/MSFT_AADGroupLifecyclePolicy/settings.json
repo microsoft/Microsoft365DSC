@@ -1,6 +1,12 @@
 ﻿{
     "resourceName": "AADGroupLifecyclePolicy",
     "description": "This resource configures an Azure Active Directory Group Lifecycle Policy (e.g. Expiration).",
+    "roles": {
+        "read": [],
+        "update": [
+            "Groups Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

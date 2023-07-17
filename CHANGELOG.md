@@ -2,12 +2,16 @@
 
 # UNRELEASED
 
-* DEPENDENCIES
-  * Updated all Microsoft.Graph modules to version 2.1.0.
-* MISC
-  * Added a more meaningful exception message to Update-M365DSCDependencies if the module is not installed or imported successfully
 * EXOSharedMailbox
   * Added capability to change the PrimarySMTPAddress of a Shared Mailbox
+* MISC
+  * Updated AAD, EXO and Teams settings file to describe required roles.
+  * Added a new personas documentation page to describe the targeted personas for the project.
+  * Added a more meaningful exception message to Update-M365DSCDependencies if the module is not installed or imported successfully
+* DEPENDENCIES
+  * Updated the Microsoft.Graph.* dependencies to version 2.1.0.
+  * Updated MicrosoftTeams to version 5.4.0.
+  * Updated MSCloudLoginAssistant to version 1.0.117.
 
 # 1.23.712.1
 

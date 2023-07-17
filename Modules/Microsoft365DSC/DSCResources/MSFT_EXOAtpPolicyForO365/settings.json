@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "EXOAtpPolicyForO365",
     "description": "",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Security Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

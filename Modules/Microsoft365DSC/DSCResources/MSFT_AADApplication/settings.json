@@ -1,6 +1,12 @@
 ﻿{
     "resourceName": "AADApplication",
     "description": "This resource configures an Azure Active Directory Application.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": []
+    },
     "permissions": {
         "graph": {
             "delegated": {
