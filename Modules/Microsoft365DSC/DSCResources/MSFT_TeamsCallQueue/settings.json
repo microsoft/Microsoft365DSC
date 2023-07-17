@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "TeamsCallQueue",
     "description": "This resource is used to manage Call Queue in your Skype for Business Online organization.",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Teams Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

@@ -405,6 +405,10 @@ function Export-TargetResource
                 $i++
             }
         }
+        else
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Policy Tip Configurations."
+        }
         return $dscContent
     }
     catch

@@ -1,5 +1,13 @@
 ﻿{
     "resourceName": "EXOAntiPhishPolicy",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Security Administrator"
+        ]
+    },
     "description": "",
     "permissions": {
         "graph": {

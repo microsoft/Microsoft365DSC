@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated the Microsoft.Graph.* dependencies to version 2.1.0.
+  * Updated MicrosoftTeams to version 5.4.0.
+  * Updated MSCloudLoginAssistant to version 1.0.117.
+
 # 1.23.712.1
 
 * IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator

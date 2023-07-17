@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "TeamsOnlineVoicemailPolicy",
     "description": "",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Teams Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

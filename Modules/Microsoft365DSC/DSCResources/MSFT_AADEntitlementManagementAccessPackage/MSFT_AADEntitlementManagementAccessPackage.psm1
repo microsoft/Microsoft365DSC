@@ -950,7 +950,7 @@ function Export-TargetResource
     {
         if ($_.ErrorDetails.Message -like '*User is not authorized to perform the operation.*')
         {
-            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component or the user has not been granted the proper permissions."
         }
         else
         {

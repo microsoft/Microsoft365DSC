@@ -1,5 +1,11 @@
 ﻿{
     "resourceName": "EXOAddressList",
+    "roles": {
+        "read": [],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
     "description": "",
     "permissions": {
         "graph": {

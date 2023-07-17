@@ -1,6 +1,10 @@
 ﻿{
     "resourceName": "EXOAddressList",
     "description": "",
+    "roles": {
+        "read": [],
+        "update": []
+    },
     "permissions": {
         "graph": {
             "delegated": {

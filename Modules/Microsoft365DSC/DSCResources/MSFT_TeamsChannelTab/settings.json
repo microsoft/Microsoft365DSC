@@ -1,6 +1,10 @@
 ﻿{
     "resourceName": "TeamsChannelTab",
     "description": "",
+    "roles": {
+        "read": [],
+        "update": []
+    },
     "permissions": {
         "graph": {
             "delegated": {

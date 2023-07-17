@@ -252,12 +252,16 @@ function Set-TargetResource
     $resourceScopesObj += $ResourceScopes
 
     $currentParameters.Add('RolePermissions', $rolePermissionsObj) | Out-Null
-    $currentParameters.Add('ResourceScopes', $resourceScopesObj) | Out-Null
+    if ($ResourceScopes.Length -gt 0)
+    {
+        $currentParameters.Add('ResourceScopes', $resourceScopesObj) | Out-Null
+    }
 
     # Role definition should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADRoleDef.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating New AzureAD role defition {$DisplayName}"
+        Write-Verbose -Message "Creating New AzureAD role defition {$DisplayName} with parameters:"
+        Write-Verbose -Message (Convert-M365DscHashtableToString -Hashtable $currentParameters)
         $currentParameters.Remove('Id') | Out-Null
         New-MgBetaRoleManagementDirectoryRoleDefinition @currentParameters
     }

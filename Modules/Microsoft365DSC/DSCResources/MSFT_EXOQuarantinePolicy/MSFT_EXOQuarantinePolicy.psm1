@@ -419,6 +419,12 @@ function Set-TargetResource
         }
         else
         {
+            $IdentityValue = $Identity.Split('\')
+            if ($IdentityValue.Length -gt 1)
+            {
+                $IdentityValue = $IdentityValue[1]
+                $QuarantinePolicyParams.Identity = $IdentityValue
+            }
             Set-QuarantinePolicy @QuarantinePolicyParams
         }
     }

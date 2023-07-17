@@ -15,50 +15,162 @@ This article describes the personas we've identified for Microsoft365DSC and pro
 <li><strong>Managed Identity:</strong> which is not covered as part of this article due to the lack of support across all workloads.</li>
 </ul>
 </p>
-## The Security Administrator
+## Azure AD/ Entra
 
-As a Security Administrator, I want to define new Entra Identity policies, make updates to exsting ones and monitor them for configuration drifts at scale and across one or multiple tenants.
-
+<!--- Identity Admin --->
 <table width="100%">
 <tr>
-<td width="25%" rowspan="2"><img src="../Images/Personas/SecurityAdmin.jpg"/></td>
-<td width="10%" style="text-align:right"><strong>Role:</strong></td><td width="65%">Security Administrator</td>
+    <td width="10%" colspan="3">
+        <strong>Identity Administrator</strong>
+    </td>
 </tr>
-<tr><td style="text-align:right"><strong>Required Permissions:</strong></td>
+<tr>
+<td width="25%" rowspan="2"><img src="../Images/Personas/IdentityAdmin.jpg"/></td>
+<td style="text-align:right"><strong>Description:</strong></td>
+<td><p>The Identity Administrators are responsible managing users and groups settings. As part of their role, they are responsible for defining what permissions users and service principals are granted in the tenant. They are dealing with components such as:</p>
+<ul>
+    <li>AADAdministrativeUnit</li>
+    <li>AADApplication</li>
+    <li>AADGroups</li>
+    <li>AADGroupsNamingPolicy</li>
+    <li>AADRoleDefinition</li>
+    <li>AADServicePrincipal</li>
+    <li>AADUser</li>
+    <li>Etc.</li>
+</ul>
+</td>
+</tr>
+
+<tr><td style="text-align:right"><strong>Associated Azure AD Roles:</strong></td>
 <td>
-<table width="100%">
-<tr><th width="100%" colspan="2">Credentials</th></tr>
-<tr>
-<td width="25%" style="text-align:right">Create & Update</td>
-<td width="75%"><ul>
-<li>
-Microsoft Graph Command Line Tools
+<p><strong>Create & Update:</strong><ul>
+<li>Groups Administrator</li>
+<li>Identity Governance Administrator</li>
+<li>Security Administrator</li>
+<li>User Administrator</li>
+</ul></p>
+
+<p><strong>Export & Monitor:</strong>
 <ul>
-    <li>Domain.Read.All</li>
-    <li>openid</li>
-    <li>profile</li>
-    <li>offline_access</li>
-    <li><em>any additional permissions required by the associated resources.</em></li>
-</ul>
-</li>
-</ul></td>
-</tr>
-<tr>
-<td width="25%" style="text-align:right">Export/Monitor</td>
-<td width="75%"><ul>
-<li>
-Microsoft Graph Command Line Tools
-<ul>
-    <li>Domain.Read.All</li>
-    <li>openid</li>
-    <li>profile</li>
-    <li>offline_access</li>
-    <li><em>any additional permissions required by the associated resources.</em></li>
-</ul>
-</li>
-</ul></td>
+<li>Global Reader</li>
+<li>Security Reader</li>
+</ul></p>
+</td>
 </tr>
 </table>
+
+<!--- Security Admin --->
+<table width="100%">
+<tr>
+    <td width="10%" colspan="3">
+        <strong>Security Administrator</strong>
+    </td>
+</tr>
+<tr>
+<td width="25%" rowspan="2"><img src="../Images/Personas/SecurityAdmin.jpg"/></td>
+<td style="text-align:right"><strong>Description:</strong></td>
+<td><p>The Security Administrators are responsible for defining new Entra Identity policies, make updates to exsting ones and monitor them for configuration drifts at scale and across one or multiple tenants. Their goal is to ensure the overal security of the tenant by ensuring only authorized users can perform certain tasks. They are dealing with components such as:</p>
+<ul>
+    <li>AADAuthenticationMethodPolicy</li>
+    <li>AADAuthorizationPolicy</li>
+    <li>AADConditionalAccessPolicy</li>
+    <li>AADCrossTenantAccessPolicy</li>
+    <li>AADEntitlementManagementAccessPackage</li>
+    <li>Etc.</li>
+</ul>
+</td>
+</tr>
+
+<tr><td style="text-align:right"><strong>Associated Azure AD Roles:</strong></td>
+<td>
+<p><strong>Create & Update:</strong><ul>
+<li>Authentication Policy Administrator</li>
+<li>Conditional Access Administrator</li>
+<li>Privileged Role Administrator</li>
+<li>Security Administrator</li>
+</ul></p>
+
+<p><strong>Export & Monitor:</strong>
+<ul>
+<li>Global Reader</li>
+<li>Security Reader</li>
+</ul></p>
+</td>
+</tr>
+</table>
+
+## Exchange Online
+
+<!--- Exchange Online Admin --->
+<table width="100%">
+<tr>
+    <td width="10%" colspan="3">
+        <strong>Exchange Administrator</strong>
+    </td>
+</tr>
+<tr>
+<td width="25%" rowspan="2"><img src="../Images/Personas/SecurityAdmin.jpg"/></td>
+<td style="text-align:right"><strong>Description:</strong></td>
+<td><p>The Exchange Administrators are responsible for ensuring the proper functioning of mail and calendar functionality as well as securing communications between internal employees and with external entities. They are dealing with components such as:</p>
+<ul>
+    <li>EXOAntiphishPolicy</li>
+    <li>EXOMalwareFilterRule</li>
+    <li>EXOPerimeterConfiguration</li>
+    <li>EXOTransportRule</li>
+    <li>Etc.</li>
+</ul>
+</td>
+</tr>
+
+<tr><td style="text-align:right"><strong>Associated Azure AD Roles:</strong></td>
+<td>
+<p><strong>Create & Update:</strong><ul>
+<li>Exchange Administrator</li>
+</ul></p>
+
+<p><strong>Export & Monitor:</strong>
+<ul>
+<li>Global Reader</li>
+<li>Security Reader</li>
+</ul></p>
+</td>
+</tr>
+</table>
+
+## Microsoft Teams
+
+<!--- Teams Collaboration Admin --->
+<table width="100%">
+<tr>
+    <td width="10%" colspan="3">
+        <strong>Teams Collaboration Administrator</strong>
+    </td>
+</tr>
+<tr>
+<td width="25%" rowspan="2"><img src="../Images/Personas/SecurityAdmin.jpg"/></td>
+<td style="text-align:right"><strong>Description:</strong></td>
+<td><p>The Teams Collaboration Administrators are responsible for ensuring the proper functioning the Teams collaboration features, such as managine channel, managing teams, etc. and for their associated policies (e.g., Teams Channel Policies, Teams Messaging Policies, etc.). They are dealing with components such as:</p>
+<ul>
+    <li>TeamsAppPermissionPolicy</li>
+    <li>TeamsChannel</li>
+    <li>TeamsMessagingPolicy</li>
+    <li>TeamsShiftPolicy</li>
+    <li>Etc.</li>
+</ul>
+</td>
+</tr>
+
+<tr><td style="text-align:right"><strong>Associated Azure AD Roles:</strong></td>
+<td>
+<p><strong>Create & Update:</strong><ul>
+<li>Exchange Administrator</li>
+</ul></p>
+
+<p><strong>Export & Monitor:</strong>
+<ul>
+<li>Global Reader</li>
+<li>Security Reader</li>
+</ul></p>
 </td>
 </tr>
 </table>

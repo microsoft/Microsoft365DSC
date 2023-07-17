@@ -1,6 +1,12 @@
 ﻿{
     "resourceName": "AADRoleSetting",
     "description": "This resource configures an Azure Role.",
+    "roles": {
+        "read": [],
+        "update": [
+            "Privileged Role Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

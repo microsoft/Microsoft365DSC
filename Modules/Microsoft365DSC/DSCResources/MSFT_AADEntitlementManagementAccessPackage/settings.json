@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "AADEntitlementManagementAccessPackage",
-    "description": "This resource configures an A A D Entitlement Management Access Package.",
+    "description": "This resource configures an Azure AD Entitlement Management Access Package.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Identity Governance Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

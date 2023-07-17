@@ -1,6 +1,12 @@
 ﻿{
     "resourceName": "AADGroupsSettings",
     "description": "This resource configures the Azure Active Directory groups settings.",
+    "roles": {
+        "read": [],
+        "update": [
+            "Groups Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

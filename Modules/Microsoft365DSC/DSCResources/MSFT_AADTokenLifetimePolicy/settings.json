@@ -1,6 +1,12 @@
 ﻿{
     "resourceName": "AADTokenLifetimePolicy",
     "description": "This resource configures the Azure AD Token Lifetime Policies.",
+    "roles": {
+        "read": [],
+        "update": [
+            "Application Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

@@ -457,6 +457,11 @@ function Export-TargetResource
             $i++
         }
     }
+    else
+    {
+        Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered to allow for DKIM Signing Config"
+        return ''
+    }
     return $dscContent
 }
 
