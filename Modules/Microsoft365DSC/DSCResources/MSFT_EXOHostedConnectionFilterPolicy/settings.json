@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "EXOHostedConnectionFilterPolicy",
     "description": "",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Security Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

@@ -1,6 +1,14 @@
 {
     "resourceName": "AADAuthenticationMethodPolicyVoice",
     "description": "This resource configures an Azure AD Authentication Method Policy Voice.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Authentication Policy Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

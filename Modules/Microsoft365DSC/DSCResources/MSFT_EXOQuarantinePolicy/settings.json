@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "EXOQuarantinePolicy",
     "description": "",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Security Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

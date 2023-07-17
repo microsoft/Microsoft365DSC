@@ -1,6 +1,10 @@
 ﻿{
     "resourceName": "EXOResourceConfiguration",
     "description": "",
+    "roles": {
+        "read": [],
+        "update": []
+    },
     "permissions": {
         "graph": {
             "delegated": {
@@ -16,7 +20,7 @@
             "requiredroles": [
                 "Organization Configuration"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": ""
         }
     }
 }

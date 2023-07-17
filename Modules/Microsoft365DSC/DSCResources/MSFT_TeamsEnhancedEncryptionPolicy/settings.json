@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "TeamsEnhancedEncryptionPolicy",
-    "description": "This resource configures an Use this resource to create a new Teams enhanced encryption policy..",
+    "description": "This resource configures an Use this resource to create a new Teams enhanced encryption policy.",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Teams Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

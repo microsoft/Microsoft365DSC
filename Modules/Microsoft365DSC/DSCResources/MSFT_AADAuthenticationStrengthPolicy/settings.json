@@ -1,6 +1,12 @@
 {
     "resourceName": "AADAuthenticationStrengthPolicy",
     "description": "This resource configures an Azure AD Authentication Strength Policy.",
+    "roles": {
+        "read": [],
+        "update": [
+            "Security Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

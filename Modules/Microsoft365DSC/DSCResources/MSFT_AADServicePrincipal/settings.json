@@ -1,6 +1,12 @@
 ﻿{
     "resourceName": "AADServicePrincipal",
     "description": "This resource configures an Azure Active Directory ServicePrincipal.",
+    "roles": {
+        "read": [],
+        "update": [
+            "Application Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

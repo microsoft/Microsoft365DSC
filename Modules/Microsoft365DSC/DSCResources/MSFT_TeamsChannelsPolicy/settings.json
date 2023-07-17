@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "TeamsChannelsPolicy",
     "description": "",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Teams Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {
