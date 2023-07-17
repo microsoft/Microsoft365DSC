@@ -33,5 +33,6 @@
     "powershell.codeFormatting.whitespaceInsideBrace": true,
     "powershell.pester.useLegacyCodeLens": false,
     "powershell.scriptAnalysis.enable": true,
-    "powershell.scriptAnalysis.settingsPath": ".vscode/ScriptAnalyzerSettings.psd1"
+    "powershell.scriptAnalysis.settingsPath": ".vscode/ScriptAnalyzerSettings.psd1",
+    "pester.autoRunOnSave": false
 }

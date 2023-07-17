@@ -174,6 +174,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'Primary Smtp Address different' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName        = 'Test Shared Mailbox'
+                    PrimarySMTPAddress = 'Test@contoso1.onmicrosoft.com'
+                    Alias                = 'test'
+                    EmailAddresses     = @('smtp:user@contoso.onmicrosoft.com', 'SMTP:test@contoso.onmicrosoft.com')
+                    Ensure             = 'Present'
+                    Credential         = $Credential
+                }
+
+                Mock -CommandName Get-Mailbox -MockWith {
+                    return @{
+                        Identity             = 'Test Shared Mailbox'
+                        RecipientTypeDetails = 'SharedMailbox'
+                        Alias                = 'test'
+                        EmailAddresses       = @('smtp:user@contoso.onmicrosoft.com', 'SMTP:test@contoso.onmicrosoft.com')
+                        PrimarySMTPAddress   = 'test@contoso.onmicrosoft.com'
+                    }
+                }
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+            }
+        }
+
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
