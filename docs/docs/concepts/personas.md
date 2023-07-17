@@ -25,7 +25,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
     </td>
 </tr>
 <tr>
-<td width="25%" rowspan="2"><img src="../Images/Personas/IdentityAdmin.jpg"/></td>
+<td width="25%" rowspan="2"><img src="/Images/Personas/IdentityAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
 <td><p>The Identity Administrators are responsible managing users and groups settings. As part of their role, they are responsible for defining what permissions users and service principals are granted in the tenant. They are dealing with components such as:</p>
 <ul>
@@ -67,7 +67,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
     </td>
 </tr>
 <tr>
-<td width="25%" rowspan="2"><img src="../Images/Personas/SecurityAdmin.jpg"/></td>
+<td width="25%" rowspan="2"><img src="/Images/Personas/SecurityAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
 <td><p>The Security Administrators are responsible for defining new Entra Identity policies, make updates to exsting ones and monitor them for configuration drifts at scale and across one or multiple tenants. Their goal is to ensure the overal security of the tenant by ensuring only authorized users can perform certain tasks. They are dealing with components such as:</p>
 <ul>
@@ -109,7 +109,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
     </td>
 </tr>
 <tr>
-<td width="25%" rowspan="2"><img src="../Images/Personas/ExchangeAdmin.jpg"/></td>
+<td width="25%" rowspan="2"><img src="/Images/Personas/ExchangeAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
 <td><p>The Exchange Administrators are responsible for ensuring the proper functioning of the mail and calendar functionality as well as securing communications between internal employees and with external entities. They are dealing with components such as:</p>
 <ul>
@@ -147,7 +147,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
     </td>
 </tr>
 <tr>
-<td width="25%" rowspan="2"><img src="../Images/Personas/CollabAdmin.jpg"/></td>
+<td width="25%" rowspan="2"><img src="/Images/Personas/CollabAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
 <td><p>The Teams Collaboration Administrators are responsible for ensuring the proper functioning of the Teams collaboration features, such as managing channel, managing teams, etc. and for their associated policies (e.g., Teams Channel Policies, Teams Messaging Policies, etc.). They are dealing with components such as:</p>
 <ul>
@@ -182,7 +182,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
     </td>
 </tr>
 <tr>
-<td width="25%" rowspan="2"><img src="../Images/Personas/CollabAdmin.jpg"/></td>
+<td width="25%" rowspan="2"><img src="/Images/Personas/CollabAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
 <td><p>The Teams Voice Administrators are responsible for ensuring the proper functioning of the voice features in Teams, such as managing IP Phone policies, Voicemail settings, Dial plans, etc. They are dealing with components such as:</p>
 <ul>
