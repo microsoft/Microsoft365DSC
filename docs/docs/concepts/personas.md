@@ -182,7 +182,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
     </td>
 </tr>
 <tr>
-<td width="25%" rowspan="2"><img src="/Images/Personas/CollabAdmin.jpg"/></td>
+<td width="25%" rowspan="2"><img src="/Images/Personas/VoiceAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
 <td><p>The Teams Voice Administrators are responsible for ensuring the proper functioning of the voice features in Teams, such as managing IP Phone policies, Voicemail settings, Dial plans, etc. They are dealing with components such as:</p>
 <ul>
