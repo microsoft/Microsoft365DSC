@@ -1,6 +1,6 @@
 # Personas
 
-This article describes the personas we've identified for Microsoft365DSC and provides additional insights about what each one is trying to achieve and how we recommend they configure authentication. For each personas, we provide the permissions that are required to either deploy configuration changes (including creating new instances of components) and to backup and monitor these configuration settings. If you are only interested in taking snapshots/backups of current configuration settings or to monitor existing settings for configuration drifts, than only read-only permissions are required (with some exceptions). On the other hand, if you are trying to create new instances of components (e.g., new policy) or to update existing ones, then write permissions will also be needed on top of the read permissions.
+This article describes the personas we've identified for Microsoft365DSC and provides additional insights about what each one is trying to achieve and how we recommend they configure authentication. For each persona, we provide the permissions that are required to either deploy configuration changes (including creating new instances of components) and to backup and monitor these configuration settings. If you are only interested in taking snapshots/backups of current configuration settings or to monitor existing settings for configuration drifts, than only read-only permissions are required (with some exceptions). On the other hand, if you are trying to create new instances of components (e.g., new policy) or to update existing ones, then write permissions will also be needed on top of the read permissions.
 
 <p>As mentioned in our User Guide section, there are three main types of authentication allowed in Microsoft365DSC:
 <ul>
@@ -111,7 +111,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
 <tr>
 <td width="25%" rowspan="2"><img src="../Images/Personas/ExchangeAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
-<td><p>The Exchange Administrators are responsible for ensuring the proper functioning of mail and calendar functionality as well as securing communications between internal employees and with external entities. They are dealing with components such as:</p>
+<td><p>The Exchange Administrators are responsible for ensuring the proper functioning of the mail and calendar functionality as well as securing communications between internal employees and with external entities. They are dealing with components such as:</p>
 <ul>
     <li>EXOAntiphishPolicy</li>
     <li>EXOMalwareFilterRule</li>
@@ -149,7 +149,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
 <tr>
 <td width="25%" rowspan="2"><img src="../Images/Personas/CollabAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
-<td><p>The Teams Collaboration Administrators are responsible for ensuring the proper functioning the Teams collaboration features, such as managing channel, managing teams, etc. and for their associated policies (e.g., Teams Channel Policies, Teams Messaging Policies, etc.). They are dealing with components such as:</p>
+<td><p>The Teams Collaboration Administrators are responsible for ensuring the proper functioning of the Teams collaboration features, such as managing channel, managing teams, etc. and for their associated policies (e.g., Teams Channel Policies, Teams Messaging Policies, etc.). They are dealing with components such as:</p>
 <ul>
     <li>TeamsAppPermissionPolicy</li>
     <li>TeamsChannel</li>
@@ -184,7 +184,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
 <tr>
 <td width="25%" rowspan="2"><img src="../Images/Personas/CollabAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
-<td><p>The Teams Voice Administrators are responsible for ensuring the proper functioning the voice features in Teams, such as managing IP Phone policies, Voicemail settings, Dial plans, etc. They are dealing with components such as:</p>
+<td><p>The Teams Voice Administrators are responsible for ensuring the proper functioning of the voice features in Teams, such as managing IP Phone policies, Voicemail settings, Dial plans, etc. They are dealing with components such as:</p>
 <ul>
     <li>TeamsEmergencyCallingPolicy</li>
     <li>TeamsIPPhonePolicy</li>
