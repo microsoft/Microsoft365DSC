@@ -3,7 +3,7 @@
 {
   "name": "PowerShell Binary Module",
   "hostRequirements": {
-    "cpus": 4
+    "cpus": 2
   },
   // Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
   "image": "mcr.microsoft.com/devcontainers/dotnet:0-7.0",
@@ -22,9 +22,7 @@
   "customizations": {
     "vscode": {
       "extensions": [
-        "ms-dotnettools.csharp@prerelease",
-        "josefpihrt-vscode.roslynator", //This also installs the C# extension. We cant specify them both because it leads to a race condition currently due to bug in codespaces loading
-        "ms-vscode.powershell",
+         "ms-vscode.powershell",
         "adrianwilczynski.namespace",
         "ms-vscode-remote.remote-containers",
         "anseki.vscode-color", //Useful for picking colors
@@ -37,13 +35,6 @@
         "chouzz.vscode-better-align"
       ],
       "settings": {
-        "[csharp]": {
-          "editor.defaultFormatter": "ms-dotnettools.csharp",
-          "editor.formatOnSave": true,
-          "editor.formatOnSaveMode": "modificationsIfAvailable",
-          "editor.formatOnType": true,
-          "editor.wordBasedSuggestions": false
-        },
         "editor.inlayHints.enabled": "offUnlessPressed",
         "csharp.inlayHints.parameters.enabled": true,
         "csharp.inlayHints.parameters.forIndexerParameters": true,
