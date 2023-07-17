@@ -1155,6 +1155,8 @@ function Export-M365DSCConfiguration
         $Validate
     )
 
+    $Global:MaximumFunctionCount = 16000
+
     # Define the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = @()
 
@@ -1510,7 +1512,7 @@ function Get-M365DSCTenantDomain
 
         try
         {
-            $tenantDetails = Get-MgOrganization -ErrorAction 'Stop'
+            $tenantDetails = Get-MgBetaOrganization -ErrorAction 'Stop'
             $defaultDomain = $tenantDetails.VerifiedDomains | Where-Object -FilterScript { $_.IsInitial }
 
             return $defaultDomain.Name
@@ -1658,6 +1660,8 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
+
+    $Global:MaximumFunctionCount = 16000
 
     if ($Workload -eq 'MicrosoftTeams')
     {
@@ -2041,7 +2045,7 @@ function Get-SPOAdministrationUrl
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message 'Getting SharePoint Online admin URL...'
-    [Array]$defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de' -or $_.Id -like '*.onmicrosoft.us') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    [Array]$defaultDomain = Get-MgBetaDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de' -or $_.Id -like '*.onmicrosoft.us') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].Id -like '*.onmicrosoft.com*')
     {
@@ -2089,7 +2093,7 @@ function Get-M365TenantName
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
     Write-Verbose -Message 'Getting SharePoint Online admin URL...'
-    [Array]$defaultDomain = Get-MgDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
+    [Array]$defaultDomain = Get-MgBetaDomain | Where-Object { ($_.Id -like '*.onmicrosoft.com' -or $_.Id -like '*.onmicrosoft.de') -and $_.IsInitial -eq $true } # We don't use IsDefault here because the default could be a custom domain
 
     if ($defaultDomain[0].Id -like '*.onmicrosoft.com*')
     {
@@ -2380,17 +2384,28 @@ function Get-AllSPOPackages
             -Url $tenantAppCatalogUrl
 
         $filesToDownload = @()
-
+        $allFiles = @()
         if ($null -ne $tenantAppCatalogUrl)
         {
-            $spfxFiles = Find-PnPFile -List 'AppCatalog' -Match '*.sppkg'
-            $appFiles = Find-PnPFile -List 'AppCatalog' -Match '*.app'
-
-            $allFiles = $spfxFiles + $appFiles
-
-            foreach ($file in $allFiles)
+            try
             {
-                $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+                [Array]$spfxFiles = Find-PnPFile -List 'AppCatalog' -Match '*.sppkg' -ErrorAction Stop
+                [Array]$appFiles = Find-PnPFile -List 'AppCatalog' -Match '*.app' -ErrorAction Stop
+
+                $allFiles = $spfxFiles + $appFiles
+
+                foreach ($file in $allFiles)
+                {
+                    $filesToDownload += @{Name = $file.Name; Site = $tenantAppCatalogUrl; Title = $file.Title }
+                }
+            }
+            catch
+            {
+                New-M365DSCLogEntry -Message $_.Exception.Message `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
             }
         }
         return $filesToDownload
@@ -2742,6 +2757,7 @@ function Update-M365DSCDependencies
         $ValidateOnly
     )
 
+
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
     $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
@@ -2782,7 +2798,8 @@ function Update-M365DSCDependencies
         }
         catch
         {
-            Write-Host "Could not update {$($dependency.ModuleName)}"
+            Write-Host "Could not update or import {$($dependency.ModuleName)}"
+            Write-Host "Error-Mesage: $($_.Exception.Message)"
         }
         $i++
     }

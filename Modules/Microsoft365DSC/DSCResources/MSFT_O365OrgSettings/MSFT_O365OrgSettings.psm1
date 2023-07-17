@@ -156,6 +156,14 @@ function Get-TargetResource
     $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
         -InboundParameters $PSBoundParameters
 
+    # Workaround for issue when if connected to S+C prior to calling cmdlet, an error about an invalid token is thrown.
+    # If connected to S+C, then we need to re-initialize the connection to EXO.
+    if ($Global:MSCloudLoginConnectionProfile.SecurityComplianceCenter.Connected -and `
+        $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Connected)
+    {
+        $Global:MSCloudLoginConnectionProfile.ExchangeOnline.Disconnect()
+        $Global:MSCloudLoginConnectionProfile.SecurityComplianceCenter.Connected = $false
+    }
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
@@ -190,13 +198,27 @@ function Get-TargetResource
 
         # Microsoft Viva Briefing Email
         $vivaBriefingEmailValue = $false
-        $currentBriefingConfig = Get-DefaultTenantBriefingConfig
-        if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
+        try
         {
-            $vivaBriefingEmailValue = $true
+            $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop
+            if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
+            {
+                $vivaBriefingEmailValue = $true
+            }
+        }
+        catch
+        {
+            if ($_.Exception.Message -like "*Unexpected character encountered while parsing value*")
+            {
+                $vivaBriefingEmailValue = $true
+            }
+            else
+            {
+                throw $_
+            }
         }
 
-        # Viva Insightss settings
+        # Viva Insights settings
         $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig
         $MRODeviceManagerService = 'ebe0c285-db95-403f-a1a3-a793bd6d7767'
         try

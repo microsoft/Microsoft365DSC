@@ -62,8 +62,6 @@ nav:
       - 'Develop a New Resource': 'contributing/develop-new-resource.md'
   - Concepts:
       - 'Breaking Changes Policy': 'concepts/breaking-changes.md'
-      - 'OneDrive & SharePoint Permissions': 'concepts/odsp-permissions.md'
-      - 'Consent Flow': 'concepts/consent-flow.md'
       - 'Key Parameters in DSC': 'concepts/key-parameters.md'
   - Resources:
       - 'Overview': 'resources/overview.md'

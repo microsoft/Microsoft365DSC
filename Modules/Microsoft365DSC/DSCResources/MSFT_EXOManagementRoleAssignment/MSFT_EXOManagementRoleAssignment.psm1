@@ -117,7 +117,14 @@ function Get-TargetResource
 
     try
     {
-        $roleAssignment = Get-ManagementRoleAssignment -Identity $Name -ErrorAction SilentlyContinue
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            $roleAssignment = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Name}
+        }
+        else
+        {
+            $roleAssignment = Get-ManagementRoleAssignment -Identity $Name -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $roleAssignment)
         {
@@ -131,7 +138,7 @@ function Get-TargetResource
             {
                 $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                     -InboundParameters $PSBoundParameters
-                $adminUnit = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $roleAssignment.CustomRecipientWriteScope
+                $adminUnit = Get-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $roleAssignment.CustomRecipientWriteScope
 
                 if ($RecipientAdministrativeUnitScope -eq $adminUnit.Id)
                 {
@@ -317,10 +324,10 @@ function Set-TargetResource
         $NewManagementRoleParams.Remove('CustomRecipientWriteScope') | Out-Null
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
-        $adminUnit = Get-MgDirectoryAdministrativeUnit -AdministrativeUnitId $RecipientAdministrativeUnitScope -ErrorAction SilentlyContinue
+        $adminUnit = Get-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $RecipientAdministrativeUnitScope -ErrorAction SilentlyContinue
         if ($null -eq $adminUnit)
         {
-            $adminUnit = Get-MgDirectoryAdministrativeUnit -All | Where-Object -FilterScript { $_.DisplayName -eq $RecipientAdministrativeUnitScope }
+            $adminUnit = Get-MgBetaDirectoryAdministrativeUnit -All | Where-Object -FilterScript { $_.DisplayName -eq $RecipientAdministrativeUnitScope }
         }
         $NewManagementRoleParams.RecipientAdministrativeUnitScope = $adminUnit.Id
     }
@@ -564,13 +571,14 @@ function Export-TargetResource
 
     try
     {
-        [array]$roleAssignments = Get-ManagementRoleAssignment | Where-Object -FilterScript { $_.RoleAssigneeType -eq 'ServicePrincipal' -or `
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-ManagementRoleAssignment | Where-Object -FilterScript { $_.RoleAssigneeType -eq 'ServicePrincipal' -or `
                 $_.RoleAssigneeType -eq 'User' -or $_.RoleAssigneeType -eq 'RoleAssignmentPolicy' -or $_.RoleAssigneeType -eq 'SecurityGroup' `
                 -or $_.RoleAssigneeType -eq 'RoleGroup' }
 
-        $dscContent = ''
+        $dscContent = [System.Text.StringBuilder]::New()
 
-        if ($roleAssignments.Length -eq 0)
+        if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -579,9 +587,9 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        foreach ($assignment in $roleAssignments)
+        foreach ($assignment in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($roleAssignments.Count)] $($assignment.Name)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($assignment.Name)" -NoNewline
 
             $Params = @{
                 Name                  = $assignment.Name
@@ -602,13 +610,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent += $currentDSCBlock
+            $dscContent.Append($currentDSCBlock) | Out-Null
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-        return $dscContent
+        return $dscContent.ToString()
     }
     catch
     {

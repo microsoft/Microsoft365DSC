@@ -257,6 +257,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Url                 = 'https://001q1.sharepoint.com/'
                     }
                 }
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
+                    return @(
+                        [PSCustomObject]@{
+                            Id = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
+                            displayName = 'MyCatalog'
+                        }
+                    )
+                }
             }
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams

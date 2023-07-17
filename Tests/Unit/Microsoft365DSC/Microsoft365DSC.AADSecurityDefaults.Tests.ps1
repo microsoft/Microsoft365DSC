@@ -32,7 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
+            Mock -CommandName Update-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -59,7 +59,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential       = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
                     return @{
                         DisplayName = 'Security Defaults'
                         Id          = '000000000000'
@@ -71,14 +71,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy' -Exactly 1
             }
             It 'Should return false from the test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
             It 'Should create the Enable from the set method' {
                 Set-TargetResource @testParams |
-                Should -Invoke -CommandName 'Update-MgPolicyIdentitySecurityDefaultEnforcementPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Update-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy' -Exactly 1
             }
         }
         Context -Name 'The Security Defaults are already in the desired State' -Fixture {
@@ -91,7 +91,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential       = $credsGlobalAdmin
                 }
 
-                Mock -CommandName Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
+                Mock -CommandName Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
                     return @{
                         DisplayName = 'Security Defaults'
                         Id          = '000000000000'
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should return values from the get method' {
                 Get-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgPolicyIdentitySecurityDefaultEnforcementPolicy' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy' -Exactly 1
             }
 
             It 'Should return false from the test method' {

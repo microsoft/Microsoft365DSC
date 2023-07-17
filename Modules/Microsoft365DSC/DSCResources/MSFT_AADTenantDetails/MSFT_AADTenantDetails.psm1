@@ -71,7 +71,7 @@ function Get-TargetResource
 
     try
     {
-        $AADTenantDetails = Get-MgOrganization -ErrorAction 'SilentlyContinue'
+        $AADTenantDetails = Get-MgBetaOrganization -ErrorAction 'SilentlyContinue'
 
         if ($null -eq $AADTenantDetails)
         {
@@ -203,10 +203,10 @@ function Set-TargetResource
     {
         $currentParameters.Remove('ManagedIdentity') | Out-Null
     }
-    $currentParameters.Add('OrganizationId', $(Get-MgOrganization).Id)
+    $currentParameters.Add('OrganizationId', $(Get-MgBetaOrganization).Id)
     try
     {
-        Update-MgOrganization @currentParameters
+        Update-MgBetaOrganization @currentParameters
     }
     catch
     {
@@ -346,7 +346,7 @@ function Export-TargetResource
     $dscContent = ''
     try
     {
-        $AADTenantDetails = Get-MgOrganization -ErrorAction Stop
+        $AADTenantDetails = Get-MgBetaOrganization -ErrorAction Stop
 
         $Params = @{
             MarketingNotificationEmails          = $AADTenantDetails.MarketingNotificationEmails

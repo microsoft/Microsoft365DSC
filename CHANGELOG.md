@@ -4,14 +4,63 @@
 
 * SPOExternalUserExpireInDays
   * Added the External User Expiration setting in the config.
+* DEPENDENCIES
+  * Updated all Microsoft.Graph modules to version 2.1.0.
+* MISC
+  * Added a more meaningful exception message to Update-M365DSCDependencies if the module is not installed or imported successfully
 
+# 1.23.712.1
+
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
+  * Fixes an issue where the Get-TargetResource function was defining the parameter as Identity and all othe methods and schema had it defined to Id.
+* O365OrgSettings
+  * Introduced a workaround to fix an issue with the ExchangeOnlineManagement module where if connected to Security and Compliance center
+    an error about an invalid token would get thrown when calling the Get-DefaultTenantMyAnalyticsFeatureConfig cmdlet.
+* SPOApp
+  * Fixes an issue where the extraction was complaining about op_addition failing.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.167.
+* DRG
+  * General cleanup from generated resources from DRG
+    * Added module M365DSCDRGUtil.psm1
+    * Fix issues on several resources
+    * Fix assignment from several resources
+    * Fix unit test on several resources
+    * Removed helper resources centralized in M365DSCDRGUtil from all resources
+      FIXES [#3309](https://github.com/microsoft/Microsoft365DSC/issues/3309)
+* MISC
+  * Fixes cmdlet to use Get-MgBetaOrganization in the Get-M365DSCTenantDomain function.
+    FIXES [#3449](https://github.com/microsoft/Microsoft365DSC/issues/3449)
+
+# 1.23.705.1
+
+* EXOAddressList
+  * Improved export performance.
+* EXOCASMailboxSettings
+  * Improved export performance.
+* EXODataClassification
+  * Improved export performance.
+* EXODistributionGroup
+  * Improved export performance.
+* EXOGroupSettings
+  * Improved export performance.
 * EXOMailboxPlan
   * Support comparing instances without the GUID in the name.
     FIXES [#3314](https://github.com/microsoft/Microsoft365DSC/issues/3314)
+* EXOManagementRole
+  * Improved export performance.
+* EXOManagementRoleAssignment
+  * Improved export performance.
+* EXORoleGroup
+  * Improved export performance.
 * DEPENDENCIES
   * Updated all Microsoft.Graph modules to version 2.0.0.
+  * Updated all MSCloudLoginAssistant modules to version 1.0.116.
 * MISC
   * Updated QA tests to dynamically retrieve the permission list.
+* IntuneASRRulesPolicyWindows10
+  * Fix possible values for several properties both in the module and its schema
+    FIXES [#3434](https://github.com/microsoft/Microsoft365DSC/issues/3434)
 
 # 1.23.628.1
 
