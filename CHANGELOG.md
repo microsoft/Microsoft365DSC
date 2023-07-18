@@ -4,6 +4,8 @@
 
 * EXOSharedMailbox
   * Added capability to change the PrimarySMTPAddress of a Shared Mailbox
+* SPOExternalUserExpireInDays
+  * Added the External User Expiration setting in the config.
 * MISC
   * Updated AAD, EXO and Teams settings file to describe required roles.
   * Added a new personas documentation page to describe the targeted personas for the project.

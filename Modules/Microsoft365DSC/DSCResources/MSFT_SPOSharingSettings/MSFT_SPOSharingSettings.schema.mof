@@ -32,4 +32,6 @@ class MSFT_SPOSharingSettings : OMI_BaseResource
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Enable Guest access to a site or Onedrive to expire after")] boolean ExternalUserExpirationRequired;
+    [Write, Description("Specifies Number of days for Guest Access links to expire.")] uint32 ExternalUserExpireInDays;
 };
