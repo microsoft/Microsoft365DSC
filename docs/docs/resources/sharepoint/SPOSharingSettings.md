@@ -35,6 +35,8 @@
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **ExternalUserExpirationRequired** | Write | Boolean | Enable Guest access to a site or Onedrive to expire after | |
+| **ExternalUserExpireInDays** | Write | UInt32 | Specifies Number of days for Guest Access links to expire. | |
 
 
 ## Description
