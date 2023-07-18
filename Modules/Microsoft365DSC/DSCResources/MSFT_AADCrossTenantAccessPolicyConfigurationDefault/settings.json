@@ -1,6 +1,14 @@
 {
     "resourceName": "AADAuthenticationMethodPolicyConfigurationDefault",
     "description": "This resource configures an Azure AD Authentication Method Policy Configuration Default.",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Security Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

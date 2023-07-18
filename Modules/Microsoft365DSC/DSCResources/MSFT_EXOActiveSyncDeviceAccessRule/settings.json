@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "EXOActiveSyncDeviceAccessRule",
     "description": "",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

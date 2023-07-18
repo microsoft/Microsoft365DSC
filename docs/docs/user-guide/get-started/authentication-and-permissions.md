@@ -69,7 +69,7 @@ Most components of the Microsoft365DSC solution are using the Microsoft Graph Po
     For example: If your account only has permissions on three SharePoint sites, only these sites can be retrieved. Even when the AzureAD app has Sites.FullControll.All permissions granted.
 
     <figure markdown>
-      ![Using the Graph API with Delegated Permissions and the default App Registration](../../Images/PermissionsGraphDelegatedApp.png)
+      ![Using the Graph API with Delegated Permissions and the default App Registration](/Images/PermissionsGraphDelegatedApp.png)
       <figcaption>Using the Graph API with Delegated Permissions and the default App Registration</figcaption>
     </figure>
 
@@ -84,7 +84,7 @@ Most components of the Microsoft365DSC solution are using the Microsoft Graph Po
     **NOTE:** This is the easiest option to use.
 
     <figure markdown>
-      ![Using the Graph API with a custom application](../../Images/PermissionsM365DSCApp.png)
+      ![Using the Graph API with a custom application](/Images/PermissionsM365DSCApp.png)
       <figcaption>Using the Graph API with a custom application</figcaption>
     </figure>
 
@@ -289,13 +289,13 @@ All SharePoint and OneDrive resources work with the SharePoint Admin role assign
 
 When executing the Export-M365DSCConfiguration cmdlet user name and password should be filled in the following fields:
 
-![User name and Password](../Images/userpwdpng.png 'Username and Password')
+![User name and Password](/Images/userpwdpng.png 'Username and Password')
 
 ### Azure AD app permissions
 
 The best option when using Microsoft365DSC with SharePoint and OneDrive is to use an Azure AD app principal. When using AAD App permission Microsoft365DSC supports 2 different scenarios, certificate path option or installing certificate and using the thumbprint. The permissions required for Azure AD applications are SharePoint Site.FullControl.All scope.
 
-![API Permissions](../Images/APIPermissions.png 'SharePoint Permissions')
+![API Permissions](/Images/APIPermissions.png 'SharePoint Permissions')
 
 ### Configure AzureAD app for Microsoft365DSC
 
@@ -317,9 +317,9 @@ DSC by default the LCM runs under the system account so easiest option to instal
 After AzureAD app is created and certificate is installed you need some additional properties before you can use with Microsoft365DSC. Login to
 Azure Active Directory and browse to the App registrations page you should see the TestApp2 app created from the script above. We need to copy the following properties:
 
-![Application Id](../Images/AppId.png 'Application ID')
+![Application Id](/Images/AppId.png 'Application ID')
 
-![Certificate Thumbprint](../Images/CertificateThump.png 'Certificate Thumbprint')
+![Certificate Thumbprint](/Images/CertificateThump.png 'Certificate Thumbprint')
 
 ### Using Certificate Thumbprint option
 
@@ -332,7 +332,7 @@ when using certificate thumbprint.
 
 From the Export-M365DSCConfiguration GUI the following fields should be used:
 
-![ExportThumprint](../Images/ExportCertThumb.png 'Export using thumbprint')
+![ExportThumprint](/Images/ExportCertThumb.png 'Export using thumbprint')
 
 ### Using Certificate Path option
 
@@ -346,7 +346,7 @@ would be the best solution. The following parameters are required when using cer
 
 From the Export-M365DSCConfiguration GUI the following fields should be used:
 
-![Export using Certificate Path](../Images/CertPath.png){ align=center width=500 }
+![Export using Certificate Path](/Images/CertPath.png){ align=center width=500 }
 
 ## Using Authentication in DSC configurations
 

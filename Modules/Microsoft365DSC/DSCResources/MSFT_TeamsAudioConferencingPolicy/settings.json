@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "TeamsAudioConferencingPolicy",
     "description": "This resource configures a Teams Audio Conferencing Policy.",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Teams Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {
