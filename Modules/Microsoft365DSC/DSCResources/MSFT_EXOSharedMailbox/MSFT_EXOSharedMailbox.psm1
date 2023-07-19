@@ -303,6 +303,14 @@ function Set-TargetResource
             Write-Verbose -Message "Updating Alias for the Shared Mailbox '$($DisplayName)'"
             Set-Mailbox -Identity $DisplayName -Alias $Alias
         }
+        $current = $currentMailbox.PrimarySMTPAddress
+        $desired = $PrimarySMTPAddress
+        $diff = Compare-Object -ReferenceObject $current -DifferenceObject $desired
+        if ($diff)
+        {
+            Write-Verbose -Message "Updating PrimarySmtpAddress for the Shared Mailbox from $($mailbox.PrimarySMTPAddress) to $PrimarySMTPAddress"
+            Set-Mailbox -Identity $mailbox.guid.guid -WindowsEmailAddress $PrimarySMTPAddress
+        }
     }
 }
 

@@ -31,7 +31,7 @@ To authenticate with Microsoft Exchange, this resource required the following pe
 
 #### Role Groups
 
-- Organization Management
+- 
 
 ## Examples
 

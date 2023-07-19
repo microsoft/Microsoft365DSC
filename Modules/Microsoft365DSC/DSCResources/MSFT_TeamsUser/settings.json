@@ -1,6 +1,10 @@
 ﻿{
     "resourceName": "TeamsUser",
     "description": "",
+    "roles": {
+        "read": [],
+        "update": []
+    },
     "permissions": {
         "graph": {
             "delegated": {

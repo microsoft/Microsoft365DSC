@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "TeamsAppSetupPolicy",
     "description": "Manages Teams app setup policies in your tenant.",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Teams Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

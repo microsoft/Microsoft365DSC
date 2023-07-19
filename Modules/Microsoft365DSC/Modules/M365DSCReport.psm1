@@ -673,7 +673,7 @@ function Compare-M365DSCConfigurations
             {
                 $drift = @{
                     ResourceName         = $sourceResource.ResourceName
-                    ResourceInstanceName = $destinationResource.ResourceInstanceName
+                    ResourceInstanceName = $sourceResource.ResourceInstanceName
                     Key                  = $keyName
                     KeyValue             = $SourceKeyValue
                     Properties           = @(@{
@@ -1026,8 +1026,8 @@ function Compare-M365DSCConfigurations
                     $drift = @{
                         ResourceName         = $currentDestinationResource.ResourceName
                         ResourceInstanceName = $currentDestinationResource.ResourceInstanceName
-                        Key                  = $keyName
-                        KeyValue             = $currentDestinationResource."$keyName"
+                        Key                  = $key
+                        KeyValue             = $currentDestinationResource."$key"
                         Properties           = @(@{
                             ParameterName      = '_IsInConfiguration_'
                             ValueInSource      = 'Absent'

@@ -1,6 +1,12 @@
 ﻿{
     "resourceName": "AADUser",
     "description": "",
+    "roles": {
+        "read": [],
+        "update": [
+            "User Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

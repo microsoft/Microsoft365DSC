@@ -1,6 +1,14 @@
 {
     "resourceName": "AADAuthenticationMethodPolicyEmail",
     "description": "This resource configures an Azure AD Authentication Method Policy Email.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Authentication Policy Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

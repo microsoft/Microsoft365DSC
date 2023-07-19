@@ -1,6 +1,14 @@
 ﻿{
     "resourceName": "EXOOMEConfiguration",
     "description": "",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
     "permissions": {
         "graph": {
             "delegated": {

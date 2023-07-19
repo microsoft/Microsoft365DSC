@@ -1080,7 +1080,7 @@ function Set-TargetResource
             }
             catch
             {
-                Write-Verbose -Message "Problem on set $($role.id) for Policy $($Policy.PolicyId)"
+                throw $_
             }
             $params = @{}
         }
