@@ -8,7 +8,7 @@ body:
         Your feedback and support is greatly appreciated, thanks for contributing!
         Thank you for opening an issue. Please fill in the following information to help us triage (and fix) your issue.
 
-        Pleasse prefix the issue title with the resource name, e.g. `ResourceNameHere: Your title here`.
+        Pleasse prefix the issue title with the resource name, e.g. **`ResourceNameHere: Your title here`.**
 
         Please make sure to have only one version of Microsoft365DSC installed on your system. If you have multiple versions installed, please remove all of them and install the latest version from the PowerShell Gallery.
         You can use the built-in Update-M365DSCModule cmdlet to update to the latest version.
@@ -68,7 +68,7 @@ body:
 
   - type: textarea
     attributes:
-      label: "PowerShell Version"
+      label: "Environment Information + PowerShell Version"
       description: |
         Please provide as much as possible about the target node, for example edition, version, build and language.
         On OS with WMF 5.1 the following command can help get this information.
@@ -82,6 +82,8 @@ body:
         'WindowsBuildLabEx',
         'OsLanguage',
         'OsMuiLanguages')
+
+        $PSVersionTable
         ```
       render: powershell
     validations:
