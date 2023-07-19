@@ -20,6 +20,13 @@ class MSFT_AADCrossTenantAccessPolicyB2BSetting
 };
 
 [ClassVersion("1.0.0")]
+class MSFT_AADCrossTenantAccessPolicyInboundOutboundPolicyConfiguration
+{
+    [Write, Description("Specifies whether you want to automatically trust Inbound invitations..")] Boolean InboundAllowed;
+    [Write, Description("Specifies whether you want to automatically trust Outbound invitations.")] Boolean OutboundAllowed;
+};
+
+[ClassVersion("1.0.0")]
 class MSFT_AADCrossTenantAccessPolicyInboundTrust
 {
     [Write, Description("Specifies whether compliant devices from external Azure AD organizations are trusted.")] Boolean IsCompliantDeviceAccepted;
