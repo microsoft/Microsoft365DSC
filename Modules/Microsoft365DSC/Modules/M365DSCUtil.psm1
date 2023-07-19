@@ -3228,7 +3228,7 @@ function Get-M365DSCExportContentForResource
 
     # Check to see if a resource with this exact name was already exported, if so, append a number to the end.
     $i = 2
-    $tempName = $instanceName
+    $tempName = $instanceName.Replace('"', '')
     while ($null -ne $Global:M365DSCExportedResourceInstancesNames -and `
            $Global:M365DSCExportedResourceInstancesNames.Contains($tempName))
     {
