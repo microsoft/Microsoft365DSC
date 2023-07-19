@@ -1,0 +1,88 @@
+name: Problem with a resource
+about: If you have a problem, bug, or enhancement with a resource in this resource module.
+labels:
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Your feedback and support is greatly appreciated, thanks for contributing!
+        Thank you for opening an issue. Please fill in the following information to help us triage (and fix) your issue.
+
+        Pleasse prefix the issue title with the resource name, e.g. `ResourceNameHere: Your title here`.
+
+  - type: textarea
+    attributes:
+      label: Details of the scenario you tried and the problem that is occurring
+    validations:
+      required: true
+
+  - type: dropdown
+    attributes:
+      label: Resource Workload
+      description: The workload of the resource you are having an issue with.
+      options:
+        - name: "Azure Active Directory"
+          value: "Azure Active Directory"
+        - name: "Exchange Online"
+          value: "Exchange Online"
+        - name: "Office 365 Admin"
+          value: "Office 365 Admin"
+        - name: "OneDrive for Business"
+          value: "OneDrive for Business"
+        - name: "Planner"
+          value: "Planner"
+        - name: "Power Platform"
+          value: "Power Platform"
+        - name: "Security & Compliance Center"
+          value: "Security & Compliance Center"
+        - name: "SharePoint Online"
+          value: "SharePoint Online"
+        - name: "Teams"
+          value: "Teams"
+        - name: "other"
+          value: "other"
+      default: "other"
+    validations:
+      required: false
+
+  - type: input
+    attributes:
+      label: Microsoft 365 DSC Version
+      description: The version of the Microsoft 365 DSC module you are using.
+      placeholder: V1.23.712.1
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: The DSC configuration that is used to reproduce the issue (as detailed as possible)
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: Verbose logs showing the problem
+    validations:
+      required: false
+
+  - type: textarea
+    attributes:
+      label: PowerShell Version
+      description: |
+        Please provide as much as possible about the target node, for example edition, version, build and language.
+        On OS with WMF 5.1 the following command can help get this information.
+
+        ```powershell
+        Get-ComputerInfo -Property @(
+        'OsName',
+        'OsOperatingSystemSKU',
+        'OSArchitecture',
+        'WindowsVersion',
+        'WindowsBuildLabEx',
+        'OsLanguage',
+        'OsMuiLanguages')
+        ```
+      placeholder: 5.1.19041.1
+    validations:
+      required: false
