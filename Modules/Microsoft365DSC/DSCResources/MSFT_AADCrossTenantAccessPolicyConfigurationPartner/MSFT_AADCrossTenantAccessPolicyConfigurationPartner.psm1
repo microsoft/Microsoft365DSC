@@ -766,7 +766,7 @@ function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingAsStrin
     $StringContent = $null
     if ($null -ne $Setting.InboundAllowed -or $null -ne $Setting.OutoundAllowed)
     {
-        $StringContent = "MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings {`r`n"
+        $StringContent = "MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSetting {`r`n"
         if ($null -ne $Setting.InboundAllowed)
         {
             $StringContent += "                InboundAllowed  = `$" + $Setting.InboundAllowed.ToString() + "`r`n"
