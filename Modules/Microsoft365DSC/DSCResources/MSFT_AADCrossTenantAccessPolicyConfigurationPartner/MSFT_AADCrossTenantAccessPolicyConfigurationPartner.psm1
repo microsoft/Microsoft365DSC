@@ -174,6 +174,9 @@ function Set-TargetResource
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
+        $AutomaticUserConsentSettings,
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $InboundTrust,
 
         [Parameter()]
