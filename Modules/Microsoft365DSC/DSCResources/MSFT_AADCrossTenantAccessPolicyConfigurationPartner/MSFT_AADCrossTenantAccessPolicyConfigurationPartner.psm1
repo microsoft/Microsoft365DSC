@@ -110,7 +110,11 @@ function Get-TargetResource
         }
         if ($null -ne $getValue.AutomaticUserConsentSettings)
         {
+<<<<<<< HEAD
             $AutomaticUserConsentSettingsValue = $getValue.AutomaticUserConsentSettings
+=======
+            $AutomaticUserConsentSettings = $getValue.AutomaticUserConsentSettings
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
         }
         if ($null -ne $getValue.InboundTrust)
         {
@@ -122,7 +126,11 @@ function Get-TargetResource
             B2BCollaborationOutbound     = $B2BCollaborationOutboundValue
             B2BDirectConnectInbound      = $B2BDirectConnectInboundValue
             B2BDirectConnectOutbound     = $B2BDirectConnectOutboundValue
+<<<<<<< HEAD
             AutomaticUserConsentSettings = $AutomaticUserConsentSettingsValue
+=======
+            AutomaticUserConsentSettings = $AutomaticUserConsentSettings
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
             InboundTrust                 = $InboundTrustValue
             Ensure                       = 'Present'
             Credential                   = $Credential
@@ -254,7 +262,11 @@ function Set-TargetResource
     }
     if ($null -ne $OperationParams.AutomaticUserConsentSettings)
     {
+<<<<<<< HEAD
         $OperationParams.AutomaticUserConsentSettings = (Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettings -Setting $OperationParams.AutomaticUserConsentSettings)
+=======
+        $OperationParams.AutomaticUserConsentSettings = (Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSetting -Setting $OperationParams.AutomaticUserConsentSettings)
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
     }
     if ($null -ne $OperationParams.InboundTrust)
     {
@@ -499,7 +511,11 @@ function Export-TargetResource
             }
             if ($null -ne $Results.AutomaticUserConsentSettings)
             {
+<<<<<<< HEAD
                 $Results.AutomaticUserConsentSettings = Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingsAsString -Setting $Results.AutomaticUserConsentSettings
+=======
+                $Results.AutomaticUserConsentSettings = Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingAsString -Setting $Results.AutomaticUserConsentSettings
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
             }
             if ($null -ne $Results.InboundTrust)
             {
@@ -738,7 +754,11 @@ function Get-M365DSCAADCrossTenantAccessPolicyB2BSetting
     return $results
 }
 
+<<<<<<< HEAD
 function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettings
+=======
+function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSetting
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
 {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
@@ -751,12 +771,20 @@ function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettings
     $result = @{
         InboundAllowed  = $Setting.InboundAllowed
         OutboundAllowed = $Setting.OutboundAllowed
+<<<<<<< HEAD
+=======
+
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
     }
 
     return $result
 }
 
+<<<<<<< HEAD
 function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingsAsString
+=======
+function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingAsString
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -766,6 +794,7 @@ function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingsAsStri
     )
 
     $StringContent = $null
+<<<<<<< HEAD
     if ($null -ne $Setting.InboundAllowed -or $null -ne $Setting.OutboundAllowed)
     {
         $StringContent = "MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings {`r`n"
@@ -778,6 +807,20 @@ function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingsAsStri
             $StringContent += "                OutboundAllowed          = `$" + $Setting.OutboundAllowed.ToString() + "`r`n"
         }
         $StringContent += "            }`r`n"
+=======
+    if ($null -ne $Setting.InboundAllowed -or $null -ne $Setting.OutoundAllowed)
+    {
+        $StringContent = "MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSetting {`r`n"
+        if ($null -ne $Setting.InboundAllowed)
+        {
+            $StringContent += "                InboundAllowed  = `$" + $Setting.InboundAllowed.ToString() + "`r`n"
+        }
+        if ($null -ne $Setting.OutoundAllowed)
+        {
+            $StringContent += "                OutoundAllowed = `$" + $Setting.OutoundAllowed.ToString() + "`r`n"
+        }
+
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
     }
 
     return $StringContent

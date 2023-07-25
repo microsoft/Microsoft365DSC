@@ -20,7 +20,11 @@ class MSFT_AADCrossTenantAccessPolicyB2BSetting
 };
 
 [ClassVersion("1.0.0")]
+<<<<<<< HEAD
 class MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings
+=======
+class MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSetting
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
 {
     [Write, Description("Specifies whether you want to automatically trust Inbound invitations..")] Boolean InboundAllowed;
     [Write, Description("Specifies whether you want to automatically trust Outbound invitations.")] Boolean OutboundAllowed;
@@ -42,7 +46,11 @@ class MSFT_AADCrossTenantAccessPolicyConfigurationPartner : OMI_BaseResource
     [Write, Description("Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B collaboration."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BCollaborationOutbound;
     [Write, Description("Defines your partner-specific configuration for users from other organizations accessing your resources via Azure AD B2B direct connect."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BDirectConnectInbound;
     [Write, Description("Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B direct connect."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BDirectConnectOutbound;
+<<<<<<< HEAD
     [Write, Description("Determines the partner-specific configuration for accepting trust claims from other tenant invitations."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings")] String AutomaticUserConsentSettings;
+=======
+    [Write, Description("Determines the partner-specific configuration for accepting trust claims from other tenant invitations."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSetting")] String AutomaticUserConsentSettings;
+>>>>>>> b2a86a4cd7ddc2a1421f5477b1d4c78bb5a92488
     [Write, Description("Determines the partner-specific configuration for trusting other Conditional Access claims from external Azure AD organizations."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyInboundTrust")] String InboundTrust;
     [Write, Description("Specify if the policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
