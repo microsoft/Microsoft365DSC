@@ -14,6 +14,7 @@
     the module is not installed or imported successfully
   * Fixes an issue with the reporting where the wrong key parameter was sometimes
     used when a component was missing in the source tenant.
+  * Added automatically redeem invitations for inbound and outbound cross tenant invites
 * DEPENDENCIES
   * Updated the Microsoft.Graph.* dependencies to version 2.1.0.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.168.
