@@ -398,7 +398,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentParameters = $PSBoundParameters
+    $currentParameters = [hashtable]$PSBoundParameters
     $currentGroup = Get-TargetResource @PSBoundParameters
     $currentParameters.Remove('ApplicationId') | Out-Null
     $currentParameters.Remove('TenantId') | Out-Null
