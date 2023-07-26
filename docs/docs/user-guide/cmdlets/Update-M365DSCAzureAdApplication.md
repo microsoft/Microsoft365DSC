@@ -87,3 +87,5 @@ This function does not generate any output.
 -------------------------- EXAMPLE 4 --------------------------
 
 `Update-M365DSCAzureAdApplication -ApplicationName $Microsoft365DSC -Permissions $(Get-M365DSCCompiledPermissionList -ResourceNameList Get-M365DSCAllResources -PermissionType Application -AccessType Read) -Type Certificate -CreateSelfSignedCertificate -AdminConsent -MonthsValid 12 -Credential $creds -CertificatePath c:\Temp\M365DSC.cer`
+
+
