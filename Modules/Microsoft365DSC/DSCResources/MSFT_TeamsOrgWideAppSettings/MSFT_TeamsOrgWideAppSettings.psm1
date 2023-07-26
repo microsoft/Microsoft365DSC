@@ -15,19 +15,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $Credential
     )
     Write-Verbose -Message 'Checking the Teams Upgrade Configuration'
 
@@ -57,9 +45,6 @@ function Get-TargetResource
             IsSingleInstance      = 'Yes'
             IsSideloadedAppsInteractionEnabled = $settings.IsSideloadedAppsInteractionEnabled
             Credential                         = $Credential
-            ApplicationId                      = $ApplicationId
-            TenantId                           = $TenantId
-            CertificateThumbprint              = $CertificateThumbprint
         }
     }
     catch
@@ -92,19 +77,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $Credential
     )
 
     Write-Verbose -Message 'Setting Teams Upgrade Configuration'
@@ -127,9 +100,6 @@ function Set-TargetResource
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove('IsSingleInstance') | Out-Null
     $SetParameters.Remove('Credential') | Out-Null
-    $SetParameters.Remove('ApplicationId') | Out-Null
-    $SetParameters.Remove('TenantId') | Out-Null
-    $SetParameters.Remove('CertificateThumbprint') | Out-Null
 
     Set-CsTeamsSettingsCustomApp @SetParameters
 }
@@ -151,19 +121,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $Credential
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -204,19 +162,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential,
-
-        [Parameter()]
-        [System.String]
-        $ApplicationId,
-
-        [Parameter()]
-        [System.String]
-        $TenantId,
-
-        [Parameter()]
-        [System.String]
-        $CertificateThumbprint
+        $Credential
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -240,9 +186,6 @@ function Export-TargetResource
         $params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
         }
         $Results = Get-TargetResource @Params
 
