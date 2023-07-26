@@ -1243,7 +1243,7 @@ The number of months the certificate should be valid. Default value is 12.
 If specified, a new secret will be created for the application. -CreateNewSecret or -CertificatePath can be used, not both.
 
 .Parameter CertificatePath
-The path to the certificate to use for the application. -CreateNewSecret or -CertificatePath can be used, not both.
+The path to the certificate to be uploaded for the app registration. If using with -CreateSelfSignedCertificate - a file with this name will be created and uploaded (file must not exist). Otherwise the file must already exist. Cannot be used with -CreateNewSecret simultaneously.
 
 .Parameter CreateSelfSignedCertificate
 If specified, a self-signed certificate will be created for the application. -CreateSelfSignedCertificate or -CertificatePath can be used, not both.
@@ -1252,19 +1252,19 @@ If specified, a self-signed certificate will be created for the application. -Cr
 If specified, admin consent will be granted for the application.
 
 .Parameter Credential
-The credential to use for authenticating the request.
+The credential to use for authenticating the request. Mutually exclusive with -TenantId.
 
 .Parameter ApplicationId
 The ApplicationId to use for authenticating the request. -Credential or -ApplicationId can be used, not both.
 
 .Parameter TenantId
-The TenantId to use for the request. The TenantId needs to be in the form of contoso.onmicrosoft.com. -Credential or -TenantId can be used, not both.
+The name of the tenant to use for the request. Must be in the form of contoso.onmicrosoft.com. Mutually exclusive with -Credential.
 
 .Parameter ApplicationSecret
 The ApplicationSecret to use for authenticating the request. -Credential or -ApplicationSecret can be used, not both.
 
 .Parameter CertificateThumbprint
-The CertificateThumbprint to use for authenticating the request. -Credential or -CertificateThumbprint can be used, not both.
+Thumbprint of an existing auth certificate to use for authenticating the request. Mutually exclusive with -Credential.
 
 .Parameter ManagedIdentity
 If specified, Managed Identity will be used for authenticating the request. -Credential or -ApplicationId or -ManagedIdentity can be used, only one of them.
@@ -1272,13 +1272,13 @@ If specified, Managed Identity will be used for authenticating the request. -Cre
 .Example
 Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'}) -AdminConsent -Type Secret -Credential $creds
 
-.Example
+.EXAMPLE
 Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='Graph';PermissionName='Domain.Read.All'}) -AdminConsent  -Credential $creds -Type Certificate -CreateSelfSignedCertificate -CertificatePath c:\Temp\M365DSC.cer
 
-.Example
+.EXAMPLE
 Update-M365DSCAzureAdApplication -ApplicationName 'Microsoft365DSC' -Permissions @(@{Api='SharePoint';PermissionName='Sites.FullControl.All'},@{Api='Graph';PermissionName='Group.ReadWrite.All'},@{Api='Exchange';PermissionName='Exchange.ManageAsApp'}) -AdminConsent -Credential $creds -Type Certificate -CertificatePath c:\Temp\M365DSC.cer
 
-.Example
+.EXAMPLE
 Update-M365DSCAzureAdApplication -ApplicationName $Microsoft365DSC -Permissions $(Get-M365DSCCompiledPermissionList -ResourceNameList Get-M365DSCAllResources -PermissionType Application -AccessType Read) -Type Certificate -CreateSelfSignedCertificate -AdminConsent -MonthsValid 12 -Credential $creds -CertificatePath c:\Temp\M365DSC.cer
 
 
