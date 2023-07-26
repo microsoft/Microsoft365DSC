@@ -25,8 +25,6 @@ const createTelemetryService = () => {
             throw new Error('Instrumentation key not provided in ./src/telemetry-provider.jsx')
         }
 
-        reactPlugin = new ReactPlugin();
-
         appInsights = new ApplicationInsights({
             config: {
                 instrumentationKey: instrumentationKey,
