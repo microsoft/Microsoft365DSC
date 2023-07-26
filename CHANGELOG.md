@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # 1.23.719.1
-
+* AADCrossTenant
+  * Added Automatic Consent for inbound and Outbound trust settings
 * EXOSharedMailbox
   * Added capability to change the PrimarySMTPAddress of a Shared Mailbox
 * SPOExternalUserExpireInDays

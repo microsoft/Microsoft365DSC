@@ -29,6 +29,10 @@ function Get-TargetResource
         $InboundTrust,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AutomaticUserConsentSettings,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -79,7 +83,7 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId `
-                        -ErrorAction SilentlyContinue
+            -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -104,24 +108,29 @@ function Get-TargetResource
         {
             $B2BDirectConnectOutboundValue = $getValue.B2BDirectConnectOutbound
         }
+        if ($null -ne $getValue.AutomaticUserConsentSettings)
+        {
+            $AutomaticUserConsentSettingsValue = $getValue.AutomaticUserConsentSettings
+        }
         if ($null -ne $getValue.InboundTrust)
         {
             $InboundTrustValue = $getValue.InboundTrust
         }
         $results = @{
-            PartnerTenantId          = $getValue.TenantId
-            B2BCollaborationInbound  = $B2BCollaborationInboundValue
-            B2BCollaborationOutbound = $B2BCollaborationOutboundValue
-            B2BDirectConnectInbound  = $B2BDirectConnectInboundValue
-            B2BDirectConnectOutbound = $B2BDirectConnectOutboundValue
-            InboundTrust             = $InboundTrustValue
-            Ensure                   = 'Present'
-            Credential               = $Credential
-            ApplicationId            = $ApplicationId
-            TenantId                 = $TenantId
-            ApplicationSecret        = $ApplicationSecret
-            CertificateThumbprint    = $CertificateThumbprint
-            ManagedIdentity          = $ManagedIdentity.IsPresent
+            PartnerTenantId              = $getValue.TenantId
+            B2BCollaborationInbound      = $B2BCollaborationInboundValue
+            B2BCollaborationOutbound     = $B2BCollaborationOutboundValue
+            B2BDirectConnectInbound      = $B2BDirectConnectInboundValue
+            B2BDirectConnectOutbound     = $B2BDirectConnectOutboundValue
+            AutomaticUserConsentSettings = $AutomaticUserConsentSettingsValue
+            InboundTrust                 = $InboundTrustValue
+            Ensure                       = 'Present'
+            Credential                   = $Credential
+            ApplicationId                = $ApplicationId
+            TenantId                     = $TenantId
+            ApplicationSecret            = $ApplicationSecret
+            CertificateThumbprint        = $CertificateThumbprint
+            ManagedIdentity              = $ManagedIdentity.IsPresent
         }
 
         return [System.Collections.Hashtable] $results
@@ -163,6 +172,9 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $B2BDirectConnectOutbound,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AutomaticUserConsentSettings,
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $InboundTrust,
@@ -212,13 +224,13 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $OperationParams = ([Hashtable]$PSBoundParameters).Clone()
-    $OperationParams.Remove("Credential") | Out-Null
-    $OperationParams.Remove("ManagedIdentity") | Out-Null
-    $OperationParams.Remove("ApplicationId") | Out-Null
-    $OperationParams.Remove("TenantId") | Out-Null
-    $OperationParams.Remove("CertificateThumbprint") | Out-Null
-    $OperationParams.Remove("ApplicationSecret") | Out-Null
-    $OperationParams.Remove("Ensure") | Out-Null
+    $OperationParams.Remove('Credential') | Out-Null
+    $OperationParams.Remove('ManagedIdentity') | Out-Null
+    $OperationParams.Remove('ApplicationId') | Out-Null
+    $OperationParams.Remove('TenantId') | Out-Null
+    $OperationParams.Remove('CertificateThumbprint') | Out-Null
+    $OperationParams.Remove('ApplicationSecret') | Out-Null
+    $OperationParams.Remove('Ensure') | Out-Null
 
     if ($null -ne $OperationParams.B2BCollaborationInbound)
     {
@@ -239,6 +251,10 @@ function Set-TargetResource
     {
         $OperationParams.B2BDirectConnectOutbound = (Get-M365DSCAADCrossTenantAccessPolicyB2BSetting -Setting $OperationParams.B2BDirectConnectOutbound)
         $OperationParams.B2BDirectConnectOutbound = (Update-M365DSCSettingUserIdFromUPN -Setting $OperationParams.B2BDirectConnectOutbound)
+    }
+    if ($null -ne $OperationParams.AutomaticUserConsentSettings)
+    {
+        $OperationParams.AutomaticUserConsentSettings = (Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettings -Setting $OperationParams.AutomaticUserConsentSettings)
     }
     if ($null -ne $OperationParams.InboundTrust)
     {
@@ -296,6 +312,10 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $InboundTrust,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance]
+        $AutomaticUserConsentSettings,
 
         [Parameter()]
         [System.String]
@@ -477,6 +497,10 @@ function Export-TargetResource
             {
                 $Results.B2BDirectConnectOutbound = Get-M365DSCAADCrossTenantAccessPolicyB2BSettingAsString -Setting $Results.B2BDirectConnectOutbound
             }
+            if ($null -ne $Results.AutomaticUserConsentSettings)
+            {
+                $Results.AutomaticUserConsentSettings = Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingsAsString -Setting $Results.AutomaticUserConsentSettings
+            }
             if ($null -ne $Results.InboundTrust)
             {
                 $Results.InboundTrust = Get-M365DSCAADCrossTenantAccessPolicyInboundTrustAsString -Setting $Results.InboundTrust
@@ -507,6 +531,11 @@ function Export-TargetResource
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
                     -ParameterName 'B2BDirectConnectOutbound'
+            }
+            if ($null -ne $Results.AutomaticUserConsentSettings)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                    -ParameterName 'AutomaticUserConsentSettings'
             }
             if ($null -ne $Results.InboundTrust)
             {
@@ -702,11 +731,56 @@ function Get-M365DSCAADCrossTenantAccessPolicyB2BSetting
     }
     #endregion
     $results = @{
-        Applications = $applications
+        Applications   = $applications
         UsersAndGroups = $usersAndGroups
     }
 
     return $results
+}
+
+function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettings
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Object]
+        $Setting
+    )
+
+    $result = @{
+        InboundAllowed  = $Setting.InboundAllowed
+        OutboundAllowed = $Setting.OutboundAllowed
+    }
+
+    return $result
+}
+
+function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingsAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        $Setting
+    )
+
+    $StringContent = $null
+    if ($null -ne $Setting.InboundAllowed -or $null -ne $Setting.OutboundAllowed)
+    {
+        $StringContent = "MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings {`r`n"
+        if ($null -ne $Setting.InboundAllowed)
+        {
+            $StringContent += "                InboundAllowed           = `$" + $Setting.InboundAllowed.ToString() + "`r`n"
+        }
+       if ($null -ne $Setting.OutboundAllowed)
+        {
+            $StringContent += "                OutboundAllowed                       = `$" + $Setting.OutboundAllowed.ToString() + "`r`n"
+        }
+        $StringContent += "            }`r`n"
+    }
+
+    return $StringContent
 }
 
 function Get-M365DSCAADCrossTenantAccessPolicyInboundTrust
@@ -739,7 +813,7 @@ function Get-M365DSCAADCrossTenantAccessPolicyInboundTrustAsString
 
     $StringContent = $null
     if ($null -ne $Setting.IsCompliantDeviceAccepted -or $null -ne $Setting.IsHybridAzureADJoinedDeviceAccepted -or `
-        $null -ne $Setting.IsMfaAccepted)
+            $null -ne $Setting.IsMfaAccepted)
     {
         $StringContent = "MSFT_AADCrossTenantAccessPolicyInboundTrust {`r`n"
         if ($null -ne $Setting.IsCompliantDeviceAccepted)
