@@ -52,7 +52,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **InboundAllowed** | Write | Boolean | Specifies whether you want to automatically trust Inbound invitations.. | |
+| **InboundAllowed** | Write | Boolean | Specifies whether you want to automatically trust Inbound invitations. | |
 | **OutboundAllowed** | Write | Boolean | Specifies whether you want to automatically trust Outbound invitations. | |
 
 ### MSFT_AADCrossTenantAccessPolicyInboundTrust

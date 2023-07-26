@@ -31,7 +31,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **AnyOfRecipientAddressContainsWords** | Write | StringArray[] | The AnyOfRecipientAddressContainsWords parameter specifies a condition for the DLP rule that looks for words or phrases in recipient email addresses. | |
-| **AnyOfRecipientAddressMatchesPatterns** | Write | StringArray[] | The AnyOfRecipientAddressMatchesPatterns parameter specifies a condition for the DLP rule that looks for text patterns in recipient email addresses by using regular expressions.. | |
+| **AnyOfRecipientAddressMatchesPatterns** | Write | StringArray[] | The AnyOfRecipientAddressMatchesPatterns parameter specifies a condition for the DLP rule that looks for text patterns in recipient email addresses by using regular expressions. | |
 | **RemoveRMSTemplate** | Write | Boolean | The RemoveRMSTemplate parameter specifies an action for the DLP rule that removes Office 365 Message Encryption from messages and their attachments. | |
 | **StopPolicyProcessing** | Write | Boolean | The StopPolicyProcessing parameter specifies an action that stops processing more DLP policy rules. | |
 | **DocumentIsUnsupported** | Write | Boolean | The DocumentIsUnsupported parameter specifies a condition for the DLP rule that looks for files that can't be scanned. | |
