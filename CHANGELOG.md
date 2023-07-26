@@ -10,7 +10,8 @@
     FIXES [#3454](https://github.com/microsoft/Microsoft365DSC/issues/3454)
 
 # 1.23.719.1
-
+* AADCrossTenant
+  * Added Automatic Consent for inbound and Outbound trust settings
 * EXOSharedMailbox
   * Added capability to change the PrimarySMTPAddress of a Shared Mailbox
 * SPOExternalUserExpireInDays
