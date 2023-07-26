@@ -29,7 +29,9 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
         {
             # Only validate non-GUID (hidden) permissions.
             $ObjectGuid = [System.Guid]::empty
-            if (-not [System.Guid]::TryParse($permission.Name  ,[System.Management.Automation.PSReference]$ObjectGuid))
+            # There is an issue where the GUI shows Tasks.Read.All but the OAuth value is actually Tasks.Read
+            if (-not [System.Guid]::TryParse($permission.Name  ,[System.Management.Automation.PSReference]$ObjectGuid) -and
+                $permission.Name -ne 'Tasks.Read.All')
             {
                 $permission.Name | Should -BeIn $roles
             }
