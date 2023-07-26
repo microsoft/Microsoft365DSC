@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* AADGroup
+  * Fix issue setting MemberOf property.
+    FIXES [#3496](https://github.com/microsoft/Microsoft365DSC/issues/3496)
+
 # 1.23.719.1
 
 * EXOSharedMailbox
