@@ -1,9 +1,15 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.726.1
+
 * AADGroup
   * Fix issue setting MemberOf property.
     FIXES [#3496](https://github.com/microsoft/Microsoft365DSC/issues/3496)
+* TeamsOrgWideAppSettings
+  * Removed support for app authentication since the underlying cmdlets aren't
+    supporting it yet.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.118.
 
 # 1.23.719.1
 * AADCrossTenant
