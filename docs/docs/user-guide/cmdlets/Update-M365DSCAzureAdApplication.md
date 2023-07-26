@@ -58,14 +58,14 @@ This function does not generate any output.
 | Type | False | String | Secret | Secret, Certificate | The type of credential to create. Default value is 'Secret'. Valid values are 'Secret' and 'Certificate'. |
 | MonthsValid | False | Int32 | 12 |  | The number of months the certificate should be valid. Default value is 12. |
 | CreateNewSecret | False | SwitchParameter |  |  | If specified, a new secret will be created for the application. -CreateNewSecret or -CertificatePath can be used, not both. |
-| CertificatePath | False | String |  |  | The path to the certificate to use for the application. -CreateNewSecret or -CertificatePath can be used, not both. |
+| CertificatePath | False | String |  |  | The path to the certificate to be uploaded for the app registration. If using with -CreateSelfSignedCertificate - a file with this name will be created and uploaded (file must not exist). Otherwise the file must already exist. Cannot be used with -CreateNewSecret simultaneously. |
 | CreateSelfSignedCertificate | False | SwitchParameter |  |  | If specified, a self-signed certificate will be created for the application. -CreateSelfSignedCertificate or -CertificatePath can be used, not both. |
 | AdminConsent | False | SwitchParameter |  |  | If specified, admin consent will be granted for the application. |
-| Credential | False | PSCredential |  |  | The credential to use for authenticating the request. |
+| Credential | False | PSCredential |  |  | The credential to use for authenticating the request. Mutually exclusive with -TenantId. |
 | ApplicationId | False | String |  |  | The ApplicationId to use for authenticating the request. -Credential or -ApplicationId can be used, not both. |
-| TenantId | False | String |  |  | The TenantId to use for the request. The TenantId needs to be in the form of contoso.onmicrosoft.com. -Credential or -TenantId can be used, not both. |
+| TenantId | False | String |  |  | The name of the tenant to use for the request. Must be in the form of contoso.onmicrosoft.com. Mutually exclusive with -Credential. |
 | ApplicationSecret | False | PSCredential |  |  | The ApplicationSecret to use for authenticating the request. -Credential or -ApplicationSecret can be used, not both. |
-| CertificateThumbprint | False | String |  |  | The CertificateThumbprint to use for authenticating the request. -Credential or -CertificateThumbprint can be used, not both. |
+| CertificateThumbprint | False | String |  |  | Thumbprint of an existing auth certificate to use for authenticating the request. Mutually exclusive with -Credential. |
 | ManagedIdentity | False | SwitchParameter |  |  | If specified, Managed Identity will be used for authenticating the request. -Credential or -ApplicationId or -ManagedIdentity can be used, only one of them. |
 | Message | True | String |  |  |  |
 | Type | False | String | Info | Error, Warning, Info | The type of credential to create. Default value is 'Secret'. Valid values are 'Secret' and 'Certificate'. |
