@@ -6,7 +6,7 @@
   * Fix issue setting MemberOf property.
     FIXES [#3496](https://github.com/microsoft/Microsoft365DSC/issues/3496)
 * MISC
-  * Improved Update-M365DSCDependencies function to properly install all Microsoft.Graph.*M modules.
+  * Improved Update-M365DSCDependencies function to properly install all Microsoft.Graph.* modules.
     FIXES [#3454](https://github.com/microsoft/Microsoft365DSC/issues/3454)
 
 # 1.23.719.1
