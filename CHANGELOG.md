@@ -115,7 +115,7 @@
     FIXES #3417
   * Update-M365DSCModule now forces a reload of the latest version of the Microsoft365DSC module.
     FIXES [#3326](https://github.com/microsoft/Microsoft365DSC/issues/3326)
-  * Update-M365DSCAyureADApplication
+  * Update-M365DSCAzureADApplication
     Added retry logic to catch the "Key credential end date is invalid" error when updating the application certificate.
     FIXES [#3426](https://github.com/microsoft/Microsoft365DSC/issues/3426)
 * DEPENDENCIES
