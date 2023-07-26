@@ -18,7 +18,7 @@ function Invoke-TestHarness
 
     $sw = [System.Diagnostics.StopWatch]::startnew()
 
-    $MaximumFunctionCount = 9999
+    $MaximumFunctionCount = 32767
     Write-Host -Object 'Running all Microsoft365DSC Unit Tests'
 
     $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve

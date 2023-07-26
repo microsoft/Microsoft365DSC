@@ -27,7 +27,7 @@ jobs:
         shell: pwsh
         run: |
           Import-Module './Tests/TestHarness.psm1' -Force;
-          $MaximumFunctionCount = 9999
+          $MaximumFunctionCount = 32767
 
           try
           {
@@ -35,7 +35,7 @@ jobs:
           }
           catch
           {
-              $MaximumFunctionCount = 9999
+              $MaximumFunctionCount = 32767
               Import-Module './Tests/TestHarness.psm1' -Force;
               $results = Invoke-QualityChecksHarness
           }
@@ -47,7 +47,7 @@ jobs:
         shell: pwsh
         run: |
           Import-Module './Tests/TestHarness.psm1' -Force;
-          $MaximumFunctionCount = 9999
+          $MaximumFunctionCount = 32767
 
           try
           {
@@ -55,7 +55,7 @@ jobs:
           }
           catch
           {
-              $MaximumFunctionCount = 9999
+              $MaximumFunctionCount = 32767
               Import-Module './Tests/TestHarness.psm1' -Force;
               $results = Invoke-TestHarness -IgnoreCodeCoverage
           }

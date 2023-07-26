@@ -10,6 +10,9 @@
     supporting it yet.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.118.
+* MISC
+  * Improved Update-M365DSCDependencies function to properly install all Microsoft.Graph.* modules.
+    FIXES [#3454](https://github.com/microsoft/Microsoft365DSC/issues/3454)
 
 # 1.23.719.1
 * AADCrossTenant
