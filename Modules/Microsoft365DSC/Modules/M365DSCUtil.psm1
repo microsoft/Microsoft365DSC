@@ -1155,7 +1155,7 @@ function Export-M365DSCConfiguration
         $Validate
     )
 
-    $Global:MaximumFunctionCount = 16000
+    $Global:MaximumFunctionCount = 32767
 
     # Define the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = @()
@@ -1661,7 +1661,7 @@ function New-M365DSCConnection
         $SkipModuleReload = $false
     )
 
-    $Global:MaximumFunctionCount = 16000
+    $Global:MaximumFunctionCount = 32767
 
     if ($Workload -eq 'MicrosoftTeams')
     {
@@ -2757,6 +2757,7 @@ function Update-M365DSCDependencies
         $ValidateOnly
     )
 
+    $Global:MaximumFunctionCount = 32767
 
     $InformationPreference = 'Continue'
     $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
@@ -2782,8 +2783,12 @@ function Update-M365DSCDependencies
                 {
                     Write-Information -MessageData "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
                     Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
+                    if ($dependency.ModuleName -like 'Microsoft.Graph*')
+                    {
+                        Remove-Module 'Microsoft.Graph.Authentication' -Force -ErrorAction SilentlyContinue
+                    }
+                    Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
                     Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
-                    Import-Module $dependency.ModuleName -Force
                 }
                 else
                 {
@@ -2801,6 +2806,7 @@ function Update-M365DSCDependencies
             Write-Host "Could not update or import {$($dependency.ModuleName)}"
             Write-Host "Error-Mesage: $($_.Exception.Message)"
         }
+
         $i++
     }
 

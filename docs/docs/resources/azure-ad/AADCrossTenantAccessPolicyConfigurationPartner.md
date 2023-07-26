@@ -9,6 +9,7 @@
 | **B2BCollaborationOutbound** | Write | MSFT_AADCrossTenantAccessPolicyB2BSetting | Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B collaboration. | |
 | **B2BDirectConnectInbound** | Write | MSFT_AADCrossTenantAccessPolicyB2BSetting | Defines your partner-specific configuration for users from other organizations accessing your resources via Azure AD B2B direct connect. | |
 | **B2BDirectConnectOutbound** | Write | MSFT_AADCrossTenantAccessPolicyB2BSetting | Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B direct connect. | |
+| **AutomaticUserConsentSettings** | Write | MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings | Determines the partner-specific configuration for accepting trust claims from other tenant invitations. | |
 | **InboundTrust** | Write | MSFT_AADCrossTenantAccessPolicyInboundTrust | Determines the partner-specific configuration for trusting other Conditional Access claims from external Azure AD organizations. | |
 | **Ensure** | Write | String | Specify if the policy should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -44,6 +45,15 @@
 | --- | --- | --- | --- | --- |
 | **Applications** | Write | MSFT_AADCrossTenantAccessPolicyTargetConfiguration | The list of applications targeted with your cross-tenant access policy. | |
 | **UsersAndGroups** | Write | MSFT_AADCrossTenantAccessPolicyTargetConfiguration | The list of users and groups targeted with your cross-tenant access policy. | |
+
+### MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **InboundAllowed** | Write | Boolean | Specifies whether you want to automatically trust Inbound invitations. | |
+| **OutboundAllowed** | Write | Boolean | Specifies whether you want to automatically trust Outbound invitations. | |
 
 ### MSFT_AADCrossTenantAccessPolicyInboundTrust
 

@@ -1,7 +1,22 @@
 # Change log for Microsoft365DSC
 
-# 1.23.719.1
+# 1.23.726.1
 
+* AADGroup
+  * Fix issue setting MemberOf property.
+    FIXES [#3496](https://github.com/microsoft/Microsoft365DSC/issues/3496)
+* TeamsOrgWideAppSettings
+  * Removed support for app authentication since the underlying cmdlets aren't
+    supporting it yet.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.118.
+* MISC
+  * Improved Update-M365DSCDependencies function to properly install all Microsoft.Graph.* modules.
+    FIXES [#3454](https://github.com/microsoft/Microsoft365DSC/issues/3454)
+
+# 1.23.719.1
+* AADCrossTenant
+  * Added Automatic Consent for inbound and Outbound trust settings
 * EXOSharedMailbox
   * Added capability to change the PrimarySMTPAddress of a Shared Mailbox
 * SPOExternalUserExpireInDays
@@ -110,7 +125,7 @@
     FIXES #3417
   * Update-M365DSCModule now forces a reload of the latest version of the Microsoft365DSC module.
     FIXES [#3326](https://github.com/microsoft/Microsoft365DSC/issues/3326)
-  * Update-M365DSCAyureADApplication
+  * Update-M365DSCAzureADApplication
     Added retry logic to catch the "Key credential end date is invalid" error when updating the application certificate.
     FIXES [#3426](https://github.com/microsoft/Microsoft365DSC/issues/3426)
 * DEPENDENCIES

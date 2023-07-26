@@ -35,21 +35,23 @@ body:
     validations:
       required: true
 
-  - type: checkboxes
+  - type: dropdown
+    id: Workload
     attributes:
-      label: "Workload"
+      label: "Which workloads are affected"
       description: The workload of the resource you are having an issue with.
       options:
-        - label: "Azure Active Directory"
-        - label: "Exchange Online"
-        - label: "Office 365 Admin"
-        - label: "OneDrive for Business"
-        - label: "Planner"
-        - label: "Power Platform"
-        - label: "Security & Compliance Center"
-        - label: "SharePoint Online"
-        - label: "Teams"
-        - label: "other"
+        - "Azure Active Directory"
+        - "Exchange Online"
+        - "Office 365 Admin"
+        - "OneDrive for Business"
+        - "Planner"
+        - "Power Platform"
+        - "Security & Compliance Center"
+        - "SharePoint Online"
+        - "Teams"
+        - "other"
+      multiple: true
     validations:
       required: true
 

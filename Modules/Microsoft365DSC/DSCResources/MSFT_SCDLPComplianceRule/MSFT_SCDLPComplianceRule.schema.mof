@@ -61,7 +61,7 @@ class MSFT_SCDLPComplianceRule : OMI_BaseResource
     [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("The AnyOfRecipientAddressContainsWords parameter specifies a condition for the DLP rule that looks for words or phrases in recipient email addresses.")] String AnyOfRecipientAddressContainsWords[];
-    [Write, Description("The AnyOfRecipientAddressMatchesPatterns parameter specifies a condition for the DLP rule that looks for text patterns in recipient email addresses by using regular expressions..")] String AnyOfRecipientAddressMatchesPatterns[];
+    [Write, Description("The AnyOfRecipientAddressMatchesPatterns parameter specifies a condition for the DLP rule that looks for text patterns in recipient email addresses by using regular expressions.")] String AnyOfRecipientAddressMatchesPatterns[];
     [Write, Description("The RemoveRMSTemplate parameter specifies an action for the DLP rule that removes Office 365 Message Encryption from messages and their attachments.")] Boolean RemoveRMSTemplate;
     [Write, Description("The StopPolicyProcessing parameter specifies an action that stops processing more DLP policy rules.")] Boolean StopPolicyProcessing;
     [Write, Description("The DocumentIsUnsupported parameter specifies a condition for the DLP rule that looks for files that can't be scanned.")] Boolean DocumentIsUnsupported;

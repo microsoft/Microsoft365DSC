@@ -386,7 +386,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return 'Credentials'
                 }
                 Mock -CommandName Get-MgGroup -ParameterFilter { $Id -eq '12345-12345-12345-12345' -or $Filter -eq "DisplayName eq 'DSCGroup'" } -MockWith {
-                    return @{
+                    $returnData = @{
                         DisplayName     = 'DSCGroup'
                         ID              = '12345-12345-12345-12345'
                         Description     = 'Microsoft DSC Group'
@@ -395,6 +395,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MailNickname    = 'M365DSC'
                         GroupTypes      = @()
                     }
+                    
+                    # Set-TargetResource expects object-type of answer to contain 'group'
+                    $returnData.psobject.TypeNames.insert(0, 'Group')
+                    return $returnData
                 }
                 Mock -CommandName Get-MgGroup -ParameterFilter { $Id -eq '67890-67890-67890-67890' -or $Filter -eq "DisplayName -eq 'DSCMemberOfGroup'" } -MockWith {
                     $returnData = @{
@@ -424,7 +428,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 2
             }
         }
 
