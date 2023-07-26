@@ -20,13 +20,6 @@ class MSFT_AADCrossTenantAccessPolicyB2BSetting
 };
 
 [ClassVersion("1.0.0")]
-class MSFT_AADCrossTenantAccessPolicyB2BSetting
-{
-    [Write, Description("The list of applications targeted with your cross-tenant access policy."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyTargetConfiguration")] String Applications;
-    [Write, Description("The list of users and groups targeted with your cross-tenant access policy."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyTargetConfiguration")] String UsersAndGroups;
-};
-
-[ClassVersion("1.0.0")]
 class MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings
 {
     [Write, Description("Specifies whether you want to automatically trust Inbound invitations..")] Boolean InboundAllowed;
