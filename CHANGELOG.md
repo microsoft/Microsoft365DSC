@@ -2,8 +2,11 @@
 
 # UNRELEASED
 
+* AADGroup, AADUser and O365Group
+  * Add support to use function endsWith as filter
+    FIXES [#3518](https://github.com/microsoft/Microsoft365DSC/issues/3518)
 * O365OrgSettings
-  * Added error handling for the Viva settings to handle task cancelation errors.
+  * Added error handling for the Viva settings to handle task cancellation errors.
 * MISC
   * M365DscReverse: Fix exporting when $Filter var exists locally
     FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)

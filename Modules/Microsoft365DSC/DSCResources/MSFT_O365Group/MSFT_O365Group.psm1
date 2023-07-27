@@ -558,7 +558,16 @@ function Export-TargetResource
     try
     {
         $dscContent = ''
-        $groups = Get-MgGroup -All:$true -Filter $Filter | Where-Object -FilterScript {
+        $ExportParameters = @{
+            Filter      = $Filter
+            All         = [switch]$true
+            ErrorAction = 'Stop'
+        }
+        if ($Filter -like "*endsWith*") {
+            $ExportParameters.Add('CountVariable', 'count')
+            $ExportParameters.Add('ConsistencyLevel', 'eventual')
+        }
+        $groups = Get-MgGroup @ExportParameters | Where-Object -FilterScript {
             $_.MailNickName -ne '00000000-0000-0000-0000-000000000000'
         }
 
