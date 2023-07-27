@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* O365OrgSettings
+  * Added error handling for the Viva settings to handle task cancelation errors.
 * MISC
   * M365DscReverse: Fix exporting when $Filter var exists locally
     FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
