@@ -1038,7 +1038,16 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedGroups = Get-MgGroup -Filter $Filter -All:$true -ErrorAction Stop
+        $ExportParameters = @{
+            Filter      = $Filter
+            All         = [switch]$true
+            ErrorAction = 'Stop'
+        }
+        if ($Filter -like "*endsWith*") {
+            $ExportParameters.Add('CountVariable', 'count')
+            $ExportParameters.Add('ConsistencyLevel', 'eventual')
+        }
+        [array] $Script:exportedGroups = Get-MgGroup @ExportParameters
         $Script:exportedGroups = $Script:exportedGroups | Where-Object -FilterScript {
             -not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and `
                 -not ($_.MailEnabled -and $_.SecurityEnabled)
