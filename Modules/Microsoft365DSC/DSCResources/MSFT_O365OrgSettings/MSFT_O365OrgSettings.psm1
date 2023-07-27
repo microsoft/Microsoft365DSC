@@ -212,6 +212,35 @@ function Get-TargetResource
             {
                 $vivaBriefingEmailValue = $true
             }
+            elseif ($_.Exception.Message -like "*A task was canceled*")
+            {
+                $retries = 1
+                $errorContent = $null
+                while ($retries -le 5)
+                {
+                    try
+                    {
+                        Start-Sleep -Seconds 2
+                        $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop
+                    }
+                    catch
+                    {
+                        $errorContent = $_
+                        $retries++
+                    }
+                }
+                if ($null -eq $currentBriefingConfig)
+                {
+                    throw $errorContent
+                }
+                else
+                {
+                    if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
+                    {
+                        $vivaBriefingEmailValue = $true
+                    }
+                }
+            }
             else
             {
                 throw $_
