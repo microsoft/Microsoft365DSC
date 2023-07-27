@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* O365OrgSettings
+  * Added error handling for the Viva settings to handle task cancelation errors.
+
 # 1.23.726.1
 
 * AADGroup
