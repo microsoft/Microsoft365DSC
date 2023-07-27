@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADGroup, AADUser and O365Group
+  * Add support to use function endsWith as filter
+    FIXES [#3518](https://github.com/microsoft/Microsoft365DSC/issues/3518)
 * MISC
   * M365DscReverse: Fix exporting when $Filter var exists locally
     FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
