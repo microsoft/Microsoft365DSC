@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * M365DscReverse: Fix exporting when $Filter var exists locally
+    FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
+
 # 1.23.726.1
 
 * AADGroup
