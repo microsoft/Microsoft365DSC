@@ -7,12 +7,18 @@
     FIXES [#3518](https://github.com/microsoft/Microsoft365DSC/issues/3518)
 * O365OrgSettings
   * Added error handling for the Viva settings to handle task cancellation errors.
+* SCComplianceSearch
+  * Fixed an issue with the export when using CertificateThumbprint.
+    FIXES [#3499](https://github.com/microsoft/Microsoft365DSC/issues/3499)
 * SCComplianceSearchAction
   * Adds support for the Preview action type.
     FIXES [#3498](https://github.com/microsoft/Microsoft365DSC/issues/3498)
 * MISC
   * M365DscReverse: Fix exporting when $Filter var exists locally
     FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* dependencies to version 2.2.0.
+  * Updated dependency Microsoft.PowerApps.Administration.PowerShell to version 2.0.170.
 
 # 1.23.726.1
 
