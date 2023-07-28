@@ -534,31 +534,55 @@ function Set-TargetResource
         Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing
     }
 
-    $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
-    $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
-    if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled -and `
-        $CortanaEnabledValue.Id -ne $null)
+    if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled)
     {
-        Write-Verbose -Message "Updating the Cortana setting to {$CortanaEnabled}"
-        Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
-            -AccountEnabled:$CortanaEnabled
+        $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
+        $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
+
+        if ($null -ne $CortanaEnabledValue.Id)
+        {
+            Write-Verbose -Message "Updating the Cortana setting to {$CortanaEnabled}"
+            Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
+                -AccountEnabled:$CortanaEnabled
+        }
     }
 
     # Microsoft Viva Briefing Email
-    Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
     $briefingValue = 'opt-out'
     if ($MicrosoftVivaBriefingEmail)
     {
         $briefingValue = 'opt-in'
     }
-    Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue | Out-Null
+    if ($briefingValue -ne $currentValues.MicrosoftVivaBriefingEmail)
+    {
+        Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
+        Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue | Out-Null
+    }
 
     # Viva Insights
-    Write-Verbose -Message "Updating Viva Insights settings."
-    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Dashboard" -IsEnabled $VivaInsightsWebExperience | Out-Null
-    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Digest-email" -IsEnabled $VivaInsightsDigestEmail | Out-Null
-    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Add-In" -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
-    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Scheduled-send" -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
+    if ($currentValues.VivaInsightsWebExperience -ne $VivaInsightsWebExperience)
+    {
+        Write-Verbose -Message "Updating Viva Insights settings for Web Experience"
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Dashboard" -IsEnabled $VivaInsightsWebExperience | Out-Null
+    }
+
+    if ($currentValues.VivaInsightsDigestEmail -ne $VivaInsightsDigestEmail)
+    {
+        Write-Verbose -Message "Updating Viva Insights settings for Digest Email"
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Digest-email" -IsEnabled $VivaInsightsDigestEmail | Out-Null
+    }
+
+    if ($currentValues.VivaInsightsOutlookAddInAndInlineSuggestions -ne $VivaInsightsOutlookAddInAndInlineSuggestions)
+    {
+        Write-Verbose -Message "Updating Viva Insights settings for Addin and Inline Suggestions"
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Add-In" -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
+    }
+
+    if ($currentValues.VivaInsightsScheduleSendSuggestions -ne $VivaInsightsScheduleSendSuggestions)
+    {
+        Write-Verbose -Message "Updating Viva Insights settings for ScheduleSendSuggestions"
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Scheduled-send" -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
+    }
 
     # Reports Display Names
     $AdminCenterReportDisplayConcealedNamesEnabled = Get-M365DSCOrgSettingsAdminCenterReport
@@ -570,8 +594,12 @@ function Set-TargetResource
     }
 
     # Apps Installation
-    if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows") -or $PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac"))
+    if (($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows") -or `
+        $PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac")) -and `
+        ($currentValues.InstallationOptionsAppsForWindows -ne $InstallationOptionsAppsForWindows -or `
+        $currentValues.InstallationOptionsAppsForMac -ne $InstallationOptionsAppsForMac))
     {
+        Write-Verbose -Message "Updating Office Apps Installation options."
         $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
             -InboundParameters $PSBoundParameters
         $InstallationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
