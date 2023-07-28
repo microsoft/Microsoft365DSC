@@ -15,29 +15,29 @@ Function New-M365DSCConfigurationToMarkdown
           [Parameter()]
           [Array]
           $ParsedContent,
-  
+
           [Parameter()]
           [System.String]
           $OutputPath,
-  
+
           [Parameter()]
           [System.String]
           $TemplateName,
-  
+
           [Parameter()]
           [Switch]
           $SortProperties
       )
-  
+
       $crlf = "`r`n"
       if ([System.String]::IsNullOrEmpty($TemplateName))
       {
           $TemplateName = 'Configuration Report'
       }
-  
+
       Write-Output 'Generating Markdown report'
       $fullMD = "# " + $TemplateName + $crlf
-  
+
       $totalCount = $parsedContent.Count
       $currentCount = 0
       foreach ($resource in $parsedContent)
@@ -45,7 +45,7 @@ Function New-M365DSCConfigurationToMarkdown
           # Create a new table for each resource
           $percentage = [math]::Round(($currentCount / $totalCount) * 100, 2)
           Write-Progress -Activity 'Processing generated DSC Object' -Status ("{0:N2} completed - $($resource.ResourceName)" -f $percentage) -PercentComplete $percentage
-  
+
           $fullMD += "## " + $resource.ResourceInstanceName + $crlf
           $fullMD += "|Item|Value|`r`n"
           $fullMD += "|:---|:---|`r`n"
@@ -57,7 +57,7 @@ Function New-M365DSCConfigurationToMarkdown
           {
               $properties = $resource.Keys
           }
-  
+
           foreach ($property in $properties)
           {
               if ($property -ne 'ResourceName' `
@@ -115,19 +115,19 @@ Function New-M365DSCConfigurationToMarkdown
                   $partMD += $value + $crlf
               }
           }
-  
+
           $fullMD += $partMD + $crlf
           $partMD = ""
-  
+
           $currentCount++
       }
-  
+
       if (-not [System.String]::IsNullOrEmpty($OutputPath))
       {
           Write-Output 'Saving Markdown report'
           $fullMD | Out-File $OutputPath
       }
-  
+
       Write-Output 'Completed generating Markdown report'
   }
 
@@ -1103,6 +1103,10 @@ function Get-M365DSCCIMInstanceKey
     elseif ($CIMInstance.ContainsKey('Usage'))
     {
         $primaryKey = 'Usage'
+    }
+    elseif ($CIMInstance.ContainsKey("odataType"))
+    {
+        $primaryKey = 'odataType'
     }
     return $primaryKey
 }
