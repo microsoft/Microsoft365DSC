@@ -20,6 +20,8 @@
 * MISC
   * M365DscReverse: Fix exporting when $Filter var exists locally
     FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
+  * Fix for the delta report function to handle deep nested CIM Instances.
+    FIXES [#3478](https://github.com/microsoft/Microsoft365DSC/issues/3478)
 * DEPENDENCIES
   * Updated Microsoft.Graph.* dependencies to version 2.2.0.
   * Updated dependency Microsoft.PowerApps.Administration.PowerShell to version 2.0.170.
