@@ -13,6 +13,10 @@
 * SCComplianceSearchAction
   * Adds support for the Preview action type.
     FIXES [#3498](https://github.com/microsoft/Microsoft365DSC/issues/3498)
+* SCRetentionCompliancePolicy
+  * Fixes an issue where SPN auth parameters weren't returned from the Get-TargetResource
+    function.
+    FIXES [#3500](https://github.com/microsoft/Microsoft365DSC/issues/3500)
 * MISC
   * M365DscReverse: Fix exporting when $Filter var exists locally
     FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
