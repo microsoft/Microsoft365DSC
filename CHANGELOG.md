@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* AADAuthorizationPolicy
+  * Added support for the AllowedToCreateTenants &
+    AllowedToReadBitlockerKeysForOwnedDevice properties.
+    FIXES [#3492](https://github.com/microsoft/Microsoft365DSC/issues/3492)
 * AADGroup, AADUser and O365Group
   * Add support to use function endsWith as filter
     FIXES [#3518](https://github.com/microsoft/Microsoft365DSC/issues/3518)
@@ -24,6 +28,7 @@
     FIXES [#3478](https://github.com/microsoft/Microsoft365DSC/issues/3478)
 * DEPENDENCIES
   * Updated Microsoft.Graph.* dependencies to version 2.2.0.
+  * Updated MSCloudLoginAssistant to version 1.0.119.
   * Updated dependency Microsoft.PowerApps.Administration.PowerShell to version 2.0.170.
 
 # 1.23.726.1
