@@ -11,6 +11,7 @@
     FIXES [#3518](https://github.com/microsoft/Microsoft365DSC/issues/3518)
 * O365OrgSettings
   * Added error handling for the Viva settings to handle task cancellation errors.
+  * Added improvements for the set to only call into APIs that need a PATCH request.
 * SCComplianceSearch
   * Fixed an issue with the export when using CertificateThumbprint.
     FIXES [#3499](https://github.com/microsoft/Microsoft365DSC/issues/3499)

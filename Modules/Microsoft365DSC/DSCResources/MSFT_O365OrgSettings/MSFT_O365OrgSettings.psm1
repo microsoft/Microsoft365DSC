@@ -200,7 +200,7 @@ function Get-TargetResource
         $vivaBriefingEmailValue = $false
         try
         {
-            $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop
+            $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop -Verbose:$false
             if ($currentBriefingConfig.IsEnabledByDefault -eq 'opt-in')
             {
                 $vivaBriefingEmailValue = $true
@@ -221,7 +221,7 @@ function Get-TargetResource
                     try
                     {
                         Start-Sleep -Seconds 2
-                        $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop
+                        $currentBriefingConfig = Get-DefaultTenantBriefingConfig -ErrorAction Stop -Verbose:$false
                     }
                     catch
                     {
@@ -248,7 +248,7 @@ function Get-TargetResource
         }
 
         # Viva Insights settings
-        $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig
+        $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose:$false
         $MRODeviceManagerService = 'ebe0c285-db95-403f-a1a3-a793bd6d7767'
         try
         {
@@ -534,31 +534,55 @@ function Set-TargetResource
         Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing
     }
 
-    $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
-    $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
-    if ($CortanaEnabled -ne $CortanaEnabledValue.AccountEnabled -and `
-        $CortanaEnabledValue.Id -ne $null)
+    if ($currentValues.CortanaEnabled -and $CortanaEnabled -ne $currentValues.CortanaEnabled)
     {
-        Write-Verbose -Message "Updating the Cortana setting to {$CortanaEnabled}"
-        Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
-            -AccountEnabled:$CortanaEnabled
+        $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
+        $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
+
+        if ($null -ne $CortanaEnabledValue.Id -and $CortanaEnabledValue.AccountEnabled)
+        {
+            Write-Verbose -Message "Updating the Cortana setting to {$CortanaEnabled}"
+            Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
+                -AccountEnabled:$CortanaEnabled
+        }
     }
 
     # Microsoft Viva Briefing Email
-    Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
     $briefingValue = 'opt-out'
     if ($MicrosoftVivaBriefingEmail)
     {
         $briefingValue = 'opt-in'
     }
-    Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue | Out-Null
+    if ($currentValues.MicrosoftVivaBriefingEmail -and $MicrosoftVivaBriefingEmail -ne $currentValues.MicrosoftVivaBriefingEmail)
+    {
+        Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
+        Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue -Verbose:$false | Out-Null
+    }
 
     # Viva Insights
-    Write-Verbose -Message "Updating Viva Insights settings."
-    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Dashboard" -IsEnabled $VivaInsightsWebExperience | Out-Null
-    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Digest-email" -IsEnabled $VivaInsightsDigestEmail | Out-Null
-    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Add-In" -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions | Out-Null
-    Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Scheduled-send" -IsEnabled $VivaInsightsScheduleSendSuggestions | Out-Null
+    if ($currentValues.VivaInsightsWebExperience -ne $VivaInsightsWebExperience)
+    {
+        Write-Verbose -Message "Updating Viva Insights settings for Web Experience"
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Dashboard" -IsEnabled $VivaInsightsWebExperience -Verbose:$false | Out-Null
+    }
+
+    if ($currentValues.VivaInsightsDigestEmail -ne $VivaInsightsDigestEmail)
+    {
+        Write-Verbose -Message "Updating Viva Insights settings for Digest Email"
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Digest-email" -IsEnabled $VivaInsightsDigestEmail -Verbose:$false | Out-Null
+    }
+
+    if ($currentValues.VivaInsightsOutlookAddInAndInlineSuggestions -ne $VivaInsightsOutlookAddInAndInlineSuggestions)
+    {
+        Write-Verbose -Message "Updating Viva Insights settings for Addin and Inline Suggestions"
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Add-In" -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions -Verbose:$false | Out-Null
+    }
+
+    if ($currentValues.VivaInsightsScheduleSendSuggestions -ne $VivaInsightsScheduleSendSuggestions)
+    {
+        Write-Verbose -Message "Updating Viva Insights settings for ScheduleSendSuggestions"
+        Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Scheduled-send" -IsEnabled $VivaInsightsScheduleSendSuggestions -Verbose:$false | Out-Null
+    }
 
     # Reports Display Names
     $AdminCenterReportDisplayConcealedNamesEnabled = Get-M365DSCOrgSettingsAdminCenterReport
@@ -570,7 +594,10 @@ function Set-TargetResource
     }
 
     # Apps Installation
-    if ($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows") -or $PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac"))
+    if (($PSBoundParameters.ContainsKey("InstallationOptionsAppsForWindows") -or `
+        $PSBoundParameters.ContainsKey("InstallationOptionsAppsForMac")) -and `
+        ($null -ne (Compare-Object -ReferenceObject $currentValues.InstallationOptionsAppsForWindows -DifferenceObject $InstallationOptionsAppsForWindows) -or `
+         $null -ne (Compare-Object -ReferenceObject $currentValues.InstallationOptionsAppsForMac -DifferenceObject $InstallationOptionsAppsForMac)))
     {
         $ConnectionModeTasks = New-M365DSCConnection -Workload 'Tasks' `
             -InboundParameters $PSBoundParameters
@@ -705,15 +732,15 @@ function Set-TargetResource
 
     # To Do
     $ToDoParametersToUpdate = @{}
-    if ($ToDoIsPushNotificationEnabled -ne $currentValues.ToDoIsPushNotificationEnabled)
+    if ($currentValues.ToDoIsPushNotificationEnabled -and $ToDoIsPushNotificationEnabled -ne $currentValues.ToDoIsPushNotificationEnabled)
     {
         $ToDoParametersToUpdate.Add('isPushNotificationEnabled', $ToDoIsPushNotificationEnabled)
     }
-    if ($ToDoIsExternalJoinEnabled -ne $currentValues.ToDoIsExternalJoinEnabled)
+    if ($currentValues.ToDoIsExternalJoinEnabled -and $ToDoIsExternalJoinEnabled -ne $currentValues.ToDoIsExternalJoinEnabled)
     {
         $ToDoParametersToUpdate.Add('isExternalJoinEnabled', $ToDoIsExternalJoinEnabled)
     }
-    if ($ToDoIsExternalShareEnabled -ne $currentValues.ToDoIsExternalShareEnabled)
+    if ($currentValues.ToDoIsExternalShareEnabled -and $ToDoIsExternalShareEnabled -ne $currentValues.ToDoIsExternalShareEnabled)
     {
         $ToDoParametersToUpdate.Add('isExternalShareEnabled', $ToDoIsExternalShareEnabled)
     }
@@ -998,6 +1025,7 @@ function Get-M365DSCO365OrgSettingsPlannerConfig
 {
     [CmdletBinding()]
     param()
+    $VerbosePreference = 'SilentlyContinue'
     $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + "/taskAPI/tenantAdminSettings/Settings";
     $results = Invoke-RestMethod -ContentType "application/json;odata.metadata=full" `
         -Headers @{"Accept"="application/json"; "Authorization"=$Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; "Accept-Charset"="UTF-8"; "OData-Version"="4.0;NetFx"; "OData-MaxVersion"="4.0;NetFx"} `
@@ -1014,6 +1042,7 @@ function Set-M365DSCO365OrgSettingsPlannerConfig
         [System.Boolean]
         $AllowCalendarSharing
     )
+    $VerbosePreference = 'SilentlyContinue'
 
     $flags = @{
         allowCalendarSharing = $AllowCalendarSharing
@@ -1033,6 +1062,7 @@ function Get-M365DSCOrgSettingsAdminCenterReport
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
+    $VerbosePreference = 'SilentlyContinue'
 
     $url = 'https://graph.microsoft.com/beta/admin/reportSettings'
     $results = Invoke-MgGraphRequest -Method GET -Uri $url
@@ -1048,6 +1078,7 @@ function Update-M365DSCOrgSettingsAdminCenterReport
         [System.Boolean]
         $DisplayConcealedNames
     )
+    $VerbosePreference = 'SilentlyContinue'
     $url = 'https://graph.microsoft.com/beta/admin/reportSettings'
     $body = @{
         "@odata.context"      ="https://graph.microsoft.com/beta/$metadata#admin/reportSettings/$entity"
@@ -1065,6 +1096,7 @@ function Get-M365DSCOrgSettingsInstallationOptions
         [System.String]
         $AuthenticationOption
     )
+    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1100,6 +1132,7 @@ function Update-M365DSCOrgSettingsInstallationOptions
         [System.String]
         $AuthenticationOption
     )
+    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1126,6 +1159,7 @@ function Get-M365DSCOrgSettingsForms
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
+    $VerbosePreference = 'SilentlyContinue'
 
     $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
     $results = Invoke-MgGraphRequest -Method GET -Uri $url
@@ -1141,6 +1175,7 @@ function Update-M365DSCOrgSettingsForms
         [System.Collections.Hashtable]
         $Options
     )
+    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
@@ -1163,6 +1198,7 @@ function Get-M365DSCOrgSettingsDynamicsCustomerVoice
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
+    $VerbosePreference = 'SilentlyContinue'
 
     $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
     $results = Invoke-MgGraphRequest -Method GET -Uri $url
@@ -1178,10 +1214,10 @@ function Update-M365DSCOrgSettingsDynamicsCustomerVoice
         [System.Collections.Hashtable]
         $Options
     )
+    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
-        Write-Verbose -Message "Updating Dynamics Customer Voice Settings"
         $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
@@ -1200,6 +1236,7 @@ function Get-M365DSCOrgSettingsAppsAndServices
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
+    $VerbosePreference = 'SilentlyContinue'
 
     $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
     $results = Invoke-MgGraphRequest -Method GET -Uri $url
@@ -1215,10 +1252,10 @@ function Update-M365DSCOrgSettingsAppsAndServices
         [System.Collections.Hashtable]
         $Options
     )
+    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
-        Write-Verbose -Message "Updating App & Services Settings"
         $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
@@ -1236,6 +1273,7 @@ function Get-M365DSCOrgSettingsToDo
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param()
+    $VerbosePreference = 'SilentlyContinue'
 
     $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
     $results = Invoke-MgGraphRequest -Method GET -Uri $url
@@ -1251,10 +1289,10 @@ function Update-M365DSCOrgSettingsToDo
         [System.Collections.Hashtable]
         $Options
     )
+    $VerbosePreference = 'SilentlyContinue'
 
     try
     {
-        Write-Verbose -Message "Updating To Do Settings"
         $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
