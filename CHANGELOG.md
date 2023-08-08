@@ -22,6 +22,10 @@
   * Fixes an issue where SPN auth parameters weren't returned from the Get-TargetResource
     function.
     FIXES [#3500](https://github.com/microsoft/Microsoft365DSC/issues/3500)
+* TeasShiftPolicy
+  * Deprecated the EnableShiftPresence parameter.
+* TeamsTemplatesPolicy
+  * Initial release.
 * MISC
   * M365DscReverse: Fix exporting when $Filter var exists locally
     FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
