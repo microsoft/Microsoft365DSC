@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* TeamsGroupPolicyAssignment
+  * FIXES [#3559](https://github.com/microsoft/Microsoft365DSC/issues/3559)
 * AADAuthorizationPolicy
   * Added support for the AllowedToCreateTenants &
     AllowedToReadBitlockerKeysForOwnedDevice properties.
