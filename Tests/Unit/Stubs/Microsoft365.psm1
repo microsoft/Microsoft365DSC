@@ -58737,8 +58737,8 @@ function Update-MgDeviceManagementRoleDefinition
     )
 }
 #endregion
-#region Microsoft.Graph.DirectoryObjects
-function Get-MgDirectoryObject
+#region Microsoft.Graph.Beta.DirectoryObjects
+function Get-MgBetaDirectoryObject
 {
     [CmdletBinding()]
     param(
@@ -58820,6 +58820,8 @@ function Get-MgDirectoryObject
     )
 }
 #endregion
+
+
 #region Microsoft.Graph.Groups
 function Get-MgGroup
 {
