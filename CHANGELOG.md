@@ -1,6 +1,7 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.809.1
+
 * TeamsGroupPolicyAssignment
   * FIXES [#3559](https://github.com/microsoft/Microsoft365DSC/issues/3559)
 * AADAuthorizationPolicy
