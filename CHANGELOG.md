@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADGroupSettings
+  * Add support for enabling sensitivity labels in M365-groups
 * AADAuthorizationPolicy
   * Added support for the AllowedToCreateTenants &
     AllowedToReadBitlockerKeysForOwnedDevice properties.
