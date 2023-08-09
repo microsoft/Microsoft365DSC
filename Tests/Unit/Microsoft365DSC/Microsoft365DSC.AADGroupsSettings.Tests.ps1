@@ -200,6 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowGuestsToBeGroupOwner     = $True
                     AllowToAddGuests              = $True
                     EnableGroupCreation           = $True
+                    EnableMIPLabels               = $True
                     Ensure                        = 'Present'
                     Credential                    = $Credential
                     GroupCreationAllowedGroupName = 'All Company'
@@ -222,6 +223,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             },
                             @{
                                 Name  = 'EnableGroupCreation'
+                                Value = $true
+                            },
+                            @{
+                                Name  = 'EnableMIPLabels'
                                 Value = $true
                             },
                             @{
@@ -273,6 +278,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowGuestsToBeGroupOwner     = $True
                     AllowToAddGuests              = $True
                     EnableGroupCreation           = $False #Drift
+                    EnableMIPLabels               = $True #Drift
                     Ensure                        = 'Present'
                     Credential                    = $Credential
                     GroupCreationAllowedGroupName = 'All Company'
