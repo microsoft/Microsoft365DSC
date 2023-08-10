@@ -140,9 +140,7 @@
       IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
       # ReleaseNotes of this module
-      ReleaseNotes = '* TeamsGroupPolicyAssignment
-      * FIXES [#3559](https://github.com/microsoft/Microsoft365DSC/issues/3559)
-    * AADAuthorizationPolicy
+      ReleaseNotes = '* AADAuthorizationPolicy
       * Added support for the AllowedToCreateTenants &
         AllowedToReadBitlockerKeysForOwnedDevice properties.
         FIXES [#3492](https://github.com/microsoft/Microsoft365DSC/issues/3492)
@@ -159,10 +157,14 @@
       * Adds support for the Preview action type.
         FIXES [#3498](https://github.com/microsoft/Microsoft365DSC/issues/3498)
     * SCRetentionCompliancePolicy
-      * Fixes an issue where SPN auth parameters weren t returned from the Get-TargetResource
+      * Fixes an issue where SPN auth parameters werent returned from the Get-TargetResource
         function.
         FIXES [#3500](https://github.com/microsoft/Microsoft365DSC/issues/3500)
-    * TeasShiftPolicy
+    * SPOTenantSettings
+      * Add support for new parameter HideSyncButtonOnTeamSite
+    * TeamsGroupPolicyAssignment
+      * FIXES [#3559](https://github.com/microsoft/Microsoft365DSC/issues/3559)
+    * TeamsShiftPolicy
       * Deprecated the EnableShiftPresence parameter.
     * TeamsTemplatesPolicy
       * Initial release.
