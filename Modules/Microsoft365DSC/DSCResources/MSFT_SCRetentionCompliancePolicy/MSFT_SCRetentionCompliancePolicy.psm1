@@ -212,6 +212,11 @@ function Get-TargetResource
                     SkypeLocation                = @()
                     SkypeLocationException       = @()
                     Credential                   = $Credential
+                    ApplicationId                 = $ApplicationId
+                    TenantId                      = $TenantId
+                    CertificateThumbprint         = $CertificateThumbprint
+                    CertificatePath               = $CertificatePath
+                    CertificatePassword           = $CertificatePassword
                 }
 
                 if ($PolicyObject.DynamicScopeLocation.Count -gt 0)

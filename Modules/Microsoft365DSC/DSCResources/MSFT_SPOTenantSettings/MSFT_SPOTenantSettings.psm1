@@ -74,6 +74,10 @@ function Get-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
+        [System.Boolean]
+        $HideSyncButtonOnTeamSite,
+
+        [Parameter()]
         [ValidateSet('AllowExternalSharing', 'BlockExternalSharing')]
         [System.String]
         $MarkNewFilesSensitiveByDefault,
@@ -182,6 +186,7 @@ function Get-TargetResource
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $SPOTenantSettings.ApplyAppEnforcedRestrictionsToAdHocRecipients
             FilePickerExternalImageSearchEnabled          = $SPOTenantSettings.FilePickerExternalImageSearchEnabled
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
+            HideSyncButtonOnTeamSite                      = $SPOTenantSettings.HideSyncButtonOnTeamSite
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
             ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
             DisabledWebPartIds                            = [String[]]$SPOTenantSettings.DisabledWebPartIds
@@ -287,6 +292,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $HideDefaultThemes,
+
+        [Parameter()]
+        [System.Boolean]
+        $HideSyncButtonOnTeamSite,
 
         [Parameter()]
         [ValidateSet('AllowExternalSharing', 'BlockExternalSharing')]
@@ -456,6 +465,10 @@ function Test-TargetResource
         $HideDefaultThemes,
 
         [Parameter()]
+        [System.Boolean]
+        $HideSyncButtonOnTeamSite,
+
+        [Parameter()]
         [ValidateSet('AllowExternalSharing', 'BlockExternalSharing')]
         [System.String]
         $MarkNewFilesSensitiveByDefault,
@@ -547,6 +560,7 @@ function Test-TargetResource
             'ApplyAppEnforcedRestrictionsToAdHocRecipients', `
             'FilePickerExternalImageSearchEnabled', `
             'HideDefaultThemes', `
+            'HideSyncButtonOnTeamSite', `
             'MarkNewFilesSensitiveByDefault', `
             'ConditionalAccessPolicy', `
             'DisabledWebPartIds', `

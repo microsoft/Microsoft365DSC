@@ -121,7 +121,7 @@ function Get-TargetResource
                 $IncludeSP = Get-ResultProperty -ResultString $currentAction.Results -PropertyName 'Include SharePoint versions'
                 $ScopeValue = Get-ResultProperty -ResultString $currentAction.Results -PropertyName 'Scope'
 
-                $ActionName = 'Export'
+                $ActionName = $Action
                 if ('RetentionReports' -eq $Scenario)
                 {
                     $ActionName = 'Retention'
@@ -142,6 +142,10 @@ function Get-TargetResource
                     CertificatePath                     = $CertificatePath
                     CertificatePassword                 = $CertificatePassword
                     Ensure                              = 'Present'
+                }
+                if ($ActionName -eq 'Preview')
+                {
+                    $result.Remove('EnableDedupe') | Out-Null
                 }
             }
             else
@@ -317,9 +321,16 @@ function Set-TargetResource
             'Purge'
             {
                 $CreationParams.Add('Purge', $true)
-                $CreationParams.Remove('ActionScope')
-                $CreationParams.Remove('Scope')
+                $CreationParams.Remove('ActionScope') | Out-Null
+                $CreationParams.Remove('Scope') | Out-Null
                 $CreationParams.Add('Confirm', $false)
+            }
+            'Preview'
+            {
+                $CreationParams.Add('Preview', $true)
+                $CreationParams.Remove("Scope") | Out-Null
+                $CreationParams.Add('Confirm', $false)
+                $CreationParams.Remove('EnableDedupe') | Out-Null
             }
         }
 
@@ -687,7 +698,6 @@ function Get-CurrentAction
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('Export', 'Purge', 'Retention')]
         $Action
     )
     # For the sake of retrieving the current action, search by Action = Export;
@@ -719,13 +729,17 @@ function Get-CurrentAction
         $currentAction = Get-ComplianceSearchAction | Where-Object { $_.SearchName -eq $SearchName -and $_.Action -eq $Action }
     }
 
-    if ('Purge' -ne $Action -and $null -ne $currentAction)
+    if ('Purge' -ne $Action -and $null -ne $currentAction -and -not [System.String]::IsNullOrEmpty($Scenario))
     {
         $currentAction = $currentAction | Where-Object { $_.Results -like "*Scenario: $($Scenario)*" }
     }
     elseif ('Purge' -eq $Action)
     {
         $currentAction = $currentAction | Where-Object { $_.Action -eq 'Purge' }
+    }
+    elseif ('Preview' -eq $Action)
+    {
+        $currentAction = $currentAction | Where-Object { $_.Action -eq 'Preview' }
     }
 
     return $currentAction

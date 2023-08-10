@@ -813,7 +813,17 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
         $propertiesToRetrieve = @('Id', 'UserPrincipalName', 'DisplayName', 'GivenName', 'Surname', 'UsageLocation', 'City', 'Country', 'Department', 'FacsimileTelephoneNumber', 'Mobile', 'OfficeLocation', 'TelephoneNumber', 'PostalCode', 'PreferredLanguage', 'State', 'StreetAddress', 'JobTitle', 'UserType', 'PasswordPolicies')
-        $Script:M365DSCExportInstances = Get-MgUser -Filter $Filter -All:$true -Property $propertiesToRetrieve -ErrorAction Stop
+        $ExportParameters = @{
+            Filter      = $Filter
+            All         = [switch]$true
+            Property    = $propertiesToRetrieve
+            ErrorAction = 'Stop'
+        }
+        if ($Filter -like "*endsWith*") {
+            $ExportParameters.Add('CountVariable', 'count')
+            $ExportParameters.Add('ConsistencyLevel', 'eventual')
+        }
+        $Script:M365DSCExportInstances = Get-MgUser @ExportParameters
 
         $dscContent = [System.Text.StringBuilder]::new()
         $i = 1

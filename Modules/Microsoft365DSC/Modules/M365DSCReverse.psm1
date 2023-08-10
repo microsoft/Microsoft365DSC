@@ -582,11 +582,6 @@ function Start-M365DSCConfigurationExtract
                 $parameters.Add('MaxProcesses', $MaxProcesses)
             }
 
-            if ($FilterExists -and -not [System.String]::IsNullOrEmpty($Filter))
-            {
-                $parameters.Add('Filter', $Filter)
-            }
-
             if ($ComponentsToSkip -notcontains $resourceName)
             {
                 Write-Host "[$i/$($ResourcesToExport.Length)] Extracting [" -NoNewline
@@ -604,7 +599,7 @@ function Start-M365DSCConfigurationExtract
                 # Check if filters for the current resource were specified.
                 $resourceFilter = $null
                 $resourceName = $resource.Name.Split('.')[0] -replace 'MSFT_', ''
-                if ($filters -ne $null -and $filters.Keys.Contains($resourceName))
+                if ($FilterExists -and $null -ne $Filters -and $Filters.Keys.Contains($resourceName))
                 {
                     $resourceFilter = $Filters.($resource.Name.Split('.')[0] -replace 'MSFT_', '')
                     if ($FilterExists)

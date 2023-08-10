@@ -553,9 +553,14 @@ function Export-TargetResource
             foreach ($search in $searches)
             {
                 $Params = @{
-                    Name       = $search.Name
-                    Case       = $case.Name
-                    Credential = $Credential
+                    Name                  = $search.Name
+                    Case                  = $case.Name
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    CertificatePath       = $CertificatePath
+                    CertificatePassword   = $CertificatePassword
                 }
                 Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewline
                 $Results = Get-TargetResource @Params

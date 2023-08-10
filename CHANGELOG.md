@@ -1,5 +1,45 @@
 # Change log for Microsoft365DSC
 
+# 1.23.809.1
+
+* AADAuthorizationPolicy
+  * Added support for the AllowedToCreateTenants &
+    AllowedToReadBitlockerKeysForOwnedDevice properties.
+    FIXES [#3492](https://github.com/microsoft/Microsoft365DSC/issues/3492)
+* AADGroup, AADUser and O365Group
+  * Add support to use function endsWith as filter
+    FIXES [#3518](https://github.com/microsoft/Microsoft365DSC/issues/3518)
+* O365OrgSettings
+  * Added error handling for the Viva settings to handle task cancellation errors.
+  * Added improvements for the set to only call into APIs that need a PATCH request.
+* SCComplianceSearch
+  * Fixed an issue with the export when using CertificateThumbprint.
+    FIXES [#3499](https://github.com/microsoft/Microsoft365DSC/issues/3499)
+* SCComplianceSearchAction
+  * Adds support for the Preview action type.
+    FIXES [#3498](https://github.com/microsoft/Microsoft365DSC/issues/3498)
+* SCRetentionCompliancePolicy
+  * Fixes an issue where SPN auth parameters weren't returned from the Get-TargetResource
+    function.
+    FIXES [#3500](https://github.com/microsoft/Microsoft365DSC/issues/3500)
+* SPOTenantSettings
+  * Add support for new parameter HideSyncButtonOnTeamSite
+* TeamsGroupPolicyAssignment
+  * FIXES [#3559](https://github.com/microsoft/Microsoft365DSC/issues/3559)
+* TeamsShiftPolicy
+  * Deprecated the EnableShiftPresence parameter.
+* TeamsTemplatesPolicy
+  * Initial release.
+* MISC
+  * M365DscReverse: Fix exporting when $Filter var exists locally
+    FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
+  * Fix for the delta report function to handle deep nested CIM Instances.
+    FIXES [#3478](https://github.com/microsoft/Microsoft365DSC/issues/3478)
+* DEPENDENCIES
+  * Updated Microsoft.Graph.* dependencies to version 2.2.0.
+  * Updated MSCloudLoginAssistant to version 1.0.119.
+  * Updated dependency Microsoft.PowerApps.Administration.PowerShell to version 2.0.170.
+
 # 1.23.726.1
 
 * AADGroup
