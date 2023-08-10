@@ -28,6 +28,8 @@
   * Deprecated the EnableShiftPresence parameter.
 * TeamsTemplatesPolicy
   * Initial release.
+* SPOTenantSettings
+  * Add support for new parameter HideSyncButtonOnTeamSite
 * MISC
   * M365DscReverse: Fix exporting when $Filter var exists locally
     FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
