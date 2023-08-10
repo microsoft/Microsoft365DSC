@@ -156,6 +156,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Value = $true
                             },
                             @{
+                                Name  = 'EnableMIPLabels'
+                                Value = $false
+                            },
+                            @{
                                 Name  = 'AllowGuestsToBeGroupOwner'
                                 Value = $false
                             },
@@ -185,7 +189,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName 'Get-MgBetaDirectorySetting' -Exactly 1
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 

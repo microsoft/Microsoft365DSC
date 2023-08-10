@@ -99,7 +99,7 @@ function Get-TargetResource
         }
         else
         {
-            Write-Verbose -Message 'Found existing AzureAD Groups Settings'
+            Write-Verbose -Message 'Found existing AzureAD DirectorySetting for Group.Unified'
             $AllowedGroupName = $null
             $GroupCreationValue = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GroupCreationAllowedGroupId' }
             if (-not [System.String]::IsNullOrEmpty($GroupCreationValue.Value))
