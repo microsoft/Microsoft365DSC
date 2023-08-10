@@ -21,6 +21,7 @@
 | **ApplyAppEnforcedRestrictionsToAdHocRecipients** | Write | Boolean | | |
 | **FilePickerExternalImageSearchEnabled** | Write | Boolean | | |
 | **HideDefaultThemes** | Write | Boolean | Defines if the default themes are visible or hidden | |
+| **HideSyncButtonOnTeamSite** | Write | Boolean | To enable or disable Sync button on Team sites | |
 | **MarkNewFilesSensitiveByDefault** | Write | String | Allow or block external sharing until at least one Office DLP policy scans the content of the file. | `AllowExternalSharing`, `BlockExternalSharing` |
 | **ConditionalAccessPolicy** | Write | String | Allow or Block Conditional Access Policy on the SharePoint Tenant | `AllowFullAccess`, `AllowLimitedAccess`, `BlockAccess` |
 | **DisabledWebPartIds** | Write | String | Provide GUID for the Web Parts that are to be disabled on the Sharepoint Site | |
