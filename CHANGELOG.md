@@ -1,9 +1,12 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* AADGroupsSettings
+  * Add support for enabling sensitivity labels in M365-groups
+
 # 1.23.809.1
 
-* AADGroupSettings
-  * Add support for enabling sensitivity labels in M365-groups
 * AADAuthorizationPolicy
   * Added support for the AllowedToCreateTenants &
     AllowedToReadBitlockerKeysForOwnedDevice properties.
