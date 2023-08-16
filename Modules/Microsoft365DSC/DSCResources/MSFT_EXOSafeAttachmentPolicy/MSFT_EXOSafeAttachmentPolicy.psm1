@@ -14,10 +14,6 @@ function Get-TargetResource
         $Action = 'Block',
 
         [Parameter()]
-        [Boolean]
-        $ActionOnError = $false,
-
-        [Parameter()]
         [System.String]
         $AdminDisplayName,
 
@@ -115,7 +111,6 @@ function Get-TargetResource
                 Ensure                = 'Present'
                 Identity              = $Identity
                 Action                = $SafeAttachmentPolicy.Action
-                ActionOnError         = $SafeAttachmentPolicy.ActionOnError
                 AdminDisplayName      = $SafeAttachmentPolicy.AdminDisplayName
                 Enable                = $SafeAttachmentPolicy.Enable
                 QuarantineTag         = $SafeAttachmentPolicy.QuarantineTag
@@ -160,10 +155,6 @@ function Set-TargetResource
         [ValidateSet('Block', 'Replace', 'Allow', 'DynamicDelivery')]
         [System.String]
         $Action = 'Block',
-
-        [Parameter()]
-        [Boolean]
-        $ActionOnError = $false,
 
         [Parameter()]
         [System.String]
@@ -255,26 +246,18 @@ function Set-TargetResource
         if ($Redirect -eq $true)
         {
             $Message = 'Cannot proceed with processing of SafeAttachmentPolicy because Redirect is set to true '
-            if ($ActionOnError -eq $false)
+            if ([String]::IsNullOrEmpty($RedirectAddress))
             {
-                $Message += 'and ActionOnError is false'
+                $Message += 'and RedirectAddress is null'
                 $StopProcessingPolicy = $true
-            }
-            else
-            {
-                if ([String]::IsNullOrEmpty($RedirectAddress))
-                {
-                    $Message += 'and RedirectAddress is null'
-                    $StopProcessingPolicy = $true
-                }
             }
             if ($StopProcessingPolicy -eq $true)
             {
                 Write-Verbose -Message $Message
                 try
                 {
-                    $Message = 'Please ensure that if Redirect is set to true then  ' + `
-                        'ActionOnError is also set to true and RedirectAddress is not null'
+                    $Message = 'Please ensure that if Redirect is set to true ' + `
+                        'and RedirectAddress is not null'
                     New-M365DSCLogEntry -Message $Message `
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
@@ -365,10 +348,6 @@ function Test-TargetResource
         [ValidateSet('Block', 'Replace', 'Allow', 'DynamicDelivery')]
         [System.String]
         $Action = 'Block',
-
-        [Parameter()]
-        [Boolean]
-        $ActionOnError = $false,
 
         [Parameter()]
         [System.String]
