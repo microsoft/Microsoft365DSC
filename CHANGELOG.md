@@ -1,7 +1,7 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
-
+* AADGroupsSettings
+  * Add support for enabling sensitivity labels in M365-groups
 * O365OrgSettings
   * Updated logic of the Get to return null if permissions are not granted for
     a given API.
