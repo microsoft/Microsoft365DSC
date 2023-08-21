@@ -184,17 +184,44 @@ function Get-TargetResource
         Ensure           = 'Absent'
     }
 
+    $results = @{
+        IsSingleInstance      = 'Yes'
+        Credential            = $Credential
+        ApplicationId         = $ApplicationId
+        TenantId              = $TenantId
+        ApplicationSecret     = $ApplicationSecret
+        CertificateThumbprint = $CertificateThumbprint
+        Managedidentity       = $ManagedIdentity.IsPresent
+    }
     try
     {
         $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
         $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled'
+        if ($null -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue)
+        {
+            $results += @{
+                M365WebEnableUsersToOpenFilesFrom3PStorage = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
+            }
+        }
 
         # Planner iCal settings
         $PlannerSettings = Get-M365DSCO365OrgSettingsPlannerConfig
+        if ($null -ne $PlannerSettings)
+        {
+            $results += @{
+                PlannerAllowCalendarSharing = $PlannerSettings.allowCalendarSharing
+            }
+        }
 
         # Cortana settings
         $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
         $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled'
+        if ($null -ne $CortanaEnabledValue)
+        {
+            $results += @{
+                CortanaEnabled = $CortanaEnabledValue.AccountEnabled
+            }
+        }
 
         # Microsoft Viva Briefing Email
         $vivaBriefingEmailValue = $false
@@ -246,9 +273,22 @@ function Get-TargetResource
                 throw $_
             }
         }
+        $results += @{
+            MicrosoftVivaBriefingEmail = $vivaBriefingEmailValue
+        }
 
         # Viva Insights settings
         $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose:$false
+        if ($null -ne $currentVivaInsightsSettings)
+        {
+            $results += @{
+                VivaInsightsDigestEmail                      = $currentVivaInsightsSettings.IsDigestEmailEnabled
+                VivaInsightsOutlookAddInAndInlineSuggestions = $currentVivaInsightsSettings.IsAddInEnabled
+                VivaInsightsScheduleSendSuggestions          = $currentVivaInsightsSettings.IsScheduleSendEnabled
+                VivaInsightsWebExperience                    = $currentVivaInsightsSettings.IsDashboardEnabled
+            }
+        }
+
         $MRODeviceManagerService = 'ebe0c285-db95-403f-a1a3-a793bd6d7767'
         try
         {
@@ -266,74 +306,89 @@ function Get-TargetResource
 
         # Reports Display Settings
         $AdminCenterReportDisplayConcealedNamesValue = Get-M365DSCOrgSettingsAdminCenterReport
+        if ($null -ne $AdminCenterReportDisplayConcealedNamesValue)
+        {
+            $results += @{
+                AdminCenterReportDisplayConcealedNames = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
+            }
+        }
 
         # Installation Options
         $installationOptions = Get-M365DSCOrgSettingsInstallationOptions -AuthenticationOption $ConnectionModeTasks
-        $appsForWindowsValue = @()
-        foreach ($key in $installationOptions.appsForWindows.Keys)
+        if ($null -ne $installationOptions)
         {
-            if ($installationOptions.appsForWindows.$key)
+            $appsForWindowsValue = @()
+            foreach ($key in $installationOptions.appsForWindows.Keys)
             {
-                $appsForWindowsValue += $key
+                if ($installationOptions.appsForWindows.$key)
+                {
+                    $appsForWindowsValue += $key
+                }
             }
-        }
-        $appsForMacValue = @()
-        foreach ($key in $installationOptions.appsForMac.Keys)
-        {
-            if ($installationOptions.appsForMac.$key)
+            $appsForMacValue = @()
+            foreach ($key in $installationOptions.appsForMac.Keys)
             {
-                $appsForMacValue += $key
+                if ($installationOptions.appsForMac.$key)
+                {
+                    $appsForMacValue += $key
+                }
+            }
+
+            $results += @{
+                InstallationOptionsUpdateChannel  = $installationOptions.updateChannel
+                InstallationOptionsAppsForWindows = $appsForWindowsValue
+                InstallationOptionsAppsForMac     = $appsForMacValue
             }
         }
 
         # Forms
         $FormsSettings = Get-M365DSCOrgSettingsForms
+        if ($null -ne $FormsSettings)
+        {
+            $results += @{
+                FormsIsExternalSendFormEnabled                        = $FormsSettings.isExternalSendFormEnabled
+                FormsIsExternalShareCollaborationEnabled              = $FormsSettings.isExternalShareCollaborationEnabled
+                FormsIsExternalShareResultEnabled                     = $FormsSettings.isExternalShareResultEnabled
+                FormsIsExternalShareTemplateEnabled                   = $FormsSettings.isExternalShareTemplateEnabled
+                FormsIsRecordIdentityByDefaultEnabled                 = $FormsSettings.isRecordIdentityByDefaultEnabled
+                FormsIsBingImageSearchEnabled                         = $FormsSettings.isBingImageSearchEnabled
+                FormsIsInOrgFormsPhishingScanEnabled                  = $FormsSettings.isInOrgFormsPhishingScanEnabled
+            }
+        }
 
         # DynamicsCustomerVoice
         $DynamicCustomerVoiceSettings = Get-M365DSCOrgSettingsDynamicsCustomerVoice
+        if ($null -ne $DynamicCustomerVoiceSettings)
+        {
+            $results += @{
+                DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled  = $DynamicCustomerVoiceSettings.isRestrictedSurveyAccessEnabled
+                DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled = $DynamicCustomerVoiceSettings.isRecordIdentityByDefaultEnabled
+                DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled  = $DynamicCustomerVoiceSettings.isInOrgFormsPhishingScanEnabled
+            }
+        }
 
         # Apps and Services
         $AppsAndServicesSettings = Get-M365DSCOrgSettingsAppsAndServices
+        if ($null -ne $AppsAndServicesSettings)
+        {
+            $results += @{
+                AppsAndServicesIsOfficeStoreEnabled                   = $AppsAndServicesSettings.isOfficeStoreEnabled
+                AppsAndServicesIsAppAndServicesTrialEnabled           = $AppsAndServicesSettings.IsAppAndServicesTrialEnabled
+            }
+        }
 
         # To do
         $ToDoSettings = Get-M365DSCOrgSettingsToDo
-
-        return @{
-            IsSingleInstance                                      = 'Yes'
-            AdminCenterReportDisplayConcealedNames                = $AdminCenterReportDisplayConcealedNamesValue.displayConcealedNames
-            AppsAndServicesIsOfficeStoreEnabled                   = $AppsAndServicesSettings.isOfficeStoreEnabled
-            AppsAndServicesIsAppAndServicesTrialEnabled           = $AppsAndServicesSettings.IsAppAndServicesTrialEnabled
-            CortanaEnabled                                        = $CortanaEnabledValue.AccountEnabled
-            DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled  = $DynamicCustomerVoiceSettings.isRestrictedSurveyAccessEnabled
-            DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled = $DynamicCustomerVoiceSettings.isRecordIdentityByDefaultEnabled
-            DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled  = $DynamicCustomerVoiceSettings.isInOrgFormsPhishingScanEnabled
-            FormsIsExternalSendFormEnabled                        = $FormsSettings.isExternalSendFormEnabled
-            FormsIsExternalShareCollaborationEnabled              = $FormsSettings.isExternalShareCollaborationEnabled
-            FormsIsExternalShareResultEnabled                     = $FormsSettings.isExternalShareResultEnabled
-            FormsIsExternalShareTemplateEnabled                   = $FormsSettings.isExternalShareTemplateEnabled
-            FormsIsRecordIdentityByDefaultEnabled                 = $FormsSettings.isRecordIdentityByDefaultEnabled
-            FormsIsBingImageSearchEnabled                         = $FormsSettings.isBingImageSearchEnabled
-            FormsIsInOrgFormsPhishingScanEnabled                  = $FormsSettings.isInOrgFormsPhishingScanEnabled
-            InstallationOptionsUpdateChannel                      = $installationOptions.updateChannel
-            InstallationOptionsAppsForWindows                     = $appsForWindowsValue
-            InstallationOptionsAppsForMac                         = $appsForMacValue
-            MicrosoftVivaBriefingEmail                            = $vivaBriefingEmailValue
-            M365WebEnableUsersToOpenFilesFrom3PStorage            = $M365WebEnableUsersToOpenFilesFrom3PStorageValue.AccountEnabled
-            PlannerAllowCalendarSharing                           = $PlannerSettings.allowCalendarSharing
-            ToDoIsPushNotificationEnabled                         = $ToDoSettings.IsPushNotificationEnabled
-            ToDoIsExternalJoinEnabled                             = $ToDoSettings.IsExternalJoinEnabled
-            ToDoIsExternalShareEnabled                            = $ToDoSettings.IsExternalShareEnabled
-            VivaInsightsDigestEmail                               = $currentVivaInsightsSettings.IsDigestEmailEnabled
-            VivaInsightsOutlookAddInAndInlineSuggestions          = $currentVivaInsightsSettings.IsAddInEnabled
-            VivaInsightsScheduleSendSuggestions                   = $currentVivaInsightsSettings.IsScheduleSendEnabled
-            VivaInsightsWebExperience                             = $currentVivaInsightsSettings.IsDashboardEnabled
-            Credential                                            = $Credential
-            ApplicationId                                         = $ApplicationId
-            TenantId                                              = $TenantId
-            ApplicationSecret                                     = $ApplicationSecret
-            CertificateThumbprint                                 = $CertificateThumbprint
-            Managedidentity                                       = $ManagedIdentity.IsPresent
+        if ($null -ne $ToDoSettings)
+        {
+            $results += @{
+                ToDoIsPushNotificationEnabled                         = $ToDoSettings.IsPushNotificationEnabled
+                ToDoIsExternalJoinEnabled                             = $ToDoSettings.IsExternalJoinEnabled
+                ToDoIsExternalShareEnabled                            = $ToDoSettings.IsExternalShareEnabled
+            }
         }
+
+        return $results
     }
     catch
     {
@@ -1026,12 +1081,26 @@ function Get-M365DSCO365OrgSettingsPlannerConfig
     [CmdletBinding()]
     param()
     $VerbosePreference = 'SilentlyContinue'
-    $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + "/taskAPI/tenantAdminSettings/Settings";
-    $results = Invoke-RestMethod -ContentType "application/json;odata.metadata=full" `
-        -Headers @{"Accept"="application/json"; "Authorization"=$Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; "Accept-Charset"="UTF-8"; "OData-Version"="4.0;NetFx"; "OData-MaxVersion"="4.0;NetFx"} `
-        -Method GET `
-        $Uri
-    return $results
+
+    try
+    {
+        $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + "/taskAPI/tenantAdminSettings/Settings";
+        $results = Invoke-RestMethod -ContentType "application/json;odata.metadata=full" `
+            -Headers @{"Accept"="application/json"; "Authorization"=$Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; "Accept-Charset"="UTF-8"; "OData-Version"="4.0;NetFx"; "OData-MaxVersion"="4.0;NetFx"} `
+            -Method GET `
+            $Uri
+        return $results
+    }
+    catch
+    {
+        Write-Verbose -Message "Not able to retrieve Office 365 Planner Settings. Please ensure correct permissions have been granted."
+        New-M365DSCLogEntry -Message 'Error updating Office 365 Planner Settings' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+        return $null
+    }
 }
 
 function Set-M365DSCO365OrgSettingsPlannerConfig
@@ -1064,9 +1133,17 @@ function Get-M365DSCOrgSettingsAdminCenterReport
     param()
     $VerbosePreference = 'SilentlyContinue'
 
-    $url = 'https://graph.microsoft.com/beta/admin/reportSettings'
-    $results = Invoke-MgGraphRequest -Method GET -Uri $url
-    return $results
+    try
+    {
+        $url = 'https://graph.microsoft.com/beta/admin/reportSettings'
+        $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
+        return $results
+    }
+    catch
+    {
+        Write-Verbose -Message "Not able to retrieve Office 365 Report Settings. Please ensure correct permissions have been granted."
+        return $null
+    }
 }
 
 function Update-M365DSCOrgSettingsAdminCenterReport
@@ -1102,21 +1179,13 @@ function Get-M365DSCOrgSettingsInstallationOptions
     {
         $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url
+        return $results
     }
     catch
     {
-        if ($_.Exception.ToString().Contains('Forbidden (Forbidden)'))
-        {
-            if ($AuthenticationOption -eq 'Credentials')
-            {
-                $errorMessage = "You don't have the proper permissions to retrieve the Office 365 Apps Installation Options." `
-                    + " When using Credentials to authenticate, you need to grant permissions to the Microsoft Graph PowerShell SDK by running" `
-                    + " Connect-MgGraph -Scopes OrgSettings-Microsoft365Install.Read.All"
-                Write-Error -Message $errorMessage
-            }
-        }
+        Write-Verbose -Message "Not able to retrieve Office 365 Apps Installation Options. Please ensure correct permissions have been granted."
+        return $null
     }
-    return $results
 }
 
 function Update-M365DSCOrgSettingsInstallationOptions
@@ -1145,7 +1214,7 @@ function Update-M365DSCOrgSettingsInstallationOptions
         {
             if ($AuthenticationOption -eq 'Credentials')
             {
-                $errorMessage = "You don't have the proper permissions to retrieve the Office 365 Apps Installation Options." `
+                $errorMessage = "You don't have the proper permissions to update the Office 365 Apps Installation Options." `
                     + " When using Credentials to authenticate, you need to grant permissions to the Microsoft Graph PowerShell SDK by running" `
                     + " Connect-MgGraph -Scopes OrgSettings-Microsoft365Install.ReadWrite.All"
                 Write-Error -Message $errorMessage
@@ -1161,9 +1230,17 @@ function Get-M365DSCOrgSettingsForms
     param()
     $VerbosePreference = 'SilentlyContinue'
 
-    $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
-    $results = Invoke-MgGraphRequest -Method GET -Uri $url
-    return $results
+    try
+    {
+        $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
+        $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
+        return $results
+    }
+    catch
+    {
+        Write-Verbose -Message "Not able to retrieve O365OrgSettings Forms Settings. Please ensure correct permissions have been granted."
+        return $null
+    }
 }
 
 function Update-M365DSCOrgSettingsForms
@@ -1200,9 +1277,17 @@ function Get-M365DSCOrgSettingsDynamicsCustomerVoice
     param()
     $VerbosePreference = 'SilentlyContinue'
 
-    $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
-    $results = Invoke-MgGraphRequest -Method GET -Uri $url
-    return $results
+    try
+    {
+        $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
+        $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
+        return $results
+    }
+    catch
+    {
+        Write-Verbose -Message "Not able to retrieve O365OrgSettings Dynamics Customer Voice Settings. Please ensure correct permissions have been granted."
+        return $null
+    }
 }
 
 function Update-M365DSCOrgSettingsDynamicsCustomerVoice
@@ -1238,9 +1323,17 @@ function Get-M365DSCOrgSettingsAppsAndServices
     param()
     $VerbosePreference = 'SilentlyContinue'
 
-    $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
-    $results = Invoke-MgGraphRequest -Method GET -Uri $url
-    return $results
+    try
+    {
+        $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
+        $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
+        return $results
+    }
+    catch
+    {
+        Write-Verbose -Message "Not able to retrieve O365OrgSettings Apps and Services Settings. Please ensure correct permissions have been granted."
+        return $null
+    }
 }
 
 function Update-M365DSCOrgSettingsAppsAndServices
@@ -1275,9 +1368,17 @@ function Get-M365DSCOrgSettingsToDo
     param()
     $VerbosePreference = 'SilentlyContinue'
 
-    $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
-    $results = Invoke-MgGraphRequest -Method GET -Uri $url
-    return $results
+    try
+    {
+        $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
+        $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
+        return $results
+    }
+    catch
+    {
+        Write-Verbose -Message "Not able to retrieve ToDo settings. Please ensure correct permissions have been granted."
+        return $null
+    }
 }
 
 function Update-M365DSCOrgSettingsToDo
@@ -1298,6 +1399,7 @@ function Update-M365DSCOrgSettingsToDo
     }
     catch
     {
+        Write-Verbose -Message "Error: $($_.Exception.Message)"
         New-M365DSCLogEntry -Message 'Error updating O365OrgSettings To Do Settings' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
