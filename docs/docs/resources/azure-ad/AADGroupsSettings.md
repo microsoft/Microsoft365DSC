@@ -6,6 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
 | **EnableGroupCreation** | Write | Boolean | The flag indicating whether Office 365 group creation is allowed in the directory by non-admin users. This setting does not require an Azure Active Directory Premium P1 license. | |
+| **EnableMIPLabels** | Write | Boolean | Boolean indicating whether or not sensitivity labels can be assigned to M365-groups. | |
 | **AllowGuestsToBeGroupOwner** | Write | Boolean | Boolean indicating whether or not a guest user can be an owner of groups. | |
 | **AllowGuestsToAccessGroups** | Write | Boolean | Boolean indicating whether or not a guest user can have access to Office 365 groups content. This setting does not require an Azure Active Directory Premium P1 license. | |
 | **GuestUsageGuidelinesUrl** | Write | String | The url of a link to the guest usage guidelines. | |
