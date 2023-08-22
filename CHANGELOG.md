@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+* IntuneRoleAssignment
+  * FIXES [[#3590](https://github.com/microsoft/Microsoft365DSC/issues/3590)]
+* AADAuthenticationMethodPolicy
+  * FIXES [[#3588](https://github.com/microsoft/Microsoft365DSC/issues/3588)]
 * AADGroupsSettings
   * Add support for enabling sensitivity labels in M365-groups
 * O365OrgSettings
