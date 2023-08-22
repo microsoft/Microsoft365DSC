@@ -5,6 +5,7 @@
 * O365OrgSettings
   * Updated logic of the Get to return null if permissions are not granted for
     a given API.
+  * Updated the list of required permissions.
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.3.0
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.173.
