@@ -10,6 +10,9 @@
 * EXOSafeAttachmentPolicy
   * Deprecated ActionOnError Parameter
     FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Initial release
+    FIXES [#3349](https://github.com/microsoft/Microsoft365DSC/issues/3349)
 * O365OrgSettings
   * Updated logic of the Get to return null if permissions are not granted for
     a given API.
