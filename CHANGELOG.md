@@ -2,7 +2,9 @@
 * EXOSafeAttachmentPolicy
   * Deprecated ActionOnError Parameter
     FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
-
+* AADAuthorizationPolicy
+  * Fix issue with property PermissionGrantPolicyIdsAssignedToDefaultUserRole
+    FIXES [#3594](https://github.com/microsoft/Microsoft365DSC/issues/3594)
 * AADGroupsSettings
   * Add support for enabling sensitivity labels in M365-groups
 * O365OrgSettings
