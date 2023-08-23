@@ -1,5 +1,23 @@
 # Change log for Microsoft365DSC
 
+# 1.23.823.1
+
+* AADAuthorizationPolicy
+  * Fix issue with property PermissionGrantPolicyIdsAssignedToDefaultUserRole
+    FIXES [#3594](https://github.com/microsoft/Microsoft365DSC/issues/3594)
+* AADGroupsSettings
+  * Add support for enabling sensitivity labels in M365-groups
+* EXOSafeAttachmentPolicy
+  * Deprecated ActionOnError Parameter
+    FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
+* O365OrgSettings
+  * Updated logic of the Get to return null if permissions are not granted for
+    a given API.
+  * Updated the list of required permissions.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.3.0
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.174.
+
 # 1.23.809.1
 
 * AADAuthorizationPolicy
