@@ -1,12 +1,15 @@
 # Change log for Microsoft365DSC
-* EXOSafeAttachmentPolicy
-  * Deprecated ActionOnError Parameter
-    FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
 
 # 1.23.823.1
 
+* AADAuthorizationPolicy
+  * Fix issue with property PermissionGrantPolicyIdsAssignedToDefaultUserRole
+    FIXES [#3594](https://github.com/microsoft/Microsoft365DSC/issues/3594)
 * AADGroupsSettings
   * Add support for enabling sensitivity labels in M365-groups
+* EXOSafeAttachmentPolicy
+  * Deprecated ActionOnError Parameter
+    FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
 * O365OrgSettings
   * Updated logic of the Get to return null if permissions are not granted for
     a given API.
