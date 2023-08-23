@@ -254,27 +254,23 @@ function Set-TargetResource
         $StopProcessingPolicy = $false
         if ($Redirect -eq $true)
         {
-            $Message = 'Cannot proceed with processing of SafeAttachmentPolicy because Redirect is set to true '
-            if ($ActionOnError -eq $false)
-            {
-                $Message += 'and ActionOnError is false'
-                $StopProcessingPolicy = $true
+            if ($ActionOnError -eq $true){
+                Write-Verbose -Message "The ActionOnError parameter is deprecated"
+                $SafeAttachmentPolicyParams.Remove('ActionOnError') | Out-Null
             }
-            else
+            $Message = 'Cannot proceed with processing of SafeAttachmentPolicy because Redirect is set to true '
+            if ([String]::IsNullOrEmpty($RedirectAddress))
             {
-                if ([String]::IsNullOrEmpty($RedirectAddress))
-                {
-                    $Message += 'and RedirectAddress is null'
-                    $StopProcessingPolicy = $true
-                }
+                $Message += 'and RedirectAddress is null'
+                $StopProcessingPolicy = $true
             }
             if ($StopProcessingPolicy -eq $true)
             {
                 Write-Verbose -Message $Message
                 try
                 {
-                    $Message = 'Please ensure that if Redirect is set to true then  ' + `
-                        'ActionOnError is also set to true and RedirectAddress is not null'
+                    $Message = 'Please ensure that if Redirect is set to true ' + `
+                        'and RedirectAddress is not null'
                     New-M365DSCLogEntry -Message $Message `
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `

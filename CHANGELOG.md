@@ -1,4 +1,7 @@
 # Change log for Microsoft365DSC
+* EXOSafeAttachmentPolicy
+  * Deprecated ActionOnError Parameter
+    FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
 
 # 1.23.823.1
 
