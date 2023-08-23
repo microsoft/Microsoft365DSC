@@ -164,7 +164,7 @@ function Get-TargetResource
             DefaultUserRoleAllowedToReadOtherUsers                  = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
             DefaultUserRoleAllowedToReadBitlockerKeysForOwnedDevice = $Policy.DefaultUserRolePermissions.AllowedToReadBitlockerKeysForOwnedDevice
             DefaultUserRoleAllowedToCreateTenants                   = $Policy.DefaultUserRolePermissions.AllowedToCreateTenants
-            PermissionGrantPolicyIdsAssignedToDefaultUserRole       = $Policy.DefaultUserRolePermissions.PermissionGrantPoliciesAssigned
+            PermissionGrantPolicyIdsAssignedToDefaultUserRole       = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
             GuestUserRole                                           = Get-GuestUserRoleNameFromId -GuestUserRoleId $Policy.GuestUserRoleId
             Ensure                                                  = 'Present'
             Credential                                              = $Credential
@@ -325,12 +325,8 @@ function Set-TargetResource
             {
                 if ($param -like 'Permission*')
                 {
-                    #beta profile
-                    #$UpdateParameters.Add($param, $currentParameters.$param)
-                    #Write-Verbose -Message "Added '$param' to UpdateParameters"
-                    #v1.0 profile
-                    $defaultUserRolePermissions.Add('PermissionGrantPoliciesAssigned', $currentParameters.$param)
-                    Write-Verbose -Message "Added 'PermissionGrantPoliciesAssigned' ($param) to defaultUserRolePermissions"
+                    $UpdateParameters.Add($param, $currentParameters.$param)
+                    Write-Verbose -Message "Added '$param' to UpdateParameters"
                 }
                 else
                 {
