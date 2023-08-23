@@ -1,5 +1,7 @@
 # Change log for Microsoft365DSC
 
+# 1.23.823.1
+
 * AADGroupsSettings
   * Add support for enabling sensitivity labels in M365-groups
 * O365OrgSettings
@@ -8,7 +10,7 @@
   * Updated the list of required permissions.
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.3.0
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.173.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.174.
 
 # 1.23.809.1
 
