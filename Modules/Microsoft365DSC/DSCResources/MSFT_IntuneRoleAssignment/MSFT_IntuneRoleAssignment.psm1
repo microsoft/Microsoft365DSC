@@ -316,7 +316,7 @@ function Set-TargetResource
     {
         [string]$roleDefinition = $null
         $Filter = "displayName eq '$RoleDefinitionDisplayName'"
-        $RoleDefinitionId = Get-MgDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
+        $RoleDefinitionId = Get-MgBetaDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
         if ($null -ne $RoleDefinitionId)
         {
             $roleDefinition = $RoleDefinitionId.Id
