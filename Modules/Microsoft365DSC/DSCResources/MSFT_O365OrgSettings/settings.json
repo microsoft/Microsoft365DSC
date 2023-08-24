@@ -64,6 +64,9 @@
                     },
                     {
                         "name": "OrgSettings-DynamicsVoice.Read.All"
+                    },
+                    {
+                        "name": "Tasks.ReadWrite.All"
                     }
                 ],
                 "update": [
@@ -87,6 +90,9 @@
                     },
                     {
                         "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
+                    },
+                    {
+                        "name": "Tasks.Read.All"
                     }
                 ]
             }
