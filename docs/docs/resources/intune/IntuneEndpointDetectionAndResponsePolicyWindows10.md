@@ -4,13 +4,13 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the endpoint protection and response policy for Windows 10. | |
-| **DisplayName** | Required | String | Display name of the endpoint protection and response policy for Windows 10. | |
-| **Description** | Write | String | Description of the endpoint protection and response policy for Windows 10. | |
-| **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the endpoint protection and response policy for Windows 10. | |
-| **SampleSharing** | Write | String | Indicates whether to share samples with Microsoft. | `0` (None), `1` (All) |
-| **ConfigurationType** | Write | String | Type of configuration profile. | `AutoFromConnector`, `Onboard`, `Offboard` |
-| **ConfigurationBlob** | Write | String | Configuration blob created by the connector. Can only be used if the `ConfigurationType` is either `Onboard` oder `Offboard`. Can not be validated after creating the policy and is not included in the export. Must be manually added before an import. | |
+| **Identity** | Key | String | Identity of the endpoint detection and response policy for Windows 10. | |
+| **DisplayName** | Required | String | Display name of the endpoint detection and response policy for Windows 10. | |
+| **Description** | Write | String | Description of the endpoint detection and response policy for Windows 10. | |
+| **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the endpoint detection and response policy for Windows 10. | |
+| **SampleSharing** | Write | String | Return or set Windows Defender Advanced Threat Protection Sample Sharing configuration parameter: 0 - none, 1 - All | `0`, `1` |
+| **ConfigurationType** | Write | String | Microsoft Defender for Endpoint endpoint detection and response capabilities provide advanced attack detections that are near real-time and actionable. Security analysts can prioritize alerts effectively, gain visibility into the full scope of a breach, and take response actions to remediate threats. | `AutoFromConnector`, `Onboard`, `Offboard` |
+| **ConfigurationBlob** | Write | String | Set Windows Defender Advanced Threat Protection Onboarding blob and initiate onboarding to Windows Defender Advanced Threat Protection | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -34,13 +34,7 @@
 
 ## Description
 
-This resource configures an Intune Endpoint Detection and Response policy for a Windows 10 Device.
-This policy setting allows you to configure the Endpoint Detection and Response (EDR) feature for Windows 10 devices. You can manage the EDR settings and onboard / offboard devices to / from Microsoft Defender for Endpoint.
-
-Special notice goes to the `ConfigurationBlob`, which specifies the onboard / offboard string for the policy. This string is created by the Microsoft Defender for Endpoint connector and can be retrieved from the Microsoft Defender for Endpoint portal. The `ConfigurationBlob` can only be used if the `ConfigurationType` is either `Onboard` or `Offboard`. The `ConfigurationBlob` can not be validated after creating the policy and is not included in the export. Therefore, after creating an export and before importing it again, the `ConfigurationBlob` must be added to the export file with the string.
-
-For more information about the EDR policies, see Endpoint detection and response policy for endpoint security in Intune
-: https://learn.microsoft.com/en-us/mem/intune/protect/endpoint-security-edr-policy.
+This resource configures an Intune Endpoint Detection and Response Policy for Windows 10.
 
 ## Permissions
 
