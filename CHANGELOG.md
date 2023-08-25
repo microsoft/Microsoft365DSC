@@ -1,5 +1,7 @@
 # Change log for Microsoft365DSC
 
+* AADAuthenticationMethodPolicy
+  * FIXES [[[#3588](https://github.com/microsoft/Microsoft365DSC/issues/3588)]]
 * IntuneRoleAssignment
   * FIXES [[#3590](https://github.com/microsoft/Microsoft365DSC/issues/3590)]
 * AADGroupsSettings
