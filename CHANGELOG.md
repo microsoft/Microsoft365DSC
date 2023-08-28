@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* DEPENDENCIES
+  * Updated ReverseDSC to version 2.0.0.17
 * MISC
   * Fixes an issue with the generic export CIM Instance logic.
     FIXES [#3610](https://github.com/microsoft/Microsoft365DSC/issues/3610)
