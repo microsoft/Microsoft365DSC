@@ -1,4 +1,4 @@
-# Microsoft365DSC
+Microsoft365DSC
 
 This module allows organizations to automate the deployment,
 configuration, reporting and monitoring of Microsoft 365 Tenants via PowerShell
@@ -13,21 +13,21 @@ additional resources, please navigate to the official web site at
 official YouTube channel
 [Microsoft365DSC](https://www.youtube.com/channel/UCveScabVT6pxzqYgGRu17iw).
 
-## Roadmap & Backlog
+Roadmap & Backlog
 
 We are using Azure DevOps for project management. You can access our backlog and roadmap by clicking on the status badge below:
 
 [![Board Status](https://dev.azure.com/Microsoft365DSC/c730cd2b-2b5f-4af2-8bce-2b7b3ee6f69b/e58164ef-f760-40e9-bd67-893cf4938bef/_apis/work/boardbadge/84871665-8a0f-46de-8a93-c214ea36b371?columnOptions=1)](https://dev.azure.com/Microsoft365DSC/Backlog/_workitems/)
 
-## Branches
+Branches
 
-### master
+master
 
 [![codecov](https://codecov.io/gh/Microsoft/Microsoft365DSC/branch/master/graph/badge.svg)](https://codecov.io/gh/Microsoft/Microsoft365DSC)
 
 This is the branch containing the latest release. No contributions should be made directly to this branch.
 
-### dev
+dev
 
 [![Code Coverage](https://github.com/microsoft/Microsoft365DSC/actions/workflows/CodeCoverage.yml/badge.svg)](https://github.com/microsoft/Microsoft365DSC/actions/workflows/CodeCoverage.yml)
 
