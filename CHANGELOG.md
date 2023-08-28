@@ -4,7 +4,7 @@
 
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.4.0.
-  * Updated ReverseDSC to version 2.0.0.17
+  * Updated ReverseDSC to version 2.0.0.18
 * MISC
   * Fixes an issue with the generic export CIM Instance logic.
     FIXES [#3610](https://github.com/microsoft/Microsoft365DSC/issues/3610)
