@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.4.0.
+  * Updated ReverseDSC to version 2.0.0.18
+* MISC
+  * Fixes an issue with the generic export CIM Instance logic.
+    FIXES [#3610](https://github.com/microsoft/Microsoft365DSC/issues/3610)
+
 # 1.23.823.1
 
 * AADAuthorizationPolicy
