@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* O365SearchAndintelligenceConfigurations
+  * Removed support for Service Principal Auth, which the cmdlet never supported.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.4.0.
   * Updated ReverseDSC to version 2.0.0.18
