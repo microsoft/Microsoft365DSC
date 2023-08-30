@@ -7,6 +7,10 @@
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.4.0.
   * Updated ReverseDSC to version 2.0.0.18
+  * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and Update-M365DSCModule to be usable with -Scope, allowing the user to install/update the module dependencies without admin rights, using current user scope. Confirm-M365DSCDependencies error message changed to reflect this change.
+    FIXES [#3621](https://github.com/microsoft/Microsoft365DSC/issues/3621)
+
+
 * MISC
   * Fixes an issue with the generic export CIM Instance logic.
     FIXES [#3610](https://github.com/microsoft/Microsoft365DSC/issues/3610)
