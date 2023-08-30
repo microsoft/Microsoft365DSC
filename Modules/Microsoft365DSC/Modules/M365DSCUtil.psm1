@@ -4086,6 +4086,7 @@ function Update-M365DSCModule
     }
     Update-M365DSCDependencies -Scope $Scope
     Uninstall-M365DSCOutdatedDependencies
+}
 
 <#
 .Description
