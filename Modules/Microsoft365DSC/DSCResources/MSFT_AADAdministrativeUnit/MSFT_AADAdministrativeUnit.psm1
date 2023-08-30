@@ -1074,8 +1074,8 @@ function Export-TargetResource
             }
             if ($null -ne $Results.Members)
             {
-                $currentDSCBlock = $currentDSCBlock.Replace("`",`"`r`n", "")
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Members' -IsCIMArray $true
+                $currentDSCBlock = $currentDSCBlock.Replace("`",`"`r`n", "")
                 $currentDSCBlock = $currentDSCBlock.Replace(",`r`n", '').Replace("`");`r`n", ");`r`n")
                 $currentDSCBlock = $currentDSCBlock.Replace("Members              = @(`"", "Members              = @(")
                 $currentDSCBlock = $currentDSCBlock.Replace("`$OrganizationName'", "' + `$OrganizationName")

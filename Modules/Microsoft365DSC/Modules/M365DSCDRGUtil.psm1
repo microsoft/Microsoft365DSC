@@ -427,15 +427,15 @@ function Get-M365DSCDRGComplexTypeToString
     $currentProperty += "$indent}"
     #if ($isArray -or $IndentLevel -gt 4)
     #{
-        $currentProperty += "`r`n"
+        #$currentProperty += "`r`n"
     #}
 
     #Indenting last parenthese when the cim instance is an array
-    if ($IndentLevel -eq 5)
+    <#if ($IndentLevel -eq 5)
     {
         $indent = '    ' * ($IndentLevel -2)
         $currentProperty += $indent
-    }
+    }#>
 
     $emptyCIM = $currentProperty.replace(' ', '').replace("`r`n", '')
     if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
