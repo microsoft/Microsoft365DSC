@@ -1,9 +1,12 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.830.1
 
 * O365SearchAndintelligenceConfigurations
   * Removed support for Service Principal Auth, which the cmdlet never supported.
+* SPOHomeSite
+  * Fixes an issue if no home site exists
+    FIXES [#3577](https://github.com/microsoft/Microsoft365DSC/issues/3577)
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.4.0.
   * Updated ReverseDSC to version 2.0.0.18
