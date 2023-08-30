@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.830.1
 
 * O365SearchAndintelligenceConfigurations
   * Removed support for Service Principal Auth, which the cmdlet never supported.
