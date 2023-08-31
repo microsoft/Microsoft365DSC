@@ -1375,7 +1375,7 @@ function Confirm-M365DSCDependencies
             {
                 $ErrorMessage += '    * ' + $invalidDependency.ModuleName + "`r`n"
             }
-            $ErrorMessage += 'Please run Update-M365DSCDependencies as Administrator.'
+            $ErrorMessage += 'Please run Update-M365DSCDependencies with scope "currentUser" or as Administrator.'
             $ErrorMessage += 'Please run Uninstall-M365DSCOutdatedDependencies.'
             $Script:M365DSCDependenciesValidated = $false
             Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
@@ -2257,8 +2257,14 @@ function Get-SPOUserProfilePropertyInstance
 .Description
 This function downloads and installs the Dev branch of Microsoft365DSC on the local machine
 
+.Parameter Scope
+Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+
 .Example
 Install-M365DSCDevBranch
+
+.Example
+Install-M365DSCDevBranch -Scope CurrentUser
 
 .Functionality
 Public
@@ -2266,7 +2272,11 @@ Public
 function Install-M365DSCDevBranch
 {
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter()]
+        [ValidateSet("CurrentUser", "AllUsers")]
+        $Scope = "AllUsers"
+    )
 
     #region Download and Extract Dev branch's ZIP
     Write-Host 'Downloading the Zip package...' -NoNewline
@@ -2283,7 +2293,11 @@ function Install-M365DSCDevBranch
     #region Install All Dependencies
     $manifest = Import-PowerShellDataFile "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\Microsoft365DSC.psd1"
     $dependencies = $manifest.RequiredModules
-    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+    if ((-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq "AllUsers"))
+    {
+        Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+    }
+    else
     {
         foreach ($dependency in $dependencies)
         {
@@ -2291,15 +2305,11 @@ function Install-M365DSCDevBranch
             $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
             if ($null -eq $existingModule)
             {
-                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope 'AllUsers' | Out-Null
+                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope $Scope | Out-Null
             }
             Import-Module $dependency.ModuleName -Force | Out-Null
             Write-Host 'Done' -ForegroundColor Green
         }
-    }
-    else
-    {
-        Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
     }
     #endregion
 
@@ -2734,11 +2744,20 @@ This function installs all missing M365DSC dependencies
 .Parameter Force
 Specifies that all dependencies should be forcefully imported again.
 
+.Parameter ValidateOnly
+Specifies that the function should only return the dependencies that are not installed.
+
+.Parameter Scope
+Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+
 .Example
 Update-M365DSCDependencies
 
 .Example
 Update-M365DSCDependencies -Force
+
+.Example
+Update-M365DSCDependencies -Scope CurrenUser
 
 .Functionality
 Public
@@ -2754,7 +2773,10 @@ function Update-M365DSCDependencies
 
         [Parameter()]
         [Switch]
-        $ValidateOnly
+        $ValidateOnly,
+        [Parameter()]
+        [ValidateSet("CurrentUser", "AllUsers")]
+        $Scope = "AllUsers"
     )
 
     $Global:MaximumFunctionCount = 32767
@@ -2779,7 +2801,11 @@ function Update-M365DSCDependencies
 
             if ((-not $found -or $Force) -and -not $ValidateOnly)
             {
-                if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+                if ((-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq "AllUsers"))
+                {
+                    Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+                }
+                else
                 {
                     Write-Information -MessageData "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
                     Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
@@ -2788,11 +2814,7 @@ function Update-M365DSCDependencies
                         Remove-Module 'Microsoft.Graph.Authentication' -Force -ErrorAction SilentlyContinue
                     }
                     Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
-                    Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
-                }
-                else
-                {
-                    Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+                    Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope "$Scope"
                 }
             }
 
@@ -4011,8 +4033,17 @@ function Test-M365DSCModuleValidity
 .Description
 This function updates the module, dependencies and uninstalls outdated dependencies.
 
+.Parameter Scope
+Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+
 .Example
 Update-M365DSCModule
+
+.Example
+Update-M365DSCModule -Scope CurrentUser
+
+.Example
+Update-M365DSCModule -Scope AllUsers
 
 .Functionality
 Public
@@ -4020,10 +4051,14 @@ Public
 function Update-M365DSCModule
 {
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter()]
+        [ValidateSet("CurrentUser", "AllUsers")]
+        $Scope = "AllUsers"
+    )
     try
     {
-        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop
+        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop -Scope $Scope
     }
     catch
     {
@@ -4049,7 +4084,7 @@ function Update-M365DSCModule
     {
         throw $_
     }
-    Update-M365DSCDependencies
+    Update-M365DSCDependencies -Scope $Scope
     Uninstall-M365DSCOutdatedDependencies
 }
 
