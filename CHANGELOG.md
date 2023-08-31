@@ -1,11 +1,10 @@
 # Change log for Microsoft365DSC
 
-<<<<<<< Dev
 # UNRELEASED
 * EXORemoteDomain 
   * Implemented a wait/retry mecanism between the New-RemoteDomain and Set-RemoteDomain to avoid timeout.
   FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
-=======
+
 # 1.23.830.1
 
 * O365SearchAndintelligenceConfigurations
@@ -43,7 +42,6 @@
 
 # 1.23.809.1
 
->>>>>>> Dev
 * AADAuthorizationPolicy
   * Added support for the AllowedToCreateTenants &
     AllowedToReadBitlockerKeysForOwnedDevice properties.
