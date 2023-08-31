@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * AADGroup
-  * Fixed Get-TargetResource not to use the paramaters that should be set, preventing an empty delta on Set-TargetResource
+  * Fixed Get-TargetResource not to use the parameters that should be set, preventing an empty delta on Set-TargetResource
     FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
 
 # 1.23.830.1
