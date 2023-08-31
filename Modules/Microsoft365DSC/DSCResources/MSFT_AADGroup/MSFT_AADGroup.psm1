@@ -118,6 +118,10 @@ function Get-TargetResource
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
+    $nullReturn.Owners = @()
+    $nullReturn.Members = @()
+    $nullReturn.MemberOf = @()
+    $nullReturn.AssignedToRole = @()
     try
     {
         if ($PSBoundParameters.ContainsKey('Id'))
