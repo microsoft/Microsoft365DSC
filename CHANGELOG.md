@@ -1,9 +1,49 @@
 # Change log for Microsoft365DSC
 
+<<<<<<< Dev
 # UNRELEASED
 * EXORemoteDomain 
   * Implemented a wait/retry mecanism between the New-RemoteDomain and Set-RemoteDomain to avoid timeout.
   FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
+=======
+# 1.23.830.1
+
+* O365SearchAndintelligenceConfigurations
+  * Removed support for Service Principal Auth, which the cmdlet never supported.
+* SPOHomeSite
+  * Fixes an issue if no home site exists
+    FIXES [#3577](https://github.com/microsoft/Microsoft365DSC/issues/3577)
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.4.0.
+  * Updated ReverseDSC to version 2.0.0.18
+* MISC
+  * Fixes an issue with the generic export CIM Instance logic.
+    FIXES [#3610](https://github.com/microsoft/Microsoft365DSC/issues/3610)
+
+# 1.23.823.1
+
+* AADAuthorizationPolicy
+  * Fix issue with property PermissionGrantPolicyIdsAssignedToDefaultUserRole
+    FIXES [#3594](https://github.com/microsoft/Microsoft365DSC/issues/3594)
+* AADGroupsSettings
+  * Add support for enabling sensitivity labels in M365-groups
+* EXOSafeAttachmentPolicy
+  * Deprecated ActionOnError Parameter
+    FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Initial release
+    FIXES [#3349](https://github.com/microsoft/Microsoft365DSC/issues/3349)
+* O365OrgSettings
+  * Updated logic of the Get to return null if permissions are not granted for
+    a given API.
+  * Updated the list of required permissions.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.3.0
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.174.
+
+# 1.23.809.1
+
+>>>>>>> Dev
 * AADAuthorizationPolicy
   * Added support for the AllowedToCreateTenants &
     AllowedToReadBitlockerKeysForOwnedDevice properties.
@@ -13,6 +53,7 @@
     FIXES [#3518](https://github.com/microsoft/Microsoft365DSC/issues/3518)
 * O365OrgSettings
   * Added error handling for the Viva settings to handle task cancellation errors.
+  * Added improvements for the set to only call into APIs that need a PATCH request.
 * SCComplianceSearch
   * Fixed an issue with the export when using CertificateThumbprint.
     FIXES [#3499](https://github.com/microsoft/Microsoft365DSC/issues/3499)
@@ -23,6 +64,14 @@
   * Fixes an issue where SPN auth parameters weren't returned from the Get-TargetResource
     function.
     FIXES [#3500](https://github.com/microsoft/Microsoft365DSC/issues/3500)
+* SPOTenantSettings
+  * Add support for new parameter HideSyncButtonOnTeamSite
+* TeamsGroupPolicyAssignment
+  * FIXES [#3559](https://github.com/microsoft/Microsoft365DSC/issues/3559)
+* TeamsShiftPolicy
+  * Deprecated the EnableShiftPresence parameter.
+* TeamsTemplatesPolicy
+  * Initial release.
 * MISC
   * M365DscReverse: Fix exporting when $Filter var exists locally
     FIXES [#3515](https://github.com/microsoft/Microsoft365DSC/issues/3515)
