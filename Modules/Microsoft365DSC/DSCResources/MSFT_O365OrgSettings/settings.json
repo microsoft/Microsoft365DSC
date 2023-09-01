@@ -97,10 +97,6 @@
                 ]
             }
         },
-        "exchange": {
-            "requiredroles": [],
-            "requiredrolegroups": []
-        },
         "ProjectWorkManagement": {
             "delegated": {
                 "read": [

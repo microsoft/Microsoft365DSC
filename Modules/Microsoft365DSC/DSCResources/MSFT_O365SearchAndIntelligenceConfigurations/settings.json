@@ -16,21 +16,9 @@
                 ]
             },
             "application": {
-                "read": [
-                    {
-                        "name": "User.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "User.ReadWrite"
-                    }
-                ]
+                "read": [],
+                "update": []
             }
-        },
-        "exchange": {
-            "requiredroles": [],
-            "requiredrolegroups": []
         }
     }
 }

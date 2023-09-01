@@ -1731,7 +1731,6 @@ function Update-M365DSCAzureAdApplication
                         Type        = 'AsymmetricX509Cert'
                         Usage       = 'Verify'
                         Key         = $cerCert.GetRawCertData()
-                        EndDateTime = $endDate
                     }
 
                     $maxRetries = 3
@@ -1742,7 +1741,7 @@ function Update-M365DSCAzureAdApplication
                     {
                         try
                         {
-                            $appCred = Update-MgApplication -ApplicationId $azureAdApp.Id -KeyCredentials $params
+                            $appCred = Update-MgApplication -ApplicationId $azureAdApp.Id -KeyCredentials $params -ErrorAction Stop
                             break # exit the loop if the operation succeeds
                         }
                         catch
