@@ -2,12 +2,15 @@
 
 # UNRELEASED
 
-* EXORemoteDomain 
+* EXORemoteDomain
   * Implemented a wait/retry mecanism between the New-RemoteDomain and Set-RemoteDomain to avoid timeout.
   FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
 * DEPENDENCIES
   * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and Update-M365DSCModule to be usable with -Scope, allowing the user to install/update the module dependencies without admin rights, using current user scope. Confirm-M365DSCDependencies error message changed to reflect this change.
     FIXES [#3621](https://github.com/microsoft/Microsoft365DSC/issues/3621)
+* MISC
+  * M365DscReport: Fix typo in var name in Compare-M365DSCConfigurations cmdlet
+    FIXES [#3632](https://github.com/microsoft/Microsoft365DSC/issues/3632)
 
 # 1.23.830.1
 
