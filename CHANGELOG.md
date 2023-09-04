@@ -5,6 +5,8 @@
 * AADGroup
   * Fixed Get-TargetResource not to use the parameters that should be set, preventing an empty delta on Set-TargetResource
     FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
+  * AADRoleEligibilityScheduleRequest
+    * Initial Release.
 * EXORemoteDomain
   * Implemented a wait/retry mecanism between the New-RemoteDomain and Set-RemoteDomain to avoid timeout.
   FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)

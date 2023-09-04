@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -ChildPath '\UnitTestHelper.psm1' `
         -Resolve)
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'AADAdministrativeUnit' -GenericStubModule $GenericStubPath
+    -DscResource 'AADRoleEligibilityScheduleRequest' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -31,40 +31,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
-            Mock -CommandName Get-PSSession -MockWith {
-            }
-
-            Mock -CommandName Remove-PSSession -MockWith {
-            }
-
-            Mock -CommandName Invoke-MgGraphRequest -MockWith {
-            }
-
-            Mock -CommandName Update-MgBetaDirectoryAdministrativeUnit -MockWith {
-            }
-
-            Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnit -MockWith {
-            }
-
-            Mock -CommandName New-MgBetaDirectoryAdministrativeUnit -MockWith {
-            }
-
-            Mock -CommandName New-MgBetaDirectoryAdministrativeUnitMemberByRef -MockWith {
-            }
-
-            Mock -CommandName New-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
-            }
-
-            Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnit -MockWith {
-            }
-
-            Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberByRef -MockWith {
-            }
-
-            Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
-            }
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
+            }
+
+            Mock -CommandName New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
+            }
+
+            Mock -CommandName Get-MgUser -MockWith {
+                return @{
+                    Id = '123456'
+                    UserPrincipalName = 'John.Smith@contoso.com'
+                }
+            }
+
+            Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
+                return @{
+                    DisplayName = 'Teams Communications Administrator'
+                    Id          = '12345'
+                }
             }
 
             # Mock Write-Host to hide output during the tests
@@ -72,36 +57,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
         # Test contexts
-        Context -Name 'The AU should exist but it DOES NOT' -Fixture {
+        Context -Name 'The instance should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description = 'FakeStringValue1'
-                    DisplayName = 'FakeStringValue1'
-                    Id          = 'FakeStringValue1'
-                    Members     = @(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                            Type     = 'User'
-                            Identity = 'john.smith@contoso.com'
-                        } -ClientOnly)
-                    )
-                    Visibility  = 'Public'
-                    Ensure      = 'Present'
+                    Action               = "AdminAssign";
+                    DirectoryScopeId     = "/";
+                    Ensure               = "Present";
+                    IsValidationOnly     = $False;
+                    Principal            = "John.Smith@contoso.com";
+                    RoleDefinition       = "Teams Communications Administrator";
+                    ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
+                            startDateTime             = '2023-09-01T02:40:44Z'
+                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
+                                endDateTime = '2025-10-31T02:40:09Z'
+                                type        = 'afterDateTime'
+                            } -ClientOnly
+                        } -ClientOnly
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgUser -MockWith {
-                    return @{
-                        Id = '123456'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
-                    return $null
-                }
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitMember -MockWith {
-                    return $null
-                }
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
                     return $null
                 }
             }
@@ -111,40 +86,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
-            It 'Should Create the AU from the Set method' {
+            It 'Should Create the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDirectoryAdministrativeUnit -Exactly 1
+                Should -Invoke -CommandName New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Exactly 1
             }
         }
 
-        Context -Name 'The AU exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The instance exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description = 'FakeStringValue2'
-                    DisplayName = 'FakeStringValue2'
-                    Id          = 'FakeStringValue2'
-                    Members     = @(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                            Type     = 'User'
-                            Identity = 'john.smith@contoso.com'
-                        } -ClientOnly)
-                    )
-                    Ensure      = 'Absent'
+                    Action               = "AdminAssign";
+                    DirectoryScopeId     = "/";
+                    Ensure               = "Absent";
+                    IsValidationOnly     = $False;
+                    Principal            = "John.Smith@contoso.com";
+                    RoleDefinition       = "Teams Communications Administrator";
+                    ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
+                            startDateTime             = '2023-09-01T02:40:44Z'
+                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
+                                endDateTime = '2025-10-31T02:40:09Z'
+                                type        = 'afterDateTime'
+                            } -ClientOnly
+                        } -ClientOnly
                     Credential  = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
                     return @{
-                        Description = 'FakeStringValue2'
-                        DisplayName = 'FakeStringValue2'
-                        Id          = 'FakeStringValue2'
+                        Action               = "AdminAssign";
+                        Id                   = '12345-12345-12345-12345-12345'
+                        DirectoryScopeId     = "/";
+                        IsValidationOnly     = $False;
+                        PrincipalId          = "123456";
+                        RoleDefinition       = "12345";
+                        ScheduleInfo         = @{
+                            startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
+                            expiration                = @{
+                                    endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
+                                    type        = 'afterDateTime'
+                                }
+                        };
                     }
-                }
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitMember -MockWith {
-                    return $null
-                }
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
-                    return $null
                 }
             }
 
@@ -156,91 +138,47 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should Remove the AU from the Set method' {
+            It 'Should Remove the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnit -Exactly 1
+                Should -Invoke -CommandName New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Exactly 1
             }
         }
-        Context -Name 'The AU Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The instance Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description                   = 'DSCAU'
-                    DisplayName                   = 'DSCAU'
-                    Id                            = 'DSCAU'
-                    Members                       = @(
-                                    (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                            Identity = 'John.Doe@mytenant.com'
-                            Type     = 'User'
-                        } -ClientOnly)
-                    )
-                    ScopedRoleMembers             = @(
-                                (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
-                            RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                                    Identity = 'John.Doe@mytenant.com'
-                                    Type     = 'User'
-                                } -ClientOnly)
-                            #Identity = 'John.Doe@mytenant.com'
-                            #Type     = 'User'
-                        } -ClientOnly)
-                    )
-                    Visibility                    = 'Public'
-                    MembershipType                = 'Assigned'
-                    # MembershipRule and -ProcessingState params are only used when MembershipType is Dynamic
-                    MembershipRule                = 'Canada'
-                    MembershipRuleProcessingState = 'On'
-                    Ensure                        = 'Present'
-                    Credential                    = $Credential
+                    Action               = "AdminAssign";
+                    DirectoryScopeId     = "/";
+                    Ensure               = "Present";
+                    IsValidationOnly     = $False;
+                    Principal            = "John.Smith@contoso.com";
+                    RoleDefinition       = "Teams Communications Administrator";
+                    ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
+                            startDateTime             = '2023-08-31T10:40:44Z'
+                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
+                                endDateTime = '2025-10-31T10:40:09Z'
+                                type        = 'afterDateTime'
+                            } -ClientOnly
+                        } -ClientOnly
+                    Credential  = $Credential
                 }
 
-                # Note: It is in fact possible to update the AU MembershipRule with any invalid value, but in the AAD-portal, updates are not possible unless the rule is valid.
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
                     return @{
-                        Description          = 'DSCAU'
-                        DisplayName          = 'DSCAU'
-                        Id                   = 'DSCAU'
-                        Visibility           = 'Public'
-                        AdditionalProperties = @{
-                            membershipType                = 'Assigned'
-                            membershipRule                = 'Canada'
-                            membershipRuleProcessingState = 'On'
-                        }
+                        Action               = "AdminAssign";
+                        Id                   = '12345-12345-12345-12345-12345'
+                        DirectoryScopeId     = "/";
+                        IsValidationOnly     = $False;
+                        PrincipalId          = "123456";
+                        RoleDefinition       = "12345";
+                        ScheduleInfo         = @{
+                            startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
+                            expiration                = @{
+                                    endDateTime = [System.DateTime]::Parse('2025-10-31T14:40:09Z')
+                                    type        = 'afterDateTime'
+                                }
+                        };
                     }
                 }
-
-                Mock -CommandName Invoke-MgGraphRequest -MockWith {
-                    return @{
-                        '@odata.type'     = '#microsoft.graph.user'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                        Id                = '1234567890'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitMember -MockWith {
-                    return @(@{
-                            Id = '1234567890'
-                        })
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
-                    return @(@{
-                            RoleId         = '12345-67890'
-                            RoleMemberInfo = @{
-                                DisplayName = 'John Doe'
-                                Id          = '1234567890'
-                            }
-                        })
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryRole -MockWith {
-                    return @{
-                        Id          = '12345-67890'
-                        DisplayName = 'User Administrator'
-                    }
-                }
-
             }
 
             It 'Should return Values from the Get method' {
@@ -251,66 +189,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
-        Context -Name 'The AU Exists and specified Values are NOT in the desired state (leaving Members and ScopedRoleMembers as-is)' -Fixture {
+        Context -Name 'The instance Exists and specified Values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Description                   = 'DSCAU New Description'
-                    DisplayName                   = 'DSCAU'
-                    Id                            = 'DSCAU'
-                    Ensure                        = 'Present'
-                    Credential                    = $Credential
+                    Action               = "AdminAssign";
+                    DirectoryScopeId     = "/";
+                    Ensure               = "Present";
+                    IsValidationOnly     = $False;
+                    Principal            = "John.Smith@contoso.com";
+                    RoleDefinition       = "Teams Communications Administrator";
+                    ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
+                            startDateTime             = '2023-09-01T02:40:44Z'
+                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
+                                endDateTime = '2025-10-31T02:40:09Z'
+                                type        = 'afterDateTime'
+                            } -ClientOnly
+                        } -ClientOnly
+                    Credential  = $Credential
                 }
 
-                # Note: It is in fact possible to update the AU MembershipRule with any invalid value, but in the AAD-portal, updates are not possible unless the rule is valid.
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
                     return @{
-                        Description          = 'DSCAU Old Description'
-                        DisplayName          = 'DSCAU'
-                        Id                   = 'DSCAU'
-                        AdditionalProperties = @{
-                            membershipType                = 'Assigned'
-                        }
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitMember -MockWith {
-                    return @(@{
-                            Id = '1234567890'
-                        })
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
-                    return @(@{
-                            RoleId         = '12345-67890'
-                            RoleMemberInfo = @{
-                                DisplayName = 'John Doe'
-                                Id          = '1234567890'
-                            }
-                        })
-                }
-
-                Mock -CommandName Invoke-MgGraphRequest -MockWith {
-                    return @{
-                        '@odata.type'     = '#microsoft.graph.user'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                        Id                = '1234567890'
-                    }
-                }
-
-                Mock -CommandName Get-MgUser -MockWith {
-                    return [pscustomobject]@{
-                        Id                = '1234567890'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryRole -MockWith {
-                    return @{
-                        Id          = '12345-67890'
-                        DisplayName = 'User Administrator'
+                        Action               = "AdminAssign";
+                        Id                   = '12345-12345-12345-12345-12345'
+                        DirectoryScopeId     = "/";
+                        IsValidationOnly     = $False;
+                        PrincipalId          = "123456";
+                        RoleDefinition       = "12345";
+                        ScheduleInfo         = @{
+                            startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
+                            expiration                = @{
+                                    endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
+                                    type        = 'afterDateTime'
+                                }
+                        };
                     }
                 }
 
@@ -324,395 +236,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should call the Set method without removing existing Members or ScopedRoleMembers' {
+            It 'Should call the Set to Update the instance' {
                 Set-TargetResource @testParams
-                Should -Not -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberByRef
-                Should -Not -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
-            }
-
-        }
-        Context -Name 'The AU exists and values (Members contains a User) are NOT in the desired state' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description       = 'DSCAU2'
-                    DisplayName       = 'DSCAU2'
-                    Id                = 'DSCAU2'
-                    Members           = @(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                            Identity = 'John.Doe@mytenant.com'
-                            Type     = 'User'
-                        } -ClientOnly)
-                    )
-                    Visibility        = 'Public'
-
-                    Ensure            = 'Present'
-                    Credential        = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
-                        Description = 'DSCAU2'
-                        DisplayName = 'DSCAU2'
-                        Id          = 'DSCAU2'
-                        Visibility  = 'Public'
-                    }
-                }
-
-                Mock -CommandName Get-MgUser -MockWith {
-                    return [pscustomobject]@{
-                        Id                = '1234567890'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDirectoryAdministrativeUnitMemberByRef -Exactly 1
+                Should -Invoke -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Exactly 1
             }
         }
-
-        Context -Name 'The AU exists and values (Members contains a Group) are NOT in the desired state' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description       = 'DSCAU2'
-                    DisplayName       = 'DSCAU2'
-                    Id                = 'DSCAU2'
-                    Members           = @(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                            Identity = 'DSCAUMemberGroup'
-                            Type     = 'Group'
-                        } -ClientOnly)
-                    )
-                    Visibility        = 'Public'
-
-                    Ensure            = 'Present'
-                    Credential        = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
-                        Description = 'DSCAU2'
-                        DisplayName = 'DSCAU2'
-                        Id          = 'DSCAU2'
-                        Visibility  = 'Public'
-                    }
-                }
-
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return [pscustomobject]@{
-                        Id                = '1234567890'
-                        DisplayName       = 'DSCAUMemberGroup'
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDirectoryAdministrativeUnitMemberByRef -Exactly 1
-            }
-        }
-
-        Context -Name 'The AU exists and values (Members contains a Device) are NOT in the desired state' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description       = 'DSCAU2'
-                    DisplayName       = 'DSCAU2'
-                    Id                = 'DSCAU2'
-                    Members           = @(
-                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                            Identity = 'DSCAUMemberDevice'
-                            Type     = 'Device'
-                        } -ClientOnly)
-                    )
-                    Visibility        = 'Public'
-
-                    Ensure            = 'Present'
-                    Credential        = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
-                        Description = 'DSCAU2'
-                        DisplayName = 'DSCAU2'
-                        Id          = 'DSCAU2'
-                        Visibility  = 'Public'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDevice -MockWith {
-                    return [pscustomobject]@{
-                        Id                = '1234567890'
-                        DisplayName       = 'DSCAUMemberDevice'
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDirectoryAdministrativeUnitMemberByRef -Exactly 1
-            }
-        }
-
-        Context -Name 'The AU exists and values (ScopedRoleMembers contains a User) are NOT in the desired state' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description       = 'DSCAU'
-                    DisplayName       = 'DSCAU'
-                    Id                = 'DSCAU'
-                    ScopedRoleMembers = @(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
-                            RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                                    Identity = 'John.Doe@mytenant.com'
-                                    Type     = 'User'
-                                } -ClientOnly)
-                            #Identity = 'John.Doe@mytenant.com'
-                            #Type     = 'User'
-                        } -ClientOnly)
-                    )
-                    Visibility        = 'Public'
-                    Ensure            = 'Present'
-                    Credential        = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
-                        Description = 'DSCAU'
-                        DisplayName = 'DSCAU'
-                        Id          = 'DSCAU'
-                        Visibility  = 'Public'
-                    }
-                }
-
-                Mock -CommandName Get-MgUser -MockWith {
-                    return [pscustomobject]@{
-                        Id                = '1234567890'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryRole -MockWith {
-                    return [pscustomobject]@{
-                        Id          = '12345-67890'
-                        DisplayName = 'User Administrator'
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDirectoryAdministrativeUnitScopedRoleMember -Exactly 1
-            }
-        }
-
-        Context -Name 'The AU exists and values (ScopedRoleMembers contains a Group) are NOT in the desired state' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description       = 'DSCAU'
-                    DisplayName       = 'DSCAU'
-                    Id                = 'DSCAU'
-                    ScopedRoleMembers = @(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
-                            RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                                    Identity = 'DSCScopedRoleUserAdmins'
-                                    Type     = 'Group'
-                                } -ClientOnly)
-                        } -ClientOnly)
-                    )
-                    Visibility        = 'Public'
-                    Ensure            = 'Present'
-                    Credential        = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
-                        Description = 'DSCAU'
-                        DisplayName = 'DSCAU'
-                        Id          = 'DSCAU'
-                        Visibility  = 'Public'
-                    }
-                }
-
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return [pscustomobject]@{
-                        Id                = '1234567890'
-                        DisplayName       = 'DSCScopedRoleUserAdmins'
-                        IsAssignableToRole = $true
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryRole -MockWith {
-                    return [pscustomobject]@{
-                        Id          = '12345-67890'
-                        DisplayName = 'User Administrator'
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDirectoryAdministrativeUnitScopedRoleMember -Exactly 1
-            }
-        }
-
-        Context -Name 'The AU exists, attempt to add as a ScopedRoleMember a Group that is NOT role-enabled. Should throw' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description       = 'DSCAU New Description'
-                    DisplayName       = 'DSCAU'
-                    Id                = 'DSCAU'
-                    ScopedRoleMembers = @(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
-                            RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                                    Identity = 'DSCNotARoleGroup'
-                                    Type     = 'Group'
-                                } -ClientOnly)
-                        } -ClientOnly)
-                    )
-                    Ensure            = 'Present'
-                    Credential        = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
-                        Description = 'DSCAU Old Description'
-                        DisplayName = 'DSCAU'
-                        Id          = 'DSCAU'
-                    }
-                }
-
-                Mock -CommandName Get-MgGroup -MockWith {
-                    return [pscustomobject]@{
-                        Id                = '1234567890'
-                        DisplayName       = 'DSCNotARoleGroup'
-                        IsAssignableToRole = $false
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryRole -MockWith {
-                    return [pscustomobject]@{
-                        Id          = '12345-67890'
-                        DisplayName = 'User Administrator'
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-            It 'Should call the Set method and throw' {
-                {Set-TargetResource @testParams} | Should -Throw -ExpectedMessage '*scoped role group*is not role-enabled*'
-            }
-        }
-
-        Context -Name 'The AU exists and values (ScopedRoleMembers contains an SPN) are NOT in the desired state' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description       = 'DSCAU'
-                    DisplayName       = 'DSCAU'
-                    Id                = 'DSCAU'
-                    ScopedRoleMembers = @(
-                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
-                            RoleName       = 'User Administrator'
-                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
-                                    Identity = 'DSCScopedRoleSPN'
-                                    Type     = 'ServicePrincipal'
-                                } -ClientOnly)
-                        } -ClientOnly)
-                    )
-                    Visibility        = 'Public'
-                    Ensure            = 'Present'
-                    Credential        = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
-                    return [pscustomobject]@{
-                        Description = 'DSCAU'
-                        DisplayName = 'DSCAU'
-                        Id          = 'DSCAU'
-                        Visibility  = 'Public'
-                    }
-                }
-
-                Mock -CommandName Get-MgServicePrincipal -MockWith {
-                    return [pscustomobject]@{
-                        Id                = '1234567890'
-                        DisplayName       = 'DSCScopedRoleSPN'
-                    }
-                }
-
-                Mock -CommandName Invoke-MgGraphRequest -MockWith {
-                    return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.serviceprincipal'
-                        DisplayName       = 'DSCScopedRoleSPN'
-                        Id                = '1234567890'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryRole -MockWith {
-                    return [pscustomobject]@{
-                        Id          = '12345-67890'
-                        DisplayName = 'User Administrator'
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-            It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDirectoryAdministrativeUnitScopedRoleMember -Exactly 1
-            }
-        }
-
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
@@ -721,74 +249,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
                     return @{
-                        Description = 'ExportDSCAU'
-                        DisplayName = 'ExportDSCAU'
-                        Id          = 'ExportDSCAU'
-                        Visibility  = 'Public'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitMember -MockWith {
-                    return [pscustomobject]@{
-                        Id = '1234567890'
-                    }
-                }
-
-                Mock -CommandName Get-MgUser -MockWith {
-                    return [pscustomobject]@{
-                        Id                = '1234567890'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
-                    return @([pscustomobject]@{
-                            RoleId         = '12345-67890'
-                            RoleMemberInfo = @{
-                                DisplayName = 'John Doe'
-                                Id          = '1234567890'
-                            }
-                        },
-                        [pscustomobject]@{
-                            RoleId         = '09876-54321'
-                            RoleMemberInfo = @{
-                                DisplayName = 'FakeRoleGroup'
-                                Id          = '0987654321'
-                            }
-                        })
-                }
-
-                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter { $Uri -match '1234567890$' } -MockWith {
-                    return [pscustomobject]@{
-                        '@odata.type'     = '#microsoft.graph.user'
-                        DisplayName       = 'John Doe'
-                        UserPrincipalName = 'John.Doe@mytenant.com'
-                        Id                = '1234567890'
-                    }
-                }
-
-                Mock -CommandName Invoke-MgGraphRequest -ParameterFilter { $Uri -match '0987654321$' } -MockWith {
-                    return [pscustomobject]@{
-                        '@odata.type' = '#microsoft.graph.group'
-                        DisplayName   = 'FakeRoleGroup'
-                        Id            = '0987654321'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryRole -ParameterFilter { $DirectoryRoleId -eq '12345-67890' } -MockWith {
-                    return [pscustomobject]@{
-                        Id          = '12345-67890'
-                        DisplayName = 'DSC User Administrator'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryRole -ParameterFilter { $DirectoryRoleId -eq '09876-54321' } -MockWith {
-                    return [pscustomobject]@{
-                        Id          = '09876-54321'
-                        DisplayName = 'DSC Groups Administrator'
+                        Action               = "AdminAssign";
+                        Id                   = '12345-12345-12345-12345-12345'
+                        DirectoryScopeId     = "/";
+                        IsValidationOnly     = $False;
+                        PrincipalId          = "123456";
+                        RoleDefinition       = "12345";
+                        ScheduleInfo         = @{
+                            startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
+                            expiration                = @{
+                                    endDateTime = [System.DateTime]::Parse('2025-10-31T02:40:09Z')
+                                    type        = 'afterDateTime'
+                                }
+                        };
                     }
                 }
             }

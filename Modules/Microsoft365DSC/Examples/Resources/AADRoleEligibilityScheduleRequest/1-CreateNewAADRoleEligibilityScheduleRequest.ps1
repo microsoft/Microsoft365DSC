@@ -16,15 +16,23 @@ Configuration Example
 
     node localhost
     {
-        AADAdministrativeUnit 'TestUnit'
+        AADRoleEligibilityScheduleRequest "MyRequest"
         {
-            Id                            = '49a843c7-e80c-4bae-8819-825656a108f2'
-            DisplayName                   = 'Test-Unit'
-            MembershipRule                = "(user.country -eq `"Canada`")"
-            MembershipRuleProcessingState = 'On'
-            MembershipType                = 'Dynamic'
-            Ensure                        = 'Present'
-            Credential                    = $credsGlobalAdmin
+            Action               = "AdminAssign";
+            Credential           = $credsGlobalAdmin;
+            DirectoryScopeId     = "/";
+            Ensure               = "Present";
+            IsValidationOnly     = $False;
+            Principal            = "John.Smith@$OrganizationName";
+            RoleDefinition       = "Teams Communications Administrator";
+            ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
+                startDateTime             = '2023-09-01T02:40:44Z'
+                expiration                = MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration
+                    {
+                        endDateTime = '2025-10-31T02:40:09Z'
+                        type        = 'afterDateTime'
+                    }
+            };
         }
     }
 }
