@@ -22,6 +22,8 @@
     EndDate parameter was incorrect and not necessary.
   * Fixed issue in documentation generation
     FIXES [#3635](https://github.com/microsoft/Microsoft365DSC/issues/3635)
+  * M365DscReport: Fix typo in var name in Compare-M365DSCConfigurations cmdlet
+    FIXES [#3632](https://github.com/microsoft/Microsoft365DSC/issues/3632)
 
 # 1.23.830.1
 
