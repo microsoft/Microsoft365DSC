@@ -7,6 +7,8 @@
     FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
 * AADAuthorizationPolicy
   * Fix issues with the Set method, which did not check an array properly.
+* EXOIRMConfiguration
+  * Corrected type in schema for parameter TransportDecryptionSetting
 * EXORemoteDomain
   * Implemented a wait/retry mecanism between the New-RemoteDomain and Set-RemoteDomain to avoid timeout.
     FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
