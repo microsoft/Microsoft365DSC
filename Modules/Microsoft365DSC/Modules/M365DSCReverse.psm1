@@ -789,6 +789,9 @@ function Start-M365DSCConfigurationExtract
         {
             $outputDSCFile = $OutputDSCPath + 'M365TenantConfig.ps1'
         }
+
+        # Clean empty lines with semi-colons, normally generated from CIMInstances convertions to String.
+        $DSCContent = $DSCContent.Replace("`r`n;`r`n", ";`r`n")
         $DSCContent.ToString() | Out-File $outputDSCFile
 
         if (!$AzureAutomation -and !$ManagedIdentity.IsPresent)
