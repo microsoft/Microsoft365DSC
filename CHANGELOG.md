@@ -2,12 +2,15 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicyAuthenticator
+  * Fixes issues with the export missing a line return.
+    FIXES [#3645](https://github.com/microsoft/Microsoft365DSC/issues/3645)
+* AADAuthorizationPolicy
+  * Fix issues with the Set method, which did not check an array properly.
 * AADGroup
   * Fixed Get-TargetResource not to use the parameters that should be set,
     preventing an empty delta on Set-TargetResource
     FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
-* AADAuthorizationPolicy
-  * Fix issues with the Set method, which did not check an array properly.
 * AADRoleEligibilityScheduleRequest
   * Initial Release.
 * EXOIRMConfiguration
