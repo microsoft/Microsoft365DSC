@@ -45,17 +45,53 @@ This resource configures the Org settings for a Microsoft 365 tenant.
 
 ## Permissions
 
-### Exchange
+### Microsoft Graph
 
-To authenticate with Microsoft Exchange, this resource required the following permissions:
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
 
-#### Roles
+#### Delegated permissions
 
-- 
+- **Read**
 
-#### Role Groups
+    - Application.Read.All, ReportSettings.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All
 
-- None
+- **Update**
+
+    - Application.ReadWrite.All, ReportSettings.ReadWrite.All, OrgSettings-Forms.ReadWrite.All, OrgSettings-Todo.ReadWrite.All, OrgSettings-DynamicsVoice.ReadWrite.All, OrgSettings-AppsAndServices.Read.All
+
+#### Application permissions
+
+- **Read**
+
+    - Application.Read.All, ReportSettings.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All, Tasks.Read.All
+
+- **Update**
+
+    - Application.ReadWrite.All, ReportSettings.ReadWrite.All, 83f7232f-763c-47b2-a097-e35d2cbe1da5, OrgSettings-Forms.ReadWrite.All, OrgSettings-Todo.ReadWrite.All, OrgSettings-AppsAndServices.ReadWrite.All, OrgSettings-DynamicsVoice.ReadWrite.All, Tasks.ReadWrite.All
+
+### ProjectWorkManagement
+
+To authenticate with the Microsoft ProjectWorkManagement API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - OrgSettings-Planner.Read.All
+
+- **Update**
+
+    - OrgSettings-Planner.ReadWrite.All
+
+#### Application permissions
+
+- **Read**
+
+    - OrgSettings-Planner.Read.All
+
+- **Update**
+
+    - OrgSettings-Planner.ReadWrite.All
 
 ## Examples
 

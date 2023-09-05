@@ -29,7 +29,7 @@ class MSFT_IntuneDeviceConfigurationScepCertificatePolicyWindows10 : OMI_BaseRes
     [Write, Description("SCEP Key Usage. Possible values are: keyEncipherment, digitalSignature."), ValueMap{"keyEncipherment","digitalSignature"}, Values{"keyEncipherment","digitalSignature"}] String KeyUsage;
     [Write, Description("SCEP Server Url(s).")] String ScepServerUrls[];
     [Write, Description("Custom String that defines the AAD Attribute.")] String SubjectAlternativeNameFormatString;
-    [Write, Description("Custom format to use with SubjectNameFormat = Custom. Example: CN=EmailAddress}},E=EmailAddress}},OU=Enterprise Users,O=Contoso Corporation,L=Redmond,ST=WA,C=US")] String SubjectNameFormatString;
+    [Write, Description("Custom format to use with SubjectNameFormat = Custom. Example: CN={{UserName}},E={{EmailAddress}},OU=Enterprise Users,O=Contoso Corporation,L=Redmond,ST=WA,C=US")] String SubjectNameFormatString;
     [Write, Description("Custom Subject Alternative Name Settings. This collection can contain a maximum of 500 elements."), EmbeddedInstance("MSFT_MicrosoftGraphcustomSubjectAlternativeName")] String CustomSubjectAlternativeNames[];
     [Write, Description("Extended Key Usage (EKU) settings. This collection can contain a maximum of 500 elements."), EmbeddedInstance("MSFT_MicrosoftGraphextendedKeyUsage")] String ExtendedKeyUsages[];
     [Write, Description("Scale for the Certificate Validity Period. Possible values are: days, months, years."), ValueMap{"days","months","years"}, Values{"days","months","years"}] String CertificateValidityPeriodScale;
