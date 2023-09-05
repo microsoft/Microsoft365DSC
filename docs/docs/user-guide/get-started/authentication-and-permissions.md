@@ -106,7 +106,7 @@ Doing so will return an object with two properties. The **ReadPermissions** prop
 By default, this cmdlet outputs the permissions required for Delegated permissions. To output the Application permissions, use the PermissionsType parameter
 
 ```PowerShell
-Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUser', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'
+Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUser', 'AADApplication') -PermissionsType 'Application'
 ```
 
 If you are trying to interact with all available components in Microsoft365DSC, you can get a complete picture of all permissions required across all resources by running the following line of PowerShell.
@@ -193,7 +193,7 @@ For the Exchange Online resources, the service account needs certain permissions
 To request the permissions,
 
 ```PowerShell
-Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain') -Source 'Exchange'
+Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain')
 ```
 
 <figure markdown>
