@@ -80,6 +80,110 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $AcceptMessagesOnlyFrom,
+
+        [Parameter()]
+        [System.String]
+        $AcceptMessagesOnlyFromDLMembers,
+        
+        [Parameter()]
+        [System.String]
+        $AcceptMessagesOnlyFromSendersOrMembers,
+        
+        [Parameter()]
+        [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+        
+        [Parameter()]
+        [System.String]
+        $EmailAddresses,
+
+        [Parameter()]
+        [System.String]
+        $GrantSendOnBehalfTo,
+        
+        [Parameter()]
+        [System.String]
+        $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $IsDirSynced,
+        
+        [Parameter()]
+        [System.String]
+        $LegacyExchangeDN,
+        
+        [Parameter()]
+        [System.String]
+        $SendOofMessageToOriginatorEnabled,
+        
+        [Parameter()]
+        [System.String]
+        $WhenCreated,
+
+        [Parameter()]
+        [System.String]
         [ValidateSet('Always', 'Internal', 'Never')]
         $SendModerationNotifications,
 
@@ -156,10 +260,12 @@ function Get-TargetResource
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
             $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            $distributionGroupMembers = Get-DistributionGroupMember $Name  -ErrorAction Stop -ResultSize Unlimited
         }
         else
         {
             $distributionGroup = Get-DistributionGroup -Filter "Name -eq ""$Name""" -ErrorAction Stop
+            $distributionGroupMembers = Get-DistributionGroupMember $Name  -ErrorAction Stop -ResultSize Unlimited
         }
 
         if ($null -eq $distributionGroup)
@@ -182,34 +288,60 @@ function Get-TargetResource
             }
 
             $result = @{
-                Alias                              = $distributionGroup.Alias
-                BccBlocked                         = $distributionGroup.BccBlocked
-                BypassNestedModerationEnabled      = $distributionGroup.BypassNestedModerationEnabled
-                Description                        = $descriptionValue
-                DisplayName                        = $distributionGroup.DisplayName
-                HiddenGroupMembershipEnabled       = $distributionGroup.HiddenGroupMembershipEnabled
-                ManagedBy                          = $distributionGroup.ManagedBy
-                MemberDepartRestriction            = $distributionGroup.MemberDepartRestriction
-                MemberJoinRestriction              = $distributionGroup.MemberJoinRestriction
-                Members                            = $distributionGroup.Members
-                ModeratedBy                        = $distributionGroup.ModeratedBy
-                ModerationEnabled                  = $distributionGroup.ModerationEnabled
-                Name                               = $distributionGroup.Name
-                Notes                              = $distributionGroup.Notes
-                OrganizationalUnit                 = $distributionGroup.OrganizationalUnit
-                PrimarySmtpAddress                 = $distributionGroup.PrimarySmtpAddress
-                RequireSenderAuthenticationEnabled = $distributionGroup.RequireSenderAuthenticationEnabled
-                RoomList                           = $distributionGroup.RoomList
-                SendModerationNotifications        = $distributionGroup.SendModerationNotifications
-                Type                               = $groupTypeValue
-                Ensure                             = 'Present'
-                Credential                         = $Credential
-                ApplicationId                      = $ApplicationId
-                CertificateThumbprint              = $CertificateThumbprint
-                CertificatePath                    = $CertificatePath
-                CertificatePassword                = $CertificatePassword
-                Managedidentity                    = $ManagedIdentity.IsPresent
-                TenantId                           = $TenantId
+                Alias                                   = $distributionGroup.Alias
+                BccBlocked                              = $distributionGroup.BccBlocked
+                BypassNestedModerationEnabled           = $distributionGroup.BypassNestedModerationEnabled
+                Description                             = $descriptionValue
+                DisplayName                             = $distributionGroup.DisplayName
+                HiddenGroupMembershipEnabled            = $distributionGroup.HiddenGroupMembershipEnabled
+                ManagedBy                               = $distributionGroup.ManagedBy
+                MemberDepartRestriction                 = $distributionGroup.MemberDepartRestriction
+                MemberJoinRestriction                   = $distributionGroup.MemberJoinRestriction
+                Members                                 = $distributionGroupMembers.Name
+                ModeratedBy                             = $distributionGroup.ModeratedBy
+                ModerationEnabled                       = $distributionGroup.ModerationEnabled
+                Name                                    = $distributionGroup.Name
+                Notes                                   = $distributionGroup.Notes
+                OrganizationalUnit                      = $distributionGroup.OrganizationalUnit
+                PrimarySmtpAddress                      = $distributionGroup.PrimarySmtpAddress
+                RequireSenderAuthenticationEnabled      = $distributionGroup.RequireSenderAuthenticationEnabled
+                RoomList                                = $distributionGroup.RoomList
+                SendModerationNotifications             = $distributionGroup.SendModerationNotifications
+                AcceptMessagesOnlyFrom                  = $distributionGroup.AcceptMessagesOnlyFrom
+                AcceptMessagesOnlyFromDLMembers         = $distributionGroup.AcceptMessagesOnlyFromDLMembers
+                AcceptMessagesOnlyFromSendersOrMembers  = $distributionGroup.AcceptMessagesOnlyFromSendersOrMembers
+                CustomAttribute1                        = $distributionGroup.CustomAttribute1   
+                CustomAttribute2                        = $distributionGroup.CustomAttribute2
+                CustomAttribute3                        = $distributionGroup.CustomAttribute3
+                CustomAttribute4                        = $distributionGroup.CustomAttribute4
+                CustomAttribute5                        = $distributionGroup.CustomAttribute5
+                CustomAttribute6                        = $distributionGroup.CustomAttribute6
+                CustomAttribute7                        = $distributionGroup.CustomAttribute7
+                CustomAttribute8                        = $distributionGroup.CustomAttribute8
+                CustomAttribute9                        = $distributionGroup.CustomAttribute9
+                CustomAttribute10                       = $distributionGroup.CustomAttribute10
+                CustomAttribute11                       = $distributionGroup.CustomAttribute11
+                CustomAttribute12                       = $distributionGroup.CustomAttribute12
+                CustomAttribute13                       = $distributionGroup.CustomAttribute13
+                CustomAttribute14                       = $distributionGroup.CustomAttribute14
+                CustomAttribute15                       = $distributionGroup.CustomAttribute15
+                EmailAddresses                          = $distributionGroup.EmailAddresses
+                GrantSendOnBehalfTo                     = $distributionGroup.GrantSendOnBehalfTo
+                HiddenFromAddressListsEnabled           = $distributionGroup.HiddenFromAddressListsEnabled
+                Identity                                = $distributionGroup.Identity
+                IsDirSynced                             = $distributionGroup.IsDirSynced
+                LegacyExchangeDN                        = $distributionGroup.LegacyExchangeDN
+                SendOofMessageToOriginatorEnabled       = $distributionGroup.SendOofMessageToOriginatorEnabled
+                WhenCreated                             = $distributionGroup.WhenCreated
+                Type                                    = $groupTypeValue
+                Ensure                                  = 'Present'
+                Credential                              = $Credential
+                ApplicationId                           = $ApplicationId
+                CertificateThumbprint                   = $CertificateThumbprint
+                CertificatePath                         = $CertificatePath
+                CertificatePassword                     = $CertificatePassword
+                Managedidentity                         = $ManagedIdentity.IsPresent
+                TenantId                                = $TenantId
             }
 
             Write-Verbose -Message "Found Distribution Group $($Name)"
@@ -307,6 +439,111 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $RoomList,
+
+        [Parameter()]
+        [System.String]
+        $AcceptMessagesOnlyFrom,
+
+        [Parameter()]
+        [System.String]
+        $AcceptMessagesOnlyFromDLMembers,
+        
+        [Parameter()]
+        [System.String]
+        $AcceptMessagesOnlyFromSendersOrMembers,
+
+                
+        [Parameter()]
+        [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddresses,
+
+        [Parameter()]
+        [System.String]
+        $GrantSendOnBehalfTo,
+        
+        [Parameter()]
+        [System.String]
+        $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $IsDirSynced,
+        
+        [Parameter()]
+        [System.String]
+        $LegacyExchangeDN,
+                
+        [Parameter()]
+        [System.String]
+        $SendOofMessageToOriginatorEnabled,
+        
+        [Parameter()]
+        [System.String]
+        $WhenCreated,
 
         [Parameter()]
         [System.String]
@@ -496,6 +733,111 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $RoomList,
+
+        [Parameter()]
+        [System.String]
+        $AcceptMessagesOnlyFrom,
+
+        [Parameter()]
+        [System.String]
+        $AcceptMessagesOnlyFromDLMembers,
+        
+        [Parameter()]
+        [System.String]
+        $AcceptMessagesOnlyFromSendersOrMembers,
+
+                
+        [Parameter()]
+        [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+
+        [Parameter()]
+        [System.String]
+        $EmailAddresses,
+
+        [Parameter()]
+        [System.String]
+        $GrantSendOnBehalfTo,
+        
+        [Parameter()]
+        [System.String]
+        $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $IsDirSynced,
+        
+        [Parameter()]
+        [System.String]
+        $LegacyExchangeDN,
+            
+        [Parameter()]
+        [System.String]
+        $SendOofMessageToOriginatorEnabled,
+        
+        [Parameter()]
+        [System.String]
+        $WhenCreated,
 
         [Parameter()]
         [System.String]
