@@ -5,14 +5,27 @@
 * AADGroup
   * Fixed Get-TargetResource not to use the parameters that should be set, preventing an empty delta on Set-TargetResource
     FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
-  * AADRoleEligibilityScheduleRequest
-    * Initial Release.
+* AADAuthorizationPolicy
+  * Fix issues with the Set method, which did not check an array properly.
+* AADRoleEligibilityScheduleRequest
+  * Initial Release.
+* EXOIRMConfiguration
+  * Corrected type in schema for parameter TransportDecryptionSetting
 * EXORemoteDomain
   * Implemented a wait/retry mecanism between the New-RemoteDomain and Set-RemoteDomain to avoid timeout.
-  FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
+    FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
 * DEPENDENCIES
-  * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and Update-M365DSCModule to be usable with -Scope, allowing the user to install/update the module dependencies without admin rights, using current user scope. Confirm-M365DSCDependencies error message changed to reflect this change.
+  * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and Update-M365DSCModule to be usable with -Scope, allowing
+    the user to install/update the module dependencies without admin rights, using current user scope. Confirm-M365DSCDependencies
+    error message changed to reflect this change.
     FIXES [#3621](https://github.com/microsoft/Microsoft365DSC/issues/3621)
+* MISC
+  * Fix in Update-M365DSCAzureAdApplication to prevent issue with uploading certificate.
+    EndDate parameter was incorrect and not necessary.
+  * Fixed issue in documentation generation
+    FIXES [#3635](https://github.com/microsoft/Microsoft365DSC/issues/3635)
+  * M365DscReport: Fix typo in var name in Compare-M365DSCConfigurations cmdlet
+    FIXES [#3632](https://github.com/microsoft/Microsoft365DSC/issues/3632)
 
 # 1.23.830.1
 
@@ -48,12 +61,6 @@
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.3.0
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.174.
-
-# 1.23.809.1
-
-* AADGroup
-  * Fixed Get-TargetResource not to use the parameters that should be set, preventing an empty delta on Set-TargetResource
-    FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
 
 # 1.23.830.1
 

@@ -10,7 +10,7 @@
 | **KeyUsage** | Write | String | SCEP Key Usage. Possible values are: keyEncipherment, digitalSignature. | `keyEncipherment`, `digitalSignature` |
 | **ScepServerUrls** | Write | StringArray[] | SCEP Server Url(s). | |
 | **SubjectAlternativeNameFormatString** | Write | String | Custom String that defines the AAD Attribute. | |
-| **SubjectNameFormatString** | Write | String | Custom format to use with SubjectNameFormat = Custom. Example: CN=EmailAddress}},E=EmailAddress}},OU=Enterprise Users,O=Contoso Corporation,L=Redmond,ST=WA,C=US | |
+| **SubjectNameFormatString** | Write | String | Custom format to use with SubjectNameFormat = Custom. Example: CN={{UserName}},E={{EmailAddress}},OU=Enterprise Users,O=Contoso Corporation,L=Redmond,ST=WA,C=US | |
 | **CustomSubjectAlternativeNames** | Write | MSFT_MicrosoftGraphcustomSubjectAlternativeName[] | Custom Subject Alternative Name Settings. This collection can contain a maximum of 500 elements. | |
 | **ExtendedKeyUsages** | Write | MSFT_MicrosoftGraphextendedKeyUsage[] | Extended Key Usage (EKU) settings. This collection can contain a maximum of 500 elements. | |
 | **CertificateValidityPeriodScale** | Write | String | Scale for the Certificate Validity Period. Possible values are: days, months, years. | `days`, `months`, `years` |

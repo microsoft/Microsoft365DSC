@@ -17,17 +17,29 @@ This resource configures the Search And Intelligence configuration settings.
 
 ## Permissions
 
-### Exchange
+### Microsoft Graph
 
-To authenticate with Microsoft Exchange, this resource required the following permissions:
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
 
-#### Roles
+#### Delegated permissions
 
-- 
+- **Read**
 
-#### Role Groups
+    - User.Read.All
 
-- None
+- **Update**
+
+    - User.ReadWrite
+
+#### Application permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
 
 ## Examples
 
