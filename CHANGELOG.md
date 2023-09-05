@@ -3,7 +3,8 @@
 # UNRELEASED
 
 * AADGroup
-  * Fixed Get-TargetResource not to use the parameters that should be set, preventing an empty delta on Set-TargetResource
+  * Fixed Get-TargetResource not to use the parameters that should be set,
+    preventing an empty delta on Set-TargetResource
     FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
 * AADAuthorizationPolicy
   * Fix issues with the Set method, which did not check an array properly.
@@ -12,13 +13,17 @@
 * EXOIRMConfiguration
   * Corrected type in schema for parameter TransportDecryptionSetting
 * EXORemoteDomain
-  * Implemented a wait/retry mecanism between the New-RemoteDomain and Set-RemoteDomain to avoid timeout.
+  * Implemented a wait/retry mecanism between the New-RemoteDomain and
+    Set-RemoteDomain to avoid timeout.
     FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
 * DEPENDENCIES
-  * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and Update-M365DSCModule to be usable with -Scope, allowing
-    the user to install/update the module dependencies without admin rights, using current user scope. Confirm-M365DSCDependencies
+  * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and
+    Update-M365DSCModule to be usable with -Scope, allowing
+    the user to install/update the module dependencies without admin rights,
+    using current user scope. Confirm-M365DSCDependencies
     error message changed to reflect this change.
     FIXES [#3621](https://github.com/microsoft/Microsoft365DSC/issues/3621)
+  * Updated MSCloudLoginAssitant to version 1.0.120
 * MISC
   * Fix in Update-M365DSCAzureAdApplication to prevent issue with uploading certificate.
     EndDate parameter was incorrect and not necessary.
