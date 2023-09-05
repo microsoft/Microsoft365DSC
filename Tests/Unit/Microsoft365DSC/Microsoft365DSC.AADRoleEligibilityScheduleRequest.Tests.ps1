@@ -20,8 +20,8 @@ $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
-        BeforeAll {
-
+        BeforeAll {        
+            $Global:CurrentModeIsExport = $false
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
@@ -102,9 +102,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-                            startDateTime             = '2023-09-01T02:40:44Z'
+                            
                             expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
-                                endDateTime = '2025-10-31T02:40:09Z'
+                                
                                 type        = 'afterDateTime'
                             } -ClientOnly
                         } -ClientOnly
@@ -118,7 +118,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DirectoryScopeId     = "/";
                         IsValidationOnly     = $False;
                         PrincipalId          = "123456";
-                        RoleDefinition       = "12345";
+                        RoleDefinitionId     = "12345";
                         ScheduleInfo         = @{
                             startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
                             expiration                = @{
@@ -153,9 +153,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-                            startDateTime             = '2023-08-31T10:40:44Z'
+                            
                             expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
-                                endDateTime = '2025-10-31T10:40:09Z'
+                                
                                 type        = 'afterDateTime'
                             } -ClientOnly
                         } -ClientOnly
@@ -169,11 +169,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DirectoryScopeId     = "/";
                         IsValidationOnly     = $False;
                         PrincipalId          = "123456";
-                        RoleDefinition       = "12345";
+                        RoleDefinitionId     = "12345";
                         ScheduleInfo         = @{
-                            startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
                             expiration                = @{
-                                    endDateTime = [System.DateTime]::Parse('2025-10-31T14:40:09Z')
                                     type        = 'afterDateTime'
                                 }
                         };
@@ -199,9 +197,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Principal            = "John.Smith@contoso.com";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
-                            startDateTime             = '2023-09-01T02:40:44Z'
+                            
                             expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
-                                endDateTime = '2025-10-31T02:40:09Z'
+                                
                                 type        = 'afterDateTime'
                             } -ClientOnly
                         } -ClientOnly
@@ -215,7 +213,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DirectoryScopeId     = "/";
                         IsValidationOnly     = $False;
                         PrincipalId          = "123456";
-                        RoleDefinition       = "12345";
+                        RoleDefinitionId     = "12345";
                         ScheduleInfo         = @{
                             startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
                             expiration                = @{
@@ -256,7 +254,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DirectoryScopeId     = "/";
                         IsValidationOnly     = $False;
                         PrincipalId          = "123456";
-                        RoleDefinition       = "12345";
+                        RoleDefinitionId     = "12345";
                         ScheduleInfo         = @{
                             startDateTime             = [System.DateTime]::Parse('2023-09-01T02:40:44Z')
                             expiration                = @{
