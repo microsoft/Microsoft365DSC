@@ -92,7 +92,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgbetaDeviceAppManagementPolicySet -PolicySetId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgbetaDeviceAppManagementPolicySet -PolicySetId $Id -ExpandProperty * -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -149,7 +149,12 @@ function Get-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             #endregion
         }
+
+        <#
         $assignmentsValues = Get-MgBetaDeviceAppManagementPolicySetAssignment -PolicySetId $Id
+        #>
+        $assignmentsValues = $getValue.Assignments
+
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -162,7 +167,27 @@ function Get-TargetResource
             }
             $assignmentResult += $assignmentValue
         }
+
         $results.Add('Assignments', $assignmentResult)
+
+        <#
+        $itemsValues = $getValue.Items
+
+        $itemResult = @()
+        foreach ($itemEntry in $itemsValues)
+        {
+            $itemValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+
+        $results.Add('Items', $itemResult)
+        #>
 
         return [System.Collections.Hashtable] $results
     }
@@ -334,7 +359,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Policy Sets with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Policy Sets with Id {$($currentInstance.Id)}"
         #region resource generator code
 Remove-MgbetaDeviceAppManagementPolicySet -PolicySetId $currentInstance.Id
         #endregion
