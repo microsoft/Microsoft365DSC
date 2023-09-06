@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.906.1
 
 * AADAuthenticationMethodPolicyAuthenticator
   * Fixes issues with the export missing a line return.
