@@ -19,6 +19,8 @@
   * Implemented a wait/retry mecanism between the New-RemoteDomain and
     Set-RemoteDomain to avoid timeout.
     FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Added support for ASR rule BlockWebShellCreationForServers.
 * DEPENDENCIES
   * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and
     Update-M365DSCModule to be usable with -Scope, allowing
