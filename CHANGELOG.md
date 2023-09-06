@@ -1,5 +1,75 @@
 # Change log for Microsoft365DSC
 
+# 1.23.906.1
+
+* AADAuthenticationMethodPolicyAuthenticator
+  * Fixes issues with the export missing a line return.
+    FIXES [#3645](https://github.com/microsoft/Microsoft365DSC/issues/3645)
+* AADAuthorizationPolicy
+  * Fix issues with the Set method, which did not check an array properly.
+* AADGroup
+  * Fixed Get-TargetResource not to use the parameters that should be set,
+    preventing an empty delta on Set-TargetResource
+    FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
+* AADRoleEligibilityScheduleRequest
+  * Initial Release.
+* EXOIRMConfiguration
+  * Corrected type in schema for parameter TransportDecryptionSetting
+* EXORemoteDomain
+  * Implemented a wait/retry mecanism between the New-RemoteDomain and
+    Set-RemoteDomain to avoid timeout.
+    FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
+* DEPENDENCIES
+  * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and
+    Update-M365DSCModule to be usable with -Scope, allowing
+    the user to install/update the module dependencies without admin rights,
+    using current user scope. Confirm-M365DSCDependencies
+    error message changed to reflect this change.
+    FIXES [#3621](https://github.com/microsoft/Microsoft365DSC/issues/3621)
+  * Updated MSCloudLoginAssitant to version 1.0.120
+* MISC
+  * Fix in Update-M365DSCAzureAdApplication to prevent issue with uploading certificate.
+    EndDate parameter was incorrect and not necessary.
+  * Fixed issue in documentation generation
+    FIXES [#3635](https://github.com/microsoft/Microsoft365DSC/issues/3635)
+  * M365DscReport: Fix typo in var name in Compare-M365DSCConfigurations cmdlet
+    FIXES [#3632](https://github.com/microsoft/Microsoft365DSC/issues/3632)
+
+# 1.23.830.1
+
+* O365SearchAndintelligenceConfigurations
+  * Removed support for Service Principal Auth, which the cmdlet never supported.
+* SPOHomeSite
+  * Fixes an issue if no home site exists
+    FIXES [#3577](https://github.com/microsoft/Microsoft365DSC/issues/3577)
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.4.0.
+  * Updated ReverseDSC to version 2.0.0.18
+* MISC
+  * Fixes an issue with the generic export CIM Instance logic.
+    FIXES [#3610](https://github.com/microsoft/Microsoft365DSC/issues/3610)
+
+# 1.23.823.1
+
+* AADAuthorizationPolicy
+  * Fix issue with property PermissionGrantPolicyIdsAssignedToDefaultUserRole
+    FIXES [#3594](https://github.com/microsoft/Microsoft365DSC/issues/3594)
+* AADGroupsSettings
+  * Add support for enabling sensitivity labels in M365-groups
+* EXOSafeAttachmentPolicy
+  * Deprecated ActionOnError Parameter
+    FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Initial release
+    FIXES [#3349](https://github.com/microsoft/Microsoft365DSC/issues/3349)
+* O365OrgSettings
+  * Updated logic of the Get to return null if permissions are not granted for
+    a given API.
+  * Updated the list of required permissions.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.3.0
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.174.
+
 # 1.23.830.1
 
 * O365SearchAndintelligenceConfigurations
