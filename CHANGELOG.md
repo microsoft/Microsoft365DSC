@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.3.0.
+
 # 1.23.906.1
 
 * AADAuthenticationMethodPolicyAuthenticator
