@@ -201,7 +201,6 @@
             DirectoryScopeId      = $request.DirectoryScopeId
             AppScopeId            = $request.AppScopeId
             Action                = $request.Action
-            Status                = $request.Status
             Id                    = $request.Id
             Justification         = $request.Justification
             IsValidationOnly      = $request.IsValidationOnly
@@ -670,7 +669,7 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
-            
+
             if ($Results.TicketInfo)
             {
                 $Results.TicketInfo = Get-M365DSCAzureADEligibilityRequestTicketInfoAsString -TicketInfo $Results.TicketInfo
