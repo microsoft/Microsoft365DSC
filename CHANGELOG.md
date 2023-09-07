@@ -1,22 +1,32 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.906.1
 
-* AADGroup
-  * Fixed Get-TargetResource not to use the parameters that should be set, preventing an empty delta on Set-TargetResource
-    FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
+* AADAuthenticationMethodPolicyAuthenticator
+  * Fixes issues with the export missing a line return.
+    FIXES [#3645](https://github.com/microsoft/Microsoft365DSC/issues/3645)
 * AADAuthorizationPolicy
   * Fix issues with the Set method, which did not check an array properly.
+* AADGroup
+  * Fixed Get-TargetResource not to use the parameters that should be set,
+    preventing an empty delta on Set-TargetResource
+    FIXES [#3629](https://github.com/microsoft/Microsoft365DSC/issues/3629)
+* AADRoleEligibilityScheduleRequest
+  * Initial Release.
 * EXOIRMConfiguration
   * Corrected type in schema for parameter TransportDecryptionSetting
 * EXORemoteDomain
-  * Implemented a wait/retry mecanism between the New-RemoteDomain and Set-RemoteDomain to avoid timeout.
+  * Implemented a wait/retry mecanism between the New-RemoteDomain and
+    Set-RemoteDomain to avoid timeout.
     FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
 * DEPENDENCIES
-  * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and Update-M365DSCModule to be usable with -Scope, allowing
-    the user to install/update the module dependencies without admin rights, using current user scope. Confirm-M365DSCDependencies
+  * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and
+    Update-M365DSCModule to be usable with -Scope, allowing
+    the user to install/update the module dependencies without admin rights,
+    using current user scope. Confirm-M365DSCDependencies
     error message changed to reflect this change.
     FIXES [#3621](https://github.com/microsoft/Microsoft365DSC/issues/3621)
+  * Updated MSCloudLoginAssitant to version 1.0.120
 * MISC
   * Fix in Update-M365DSCAzureAdApplication to prevent issue with uploading certificate.
     EndDate parameter was incorrect and not necessary.
