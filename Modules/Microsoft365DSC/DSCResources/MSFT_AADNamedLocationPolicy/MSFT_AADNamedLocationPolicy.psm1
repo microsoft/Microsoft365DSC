@@ -251,6 +251,7 @@ function Set-TargetResource
     }
     if ($OdataType -eq '#microsoft.graph.ipNamedLocation')
     {
+        $desiredValues.Add('isTrusted', $IsTrusted)
         $IpRangesValue = @()
         foreach ($IpRange in $IpRanges)
         {
@@ -273,6 +274,7 @@ function Set-TargetResource
     {
         $desiredValues.Add('includeUnknownCountriesAndRegions', $IncludeUnknownCountriesAndRegions)
         $desiredValues.Add('countriesAndRegions', $CountriesAndRegions)
+        $desiredValues.Add('countryLookupMethod', $CountryLookupMethod)
     }
 
     # Named Location should exist but it doesn't
