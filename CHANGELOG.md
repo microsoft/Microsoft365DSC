@@ -4,6 +4,7 @@
 
 * DEPENDENCIES
   * Updated ExchangeOnlineManagement to version 3.3.0.
+  * Updated Microsoft.Graph modules to version 2.5.0.
 
 # 1.23.906.1
 
