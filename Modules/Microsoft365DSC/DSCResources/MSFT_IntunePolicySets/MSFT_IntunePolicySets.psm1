@@ -41,6 +41,10 @@ function Get-TargetResource
         #endregion
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Items,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -150,9 +154,6 @@ function Get-TargetResource
             #endregion
         }
 
-        <#
-        $assignmentsValues = Get-MgBetaDeviceAppManagementPolicySetAssignment -PolicySetId $Id
-        #>
         $assignmentsValues = $getValue.Assignments
 
         $assignmentResult = @()
@@ -170,24 +171,22 @@ function Get-TargetResource
 
         $results.Add('Assignments', $assignmentResult)
 
-        <#
         $itemsValues = $getValue.Items
 
         $itemResult = @()
         foreach ($itemEntry in $itemsValues)
         {
             $itemValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+                dataType = $itemEntry.AdditionalProperties.'@odata.type'
+                Id = $itemEntry.Id
+                PayloadId = $itemEntry.PayloadId
+                ItemType = $itemEntry.ItemType
+                DisplayName = $itemEntry.DisplayName
             }
-            $assignmentResult += $assignmentValue
+            $itemResult += $itemValue
         }
 
         $results.Add('Items', $itemResult)
-        #>
 
         return [System.Collections.Hashtable] $results
     }
@@ -243,6 +242,11 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Items,
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -407,6 +411,10 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Items,
 
         [Parameter()]
         [System.String]
@@ -606,6 +614,18 @@ function Export-TargetResource
                     $Results.Remove('Assignments') | Out-Null
                 }
             }
+            if ($Results.Items)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Items -CIMInstanceName DeviceManagementConfigurationPolicyItems
+                if ($complexTypeStringResult)
+                {
+                    $Results.Items = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Items') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -614,6 +634,10 @@ function Export-TargetResource
             if ($Results.Assignments)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+            }
+            if ($Results.Items)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Items" -isCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock
