@@ -193,7 +193,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('clientIpAddress','authenticatorAppGps')]
-        $CountryLookupMethod,
+        $CountryLookupMethod = 'clientIpAddress',
 
         [Parameter()]
         [System.Boolean]
