@@ -4,6 +4,10 @@
 
 * DEPENDENCIES
   * Updated ExchangeOnlineManagement to version 3.3.0.
+  * Updated Microsoft.Graph modules to version 2.5.0.
+* MISC
+  * Improved error logging for methods installing or updating modules.
+    FIXES [#3660](https://github.com/microsoft/Microsoft365DSC/issues/3660)
 
 # 1.23.906.1
 
