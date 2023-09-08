@@ -5,6 +5,9 @@
 * AADNamedLocationPolicy
   * Set default value for CountryLookupMethod and removed unwanted properties
     FIXES [#3656](https://github.com/microsoft/Microsoft365DSC/issues/3656)
+* IntuneAppProtectionPolicyAndroid
+  * Added support for 'RequireClass3Biometrics' parameter
+  * Added support for 'RequirePinAfterBiometricChange' parameter
 * DEPENDENCIES
   * Updated ExchangeOnlineManagement to version 3.3.0.
   * Updated Microsoft.Graph modules to version 2.5.0.
