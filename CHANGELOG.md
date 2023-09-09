@@ -5,6 +5,15 @@
 * AADNamedLocationPolicy
   * Set default value for CountryLookupMethod and removed unwanted properties
     FIXES [#3656](https://github.com/microsoft/Microsoft365DSC/issues/3656)
+* IntuneAccountProtectionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
 * IntuneAppProtectionPolicyAndroid
   * Added support for 'RequireClass3Biometrics' parameter
   * Added support for 'RequirePinAfterBiometricChange' parameter
