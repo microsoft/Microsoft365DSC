@@ -640,12 +640,12 @@ function Set-TargetResource
     }
 
     # Reports Display Names
-    $AdminCenterReportDisplayConcealedNamesEnabled = Get-M365DSCOrgSettingsAdminCenterReport
+    $AdminCenterReportDisplayConcealedNamesEnabled = Get-MgBetaAdminReportSetting
     Write-Verbose "$($AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames) = $AdminCenterReportDisplayConcealedNames"
     if ($AdminCenterReportDisplayConcealedNames -ne $AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames)
     {
         Write-Verbose -Message "Updating the Admin Center Report Display Concealed Names setting to {$AdminCenterReportDisplayConcealedNames}"
-        Update-M365DSCOrgSettingsAdminCenterReport -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
+        Update-MgBetaAdminReportSetting -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
     }
 
     # Apps Installation
@@ -1126,44 +1126,6 @@ function Set-M365DSCO365OrgSettingsPlannerConfig
         $Uri
 }
 
-function Get-M365DSCOrgSettingsAdminCenterReport
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param()
-    $VerbosePreference = 'SilentlyContinue'
-
-    try
-    {
-        $url = 'https://graph.microsoft.com/beta/admin/reportSettings'
-        $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
-        return $results
-    }
-    catch
-    {
-        Write-Verbose -Message "Not able to retrieve Office 365 Report Settings. Please ensure correct permissions have been granted."
-        return $null
-    }
-}
-
-function Update-M365DSCOrgSettingsAdminCenterReport
-{
-    [CmdletBinding()]
-    [OutputType([Void])]
-    param(
-        [Parameter(Mandatory = $true)]
-        [System.Boolean]
-        $DisplayConcealedNames
-    )
-    $VerbosePreference = 'SilentlyContinue'
-    $url = 'https://graph.microsoft.com/beta/admin/reportSettings'
-    $body = @{
-        "@odata.context"      ="https://graph.microsoft.com/beta/$metadata#admin/reportSettings/$entity"
-        displayConcealedNames = $DisplayConcealedNames
-    }
-    Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $body | Out-Null
-}
-
 function Get-M365DSCOrgSettingsInstallationOptions
 {
     [CmdletBinding()]
@@ -1177,7 +1139,7 @@ function Get-M365DSCOrgSettingsInstallationOptions
 
     try
     {
-        $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/microsoft365Apps/installationOptions'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url
         return $results
     }
@@ -1205,7 +1167,7 @@ function Update-M365DSCOrgSettingsInstallationOptions
 
     try
     {
-        $url = 'https://graph.microsoft.com/beta/admin/microsoft365Apps/installationOptions'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/microsoft365Apps/installationOptions'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
@@ -1232,7 +1194,7 @@ function Get-M365DSCOrgSettingsForms
 
     try
     {
-        $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/forms/settings'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         return $results
     }
@@ -1257,7 +1219,7 @@ function Update-M365DSCOrgSettingsForms
     try
     {
         Write-Verbose -Message "Updating Forms Settings"
-        $url = 'https://graph.microsoft.com/beta/admin/forms/settings'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/forms/settings'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
@@ -1279,7 +1241,7 @@ function Get-M365DSCOrgSettingsDynamicsCustomerVoice
 
     try
     {
-        $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/dynamics/customerVoice'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         return $results
     }
@@ -1303,7 +1265,7 @@ function Update-M365DSCOrgSettingsDynamicsCustomerVoice
 
     try
     {
-        $url = 'https://graph.microsoft.com/beta/admin/dynamics/customerVoice'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/dynamics/customerVoice'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
@@ -1325,7 +1287,7 @@ function Get-M365DSCOrgSettingsAppsAndServices
 
     try
     {
-        $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/appsAndServices/settings'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         return $results
     }
@@ -1349,7 +1311,7 @@ function Update-M365DSCOrgSettingsAppsAndServices
 
     try
     {
-        $url = 'https://graph.microsoft.com/beta/admin/appsAndServices/settings'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/appsAndServices/settings'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch
@@ -1370,7 +1332,7 @@ function Get-M365DSCOrgSettingsToDo
 
     try
     {
-        $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/todo/settings'
         $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         return $results
     }
@@ -1394,7 +1356,7 @@ function Update-M365DSCOrgSettingsToDo
 
     try
     {
-        $url = 'https://graph.microsoft.com/beta/admin/todo/settings'
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/todo/settings'
         Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $Options | Out-Null
     }
     catch

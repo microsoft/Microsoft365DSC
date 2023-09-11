@@ -8,9 +8,14 @@
 * IntuneAppProtectionPolicyAndroid
   * Added support for 'RequireClass3Biometrics' parameter
   * Added support for 'RequirePinAfterBiometricChange' parameter
+* O365OrgSettings
+  * Fixes an issue where the wrong Graph URLs were being called for sovereign
+    clouds.
+    FIXES [#3673](https://github.com/microsoft/Microsoft365DSC/issues/3673)
 * DEPENDENCIES
   * Updated ExchangeOnlineManagement to version 3.3.0.
   * Updated Microsoft.Graph modules to version 2.5.0.
+  * Added dependency on Microsoft.Graph.Beta.Reports.
 * MISC
   * Improved error logging for methods installing or updating modules.
     FIXES [#3660](https://github.com/microsoft/Microsoft365DSC/issues/3660)
