@@ -59,12 +59,14 @@ body:
     attributes:
       label: "The DSC configuration"
       description: "The DSC configuration that is used to reproduce the issue (as detailed as possible)"
+      render: powershell
     validations:
       required: false
 
   - type: textarea
     attributes:
       label: "Verbose logs showing the problem"
+      render: powershell
     validations:
       required: false
 
