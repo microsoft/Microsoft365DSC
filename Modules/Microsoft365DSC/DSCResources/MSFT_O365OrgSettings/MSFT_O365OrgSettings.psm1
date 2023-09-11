@@ -1370,4 +1370,42 @@ function Update-M365DSCOrgSettingsToDo
     }
 }
 
+function Get-M365DSCOrgSettingsAdminCenterReport
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param()
+    $VerbosePreference = 'SilentlyContinue'
+
+    try
+    {
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/reportSettings'
+        $results = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
+        return $results
+    }
+    catch
+    {
+        Write-Verbose -Message "Not able to retrieve Office 365 Report Settings. Please ensure correct permissions have been granted."
+        return $null
+    }
+}
+
+function Update-M365DSCOrgSettingsAdminCenterReport
+{
+    [CmdletBinding()]
+    [OutputType([Void])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Boolean]
+        $DisplayConcealedNames
+    )
+    $VerbosePreference = 'SilentlyContinue'
+    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/admin/reportSettings'
+    $body = @{
+        "@odata.context"      = $Global:MSCloudLoginConnectionProfile.MicrosoftGraoh.ResourceUrl + 'beta/$metadata#admin/reportSettings/$entity'
+        displayConcealedNames = $DisplayConcealedNames
+    }
+    Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $body | Out-Null
+}
+
 Export-ModuleMember -Function *-TargetResource
