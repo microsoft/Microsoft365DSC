@@ -23,27 +23,25 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 7 -and $_ -le 365 })]
+        [ValidateRange(7, 365)]
         $PasswordAgeDays_AAD,
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 1 -and $_ -le 365 })]
+        [ValidateRange(1, 365)]
         $PasswordAgeDays,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet('true', 'false')]
+        [System.Boolean]
         $PasswordExpirationProtectionEnabled,
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 0 -and $_ -le 12 })]
+        [ValidateRange(0, 12)]
         $AdEncryptedPasswordHistorySize,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet('true', 'false')]
+        [System.Boolean]
         $AdPasswordEncryptionEnabled,
 
         [Parameter()]
@@ -61,7 +59,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 8 -and $_ -le 64 })]
+        [ValidateRange(8, 64)]
         $PasswordLength,
 
         [Parameter()]
@@ -71,7 +69,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 0 -and $_ -le 24 })]
+        [ValidateRange(0, 24)]
         $PostAuthenticationResetDelay,
 
         [Parameter()]
@@ -279,27 +277,25 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 7 -and $_ -le 365 })]
+        [ValidateRange(7, 365)]
         $PasswordAgeDays_AAD,
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 1 -and $_ -le 365 })]
+        [ValidateRange(1, 365)]
         $PasswordAgeDays,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet('true', 'false')]
+        [System.Boolean]
         $PasswordExpirationProtectionEnabled,
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 0 -and $_ -le 12 })]
+        [ValidateRange(0, 12)]
         $AdEncryptedPasswordHistorySize,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet('true', 'false')]
+        [System.Boolean]
         $AdPasswordEncryptionEnabled,
 
         [Parameter()]
@@ -317,7 +313,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 8 -and $_ -le 64 })]
+        [ValidateRange(8, 64)]
         $PasswordLength,
 
         [Parameter()]
@@ -327,7 +323,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 0 -and $_ -le 24 })]
+        [ValidateRange(0, 24)]
         $PostAuthenticationResetDelay,
 
         [Parameter()]
@@ -469,27 +465,25 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 7 -and $_ -le 365 })]
+        [ValidateRange(7, 365)]
         $PasswordAgeDays_AAD,
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 1 -and $_ -le 365 })]
+        [ValidateRange(1, 365)]
         $PasswordAgeDays,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet('true', 'false')]
+        [System.Boolean]
         $PasswordExpirationProtectionEnabled,
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 0 -and $_ -le 12 })]
+        [ValidateRange(0, 12)]
         $AdEncryptedPasswordHistorySize,
 
         [Parameter()]
-        [System.String]
-        [ValidateSet('true', 'false')]
+        [System.Boolean]
         $AdPasswordEncryptionEnabled,
 
         [Parameter()]
@@ -507,7 +501,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 8 -and $_ -le 64 })]
+        [ValidateRange(8, 64)]
         $PasswordLength,
 
         [Parameter()]
@@ -517,7 +511,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateScript({ $_ -ge 0 -and $_ -le 24 })]
+        [ValidateRange(0, 24)]
         $PostAuthenticationResetDelay,
 
         [Parameter()]

@@ -54,10 +54,6 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    if ($WindowsHelloForBusinessBlocked -eq "notConfigured") {
-        $WindowsHelloForBusinessBlocked = $null
-    }
-
     Write-Verbose -Message "Checking for the Intune Account Protection Local User Group Membership Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `

@@ -17,16 +17,17 @@ function Get-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
+        [ValidateSet('notConfigured', 'true', 'false')]
         $WindowsHelloForBusinessBlocked,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 4) -and ($_ -le 127) })]
+        [ValidateRange(4, 127)]
         [System.Int32]
         $PinMinimumLength,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 4) -and ($_ -le 127) })]
+        [ValidateRange(4, 127)]
         [System.Int32]
         $PinMaximumLength,
 
@@ -46,12 +47,12 @@ function Get-TargetResource
         $PinSpecialCharactersUsage,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 0) -and ($_ -le 730) })]
+        [ValidateRange(0, 730)]
         [System.Int32]
         $PinExpirationInDays,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 0) -and ($_ -le 50) })]
+        [ValidateRange(0, 50)]
         [System.Int32]
         $PinPreviousBlockCount,
 
@@ -118,10 +119,6 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    if ($WindowsHelloForBusinessBlocked -eq "notConfigured") {
-        $WindowsHelloForBusinessBlocked = $null
-    }
-
     Write-Verbose -Message "Checking for the Intune Account Protection Policy {$DisplayName}"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -177,6 +174,19 @@ function Get-TargetResource
         {
             $settingName = $setting.definitionId.Split("_")[1]
             $settingValue = $setting.ValueJson | ConvertFrom-Json
+
+            if ($settingName -eq 'WindowsHelloForBusinessBlocked')
+            {
+                if ($null -eq $settingValue)
+                {
+                    $settingValue = 'notConfigured'
+                }
+                else
+                {
+                    $settingValue = $settingValue.ToString()
+                }
+
+            }
 
             $returnHashtable.Add($settingName, $settingValue)
         }
@@ -249,16 +259,17 @@ function Set-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
+        [ValidateSet('notConfigured', 'true', 'false')]
         $WindowsHelloForBusinessBlocked,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 4) -and ($_ -le 127) })]
+        [ValidateRange(4, 127)]
         [System.Int32]
         $PinMinimumLength,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 4) -and ($_ -le 127) })]
+        [ValidateRange(4, 127)]
         [System.Int32]
         $PinMaximumLength,
 
@@ -278,12 +289,12 @@ function Set-TargetResource
         $PinSpecialCharactersUsage,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 0) -and ($_ -le 730) })]
+        [ValidateRange(0, 730)]
         [System.Int32]
         $PinExpirationInDays,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 0) -and ($_ -le 50) })]
+        [ValidateRange(0, 50)]
         [System.Int32]
         $PinPreviousBlockCount,
 
@@ -472,16 +483,17 @@ function Test-TargetResource
         $Description,
 
         [Parameter()]
-        [System.Boolean]
+        [System.String]
+        [ValidateSet('notConfigured', 'true', 'false')]
         $WindowsHelloForBusinessBlocked,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 4) -and ($_ -le 127) })]
+        [ValidateRange(4, 127)]
         [System.Int32]
         $PinMinimumLength,
 
         [Parameter()]
-        [ValidateScript({ $_ -eq 'null' -or (($_ -ge 4) -and ($_ -le 127)) })]
+        [ValidateRange(4, 127)]
         [System.Int32]
         $PinMaximumLength,
 
@@ -501,12 +513,12 @@ function Test-TargetResource
         $PinSpecialCharactersUsage,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 0) -and ($_ -le 730) })]
+        [ValidateRange(0, 730)]
         [System.Int32]
         $PinExpirationInDays,
 
         [Parameter()]
-        [ValidateScript({ ($_ -ge 0) -and ($_ -le 50) })]
+        [ValidateRange(0, 50)]
         [System.Int32]
         $PinPreviousBlockCount,
 
@@ -602,6 +614,22 @@ function Test-TargetResource
         if ($null -eq $ValuesToCheck.$key) {
             $ValuesToCheck.Remove($key) | Out-Null
         }
+    }
+
+    if ($CurrentValues.WindowsHelloForBusinessBlocked -in @('notconfigured', 'True'))
+    {
+        $ValuesToCheck.Remove('PinMinimumLength') | Out-Null
+        $ValuesToCheck.Remove('PinMaximumLength') | Out-Null
+        $ValuesToCheck.Remove('PinLowercaseCharactersUsage') | Out-Null
+        $ValuesToCheck.Remove('PinUppercaseCharactersUsage') | Out-Null
+        $ValuesToCheck.Remove('PinSpecialCharactersUsage') | Out-Null
+        $ValuesToCheck.Remove('PinExpirationInDays') | Out-Null
+        $ValuesToCheck.Remove('PinPreviousBlockCount') | Out-Null
+        $ValuesToCheck.Remove('PinRecoveryEnabled') | Out-Null
+        $ValuesToCheck.Remove('SecurityDeviceRequired') | Out-Null
+        $ValuesToCheck.Remove('UnlockWithBiometricsEnabled') | Out-Null
+        $ValuesToCheck.Remove('EnhancedAntiSpoofingForFacialFeaturesEnabled') | Out-Null
+        $ValuesToCheck.Remove('UseCertificatesForOnPremisesAuthEnabled') | Out-Null
     }
 
     if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
@@ -862,6 +890,11 @@ function Get-M365DSCIntuneDeviceConfigurationSettings
         if ($null -ne $currentValueKey)
         {
             $settingValue = $Properties.$currentValueKey
+        }
+
+        if ($currentValueKey -eq 'WindowsHelloForBusinessBlocked' -and $settingValue -eq 'notConfigured')
+        {
+            $settingValue = $null
         }
 
         switch ($settingType)
