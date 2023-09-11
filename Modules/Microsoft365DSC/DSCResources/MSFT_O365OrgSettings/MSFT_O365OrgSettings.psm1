@@ -640,12 +640,12 @@ function Set-TargetResource
     }
 
     # Reports Display Names
-    $AdminCenterReportDisplayConcealedNamesEnabled = Get-MgBetaAdminReportSetting
+    $AdminCenterReportDisplayConcealedNamesEnabled = Get-M365DSCOrgSettingsAdminCenterReport
     Write-Verbose "$($AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames) = $AdminCenterReportDisplayConcealedNames"
     if ($AdminCenterReportDisplayConcealedNames -ne $AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames)
     {
         Write-Verbose -Message "Updating the Admin Center Report Display Concealed Names setting to {$AdminCenterReportDisplayConcealedNames}"
-        Update-MgBetaAdminReportSetting -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
+        Update-M365DSCOrgSettingsAdminCenterReport -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
     }
 
     # Apps Installation
