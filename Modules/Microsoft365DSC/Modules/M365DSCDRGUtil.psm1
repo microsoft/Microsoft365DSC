@@ -397,7 +397,12 @@ function Get-M365DSCDRGComplexTypeToString
             }
             else
             {
-                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($indent)
+                $currentValue = $ComplexObject[$key]
+                if ($currentValue.GetType().Name -eq 'String')
+                {
+                    $currentValue = $ComplexObject[$key].Replace("'", "''").Replace("’", "''")
+                }
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $currentValue -Space ($indent)
             }
         }
         else
