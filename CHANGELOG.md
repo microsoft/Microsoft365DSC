@@ -8,6 +8,8 @@
 * IntuneAppProtectionPolicyAndroid
   * Added support for 'RequireClass3Biometrics' parameter
   * Added support for 'RequirePinAfterBiometricChange' parameter
+* M365DSCRuleEvaluation
+  * Initial Release.
 * O365OrgSettings
   * Fixes an issue where the wrong Graph URLs were being called for sovereign
     clouds.
