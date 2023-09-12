@@ -8,6 +8,10 @@
 * IntuneAppProtectionPolicyAndroid
   * Added support for 'RequireClass3Biometrics' parameter
   * Added support for 'RequirePinAfterBiometricChange' parameter
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Added support for 'engineupdateschannel' parameter
+  * Added support for 'platformupdateschannel' parameter
+  * Added support for 'securityintelligenceupdateschannel' parameter
 * O365OrgSettings
   * Fixes an issue where the wrong Graph URLs were being called for sovereign
     clouds.
