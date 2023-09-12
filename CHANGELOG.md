@@ -19,6 +19,8 @@
 * MISC
   * Improved error logging for methods installing or updating modules.
     FIXES [#3660](https://github.com/microsoft/Microsoft365DSC/issues/3660)
+  * Removed Id as a mandatory parameter for most AAD resources.
+    FIXES [#3344](https://github.com/microsoft/Microsoft365DSC/issues/3344)
 
 # 1.23.906.1
 

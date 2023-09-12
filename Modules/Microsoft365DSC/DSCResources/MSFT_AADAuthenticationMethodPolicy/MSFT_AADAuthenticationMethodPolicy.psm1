@@ -34,7 +34,7 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $SystemCredentialPreferences,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
         #endregion
@@ -283,7 +283,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $SystemCredentialPreferences,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -405,11 +405,9 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $SystemCredentialPreferences,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
-
-        #endregion
 
         [Parameter()]
         [System.String]
