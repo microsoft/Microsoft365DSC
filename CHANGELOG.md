@@ -12,6 +12,8 @@
   * Added support for 'engineupdateschannel' parameter
   * Added support for 'platformupdateschannel' parameter
   * Added support for 'securityintelligenceupdateschannel' parameter
+* M365DSCRuleEvaluation
+  * Initial Release.
 * O365OrgSettings
   * Fixes an issue where the wrong Graph URLs were being called for sovereign
     clouds.
@@ -23,6 +25,8 @@
 * MISC
   * Improved error logging for methods installing or updating modules.
     FIXES [#3660](https://github.com/microsoft/Microsoft365DSC/issues/3660)
+  * Single quotes handling in Export for complex CIMInstances
+    FIXES [#3479](https://github.com/microsoft/Microsoft365DSC/issues/3479)
 
 # 1.23.906.1
 
