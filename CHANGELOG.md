@@ -21,6 +21,8 @@
     FIXES [#3660](https://github.com/microsoft/Microsoft365DSC/issues/3660)
   * Removed Id as a mandatory parameter for most AAD resources.
     FIXES [#3344](https://github.com/microsoft/Microsoft365DSC/issues/3344)
+  * Single quotes handling in Export for complex CIMInstances
+    FIXES [#3479](https://github.com/microsoft/Microsoft365DSC/issues/3479)
 
 # 1.23.906.1
 

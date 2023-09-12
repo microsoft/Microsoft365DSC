@@ -913,6 +913,7 @@ function Export-TargetResource
             $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
             $currentDSCBlock = $currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
             $currentDSCBlock = $currentDSCBlock.replace( "`r`n,`r`n" , "`r`n" )
+            $currentDSCBlock = $currentDSCBlock.Replace("}                    Enabled = `$","}`r`n                    Enabled = `$")
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
