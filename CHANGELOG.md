@@ -1,5 +1,29 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADNamedLocationPolicy
+  * Set default value for CountryLookupMethod and removed unwanted properties
+    FIXES [#3656](https://github.com/microsoft/Microsoft365DSC/issues/3656)
+* IntuneAppProtectionPolicyAndroid
+  * Added support for 'RequireClass3Biometrics' parameter
+  * Added support for 'RequirePinAfterBiometricChange' parameter
+* M365DSCRuleEvaluation
+  * Initial Release.
+* O365OrgSettings
+  * Fixes an issue where the wrong Graph URLs were being called for sovereign
+    clouds.
+    FIXES [#3673](https://github.com/microsoft/Microsoft365DSC/issues/3673)
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.3.0.
+  * Updated Microsoft.Graph modules to version 2.5.0.
+  * Added dependency on Microsoft.Graph.Beta.Reports.
+* MISC
+  * Improved error logging for methods installing or updating modules.
+    FIXES [#3660](https://github.com/microsoft/Microsoft365DSC/issues/3660)
+  * Single quotes handling in Export for complex CIMInstances
+    FIXES [#3479](https://github.com/microsoft/Microsoft365DSC/issues/3479)
+
 # 1.23.906.1
 
 * AADAuthenticationMethodPolicyAuthenticator
@@ -19,6 +43,8 @@
   * Implemented a wait/retry mecanism between the New-RemoteDomain and
     Set-RemoteDomain to avoid timeout.
     FIXES [#3628](https://github.com/microsoft/Microsoft365DSC/issues/3628)
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Added support for ASR rule BlockWebShellCreationForServers.
 * DEPENDENCIES
   * Updated Install-M365DSCDevBranch, Update-M365DSCDependencies and
     Update-M365DSCModule to be usable with -Scope, allowing
