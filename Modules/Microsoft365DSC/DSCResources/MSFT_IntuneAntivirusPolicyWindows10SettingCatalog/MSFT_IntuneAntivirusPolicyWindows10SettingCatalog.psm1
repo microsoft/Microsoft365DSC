@@ -217,6 +217,21 @@ function Get-TargetResource
         $puaprotection,
 
         [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $engineupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $platformupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '4', '5')]
+        [System.String]
+        $securityintelligenceupdateschannel,
+
+        [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
         $realtimescandirection,
@@ -677,6 +692,21 @@ function Set-TargetResource
         $puaprotection,
 
         [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $engineupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $platformupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '4', '5')]
+        [System.String]
+        $securityintelligenceupdateschannel,
+
+        [Parameter()]
         [ValidateSet('0', '1', '2')]
         [System.String]
         $realtimescandirection,
@@ -1096,6 +1126,21 @@ function Test-TargetResource
         [ValidateSet('0', '1', '2')]
         [System.String]
         $puaprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $engineupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $platformupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '4', '5')]
+        [System.String]
+        $securityintelligenceupdateschannel,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]

@@ -10,6 +10,10 @@
 * IntuneAppProtectionPolicyAndroid
   * Added support for 'RequireClass3Biometrics' parameter
   * Added support for 'RequirePinAfterBiometricChange' parameter
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Added support for 'engineupdateschannel' parameter
+  * Added support for 'platformupdateschannel' parameter
+  * Added support for 'securityintelligenceupdateschannel' parameter
 * M365DSCRuleEvaluation
   * Initial Release.
 * O365OrgSettings
