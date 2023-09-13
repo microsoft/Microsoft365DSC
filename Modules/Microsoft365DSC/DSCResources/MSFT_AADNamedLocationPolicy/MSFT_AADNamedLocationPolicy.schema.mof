@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("AADNamedLocationPolicy")]
 class MSFT_AADNamedLocationPolicy : OMI_BaseResource
 {
-    [Write, Description("Specifies the Odata Type of a Named Location object in Azure Active Directory"), ValueMap{"#microsoft.graph.countryNamedLocation","#microsoft.graph.ipNamedLocation"}, Values{"#microsoft.graph.countryNamedLocation","#microsoft.graph.ipNamedLocation"}] string OdataType;
+    [Write, Description("Specifies the Odata Type of a Named Location object in Azure Active Directory"), ValueMap{"#microsoft.graph.countryNamedLocation","#microsoft.graph.ipNamedLocation","#microsoft.graph.compliantNetworkNamedLocation"}, Values{"#microsoft.graph.countryNamedLocation","#microsoft.graph.ipNamedLocation","#microsoft.graph.compliantNetworkNamedLocation"}] string OdataType;
     [Write, Description("Specifies the ID of a Named Location in Azure Active Directory.")] String Id;
     [Key, Description("Specifies the Display Name of a Named Location in Azure Active Directory")] string DisplayName;
     [Write, Description("Specifies the IP ranges of the Named Location in Azure Active Directory")] String IpRanges[];

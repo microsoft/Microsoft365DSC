@@ -5,6 +5,8 @@
 * AADNamedLocationPolicy
   * Set default value for CountryLookupMethod and removed unwanted properties
     FIXES [#3656](https://github.com/microsoft/Microsoft365DSC/issues/3656)
+  * Added support for compliantNetworkNamedLocation.
+    FIXES [#3422](https://github.com/microsoft/Microsoft365DSC/issues/3422)
 * IntuneAppProtectionPolicyAndroid
   * Added support for 'RequireClass3Biometrics' parameter
   * Added support for 'RequirePinAfterBiometricChange' parameter
