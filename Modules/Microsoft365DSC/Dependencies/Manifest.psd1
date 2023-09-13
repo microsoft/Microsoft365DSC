@@ -45,6 +45,10 @@
             RequiredVersion = '2.5.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Beta.Reports'
+            RequiredVersion = '2.5.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Beta.Teams'
             RequiredVersion = '2.5.0'
         },

@@ -98,6 +98,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
+        $BlockWebShellCreationForServers,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
         $BlockWin32APICallsFromOfficeMacros,
 
         [Parameter()]
@@ -372,6 +377,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
+        $BlockWebShellCreationForServers,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
         $BlockWin32APICallsFromOfficeMacros,
 
         [Parameter()]
@@ -620,6 +630,11 @@ function Test-TargetResource
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWebShellCreationForServers,
 
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]

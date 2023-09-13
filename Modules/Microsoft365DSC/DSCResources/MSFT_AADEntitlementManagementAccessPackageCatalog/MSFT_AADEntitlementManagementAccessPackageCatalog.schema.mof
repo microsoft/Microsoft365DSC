@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("AADEntitlementManagementAccessPackageCatalog")]
 class MSFT_AADEntitlementManagementAccessPackageCatalog : OMI_BaseResource
 {
-    [Key, Description("The id of the access package catalog.")] String Id;
-    [Required, Description("The display name of the access package catalog.")] String DisplayName;
+    [Key, Description("The display name of the access package catalog.")] String DisplayName;
+    [Write, Description("The id of the access package catalog.")] String Id;
     [Write, Description("Has the value Published if the access packages are available for management.")] String CatalogStatus;
     [Write, Description("One of UserManaged or ServiceDefault."), ValueMap{"UserManaged","ServiceDefault"}, Values{"UserManaged","ServiceDefault"}] String CatalogType;
     [Write, Description("The description of the access package catalog.")] String Description;
