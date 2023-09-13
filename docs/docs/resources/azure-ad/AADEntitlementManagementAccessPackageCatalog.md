@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | The id of the access package catalog. | |
-| **DisplayName** | Required | String | The display name of the access package catalog. | |
+| **DisplayName** | Key | String | The display name of the access package catalog. | |
+| **Id** | Write | String | The id of the access package catalog. | |
 | **CatalogStatus** | Write | String | Has the value Published if the access packages are available for management. | |
 | **CatalogType** | Write | String | One of UserManaged or ServiceDefault. | `UserManaged`, `ServiceDefault` |
 | **Description** | Write | String | The description of the access package catalog. | |

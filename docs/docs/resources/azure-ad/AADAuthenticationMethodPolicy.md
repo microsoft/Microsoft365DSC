@@ -5,13 +5,13 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Description** | Write | String | A description of the policy. | |
-| **DisplayName** | Required | String | The name of the policy. | |
+| **DisplayName** | Key | String | The name of the policy. | |
 | **PolicyMigrationState** | Write | String | The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: premigration - means the authentication methods policy is used for authentication only, legacy policies are respected. migrationInProgress - means the authentication methods policy is used for both authenication and SSPR, legacy policies are respected. migrationComplete - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. unknownFutureValue - Evolvable enumeration sentinel value. Do not use. | `preMigration`, `migrationInProgress`, `migrationComplete`, `unknownFutureValue` |
 | **PolicyVersion** | Write | String | The version of the policy in use. | |
 | **ReconfirmationInDays** | Write | UInt32 | Days before the user will be asked to reconfirm their method. | |
 | **RegistrationEnforcement** | Write | MSFT_MicrosoftGraphregistrationEnforcement | Enforce registration at sign-in time. This property can be used to remind users to set up targeted authentication methods. | |
 | **SystemCredentialPreferences** | Write | MSFT_MicrosoftGraphsystemCredentialPreferences | Prompt users with their most-preferred credential for multifactor authentication. | |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
