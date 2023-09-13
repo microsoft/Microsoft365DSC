@@ -58,8 +58,8 @@ class MSFT_MicrosoftGraphmacosappleeventreceiver
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyMacOS")]
 class MSFT_IntuneDeviceConfigurationPolicyMacOS : OMI_BaseResource
 {
-    [Key, Description("")] String Id;
-    [Required, Description("")] String DisplayName;
+    [Write, Description("")] String Id;
+    [Key, Description("")] String DisplayName;
     [Write, Description("")] String Description;
     [Write, Description("")] Boolean AddingGameCenterFriendsBlocked;
     [Write, Description("")] Boolean AirDropBlocked;

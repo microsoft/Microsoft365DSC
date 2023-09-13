@@ -11,8 +11,8 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiConfigurationPolicyAndroidDeviceAdministrator")]
 class MSFT_IntuneWifiConfigurationPolicyAndroidDeviceAdministrator : OMI_BaseResource
 {
-    [Key, Description("Id of the Intune Policy.")] String Id;
-    [Required, Description("Display name of the Intune Policy.")] String DisplayName;
+    [Write, Description("Id of the Intune Policy.")] String Id;
+    [Key, Description("Display name of the Intune Policy.")] String DisplayName;
     [Write, Description("Description of the Intune Policy.")] String Description;
     [Write, Description("Connect automatically.")] Boolean ConnectAutomatically;
     [Write, Description("Connect when network name is hidden.")] Boolean ConnectWhenNetworkNameIsHidden;
