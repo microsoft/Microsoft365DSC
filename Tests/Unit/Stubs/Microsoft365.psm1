@@ -26526,6 +26526,160 @@ function Get-MgBetaRoleManagementDirectoryRoleDefinition
         $HttpPipelineAppend
     )
 }
+function Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleEligibilityScheduleId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [System.String]
+        $UnifiedRoleEligibilityScheduleRequestId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function New-MgBetaEntitlementManagementAccessPackage
 {
     [CmdletBinding()]
@@ -26717,10 +26871,6 @@ function New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         $CustomExtensionStageSettings,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [PSObject]
         $AccessPackageCatalog,
 
@@ -26789,8 +26939,8 @@ function New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         $ExpirationDateTime,
 
         [Parameter()]
-        [PSObject]
-        $BodyParameter,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -26801,12 +26951,16 @@ function New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         $AccessPackage,
 
         [Parameter()]
-        [System.String]
-        $ModifiedBy,
+        [PSObject]
+        $BodyParameter,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -26882,16 +27036,16 @@ function New-MgBetaEntitlementManagementAccessPackageCatalog
         $Confirm,
 
         [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
 
         [Parameter()]
         [PSObject]
         $AccessPackageResources,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
 
         [Parameter()]
         [PSObject]
@@ -26959,12 +27113,12 @@ function New-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackageBy
         $HttpPipelineAppend,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
         [System.String]
         $AccessPackageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -27016,12 +27170,12 @@ function New-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef
         $HttpPipelineAppend,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
         [System.String]
         $AccessPackageId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -27515,16 +27669,20 @@ function New-MgBetaRoleManagementDirectoryRoleDefinition
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsPrivileged,
+
+        [Parameter()]
         [PSObject]
         $HttpPipelinePrepend,
 
         [Parameter()]
         [System.String]
         $Version,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -27563,12 +27721,242 @@ function New-MgBetaRoleManagementDirectoryRoleDefinition
         $ProxyCredential,
 
         [Parameter()]
-        [System.String]
-        $TemplateId,
+        [System.Management.Automation.SwitchParameter]
+        $Break,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsEnabled,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaRoleManagementDirectoryRoleEligibilitySchedule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $MemberType,
+
+        [Parameter()]
+        [PSObject]
+        $Principal,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $CreatedUsing,
+
+        [Parameter()]
+        [System.DateTime]
+        $ModifiedDateTime,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $ScheduleInfo,
+
+        [Parameter()]
+        [PSObject]
+        $DirectoryScope,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $PrincipalId,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Status,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionId,
+
+        [Parameter()]
+        [PSObject]
+        $RoleDefinition,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $AppScope,
+
+        [Parameter()]
+        [System.String]
+        $DirectoryScopeId,
+
+        [Parameter()]
+        [System.String]
+        $AppScopeId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Justification,
+
+        [Parameter()]
+        [PSObject]
+        $Principal,
+
+        [Parameter()]
+        [System.DateTime]
+        $CreatedDateTime,
+
+        [Parameter()]
+        [System.String]
+        $Action,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $ScheduleInfo,
+
+        [Parameter()]
+        [PSObject]
+        $DirectoryScope,
+
+        [Parameter()]
+        [PSObject]
+        $TargetSchedule,
+
+        [Parameter()]
+        [System.String]
+        $ApprovalId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $CustomData,
+
+        [Parameter()]
+        [PSObject]
+        $CreatedBy,
+
+        [Parameter()]
+        [System.String]
+        $PrincipalId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsValidationOnly,
+
+        [Parameter()]
+        [System.DateTime]
+        $CompletedDateTime,
+
+        [Parameter()]
+        [PSObject]
+        $TicketInfo,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Status,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $TargetScheduleId,
+
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionId,
+
+        [Parameter()]
+        [PSObject]
+        $RoleDefinition,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $AppScope,
+
+        [Parameter()]
+        [System.String]
+        $DirectoryScopeId,
+
+        [Parameter()]
+        [System.String]
+        $AppScopeId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
 
         [Parameter()]
         [PSObject]
@@ -27605,15 +27993,15 @@ function Remove-MgBetaEntitlementManagementAccessPackage
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
         [System.String]
         $AccessPackageId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -27777,10 +28165,6 @@ function Remove-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackag
     param(
         [Parameter()]
         [System.String]
-        $AccessPackageId1,
-
-        [Parameter()]
-        [System.String]
         $Id,
 
         [Parameter()]
@@ -27814,6 +28198,10 @@ function Remove-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackag
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageId1,
 
         [Parameter()]
         [System.String]
@@ -27861,8 +28249,16 @@ function Remove-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef
         $InputObject,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [PSObject]
         $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.String]
+        $AccessPackageId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -27871,14 +28267,6 @@ function Remove-MgBetaEntitlementManagementAccessPackageIncompatibleGroupByRef
         [Parameter()]
         [System.String]
         $GroupId,
-
-        [Parameter()]
-        [System.String]
-        $AccessPackageId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -27923,15 +28311,15 @@ function Remove-MgBetaEntitlementManagementAccessPackageResourceRoleScope
 
         [Parameter()]
         [System.String]
+        $AccessPackageResourceRoleScopeId,
+
+        [Parameter()]
+        [System.String]
         $AccessPackageId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
-
-        [Parameter()]
-        [System.String]
-        $AccessPackageResourceRoleScopeId,
 
         [Parameter()]
         [PSObject]
@@ -28213,10 +28601,6 @@ function Remove-MgBetaRoleManagementDirectoryRoleDefinition
 
         [Parameter()]
         [System.String]
-        $UnifiedRoleDefinitionId,
-
-        [Parameter()]
-        [System.String]
         $IfMatch,
 
         [Parameter()]
@@ -28232,6 +28616,10 @@ function Remove-MgBetaRoleManagementDirectoryRoleDefinition
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
+        [System.String]
+        $UnifiedRoleDefinitionId,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break,
 
@@ -28244,6 +28632,10 @@ function Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [PSObject]
+        $CustomExtensionHandlers,
+
         [Parameter()]
         [System.String]
         $Description,
@@ -28259,10 +28651,6 @@ function Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         [Parameter()]
         [PSObject]
         $CustomExtensionStageSettings,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -28287,10 +28675,6 @@ function Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $AccessPackageId,
 
         [Parameter()]
         [PSObject]
@@ -28321,8 +28705,8 @@ function Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         $VerifiableCredentialSettings,
 
         [Parameter()]
-        [PSObject]
-        $CustomExtensionHandlers,
+        [System.String]
+        $AccessPackageId,
 
         [Parameter()]
         [System.Int32]
@@ -28341,8 +28725,8 @@ function Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         $ExpirationDateTime,
 
         [Parameter()]
-        [PSObject]
-        $BodyParameter,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -28353,12 +28737,16 @@ function Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy
         $AccessPackage,
 
         [Parameter()]
-        [System.String]
-        $ModifiedBy,
+        [PSObject]
+        $BodyParameter,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -28462,12 +28850,12 @@ function Update-MgBetaEntitlementManagementAccessPackage
         $AccessPackageResourceRoleScopes,
 
         [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -28555,16 +28943,16 @@ function Update-MgBetaEntitlementManagementAccessPackageCatalog
         $Confirm,
 
         [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
 
         [Parameter()]
         [PSObject]
         $AccessPackageResources,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
 
         [Parameter()]
         [PSObject]
@@ -28672,12 +29060,12 @@ function Update-MgBetaEntitlementManagementConnectedOrganization
         $InternalSponsors,
 
         [Parameter()]
-        [System.String]
-        $ModifiedBy,
-
-        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $ModifiedBy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -28802,6 +29190,18 @@ function Update-MgBetaRoleManagementDirectoryRoleDefinition
         $AdditionalProperties,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsPrivileged,
+
+        [Parameter()]
         [System.String]
         $UnifiedRoleDefinitionId,
 
@@ -28812,10 +29212,6 @@ function Update-MgBetaRoleManagementDirectoryRoleDefinition
         [Parameter()]
         [System.String]
         $Version,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -28854,16 +29250,12 @@ function Update-MgBetaRoleManagementDirectoryRoleDefinition
         $ProxyCredential,
 
         [Parameter()]
-        [System.String]
-        $TemplateId,
+        [System.Management.Automation.SwitchParameter]
+        $Break,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $IsEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
 
         [Parameter()]
         [PSObject]
@@ -78967,3 +79359,371 @@ function Set-CsUserCallingSettings
     )
 }
 #endregion
+#region Microsoft.Graph.Beta.DeviceManagement.Administration
+function Get-MgBetaDeviceManagementRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgBetaDeviceManagementRoleScopeTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $RoleScopeTagId,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaDeviceManagementRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $Permissions,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [PSObject]
+        $RoleAssignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsBuiltIn,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $RolePermissions,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsBuiltInRoleDefinition,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgBetaDeviceManagementRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Update-MgBetaDeviceManagementRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $Permissions,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [PSObject]
+        $RoleAssignments,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsBuiltIn,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionId,
+
+        [Parameter()]
+        [PSObject]
+        $RolePermissions,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsBuiltInRoleDefinition,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+#endregion
+

@@ -1375,7 +1375,7 @@ function Confirm-M365DSCDependencies
             {
                 $ErrorMessage += '    * ' + $invalidDependency.ModuleName + "`r`n"
             }
-            $ErrorMessage += 'Please run Update-M365DSCDependencies as Administrator.'
+            $ErrorMessage += 'Please run Update-M365DSCDependencies with scope "currentUser" or as Administrator.'
             $ErrorMessage += 'Please run Uninstall-M365DSCOutdatedDependencies.'
             $Script:M365DSCDependenciesValidated = $false
             Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
@@ -2257,8 +2257,14 @@ function Get-SPOUserProfilePropertyInstance
 .Description
 This function downloads and installs the Dev branch of Microsoft365DSC on the local machine
 
+.Parameter Scope
+Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+
 .Example
 Install-M365DSCDevBranch
+
+.Example
+Install-M365DSCDevBranch -Scope CurrentUser
 
 .Functionality
 Public
@@ -2266,68 +2272,82 @@ Public
 function Install-M365DSCDevBranch
 {
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter()]
+        [ValidateSet("CurrentUser", "AllUsers")]
+        $Scope = "AllUsers"
+    )
 
-    #region Download and Extract Dev branch's ZIP
-    Write-Host 'Downloading the Zip package...' -NoNewline
-    $url = 'https://github.com/microsoft/Microsoft365DSC/archive/Dev.zip'
-    $output = "$($env:Temp)\dev.zip"
-    $extractPath = $env:Temp + '\O365Dev'
-    Write-Host 'Done' -ForegroundColor Green
+    try {
 
-    Invoke-WebRequest -Uri $url -OutFile $output
+        #region Download and Extract Dev branch's ZIP
+        Write-Host 'Downloading the Zip package...' -NoNewline
+        $url = 'https://github.com/microsoft/Microsoft365DSC/archive/Dev.zip'
+        $output = "$($env:Temp)\dev.zip"
+        $extractPath = $env:Temp + '\O365Dev'
+        Write-Host 'Done' -ForegroundColor Green
 
-    Expand-Archive $output -DestinationPath $extractPath -Force
-    #endregion
+        Invoke-WebRequest -Uri $url -OutFile $output
 
-    #region Install All Dependencies
-    $manifest = Import-PowerShellDataFile "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\Microsoft365DSC.psd1"
-    $dependencies = $manifest.RequiredModules
-    if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
-    {
-        foreach ($dependency in $dependencies)
+        Expand-Archive $output -DestinationPath $extractPath -Force
+        #endregion
+
+        #region Install All Dependencies
+        $manifest = Import-PowerShellDataFile "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\Microsoft365DSC.psd1"
+        $dependencies = $manifest.RequiredModules
+        if ((-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq "AllUsers"))
         {
-            Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
-            $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-            if ($null -eq $existingModule)
+            Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+        }
+        else
+        {
+            foreach ($dependency in $dependencies)
             {
-                Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope 'AllUsers' | Out-Null
+                Write-Host "Installing {$($dependency.ModuleName)}..." -NoNewline
+                $existingModule = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+                if ($null -eq $existingModule)
+                {
+                    Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -AllowClobber -Scope $Scope | Out-Null
+                }
+                Import-Module $dependency.ModuleName -Force | Out-Null
+                Write-Host 'Done' -ForegroundColor Green
             }
-            Import-Module $dependency.ModuleName -Force | Out-Null
-            Write-Host 'Done' -ForegroundColor Green
         }
-    }
-    else
-    {
-        Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
-    }
-    #endregion
+        #endregion
 
-    #region Install M365DSC
-    Write-Host 'Updating the Core Microsoft365DSC module...' -NoNewline
-    $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC\'
-    $currentVersionPath = $defaultPath + ([Version]$($manifest.ModuleVersion)).ToString()
+        #region Install M365DSC
+        Write-Host 'Updating the Core Microsoft365DSC module...' -NoNewline
+        $defaultPath = 'C:\Program Files\WindowsPowerShell\Modules\Microsoft365DSC\'
+        $currentVersionPath = $defaultPath + ([Version]$($manifest.ModuleVersion)).ToString()
 
-    Copy-Item "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\*" `
-        -Destination $defaultPath -Recurse -Force
+        Copy-Item "$extractPath\Microsoft365DSC-Dev\Modules\Microsoft365DSC\*" `
+            -Destination $defaultPath -Recurse -Force
 
-    Import-Module ($defaultPath + 'Microsoft365DSC.psd1') -Force | Out-Null
-    $oldModule = Get-Module 'Microsoft365DSC' | Where-Object -FilterScript { $_.ModuleBase -eq $currentVersionPath }
-    Remove-Module $oldModule -Force | Out-Null
-    if (Test-Path $currentVersionPath)
-    {
-        try
+        Import-Module ($defaultPath + 'Microsoft365DSC.psd1') -Force | Out-Null
+        $oldModule = Get-Module 'Microsoft365DSC' | Where-Object -FilterScript { $_.ModuleBase -eq $currentVersionPath }
+        Remove-Module $oldModule -Force | Out-Null
+        if (Test-Path $currentVersionPath)
         {
-            Remove-Item $currentVersionPath -Recurse -Confirm:$false -Force `
-                -ErrorAction Stop
+            try
+            {
+                Remove-Item $currentVersionPath -Recurse -Confirm:$false -Force `
+                    -ErrorAction Stop
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
-        catch
-        {
-            Write-Verbose -Message $_
-        }
+        Write-Host 'Done' -ForegroundColor Green
+        #endregion
     }
-    Write-Host 'Done' -ForegroundColor Green
-    #endregion
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error installing Dev Branch:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source)
+        Write-Error $_
+    }
 }
 
 <#
@@ -2734,11 +2754,20 @@ This function installs all missing M365DSC dependencies
 .Parameter Force
 Specifies that all dependencies should be forcefully imported again.
 
+.Parameter ValidateOnly
+Specifies that the function should only return the dependencies that are not installed.
+
+.Parameter Scope
+Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+
 .Example
 Update-M365DSCDependencies
 
 .Example
 Update-M365DSCDependencies -Force
+
+.Example
+Update-M365DSCDependencies -Scope CurrenUser
 
 .Functionality
 Public
@@ -2754,68 +2783,82 @@ function Update-M365DSCDependencies
 
         [Parameter()]
         [Switch]
-        $ValidateOnly
+        $ValidateOnly,
+        [Parameter()]
+        [ValidateSet("CurrentUser", "AllUsers")]
+        $Scope = "AllUsers"
     )
 
-    $Global:MaximumFunctionCount = 32767
-
-    $InformationPreference = 'Continue'
-    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
-    $dependencies = $manifest.Dependencies
-    $i = 1
-
-    $returnValue = @()
-
-    foreach ($dependency in $dependencies)
+    try
     {
-        Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $dependencies.Count * 100)
-        try
-        {
-            if (-not $Force)
-            {
-                $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
-            }
+        $Global:MaximumFunctionCount = 32767
 
-            if ((-not $found -or $Force) -and -not $ValidateOnly)
+        $InformationPreference = 'Continue'
+        $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+        $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
+        $dependencies = $manifest.Dependencies
+        $i = 1
+
+        $returnValue = @()
+
+        foreach ($dependency in $dependencies)
+        {
+            Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $dependencies.Count * 100)
+            try
             {
-                if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+                if (-not $Force)
                 {
-                    Write-Information -MessageData "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
-                    Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
-                    if ($dependency.ModuleName -like 'Microsoft.Graph*')
+                    $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
+                }
+
+                if ((-not $found -or $Force) -and -not $ValidateOnly)
+                {
+                    if ((-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq "AllUsers"))
                     {
-                        Remove-Module 'Microsoft.Graph.Authentication' -Force -ErrorAction SilentlyContinue
+                        Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
                     }
-                    Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
-                    Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope 'AllUsers'
+                    else
+                    {
+                        Write-Information -MessageData "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
+                        Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
+                        if ($dependency.ModuleName -like 'Microsoft.Graph*')
+                        {
+                            Remove-Module 'Microsoft.Graph.Authentication' -Force -ErrorAction SilentlyContinue
+                        }
+                        Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
+                        Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope "$Scope"
+                    }
                 }
-                else
+
+                if (-not $found -and $validateOnly)
                 {
-                    Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+                    $returnValue += $dependency
                 }
             }
-
-            if (-not $found -and $validateOnly)
+            catch
             {
-                $returnValue += $dependency
+                Write-Host "Could not update or import {$($dependency.ModuleName)}"
+                Write-Host "Error-Mesage: $($_.Exception.Message)"
             }
+
+            $i++
         }
-        catch
+
+        # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
+        Write-Progress -Activity 'Scanning Dependencies' -Completed
+
+        if ($ValidateOnly)
         {
-            Write-Host "Could not update or import {$($dependency.ModuleName)}"
-            Write-Host "Error-Mesage: $($_.Exception.Message)"
+            return $returnValue
         }
 
-        $i++
     }
-
-    # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
-    Write-Progress -Activity 'Scanning Dependencies' -Completed
-
-    if ($ValidateOnly)
+    catch
     {
-        return $returnValue
+        New-M365DSCLogEntry -Message 'Error Updating Dependencies:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source)
+        Write-Error $_
     }
 }
 
@@ -2832,60 +2875,83 @@ function Uninstall-M365DSCOutdatedDependencies
     [CmdletBinding()]
     param()
 
-    $InformationPreference = 'Continue'
-
-    [array]$microsoft365DscModules = Get-Module Microsoft365DSC -ListAvailable
-    $outdatedMicrosoft365DscModules = $microsoft365DscModules | Sort-Object Version | Select-Object -SkipLast 1
-
-    foreach ($module in $outdatedMicrosoft365DscModules)
+    try
     {
-        try
+        $InformationPreference = 'Continue'
+
+        [array]$microsoft365DscModules = Get-Module Microsoft365DSC -ListAvailable
+        $outdatedMicrosoft365DscModules = $microsoft365DscModules | Sort-Object Version | Select-Object -SkipLast 1
+
+        foreach ($module in $outdatedMicrosoft365DscModules)
         {
-            Write-Information -MessageData "Uninstalling $($module.Name) Version {$($module.Version)}"
-            if (Test-Path -Path $($module.Path))
+            try
             {
-                Remove-Item $($module.Path) -Force -Recurse
+                Write-Information -MessageData "Uninstalling $($module.Name) Version {$($module.Version)}"
+                if (Test-Path -Path $($module.Path))
+                {
+                    Remove-Item $($module.Path) -Force -Recurse
+                }
+            }
+            catch
+            {
+                New-M365DSCLogEntry -Message "Could not uninstall $($module.Name) Version $($module.Version)" `
+                    -Exception $_ `
+                    -Source $($MyInvocation.MyCommand.Source)
+                Write-Host "Could not uninstall $($module.Name) Version $($module.Version)"
             }
         }
-        catch
+
+        $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+        $manifest = Import-PowerShellDataFile "$currentPath\Dependencies\Manifest.psd1"
+
+        $allDependenciesExceptAuth = $manifest.Dependencies | Where-Object { $_.ModuleName -ne 'Microsoft.Graph.Authentication' }
+
+        $i = 1
+        foreach ($dependency in $allDependenciesExceptAuth)
         {
-            Write-Host "Could not uninstall $($module.Name) Version $($module.Version) "
-        }
-    }
-
-    $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-    $manifest = Import-PowerShellDataFile "$currentPath\Dependencies\Manifest.psd1"
-
-    $allDependenciesExceptAuth = $manifest.Dependencies | Where-Object { $_.ModuleName -ne 'Microsoft.Graph.Authentication' }
-
-    $i = 1
-    foreach ($dependency in $allDependenciesExceptAuth)
-    {
-        Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $allDependenciesExceptAuth.Count * 100)
-        try
-        {
-            $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
-            foreach ($foundModule in $found)
+            Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $allDependenciesExceptAuth.Count * 100)
+            try
             {
-                try
+                $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
+                foreach ($foundModule in $found)
                 {
-                    Write-Information -MessageData "Uninstalling $($foundModule.Name) Version {$($foundModule.Version)}"
-                    if (Test-Path -Path $($foundModule.Path))
+                    try
                     {
-                        Remove-Item $($foundModule.ModuleBase) -Force -Recurse
+                        Write-Information -MessageData "Uninstalling $($foundModule.Name) Version {$($foundModule.Version)}"
+                        if (Test-Path -Path $($foundModule.Path))
+                        {
+                            Remove-Item $($foundModule.ModuleBase) -Force -Recurse
+                        }
+                    }
+                    catch
+                    {
+                        New-M365DSCLogEntry -Message "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)" `
+                            -Exception $_ `
+                            -Source $($MyInvocation.MyCommand.Source)
+                        Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)"
                     }
                 }
-                catch
-                {
-                    Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version) "
-                }
             }
+            catch
+            {
+                Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+            }
+            $i++
         }
         catch
         {
-            Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+            New-M365DSCLogEntry -Message 'Error Uninstalling Outdated Dependencies:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source)
+            Write-Error $_
         }
-        $i++
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error Uninstalling Outdated Dependencies:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source)
+        Write-Error $_
     }
 
     $authModule = $manifest.Dependencies | Where-Object { $_.ModuleName -eq 'Microsoft.Graph.Authentication' }
@@ -4011,8 +4077,17 @@ function Test-M365DSCModuleValidity
 .Description
 This function updates the module, dependencies and uninstalls outdated dependencies.
 
+.Parameter Scope
+Specifies the scope of the update of the module. The default value is AllUsers(needs to run as elevated user).
+
 .Example
 Update-M365DSCModule
+
+.Example
+Update-M365DSCModule -Scope CurrentUser
+
+.Example
+Update-M365DSCModule -Scope AllUsers
 
 .Functionality
 Public
@@ -4020,10 +4095,14 @@ Public
 function Update-M365DSCModule
 {
     [CmdletBinding()]
-    param()
+    param(
+        [Parameter()]
+        [ValidateSet("CurrentUser", "AllUsers")]
+        $Scope = "AllUsers"
+    )
     try
     {
-        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop
+        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop -Scope $Scope
     }
     catch
     {
@@ -4047,9 +4126,12 @@ function Update-M365DSCModule
     }
     catch
     {
+        New-M365DSCLogEntry -Message 'Error Updating Module:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source)
         throw $_
     }
-    Update-M365DSCDependencies
+    Update-M365DSCDependencies -Scope $Scope
     Uninstall-M365DSCOutdatedDependencies
 }
 

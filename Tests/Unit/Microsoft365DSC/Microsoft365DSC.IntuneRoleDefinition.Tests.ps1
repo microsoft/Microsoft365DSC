@@ -33,13 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgDeviceManagementRoleDefinition -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementRoleDefinition -MockWith {
             }
 
-            Mock -CommandName New-MgDeviceManagementRoleDefinition -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementRoleDefinition -MockWith {
             }
 
-            Mock -CommandName Remove-MgDeviceManagementRoleDefinition -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementRoleDefinition -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -65,7 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementRoleDefinition -MockWith {
                     return $null
                 }
             }
@@ -77,7 +77,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgDeviceManagementRoleDefinition -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceManagementRoleDefinition -Exactly 1
             }
         }
 
@@ -94,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementRoleDefinition -MockWith {
                     return @{
                         Description     = 'FakeStringValue'
                         DisplayName     = 'FakeStringValue'
@@ -120,7 +120,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgDeviceManagementRoleDefinition -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementRoleDefinition -Exactly 1
             }
         }
         Context -Name 'The IntuneRoleDefinition Exists and Values are already in the desired state' -Fixture {
@@ -136,7 +136,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementRoleDefinition -MockWith {
                     return @{
                         Description     = 'FakeStringValue'
                         DisplayName     = 'FakeStringValue'
@@ -171,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential                = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementRoleDefinition -MockWith {
                     return @{
                         Description     = 'FakeStringValue'
                         DisplayName     = 'FakeStringValue'
@@ -197,7 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgDeviceManagementRoleDefinition -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementRoleDefinition -Exactly 1
             }
         }
 
@@ -209,7 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgDeviceManagementRoleDefinition -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementRoleDefinition -MockWith {
                     return @{
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'

@@ -400,6 +400,16 @@ function Set-TargetResource
         }
         New-RemoteDomain -Name $Name -DomainName $DomainName
 
+        $tries = 1
+        $remoteDomain = $null
+        do
+        {
+            Write-Verbose -Message 'Waiting for 10 seconds'
+            Start-Sleep -Seconds 10
+            $remoteDomain = Get-RemoteDomain -Identity $Name -ErrorAction SilentlyContinue
+            $tries++
+        } until ($null -eq $remoteDomain -or $tries -le 12)
+
         # Configure new remote domain
         $RemoteDomainParams.Remove('DomainName') | Out-Null
         Set-RemoteDomain @RemoteDomainParams

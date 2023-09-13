@@ -193,7 +193,7 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         [ValidateSet('clientIpAddress','authenticatorAppGps')]
-        $CountryLookupMethod,
+        $CountryLookupMethod = 'clientIpAddress',
 
         [Parameter()]
         [System.Boolean]
@@ -248,10 +248,10 @@ function Set-TargetResource
     $desiredValues = @{
         '@odata.type' = $OdataType
         displayName   = $DisplayName
-        isTrusted     = $IsTrusted
     }
     if ($OdataType -eq '#microsoft.graph.ipNamedLocation')
     {
+        $desiredValues.Add('isTrusted', $IsTrusted)
         $IpRangesValue = @()
         foreach ($IpRange in $IpRanges)
         {
@@ -291,8 +291,7 @@ function Set-TargetResource
     }
     # Named Location should exist and will be configured to desired state
     elseif ($Ensure -eq 'Present' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
-    {
-        $desiredValues.Add('NamedLocationId', $currentAADNamedLocation.Id) | Out-Null
+    {   
         $VerboseAttributes = ($desiredValues | Out-String)
         Write-Verbose -Message "Updating existing AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
 

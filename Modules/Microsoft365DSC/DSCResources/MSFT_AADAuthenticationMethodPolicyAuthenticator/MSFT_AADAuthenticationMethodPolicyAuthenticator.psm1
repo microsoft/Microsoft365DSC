@@ -29,7 +29,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
-
         #endregion
 
         [Parameter()]
@@ -921,6 +920,9 @@ function Export-TargetResource
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IncludeTargets' -IsCIMArray:$True
             }
             $currentDSCBlock = Remove-M365DSCCimInstanceTrailingCharacterFromExport -DSCBlock $currentDSCBlock
+
+            # FIX #3645
+            $currentDSCBlock = $currentDSCBlock.Replace("}                    State = 'default'`r`n","}`r`n                    State = 'default'`r`n")
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

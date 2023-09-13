@@ -1,0 +1,32 @@
+{
+    "resourceName": "IntuneEndpointDetectionAndResponsePolicyWindows10",
+    "description": "This resource configures an Intune Endpoint Detection and Response Policy for Windows 10.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -2,9 +2,7 @@ import { ApplicationInsights } from '@microsoft/applicationinsights-web';
 import { ReactPlugin } from '@microsoft/applicationinsights-react-js';
 
 let reactPlugin = new ReactPlugin();
-let appInsights = new ApplicationInsights({
-    config: {}
-});
+let appInsights;
 
 /**
  * Create the App Insights Telemetry Service

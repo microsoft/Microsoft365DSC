@@ -1,7 +1,7 @@
 # Change log for Microsoft365DSC
 
 * AADAuthenticationMethodPolicy
-  * FIXES [[[#3588](https://github.com/microsoft/Microsoft365DSC/issues/3588)]]
+  * FIXES [[#3588](https://github.com/microsoft/Microsoft365DSC/issues/3588)]
 * IntuneRoleAssignment
   * FIXES [[#3590](https://github.com/microsoft/Microsoft365DSC/issues/3590)]
 * AADGroupsSettings
@@ -9,6 +9,44 @@
 * EXOSafeAttachmentPolicy
   * Deprecated ActionOnError Parameter
     FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Initial release
+    FIXES [#3349](https://github.com/microsoft/Microsoft365DSC/issues/3349)
+* O365OrgSettings
+  * Updated logic of the Get to return null if permissions are not granted for
+    a given API.
+  * Updated the list of required permissions.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.3.0
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.174.
+
+# 1.23.830.1
+
+* O365SearchAndintelligenceConfigurations
+  * Removed support for Service Principal Auth, which the cmdlet never supported.
+* SPOHomeSite
+  * Fixes an issue if no home site exists
+    FIXES [#3577](https://github.com/microsoft/Microsoft365DSC/issues/3577)
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.4.0.
+  * Updated ReverseDSC to version 2.0.0.18
+* MISC
+  * Fixes an issue with the generic export CIM Instance logic.
+    FIXES [#3610](https://github.com/microsoft/Microsoft365DSC/issues/3610)
+
+# 1.23.823.1
+
+* AADAuthorizationPolicy
+  * Fix issue with property PermissionGrantPolicyIdsAssignedToDefaultUserRole
+    FIXES [#3594](https://github.com/microsoft/Microsoft365DSC/issues/3594)
+* AADGroupsSettings
+  * Add support for enabling sensitivity labels in M365-groups
+* EXOSafeAttachmentPolicy
+  * Deprecated ActionOnError Parameter
+    FIXES [#3579](https://github.com/microsoft/Microsoft365DSC/issues/3579)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Initial release
+    FIXES [#3349](https://github.com/microsoft/Microsoft365DSC/issues/3349)
 * O365OrgSettings
   * Updated logic of the Get to return null if permissions are not granted for
     a given API.

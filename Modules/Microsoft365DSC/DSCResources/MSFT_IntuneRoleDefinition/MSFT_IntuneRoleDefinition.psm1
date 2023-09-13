@@ -91,7 +91,7 @@ function Get-TargetResource
 
         if ($Id -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')
         {
-            $getValue = Get-MgDeviceManagementRoleDefinition -RoleDefinitionId $id -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaDeviceManagementRoleDefinition -RoleDefinitionId $id -ErrorAction SilentlyContinue
             if ($null -ne $getValue)
             {
                 Write-Verbose -Message "Found something with id {$id}"
@@ -102,7 +102,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Nothing with id {$id} was found"
             $Filter = "displayName eq '$DisplayName'"
-            $getValue = Get-MgDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaDeviceManagementRoleDefinition -Filter $Filter -ErrorAction SilentlyContinue
             if ($null -ne $getValue)
             {
                 Write-Verbose -Message "Found something with displayname {$DisplayName}"
@@ -271,7 +271,7 @@ function Set-TargetResource
             roleScopeTagIds = $ScopeTagIds
         }
 
-        $policy = New-MgDeviceManagementRoleDefinition -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementRoleDefinition -BodyParameter $CreateParameters
 
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -307,14 +307,14 @@ function Set-TargetResource
             roleScopeTagIds = $ScopeTagIds
         }
 
-        Update-MgDeviceManagementRoleDefinition -BodyParameter $UpdateParameters `
+        Update-MgBetaDeviceManagementRoleDefinition -BodyParameter $UpdateParameters `
             -RoleDefinitionId $currentInstance.Id
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Role Definition {$DisplayName}"
-        Remove-MgDeviceManagementRoleDefinition -RoleDefinitionId $currentInstance.Id
+        Remove-MgBetaDeviceManagementRoleDefinition -RoleDefinitionId $currentInstance.Id
     }
 }
 
@@ -487,7 +487,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-MgDeviceManagementRoleDefinition `
+        [array]$getValue = Get-MgBetaDeviceManagementRoleDefinition `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceAndAppManagementRoleDefinition'  `
@@ -495,7 +495,7 @@ function Export-TargetResource
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgDeviceManagementRoleDefinition
+            [array]$getValue = Get-MgBetaDeviceManagementRoleDefinition
             -ErrorAction Stop
         }
         $i = 1

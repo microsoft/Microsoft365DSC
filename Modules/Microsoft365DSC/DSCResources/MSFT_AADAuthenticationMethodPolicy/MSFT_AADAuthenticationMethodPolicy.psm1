@@ -37,7 +37,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
-
         #endregion
 
         [Parameter()]
