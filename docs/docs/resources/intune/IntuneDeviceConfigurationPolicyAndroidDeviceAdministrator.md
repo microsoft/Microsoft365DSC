@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Id of the Intune policy. | |
-| **DisplayName** | Required | String | Display name of the Intune policy. | |
+| **Id** | Write | String | Id of the Intune policy. | |
+| **DisplayName** | Key | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
 | **AppsBlockClipboardSharing** | Write | Boolean | Block clipboard sharing between apps (Samsung KNOX Standard 4.0+). | |
 | **AppsBlockCopyPaste** | Write | Boolean | Block copy and paste functionality. | |

@@ -32,8 +32,8 @@
 | **CustomXml** | Write | String | Custom XML commands that configures the VPN connection. (UTF8 encoded byte array) | |
 | **ServerCollection** | Write | MSFT_MicrosoftGraphvpnServer[] | List of VPN Servers on the network. Make sure end users can access these network locations. This collection can contain a maximum of 500 elements. | |
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
-| **DisplayName** | Required | String | Admin provided name of the device configuration. | |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **DisplayName** | Key | String | Admin provided name of the device configuration. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |

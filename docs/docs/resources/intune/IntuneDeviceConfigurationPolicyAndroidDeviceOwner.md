@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | The Id of the policy. | |
-| **DisplayName** | Required | String | The display name of hte policy. | |
+| **Id** | Write | String | The Id of the policy. | |
+| **DisplayName** | Key | String | The display name of hte policy. | |
 | **Description** | Write | String | The description of the policy. | |
 | **AccountsBlockModification** | Write | Boolean | Block modification of accounts. Only supported on Dedicated devices. | |
 | **AppsAllowInstallFromUnknownSources** | Write | Boolean | When allowed, users can enable the 'unknown sources' setting to install apps from sources other than the Google Play Store. | |
