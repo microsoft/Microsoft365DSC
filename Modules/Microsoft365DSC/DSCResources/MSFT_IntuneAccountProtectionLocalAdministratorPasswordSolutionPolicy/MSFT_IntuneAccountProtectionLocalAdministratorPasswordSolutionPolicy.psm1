@@ -18,7 +18,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateSet(0, 1, 2)]
+        [ValidateRange(0, 2)]
         $BackupDirectory,
 
         [Parameter()]
@@ -54,7 +54,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateSet(1, 2, 3, 4)]
+        [ValidateRange(1, 4)]
         $PasswordComplexity,
 
         [Parameter()]
@@ -272,7 +272,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateSet(0, 1, 2)]
+        [ValidateRange(0, 2)]
         $BackupDirectory,
 
         [Parameter()]
@@ -308,7 +308,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateSet(1, 2, 3, 4)]
+        [ValidateRange(1, 4)]
         $PasswordComplexity,
 
         [Parameter()]
@@ -460,7 +460,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateSet(0, 1, 2)]
+        [ValidateRange(0, 2)]
         $BackupDirectory,
 
         [Parameter()]
@@ -496,7 +496,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateSet(1, 2, 3, 4)]
+        [ValidateRange(1, 4)]
         $PasswordComplexity,
 
         [Parameter()]
