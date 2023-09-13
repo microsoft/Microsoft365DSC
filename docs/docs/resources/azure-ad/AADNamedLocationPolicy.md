@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **OdataType** | Write | String | Specifies the Odata Type of a Named Location object in Azure Active Directory | `#microsoft.graph.countryNamedLocation`, `#microsoft.graph.ipNamedLocation` |
+| **OdataType** | Write | String | Specifies the Odata Type of a Named Location object in Azure Active Directory | `#microsoft.graph.countryNamedLocation`, `#microsoft.graph.ipNamedLocation`, `#microsoft.graph.compliantNetworkNamedLocation` |
 | **Id** | Write | String | Specifies the ID of a Named Location in Azure Active Directory. | |
 | **DisplayName** | Key | String | Specifies the Display Name of a Named Location in Azure Active Directory | |
 | **IpRanges** | Write | StringArray[] | Specifies the IP ranges of the Named Location in Azure Active Directory | |

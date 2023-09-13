@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter()]
-        [ValidateSet('#microsoft.graph.countryNamedLocation', '#microsoft.graph.ipNamedLocation')]
+        [ValidateSet('#microsoft.graph.countryNamedLocation', '#microsoft.graph.ipNamedLocation', '#microsoft.graph.compliantNetworkNamedLocation')]
         [System.String]
         $OdataType,
 
@@ -166,7 +166,7 @@ function Set-TargetResource
     param
     (
         [Parameter()]
-        [ValidateSet('#microsoft.graph.countryNamedLocation', '#microsoft.graph.ipNamedLocation')]
+        [ValidateSet('#microsoft.graph.countryNamedLocation', '#microsoft.graph.ipNamedLocation', '#microsoft.graph.compliantNetworkNamedLocation')]
         [System.String]
         $OdataType,
 
@@ -291,7 +291,7 @@ function Set-TargetResource
     }
     # Named Location should exist and will be configured to desired state
     elseif ($Ensure -eq 'Present' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
-    {   
+    {
         $VerboseAttributes = ($desiredValues | Out-String)
         Write-Verbose -Message "Updating existing AAD Named Location {$Displayname)} with attributes: $VerboseAttributes"
 
@@ -319,7 +319,7 @@ function Test-TargetResource
     param
     (
         [Parameter()]
-        [ValidateSet('#microsoft.graph.countryNamedLocation', '#microsoft.graph.ipNamedLocation')]
+        [ValidateSet('#microsoft.graph.countryNamedLocation', '#microsoft.graph.ipNamedLocation', '#microsoft.graph.compliantNetworkNamedLocation')]
         [System.String]
         $OdataType,
 

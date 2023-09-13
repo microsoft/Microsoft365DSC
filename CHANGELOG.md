@@ -5,24 +5,39 @@
 * AADNamedLocationPolicy
   * Set default value for CountryLookupMethod and removed unwanted properties
     FIXES [#3656](https://github.com/microsoft/Microsoft365DSC/issues/3656)
-* IntuneAccountProtectionPolicy
-  * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
-* IntuneAccountProtectionLocalUserGroupMembershipPolicy
-  * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
+  * Added support for compliantNetworkNamedLocation.
+    FIXES [#3422](https://github.com/microsoft/Microsoft365DSC/issues/3422)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Initial release
     FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
+* IntuneAccountProtectionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
 * IntuneAppProtectionPolicyAndroid
   * Added support for 'RequireClass3Biometrics' parameter
   * Added support for 'RequirePinAfterBiometricChange' parameter
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Added support for 'engineupdateschannel' parameter
+  * Added support for 'platformupdateschannel' parameter
+  * Added support for 'securityintelligenceupdateschannel' parameter
+* M365DSCRuleEvaluation
+  * Initial Release.
+* O365OrgSettings
+  * Fixes an issue where the wrong Graph URLs were being called for sovereign
+    clouds.
+    FIXES [#3673](https://github.com/microsoft/Microsoft365DSC/issues/3673)
 * DEPENDENCIES
   * Updated ExchangeOnlineManagement to version 3.3.0.
   * Updated Microsoft.Graph modules to version 2.5.0.
+  * Added dependency on Microsoft.Graph.Beta.Reports.
 * MISC
   * Improved error logging for methods installing or updating modules.
     FIXES [#3660](https://github.com/microsoft/Microsoft365DSC/issues/3660)
+  * Single quotes handling in Export for complex CIMInstances
+    FIXES [#3479](https://github.com/microsoft/Microsoft365DSC/issues/3479)
 
 # 1.23.906.1
 
