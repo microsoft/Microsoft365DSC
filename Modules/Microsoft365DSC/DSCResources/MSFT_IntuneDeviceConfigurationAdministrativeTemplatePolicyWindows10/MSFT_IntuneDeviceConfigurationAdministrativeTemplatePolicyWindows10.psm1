@@ -18,7 +18,7 @@ function Get-TargetResource
         [System.String]
         $PolicyConfigurationIngestionType,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -284,7 +284,7 @@ function Set-TargetResource
         [System.String]
         $PolicyConfigurationIngestionType,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -608,7 +608,7 @@ function Test-TargetResource
         [System.String]
         $PolicyConfigurationIngestionType,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 

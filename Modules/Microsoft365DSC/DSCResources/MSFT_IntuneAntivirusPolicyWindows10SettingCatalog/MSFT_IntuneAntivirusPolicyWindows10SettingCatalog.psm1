@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -377,8 +377,14 @@ function Get-TargetResource
 
         if ($null -eq $policy)
         {
-            Write-Verbose -Message "No Endpoint Protection Policy with Id {$Identity} was found"
-            return $nullResult
+            Write-Verbose -Message "No policy with Id {$Identity} was found. Trying to retrieve by name {$DisplayName}."
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "Name eq '$DisplayName'"
+
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No policy with name {$DisplayName} was found."
+                return $nullResult
+            }
         }
 
         #Retrieve policy specific settings
@@ -479,7 +485,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -915,7 +921,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         $Identity,
 

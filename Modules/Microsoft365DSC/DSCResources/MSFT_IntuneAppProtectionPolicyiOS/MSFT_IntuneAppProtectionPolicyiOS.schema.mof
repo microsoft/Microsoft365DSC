@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneAppProtectionPolicyiOS")]
 class MSFT_IntuneAppProtectionPolicyiOS : OMI_BaseResource
 {
-    [Key, Description("Identity of the iOS App Protection Policy.")] String Identity;
-    [Required, Description("Display name of the iOS App Protection Policy.")] String DisplayName;
+    [Key, Description("Display name of the iOS App Protection Policy.")] String DisplayName;
+    [Write, Description("Identity of the iOS App Protection Policy.")] String Identity;
     [Write, Description("Description of the iOS App Protection Policy.")] String Description;
     [Write, Description("The period after which access is checked when the device is not connected to the internet.")] String PeriodOfflineBeforeAccessCheck;
     [Write, Description("The period after which access is checked when the device is connected to the internet.")] String PeriodOnlineBeforeAccessCheck;

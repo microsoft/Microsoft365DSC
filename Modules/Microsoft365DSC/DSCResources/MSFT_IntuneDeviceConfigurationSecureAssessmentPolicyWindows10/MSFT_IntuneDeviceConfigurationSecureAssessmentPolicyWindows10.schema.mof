@@ -20,8 +20,8 @@ class MSFT_IntuneDeviceConfigurationSecureAssessmentPolicyWindows10 : OMI_BaseRe
     [Write, Description("Url link to an assessment that's automatically loaded when the secure assessment browser is launched. It has to be a valid Url (https://msdn.microsoft.com/).")] String LaunchUri;
     [Write, Description("Specifies the display text for the local guest account shown on the sign-in screen. Typically is the name of an assessment. When the user clicks the local guest account on the sign-in screen, an assessment app is launched with a specified assessment URL. Secure assessments can only be configured with local guest account sign-in on devices running Windows 10, version 1903 or later. Important notice: this property must be set with assessmentAppUserModelID in order to make the local guest account sign-in experience work properly for secure assessments.")] String LocalGuestAccountName;
     [Write, Description("Admin provided description of the Device Configuration.")] String Description;
-    [Required, Description("Admin provided name of the device configuration.")] String DisplayName;
-    [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Key, Description("Admin provided name of the device configuration.")] String DisplayName;
+    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
