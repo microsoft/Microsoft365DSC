@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.913.1
 
 * AADNamedLocationPolicy
   * Set default value for CountryLookupMethod and removed unwanted properties
