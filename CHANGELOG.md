@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* O365OrgSettings
+  * Fixes and issue where a the wrong url was being used in some of the API
+    calls, resulting in null returns for some properties in the Get method.
+
 # 1.23.913.2
 
 * MISC
