@@ -18,7 +18,7 @@ function Get-TargetResource
         [System.String]
         $PolicyConfigurationIngestionType,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -284,7 +284,7 @@ function Set-TargetResource
         [System.String]
         $PolicyConfigurationIngestionType,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -608,7 +608,7 @@ function Test-TargetResource
         [System.String]
         $PolicyConfigurationIngestionType,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -913,6 +913,7 @@ function Export-TargetResource
             $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )
             $currentDSCBlock = $currentDSCBlock.replace( "`r`n;`r`n" , "`r`n" )
             $currentDSCBlock = $currentDSCBlock.replace( "`r`n,`r`n" , "`r`n" )
+            $currentDSCBlock = $currentDSCBlock.Replace("}                    Enabled = `$","}`r`n                    Enabled = `$")
 
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `

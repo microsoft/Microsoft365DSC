@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -215,6 +215,21 @@ function Get-TargetResource
         [ValidateSet('0', '1', '2')]
         [System.String]
         $puaprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $engineupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $platformupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '4', '5')]
+        [System.String]
+        $securityintelligenceupdateschannel,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
@@ -362,8 +377,14 @@ function Get-TargetResource
 
         if ($null -eq $policy)
         {
-            Write-Verbose -Message "No Endpoint Protection Policy with Id {$Identity} was found"
-            return $nullResult
+            Write-Verbose -Message "No policy with Id {$Identity} was found. Trying to retrieve by name {$DisplayName}."
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "Name eq '$DisplayName'"
+
+            if ($null -eq $policy)
+            {
+                Write-Verbose -Message "No policy with name {$DisplayName} was found."
+                return $nullResult
+            }
         }
 
         #Retrieve policy specific settings
@@ -464,7 +485,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -675,6 +696,21 @@ function Set-TargetResource
         [ValidateSet('0', '1', '2')]
         [System.String]
         $puaprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $engineupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $platformupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '4', '5')]
+        [System.String]
+        $securityintelligenceupdateschannel,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]
@@ -885,7 +921,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -1096,6 +1132,21 @@ function Test-TargetResource
         [ValidateSet('0', '1', '2')]
         [System.String]
         $puaprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $engineupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '2', '3', '4', '5', '6')]
+        [System.String]
+        $platformupdateschannel,
+
+        [Parameter()]
+        [ValidateSet('0', '4', '5')]
+        [System.String]
+        $securityintelligenceupdateschannel,
 
         [Parameter()]
         [ValidateSet('0', '1', '2')]

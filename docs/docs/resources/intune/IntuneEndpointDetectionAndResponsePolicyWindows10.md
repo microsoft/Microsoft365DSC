@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the endpoint detection and response policy for Windows 10. | |
-| **DisplayName** | Required | String | Display name of the endpoint detection and response policy for Windows 10. | |
+| **Identity** | Write | String | Identity of the endpoint detection and response policy for Windows 10. | |
+| **DisplayName** | Key | String | Display name of the endpoint detection and response policy for Windows 10. | |
 | **Description** | Write | String | Description of the endpoint detection and response policy for Windows 10. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the endpoint detection and response policy for Windows 10. | |
 | **SampleSharing** | Write | String | Return or set Windows Defender Advanced Threat Protection Sample Sharing configuration parameter: 0 - none, 1 - All | `0`, `1` |

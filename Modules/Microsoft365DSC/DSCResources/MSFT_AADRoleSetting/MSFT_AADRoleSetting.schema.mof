@@ -1,8 +1,8 @@
 [ClassVersion("1.0.0.0"), FriendlyName("AADRoleSetting")]
 class MSFT_AADRoleSetting : OMI_BaseResource
 {
-    [Key, Description("Specifies the RoleId.")] String Id;
-    [Required, Description("RuleDefinition Displayname")] String Displayname;
+    [Key, Description("RuleDefinition Displayname")] String Displayname;
+    [Write, Description("Specifies the RoleId.")] String Id;
     [Write, Description("Activation maximum duration (hours).")] String ActivationMaxDuration;
     [Write, Description("Require justification on activation (True/False)")] Boolean ActivationReqJustification;
     [Write, Description("Require ticket information on activation (True/False)")] Boolean ActivationReqTicket;

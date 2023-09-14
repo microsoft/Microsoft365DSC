@@ -5,9 +5,9 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Description** | Write | String | User provided description for the resource object. | |
-| **DisplayName** | Required | String | User provided name for the resource object. | |
+| **DisplayName** | Key | String | User provided name for the resource object. | |
 | **PolicyConfigurationIngestionType** | Write | String | Type of definitions configured for this policy. Possible values are: unknown, custom, builtIn, mixed, unknownFutureValue. | `unknown`, `custom`, `builtIn`, `mixed`, `unknownFutureValue` |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **DefinitionValues** | Write | MSFT_IntuneGroupPolicyDefinitionValue[] | The list of enabled or disabled group policy definition values for the configuration. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |

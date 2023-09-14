@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -94,6 +94,11 @@ function Get-TargetResource
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWebShellCreationForServers,
 
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
@@ -278,7 +283,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -368,6 +373,11 @@ function Set-TargetResource
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWebShellCreationForServers,
 
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
@@ -530,7 +540,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $True)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -620,6 +630,11 @@ function Test-TargetResource
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockWebShellCreationForServers,
 
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]

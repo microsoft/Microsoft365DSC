@@ -4,11 +4,11 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **OdataType** | Write | String | Specifies the Odata Type of a Named Location object in Azure Active Directory | `#microsoft.graph.countryNamedLocation`, `#microsoft.graph.ipNamedLocation` |
+| **OdataType** | Write | String | Specifies the Odata Type of a Named Location object in Azure Active Directory | `#microsoft.graph.countryNamedLocation`, `#microsoft.graph.ipNamedLocation`, `#microsoft.graph.compliantNetworkNamedLocation` |
 | **Id** | Write | String | Specifies the ID of a Named Location in Azure Active Directory. | |
 | **DisplayName** | Key | String | Specifies the Display Name of a Named Location in Azure Active Directory | |
 | **IpRanges** | Write | StringArray[] | Specifies the IP ranges of the Named Location in Azure Active Directory | |
-| **IsTrusted** | Write | Boolean | Specifies the isTrusted value for the Named Location in Azure Active Directory | |
+| **IsTrusted** | Write | Boolean | Specifies the isTrusted value for the Named Location (IP ranges only) in Azure Active Directory | |
 | **CountriesAndRegions** | Write | StringArray[] | Specifies the countries and regions for the Named Location in Azure Active Directory | |
 | **CountryLookupMethod** | Write | String | Determines what method is used to decide which country the user is located in. Possible values are clientIpAddress(default) and authenticatorAppGps. | `clientIpAddress`, `authenticatorAppGps` |
 | **IncludeUnknownCountriesAndRegions** | Write | Boolean | Specifies the includeUnknownCountriesAndRegions value for the Named Location in Azure Active Directory | |
