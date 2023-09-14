@@ -178,7 +178,7 @@ function Test-TargetResource
 
             $OrganizationName = $ConfigurationData.NonNodeData.OrganizationName
 
-            Import-DscResource -ModuleName 'Microsoft365DSC' -ModuleVersion '1.23.906.1'
+            Import-DscResource -ModuleName 'Microsoft365DSC'
 
             Node localhost
             {
