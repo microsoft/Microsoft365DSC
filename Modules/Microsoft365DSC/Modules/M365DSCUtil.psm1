@@ -2938,13 +2938,6 @@ function Uninstall-M365DSCOutdatedDependencies
             }
             $i++
         }
-        catch
-        {
-            New-M365DSCLogEntry -Message 'Error Uninstalling Outdated Dependencies:' `
-                -Exception $_ `
-                -Source $($MyInvocation.MyCommand.Source)
-            Write-Error $_
-        }
     }
     catch
     {

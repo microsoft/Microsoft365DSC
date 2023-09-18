@@ -18,8 +18,8 @@ class MSFT_MicrosoftGraphWindowsUpdateRolloutSettings
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10")]
 class MSFT_IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 : OMI_BaseResource
 {
-    [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
-    [Required, Description("The display name of the profile.")] String DisplayName;
+    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Key, Description("The display name of the profile.")] String DisplayName;
     [Write, Description("The description of the profile which is specified by the user.")] String Description;
     [Write, Description("The feature update version that will be deployed to the devices targeted by this profile. The version could be any supported version for example 1709, 1803 or 1809 and so on.")] String FeatureUpdateVersion;
     [Write, Description("The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers."), EmbeddedInstance("MSFT_MicrosoftGraphwindowsUpdateRolloutSettings")] String RolloutSettings;

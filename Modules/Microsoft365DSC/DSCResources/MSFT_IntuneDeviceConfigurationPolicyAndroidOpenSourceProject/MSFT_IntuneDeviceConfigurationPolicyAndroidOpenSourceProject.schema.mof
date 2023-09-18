@@ -11,8 +11,8 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneDeviceConfigurationPolicyAndroidOpenSourceProject")]
 class MSFT_IntuneDeviceConfigurationPolicyAndroidOpenSourceProject : OMI_BaseResource
 {
-    [Key, Description("Id of the Intune policy.")] String Id;
-    [Required, Description("Display name of the Intune policy.")] String DisplayName;
+    [Write, Description("Id of the Intune policy.")] String Id;
+    [Key, Description("Display name of the Intune policy.")] String DisplayName;
     [Write, Description("Description of the Intune policy.")] String Description;
     [Write, Description("Prevent applications from unknown sources.")] Boolean AppsBlockInstallFromUnknownSources;
     [Write, Description("Prevent bluetooth configuration.")] Boolean BluetoothBlockConfiguration;

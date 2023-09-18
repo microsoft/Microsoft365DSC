@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the endpoint protection policy for Windows 10. | |
-| **DisplayName** | Required | String | Display name of the endpoint protection policy for Windows 10. | |
+| **DisplayName** | Key | String | Display name of the endpoint protection policy for Windows 10. | |
+| **Identity** | Write | String | Identity of the endpoint protection policy for Windows 10. | |
 | **Description** | Write | String | Description of the endpoint protection policy for Windows 10. | |
 | **tamperprotection** | Write | String | Allows or disallows scanning of archives. (0: enable feature. 1: disable feature) | `0`, `1` |
 | **disableaccountprotectionui** | Write | String | Use this policy setting to specify if to display the Account protection area in Windows Defender Security Center. (0: disable feature. 1: enable feature) | `0`, `1` |
@@ -51,6 +51,9 @@
 | **excludedpaths** | Write | StringArray[] | Allows an administrator to specify a list of directory paths to ignore during a scan. | |
 | **excludedprocesses** | Write | StringArray[] | Allows an administrator to specify a list of files opened by processes to ignore during a scan. | |
 | **puaprotection** | Write | String | Specifies the level of detection for potentially unwanted applications (PUAs). (0: disabled, 1: block mode, 2: audit mode) | `0`, `1`, `2` |
+| **engineupdateschannel** | Write | String | Enable this policy to specify when devices receive Microsoft Defender engine updates during the monthly gradual rollout. (0: Not configured, 2: Beta Channel, 3: Current Channel (Preview), 4: Current Channel (Staged), 5: Current Channel (Broad), 6: Critical) | `0`, `2`, `3`, `4`, `5`, `6` |
+| **platformupdateschannel** | Write | String | Enable this policy to specify when devices receive Microsoft Defender platform updates during the monthly gradual rollout. (0: Not configured, 2: Beta Channel, 3: Current Channel (Preview), 4: Current Channel (Staged), 5: Current Channel (Broad), 6: Critical) | `0`, `2`, `3`, `4`, `5`, `6` |
+| **securityintelligenceupdateschannel** | Write | String | Enable this policy to specify when devices receive Microsoft Defender security intelligence updates during the daily gradual rollout. (0: Not configured, 4: Current Channel (Staged), 5: Current Channel (Broad)) | `0`, `4`, `5` |
 | **realtimescandirection** | Write | String | Controls which sets of files should be monitored. (0: Monitor all files (bi-directional), 1: Monitor incoming files, 2: Monitor outgoing files) | `0`, `1`, `2` |
 | **scanparameter** | Write | String | Selects whether to perform a quick scan or full scan. (1: Quick scan, 2: Full scan) | `1`, `2` |
 | **schedulequickscantime** | Write | SInt32 | Selects the time of day that the Windows Defender quick scan should run. | |

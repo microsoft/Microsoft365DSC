@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Specifies the GUID for the Policy. | |
-| **DisplayName** | Required | String | DisplayName of the AAD CA Policy | |
+| **DisplayName** | Key | String | DisplayName of the AAD CA Policy | |
+| **Id** | Write | String | Specifies the GUID for the Policy. | |
 | **State** | Write | String | Specifies the State of the Policy. | `disabled`, `enabled`, `enabledForReportingButNotEnforced` |
 | **IncludeApplications** | Write | StringArray[] | Cloud Apps in scope of the Policy. | |
 | **ExcludeApplications** | Write | StringArray[] | Cloud Apps out of scope of the Policy. | |
