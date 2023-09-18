@@ -96,7 +96,10 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgbetaDeviceAppManagementPolicySet -PolicySetId $Id -ExpandProperty * -ErrorAction SilentlyContinue
+        if ($id -ne $null)
+        {
+            $getValue = Get-MgbetaDeviceAppManagementPolicySet -PolicySetId $Id -ExpandProperty * -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -105,6 +108,7 @@ function Get-TargetResource
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgbetaDeviceAppManagementPolicySet `
+                    -ExpandProperty * `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
@@ -177,11 +181,12 @@ function Get-TargetResource
         foreach ($itemEntry in $itemsValues)
         {
             $itemValue = @{
-                dataType = $itemEntry.AdditionalProperties.'@odata.type'
-                Id = $itemEntry.Id
-                PayloadId = $itemEntry.PayloadId
-                ItemType = $itemEntry.ItemType
-                DisplayName = $itemEntry.DisplayName
+                #dataType = $itemEntry.AdditionalProperties.'@odata.type'
+                id = $itemEntry.Id
+                payloadId = $itemEntry.PayloadId
+                itemType = $itemEntry.ItemType
+                displayName = $itemEntry.GisplayName
+                guidedDeploymentTags = $itemEntry.GuidedDeploymentTags
             }
             $itemResult += $itemValue
         }
@@ -276,7 +281,6 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -291,16 +295,22 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
+    Write-Verbose -Message ("#### CURRENT INSTANCE #### requirement: " + $ensure + "   actual: " + $currentInstance.Ensure)
+
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Policy Sets with DisplayName {$DisplayName}"
+        # remove complex values
         $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove("Items") | Out-Null
+        # remove unused values
+        $BoundParameters.Remove('Id') | Out-Null
+        $BoundParameters.Remove('Status') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Remove('Id') | Out-Null
 
         $keys = (([Hashtable]$CreateParameters).clone()).Keys
         foreach ($key in $keys)
@@ -310,22 +320,34 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
-        #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.PolicySet")
-        $policy = New-MgbetaDeviceAppManagementPolicySet -BodyParameter $CreateParameters
+
+        # set assignments and items to work with New-MgbetaDeviceAppManagementPolicySet command
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash += @{
+                                    target = @{
+                                                '@odata.type' = $assignment.dataType
+                                                groupId = $assignment.groupId
+                                            }
+                                    }
         }
+        $CreateParameters.Add("Assignments", $assignmentsHash)
 
-        if ($policy.id)
+        $itemsHash = @()
+        foreach ($item in $items)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceAppManagement/policySets'
+            $itemsHash += @{
+                                PayloadId = $item.payloadId
+                                "@odata.type" = $item.dataType
+                                guidedDeploymentTags =$item.guidedDeploymentTags
+                            }
         }
-        #endregion
+        $CreateParameters.Add("Items", $itemsHash)
+
+        write-verbose -Message ($CreateParameters | out-string)
+        $policy = New-MgbetaDeviceAppManagementPolicySet @CreateParameters
+
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {

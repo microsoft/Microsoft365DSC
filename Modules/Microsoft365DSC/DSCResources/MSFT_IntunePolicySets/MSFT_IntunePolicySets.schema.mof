@@ -11,11 +11,12 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 [ClassVersion("1.0.0.0")]
 class MSFT_DeviceManagementConfigurationPolicyItems
 {
-    [Write, Description("The type of the target assignment."), ValueMap{"#microsoft.graph.managedAppProtectionPolicySetItem","#microsoft.graph.deviceConfigurationPolicySetItem","#microsoft.graph.deviceCompliancePolicyPolicySetItem"}, Values{"#microsoft.graph.managedAppProtectionPolicySetItem","#microsoft.graph.deviceConfigurationPolicySetItem","#microsoft.graph.deviceCompliancePolicyPolicySetItem"}] String dataType;
-    [Write, Description("The Id of the Item object.")] String Id;
-    [Write, Description("The group Id of the policy the item represents.")] String PayloadId;
-    [Write, Description("The collection display name of the policy the item represents")] String DisplayName;
-    [Write, Description("The type of policy the item represents.")] String ItemType;
+    [Write, Description("The Id of the Item object.")] String id;
+    [Write, Description("The type of policy the item represents.")] String dataType;
+    [Write, Description("The group Id of the policy the item represents.")] String payloadId;
+    [Write, Description("The collection display name of the policy the item represents")] String displayName;
+    [Write, Description("The type of policy the item represents.")] String itemType;
+    [Write, Description("Tags of the guided deployment")] String guidedDeploymentTags[];
 };
 
 
