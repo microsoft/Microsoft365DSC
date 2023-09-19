@@ -5,6 +5,12 @@
 * O365OrgSettings
   * Fixes and issue where a the wrong url was being used in some of the API
     calls, resulting in null returns for some properties in the Get method.
+* SPOSharingSettings
+  * Changes verbose prompts to warnings.
+* TeamsGroupPolicyAssignment
+  * Changes to how Group IDs are retrieved and evaluated.
+* TeamsAppPermissionPolicy
+  * Fixes to the Test-TargetResource evaluation of empty arrays.
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.6.0.
     FIXES [#3671](https://github.com/microsoft/Microsoft365DSC/issues/3671)
