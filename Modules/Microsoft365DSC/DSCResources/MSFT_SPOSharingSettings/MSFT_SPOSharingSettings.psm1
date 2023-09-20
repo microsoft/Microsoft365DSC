@@ -433,7 +433,7 @@ function Set-TargetResource
     if ($null -eq $SharingAllowedDomainList -and $null -eq $SharingBlockedDomainList -and
         ($null -ne $RequireAcceptingAccountMatchInvitedAccount -and $RequireAcceptingAccountMatchInvitedAccount -eq $false))
     {
-        Write-Verbose -Message 'If SharingAllowedDomainList / SharingBlockedDomainList are set to null RequireAcceptingAccountMatchInvitedAccount must be set to True '
+        Write-Warning -Message 'If SharingAllowedDomainList / SharingBlockedDomainList are set to null RequireAcceptingAccountMatchInvitedAccount must be set to True '
         $CurrentParameters.Remove('RequireAcceptingAccountMatchInvitedAccount') | Out-Null
     }
 
@@ -444,31 +444,31 @@ function Set-TargetResource
     }
     if ($SharingCapability -ne 'ExternalUserAndGuestSharing')
     {
-        Write-Verbose -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured'
+        Write-Warning -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured'
         $CurrentParameters.Remove('RequireAnonymousLinksExpireInDays') | Out-Null
     }
     if ($SharingCapability -ne 'ExternalUserExpirationRequired')
     {
-        Write-Verbose -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserExpirationRequired for that the ExternalUserExpireInDays property cannot be configured'
+        Write-Warning -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserExpirationRequired for that the ExternalUserExpireInDays property cannot be configured'
         $CurrentParameters.Remove('ExternalUserExpireInDays') | Out-Null
     }
     if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
     {
-        Write-Verbose -Message 'RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured'
+        Write-Warning -Message 'RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured'
         $CurrentParameters.Remove('SharingAllowedDomainList') | Out-Null
         $CurrentParameters.Remove('SharingBlockedDomainList') | Out-Null
     }
 
     if ($SharingCapability -ne 'ExternalUserAndGuestSharing' -and ($null -ne $FileAnonymousLinkType -or $null -ne $FolderAnonymousLinkType))
     {
-        Write-Verbose -Message 'If anonymous file or folder links are set, SharingCapability must be set to ExternalUserAndGuestSharing '
+        Write-Warning -Message 'If anonymous file or folder links are set, SharingCapability must be set to ExternalUserAndGuestSharing '
         $CurrentParameters.Remove('FolderAnonymousLinkType') | Out-Null
         $CurrentParameters.Remove('FileAnonymousLinkType') | Out-Null
     }
 
     if ($SharingDomainRestrictionMode -eq 'None')
     {
-        Write-Verbose -Message 'SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured'
+        Write-Warning -Message 'SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured'
         $CurrentParameters.Remove('SharingAllowedDomainList') | Out-Null
         $CurrentParameters.Remove('SharingBlockedDomainList') | Out-Null
     }
@@ -479,7 +479,7 @@ function Set-TargetResource
     }
     elseif ($SharingDomainRestrictionMode -eq 'BlockList')
     {
-        Write-Verbose -Message 'SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured'
+        Write-Warning -Message 'SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured'
         $CurrentParameters.Remove('SharingAllowedDomainList') | Out-Null
     }
     foreach ($value in $CurrentParameters.GetEnumerator())
