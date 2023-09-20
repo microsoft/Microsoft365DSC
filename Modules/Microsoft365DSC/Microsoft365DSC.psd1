@@ -11,7 +11,7 @@
   # RootModule = ''
 
   # Version number of this module.
-  ModuleVersion     = '1.23.920.1'
+  ModuleVersion     = '1.23.920.2'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -140,7 +140,8 @@
       IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
       # ReleaseNotes of this module
-      ReleaseNotes = '* O365OrgSettings
+      ReleaseNotes = '** 1.23.920.2 rolls back the Graph dependencies to version 2.5.0
+      * O365OrgSettings
       * Fixes and issue where a the wrong url was being used in some of the API
         calls, resulting in null returns for some properties in the Get method.
     * SPOSharingSettings
