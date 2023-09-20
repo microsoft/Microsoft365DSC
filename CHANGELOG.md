@@ -14,6 +14,9 @@
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 5.6.0.
     FIXES [#3671](https://github.com/microsoft/Microsoft365DSC/issues/3671)
+* MISC
+  * M365DSCUtil: Fix problem naming similar resources
+    FIXES [#3700](https://github.com/microsoft/Microsoft365DSC/issues/3700)
 
 # 1.23.913.2
 
