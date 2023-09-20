@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.920.2
 
+* DEPENDENCIES
+  * Rolled back Microsoft.Graph to version 2.5.0.
 * MISC
   * M365DSCDRGUtil: Write properties properly indented and in new line
     FIXES [#3634](https://github.com/microsoft/Microsoft365DSC/issues/3634)
