@@ -400,7 +400,7 @@ function Get-M365DSCDRGComplexTypeToString
                 $currentValue = $ComplexObject[$key]
                 if ($currentValue.GetType().Name -eq 'String')
                 {
-                    $currentValue = $ComplexObject[$key].Replace("'", "''").Replace("’", "''")
+                    $currentValue = $ComplexObject[$key].Replace("'", "''").Replace("ï¿½", "''")
                 }
                 $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $currentValue -Space ($indent)
             }
@@ -430,17 +430,17 @@ function Get-M365DSCDRGComplexTypeToString
     }
 
     $currentProperty += "$indent}"
-    #if ($isArray -or $IndentLevel -gt 4)
-    #{
-        #$currentProperty += "`r`n"
-    #}
+    if ($isArray -or $IndentLevel -gt 4)
+    {
+        $currentProperty += "`r`n"
+    }
 
     #Indenting last parenthese when the cim instance is an array
-    <#if ($IndentLevel -eq 5)
+    if ($IndentLevel -eq 5)
     {
         $indent = '    ' * ($IndentLevel -2)
         $currentProperty += $indent
-    }#>
+    }
 
     $emptyCIM = $currentProperty.replace(' ', '').replace("`r`n", '')
     if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")

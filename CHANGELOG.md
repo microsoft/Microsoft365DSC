@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * M365DSCDRGUtil: Write properties properly indented and in new line
+    FIXES [#3634](https://github.com/microsoft/Microsoft365DSC/issues/3634)
+
 # 1.23.920.1
 
 * O365OrgSettings
