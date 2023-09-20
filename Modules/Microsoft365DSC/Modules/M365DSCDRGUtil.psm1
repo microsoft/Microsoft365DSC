@@ -435,7 +435,7 @@ function Get-M365DSCDRGComplexTypeToString
         $currentProperty += "`r`n"
     }
 
-    #Indenting last parenthese when the cim instance is an array
+    #Indenting last parenthesis when the cim instance is an array
     if ($IndentLevel -eq 5)
     {
         $indent = '    ' * ($IndentLevel -2)
