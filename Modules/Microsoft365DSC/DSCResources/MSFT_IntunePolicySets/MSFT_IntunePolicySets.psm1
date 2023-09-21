@@ -107,13 +107,26 @@ function Get-TargetResource
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgbetaDeviceAppManagementPolicySet `
-                    -ExpandProperty * `
-                    -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.PolicySet" `
+                [array]$getValue = Get-MgbetaDeviceAppManagementPolicySet `
+                -Filter "DisplayName eq '$DisplayName'"
+
+                if ($getValue -eq $null)
+                {
+                    Write-verbose -Message "Could not find an Intune Policy Sets with DisplayName {$DisplayName}"
+                    return $nullResult
+                }
+                else
+                {
+                    if ($getValue.count -gt 1)
+                    {
+                        Write-verbose -Message "Multiple Intune Policy Sets with DisplayName {$DisplayName} - unable to continue"
+                        return $nullResult
                     }
+                    else {
+                        $getValue = Get-MgbetaDeviceAppManagementPolicySet -PolicySetId $getValue.Id -ExpandProperty * -ErrorAction SilentlyContinue
+
+                        }
+                }
             }
         }
         #endregion
@@ -181,7 +194,7 @@ function Get-TargetResource
         foreach ($itemEntry in $itemsValues)
         {
             $itemValue = @{
-                #dataType = $itemEntry.AdditionalProperties.'@odata.type'
+                dataType = $itemEntry.AdditionalProperties.'@odata.type'
                 id = $itemEntry.Id
                 payloadId = $itemEntry.PayloadId
                 itemType = $itemEntry.ItemType
@@ -352,12 +365,18 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Policy Sets with Id {$($currentInstance.Id)}"
+        # remove complex values
         $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove("Items") | Out-Null
+        # remove unused values
+        $BoundParameters.Remove('Id') | Out-Null
+        $BoundParameters.Remove('Status') | Out-Null
+        $BoundParameters.Remove('ErrorCode') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
-        $UpdateParameters.Remove('Id') | Out-Null
+#        $UpdateParameters.Remove('Id') | Out-Null
 
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
@@ -368,19 +387,34 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.PolicySet")
-        Update-MgbetaDeviceAppManagementPolicySet  `
-            -PolicySetId $currentInstance.Id `
-            -BodyParameter $UpdateParameters
-        $assignmentsHash = @()
+        #$UpdateParameters.Add("@odata.type", "#microsoft.graph.PolicySet")
+        $UpdateParameters.Add("PolicySetId", $currentInstance.Id)
+
+        write-verbose -Message ($UpdateParameters | out-string)
+        Update-MgbetaDeviceAppManagementPolicySet  @UpdateParameters
+
+        if (($itemamendments = Get-ItemsAmendmentsObject -currentObjectItems $currentInstance.Items -targetObjectItems $items) -ne $null )
+        {
+
+            write-verbose -message ($itemamendments | out-string)
+            $url = ('https://graph.microsoft.com/beta/deviceAppManagement/policySets/' + $currentInstance.Id + '/update' )
+            Invoke-MgGraphRequest -Method POST -Uri $url -Body $itemamendments
+        }
+
+        $assignmentsHash = @{ assignments = @()}
         foreach ($assignment in $Assignments)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash.assignments += @{
+                                    target = @{
+                                                '@odata.type' = $assignment.dataType
+                                                groupId = $assignment.groupId
+                                            }
+                                    }
         }
-        Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentInstance.id `
-            -Targets $assignmentsHash `
-            -Repository 'deviceAppManagement/policySets'
+
+        write-verbose -message ($assignmentsHash | out-string)
+        $url = ('https://graph.microsoft.com/beta/deviceAppManagement/policySets/' + $currentInstance.Id + '/update' )
+        Invoke-MgGraphRequest -Method POST -Uri $url -Body $assignmentsHash
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -682,6 +716,55 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-ItemsAmendmentsObject
+{
+    param (
+        $currentObjectItems,
+        $targetObjectItems
+    )
+
+    $nullreturn = $true
+    $ItemsModificationTemplate = @{
+                                    deletedPolicySetItems = @()
+                                    updatedPolicySetItems = @()
+                                    addedPolicySetItems = @()
+                }
+
+    $currentObjectItems | foreach {
+
+        if (!($targetObjectItems.Payloadid -contains $_.PayloadId))
+        {
+            write-verbose -message ($_.DisplayName + ' NOT present in Config Document, Removing')
+            $ItemsModificationTemplate.deletedPolicySetItems += $_.Id
+            $nullreturn = $false
+        }
+
+    }
+
+    $targetObjectItems | foreach {
+
+        if (!($currentObjectItems.PayloadId -contains $_.PayloadId))
+        {
+            write-verbose -message ($_.DisplayName + ' NOT already present in Policy Set, Adding')
+            $ItemsModificationTemplate.addedPolicySetItems += @{
+                                                                payloadId = $_.payloadId
+                                                                "@odata.type" = $_.dataType
+                                                                guidedDeploymentTags = $_.guidedDeploymentTags
+                                                               }
+            $nullreturn = $false
+        }
+
+    }
+
+    if (!$nullreturn)
+    {
+        return $ItemsModificationTemplate
+    }
+
+    return $null
+
 }
 
 Export-ModuleMember -Function *-TargetResource
