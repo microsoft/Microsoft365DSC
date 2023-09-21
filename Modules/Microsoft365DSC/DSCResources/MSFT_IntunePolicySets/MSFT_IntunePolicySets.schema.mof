@@ -11,7 +11,6 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 [ClassVersion("1.0.0.0")]
 class MSFT_DeviceManagementConfigurationPolicyItems
 {
-    [Write, Description("The Id of the Item object.")] String id;
     [Write, Description("The type of policy the item represents.")] String dataType;
     [Write, Description("The group Id of the policy the item represents.")] String payloadId;
     [Write, Description("The collection display name of the policy the item represents")] String displayName;

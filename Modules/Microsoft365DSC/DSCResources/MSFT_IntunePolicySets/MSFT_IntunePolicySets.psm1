@@ -171,6 +171,11 @@ function Get-TargetResource
             #endregion
         }
 
+        if ($getValue.GuidedDeploymentTags -eq $null)
+        {
+            $results.GuidedDeploymentTags = @()
+        }
+
         $assignmentsValues = $getValue.Assignments
 
         $assignmentResult = @()
@@ -195,10 +200,9 @@ function Get-TargetResource
         {
             $itemValue = @{
                 dataType = $itemEntry.AdditionalProperties.'@odata.type'
-                id = $itemEntry.Id
                 payloadId = $itemEntry.PayloadId
                 itemType = $itemEntry.ItemType
-                displayName = $itemEntry.GisplayName
+                displayName = $itemEntry.displayName
                 guidedDeploymentTags = $itemEntry.GuidedDeploymentTags
             }
             $itemResult += $itemValue
@@ -376,8 +380,6 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
-#        $UpdateParameters.Remove('Id') | Out-Null
-
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
         {
@@ -387,7 +389,6 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        #$UpdateParameters.Add("@odata.type", "#microsoft.graph.PolicySet")
         $UpdateParameters.Add("PolicySetId", $currentInstance.Id)
 
         write-verbose -Message ($UpdateParameters | out-string)
