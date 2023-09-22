@@ -429,13 +429,13 @@ function Set-TargetResource
         if (-not [System.String]::IsNullOrEmpty($AppId))
         {
             Write-Verbose "Trying to retrieve existing deleted Applications from soft delete by Id {$AppId}."
-            [Array]$deletedApp = Get-MgBetaDirectoryDeletedApplication -DirectoryObjectId $AppId -ErrorAction SilentlyContinue
+            [Array]$deletedApp = Get-MgBetaDirectoryDeletedItemAsApplication -DirectoryObjectId $AppId -ErrorAction SilentlyContinue
         }
 
         if ($null -eq $deletedApp)
         {
             Write-Verbose "Trying to retrieve existing deleted Applications from soft delete by DisplayName {$DisplayName}."
-            [Array]$deletedApp = Get-MgBetaDirectoryDeletedApplication -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+            [Array]$deletedApp = Get-MgBetaDirectoryDeletedItemAsApplication -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
         }
 
         if ($null -ne $deletedApp -and $deletedApp.Length -eq 1)
