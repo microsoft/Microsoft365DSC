@@ -2,11 +2,12 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Added support for restoring soft deleted instances.
 * O365OrgSettings
   * Changes to how ToDo discrepencies are being fixed in the SET method.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.6.1.
-
 
 # 1.23.920.2
 
