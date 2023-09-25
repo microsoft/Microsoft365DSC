@@ -203,7 +203,6 @@ function Test-TargetResource
             $afterRuleCountQueryString = "`$instances.Length $AfterRuleCountQuery"
             $afterRuleCountQueryBlock = [Scriptblock]::Create($afterRuleCountQueryString)
             $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
-            Write-Verbose -Message "Output of rule count: $($result | Out-String)"
             $message = [System.Text.StringBuilder]::New()
             if ($instances.Length -eq 0)
             {
@@ -247,6 +246,7 @@ function Test-TargetResource
                         -EventID 1 -Source $CurrentResourceName
             }
         }
+        Write-Verbose -Message "Test-TargetResource returned $result"
         return $result
     }
 }
