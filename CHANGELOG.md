@@ -10,6 +10,7 @@
   * Changes to how ToDo discrepencies are being fixed in the SET method.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.6.1.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.117.
 
 # 1.23.920.2
 
