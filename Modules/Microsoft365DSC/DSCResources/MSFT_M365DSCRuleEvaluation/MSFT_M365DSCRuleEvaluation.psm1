@@ -191,9 +191,17 @@ function Test-TargetResource
         Write-Verbose -Message "Successfully converted {$($DSCConvertedInstances.Length)} DSC Objects."
 
         Write-Verbose -Message "Querying DSC Objects for invalid instances based on the specified Rule Definition."
-        $queryBlock = [Scriptblock]::Create($RuleDefinition)
-        [Array]$instances = $DSCConvertedInstances | Where-Object -FilterScript $queryBlock
-        Write-Verbose -Message "Identified {$($instances.Length)} instances matching rule."
+        if ($RuleDefinition -eq '*')
+        {
+            [Array]$instances = $DSCConvertedInstances
+            Write-Verbose -Message "Identified {$($instances.Length)} instances matching rule."
+        }
+        else
+        {
+            $queryBlock = [Scriptblock]::Create($RuleDefinition)
+            [Array]$instances = $DSCConvertedInstances | Where-Object -FilterScript $queryBlock
+            Write-Verbose -Message "Identified {$($instances.Length)} instances matching rule."
+        }
 
         $result = ($instances.Length -$DSCConvertedInstances.Length) -eq 0
 
