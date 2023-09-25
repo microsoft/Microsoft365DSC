@@ -4,10 +4,13 @@
 
 * AADApplication
   * Added support for restoring soft deleted instances.
+* M365DSCRuleEvaluation
+  * Improvements to how rules are evaluated and how drifts are logged.
 * O365OrgSettings
   * Changes to how ToDo discrepencies are being fixed in the SET method.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.6.1.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.117.
 
 # 1.23.920.2
 
