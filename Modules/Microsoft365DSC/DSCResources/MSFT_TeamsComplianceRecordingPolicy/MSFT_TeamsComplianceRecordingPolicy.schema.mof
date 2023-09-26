@@ -1,8 +1,20 @@
+[ClassVersion("0.0.96.0"), FriendlyName("TeamsComplianceRecordingApplication)]
+class MSFT_Microsoft.Teams.Policy.Administration.Cmdlets.Core.ComplianceRecordingApplication
+{
+    [Write, Description("")] String Id;
+    [Write, Description("")] String[] ComplianceRecordingPairedApplications;
+    [Write, Description("")] Boolean RequiredBeforeMeetingJoin;
+    [Write, Description("")] Boolean RequiredBeforeCallEstablishment;
+    [Write, Description("")] Boolean RequiredDuringMeeting;
+    [Write, Description("")] Boolean RequiredDuringCall;
+    [Write, Description("")] String ConcurrentInvitationCount;
+}
+
 [ClassVersion("1.0.0.0"), FriendlyName("TeamsComplianceRecordingPolicy")]
 class MSFT_TeamsComplianceRecordingPolicy : OMI_BaseResource
 {
     [Key, Description("Unique identifier of the application instance of a policy-based recording application to be retrieved.")] String Identity;
-    [Write, Description("A list of application instances of policy-based recording applications to assign to this policy. The Id of each of these application instances must be the ObjectId of the application instance as obtained by the Get-CsOnlineApplicationInstance cmdlet.")] String ComplianceRecordingApplications[];
+    [Write, Description("A list of application instances of policy-based recording applications to assign to this policy. The Id of each of these application instances must be the ObjectId of the application instance as obtained by the Get-CsOnlineApplicationInstance cmdlet."), EmbeddedInstance("MSFT_Microsoft.Teams.Policy.Administration.Cmdlets.Core.ComplianceRecordingApplication")] String ComplianceRecordingApplications[];
     [Write, Description("Enables administrators to provide explanatory text to accompany a Teams recording policy. For example, the Description might include information about the users the policy should be assigned to.")] String Description;
     [Write, Description("Setting this attribute to true disables recording audio notifications for 1:1 calls that are under compliance recording.")] Boolean DisableComplianceRecordingAudioNotificationForCalls;
     [Write, Description("Controls whether this Teams recording policy is active or not.")] Boolean Enabled;

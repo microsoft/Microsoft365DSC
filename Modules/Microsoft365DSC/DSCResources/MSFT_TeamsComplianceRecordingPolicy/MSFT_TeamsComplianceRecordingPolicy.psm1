@@ -9,7 +9,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ComplianceRecordingApplications,
 
         [Parameter()]
@@ -75,10 +75,28 @@ function Get-TargetResource
             return $nullResult
         }
 
+        if($instance.ComplianceRecordingApplications.Count -gt 0){
+            $ComplexComplianceRecordingApplications = @()
+            foreach($CurrentComplianceRecordingApplications in $instance.ComplianceRecordingApplications){
+                $MyComplianceRecordingApplications = @{}
+                $MyComplianceRecordingApplications.Add('ComplianceRecordingPairedApplications', $CurrentComplianceRecordingApplications.ComplianceRecordingPairedApplications)
+                $MyComplianceRecordingApplications.Add('Id', $CurrentComplianceRecordingApplications.Id)
+                $MyComplianceRecordingApplications.Add('RequiredBeforeMeetingJoin', $CurrentComplianceRecordingApplications.RequiredBeforeMeetingJoin)
+                $MyComplianceRecordingApplications.Add('RequiredBeforeCallEstablishment', $CurrentComplianceRecordingApplications.RequiredBeforeCallEstablishment)
+                $MyComplianceRecordingApplications.Add('RequiredDuringMeeting', $CurrentComplianceRecordingApplications.RequiredDuringMeeting)
+                $MyComplianceRecordingApplications.Add('RequiredDuringCall', $CurrentComplianceRecordingApplications.RequiredDuringCall)
+                $MyComplianceRecordingApplications.Add('ConcurrentInvitationCount', $CurrentComplianceRecordingApplications.ConcurrentInvitationCount)
+
+                if ($MyComplianceRecordingApplications.values.Where({$null -ne $_}).count -gt 0){
+                    $ComplexComplianceRecordingApplications += $MyComplianceRecordingApplications
+                }
+            }
+        }
+
         Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
             Identity                                            = $instance.Identity
-            ComplianceRecordingApplications                     = $instance.ComplianceRecordingApplications
+            ComplianceRecordingApplications                     = $ComplexComplianceRecordingApplications
             Description                                         = $instance.Description
             DisableComplianceRecordingAudioNotificationForCalls = $instance.DisableComplianceRecordingAudioNotificationForCalls
             Enabled                                             = $instance.Enabled
@@ -113,7 +131,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ComplianceRecordingApplications,
 
         [Parameter()]
@@ -236,7 +254,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String[]]
+        [Microsoft.Management.Infrastructure.CimInstance]
         $ComplianceRecordingApplications,
 
         [Parameter()]
@@ -406,11 +424,42 @@ function Export-TargetResource
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
+            if ($null -ne $Results.ComplianceRecordingApplications)
+            {
+                $complexMapping = @(
+                    @{
+                        Name            = 'ComplianceRecordingApplications'
+                        CimInstanceName = 'Microsoft.Teams.Policy.Administration.Cmdlets.Core.ComplianceRecordingApplication'
+                        IsRequired      = $False
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.ComplianceRecordingApplications `
+                    -CIMInstanceName 'Microsoft.Teams.Policy.Administration.Cmdlets.Core.ComplianceRecordingApplication' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                {
+                    $Results.ComplianceRecordingApplications = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('ComplianceRecordingApplications') | Out-Null
+                }
+            }
+
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+            if ($Results.ComplianceRecordingApplications)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ComplianceRecordingApplications' -IsCIMArray:$True
+                $currentDSCBlock = $currentDSCBlock.Replace('ComplianceRecordingApplications         = @("', 'ComplianceRecordingApplications         = @(')
+                $currentDSCBlock = $currentDSCBlock.Replace("            `",`"`r`n", '')
+
+            }
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
