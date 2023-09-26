@@ -9,7 +9,7 @@
 * O365OrgSettings
   * Changes to how ToDo discrepencies are being fixed in the SET method.
 * M365DSCDRGUtil
-  * Added support for ntune URIs to be dynamic based on user 
+  * Added support for Intune URIs to be dynamic based on user 
     cloud (Commercial, GCC-H..etc) 
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.6.1.
