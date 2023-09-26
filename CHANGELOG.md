@@ -11,6 +11,8 @@
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.6.1.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.117.
+* MISC
+  * Fixed handling of Graph connection in Update-M365DSCAllowedGraphScopes
 
 # 1.23.920.2
 
