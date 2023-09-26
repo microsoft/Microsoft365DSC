@@ -1011,7 +1011,7 @@ function New-IntuneSettingCatalogPolicy
     try
     {
 	$BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
-        $Uri = "$($BaseUrl)/beta/deviceManagement/configurationPolicies'
+        $Uri = '$($BaseUrl)/beta/deviceManagement/configurationPolicies'
 
         $policy = @{
             'name'              = $Name
