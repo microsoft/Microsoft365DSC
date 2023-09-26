@@ -1011,7 +1011,7 @@ function New-IntuneSettingCatalogPolicy
     try
     {
 	$BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
-        $Uri = '$($BaseUrl)/beta/deviceManagement/configurationPolicies'
+        $Uri = "$($BaseUrl)/beta/deviceManagement/configurationPolicies'
 
         $policy = @{
             'name'              = $Name
@@ -1075,7 +1075,7 @@ function Update-IntuneSettingCatalogPolicy
     try
     {
         $BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
-        $Uri = '$($BaseUrl)/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
+        $Uri = "$($BaseUrl)/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
 
         $policy = @{
             'name'              = $Name
@@ -1127,7 +1127,7 @@ function Update-DeviceConfigurationPolicyAssignment
     {
         $deviceManagementPolicyAssignments = @()
         $BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
-        $Uri = '$($BaseUrl)/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+        $Uri = "$($BaseUrl)/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
 
         foreach ($target in $targets)
         {
