@@ -429,13 +429,13 @@ function Export-TargetResource
                 $complexMapping = @(
                     @{
                         Name            = 'ComplianceRecordingApplications'
-                        CimInstanceName = 'Microsoft.Teams.Policy.Administration.Cmdlets.Core.ComplianceRecordingApplication'
+                        CimInstanceName = 'TeamsComplianceRecordingApplication'
                         IsRequired      = $False
                     }
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.ComplianceRecordingApplications `
-                    -CIMInstanceName 'Microsoft.Teams.Policy.Administration.Cmdlets.Core.ComplianceRecordingApplication' `
+                    -CIMInstanceName 'TeamsComplianceRecordingApplicationn' `
                     -ComplexTypeMapping $complexMapping
 
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
