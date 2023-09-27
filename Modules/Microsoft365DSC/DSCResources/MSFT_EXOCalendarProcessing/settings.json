@@ -1,0 +1,33 @@
+﻿{
+    "resourceName": "EXOAvailabilityConfig",
+    "description": "",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Federated Sharing",
+                "Organization Configuration",
+                "Mail Tips",
+                "Message Tracking"
+            ],
+            "requiredrolegroups": "Organization Management"
+        }
+    }
+}
