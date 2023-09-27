@@ -4,6 +4,9 @@
 
 * AADApplication
   * Added support for restoring soft deleted instances.
+* AADRoleSetting
+  * Fixed issue with export where ApplicationSecret was not returned.
+    FIXES [#3695](https://github.com/microsoft/Microsoft365DSC/issues/3695)
 * M365DSCRuleEvaluation
   * Improvements to how rules are evaluated and how drifts are logged.
 * O365OrgSettings
