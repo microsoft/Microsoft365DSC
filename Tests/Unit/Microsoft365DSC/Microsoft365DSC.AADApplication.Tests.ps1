@@ -38,6 +38,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgApplication -MockWith {
             }
 
+            Mock -CommandName MgBetaDirectoryDeletedItemAsApplication -MockWith {
+            }
+
             Mock -CommandName New-MgApplication -MockWith {
                 return @{
                     ID    = '12345-12345-12345-12345-12345'
