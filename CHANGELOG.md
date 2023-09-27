@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.927.1
 
 * AADApplication
   * Added support for restoring soft deleted instances.
