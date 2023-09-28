@@ -58,15 +58,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The IntunePolicySets should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CreatedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     ErrorCode = "noError"
                     GuidedDeploymentTags = @("FakeStringValue")
                     Id = "FakeStringValue"
-                    LastModifiedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                     RoleScopeTags = @("FakeStringValue")
                     Status = "unknown"
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            dataType                                   = '#microsoft.graph.GroupAssignmentTarget'
+                            groupId                                    = '12345678-1234-1234-1234-1234567890ab'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        } -ClientOnly)
+                    )
+                    Items = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyItems -Property @{
+                            dataType                                   = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                            payloadId                                    = 'T_12345678-1234-1234-1234-1234567890ab'
+                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                            displayName = 'FakeStringValue'
+                            guidedDeploymentTags = [string[]]@('FakeStringValue')
+                        } -ClientOnly)
+                    )
                     Ensure = "Present"
                     Credential = $Credential;
                 }
@@ -90,15 +104,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The IntunePolicySets exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CreatedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     ErrorCode = "noError"
                     GuidedDeploymentTags = @("FakeStringValue")
                     Id = "FakeStringValue"
-                    LastModifiedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                     RoleScopeTags = @("FakeStringValue")
                     Status = "unknown"
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            dataType                                   = '#microsoft.graph.GroupAssignmentTarget'
+                            groupId                                    = '12345678-1234-1234-1234-1234567890ab'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        } -ClientOnly)
+                    )
+                    Items = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyItems -Property @{
+                            dataType                                   = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                            payloadId                                    = 'T_12345678-1234-1234-1234-1234567890ab'
+                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                            displayName = 'FakeStringValue'
+                            guidedDeploymentTags = [string[]]@('FakeStringValue')
+                        } -ClientOnly)
+                    )
                     Ensure = 'Absent'
                     Credential = $Credential;
                 }
@@ -117,7 +145,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         LastModifiedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                         RoleScopeTags = @("FakeStringValue")
                         Status = "unknown"
+                        Assignments = @(
+                            [pscustomobject]@{
+                                            Target = [pscustomobject]@{
+                                                        AdditionalProperties = [pscustomobject]@{
+                                                                                '@odata.type' = '#microsoft.graph.GroupAssignmentTarget'
+                                                                                groupId = '12345678-1234-1234-1234-1234567890ab'
+                                                                                }
+                                                        DeviceAndAppManagementAssignmentFilterType = 'none'
+                                                        DeviceAndAppManagementAssignmentFilterId = $null
 
+                                                    }
+                                            }
+                                        )
+                        Items = @(
+                            [pscustomobject]@{
+
+                                            AdditionalProperties = [pscustomobject]@{
+                                                                    '@odata.type' = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                                                                    }
+                                            payloadId = 'T_12345678-1234-1234-1234-1234567890ab'
+                                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                                            displayName = 'FakeStringValue'
+                                            guidedDeploymentTags = @('FakeStringValue')
+
+                                            }
+                                        )
                     }
                 }
             }
@@ -138,15 +191,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The IntunePolicySets Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CreatedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
                     ErrorCode = "noError"
                     GuidedDeploymentTags = @("FakeStringValue")
                     Id = "FakeStringValue"
-                    LastModifiedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                     RoleScopeTags = @("FakeStringValue")
                     Status = "unknown"
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            dataType                                   = '#microsoft.graph.GroupAssignmentTarget'
+                            groupId                                    = '12345678-1234-1234-1234-1234567890ab'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        } -ClientOnly)
+                    )
+                    Items = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyItems -Property @{
+                            dataType                                   = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                            payloadId                                    = 'T_12345678-1234-1234-1234-1234567890ab'
+                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                            displayName = 'FakeStringValue'
+                            guidedDeploymentTags = [string[]]@('FakeStringValue')
+                        } -ClientOnly)
+                    )
+                    #>
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
@@ -165,6 +233,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         LastModifiedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                         RoleScopeTags = @("FakeStringValue")
                         Status = "unknown"
+                        Assignments = @(
+                            [pscustomobject]@{
+                                            Target = [pscustomobject]@{
+                                                        AdditionalProperties = [pscustomobject]@{
+                                                                                '@odata.type' = '#microsoft.graph.GroupAssignmentTarget'
+                                                                                groupId = '12345678-1234-1234-1234-1234567890ab'
+                                                                                }
+                                                        DeviceAndAppManagementAssignmentFilterType = 'none'
+                                                        DeviceAndAppManagementAssignmentFilterId = $null
+
+                                                    }
+                                            }
+                                        )
+                        Items = @(
+                            [pscustomobject]@{
+
+                                            AdditionalProperties = [pscustomobject]@{
+                                                                    '@odata.type' = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                                                                    }
+                                            payloadId = 'T_12345678-1234-1234-1234-1234567890ab'
+                                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                                            displayName = 'FakeStringValue'
+                                            guidedDeploymentTags = @('FakeStringValue')
+
+                                            }
+                                        )
 
                     }
                 }
@@ -179,15 +273,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The IntunePolicySets exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    CreatedDateTime = "2023-01-01T00:00:00.0000000+00:00"
-                    Description = "FakeStringValue"
+                    Description = "UPDATED-FakeStringValue"
                     DisplayName = "FakeStringValue"
                     ErrorCode = "noError"
                     GuidedDeploymentTags = @("FakeStringValue")
                     Id = "FakeStringValue"
-                    LastModifiedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                     RoleScopeTags = @("FakeStringValue")
                     Status = "unknown"
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            dataType                                   = '#microsoft.graph.GroupAssignmentTarget'
+                            groupId                                    = '12345678-1234-1234-1234-1234567890ab'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        } -ClientOnly)
+                    )
+                    Items = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyItems -Property @{
+                            dataType                                   = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                            payloadId                                    = 'T_12345678-1234-1234-1234-1234567890ab'
+                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                            displayName = 'FakeStringValue'
+                            guidedDeploymentTags = [string[]]@('FakeStringValue')
+                        } -ClientOnly)
+                    )
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
@@ -203,6 +311,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         LastModifiedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                         RoleScopeTags = @("FakeStringValue")
                         Status = "unknown"
+                        Assignments = @(
+                            [pscustomobject]@{
+                                            Target = [pscustomobject]@{
+                                                        AdditionalProperties = [pscustomobject]@{
+                                                                                '@odata.type' = '#microsoft.graph.GroupAssignmentTarget'
+                                                                                groupId = '12345678-1234-1234-1234-1234567890ab'
+                                                                                }
+                                                        DeviceAndAppManagementAssignmentFilterType = 'none'
+                                                        DeviceAndAppManagementAssignmentFilterId = $null
+
+                                                    }
+                                            }
+                                        )
+                        Items = @(
+                            [pscustomobject]@{
+
+                                            AdditionalProperties = [pscustomobject]@{
+                                                                    '@odata.type' = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                                                                    }
+                                            payloadId = 'T_12345678-1234-1234-1234-1234567890ab'
+                                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                                            displayName = 'FakeStringValue'
+                                            guidedDeploymentTags = @('FakeStringValue')
+
+                                            }
+                                        )
                     }
                 }
             }
@@ -243,7 +377,32 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         LastModifiedDateTime = "2023-01-01T00:00:00.0000000+00:00"
                         RoleScopeTags = @("FakeStringValue")
                         Status = "unknown"
+                        Assignments = @(
+                            [pscustomobject]@{
+                                            Target = [pscustomobject]@{
+                                                        AdditionalProperties = [pscustomobject]@{
+                                                                                '@odata.type' = '#microsoft.graph.GroupAssignmentTarget'
+                                                                                groupId = '12345678-1234-1234-1234-1234567890ab'
+                                                                                }
+                                                        DeviceAndAppManagementAssignmentFilterType = 'none'
+                                                        DeviceAndAppManagementAssignmentFilterId = $null
 
+                                                    }
+                                            }
+                                        )
+                        Items = @(
+                            [pscustomobject]@{
+
+                                            AdditionalProperties = [pscustomobject]@{
+                                                                    '@odata.type' = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                                                                    }
+                                            payloadId = 'T_12345678-1234-1234-1234-1234567890ab'
+                                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                                            displayName = 'FakeStringValue'
+                                            guidedDeploymentTags = @('FakeStringValue')
+
+                                            }
+                                        )
                     }
                 }
             }

@@ -312,8 +312,6 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message ("#### CURRENT INSTANCE #### requirement: " + $ensure + "   actual: " + $currentInstance.Ensure)
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -422,7 +420,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing the Intune Policy Sets with Id {$($currentInstance.Id)}"
         #region resource generator code
-Remove-MgbetaDeviceAppManagementPolicySet -PolicySetId $currentInstance.Id
+        Remove-MgbetaDeviceAppManagementPolicySet -PolicySetId $currentInstance.Id
         #endregion
     }
 }
