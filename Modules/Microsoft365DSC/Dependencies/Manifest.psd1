@@ -86,7 +86,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.0.120"
+            RequiredVersion = "1.0.121"
         },
         @{
             ModuleName      = 'PnP.PowerShell'
