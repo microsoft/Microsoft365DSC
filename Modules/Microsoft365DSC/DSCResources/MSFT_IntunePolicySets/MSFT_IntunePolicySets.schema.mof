@@ -24,10 +24,8 @@ class MSFT_IntunePolicySets : OMI_BaseResource
 {
     [Write, Description("Description of the PolicySet.")] String Description;
     [Required, Description("DisplayName of the PolicySet.")] String DisplayName;
-    [Write, Description("Error code if any occured. Possible values are: noError, unauthorized, notFound, deleted."), ValueMap{"noError","unauthorized","notFound","deleted"}, Values{"noError","unauthorized","notFound","deleted"}] String ErrorCode;
     [Write, Description("Tags of the guided deployment")] String GuidedDeploymentTags[];
     [Write, Description("RoleScopeTags of the PolicySet")] String RoleScopeTags[];
-    [Write, Description("Validation/assignment status of the PolicySet. Possible values are: unknown, validating, partialSuccess, success, error, notAssigned."), ValueMap{"unknown","validating","partialSuccess","success","error","notAssigned"}, Values{"unknown","validating","partialSuccess","success","error","notAssigned"}] String Status;
     [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyItems")] String Items[];

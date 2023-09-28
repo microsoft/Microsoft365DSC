@@ -14,22 +14,12 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('noError','unauthorized','notFound','deleted')]
-        [System.String]
-        $ErrorCode,
-
-        [Parameter()]
         [System.String[]]
         $GuidedDeploymentTags,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTags,
-
-        [Parameter()]
-        [ValidateSet('unknown','validating','partialSuccess','success','error','notAssigned')]
-        [System.String]
-        $Status,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -138,28 +128,12 @@ function Get-TargetResource
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Policy Sets with Id {$Id} and DisplayName {$DisplayName} was found."
 
-        #region resource generator code
-        $enumErrorCode = $null
-        if ($null -ne $getValue.ErrorCode)
-        {
-            $enumErrorCode = $getValue.ErrorCode.ToString()
-        }
-
-        $enumStatus = $null
-        if ($null -ne $getValue.Status)
-        {
-            $enumStatus = $getValue.Status.ToString()
-        }
-        #endregion
-
         $results = @{
             #region resource generator code
             Description           = $getValue.Description
             DisplayName           = $getValue.DisplayName
-            ErrorCode             = $enumErrorCode
             GuidedDeploymentTags  = $getValue.GuidedDeploymentTags
             RoleScopeTags         = $getValue.RoleScopeTags
-            Status                = $enumStatus
             Id                    = $getValue.Id
             Ensure                = 'Present'
             Credential            = $Credential
@@ -239,22 +213,12 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('noError','unauthorized','notFound','deleted')]
-        [System.String]
-        $ErrorCode,
-
-        [Parameter()]
         [System.String[]]
         $GuidedDeploymentTags,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTags,
-
-        [Parameter()]
-        [ValidateSet('unknown','validating','partialSuccess','success','error','notAssigned')]
-        [System.String]
-        $Status,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -322,7 +286,6 @@ function Set-TargetResource
         $BoundParameters.Remove("Items") | Out-Null
         # remove unused values
         $BoundParameters.Remove('Id') | Out-Null
-        $BoundParameters.Remove('Status') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -372,8 +335,6 @@ function Set-TargetResource
         $BoundParameters.Remove("Items") | Out-Null
         # remove unused values
         $BoundParameters.Remove('Id') | Out-Null
-        $BoundParameters.Remove('Status') | Out-Null
-        $BoundParameters.Remove('ErrorCode') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -441,22 +402,12 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [ValidateSet('noError','unauthorized','notFound','deleted')]
-        [System.String]
-        $ErrorCode,
-
-        [Parameter()]
         [System.String[]]
         $GuidedDeploymentTags,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTags,
-
-        [Parameter()]
-        [ValidateSet('unknown','validating','partialSuccess','success','error','notAssigned')]
-        [System.String]
-        $Status,
 
         [Parameter(Mandatory = $true)]
         [System.String]

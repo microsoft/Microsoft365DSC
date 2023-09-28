@@ -60,11 +60,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
-                    ErrorCode = "noError"
                     GuidedDeploymentTags = @("FakeStringValue")
                     Id = "FakeStringValue"
                     RoleScopeTags = @("FakeStringValue")
-                    Status = "unknown"
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             dataType                                   = '#microsoft.graph.GroupAssignmentTarget'
@@ -106,11 +104,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
-                    ErrorCode = "noError"
                     GuidedDeploymentTags = @("FakeStringValue")
                     Id = "FakeStringValue"
                     RoleScopeTags = @("FakeStringValue")
-                    Status = "unknown"
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             dataType                                   = '#microsoft.graph.GroupAssignmentTarget'
@@ -193,11 +189,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
-                    ErrorCode = "noError"
                     GuidedDeploymentTags = @("FakeStringValue")
                     Id = "FakeStringValue"
                     RoleScopeTags = @("FakeStringValue")
-                    Status = "unknown"
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             dataType                                   = '#microsoft.graph.GroupAssignmentTarget'
@@ -275,11 +269,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description = "UPDATED-FakeStringValue"
                     DisplayName = "FakeStringValue"
-                    ErrorCode = "noError"
                     GuidedDeploymentTags = @("FakeStringValue")
                     Id = "FakeStringValue"
                     RoleScopeTags = @("FakeStringValue")
-                    Status = "unknown"
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             dataType                                   = '#microsoft.graph.GroupAssignmentTarget'
