@@ -1,5 +1,8 @@
 # Change log for Microsoft365DSC
 
+* TestHarness.psm1
+  * Added code around DscTestsPath parameter to target a single test file during development
+
 # 1.23.927.1
 
 * AADApplication
