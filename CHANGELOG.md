@@ -1,5 +1,8 @@
 # Change log for Microsoft365DSC
 
+* IntunePolicySets
+  * New Configuration for Intune Policy Sets
+
 # 1.23.927.1
 
 * AADApplication
