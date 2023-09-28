@@ -79,8 +79,6 @@ function Invoke-TestHarness
 			$filesToExecute += $testToRun
 		}
 	}
-	
-	#write-host ($filesToExecute | Out-String)
 
     $Params = [ordered]@{
         Path = $filesToExecute
