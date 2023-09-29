@@ -2,8 +2,16 @@
 
 # UNRELEASED
 
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.121.
+
+# 1.23.927.1
+
 * AADApplication
   * Added support for restoring soft deleted instances.
+* AADRoleSetting
+  * Fixed issue with export where ApplicationSecret was not returned.
+    FIXES [#3695](https://github.com/microsoft/Microsoft365DSC/issues/3695)
 * M365DSCRuleEvaluation
   * Improvements to how rules are evaluated and how drifts are logged.
 * O365OrgSettings
@@ -11,6 +19,8 @@
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.6.1.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.117.
+* MISC
+  * Fixed handling of Graph connection in Update-M365DSCAllowedGraphScopes
 
 # 1.23.920.2
 
