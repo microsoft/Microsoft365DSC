@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the device enrollment platform restriction. | |
-| **DisplayName** | Required | String | Display name of the device enrollment platform restriction. | |
+| **Identity** | Write | String | Identity of the device enrollment platform restriction. | |
+| **DisplayName** | Key | String | Display name of the device enrollment platform restriction. | |
 | **Description** | Write | String | Description of the device enrollment platform restriction. | |
 | **DeviceEnrollmentConfigurationType** | Write | String | Support for Enrollment Configuration Type Inherited from deviceEnrollmentConfiguration. | `singlePlatformRestriction`, `platformRestrictions` |
 | **IosRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Ios restrictions based on platform, platform operating system version, and device ownership. | |

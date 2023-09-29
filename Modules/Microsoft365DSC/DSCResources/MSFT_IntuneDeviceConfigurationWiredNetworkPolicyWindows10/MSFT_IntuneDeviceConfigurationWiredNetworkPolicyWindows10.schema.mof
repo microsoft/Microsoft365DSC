@@ -36,8 +36,8 @@ class MSFT_IntuneDeviceConfigurationWiredNetworkPolicyWindows10 : OMI_BaseResour
     [Write, Description("Specify root certificate for client validation.")] String RootCertificateForClientValidationId;
     [Write, Description("Specify secondary root certificate for client validation.")] String SecondaryRootCertificateForClientValidationId;
     [Write, Description("Admin provided description of the Device Configuration.")] String Description;
-    [Required, Description("Admin provided name of the device configuration.")] String DisplayName;
-    [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Key, Description("Admin provided name of the device configuration.")] String DisplayName;
+    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

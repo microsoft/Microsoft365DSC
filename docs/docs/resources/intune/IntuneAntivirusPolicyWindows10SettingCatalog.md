@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the endpoint protection policy for Windows 10. | |
-| **DisplayName** | Required | String | Display name of the endpoint protection policy for Windows 10. | |
+| **DisplayName** | Key | String | Display name of the endpoint protection policy for Windows 10. | |
+| **Identity** | Write | String | Identity of the endpoint protection policy for Windows 10. | |
 | **Description** | Write | String | Description of the endpoint protection policy for Windows 10. | |
 | **tamperprotection** | Write | String | Allows or disallows scanning of archives. (0: enable feature. 1: disable feature) | `0`, `1` |
 | **disableaccountprotectionui** | Write | String | Use this policy setting to specify if to display the Account protection area in Windows Defender Security Center. (0: disable feature. 1: enable feature) | `0`, `1` |

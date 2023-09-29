@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Id of the Intune policy. | |
-| **DisplayName** | Required | String | Display name of the Intune policy. | |
+| **Id** | Write | String | Id of the Intune policy. | |
+| **DisplayName** | Key | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
 | **AccountBlockModification** | Write | Boolean | Indicates whether or not to allow account modification when the device is in supervised mode. | |
 | **ActivationLockAllowWhenSupervised** | Write | Boolean | Activation Lock makes it harder for a lost or stolen device to be reactivated. | |

@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
-| **DisplayName** | Required | String | Policy display name. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
+| **DisplayName** | Key | String | Policy display name. | |
 | **AzureRightsManagementServicesAllowed** | Write | Boolean | Specifies whether to allow Azure RMS encryption for WIP | |
 | **DataRecoveryCertificate** | Write | MSFT_MicrosoftGraphwindowsInformationProtectionDataRecoveryCertificate | Specifies a recovery certificate that can be used for data recovery of encrypted files. This is the same as the data recovery agent(DRA) certificate for encrypting file system(EFS) | |
 | **EnforcementLevel** | Write | String | WIP enforcement level.See the Enum definition for supported values. Possible values are: noProtection, encryptAndAuditOnly, encryptAuditAndPrompt, encryptAuditAndBlock. | `noProtection`, `encryptAndAuditOnly`, `encryptAuditAndPrompt`, `encryptAuditAndBlock` |

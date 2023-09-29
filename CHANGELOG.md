@@ -2,6 +2,62 @@
 
 # UNRELEASED
 
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.121.
+
+# 1.23.927.1
+
+* AADApplication
+  * Added support for restoring soft deleted instances.
+* AADRoleSetting
+  * Fixed issue with export where ApplicationSecret was not returned.
+    FIXES [#3695](https://github.com/microsoft/Microsoft365DSC/issues/3695)
+* M365DSCRuleEvaluation
+  * Improvements to how rules are evaluated and how drifts are logged.
+* O365OrgSettings
+  * Changes to how ToDo discrepencies are being fixed in the SET method.
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.6.1.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.117.
+* MISC
+  * Fixed handling of Graph connection in Update-M365DSCAllowedGraphScopes
+
+# 1.23.920.2
+
+* DEPENDENCIES
+  * Rolled back Microsoft.Graph to version 2.5.0.
+* MISC
+  * M365DSCDRGUtil: Write properties properly indented and in new line
+    FIXES [#3634](https://github.com/microsoft/Microsoft365DSC/issues/3634)
+
+# 1.23.920.1
+
+* O365OrgSettings
+  * Fixes and issue where a the wrong url was being used in some of the API
+    calls, resulting in null returns for some properties in the Get method.
+* SPOSharingSettings
+  * Changes verbose prompts to warnings.
+* TeamsGroupPolicyAssignment
+  * Changes to how Group IDs are retrieved and evaluated.
+* TeamsAppPermissionPolicy
+  * Fixes to the Test-TargetResource evaluation of empty arrays.
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.6.0.
+  * Updated MicrosoftTeams to version 5.6.0.
+    FIXES [#3671](https://github.com/microsoft/Microsoft365DSC/issues/3671)
+* MISC
+  * M365DSCUtil: Fix problem naming similar resources
+    FIXES [#3700](https://github.com/microsoft/Microsoft365DSC/issues/3700)
+
+# 1.23.913.2
+
+* MISC
+  * Fixed a merge conflict in the Uninstall-M365DSCOutdatedDependencies
+    function.
+    FIXES [#3685](https://github.com/microsoft/Microsoft365DSC/issues/3685)
+
+# 1.23.913.1
+
 * AADNamedLocationPolicy
   * Set default value for CountryLookupMethod and removed unwanted properties
     FIXES [#3656](https://github.com/microsoft/Microsoft365DSC/issues/3656)
@@ -36,6 +92,8 @@
 * MISC
   * Improved error logging for methods installing or updating modules.
     FIXES [#3660](https://github.com/microsoft/Microsoft365DSC/issues/3660)
+  * Removed Id as a mandatory parameter for most AAD resources.
+    FIXES [#3344](https://github.com/microsoft/Microsoft365DSC/issues/3344)
   * Single quotes handling in Export for complex CIMInstances
     FIXES [#3479](https://github.com/microsoft/Microsoft365DSC/issues/3479)
 

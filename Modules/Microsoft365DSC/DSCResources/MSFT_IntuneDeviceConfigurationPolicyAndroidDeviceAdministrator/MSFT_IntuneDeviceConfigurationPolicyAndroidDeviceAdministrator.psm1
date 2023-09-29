@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         #region resource generator code
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -283,20 +283,14 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $getValue = $null
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
 
-        #region resource generator code
-        if (-Not [string]::IsNullOrEmpty($DisplayName))
+        if ($null -eq $getValue)
         {
             $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidGeneralDeviceConfiguration' `
             }
-        }
-
-        if (-not $getValue)
-        {
-            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
         }
         #endregion
         $complexAppsHideList = @()
@@ -481,7 +475,7 @@ function Set-TargetResource
     param
     (
         #region resource generator code
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -878,7 +872,7 @@ function Test-TargetResource
     param
     (
         #region resource generator code
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 

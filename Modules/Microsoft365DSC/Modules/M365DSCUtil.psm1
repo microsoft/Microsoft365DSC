@@ -2938,13 +2938,6 @@ function Uninstall-M365DSCOutdatedDependencies
             }
             $i++
         }
-        catch
-        {
-            New-M365DSCLogEntry -Message 'Error Uninstalling Outdated Dependencies:' `
-                -Exception $_ `
-                -Source $($MyInvocation.MyCommand.Source)
-            Write-Error $_
-        }
     }
     catch
     {
@@ -3308,7 +3301,7 @@ function Get-M365DSCExportContentForResource
         $i++
     }
     $instanceName = $tempName
-    $Global:M365DSCExportedResourceInstancesNames += $tempName
+    [string[]]$Global:M365DSCExportedResourceInstancesNames += $tempName
 
     $content = [System.Text.StringBuilder]::New()
     [void]$content.Append("        $ResourceName `"$instanceName`"`r`n")

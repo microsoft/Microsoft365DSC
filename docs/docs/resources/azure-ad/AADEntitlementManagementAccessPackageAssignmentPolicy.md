@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Id of the access package assignment policy. | |
-| **DisplayName** | Required | String | The display name of the policy. | |
+| **DisplayName** | Key | String | The display name of the policy. | |
+| **Id** | Write | String | Id of the access package assignment policy. | |
 | **AccessPackageId** | Write | String | Identifier of the access package. | |
 | **AccessReviewSettings** | Write | MSFT_MicrosoftGraphassignmentreviewsettings | Who must review, and how often, the assignments to the access package from this policy. This property is null if reviews are not required. | |
 | **CanExtend** | Write | Boolean | Indicates whether a user can extend the access package assignment duration after approval. | |

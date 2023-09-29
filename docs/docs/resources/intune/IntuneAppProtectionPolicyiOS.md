@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the iOS App Protection Policy. | |
-| **DisplayName** | Required | String | Display name of the iOS App Protection Policy. | |
+| **DisplayName** | Key | String | Display name of the iOS App Protection Policy. | |
+| **Identity** | Write | String | Identity of the iOS App Protection Policy. | |
 | **Description** | Write | String | Description of the iOS App Protection Policy. | |
 | **PeriodOfflineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is not connected to the internet. | |
 | **PeriodOnlineBeforeAccessCheck** | Write | String | The period after which access is checked when the device is connected to the internet. | |

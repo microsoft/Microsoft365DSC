@@ -18,8 +18,8 @@
 | **UsernameAADSource** | Write | String | Name of the AAD field, that will be used to retrieve UserName for email profile. Possible values are: userPrincipalName, primarySmtpAddress, samAccountName. | `userPrincipalName`, `primarySmtpAddress`, `samAccountName` |
 | **UsernameSource** | Write | String | Username attribute that is picked from AAD and injected into this profile before installing on the device. Possible values are: userPrincipalName, primarySmtpAddress. | `userPrincipalName`, `primarySmtpAddress` |
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
-| **DisplayName** | Required | String | Admin provided name of the device configuration. | |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **DisplayName** | Key | String | Admin provided name of the device configuration. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |

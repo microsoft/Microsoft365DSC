@@ -119,8 +119,8 @@ class MSFT_MicrosoftGraphcustomextensionendpointconfiguration
 [ClassVersion("1.0.0.0"), FriendlyName("AADEntitlementManagementAccessPackageAssignmentPolicy")]
 class MSFT_AADEntitlementManagementAccessPackageAssignmentPolicy : OMI_BaseResource
 {
-    [Key, Description("Id of the access package assignment policy.")] String Id;
-    [Required, Description("The display name of the policy.")] String DisplayName;
+    [Key, Description("The display name of the policy.")] String DisplayName;
+    [Write, Description("Id of the access package assignment policy.")] String Id;
     [Write, Description("Identifier of the access package.")] String AccessPackageId;
     [Write, Description("Who must review, and how often, the assignments to the access package from this policy. This property is null if reviews are not required."), EmbeddedInstance("MSFT_MicrosoftGraphassignmentreviewsettings")] String AccessReviewSettings;
     [Write, Description("Indicates whether a user can extend the access package assignment duration after approval.")] Boolean CanExtend;

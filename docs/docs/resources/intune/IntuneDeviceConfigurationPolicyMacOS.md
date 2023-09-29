@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | | |
-| **DisplayName** | Required | String | | |
+| **Id** | Write | String | | |
+| **DisplayName** | Key | String | | |
 | **Description** | Write | String | | |
 | **AddingGameCenterFriendsBlocked** | Write | Boolean | | |
 | **AirDropBlocked** | Write | Boolean | | |
