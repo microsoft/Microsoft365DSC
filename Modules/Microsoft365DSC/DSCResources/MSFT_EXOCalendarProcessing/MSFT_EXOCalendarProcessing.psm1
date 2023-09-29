@@ -69,7 +69,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $AllRequestDeleteAttachments,
+        $DeleteAttachments,
 
         [Parameter()]
         [System.Boolean]
@@ -220,26 +220,60 @@ function Get-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Getting configuration of Availability Config for $OrgWideAccount"
+    Write-Verbose -Message "Getting configuration of Calendar Processing settings for $Identity"
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
 
     try
     {
-        $AvailabilityConfigs = Get-AvailabilityConfig -ErrorAction Stop
+        $calendarProc = Get-CalendarProcessing -Identity $Identity -ErrorAction SilentlyContinue
 
-        if ($null -ne $AvailabilityConfigs -and $null -ne $AvailabilityConfigs.OrgWideAccount)
+        if ($null -eq $calendarProc)
         {
-            $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $OrgWideAccount })
-        }
-        if ($null -eq $AvailabilityConfig)
-        {
-            Write-Verbose -Message "Availability config for $($OrgWideAccount) does not exist."
+            Write-Verbose -Message "Calendar processing settings for $($Identity) does not exist."
             return $nullReturn
         }
         $result = @{
-            OrgWideAccount        = $AvailabilityConfig.OrgWideAccount
+            Identity                             = $calendarProc.Identity
+            AddAdditionalResponse                = $calendarProc.AddAdditionalResponse
+            AdditionalResponse                   = $calendarProc.AdditionalResponse
+            AddNewRequestsTentatively            = $calendarProc.AddNewRequestsTentatively
+            AddOrganizerToSubject                = $calendarProc.AddOrganizerToSubject
+            AllBookInPolicy                      = $calendarProc.AllBookInPolicy
+            AllowConflicts                       = $calendarProc.AllowConflicts
+            AllowRecurringMeetings               = $calendarProc.AllowRecurringMeetings
+            AllRequestInPolicy                   = $calendarProc.AllRequestInPolicy
+            AllRequestOutOfPolicy                = $calendarProc.AllRequestOutOfPolicy
+            AutomateProcessing                   = $calendarProc.AutomateProcessing
+            BookingType                          = $calendarProc.BookingType
+            BookingWindowInDays                  = $calendarProc.BookingWindowInDays
+            BookInPolicy                         = $calendarProc.BookInPolicy
+            ConflictPercentageAllowed            = [Array]$calendarProc.ConflictPercentageAllowed
+            DeleteAttachments                    = $calendarProc.DeleteAttachments
+            DeleteComments                       = $calendarProc.DeleteComments
+            DeleteNonCalendarItems               = $calendarProc.DeleteNonCalendarItems
+            DeleteSubject                        = $calendarProc.DeleteSubject
+            EnableAutoRelease                    = $calendarProc.EnableAutoRelease
+            EnableResponseDetails                = $calendarProc.EnableResponseDetails
+            EnforceCapacity                      = $calendarProc.EnforceCapacity
+            EnforceSchedulingHorizon             = $calendarProc.EnforceSchedulingHorizon
+            ForwardRequestsToDelegates           = $calendarProc.ForwardRequestsToDelegates
+            MaximumConflictInstances             = $calendarProc.MaximumConflictInstances
+            MaximumDurationInMinutes             = $calendarProc.MaximumDurationInMinutes
+            MinimumDurationInMinutes             = $calendarProc.MinimumDurationInMinutes
+            OrganizerInfo                        = $calendarProc.OrganizerInfo
+            PostReservationMaxClaimTimeInMinutes = $calendarProc.PostReservationMaxClaimTimeInMinutes
+            ProcessExternalMeetingMessages       = $calendarProc.ProcessExternalMeetingMessages
+            RemoveCanceledMeetings               = $calendarProc.RemoveCanceledMeetings
+            RemoveForwardedMeetingNotifications  = $calendarProc.RemoveForwardedMeetingNotifications
+            RemoveOldMeetingMessages             = $calendarProc.RemoveOldMeetingMessages
+            RemovePrivateProperty                = $calendarProc.RemovePrivateProperty
+            RequestInPolicy                      = [Array]$calendarProc.RequestInPolicy
+            RequestOutOfPolicy                   = [Array]$calendarProc.RequestOutOfPolicy
+            ResourceDelegates                    = [Array]$calendarProc.ResourceDelegates
+            ScheduleOnlyDuringWorkHours          = $calendarProc.ScheduleOnlyDuringWorkHours
+            TentativePendingApproval             = $calendarProc.TentativePendingApproval
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -401,7 +435,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Availability Config for account $OrgWideAccount"
+    Write-Verbose -Message "Testing configuration of Calendar Processing for account $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -409,19 +443,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $DesiredValues = $PSBoundParameters
-    if ($OrgWideAccount.Contains('@'))
-    {
-        $DesiredValues.OrgWideAccount = $OrgWideAccount.Split('@')[0]
-    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -485,47 +508,42 @@ function Export-TargetResource
 
     try
     {
-        if ($null -eq (Get-Command Get-AvailabilityConfig -ErrorAction SilentlyContinue))
-        {
-            Write-Host "`r`n    $($Global:M365DSCEmojiRedX) The specified account doesn't have permissions to access Availibility Config"
-            return ''
-        }
-        $AvailabilityConfig = Get-AvailabilityConfig -ErrorAction Stop
+        $mailboxes = Get-Mailbox -ErrorAction Stop
 
-        if ($null -eq $AvailabilityConfig)
+        if ($null -eq $mailboxes)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             return ''
         }
 
-        $OrgWideValue = "NotConfigured"
-        if ($null -ne $AvailabilityConfig.OrgWideAccount)
+        foreach ($mailbox in $mailboxes)
         {
-            $OrgWideValue = $AvailabilityConfig.OrgWideAccount.ToString()
-        }
-        $Params = @{
-            OrgWideAccount        = $OrgWideValue
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
-            CertificatePath       = $CertificatePath
-        }
-        $Results = Get-TargetResource @Params
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-            -Results $Results
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -Credential $Credential
-        $dscContent += $currentDSCBlock
+            $Params = @{
+                Identity              = $mailbox.UserPrincipalName
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                CertificatePassword   = $CertificatePassword
+                Managedidentity       = $ManagedIdentity.IsPresent
+                CertificatePath       = $CertificatePath
+            }
+            $Results = Get-TargetResource @Params
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
 
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
-        Write-Host $Global:M365DSCEmojiGreenCheckMark
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+            Write-Host $Global:M365DSCEmojiGreenCheckMark
+        }
+
+
         return $dscContent
     }
     catch
