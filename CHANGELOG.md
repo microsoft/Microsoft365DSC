@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.121.
 * IntunePolicySets
   * New Configuration for Intune Policy Sets
 
