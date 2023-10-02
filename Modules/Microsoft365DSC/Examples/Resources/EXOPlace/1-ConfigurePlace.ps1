@@ -16,27 +16,21 @@ Configuration Example
 
     node localhost
     {
-        EXOGroupSettings 'TestGroup'
+        EXOPlace 'TestPlace'
         {
-            DisplayName                            = "Test Group";
-            AccessType                             = "Public";
-            AlwaysSubscribeMembersToCalendarEvents = $False;
-            AuditLogAgeLimit                       = "90.00:00:00";
-            AutoSubscribeNewMembers                = $False;
-            CalendarMemberReadOnly                 = $False;
-            ConnectorsEnabled                      = $True;
-            Credential                             = $credential;
-            HiddenFromAddressListsEnabled          = $True;
-            HiddenFromExchangeClientsEnabled       = $True;
-            InformationBarrierMode                 = "Open";
-            Language                               = "en-US";
-            MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
-            MaxSendSize                            = "35 MB (36,700,160 bytes)";
-            ModerationEnabled                      = $False;
-            Notes                                  = "My Notes";
-            PrimarySmtpAddress                     = "TestGroup@contoso.com";
-            RequireSenderAuthenticationEnabled     = $True;
-            SubscriptionEnabled                    = $False;
+            AudioDeviceName        = "MyAudioDevice";
+            Capacity               = 15; #Drift
+            City                   = "";
+            Credential             = $credential
+            DisplayDeviceName      = "DisplayDeviceName";
+            Ensure                 = 'Present'
+            Identity               = "MyRoom@$contoso.com";
+            IsWheelChairAccessible = $True;
+            MTREnabled             = $False;
+            ParentType             = "None";
+            Phone                  = "555-555-5555";
+            Tags                   = @("Tag1", "Tag2");
+            VideoDeviceName        = "VideoDevice";
         }
     }
 }

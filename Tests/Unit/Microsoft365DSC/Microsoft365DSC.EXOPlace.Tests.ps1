@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'EXOCASMailboxPlan' -GenericStubModule $GenericStubPath
+    -DscResource 'EXOPlace' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -31,7 +31,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Set-CASMailboxPlan -MockWith {
+            Mock -CommandName Set-Place -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -40,28 +40,40 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name 'CASMailboxPlan update not required.' -Fixture {
+        Context -Name 'Instance is already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure            = 'Present'
-                    Identity          = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
-                    Credential        = $Credential
-                    ActiveSyncEnabled = $true
-                    ImapEnabled       = $true
-                    OwaMailboxPolicy  = 'OwaMailboxPolicy-Default'
-                    PopEnabled        = $true
+                    AudioDeviceName        = "MyAudioDevice";
+                    Capacity               = 10;
+                    City                   = "";
+                    Credential             = $Credential;
+                    DisplayDeviceName      = "DisplayDeviceName";
+                    Ensure                 = "Present";
+                    Identity               = "MyRoom@$contoso.com";
+                    IsWheelChairAccessible = $True;
+                    MTREnabled             = $False;
+                    ParentType             = "None";
+                    Phone                  = "555-555-5555";
+                    Tags                   = @("Tag1", "Tag2");
+                    VideoDeviceName        = "VideoDevice";
                 }
 
-                Mock -CommandName Get-CASMailboxPlan -MockWith {
-                    return @{
-                        Ensure            = 'Present'
-                        Identity          = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
-                        Credential        = $Credential
-                        ActiveSyncEnabled = $true
-                        ImapEnabled       = $true
-                        OwaMailboxPolicy  = 'OwaMailboxPolicy-Default'
-                        PopEnabled        = $true
-                    }
+                Mock -CommandName Get-Place -MockWith {
+                    return @(
+                        @{
+                            AudioDeviceName        = "MyAudioDevice";
+                            Capacity               = 10;
+                            City                   = "";
+                            DisplayDeviceName      = "DisplayDeviceName";
+                            Identity               = "MyRoom@$contoso.com";
+                            IsWheelChairAccessible = $True;
+                            MTREnabled             = $False;
+                            ParentType             = "None";
+                            Phone                  = "555-555-5555";
+                            Tags                   = @("Tag1", "Tag2");
+                            VideoDeviceName        = "VideoDevice";
+                        }
+                    )
                 }
             }
 
@@ -70,40 +82,58 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should not update anything in the Set Method' {
-                Set-TargetResource @testParams
+                (Get-TargetResource @testParams).Presence | Should -Be 'Present'
             }
         }
 
-        Context -Name 'CASMailboxPlan update needed.' -Fixture {
+        Context -Name 'Instance is NOT already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure            = 'Present'
-                    Identity          = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
-                    Credential        = $Credential
-                    ActiveSyncEnabled = $true
-                    ImapEnabled       = $true
-                    OwaMailboxPolicy  = 'OwaMailboxPolicy-Default'
-                    PopEnabled        = $true
+                    AudioDeviceName        = "MyAudioDevice";
+                    Capacity               = 10;
+                    City                   = "";
+                    Credential             = $Credential;
+                    DisplayDeviceName      = "DisplayDeviceName";
+                    Ensure                 = "Present";
+                    Identity               = "MyRoom@$contoso.com";
+                    IsWheelChairAccessible = $True;
+                    MTREnabled             = $False;
+                    ParentType             = "None";
+                    Phone                  = "555-555-5555";
+                    Tags                   = @("Tag1", "Tag2");
+                    VideoDeviceName        = "VideoDevice";
                 }
-                Mock -CommandName Get-CASMailboxPlan -MockWith {
-                    return @{
-                        Ensure            = 'Present'
-                        Identity          = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
-                        Credential        = $Credential
-                        ActiveSyncEnabled = $false
-                        ImapEnabled       = $false
-                        OwaMailboxPolicy  = 'OwaMailboxPolicy-Default'
-                        PopEnabled        = $false
-                    }
+
+                Mock -CommandName Get-Place -MockWith {
+                    return @(
+                        @{
+                            AudioDeviceName        = "MyAudioDevice";
+                            Capacity               = 15; #Drift
+                            City                   = "";
+                            DisplayDeviceName      = "DisplayDeviceName";
+                            Identity               = "MyRoom@$contoso.com";
+                            IsWheelChairAccessible = $True;
+                            MTREnabled             = $False;
+                            ParentType             = "None";
+                            Phone                  = "555-555-5555";
+                            Tags                   = @("Tag1", "Tag2");
+                            VideoDeviceName        = "VideoDevice";
+                        }
+                    )
                 }
             }
 
-            It 'Should return false from the Test method' {
+            It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should call the Set method' {
+            It 'Should not update anything in the Set Method' {
+                (Get-TargetResource @testParams).Presence | Should -Be 'Present'
+            }
+
+            It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName Set-Place -Exactly 1
             }
         }
 
@@ -113,14 +143,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-CASMailboxPlan -MockWith {
-                    return @{
-                        Identity          = 'ExchangeOnlineEnterprise-6f6c267b-f8db-4020-b441-f7bd966a0ca0'
-                        ActiveSyncEnabled = $true
-                        ImapEnabled       = $true
-                        OwaMailboxPolicy  = 'OwaMailboxPolicy-Default'
-                        PopEnabled        = $true
-                    }
+                Mock -CommandName Get-Place -MockWith {
+                    return @(
+                        @{
+                            AudioDeviceName        = "MyAudioDevice";
+                            Capacity               = 15; #Drift
+                            City                   = "";
+                            DisplayDeviceName      = "DisplayDeviceName";
+                            Identity               = "MyRoom@$contoso.com";
+                            IsWheelChairAccessible = $True;
+                            MTREnabled             = $False;
+                            ParentType             = "None";
+                            Phone                  = "555-555-5555";
+                            Tags                   = @("Tag1", "Tag2");
+                            VideoDeviceName        = "VideoDevice";
+                        }
+                    )
                 }
             }
 
