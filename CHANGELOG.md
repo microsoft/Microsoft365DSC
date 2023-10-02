@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
-* TestHarness.psm1
-  * Added code around DscTestsPath parameter to target a single test file during development
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.121.
 
 # 1.23.927.1
 
