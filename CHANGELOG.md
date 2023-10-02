@@ -4,8 +4,6 @@
 
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.121.
-* IntunePolicySets
-  * New Configuration for Intune Policy Sets
 
 # 1.23.927.1
 
