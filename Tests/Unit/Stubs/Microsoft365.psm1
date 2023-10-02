@@ -725,6 +725,31 @@ function Get-Mailbox
         $IncludeEmailAddressDisplayNames
     )
 }
+function Get-MailboxAutoReplyConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ReadFromDomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
 function Get-MailboxPlan
 {
     [CmdletBinding()]
@@ -892,6 +917,10 @@ function Get-ManagementRoleAssignment
         $Identity,
 
         [Parameter()]
+        [System.Object]
+        $RecipientGroupScope,
+
+        [Parameter()]
         [System.Boolean]
         $Enabled,
 
@@ -908,10 +937,6 @@ function Get-ManagementRoleAssignment
         $ConfigWriteScope,
 
         [Parameter()]
-        [System.Object]
-        $RoleAssignee,
-
-        [Parameter()]
         [System.Boolean]
         $Delegating,
 
@@ -922,6 +947,10 @@ function Get-ManagementRoleAssignment
         [Parameter()]
         [System.Object[]]
         $AssignmentMethod,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GetEffectiveUsers,
 
         [Parameter()]
         [System.Object]
@@ -940,8 +969,8 @@ function Get-ManagementRoleAssignment
         $RecipientOrganizationalUnitScope,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $GetEffectiveUsers
+        [System.Object]
+        $RoleAssignee
     )
 }
 function Get-MessageClassification
@@ -3323,8 +3352,8 @@ function New-ManagementRoleAssignment
         $CustomRecipientWriteScope,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $RecipientGroupScope,
 
         [Parameter()]
         [System.String]
@@ -3336,11 +3365,15 @@ function New-ManagementRoleAssignment
 
         [Parameter()]
         [System.Object]
-        $Policy,
+        $RecipientAdministrativeUnitScope,
 
         [Parameter()]
         [System.Object]
         $SecurityGroup,
+
+        [Parameter()]
+        [System.Object]
+        $ExclusiveRecipientWriteScope,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -3351,8 +3384,8 @@ function New-ManagementRoleAssignment
         $User,
 
         [Parameter()]
-        [System.Object]
-        $RecipientRelativeWriteScope,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -3368,15 +3401,15 @@ function New-ManagementRoleAssignment
 
         [Parameter()]
         [System.Object]
-        $RecipientAdministrativeUnitScope,
+        $Policy,
 
         [Parameter()]
         [System.Object]
-        $ExclusiveRecipientWriteScope,
+        $RecipientOrganizationalUnitScope,
 
         [Parameter()]
         [System.Object]
-        $RecipientOrganizationalUnitScope
+        $RecipientRelativeWriteScope
     )
 }
 function New-MessageClassification
@@ -4235,11 +4268,7 @@ function New-SafeAttachmentPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $ActionOnError
+        $Confirm
     )
 }
 function New-SafeAttachmentRule
@@ -8382,6 +8411,75 @@ function Set-Mailbox
         $MessageTrackingReadStatusEnabled
     )
 }
+function Set-MailboxAutoReplyConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $InternalMessage,
+
+        [Parameter()]
+        [System.String]
+        $DeclineMeetingMessage,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalAudience,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDefaultScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeclineEventsForScheduledOOF,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoDeclineFutureRequestsWhenOOF,
+
+        [Parameter()]
+        [System.Object]
+        $AutoReplyState,
+
+        [Parameter()]
+        [System.String[]]
+        $EventsToDeleteIDs,
+
+        [Parameter()]
+        [System.DateTime]
+        $StartTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateOOFEvent,
+
+        [Parameter()]
+        [System.String]
+        $OOFEventSubject,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeclineAllEventsForScheduledOOF,
+
+        [Parameter()]
+        [System.DateTime]
+        $EndTime,
+
+        [Parameter()]
+        [System.String]
+        $ExternalMessage
+    )
+}
 function Set-MailboxPlan
 {
     [CmdletBinding()]
@@ -8836,8 +8934,8 @@ function Set-ManagementRoleAssignment
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force,
+        [System.Object]
+        $RecipientGroupScope,
 
         [Parameter()]
         [System.Object]
@@ -8860,6 +8958,10 @@ function Set-ManagementRoleAssignment
         $Identity,
 
         [Parameter()]
+        [System.Object]
+        $RecipientOrganizationalUnitScope,
+
+        [Parameter()]
         [System.Boolean]
         $Enabled,
 
@@ -8872,8 +8974,8 @@ function Set-ManagementRoleAssignment
         $RecipientRelativeWriteScope,
 
         [Parameter()]
-        [System.Object]
-        $RecipientOrganizationalUnitScope
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function Set-MessageClassification
@@ -9548,7 +9650,7 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Boolean]
-        $OutlookMobileHelpShiftEnabled,
+        $AutomaticForcedReadReceiptEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -9791,6 +9893,10 @@ function Set-OrganizationConfig
         $CustomerLockboxEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $OutlookMobileHelpShiftEnabled,
+
+        [Parameter()]
         [System.Uri]
         $SiteMailboxCreationURL,
 
@@ -10006,10 +10112,6 @@ function Set-OwaMailboxPolicy
         $Confirm,
 
         [Parameter()]
-        [System.String]
-        $SetPhotoURL,
-
-        [Parameter()]
         [System.Int32]
         $DefaultClientLanguage,
 
@@ -10023,7 +10125,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $UseISO885915,
+        $MessagePreviewsDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -10039,7 +10141,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $OneDriveAttachmentsEnabled,
+        $NpsSurveysEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -10078,12 +10180,16 @@ function Set-OwaMailboxPolicy
         $SMimeSuppressNameChecksEnabled,
 
         [Parameter()]
+        [System.Object]
+        $ActionForUnknownFileAndMIMETypes,
+
+        [Parameter()]
         [System.String]
         $ExternalSPMySiteHostURL,
 
         [Parameter()]
         [System.Boolean]
-        $OnSendAddinsEnabled,
+        $OfflineEnabledWeb,
 
         [Parameter()]
         [System.Object]
@@ -10171,7 +10277,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $NpsSurveysEnabled,
+        $OfflineEnabledWin,
 
         [Parameter()]
         [System.Object]
@@ -10187,7 +10293,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $ReferenceAttachmentsEnabled,
+        $OnSendAddinsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -10259,6 +10365,10 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
+        $UseISO885915,
+
+        [Parameter()]
+        [System.Boolean]
         $RecoverDeletedItemsEnabled,
 
         [Parameter()]
@@ -10274,8 +10384,8 @@ function Set-OwaMailboxPolicy
         $WebPartsFrameOptionsType,
 
         [Parameter()]
-        [System.Object]
-        $ActionForUnknownFileAndMIMETypes,
+        [System.String]
+        $SetPhotoURL,
 
         [Parameter()]
         [System.Boolean]
@@ -10399,6 +10509,10 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
+        $OneDriveAttachmentsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PrintWithoutDownloadEnabled,
 
         [Parameter()]
@@ -10419,7 +10533,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $MessagePreviewsDisabled,
+        $ReferenceAttachmentsEnabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -10655,6 +10769,10 @@ function Set-RemoteDomain
         $PreferredInternetCodePageForShiftJis,
 
         [Parameter()]
+        [System.Boolean]
+        $SmtpDaneMandatoryModeEnabled,
+
+        [Parameter()]
         [System.String]
         $NonMimeCharacterSet,
 
@@ -10808,11 +10926,7 @@ function Set-SafeAttachmentPolicy
 
         [Parameter()]
         [System.String]
-        $QuarantineTag,
-
-        [Parameter()]
-        [System.Boolean]
-        $ActionOnError
+        $QuarantineTag
     )
 }
 function Set-SafeAttachmentRule
@@ -12289,6 +12403,7 @@ function Update-RoleGroupMember
     )
 }
 #endregion
+
 #region Microsoft.Graph.Applications
 function Get-MgApplication
 {
