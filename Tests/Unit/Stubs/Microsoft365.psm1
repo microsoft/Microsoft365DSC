@@ -12491,8 +12491,6 @@ function Update-RoleGroupMember
     )
 }
 #endregion
-
-
 #region Microsoft.Graph.Applications
 function Get-MgApplication
 {
@@ -59827,2625 +59825,1027 @@ function Get-MgBetaDirectoryObject
     )
 }
 #endregion
+#region SecurityComplianceCenter
+function Get-AdminAuditLogConfig
+{
+    [CmdletBinding()]
+    param(
 
-
-#region Microsoft.Graph.Groups
-function Get-MgGroup
+    )
+}
+function Get-AuditConfig
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String[]]
-        $Property,
+        [System.Object]
+        $DomainController
+    )
+}
+function Get-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
-        [PSObject]
-        $InputObject,
+        [System.Object]
+        $DomainController
+    )
+}
+function Get-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceValidate,
 
         [Parameter()]
-        [System.Int32]
-        $PageSize,
+        [System.Boolean]
+        $IncludeTestModeResults,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.String]
-        $ConsistencyLevel,
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $All,
+        $IncludeProgressFeedback,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DistributionDetail
+    )
+}
+function Get-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceValidate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeExecutionRuleInformation,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeExecutionRuleGuids
+    )
+}
+function Get-CaseHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeBindingsOnly,
+
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeBindings,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DistributionDetail
+    )
+}
+function Get-CaseHoldRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Policy
+    )
+}
+function Get-ComplianceCase
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $CaseType,
+
+        [Parameter()]
+        [System.String]
+        $RoleGroup,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RecentOnly,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController
+    )
+}
+function Get-ComplianceRetentionEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $BeginDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PreviewOnly,
+
+        [Parameter()]
+        [System.Object]
+        $EndDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController
+    )
+}
+function Get-ComplianceRetentionEventType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $LoadTag
+    )
+}
+function Get-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
+function Get-ComplianceSearchAction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Case,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Purge,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Details,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Export,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Preview,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
+function Get-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludingLabelState,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-DeviceConditionalAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-DeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-DlpCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Summary,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeRulesMetadata,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceValidate,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeExtendedProperties,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IRMUserRiskConfiguredAnyRule,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DistributionDetail
+    )
+}
+function Get-DlpComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeExecutionRuleGuids
+    )
+}
+function Get-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-FilePlanPropertyCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-FilePlanPropertyCitation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-FilePlanPropertyDepartment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-FilePlanPropertyReferenceId
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-FilePlanPropertySubCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-Label
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeDetailedLabelActions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipValidations,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ValidateContentTypeRemoval,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-LabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceValidate,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-ManagementRole
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RoleType,
+
+        [Parameter()]
+        [System.String[]]
+        $CmdletParameters,
+
+        [Parameter()]
+        [System.String[]]
+        $ScriptParameters,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Cmdlet,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recurse,
+
+        [Parameter()]
+        [System.String]
+        $Script,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GetChildren
+    )
+}
+function Get-ProtectionAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeTestModeResults,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ExcludeTeamsPolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetentionRuleTypes,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ErrorPolicyOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $DistributionDetail,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $TeamsPolicyOnly
+    )
+}
+function Get-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Policy
+    )
+}
+function Get-RoleGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SortBy,
 
         [Parameter()]
         [System.String]
         $Filter,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.Object]
+        $Identity,
 
         [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
+        [System.Object]
+        $Organization,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
+        $ShowPartnerLinked,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        [System.Object]
+        $ResultSize
     )
 }
-function Get-MgGroupLifecyclePolicy
+function Get-RoleGroupMember
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String[]]
-        $Property,
+        [System.Object]
+        $Identity,
 
         [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $GroupLifecyclePolicyId,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        [System.Object]
+        $ResultSize
     )
 }
-function Get-MgGroupMember
+function Get-ServicePrincipal
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String[]]
-        $Property,
+        [System.Object]
+        $Identity,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.String]
-        $ConsistencyLevel,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        [System.Object]
+        $Organization
     )
 }
-function Get-MgGroupMemberOf
+function Get-SupervisoryReviewPolicy
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String[]]
-        $Property,
+        [System.Object]
+        $Identity,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.String]
-        $ConsistencyLevel,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.String]
-        $DirectoryObjectId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        [System.Object]
+        $ResultSize
     )
 }
-function Get-MgGroupOwner
+function Get-SupervisoryReviewPolicyV2
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.String]
-        $ConsistencyLevel,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        [System.Object]
+        $Identity
     )
 }
-function New-MgGroup
+function Get-SupervisoryReviewRule
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $Identity,
 
         [Parameter()]
-        [System.String]
-        $Mail,
-
-        [Parameter()]
-        [System.String]
-        $Visibility,
-
-        [Parameter()]
-        [PSObject]
-        $PermissionGrants,
-
-        [Parameter()]
-        [PSObject]
-        $Sites,
-
-        [Parameter()]
-        [PSObject]
-        $AppRoleAssignments,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $SecurityEnabled,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $Calendar,
-
-        [Parameter()]
-        [System.String]
-        $SecurityIdentifier,
-
-        [Parameter()]
-        [PSObject]
-        $AssignedLicenses,
-
-        [Parameter()]
-        [System.DateTime]
-        $RenewedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $RejectedSenders,
-
-        [Parameter()]
-        [PSObject]
-        $Extensions,
-
-        [Parameter()]
-        [System.Int32]
-        $UnseenCount,
-
-        [Parameter()]
-        [System.String]
-        $Classification,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AutoSubscribeNewMembers,
-
-        [Parameter()]
-        [System.String[]]
-        $ProxyAddresses,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesNetBiosName,
-
-        [Parameter()]
-        [System.DateTime]
-        $ExpirationDateTime,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $OnPremisesProvisioningErrors,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesSecurityIdentifier,
-
-        [Parameter()]
-        [System.String]
-        $PreferredLanguage,
-
-        [Parameter()]
-        [PSObject]
-        $TransitiveMembers,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $HideFromAddressLists,
-
-        [Parameter()]
-        [PSObject]
-        $Planner,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.DateTime]
-        $OnPremisesLastSyncDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $Owners,
-
-        [Parameter()]
-        [PSObject]
-        $GroupLifecyclePolicies,
-
-        [Parameter()]
-        [PSObject]
-        $LicenseProcessingState,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesDomainName,
-
-        [Parameter()]
-        [PSObject]
-        $Settings,
-
-        [Parameter()]
-        [PSObject]
-        $AssignedLabels,
-
-        [Parameter()]
-        [PSObject]
-        $AcceptedSenders,
-
-        [Parameter()]
-        [PSObject]
-        $Onenote,
-
-        [Parameter()]
-        [System.String]
-        $MembershipRuleProcessingState,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [PSObject]
-        $MemberOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $MailEnabled,
-
-        [Parameter()]
-        [PSObject]
-        $Drives,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AllowExternalSenders,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [PSObject]
-        $Photo,
-
-        [Parameter()]
-        [System.String]
-        $Theme,
-
-        [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $HasMembersWithLicenseErrors,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [PSObject]
-        $TransitiveMemberOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $OnPremisesSyncEnabled,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsArchived,
-
-        [Parameter()]
-        [PSObject]
-        $Drive,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
-
-        [Parameter()]
-        [PSObject]
-        $CalendarView,
-
-        [Parameter()]
-        [PSObject]
-        $Photos,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsAssignableToRole,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject]
-        $CreatedOnBehalfOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $HideFromOutlookClients,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsSubscribedByMail,
-
-        [Parameter()]
-        [PSObject]
-        $Events,
-
-        [Parameter()]
-        [PSObject]
-        $Threads,
-
-        [Parameter()]
-        [PSObject]
-        $Team,
-
-        [Parameter()]
-        [PSObject]
-        $Members,
-
-        [Parameter()]
-        [System.String[]]
-        $GroupTypes,
-
-        [Parameter()]
-        [System.String]
-        $MembershipRule,
-
-        [Parameter()]
-        [System.String]
-        $PreferredDataLocation,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesSamAccountName,
-
-        [Parameter()]
-        [PSObject]
-        $Conversations,
-
-        [Parameter()]
-        [PSObject]
-        $MembersWithLicenseErrors,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
+        [System.Object]
+        $Policy
     )
 }
-function New-MgGroupLifecyclePolicy
+function Get-User
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
+        [System.String]
+        $SortBy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
+        $PublicFolder,
 
         [Parameter()]
-        [System.Int32]
-        $GroupLifetimeInDays,
+        [System.Object]
+        $Identity,
 
         [Parameter()]
-        [System.String]
-        $AlternateNotificationEmails,
+        [System.Object[]]
+        $RecipientTypeDetails,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.String]
-        $ManagedGroupTypes,
+        [System.Object]
+        $ResultSize,
 
         [Parameter()]
         [System.String]
-        $GroupId,
-
+        $Filter
+    )
+}
+function New-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
         [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
+        [System.Object]
+        $Workload,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        [System.Object]
+        $DomainController
     )
 }
-function New-MgGroupMember
+function New-AutoSensitivityLabelPolicy
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
+        [System.Object[]]
+        $OneDriveSharedBy,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $BodyParameter,
+        [System.Object]
+        $SharePointAdaptiveScopes,
 
         [Parameter()]
-        [System.Uri]
-        $Proxy,
+        [System.Object]
+        $ExternalMailRightsManagementOwner,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.Object]
+        $OneDriveAdaptiveScopesException,
 
         [Parameter()]
-        [System.String]
-        $GroupId,
+        [System.Object]
+        $PolicyTemplateInfo,
 
         [Parameter()]
-        [PSObject]
-        $InputObject,
+        [System.Object]
+        $PolicyRBACScopes,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        $Force,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
+        [System.Object]
+        $SharePointLocation,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $DirectoryObjectId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function New-MgGroupMemberByRef
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.String]
-        $OdataId,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function New-MgGroupOwner
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $DirectoryObjectId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function New-MgGroupOwnerByRef
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.String]
-        $OdataId,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Remove-MgGroup
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Remove-MgGroupLifecyclePolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $GroupLifecyclePolicyId,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Remove-MgGroupMemberByRef
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $DirectoryObjectId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Remove-MgGroupOwnerByRef
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $DirectoryObjectId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Set-MgGroupLicense
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String[]]
-        $RemoveLicenses,
-
-        [Parameter()]
-        [PSObject]
-        $AddLicenses,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Update-MgGroup
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $Mail,
-
-        [Parameter()]
-        [System.String]
-        $Visibility,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $PermissionGrants,
-
-        [Parameter()]
-        [PSObject]
-        $Sites,
-
-        [Parameter()]
-        [PSObject]
-        $AppRoleAssignments,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $SecurityEnabled,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $Calendar,
-
-        [Parameter()]
-        [System.String]
-        $SecurityIdentifier,
-
-        [Parameter()]
-        [PSObject]
-        $AssignedLicenses,
-
-        [Parameter()]
-        [System.DateTime]
-        $RenewedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $RejectedSenders,
-
-        [Parameter()]
-        [PSObject]
-        $Extensions,
-
-        [Parameter()]
-        [System.Int32]
-        $UnseenCount,
-
-        [Parameter()]
-        [System.String]
-        $Classification,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AutoSubscribeNewMembers,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
-
-        [Parameter()]
-        [System.String[]]
-        $ProxyAddresses,
-
-        [Parameter()]
-        [System.DateTime]
-        $ExpirationDateTime,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $OnPremisesProvisioningErrors,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesSecurityIdentifier,
-
-        [Parameter()]
-        [System.String]
-        $PreferredLanguage,
-
-        [Parameter()]
-        [PSObject]
-        $TransitiveMembers,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $HideFromAddressLists,
-
-        [Parameter()]
-        [PSObject]
-        $Planner,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.DateTime]
-        $OnPremisesLastSyncDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $Owners,
-
-        [Parameter()]
-        [PSObject]
-        $GroupLifecyclePolicies,
-
-        [Parameter()]
-        [PSObject]
-        $LicenseProcessingState,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesDomainName,
-
-        [Parameter()]
-        [PSObject]
-        $Settings,
-
-        [Parameter()]
-        [PSObject]
-        $AssignedLabels,
-
-        [Parameter()]
-        [PSObject]
-        $AcceptedSenders,
-
-        [Parameter()]
-        [PSObject]
-        $Onenote,
-
-        [Parameter()]
-        [System.String]
-        $MembershipRuleProcessingState,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [PSObject]
-        $MemberOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $MailEnabled,
-
-        [Parameter()]
-        [PSObject]
-        $Drives,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $AllowExternalSenders,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [PSObject]
-        $Photo,
-
-        [Parameter()]
-        [System.String]
-        $Theme,
-
-        [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $HasMembersWithLicenseErrors,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [PSObject]
-        $TransitiveMemberOf,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $OnPremisesSyncEnabled,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsArchived,
-
-        [Parameter()]
-        [PSObject]
-        $Drive,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesNetBiosName,
-
-        [Parameter()]
-        [PSObject]
-        $CalendarView,
-
-        [Parameter()]
-        [PSObject]
-        $Photos,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsAssignableToRole,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject]
-        $CreatedOnBehalfOf,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $HideFromOutlookClients,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsSubscribedByMail,
-
-        [Parameter()]
-        [PSObject]
-        $Events,
-
-        [Parameter()]
-        [PSObject]
-        $Threads,
-
-        [Parameter()]
-        [PSObject]
-        $Team,
-
-        [Parameter()]
-        [PSObject]
-        $Members,
-
-        [Parameter()]
-        [System.String[]]
-        $GroupTypes,
-
-        [Parameter()]
-        [System.String]
-        $MembershipRule,
-
-        [Parameter()]
-        [System.String]
-        $PreferredDataLocation,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesSamAccountName,
-
-        [Parameter()]
-        [PSObject]
-        $Conversations,
-
-        [Parameter()]
-        [PSObject]
-        $MembersWithLicenseErrors,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Update-MgGroupLifecyclePolicy
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Int32]
-        $GroupLifetimeInDays,
-
-        [Parameter()]
-        [System.String]
-        $AlternateNotificationEmails,
-
-        [Parameter()]
-        [System.String]
-        $GroupLifecyclePolicyId,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.String]
-        $ManagedGroupTypes,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
+        [System.Object]
+        $Priority,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-#endregion
-#region Microsoft.Graph.Identity.DirectoryManagement
-#endregion
-#region Microsoft.Graph.Identity.Governance
-#endregion
-#region Microsoft.Graph.Planner
-function Get-MgGroupPlanner
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Get-MgGroupPlannerPlan
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String]
-        $PlannerPlanId,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Get-MgGroupPlannerPlanTask
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $GroupId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String]
-        $PlannerPlanId,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Get-MgPlanner
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function Get-MgPlannerPlan
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
+        [System.Object[]]
+        $ExchangeSenderException,
 
         [Parameter()]
-        [PSObject]
-        $InputObject,
+        [System.Object[]]
+        $ExceptIfOneDriveSharedBy,
 
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String]
-        $PlannerPlanId,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Get-MgPlannerPlanBucket
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String]
-        $PlannerPlanId,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Get-MgPlannerTask
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.String]
-        $PlannerTaskId,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $All,
-
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Get-MgPlannerTaskDetail
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $PlannerTaskId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break
-    )
-}
-function New-MgPlannerBucket
-{
-    [CmdletBinding()]
-    param(
         [Parameter()]
-        [System.String]
-        $Id,
+        [System.Object]
+        $ExchangeLocation,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
+        [System.Object]
+        $OneDriveLocationException,
 
         [Parameter()]
         [System.String]
         $Name,
 
         [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
         [System.String]
-        $OrderHint,
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveAdaptiveScopes,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
+        [System.Boolean]
+        $UnifiedAuditLogEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfOneDriveSharedByMemberOf,
+
+        [Parameter()]
         [System.String]
-        $PlanId,
+        $ApplySensitivityLabel,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
+        [System.Object[]]
+        $OneDriveSharedByMemberOf,
 
         [Parameter()]
-        [PSObject]
-        $Tasks,
+        [System.Object[]]
+        $ExchangeSender,
 
         [Parameter()]
-        [PSObject]
-        $BodyParameter,
+        [System.Object]
+        $OneDriveLocation,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
+        [System.Object[]]
+        $ExchangeSenderMemberOf,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
+        [System.Object]
+        $SharePointAdaptiveScopesException,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        [System.Object[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverwriteLabel
     )
 }
-function New-MgPlannerPlan
+function New-AutoSensitivityLabelRule
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PSObject]
-        $Buckets,
+        [System.Object[]]
+        $SentToMemberOf,
 
         [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ImmutableId,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
 
         [Parameter()]
         [System.String]
-        $Owner,
+        $Comment,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
+        [System.Object[]]
+        $From,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
+        [System.Object]
+        $AccessScope,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
+        [System.Object]
+        $ActivationDate,
 
         [Parameter()]
-        [PSObject]
-        $Tasks,
+        [System.Object]
+        $ExceptIfContentPropertyContainsWords,
 
         [Parameter()]
-        [PSObject]
-        $Container,
+        [System.Boolean]
+        $ExceptIfDocumentIsPasswordProtected,
 
         [Parameter()]
-        [PSObject]
-        $CreatedBy,
+        [System.Object[]]
+        $ExceptIfSentToMemberOf,
 
         [Parameter()]
-        [System.Uri]
-        $Proxy,
+        [System.Object]
+        $DocumentCreatedBy,
 
         [Parameter()]
-        [PSObject]
-        $BodyParameter,
+        [System.Object]
+        $ExceptIfDocumentSizeOver,
 
         [Parameter()]
-        [System.String]
-        $Title,
+        [System.Object]
+        $ExceptIfDocumentNameMatchesWords,
 
         [Parameter()]
-        [PSObject]
-        $Details,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function New-MgPlannerTask
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.Int32]
-        $ReferenceCount,
-
-        [Parameter()]
-        [System.String]
-        $PlanId,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $Assignments,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject]
-        $ProgressTaskBoardFormat,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
+        [System.Object]
         $Priority,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
+        [System.Object]
+        $Policy,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $AppliedCategories,
+        [System.Object]
+        $SenderIPRanges,
 
         [Parameter()]
-        [System.String]
-        $BucketId,
+        [System.Object]
+        $SenderDomainIs,
 
         [Parameter()]
-        [PSObject]
-        $CreatedBy,
+        [System.Object[]]
+        $ContentContainsSensitiveInformation,
 
         [Parameter()]
-        [System.Int32]
-        $PercentComplete,
-
-        [Parameter()]
-        [System.String]
-        $Title,
-
-        [Parameter()]
-        [System.String]
-        $PreviewType,
-
-        [Parameter()]
-        [PSObject]
-        $AssignedToTaskBoardFormat,
-
-        [Parameter()]
-        [System.DateTime]
-        $CompletedDateTime,
-
-        [Parameter()]
-        [System.Int32]
-        $ChecklistItemCount,
-
-        [Parameter()]
-        [System.String]
-        $AssigneePriority,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.DateTime]
-        $StartDateTime,
+        [System.Object[]]
+        $FromMemberOf,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [PSObject]
-        $CompletedBy,
+        [System.Boolean]
+        $Disabled,
 
         [Parameter()]
-        [PSObject]
-        $Details,
+        [System.Boolean]
+        $ExceptIfDocumentIsUnsupported,
 
         [Parameter()]
-        [PSObject]
-        $BucketTaskBoardFormat,
+        [System.Object]
+        $RuleErrorAction,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.Object]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
 
         [Parameter()]
         [System.String]
-        $OrderHint,
+        $Name,
 
         [Parameter()]
-        [System.DateTime]
-        $DueDateTime,
+        [System.Object]
+        $FromAddressContainsWords,
 
         [Parameter()]
-        [System.Int32]
-        $ActiveChecklistItemCount,
+        [System.Object]
+        $DocumentSizeOver,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
+        [System.Object]
+        $ExceptIfDocumentCreatedBy,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $HasDescription,
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
-        [System.String]
-        $ConversationThreadId
+        [System.Object]
+        $Workload
     )
 }
-function Remove-MgPlannerTask
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [System.String]
-        $PlannerTaskId,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Update-MgPlanner
+function New-CaseHoldPolicy
 {
     [CmdletBinding()]
     param(
         [Parameter()]
         [System.String]
-        $Id,
+        $Name,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $Buckets,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $Tasks,
-
-        [Parameter()]
-        [PSObject]
-        $Plans,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Update-MgPlannerPlan
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $PlannerPlanId,
-
-        [Parameter()]
-        [PSObject]
-        $Buckets,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
+        [System.Object]
+        $PublicFolderLocation,
 
         [Parameter()]
         [System.String]
-        $Owner,
+        $Case,
 
         [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $Tasks,
-
-        [Parameter()]
-        [PSObject]
-        $Container,
-
-        [Parameter()]
-        [PSObject]
-        $CreatedBy,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.String]
-        $Title,
-
-        [Parameter()]
-        [PSObject]
-        $Details,
+        [System.Object]
+        $ExchangeLocation,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -62453,1353 +60853,5267 @@ function Update-MgPlannerPlan
 
         [Parameter()]
         [System.String]
-        $Id,
+        $Comment,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.Object]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        $Force
     )
 }
-#endregion
-#region Microsoft.Graph.Users
-function Get-MgUser
+function New-CaseHoldRule
 {
     [CmdletBinding()]
     param(
         [Parameter()]
         [System.String]
-        $UserId,
+        $Name,
 
         [Parameter()]
-        [System.String[]]
-        $Property,
+        [System.Boolean]
+        $Disabled,
 
         [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
-
-        [Parameter()]
-        [System.String]
-        $ConsistencyLevel,
+        [System.Object]
+        $Policy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $All,
+        $Confirm,
 
         [Parameter()]
         [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        $Comment,
 
         [Parameter()]
         [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        $ContentMatchQuery
     )
 }
-function Get-MgUserLicenseDetail
+function New-ComplianceCase
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $CaseType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $SourceCaseType,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $ExternalId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.String]
+        $SecondaryCaseType
+    )
+}
+function New-ComplianceRetentionEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EventType,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $EventDateTime,
+
+        [Parameter()]
+        [System.String]
+        $AssetId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PreviewOnly,
+
+        [Parameter()]
+        [System.Object]
+        $EventTags,
+
+        [Parameter()]
+        [System.String]
+        $SharePointAssetIdQuery,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeAssetIdQuery
+    )
+}
+function New-ComplianceRetentionEventType
 {
     [CmdletBinding()]
     param(
         [Parameter()]
         [System.String]
-        $UserId,
-
-        [Parameter()]
-        [System.String[]]
-        $Property,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.String]
-        $LicenseDetailsId,
-
-        [Parameter()]
-        [System.Int32]
-        $PageSize,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Int32]
-        $Skip,
-
-        [Parameter()]
-        [System.Int32]
-        $Top,
-
-        [Parameter()]
-        [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String[]]
-        $Sort,
+        $Name,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $All,
+        $Confirm,
 
         [Parameter()]
         [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.String]
-        $Search,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [System.String[]]
-        $ExpandProperty,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
+        $Comment
     )
 }
-function New-MgUser
+function New-ComplianceSearch
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PSObject]
-        $Todo,
-
-        [Parameter()]
-        [PSObject]
-        $Insights,
-
-        [Parameter()]
-        [PSObject]
-        $OnlineMeetings,
-
-        [Parameter()]
-        [PSObject]
-        $AssignedPlans,
+        [System.String[]]
+        $RefinerNames,
 
         [Parameter()]
         [System.String]
-        $ExternalUserState,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.DateTime]
-        $EmployeeHireDate,
+        $Description,
 
         [Parameter()]
         [System.String]
-        $OnPremisesImmutableId,
+        $Name,
 
         [Parameter()]
-        [PSObject]
-        $RegisteredDevices,
-
-        [Parameter()]
-        [PSObject]
-        $AppRoleAssignments,
-
-        [Parameter()]
-        [System.String]
-        $PreferredName,
-
-        [Parameter()]
-        [System.DateTime]
-        $ExternalUserStateChangeDateTime,
+        [System.Boolean]
+        $IncludeUserAppContent,
 
         [Parameter()]
         [System.String[]]
-        $ImAddresses,
+        $SharePointLocationExclusion,
 
         [Parameter()]
-        [System.String]
-        $OnPremisesDomainName,
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
 
         [Parameter()]
-        [System.String]
-        $AboutMe,
-
-        [Parameter()]
-        [System.String]
-        $State,
-
-        [Parameter()]
-        [System.DateTime]
-        $SignInSessionsValidFromDateTime,
-
-        [Parameter()]
-        [System.DateTime]
-        $Birthday,
-
-        [Parameter()]
-        [System.DateTime]
-        $HireDate,
-
-        [Parameter()]
-        [PSObject]
-        $Chats,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [PSObject]
-        $EmployeeOrgData,
-
-        [Parameter()]
-        [System.DateTime]
-        $LastPasswordChangeDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $Manager,
-
-        [Parameter()]
-        [PSObject]
-        $InferenceClassification,
-
-        [Parameter()]
-        [PSObject]
-        $CalendarGroups,
-
-        [Parameter()]
-        [PSObject]
-        $MailFolders,
-
-        [Parameter()]
-        [PSObject]
-        $ScopedRoleMemberOf,
-
-        [Parameter()]
-        [System.String]
-        $ConsentProvidedForMinor,
-
-        [Parameter()]
-        [PSObject]
-        $AgreementAcceptances,
-
-        [Parameter()]
-        [System.String]
-        $EmployeeType,
-
-        [Parameter()]
-        [PSObject]
-        $OwnedObjects,
-
-        [Parameter()]
-        [PSObject]
-        $AuthorizationInfo,
-
-        [Parameter()]
-        [PSObject]
-        $Photos,
-
-        [Parameter()]
-        [PSObject]
-        $Oauth2PermissionGrants,
-
-        [Parameter()]
-        [System.String]
-        $PreferredDataLocation,
-
-        [Parameter()]
-        [PSObject]
-        $MailboxSettings,
-
-        [Parameter()]
-        [System.String]
-        $Country,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesDistinguishedName,
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
         [System.String[]]
-        $Skills,
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
 
         [Parameter()]
         [System.String]
-        $MobilePhone,
+        $Case,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeOrgContent,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Globalization.CultureInfo]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion,
 
         [Parameter()]
         [System.String]
-        $FaxNumber,
+        $ContentMatchQuery
+    )
+}
+function New-ComplianceSearchAction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $SearchName,
 
         [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
+        [System.Object]
+        $ArchiveFormat,
 
         [Parameter()]
-        [PSObject]
-        $Settings,
+        [System.Management.Automation.SwitchParameter]
+        $IncludeCredential,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeSharePointDocumentVersions,
+
+        [Parameter()]
+        [System.String]
+        $ReferenceActionName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Preview,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String[]]
+        $FileTypeExclusionsForUnindexedItems,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryOnError,
+
+        [Parameter()]
+        [System.String]
+        $Version,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCC,
+
+        [Parameter()]
+        [System.Object]
+        $Format,
 
         [Parameter()]
         [System.Int32]
-        $DeviceEnrollmentLimit,
+        $JobOptions,
 
         [Parameter()]
-        [System.String]
-        $Mail,
-
-        [Parameter()]
-        [System.String]
-        $GivenName,
-
-        [Parameter()]
-        [PSObject]
-        $ContactFolders,
-
-        [Parameter()]
-        [PSObject]
-        $People,
+        [System.Boolean]
+        $EnableDedupe,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsResourceAccount,
-
-        [Parameter()]
-        [System.String[]]
-        $OtherMails,
-
-        [Parameter()]
-        [System.String]
-        $PasswordPolicies,
-
-        [Parameter()]
-        [System.String]
-        $CreationType,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesUserPrincipalName,
-
-        [Parameter()]
-        [System.String]
-        $PreferredLanguage,
-
-        [Parameter()]
-        [System.DateTime]
-        $OnPremisesLastSyncDateTime,
-
-        [Parameter()]
-        [System.String]
-        $AgeGroup,
-
-        [Parameter()]
-        [PSObject]
-        $Planner,
-
-        [Parameter()]
-        [PSObject]
-        $Contacts,
-
-        [Parameter()]
-        [PSObject]
-        $Calendars,
-
-        [Parameter()]
-        [PSObject]
-        $Drive,
-
-        [Parameter()]
-        [System.String]
-        $UsageLocation,
+        $RetentionReport,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
+        $Purge,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ShowInAddressList,
+        $Export,
 
         [Parameter()]
-        [System.String]
-        $JobTitle,
+        [System.Object]
+        $PurgeType,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AccountEnabled,
+        $Report,
+
+        [Parameter()]
+        [System.String]
+        $Region,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeArchiveFormat,
+
+        [Parameter()]
+        [System.Object]
+        $Scenario,
+
+        [Parameter()]
+        [System.Object]
+        $Scope,
 
         [Parameter()]
         [System.String[]]
-        $Schools,
-
-        [Parameter()]
-        [PSObject]
-        $SignInActivity,
+        $SearchNames,
 
         [Parameter()]
         [System.String]
-        $City,
+        $NotifyEmail,
 
         [Parameter()]
-        [PSObject]
-        $Teamwork,
-
-        [Parameter()]
-        [PSObject]
-        $ManagedAppRegistrations,
-
-        [Parameter()]
-        [PSObject]
-        $Messages,
-
-        [Parameter()]
-        [PSObject]
-        $Extensions,
-
-        [Parameter()]
-        [PSObject]
-        $Identities,
-
-        [Parameter()]
-        [PSObject]
-        $JoinedTeams,
+        [System.Object]
+        $SharePointArchiveFormat,
 
         [Parameter()]
         [System.String]
-        $MySite,
-
+        $ActionName
+    )
+}
+function New-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
         [Parameter()]
-        [System.String[]]
-        $BusinessPhones,
-
-        [Parameter()]
-        [System.String]
-        $Id,
-
-        [Parameter()]
-        [System.String[]]
-        $ProxyAddresses,
+        [System.Object]
+        $AutoApprovalPeriod,
 
         [Parameter()]
         [System.String]
-        $OfficeLocation,
-
-        [Parameter()]
-        [PSObject]
-        $Presence,
-
-        [Parameter()]
-        [PSObject]
-        $PasswordProfile,
+        $Comment,
 
         [Parameter()]
         [System.String]
-        $UserType,
+        $RetentionType,
 
         [Parameter()]
-        [PSObject]
-        $TransitiveMemberOf,
+        [System.Boolean]
+        $Regulatory,
 
         [Parameter()]
-        [PSObject]
-        $ManagedDevices,
-
-        [Parameter()]
-        [PSObject]
-        $CreatedObjects,
-
-        [Parameter()]
-        [PSObject]
-        $Photo,
-
-        [Parameter()]
-        [PSObject]
-        $LicenseDetails,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.String]
-        $StreetAddress,
-
-        [Parameter()]
-        [PSObject]
-        $CalendarView,
-
-        [Parameter()]
-        [PSObject]
-        $Onenote,
+        $Name,
 
         [Parameter()]
         [System.String]
-        $SecurityIdentifier,
+        $FilePlanProperty,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $RetentionAction,
+
+        [Parameter()]
+        [System.Object]
+        $FlowId,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsRecordUnlockedAsDefault,
+
+        [Parameter()]
+        [System.String]
+        $ComplianceTagForNextStage,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.Object]
+        $EventType,
+
+        [Parameter()]
+        [System.Object]
+        $IsRecordLabel,
+
+        [Parameter()]
+        [System.Object[]]
+        $ReviewerEmail,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.String]
+        $MultiStageReviewProperty
+    )
+}
+function New-DeviceConditionalAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
+function New-DeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
+function New-DlpCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $OneDriveSharedBy,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfOneDriveSharedBy,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ThirdPartyAppDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $OnPremisesScannerDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfOneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $PowerBIDlpLocation,
+
+        [Parameter()]
+        [System.Object[]]
+        $OneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $PowerBIDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ThirdPartyAppDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $OnPremisesScannerDlpLocationException,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpAdaptiveScopesException
+    )
+}
+function New-DlpComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ImmutableId,
+
+        [Parameter()]
+        [System.Object]
+        $ActivationDate,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEndpointUser,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomSubject,
+
+        [Parameter()]
+        [System.Object[]]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforcePortalAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $ContentIsShared,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AddRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfUnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $HasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $SetHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $Quarantine,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptRMSTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotifyEmailExchangeIncludeAttachment,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyHtmlDisclaimer,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Moderate,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomSenderDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.String]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.Object[]]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfWithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object[]]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.Object[]]
+        $EndpointDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object[]]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentContainsWords,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictBrowserAccess,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedBy,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Object]
+        $FromScope,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object[]]
+        $OnPremisesScannerDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $RedirectMessageTo,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $UnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedBy,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.String]
+        $ApplyBrandingTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedRule,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $SharedByIRMUserRisk,
+
+        [Parameter()]
+        [System.Object[]]
+        $EndpointDlpBrowserRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfContentIsShared,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AlertProperties,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $WithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object[]]
+        $DocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Boolean]
+        $ContentIsNotLabeled,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentSizeOver,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object[]]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyOverrideRequirements,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object[]]
+        $ThirdPartyAppDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Boolean]
+        $StopPolicyProcessing,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ModifySubject,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $ContentFileTypeMatches,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $SenderAddressLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomTextTranslations,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipDisplayOption,
+
+        [Parameter()]
+        [System.Object]
+        $NonBifurcatingAccessScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfDocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserType,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageSizeOver
+    )
+}
+function New-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function New-FilePlanPropertyCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function New-FilePlanPropertyCitation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $CitationUrl,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $CitationJurisdiction
+    )
+}
+function New-FilePlanPropertyDepartment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function New-FilePlanPropertyReferenceId
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function New-FilePlanPropertySubCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $ParentId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function New-Label
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EncryptionEncryptOnly,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionDoubleKeyEncryptionUrl,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderText,
+
+        [Parameter()]
+        [System.Object]
+        $Setting,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionAipTemplateScopes,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsEndToEndEncryptionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.String]
+        $ColumnAssetCondition,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.String]
+        $DefaultContentLabel,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionLevel,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyBypassScope,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsProtectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ParentId,
 
         [Parameter()]
         [System.String]
         $DisplayName,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $OwnedDevices,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $FollowedSites,
-
-        [Parameter()]
-        [PSObject]
-        $Drives,
-
-        [Parameter()]
-        [System.String[]]
-        $Interests,
+        [System.String]
+        $SchematizedDataCondition,
 
         [Parameter()]
         [System.String]
-        $LegalAgeGroupClassification,
+        $Comment,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $ApplyContentMarkingFooterMargin,
 
         [Parameter()]
-        [System.String]
-        $OnPremisesSecurityIdentifier,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject]
-        $Calendar,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $OnPremisesSyncEnabled,
-
-        [Parameter()]
-        [System.String]
-        $Department,
-
-        [Parameter()]
-        [System.String]
-        $CompanyName,
-
-        [Parameter()]
-        [PSObject]
-        $MemberOf,
-
-        [Parameter()]
-        [System.String]
-        $EmployeeId,
-
-        [Parameter()]
-        [PSObject]
-        $AssignedLicenses,
-
-        [Parameter()]
-        [PSObject]
-        $Events,
-
-        [Parameter()]
-        [System.String]
-        $UserPrincipalName,
-
-        [Parameter()]
-        [System.String[]]
-        $Responsibilities,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $ProvisionedPlans,
-
-        [Parameter()]
-        [PSObject]
-        $OnPremisesProvisioningErrors,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
-
-        [Parameter()]
-        [PSObject]
-        $OnPremisesExtensionAttributes,
-
-        [Parameter()]
-        [System.String[]]
-        $PastProjects,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $DirectReports,
-
-        [Parameter()]
-        [PSObject]
-        $Authentication,
-
-        [Parameter()]
-        [PSObject]
-        $LicenseAssignmentStates,
-
-        [Parameter()]
-        [PSObject]
-        $Activities,
-
-        [Parameter()]
-        [PSObject]
-        $Outlook,
-
-        [Parameter()]
-        [PSObject]
-        $DeviceManagementTroubleshootingEvents,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesSamAccountName,
-
-        [Parameter()]
-        [System.DateTime]
-        $EmployeeLeaveDateTime,
-
-        [Parameter()]
-        [System.String]
-        $PostalCode,
-
-        [Parameter()]
-        [System.String]
-        $Surname
-    )
-}
-function Remove-MgUser
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PassThru,
-
-        [Parameter()]
-        [System.String]
-        $IfMatch,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.String]
-        $UserId,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend
-    )
-}
-function Update-MgUser
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [PSObject]
-        $Todo,
-
-        [Parameter()]
-        [PSObject]
-        $Insights,
-
-        [Parameter()]
-        [PSObject]
-        $OnlineMeetings,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
-
-        [Parameter()]
-        [PSObject]
-        $AssignedPlans,
-
-        [Parameter()]
-        [System.String]
-        $ExternalUserState,
-
-        [Parameter()]
-        [PSObject]
-        $BodyParameter,
-
-        [Parameter()]
-        [System.DateTime]
-        $EmployeeHireDate,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesImmutableId,
-
-        [Parameter()]
-        [PSObject]
-        $RegisteredDevices,
-
-        [Parameter()]
-        [PSObject]
-        $AppRoleAssignments,
-
-        [Parameter()]
-        [System.DateTime]
-        $ExternalUserStateChangeDateTime,
-
-        [Parameter()]
-        [System.String[]]
-        $ImAddresses,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesDomainName,
-
-        [Parameter()]
-        [System.String]
-        $AboutMe,
-
-        [Parameter()]
-        [System.String]
-        $State,
-
-        [Parameter()]
-        [System.DateTime]
-        $SignInSessionsValidFromDateTime,
-
-        [Parameter()]
-        [System.DateTime]
-        $EmployeeLeaveDateTime,
-
-        [Parameter()]
-        [System.DateTime]
-        $Birthday,
-
-        [Parameter()]
-        [System.DateTime]
-        $HireDate,
-
-        [Parameter()]
-        [PSObject]
-        $Chats,
-
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
-
-        [Parameter()]
-        [PSObject]
-        $EmployeeOrgData,
-
-        [Parameter()]
-        [System.DateTime]
-        $LastPasswordChangeDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $Manager,
-
-        [Parameter()]
-        [PSObject]
-        $InferenceClassification,
-
-        [Parameter()]
-        [PSObject]
-        $CalendarGroups,
-
-        [Parameter()]
-        [PSObject]
-        $MailFolders,
-
-        [Parameter()]
-        [PSObject]
-        $ScopedRoleMemberOf,
-
-        [Parameter()]
-        [System.String]
-        $ConsentProvidedForMinor,
-
-        [Parameter()]
-        [PSObject]
-        $AgreementAcceptances,
-
-        [Parameter()]
-        [System.String]
-        $EmployeeType,
-
-        [Parameter()]
-        [PSObject]
-        $OwnedObjects,
-
-        [Parameter()]
-        [PSObject]
-        $AuthorizationInfo,
-
-        [Parameter()]
-        [PSObject]
-        $Photos,
-
-        [Parameter()]
-        [PSObject]
-        $Oauth2PermissionGrants,
-
-        [Parameter()]
-        [System.String]
-        $PreferredDataLocation,
-
-        [Parameter()]
-        [PSObject]
-        $MailboxSettings,
-
-        [Parameter()]
-        [System.String]
-        $Country,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesDistinguishedName,
-
-        [Parameter()]
-        [System.String[]]
-        $Skills,
-
-        [Parameter()]
-        [System.String]
-        $MobilePhone,
-
-        [Parameter()]
-        [System.String]
-        $FaxNumber,
-
-        [Parameter()]
-        [System.DateTime]
-        $DeletedDateTime,
-
-        [Parameter()]
-        [PSObject]
+        [System.Object]
         $Settings,
 
         [Parameter()]
-        [System.Int32]
-        $DeviceEnrollmentLimit,
+        [System.String]
+        $MigrationId,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsWhoCanRecord,
 
         [Parameter()]
         [System.String]
-        $Mail,
+        $ApplyContentMarkingFooterFontColor,
 
         [Parameter()]
         [System.String]
-        $GivenName,
+        $ApplyContentMarkingFooterFontName,
 
         [Parameter()]
-        [PSObject]
-        $ContactFolders,
+        [System.Object]
+        $TeamsVideoWatermark,
 
         [Parameter()]
-        [PSObject]
-        $People,
+        [System.Object]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionLinkedTemplateId,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsCopyRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Object]
+        $LabelActions,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsBypassLobbyForDialInUsers,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Object]
+        $LocaleSettings,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAllowedPresenters,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterAlignment,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $IsResourceAccount,
+        $Confirm,
 
         [Parameter()]
-        [System.String[]]
-        $OtherMails,
+        [System.Object]
+        $SiteExternalSharingControlType,
 
         [Parameter()]
-        [System.String]
-        $PasswordPolicies,
+        [System.Object]
+        $TeamsPresentersRestrictionEnforced,
 
         [Parameter()]
-        [System.String]
-        $CreationType,
+        [System.Object]
+        $TeamsAllowMeetingChat,
 
         [Parameter()]
-        [System.String]
-        $OnPremisesUserPrincipalName,
+        [System.Object]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
 
         [Parameter()]
-        [System.String]
-        $PreferredLanguage,
+        [System.Object]
+        $SiteAndGroupProtectionPrivacy,
 
         [Parameter()]
-        [System.DateTime]
-        $OnPremisesLastSyncDateTime,
-
-        [Parameter()]
-        [System.String]
-        $AgeGroup,
-
-        [Parameter()]
-        [PSObject]
-        $Planner,
-
-        [Parameter()]
-        [PSObject]
-        $Contacts,
-
-        [Parameter()]
-        [PSObject]
-        $Calendars,
-
-        [Parameter()]
-        [PSObject]
-        $Drive,
+        [System.Object]
+        $EncryptionPromptUser,
 
         [Parameter()]
         [System.String]
-        $UsageLocation,
+        $Tooltip,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionTemplateId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $ContentType,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.Object]
+        $Conditions,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsRecordAutomatically
+    )
+}
+function New-LabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Labels,
+
+        [Parameter()]
+        [System.Object]
+        $ModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Setting,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $MigrationId,
+
+        [Parameter()]
+        [System.Object]
+        $ModernGroupLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopesException,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ShowInAddressList,
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SkypeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SkypeLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocationException
+    )
+}
+function New-ProtectionAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $NotificationEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserThrottleWindow,
+
+        [Parameter()]
+        [System.Object]
+        $Threshold,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
 
         [Parameter()]
         [System.String]
-        $JobTitle,
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Operation,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUser,
+
+        [Parameter()]
+        [System.Object]
+        $AlertBy,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserThrottleThreshold,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypesForCounting,
+
+        [Parameter()]
+        [System.Object]
+        $AggregationType,
+
+        [Parameter()]
+        [System.Object]
+        $UseCreatedDateTime,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserSuppressionExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $VolumeThreshold,
+
+        [Parameter()]
+        [System.Object]
+        $TimeWindow,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypes,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Category,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $AlertFor,
+
+        [Parameter()]
+        [System.Object]
+        $CorrelationPolicyId,
+
+        [Parameter()]
+        [System.String]
+        $LogicalOperationName,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AccountEnabled,
+        $Confirm,
 
         [Parameter()]
-        [System.String[]]
-        $Schools,
+        [System.Object]
+        $Severity,
 
         [Parameter()]
-        [PSObject]
-        $SignInActivity,
-
-        [Parameter()]
-        [System.String]
-        $City,
-
-        [Parameter()]
-        [PSObject]
-        $Teamwork,
-
-        [Parameter()]
-        [PSObject]
-        $ManagedAppRegistrations,
-
-        [Parameter()]
-        [PSObject]
-        $Messages,
-
-        [Parameter()]
-        [PSObject]
-        $Extensions,
-
-        [Parameter()]
-        [PSObject]
-        $Identities,
-
-        [Parameter()]
-        [PSObject]
-        $JoinedTeams,
+        [System.Object]
+        $CustomProperties,
 
         [Parameter()]
         [System.String]
-        $MySite,
+        $Filter,
 
         [Parameter()]
-        [System.String[]]
-        $BusinessPhones,
+        [System.Boolean]
+        $NotifyUserOnFilterMatch,
+
+        [Parameter()]
+        [System.Object]
+        $ThreatType,
+
+        [Parameter()]
+        [System.Globalization.CultureInfo]
+        $NotificationCulture,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypesThreshold
+    )
+}
+function New-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $TeamsChannelLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Applications,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsSimulation,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $PublicFolderLocation,
 
         [Parameter()]
         [System.String]
-        $Id,
+        $Comment,
 
         [Parameter()]
-        [System.String[]]
-        $ProxyAddresses,
+        [System.Boolean]
+        $RetainCloudAttachment,
 
         [Parameter()]
-        [System.String]
-        $OfficeLocation,
+        [System.Object]
+        $ModernGroupLocation,
 
         [Parameter()]
-        [PSObject]
-        $Presence,
+        [System.Object]
+        $ExchangeLocationException,
 
         [Parameter()]
-        [PSObject]
-        $PasswordProfile,
+        [System.Object]
+        $TeamsChatLocationException,
 
         [Parameter()]
-        [System.String]
-        $UserType,
-
-        [Parameter()]
-        [PSObject]
-        $TransitiveMemberOf,
-
-        [Parameter()]
-        [PSObject]
-        $ManagedDevices,
-
-        [Parameter()]
-        [PSObject]
-        $CreatedObjects,
-
-        [Parameter()]
-        [PSObject]
-        $Photo,
-
-        [Parameter()]
-        [PSObject]
-        $LicenseDetails,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.String]
-        $StreetAddress,
+        $Name,
 
         [Parameter()]
-        [PSObject]
-        $CalendarView,
+        [System.Object]
+        $TeamsChatLocation,
 
         [Parameter()]
-        [PSObject]
-        $Onenote,
+        [System.Object]
+        $OneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SkypeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsChannelLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $SkypeLocationException,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AdaptiveScopeLocation,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictiveRetention
+    )
+}
+function New-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedItemClasses,
 
         [Parameter()]
         [System.String]
-        $SecurityIdentifier,
+        $PublishComplianceTag,
+
+        [Parameter()]
+        [System.String]
+        $RetentionComplianceAction,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $ApplyComplianceTag,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $ExpirationDateOption,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $MachineLearningModelIDs,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionDurationDisplayHint,
+
+        [Parameter()]
+        [System.Object[]]
+        $ContentContainsSensitiveInformation
+    )
+}
+function New-RoleGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Object[]]
+        $Roles,
 
         [Parameter()]
         [System.String]
         $DisplayName,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
-
-        [Parameter()]
-        [PSObject]
-        $OwnedDevices,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
-
-        [Parameter()]
-        [PSObject]
-        $FollowedSites,
-
-        [Parameter()]
-        [PSObject]
-        $Drives,
-
-        [Parameter()]
-        [System.String[]]
-        $Interests,
+        [System.Object]
+        $Members,
 
         [Parameter()]
         [System.String]
-        $LegalAgeGroupClassification,
+        $Name,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [System.String]
-        $OnPremisesSecurityIdentifier,
-
-        [Parameter()]
-        [System.String]
-        $UserId,
-
-        [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
-
-        [Parameter()]
-        [PSObject]
-        $Calendar,
+        [System.Guid]
+        $Id,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $OnPremisesSyncEnabled,
-
-        [Parameter()]
-        [System.String]
-        $Department,
-
-        [Parameter()]
-        [System.String]
-        $CompanyName,
-
-        [Parameter()]
-        [PSObject]
-        $MemberOf,
-
-        [Parameter()]
-        [System.String]
-        $EmployeeId,
-
-        [Parameter()]
-        [PSObject]
-        $AssignedLicenses,
-
-        [Parameter()]
-        [PSObject]
-        $Events,
-
-        [Parameter()]
-        [System.String]
-        $UserPrincipalName,
-
-        [Parameter()]
-        [System.String[]]
-        $Responsibilities,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Break,
-
-        [Parameter()]
-        [PSObject]
-        $ProvisionedPlans,
-
-        [Parameter()]
-        [PSObject]
-        $OnPremisesProvisioningErrors,
-
-        [Parameter()]
-        [System.String]
-        $MailNickname,
-
-        [Parameter()]
-        [PSObject]
-        $OnPremisesExtensionAttributes,
-
-        [Parameter()]
-        [System.String[]]
-        $PastProjects,
-
-        [Parameter()]
-        [System.DateTime]
-        $CreatedDateTime,
-
-        [Parameter()]
-        [PSObject]
-        $DirectReports,
-
-        [Parameter()]
-        [PSObject]
-        $Authentication,
-
-        [Parameter()]
-        [PSObject]
-        $LicenseAssignmentStates,
-
-        [Parameter()]
-        [PSObject]
-        $Activities,
-
-        [Parameter()]
-        [PSObject]
-        $Outlook,
-
-        [Parameter()]
-        [PSObject]
-        $DeviceManagementTroubleshootingEvents,
-
-        [Parameter()]
-        [System.Uri]
-        $Proxy,
-
-        [Parameter()]
-        [System.String]
-        $OnPremisesSamAccountName,
-
-        [Parameter()]
-        [System.String]
-        $PreferredName,
-
-        [Parameter()]
-        [System.String]
-        $PostalCode,
-
-        [Parameter()]
-        [System.String]
-        $Surname
+        $Force
     )
 }
-#endregion
-#region Microsoft.Graph.Users.Actions
-function Set-MgUserLicense
+function New-SupervisoryReviewPolicy
 {
     [CmdletBinding()]
     param(
         [Parameter()]
-        [PSObject]
-        $HttpPipelinePrepend,
+        [System.String]
+        $Description,
 
         [Parameter()]
-        [PSObject]
-        $BodyParameter,
+        [System.Double]
+        $SamplingRate,
 
         [Parameter()]
-        [System.Uri]
-        $Proxy,
+        [System.String]
+        $Name,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
+        [System.String]
+        $Condition,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyType,
 
         [Parameter()]
         [System.String[]]
-        $RemoveLicenses,
-
+        $Reviewers
+    )
+}
+function New-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
         [Parameter()]
-        [PSObject]
-        $AddLicenses,
-
-        [Parameter()]
-        [PSObject]
-        $InputObject,
+        [System.String]
+        $Name,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
-        [PSObject]
-        $HttpPipelineAppend,
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $UserReportingWorkloads,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $Reviewers,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
+        $Force
+    )
+}
+function New-SupervisoryReviewRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Boolean]
+        $DayXInsights,
 
         [Parameter()]
         [System.String]
-        $UserId,
+        $Name,
 
         [Parameter()]
-        [System.Collections.Hashtable]
-        $AdditionalProperties,
+        [System.String[]]
+        $ContentSources,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRevieweeIs,
+
+        [Parameter()]
+        [System.String]
+        $CcsiDataModelOperator,
+
+        [Parameter()]
+        [System.Object[]]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.String]
+        $InPurviewFilter,
+
+        [Parameter()]
+        [System.Object]
+        $Policy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedRule,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchesDataModel,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Condition,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Break
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Boolean]
+        $Ocr,
+
+        [Parameter()]
+        [System.Int32]
+        $SamplingRate,
+
+        [Parameter()]
+        [System.String[]]
+        $IncludeAdaptiveScopes
+    )
+}
+function Remove-AuditConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController
+    )
+}
+function Remove-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-CaseHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-CaseHoldRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-ComplianceCase
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController
+    )
+}
+function Remove-ComplianceRetentionEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PreviewOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-ComplianceRetentionEventType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-ComplianceSearchAction
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-DeviceConditionalAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-DeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-DlpCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-DlpComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-FilePlanPropertyAuthority
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-FilePlanPropertyCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-FilePlanPropertyCitation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-FilePlanPropertyDepartment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-FilePlanPropertyReferenceId
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-FilePlanPropertySubCategory
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-Label
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-LabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-ProtectionAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Remove-RoleGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ForceDeletion
+    )
+}
+function Set-AutoSensitivityLabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $OneDriveSharedBy,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointAdaptiveScopes,
+
+        [Parameter()]
+        [System.Boolean]
+        $SpoAipIntegrationEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalMailRightsManagementOwner,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfOneDriveSharedBy,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExchangeSenderException,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.Boolean]
+        $OverwriteLabel,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfOneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.String]
+        $ApplySensitivityLabel,
+
+        [Parameter()]
+        [System.Object[]]
+        $OneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExchangeSender,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SystemOperation,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AutoEnableAfter,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Boolean]
+        $StartSimulation
+    )
+}
+function Set-AutoSensitivityLabelRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedBy,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ActivationDate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object[]]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Object]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedBy,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $Workload
+    )
+}
+function Set-CaseHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.Object]
+        $RemovePublicFolderLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $AddPublicFolderLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String]
+        $Comment
+    )
+}
+function Set-CaseHoldRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-ComplianceCase
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $CaseType,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $ExternalId,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Reopen,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Close
+    )
+}
+function Set-ComplianceRetentionEvent
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.String]
+        $AssetId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $SharePointAssetIdQuery,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $EventType,
+
+        [Parameter()]
+        [System.Object]
+        $EventTags,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.String]
+        $ExchangeAssetIdQuery
+    )
+}
+function Set-ComplianceRetentionEventType
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $RefinerNames,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeUserAppContent,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocationExclusion,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowNotFoundExchangeLocationsEnabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String[]]
+        $SharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddSharePointLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $RemovePublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $PublicFolderLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveSharePointLocationExclusion,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeOrgContent,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocationExclusion,
+
+        [Parameter()]
+        [System.String[]]
+        $HoldNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.String[]]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Globalization.CultureInfo]
+        $Language,
+
+        [Parameter()]
+        [System.String[]]
+        $ExchangeLocationExclusion
+    )
+}
+function Set-ComplianceTag
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.String]
+        $FilePlanProperty,
+
+        [Parameter()]
+        [System.String]
+        $Notes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $AutoApprovalPeriod,
+
+        [Parameter()]
+        [System.String]
+        $MultiStageReviewProperty,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $EventType,
+
+        [Parameter()]
+        [System.Object[]]
+        $ReviewerEmail,
+
+        [Parameter()]
+        [System.Object]
+        $FlowId,
+
+        [Parameter()]
+        [System.String]
+        $ComplianceTagForNextStage,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Set-DeviceConditionalAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Set-DeviceConfigurationPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Set-DlpCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOnPremisesScannerDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveThirdPartyAppDlpLocation,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfOneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $OneDriveSharedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveTeamsLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Mode,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object]
+        $AddThirdPartyAppDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddTeamsLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveThirdPartyAppDlpLocationException,
+
+        [Parameter()]
+        [System.Object[]]
+        $OneDriveSharedBy,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $AddEndpointDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOnPremisesScannerDlpLocation,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExchangeSenderMemberOfException,
+
+        [Parameter()]
+        [System.Object]
+        $AddTeamsLocation,
+
+        [Parameter()]
+        [System.Object]
+        $OneDriveAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $AddOnPremisesScannerDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveEndpointDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemovePowerBIDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveEndpointDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfOneDriveSharedBy,
+
+        [Parameter()]
+        [System.Object]
+        $AddOnPremisesScannerDlpLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $AddEndpointDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemovePowerBIDlpLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveTeamsLocation,
+
+        [Parameter()]
+        [System.Object]
+        $EndpointDlpAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $AddPowerBIDlpLocation,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExchangeSenderMemberOf,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddThirdPartyAppDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddPowerBIDlpLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $SharePointAdaptiveScopesException
+    )
+}
+function Set-DlpComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $ActivationDate,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUser,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyEndpointUser,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomSubject,
+
+        [Parameter()]
+        [System.Object[]]
+        $FromMemberOf,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforcePortalAccess,
+
+        [Parameter()]
+        [System.Boolean]
+        $ContentIsShared,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $AddRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfUnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SenderADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfHeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $HasSenderOverride,
+
+        [Parameter()]
+        [System.Object]
+        $SetHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfHasSenderOverride,
+
+        [Parameter()]
+        [System.Boolean]
+        $Quarantine,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptRMSTemplate,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotifyEmailExchangeIncludeAttachment,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $SenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentFileTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveHeader,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyHtmlDisclaimer,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfFromMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $Moderate,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomSenderDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateAlert,
+
+        [Parameter()]
+        [System.String]
+        $PrependSubject,
+
+        [Parameter()]
+        [System.Object[]]
+        $From,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfWithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.Object[]]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.Object[]]
+        $EndpointDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object[]]
+        $IncidentReportContent,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentContainsWords,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictBrowserAccess,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentCreatedBy,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RuleErrorAction,
+
+        [Parameter()]
+        [System.Object]
+        $FromScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String]
+        $NotifyPolicyTipCustomText,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfProcessingLimitExceeded,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object[]]
+        $OnPremisesScannerDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $RedirectMessageTo,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveRMSTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $UnscannableDocumentExtensionIs,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentCreatedBy,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSeverityLevel,
+
+        [Parameter()]
+        [System.Object]
+        $SenderDomainIs,
+
+        [Parameter()]
+        [System.String]
+        $ApplyBrandingTemplate,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $GenerateIncidentReport,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedRule,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $SharedByIRMUserRisk,
+
+        [Parameter()]
+        [System.Object[]]
+        $EndpointDlpBrowserRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.Boolean]
+        $ExceptIfContentIsShared,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $AlertProperties,
+
+        [Parameter()]
+        [System.Object]
+        $ContentExtensionMatchesWords,
+
+        [Parameter()]
+        [System.Object]
+        $WithImportance,
+
+        [Parameter()]
+        [System.Object]
+        $MessageSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsUnsupported,
+
+        [Parameter()]
+        [System.Object[]]
+        $DocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Boolean]
+        $ContentIsNotLabeled,
+
+        [Parameter()]
+        [System.Object]
+        $AccessScope,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentSizeOver,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object[]]
+        $NotifyAllowOverride,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyOverrideRequirements,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientADAttributeMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $RecipientADAttributeContainsWords,
+
+        [Parameter()]
+        [System.Object[]]
+        $ThirdPartyAppDlpRestrictions,
+
+        [Parameter()]
+        [System.Object]
+        $ExpiryDate,
+
+        [Parameter()]
+        [System.Boolean]
+        $StopPolicyProcessing,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $DocumentSizeOver,
+
+        [Parameter()]
+        [System.Object]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [System.Object]
+        $ModifySubject,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ContentFileTypeMatches,
+
+        [Parameter()]
+        [System.String]
+        $NotifyEmailCustomText,
+
+        [Parameter()]
+        [System.Boolean]
+        $BlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $SenderAddressLocation,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipCustomTextTranslations,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyPolicyTipDisplayOption,
+
+        [Parameter()]
+        [System.Object]
+        $NonBifurcatingAccessScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $DocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfDocumentContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.Object]
+        $BlockAccessScope,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfDocumentCreatedByMemberOf,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserType,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfMessageSizeOver
+    )
+}
+function Set-FilePlanPropertyCitation
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $CitationUrl,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $CitationJurisdiction
+    )
+}
+function Set-Label
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $EncryptionEncryptOnly,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionDoubleKeyEncryptionUrl,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderText,
+
+        [Parameter()]
+        [System.Object]
+        $Setting,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsEndToEndEncryptionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterFontSize,
+
+        [Parameter()]
+        [System.String]
+        $ColumnAssetCondition,
+
+        [Parameter()]
+        [System.Object]
+        $ContentType,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingFontSize,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontColor,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionPrivacy,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionContentExpiredOnDateInDaysOrNever,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingText,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingLayout,
+
+        [Parameter()]
+        [System.String]
+        $DefaultContentLabel,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontName,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionLevel,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterText,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowEmailFromGuestUsers,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsLobbyBypassScope,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowLimitedAccess,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionProtectionType,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsProtectionEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ParentId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $SchematizedDataCondition,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Conditions,
+
+        [Parameter()]
+        [System.Object]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $MigrationId,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsWhoCanRecord,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionRightsDefinitions,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontColor,
+
+        [Parameter()]
+        [System.Object]
+        $PreviousLabel,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingFooterFontName,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsVideoWatermark,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderMargin,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsPresentersRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsCopyRestrictionEnforced,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderAlignment,
+
+        [Parameter()]
+        [System.Object]
+        $LabelActions,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsBypassLobbyForDialInUsers,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderFontSize,
+
+        [Parameter()]
+        [System.Object]
+        $LocaleSettings,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAllowedPresenters,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.String]
+        $ApplyContentMarkingHeaderFontName,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterAlignment,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $SiteExternalSharingControlType,
+
+        [Parameter()]
+        [System.Object]
+        $Priority,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsAllowMeetingChat,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionDoNotForward,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowAccessToGuestUsers,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionPromptUser,
+
+        [Parameter()]
+        [System.String]
+        $Tooltip,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionBlockAccess,
+
+        [Parameter()]
+        [System.Object]
+        $EncryptionOfflineAccessDays,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingHeaderEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyContentMarkingFooterMargin,
+
+        [Parameter()]
+        [System.Object]
+        $SiteAndGroupProtectionAllowFullAccess,
+
+        [Parameter()]
+        [System.String]
+        $ApplyWaterMarkingFontColor,
+
+        [Parameter()]
+        [System.String]
+        $EncryptionRightsUrl,
+
+        [Parameter()]
+        [System.Object]
+        $NextLabel,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ApplyWaterMarkingEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $TeamsRecordAutomatically
+    )
+}
+function Set-LabelPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RemoveModernGroupLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $PreviousLabelPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocationException,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Setting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Settings,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveLabels,
+
+        [Parameter()]
+        [System.Object]
+        $AddSkypeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $AddLabels,
+
+        [Parameter()]
+        [System.Object]
+        $RemovePublicFolderLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddModernGroupLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddPublicFolderLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.String]
+        $MigrationId,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopesException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSkypeLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AdvancedSettings,
+
+        [Parameter()]
+        [System.Object]
+        $NextLabelPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSkypeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $ExchangeAdaptiveScopes,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddSkypeLocationException
+    )
+}
+function Set-ProtectionAlert
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $NotificationEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserThrottleWindow,
+
+        [Parameter()]
+        [System.Object]
+        $Threshold,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Object]
+        $Operation,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUser,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $AlertBy,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypesForCounting,
+
+        [Parameter()]
+        [System.Object]
+        $AggregationType,
+
+        [Parameter()]
+        [System.Object]
+        $Severity,
+
+        [Parameter()]
+        [System.Object]
+        $VolumeThreshold,
+
+        [Parameter()]
+        [System.Object]
+        $TimeWindow,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypes,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Category,
+
+        [Parameter()]
+        [System.Object]
+        $AlertFor,
+
+        [Parameter()]
+        [System.Boolean]
+        $Disabled,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserSuppressionExpiryDate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotifyUserOnFilterMatch,
+
+        [Parameter()]
+        [System.Object]
+        $NotifyUserThrottleThreshold,
+
+        [Parameter()]
+        [System.Globalization.CultureInfo]
+        $NotificationCulture,
+
+        [Parameter()]
+        [System.Object]
+        $PrivacyManagementScopedSensitiveInformationTypesThreshold
+    )
+}
+function Set-RetentionCompliancePolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RemoveModernGroupLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddExchangeLocationException,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveTeamsChatLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $Applications,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyTemplateInfo,
+
+        [Parameter()]
+        [System.Object]
+        $AddTeamsChatLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddSkypeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyRBACScopes,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Object]
+        $RemovePublicFolderLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddModernGroupLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddTeamsChatLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddModernGroupLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddTeamsChannelLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddPublicFolderLocation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryDistribution,
+
+        [Parameter()]
+        [System.Boolean]
+        $RestrictiveRetention,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveTeamsChannelLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddAdaptiveScopeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveTeamsChatLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveTeamsChannelLocationException,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforceSimulationPolicy,
+
+        [Parameter()]
+        [System.Object]
+        $AddTeamsChannelLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSkypeLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveExchangeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveAdaptiveScopeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveSkypeLocation,
+
+        [Parameter()]
+        [System.Object]
+        $RemoveOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddSharePointLocationException,
+
+        [Parameter()]
+        [System.Object]
+        $AddOneDriveLocation,
+
+        [Parameter()]
+        [System.Object]
+        $AddSkypeLocationException,
+
+        [Parameter()]
+        [System.Boolean]
+        $StartSimulation
+    )
+}
+function Set-RetentionComplianceRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $RetentionDuration,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedItemClasses,
+
+        [Parameter()]
+        [System.Object]
+        $ContentDateFrom,
+
+        [Parameter()]
+        [System.Object[]]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.String]
+        $RetentionComplianceAction,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchQuery,
+
+        [Parameter()]
+        [System.String]
+        $ApplyComplianceTag,
+
+        [Parameter()]
+        [System.Object]
+        $ContentDateTo,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String]
+        $ExpirationDateOption,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $RetentionDurationDisplayHint
+    )
+}
+function Set-RoleGroup
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Set-SupervisoryReviewPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $AddReviewers,
+
+        [Parameter()]
+        [System.String]
+        $Condition,
+
+        [Parameter()]
+        [System.Object]
+        $PolicyType,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveReviewers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $Reviewers,
+
+        [Parameter()]
+        [System.Object]
+        $SamplingRate
+    )
+}
+function Set-SupervisoryReviewPolicyV2
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $AddReviewers,
+
+        [Parameter()]
+        [System.Int32]
+        $RetentionPeriodInDays,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Comment,
+
+        [Parameter()]
+        [System.String[]]
+        $UserReportingWorkloads,
+
+        [Parameter()]
+        [System.String[]]
+        $RemoveReviewers,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.String[]]
+        $Reviewers,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Set-SupervisoryReviewRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $ExceptIfFrom,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $DayXInsights,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentSources,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRevieweeIs,
+
+        [Parameter()]
+        [System.String]
+        $CcsiDataModelOperator,
+
+        [Parameter()]
+        [System.Object[]]
+        $ContentContainsSensitiveInformation,
+
+        [Parameter()]
+        [System.String]
+        $InPurviewFilter,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedRule,
+
+        [Parameter()]
+        [System.Object]
+        $From,
+
+        [Parameter()]
+        [System.String]
+        $ContentMatchesDataModel,
+
+        [Parameter()]
+        [System.Object]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Condition,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.Boolean]
+        $Ocr,
+
+        [Parameter()]
+        [System.Int32]
+        $SamplingRate,
+
+        [Parameter()]
+        [System.String[]]
+        $IncludeAdaptiveScopes
+    )
+}
+function Start-ComplianceSearch
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $RetryOnError,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Update-RoleGroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Members
     )
 }
 #endregion
