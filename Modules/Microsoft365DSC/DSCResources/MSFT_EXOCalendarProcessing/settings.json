@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "EXOAvailabilityConfig",
+    "resourceName": "EXOCalendarProcessing",
     "description": "",
     "roles": {
         "read": [
@@ -22,12 +22,13 @@
         },
         "exchange": {
             "requiredroles": [
-                "Federated Sharing",
-                "Organization Configuration",
-                "Mail Tips",
-                "Message Tracking"
+                "Organization Management",
+                "Recipient Management"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+               "Organization Management",
+               "Help Desk"
+            ]
         }
     }
 }

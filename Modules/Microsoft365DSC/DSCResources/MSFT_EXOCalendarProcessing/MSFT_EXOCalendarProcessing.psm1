@@ -64,7 +64,7 @@ function Get-TargetResource
         $BookInPolicy,
 
         [Parameter()]
-        [System.Uint32]
+        [System.UInt32]
         $ConflictPercentageAllowed,
 
         [Parameter()]
@@ -234,6 +234,37 @@ function Get-TargetResource
             Write-Verbose -Message "Calendar processing settings for $($Identity) does not exist."
             return $nullReturn
         }
+
+        $RequestInPolicyValue = @()
+        if ($null -ne $calendarProc.RequestInPolicy)
+        {
+            foreach ($user in $calendarProc.RequestInPolicy)
+            {
+                $userInfo = Get-User -Identity $user
+                $RequestInPolicyValue += $userInfo.UserPrincipalName
+            }
+        }
+
+        $RequestOutPolicyValue = @()
+        if ($null -ne $calendarProc.RequestOutPolicy)
+        {
+            foreach ($user in $calendarProc.RequestOutPolicy)
+            {
+                $userInfo = Get-User -Identity $user
+                $RequestOutPolicyValue += $userInfo.UserPrincipalName
+            }
+        }
+
+        $ResourceDelegatesValue = @()
+        if ($null -ne $calendarProc.ResourceDelegates)
+        {
+            foreach ($user in $calendarProc.ResourceDelegates)
+            {
+                $userInfo = Get-User -Identity $user
+                $ResourceDelegatesValue += $userInfo.UserPrincipalName
+            }
+        }
+
         $result = @{
             Identity                             = $calendarProc.Identity
             AddAdditionalResponse                = $calendarProc.AddAdditionalResponse
@@ -248,8 +279,8 @@ function Get-TargetResource
             AutomateProcessing                   = $calendarProc.AutomateProcessing
             BookingType                          = $calendarProc.BookingType
             BookingWindowInDays                  = $calendarProc.BookingWindowInDays
-            BookInPolicy                         = $calendarProc.BookInPolicy
-            ConflictPercentageAllowed            = [Array]$calendarProc.ConflictPercentageAllowed
+            BookInPolicy                         = [Array]$calendarProc.BookInPolicy
+            ConflictPercentageAllowed            = $calendarProc.ConflictPercentageAllowed
             DeleteAttachments                    = $calendarProc.DeleteAttachments
             DeleteComments                       = $calendarProc.DeleteComments
             DeleteNonCalendarItems               = $calendarProc.DeleteNonCalendarItems
@@ -269,19 +300,19 @@ function Get-TargetResource
             RemoveForwardedMeetingNotifications  = $calendarProc.RemoveForwardedMeetingNotifications
             RemoveOldMeetingMessages             = $calendarProc.RemoveOldMeetingMessages
             RemovePrivateProperty                = $calendarProc.RemovePrivateProperty
-            RequestInPolicy                      = [Array]$calendarProc.RequestInPolicy
-            RequestOutOfPolicy                   = [Array]$calendarProc.RequestOutOfPolicy
-            ResourceDelegates                    = [Array]$calendarProc.ResourceDelegates
+            RequestInPolicy                      = $RequestInPolicyValue
+            RequestOutOfPolicy                   = $RequestOutOfPolicyValue
+            ResourceDelegates                    = $ResourceDelegatesValue
             ScheduleOnlyDuringWorkHours          = $calendarProc.ScheduleOnlyDuringWorkHours
             TentativePendingApproval             = $calendarProc.TentativePendingApproval
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            CertificateThumbprint = $CertificateThumbprint
-            CertificatePath       = $CertificatePath
-            CertificatePassword   = $CertificatePassword
-            Managedidentity       = $ManagedIdentity.IsPresent
-            TenantId              = $TenantId
+            Ensure                               = 'Present'
+            Credential                           = $Credential
+            ApplicationId                        = $ApplicationId
+            CertificateThumbprint                = $CertificateThumbprint
+            CertificatePath                      = $CertificatePath
+            CertificatePassword                  = $CertificatePassword
+            Managedidentity                      = $ManagedIdentity.IsPresent
+            TenantId                             = $TenantId
         }
 
         Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"
@@ -306,7 +337,162 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $OrgWideAccount,
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddAdditionalResponse,
+
+        [Parameter()]
+        [System.String]
+        $AdditionalResponse,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddNewRequestsTentatively,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddOrganizerToSubject,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllBookInPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowConflicts,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRecurringMeetings,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllRequestInPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllRequestOutOfPolicy,
+
+        [Parameter()]
+        [ValidateSet("None", "AutoUpdate", "AutoAccept")]
+        [System.String]
+        $AutomateProcessing,
+
+        [Parameter()]
+        [ValidateSet("Standard", "Reserved")]
+        [System.String]
+        $BookingType,
+
+        [Parameter()]
+        [ValidateRange(0,1080)]
+        [System.UInt32]
+        $BookingWindowInDays = 180,
+
+        [Parameter()]
+        [System.String[]]
+        $BookInPolicy,
+
+        [Parameter()]
+        [System.UInt32]
+        $ConflictPercentageAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteAttachments,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteComments,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteNonCalendarItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteSubject,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAutoRelease,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableResponseDetails,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforceCapacity,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforceSchedulingHorizon,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForwardRequestsToDelegates,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaximumConflictInstances,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaximumDurationInMinutes,
+
+        [Parameter()]
+        [System.UInt32]
+        $MinimumDurationInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $OrganizerInfo,
+
+        [Parameter()]
+        [System.UInt32]
+        $PostReservationMaxClaimTimeInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessExternalMeetingMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveCanceledMeetings,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveForwardedMeetingNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveOldMeetingMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemovePrivateProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $RequestInPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $RequestOutOfPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $ResourceDelegates,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScheduleOnlyDuringWorkHours,
+
+        [Parameter()]
+        [System.Boolean]
+        $TentativePendingApproval,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -353,31 +539,50 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Setting configuration of Availability Config for account $OrgWideAccount"
 
-    $currentAvailabilityConfig = Get-TargetResource @PSBoundParameters
+    $currentValues = Get-TargetResource @PSBoundParameters
+
+    if ($null -ne $currentValues)
+    {
+        Write-Verbose -Message "Setting configuration of Calendar Processing for $Identity"
+    }
+    else
+    {
+        return
+    }
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    # CASE: Availability Config doesn't exist but should;
-    if ($Ensure -eq 'Present' -and $currentAvailabilityConfig.Ensure -eq 'Absent')
+    $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
+    $UpdateParameters.Remove("Ensure") | Out-Null
+    $UpdateParameters.Remove("Credential") | Out-Null
+    $UpdateParameters.Remove("ApplicationId") | Out-Null
+    $UpdateParameters.Remove("TenantId") | Out-Null
+    $UpdateParameters.Remove("CertificateThumbprint") | Out-Null
+    $UpdateParameters.Remove("ApplicationSecret") | Out-Null
+    $UpdateParameters.Remove("CertificatePath") | Out-Null
+    $UpdateParameters.Remove("CertificatePassword") | Out-Null
+    $UpdateParameters.Remove("ManagedIdentity") | Out-Null
+
+    # Some parameters can only be applied to Resource Mailboxes
+    if ($UpdateParameters.ContainsKey('AddNewRequestsTentatively'))
     {
-        Write-Verbose -Message "Availability Config '$($OrgWideAccount)' does not exist but it should. Create it."
-        New-AvailabilityConfig -OrgWideAccount $OrgWideAccount
+        $mailbox = Get-Mailbox $UpdateParameters.Identity
+        if ($mailbox.RecipientTypeDetails -ne 'EquipmentMailbox' -and $mailbox.RecipientTypeDetails -ne 'RoomMailbox')
+        {
+            Write-Verbose -Message "Removing the AddNewRequestsTentatively parameter because the mailbox is not a resource one."
+            $UpdateParameters.Remove("AddNewRequestsTentatively") | Out-Null
+
+            Write-Verbose -Message "Removing the BookingType parameter because the mailbox is not a resource one."
+            $UpdateParameters.Remove("BookingType") | Out-Null
+
+            Write-Verbose -Message "Removing the ProcessExternalMeetingMessages parameter because the mailbox is not a resource one."
+            $UpdateParameters.Remove("ProcessExternalMeetingMessages") | Out-Null
+        }
     }
-    # CASE: Availability Config exists but it shouldn't;
-    elseif ($Ensure -eq 'Absent' -and $currentAvailabilityConfig.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Availability Config '$($OrgWideAccount)' exists but it shouldn't. Remove it."
-        Remove-AvailabilityConfig -Confirm:$false
-    }
-    # CASE: Availability Config exists and it should, but has different values than the desired ones
-    elseif ($Ensure -eq 'Present' -and $currentAvailabilityConfig.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Availability Config '$($OrgWideAccount)' already exists, but needs updating."
-        Set-AvailabilityConfig -OrgWideAccount $OrgWideAccount -Confirm:$false
-    }
+
+    Set-CalendarProcessing @UpdateParameters
 }
 
 function Test-TargetResource
@@ -388,7 +593,162 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $OrgWideAccount,
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddAdditionalResponse,
+
+        [Parameter()]
+        [System.String]
+        $AdditionalResponse,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddNewRequestsTentatively,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddOrganizerToSubject,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllBookInPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowConflicts,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowRecurringMeetings,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllRequestInPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllRequestOutOfPolicy,
+
+        [Parameter()]
+        [ValidateSet("None", "AutoUpdate", "AutoAccept")]
+        [System.String]
+        $AutomateProcessing,
+
+        [Parameter()]
+        [ValidateSet("Standard", "Reserved")]
+        [System.String]
+        $BookingType,
+
+        [Parameter()]
+        [ValidateRange(0,1080)]
+        [System.UInt32]
+        $BookingWindowInDays = 180,
+
+        [Parameter()]
+        [System.String[]]
+        $BookInPolicy,
+
+        [Parameter()]
+        [System.UInt32]
+        $ConflictPercentageAllowed,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteAttachments,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteComments,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteNonCalendarItems,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeleteSubject,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAutoRelease,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableResponseDetails,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforceCapacity,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnforceSchedulingHorizon,
+
+        [Parameter()]
+        [System.Boolean]
+        $ForwardRequestsToDelegates,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaximumConflictInstances,
+
+        [Parameter()]
+        [System.UInt32]
+        $MaximumDurationInMinutes,
+
+        [Parameter()]
+        [System.UInt32]
+        $MinimumDurationInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $OrganizerInfo,
+
+        [Parameter()]
+        [System.UInt32]
+        $PostReservationMaxClaimTimeInMinutes,
+
+        [Parameter()]
+        [System.Boolean]
+        $ProcessExternalMeetingMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveCanceledMeetings,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveForwardedMeetingNotifications,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveOldMeetingMessages,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemovePrivateProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $RequestInPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $RequestOutOfPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $ResourceDelegates,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScheduleOnlyDuringWorkHours,
+
+        [Parameter()]
+        [System.Boolean]
+        $TentativePendingApproval,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -515,9 +875,15 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             return ''
         }
+        else
+        {
+            Write-Host "`r`n" -NoNewline
+        }
 
+        $i = 1
         foreach ($mailbox in $mailboxes)
         {
+            Write-Host "    |---[$i/$($mailboxes.Count)] $($mailbox.Identity.Split('-')[0])" -NoNewline
             $Params = @{
                 Identity              = $mailbox.UserPrincipalName
                 Credential            = $Credential
@@ -541,6 +907,7 @@ function Export-TargetResource
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
             Write-Host $Global:M365DSCEmojiGreenCheckMark
+            $i++
         }
 
 

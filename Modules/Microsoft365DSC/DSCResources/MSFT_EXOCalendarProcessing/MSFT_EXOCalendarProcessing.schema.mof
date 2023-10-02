@@ -3,14 +3,14 @@ class MSFT_EXOCalendarProcessing : OMI_BaseResource
 {
     [Key, Description("The Identity parameter specifies the resource mailbox that you want to view. You can use any value that uniquely identifies the mailbox.")] String Identity;
     [Write, Description("The AddAdditionalResponse parameter specifies whether additional information (the value of the AdditionalResponse parameter) is added to meeting request responses")] Boolean AddAdditionalResponse;
-    [Write, Description("The AdditionalResponse parameter specifies the additional information to be included in responses to meeting requests when the value of the AddAdditionalResponse parameter is $true. If the value contains spaces, enclose the value in quotation marks.")] String AdditionalResponse,
-    [Write, Description("The AddNewRequestsTentatively parameter specifies whether new meeting requests are added to the calendar as tentative")] Boolean AddNewRequestsTentatively,
-    [Write, Description("The AddOrganizerToSubject parameter specifies whether the meeting organizer's name is used as the subject of the meeting request.")] Boolean AddOrganizerToSubject,
-    [Write, Description("The AllBookInPolicy parameter specifies whether to automatically approve in-policy requests from all users to the resource mailbox.")] Boolean AllBookInPolicy,
-    [Write, Description("The AllowConflicts parameter specifies whether to allow conflicting meeting requests.")] Boolean AllowConflicts,
-    [Write, Description("The AllowRecurringMeetings parameter specifies whether to allow recurring meetings in meeting requests.")] Boolean AllowRecurringMeetings,
-    [Write, Description("The AllRequestInPolicy parameter specifies whether to allow all users to submit in-policy requests to the resource mailbox.")] Boolean AllRequestInPolicy,
-    [Write, Description("The AllRequestOutOfPolicy parameter specifies whether to allow all users to submit out-of-policy requests to the resource mailbox.")] Boolean AllRequestOutOfPolicy,
+    [Write, Description("The AdditionalResponse parameter specifies the additional information to be included in responses to meeting requests when the value of the AddAdditionalResponse parameter is $true. If the value contains spaces, enclose the value in quotation marks.")] String AdditionalResponse;
+    [Write, Description("The AddNewRequestsTentatively parameter specifies whether new meeting requests are added to the calendar as tentative")] Boolean AddNewRequestsTentatively;
+    [Write, Description("The AddOrganizerToSubject parameter specifies whether the meeting organizer's name is used as the subject of the meeting request.")] Boolean AddOrganizerToSubject;
+    [Write, Description("The AllBookInPolicy parameter specifies whether to automatically approve in-policy requests from all users to the resource mailbox.")] Boolean AllBookInPolicy;
+    [Write, Description("The AllowConflicts parameter specifies whether to allow conflicting meeting requests.")] Boolean AllowConflicts;
+    [Write, Description("The AllowRecurringMeetings parameter specifies whether to allow recurring meetings in meeting requests.")] Boolean AllowRecurringMeetings;
+    [Write, Description("The AllRequestInPolicy parameter specifies whether to allow all users to submit in-policy requests to the resource mailbox.")] Boolean AllRequestInPolicy;
+    [Write, Description("The AllRequestOutOfPolicy parameter specifies whether to allow all users to submit out-of-policy requests to the resource mailbox.")] Boolean AllRequestOutOfPolicy;
     [Write, Description("The AutomateProcessing parameter enables or disables calendar processing on the mailbox."), ValueMap{"None","AutoUpdate","AutoAccept"}, Values{"None","AutoUpdate","AutoAccept"}] String AutomateProcessing;
     [Write, Description("The BookingType parameter specifies how reservations work on the resource mailbox."), ValueMap{"Standard","Reserved"}, Values{"Standard","Reserved"}] String BookingType;
     [Write, Description("The BookingWindowInDays parameter specifies the maximum number of days in advance that the resource can be reserved. A valid value is an integer from 0 through 1080. The default value is 180 days. The value 0 means today.")] UInt32 BookingWindowInDays;
@@ -22,7 +22,7 @@ class MSFT_EXOCalendarProcessing : OMI_BaseResource
     [Write, Description("The DeleteSubject parameter specifies whether to remove or keep the subject of incoming meeting requests. ")] Boolean DeleteSubject;
     [Write, Description("N/A")] Boolean EnableAutoRelease;
     [Write, Description("The EnableResponseDetails parameter specifies whether to include the reasons for accepting or declining a meeting in the response email message.")] Boolean EnableResponseDetails;
-    [Write, Description("The EnforceCapacity parameter specifies whether to restrict the number of attendees to the capacity of the workspace. For example, if capacity is set to 10, then only 10 people can book the workspace. ")] Boolean EnforceCapacity;
+    [Write, Description("The EnforceCapacity parameter specifies whether to restrict the number of attendees to the capacity of the workspace. For example, if capacity is set to 10, then only 10 people can book the workspace.")] Boolean EnforceCapacity;
     [Write, Description("The EnforceSchedulingHorizon parameter controls the behavior of recurring meetings that extend beyond the date specified by the BookingWindowInDays parameter.")] Boolean EnforceSchedulingHorizon;
     [Write, Description("The ForwardRequestsToDelegates parameter specifies whether to forward incoming meeting requests to the delegates that are configured for the resource mailbox.")] Boolean ForwardRequestsToDelegates;
     [Write, Description("The MaximumConflictInstances parameter specifies the maximum number of conflicts for new recurring meeting requests when the AllowRecurringMeetings parameter is set to $true. A valid value is an integer from 0 through INT32 (2147483647). The default value is 0.")] UInt32 MaximumConflictInstances;

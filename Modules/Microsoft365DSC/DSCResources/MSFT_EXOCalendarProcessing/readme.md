@@ -1,5 +1,5 @@
-# EXOAvailabilityConfig
+# EXOCalendarProcessing
 
 ## Description
 
-This resource configures the Availability Config in Exchange Online.
+This resource configures the Calendar Processing settings Exchange Online.

@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOCalendarProcessing
+  * Initial release.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.121.
 
