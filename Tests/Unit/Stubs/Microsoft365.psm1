@@ -10711,6 +10711,103 @@ function Set-PerimeterConfig
         $GatewayIPAddresses
     )
 }
+function Set-Place
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PostalCode,
+
+        [Parameter()]
+        [System.String]
+        $Phone,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $CountryOrRegion,
+
+        [Parameter()]
+        [System.String]
+        $ParentId,
+
+        [Parameter()]
+        [System.String]
+        $Street,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsWheelChairAccessible,
+
+        [Parameter()]
+        [System.String]
+        $AudioDeviceName,
+
+        [Parameter()]
+        [System.String]
+        $DisplayDeviceName,
+
+        [Parameter()]
+        [System.Object[]]
+        $Desks,
+
+        [Parameter()]
+        [System.String]
+        $Building,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $City,
+
+        [Parameter()]
+        [System.Object]
+        $Floor,
+
+        [Parameter()]
+        [System.Object]
+        $ParentType,
+
+        [Parameter()]
+        [System.String]
+        $VideoDeviceName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags,
+
+        [Parameter()]
+        [System.String]
+        $FloorLabel,
+
+        [Parameter()]
+        [System.Object]
+        $Capacity,
+
+        [Parameter()]
+        [System.String]
+        $Label,
+
+        [Parameter()]
+        [System.Object]
+        $GeoCoordinates,
+
+        [Parameter()]
+        [System.Boolean]
+        $MTREnabled
+    )
+}
 function Set-PolicyTipConfig
 {
     [CmdletBinding()]
@@ -12516,8 +12613,6 @@ function Update-RoleGroupMember
     )
 }
 #endregion
-
-
 #region Microsoft.Graph.Applications
 function Get-MgApplication
 {
