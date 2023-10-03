@@ -1119,6 +1119,27 @@ function Get-PerimeterConfig
         $Identity
     )
 }
+function Get-Place
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Type,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
 function Get-PolicyTipConfig
 {
     [CmdletBinding()]
@@ -9617,6 +9638,10 @@ function Set-OrganizationConfig
         $MailTipsAllTipsEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $PostponeRoamingSignaturesUntilLater,
+
+        [Parameter()]
         [System.Object]
         $RemotePublicFolderMailboxes,
 
@@ -12491,6 +12516,8 @@ function Update-RoleGroupMember
     )
 }
 #endregion
+
+
 #region Microsoft.Graph.Applications
 function Get-MgApplication
 {
