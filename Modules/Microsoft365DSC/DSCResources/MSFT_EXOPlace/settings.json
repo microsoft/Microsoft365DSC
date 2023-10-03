@@ -1,0 +1,31 @@
+﻿{
+    "resourceName": "EXOInboundConnector",
+    "description": "",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Remote and Accepted Domains",
+                "View-Only Configuration"
+            ],
+            "requiredrolegroups": "Organization Management"
+        }
+    }
+}

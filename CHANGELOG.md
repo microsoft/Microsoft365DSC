@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* EXOCalendarProcessing
+  * Initial release.
+* EXOMailboxAutoReplyConfiguration
+  * Initial release.
+* EXOPlace
+  * Initial release.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.121.
 * IntunePolicySets
@@ -18,6 +24,9 @@
   * Improvements to how rules are evaluated and how drifts are logged.
 * O365OrgSettings
   * Changes to how ToDo discrepencies are being fixed in the SET method.
+* M365DSCDRGUtil
+  * Added support for Intune URIs to be dynamic based on target 
+    cloud instance (Commercial, GCC-H..etc) 
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.6.1.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.117.
