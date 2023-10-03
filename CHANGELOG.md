@@ -6,6 +6,8 @@
   * Fixed [[#3738](https://github.com/microsoft/Microsoft365DSC/issues/3738)]
 * EXOCalendarProcessing
   * Initial release.
+* EXODistributionGroup
+  * Initial release.
 * EXOMailboxAutoReplyConfiguration
   * Initial release.
 * EXOPlace
@@ -30,8 +32,8 @@
 * O365OrgSettings
   * Changes to how ToDo discrepencies are being fixed in the SET method.
 * M365DSCDRGUtil
-  * Added support for Intune URIs to be dynamic based on target 
-    cloud instance (Commercial, GCC-H..etc) 
+  * Added support for Intune URIs to be dynamic based on target
+    cloud instance (Commercial, GCC-H..etc)
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.6.1.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.117.
