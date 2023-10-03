@@ -10,10 +10,13 @@
   * Initial release.
 * EXOPlace
   * Initial release.
+* IntunePolicySets
+  * New Configuration for Intune Policy Sets
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.121.
-* TestHarness.psm1
-  * Added code around DscTestsPath parameter to target a single test file during development
+* MISC
+  * TestHarness.psm1
+    * Added code around DscTestsPath parameter to target a single test file during development
 
 # 1.23.927.1
 
