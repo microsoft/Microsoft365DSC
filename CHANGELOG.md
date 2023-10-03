@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * [BREAKING CHANGE] Fixes customExtension property where the schema and assignement 
+    were not managed correctly.
+    FIXES [#3639](https://github.com/microsoft/Microsoft365DSC/issues/3639)
 * AADEntitlementManagementConnectedOrganization
   * Fixed [[#3738](https://github.com/microsoft/Microsoft365DSC/issues/3738)]
 * EXOCalendarProcessing
