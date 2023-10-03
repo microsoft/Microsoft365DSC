@@ -314,7 +314,8 @@ function Set-TargetResource
             }
         }
         $TenantId = $CreateParameters.IdentitySources.ExternalTenantId
-        $DomainName = (Invoke-MgGraphRequest -Method 'GET' -Uri "https://graph.microsoft.com/beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$tenantid')").defaultDomainName
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$tenantid')"
+        $DomainName = (Invoke-MgGraphRequest -Method 'GET' -Uri $url).defaultDomainName
         $newConnectedOrganization = New-MgBetaEntitlementManagementConnectedOrganization -Description $CreateParameters.Description -DisplayName $CreateParameters.DisplayName -State $CreateParameters.State -DomainName $DomainName
 
         foreach ($sponsor in $ExternalSponsors)
