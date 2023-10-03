@@ -65,7 +65,7 @@ function Get-TargetResource
         $ParentId,
 
         [Parameter()]
-        [ValidateSet("Floor", "Section")]
+        [ValidateSet("Floor", "Section", "None")]
         [System.String]
         $ParentType,
 
@@ -226,70 +226,89 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String[]]
-        $AssociatedAcceptedDomains = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $CloudServicesMailEnabled,
+        [System.String]
+        $AudioDeviceName,
 
         [Parameter()]
         [System.String]
-        $Comment,
+        $Building,
 
         [Parameter()]
-        [ValidateSet('Default', 'Migrated', 'HybridWizard')]
-        [System.String]
-        $ConnectorSource,
-
-        [Parameter()]
-        [ValidateSet('OnPremises', 'Partner')]
-        [System.String]
-        $ConnectorType,
-
-        [Parameter()]
-        [System.String[]]
-        $EFSkipIPs = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $EFSkipLastIP,
-
-        [Parameter()]
-        [System.String[]]
-        $EFUsers = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireTls,
-
-        [Parameter()]
-        [System.Boolean]
-        $RestrictDomainsToCertificate,
-
-        [Parameter()]
-        [System.Boolean]
-        $RestrictDomainsToIPAddresses,
-
-        [Parameter()]
-        [System.String[]]
-        $SenderDomains = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SenderIPAddresses = @(),
+        [System.UInt32]
+        $Capacity,
 
         [Parameter()]
         [System.String]
-        $TlsSenderCertificateName,
+        $City,
+
+        [Parameter()]
+        [System.String]
+        $CountryOrRegion,
+
+        [Parameter()]
+        [System.String[]]
+        $Desks = @(),
+
+        [Parameter()]
+        [System.String]
+        $DisplayDeviceName,
+
+        [Parameter()]
+        [System.UInt32]
+        $Floor,
+
+        [Parameter()]
+        [System.String]
+        $FloorLabel,
+
+        [Parameter()]
+        [System.String]
+        $GeoCoordinates,
 
         [Parameter()]
         [System.Boolean]
-        $TreatMessagesAsInternal,
+        $IsWheelChairAccessible,
+
+        [Parameter()]
+        [System.String]
+        $Label,
+
+        [Parameter()]
+        [System.Boolean]
+        $MTREnabled,
+
+        [Parameter()]
+        [System.String]
+        $ParentId,
+
+        [Parameter()]
+        [ValidateSet("Floor", "Section", "None")]
+        [System.String]
+        $ParentType,
+
+        [Parameter()]
+        [System.String]
+        $Phone,
+
+        [Parameter()]
+        [System.String]
+        $PostalCode,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $Street,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags,
+
+        [Parameter()]
+        [System.String]
+        $VideoDeviceName,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -383,70 +402,89 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [System.String[]]
-        $AssociatedAcceptedDomains = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $CloudServicesMailEnabled,
+        [System.String]
+        $AudioDeviceName,
 
         [Parameter()]
         [System.String]
-        $Comment,
+        $Building,
 
         [Parameter()]
-        [ValidateSet('Default', 'Migrated', 'HybridWizard')]
-        [System.String]
-        $ConnectorSource,
-
-        [Parameter()]
-        [ValidateSet('OnPremises', 'Partner')]
-        [System.String]
-        $ConnectorType,
-
-        [Parameter()]
-        [System.String[]]
-        $EFSkipIPs = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $EFSkipLastIP,
-
-        [Parameter()]
-        [System.String[]]
-        $EFUsers = @(),
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireTls,
-
-        [Parameter()]
-        [System.Boolean]
-        $RestrictDomainsToCertificate,
-
-        [Parameter()]
-        [System.Boolean]
-        $RestrictDomainsToIPAddresses,
-
-        [Parameter()]
-        [System.String[]]
-        $SenderDomains = @(),
-
-        [Parameter()]
-        [System.String[]]
-        $SenderIPAddresses = @(),
+        [System.UInt32]
+        $Capacity,
 
         [Parameter()]
         [System.String]
-        $TlsSenderCertificateName,
+        $City,
+
+        [Parameter()]
+        [System.String]
+        $CountryOrRegion,
+
+        [Parameter()]
+        [System.String[]]
+        $Desks = @(),
+
+        [Parameter()]
+        [System.String]
+        $DisplayDeviceName,
+
+        [Parameter()]
+        [System.UInt32]
+        $Floor,
+
+        [Parameter()]
+        [System.String]
+        $FloorLabel,
+
+        [Parameter()]
+        [System.String]
+        $GeoCoordinates,
 
         [Parameter()]
         [System.Boolean]
-        $TreatMessagesAsInternal,
+        $IsWheelChairAccessible,
+
+        [Parameter()]
+        [System.String]
+        $Label,
+
+        [Parameter()]
+        [System.Boolean]
+        $MTREnabled,
+
+        [Parameter()]
+        [System.String]
+        $ParentId,
+
+        [Parameter()]
+        [ValidateSet("Floor", "Section", "None")]
+        [System.String]
+        $ParentType,
+
+        [Parameter()]
+        [System.String]
+        $Phone,
+
+        [Parameter()]
+        [System.String]
+        $PostalCode,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $Street,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags,
+
+        [Parameter()]
+        [System.String]
+        $VideoDeviceName,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]

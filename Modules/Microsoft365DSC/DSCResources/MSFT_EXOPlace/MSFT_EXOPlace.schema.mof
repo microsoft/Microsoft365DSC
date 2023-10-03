@@ -17,7 +17,7 @@ class MSFT_EXOPlace : OMI_BaseResource
     [Write, Description("The Label parameter specifies a descriptive label for the room (for example, a number or name). If the value contains spaces, enclose the value in quotation marks.")] String Label;
     [Write, Description("The MTREnabled parameter identifies the room as configured with a Microsoft Teams room system. You can add Teams room systems as audio sources in Teams meetings that involve the room.")] Boolean MTREnabled;
     [Write, Description("The ParentId parameter specifies the ID of a Place in the parent location hierarchy in Microsoft Places.")] String ParentId;
-    [Write, Description("The ParentType parameter specifies the parent type of the ParentId in Microsoft Places. Valid values are: Floor, Section"), ValueMap{"Floor","Section"}, Values{"Floor","Section"}] String ParentType;
+    [Write, Description("The ParentType parameter specifies the parent type of the ParentId in Microsoft Places. Valid values are: Floor, Section"), ValueMap{"Floor","Section","None"}, Values{"Floor","Section","None"}] String ParentType;
     [Write, Description("The Phone parameter specifies the room's telephone number.")] String Phone;
     [Write, Description("The PostalCode parameter specifies the room's postal code.")] String PostalCode;
     [Write, Description("The State parameter specifies the room's state or province.")] String State;
