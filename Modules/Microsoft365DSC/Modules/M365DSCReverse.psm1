@@ -711,6 +711,10 @@ function Start-M365DSCConfigurationExtract
                     Write-Host "]: $($issue.InstanceName)"
                 }
             }
+            else
+            {
+                Write-Host "No conflicts detected" -NoNewLine
+            }
         }
 
         $shouldOpenOutputDirectory = $false

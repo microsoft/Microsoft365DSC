@@ -2,16 +2,72 @@
 
 # UNRELEASED
 
-
 * AADEntitlementManagementAccessPackageAssignmentPolicy
-  * Fixes customExtension property where the schema and assignement were not managed correctly
+  * [BREAKING CHANGE] Fixes customExtension property where the schema and assignement 
+    were not managed correctly.
     FIXES [#3639](https://github.com/microsoft/Microsoft365DSC/issues/3639)
+* AADEntitlementManagementConnectedOrganization
+  * Fixed [[#3738](https://github.com/microsoft/Microsoft365DSC/issues/3738)]
+* EXOCalendarProcessing
+  * Initial release.
+* EXOMailboxAutoReplyConfiguration
+  * Initial release.
+* EXOPlace
+  * Initial release.
+* IntunePolicySets
+  * New Configuration for Intune Policy Sets
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.121.
+* MISC
+  * TestHarness.psm1
+    * Added code around DscTestsPath parameter to target a single test file during development
+
+# 1.23.927.1
+
+* AADApplication
+  * Added support for restoring soft deleted instances.
+* AADRoleSetting
+  * Fixed issue with export where ApplicationSecret was not returned.
+    FIXES [#3695](https://github.com/microsoft/Microsoft365DSC/issues/3695)
+* M365DSCRuleEvaluation
+  * Improvements to how rules are evaluated and how drifts are logged.
+* O365OrgSettings
+  * Changes to how ToDo discrepencies are being fixed in the SET method.
+* M365DSCDRGUtil
+  * Added support for Intune URIs to be dynamic based on target 
+    cloud instance (Commercial, GCC-H..etc) 
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.6.1.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.117.
+* MISC
+  * Fixed handling of Graph connection in Update-M365DSCAllowedGraphScopes
+
+# 1.23.920.2
+
+* DEPENDENCIES
+  * Rolled back Microsoft.Graph to version 2.5.0.
+* MISC
+  * M365DSCDRGUtil: Write properties properly indented and in new line
+    FIXES [#3634](https://github.com/microsoft/Microsoft365DSC/issues/3634)
+
+# 1.23.920.1
+
 * O365OrgSettings
   * Fixes and issue where a the wrong url was being used in some of the API
     calls, resulting in null returns for some properties in the Get method.
+* SPOSharingSettings
+  * Changes verbose prompts to warnings.
+* TeamsGroupPolicyAssignment
+  * Changes to how Group IDs are retrieved and evaluated.
+* TeamsAppPermissionPolicy
+  * Fixes to the Test-TargetResource evaluation of empty arrays.
 * DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.6.0.
   * Updated MicrosoftTeams to version 5.6.0.
     FIXES [#3671](https://github.com/microsoft/Microsoft365DSC/issues/3671)
+* MISC
+  * M365DSCUtil: Fix problem naming similar resources
+    FIXES [#3700](https://github.com/microsoft/Microsoft365DSC/issues/3700)
 
 # 1.23.913.2
 

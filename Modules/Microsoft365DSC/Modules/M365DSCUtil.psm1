@@ -5,7 +5,8 @@ $Global:SessionSecurityCompliance = $null
 
 #region Extraction Modes
 $Global:DefaultComponents = @('SPOApp', 'SPOSiteDesign')
-$Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUSer', `
+$Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'EXOCalendarProcessing', 'EXOMailboxAutoReplyConfiguration', 'EXOMailboxSettings', `
+        'EXOManagementRole', 'O365Group', 'AADUSer', `
         'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', `
         'SPOSiteAuditSettings', 'SPOSiteGroup', 'SPOSite', 'SPOUserProfileProperty', 'SPOPropertyBag', 'TeamsTeam', 'TeamsChannel', `
         'TeamsUser', 'TeamsChannelTab', 'TeamsOnlineVoicemailUserSettings', 'TeamsUserCallingSettings')
@@ -3301,7 +3302,7 @@ function Get-M365DSCExportContentForResource
         $i++
     }
     $instanceName = $tempName
-    $Global:M365DSCExportedResourceInstancesNames += $tempName
+    [string[]]$Global:M365DSCExportedResourceInstancesNames += $tempName
 
     $content = [System.Text.StringBuilder]::New()
     [void]$content.Append("        $ResourceName `"$instanceName`"`r`n")
