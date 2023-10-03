@@ -97,11 +97,16 @@ function Get-TargetResource
 
     try
     {
-        $permission = Get-MailboxPermission -Identity $Identity -ErrorAction Stop
+        [Array]$permission = Get-MailboxPermission -Identity $Identity -ErrorAction Stop
+
+        if ($permission.Length -gt 1)
+        {
+            $permission = $permission | Where-Object -FilterScript {$_.User -eq $User -and (Compare-Object -ReferenceObject $_.AccessRights.Replace(' ','').Split(',') -DifferenceObject $AccessRights).Count -eq 0}
+        }
 
         if ($null -eq $permission)
         {
-            Write-Verbose -Message "permission for mailbox {$($Identity)} do not exist."
+            Write-Verbose -Message "Permission for mailbox {$($Identity)} do not exist."
             return $nullResult
         }
 
@@ -427,7 +432,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($mailboxes.Count)] $($mailbox.UserPrincipalName)" -NoNewline
 
-            [Array]$permissions = Get-MailboxPermission -Identity $mailbox.Identity
+            [Array]$permissions = Get-MailboxPermission -Identity $mailbox.UserPrincipalName
 
             $j = 1
             Write-Host "`r`n" -NoNewline
