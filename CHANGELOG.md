@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementConnectedOrganization
+  * Fixed [[#3738](https://github.com/microsoft/Microsoft365DSC/issues/3738)]
 * EXOCalendarProcessing
   * Initial release.
 * EXOMailboxAutoReplyConfiguration

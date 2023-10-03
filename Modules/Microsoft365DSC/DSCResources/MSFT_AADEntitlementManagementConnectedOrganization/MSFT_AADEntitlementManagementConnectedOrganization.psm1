@@ -313,8 +313,10 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
-
-        $newConnectedOrganization = New-MgBetaEntitlementManagementConnectedOrganization -BodyParameter $CreateParameters
+        $TenantId = $CreateParameters.IdentitySources.ExternalTenantId
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$tenantid')"
+        $DomainName = (Invoke-MgGraphRequest -Method 'GET' -Uri $url).defaultDomainName
+        $newConnectedOrganization = New-MgBetaEntitlementManagementConnectedOrganization -Description $CreateParameters.Description -DisplayName $CreateParameters.DisplayName -State $CreateParameters.State -DomainName $DomainName
 
         foreach ($sponsor in $ExternalSponsors)
         {
