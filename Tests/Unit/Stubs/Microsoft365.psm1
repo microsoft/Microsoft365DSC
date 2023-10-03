@@ -738,6 +738,31 @@ function Get-Mailbox
         $IncludeEmailAddressDisplayNames
     )
 }
+function Get-MailboxAutoReplyConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ReadFromDomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
 function Get-MailboxPlan
 {
     [CmdletBinding()]
@@ -8589,6 +8614,75 @@ function Set-Mailbox
         $MessageTrackingReadStatusEnabled
     )
 }
+function Set-MailboxAutoReplyConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $InternalMessage,
+
+        [Parameter()]
+        [System.String]
+        $DeclineMeetingMessage,
+
+        [Parameter()]
+        [System.Object]
+        $ExternalAudience,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDefaultScope,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeclineEventsForScheduledOOF,
+
+        [Parameter()]
+        [System.Boolean]
+        $AutoDeclineFutureRequestsWhenOOF,
+
+        [Parameter()]
+        [System.Object]
+        $AutoReplyState,
+
+        [Parameter()]
+        [System.String[]]
+        $EventsToDeleteIDs,
+
+        [Parameter()]
+        [System.DateTime]
+        $StartTime,
+
+        [Parameter()]
+        [System.Boolean]
+        $CreateOOFEvent,
+
+        [Parameter()]
+        [System.String]
+        $OOFEventSubject,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeclineAllEventsForScheduledOOF,
+
+        [Parameter()]
+        [System.DateTime]
+        $EndTime,
+
+        [Parameter()]
+        [System.String]
+        $ExternalMessage
+    )
+}
 function Set-MailboxPlan
 {
     [CmdletBinding()]
@@ -12613,6 +12707,7 @@ function Update-RoleGroupMember
     )
 }
 #endregion
+
 #region Microsoft.Graph.Applications
 function Get-MgApplication
 {

@@ -4,6 +4,8 @@
 
 * EXOCalendarProcessing
   * Initial release.
+* EXOMailboxAutoReplyConfiguration
+  * Initial release.
 * EXOPlace
   * Initial release.
 * DEPENDENCIES
