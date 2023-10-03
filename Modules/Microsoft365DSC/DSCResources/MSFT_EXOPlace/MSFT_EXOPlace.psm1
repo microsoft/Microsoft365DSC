@@ -200,7 +200,6 @@ function Get-TargetResource
             }
 
             Write-Verbose -Message "Found Place $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
     }
@@ -355,40 +354,25 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Setting configuration of InboundConnector for $($Identity)"
+    Write-Verbose -Message "Setting configuration of Place for $($Identity)"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $InboundConnectors = Get-InboundConnector
-    $InboundConnector = $InboundConnectors | Where-Object -FilterScript { $_.Identity -eq $Identity }
-    $InboundConnectorParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $InboundConnectorParams.Remove('Ensure') | Out-Null
-    $InboundConnectorParams.Remove('Credential') | Out-Null
-    $InboundConnectorParams.Remove('ApplicationId') | Out-Null
-    $InboundConnectorParams.Remove('TenantId') | Out-Null
-    $InboundConnectorParams.Remove('CertificateThumbprint') | Out-Null
-    $InboundConnectorParams.Remove('CertificatePath') | Out-Null
-    $InboundConnectorParams.Remove('CertificatePassword') | Out-Null
-    $InboundConnectorParams.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('Ensure') | Out-Null
+    $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('ApplicationId') | Out-Null
+    $PSBoundParameters.Remove('TenantId') | Out-Null
+    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
+    $PSBoundParameters.Remove('CertificatePath') | Out-Null
+    $PSBoundParameters.Remove('CertificatePassword') | Out-Null
+    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $InboundConnector))
+    if ($null -eq $ParentId)
     {
-        Write-Verbose -Message "Creating InboundConnector $($Identity)."
-        $InboundConnectorParams.Add('Name', $Identity)
-        $InboundConnectorParams.Remove('Identity') | Out-Null
-        New-InboundConnector @InboundConnectorParams
+        $PSBoundParameters.Remove('ParentType') | Out-Null
     }
-    elseif (('Present' -eq $Ensure ) -and ($Null -ne $InboundConnector))
-    {
-        Write-Verbose -Message "Setting InboundConnector $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $InboundConnectorParams)"
-        Set-InboundConnector @InboundConnectorParams -Confirm:$false
-    }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $InboundConnector))
-    {
-        Write-Verbose -Message "Removing InboundConnector $($Identity)"
-        Remove-InboundConnector -Identity $Identity -Confirm:$false
-    }
+    Set-Place @PSBoundParameters
 }
 
 function Test-TargetResource
