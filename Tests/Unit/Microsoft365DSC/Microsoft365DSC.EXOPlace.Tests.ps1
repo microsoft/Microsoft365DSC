@@ -59,21 +59,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-Place -MockWith {
-                    return @(
-                        @{
-                            AudioDeviceName        = "MyAudioDevice";
-                            Capacity               = 10;
-                            City                   = "";
-                            DisplayDeviceName      = "DisplayDeviceName";
-                            Identity               = "MyRoom@$contoso.com";
-                            IsWheelChairAccessible = $True;
-                            MTREnabled             = $False;
-                            ParentType             = "None";
-                            Phone                  = "555-555-5555";
-                            Tags                   = @("Tag1", "Tag2");
-                            VideoDeviceName        = "VideoDevice";
-                        }
-                    )
+                    return @{
+                        AudioDeviceName        = "MyAudioDevice";
+                        Capacity               = 10;
+                        City                   = "";
+                        DisplayDeviceName      = "DisplayDeviceName";
+                        Identity               = "MyRoom@$contoso.com";
+                        IsWheelChairAccessible = $True;
+                        MTREnabled             = $False;
+                        ParentType             = "None";
+                        Phone                  = "555-555-5555";
+                        Tags                   = @("Tag1", "Tag2");
+                        VideoDeviceName        = "VideoDevice";
+                   }
                 }
             }
 
@@ -82,7 +80,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should not update anything in the Set Method' {
-                (Get-TargetResource @testParams).Presence | Should -Be 'Present'
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
@@ -128,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should not update anything in the Set Method' {
-                (Get-TargetResource @testParams).Presence | Should -Be 'Present'
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
             It 'Should update the instance from the Set method' {
@@ -139,10 +137,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
-
                 Mock -CommandName Get-Place -MockWith {
                     return @(
                         @{
