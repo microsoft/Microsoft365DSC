@@ -7,7 +7,9 @@
 * EXOCalendarProcessing
   * Initial release.
 * EXODistributionGroup
-  * Initial release.
+  * [BREAKING CHANGE] Identity is now a primary key.
+    FIXES [#3741](https://github.com/microsoft/Microsoft365DSC/issues/3741)
+  * Added support for multiple new properties to align with supporting cmdlet.
 * EXOMailboxAutoReplyConfiguration
   * Initial release.
 * EXOPlace
