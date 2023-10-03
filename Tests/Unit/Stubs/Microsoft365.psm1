@@ -1119,6 +1119,27 @@ function Get-PerimeterConfig
         $Identity
     )
 }
+function Get-Place
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Type,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
 function Get-PolicyTipConfig
 {
     [CmdletBinding()]
@@ -9617,6 +9638,10 @@ function Set-OrganizationConfig
         $MailTipsAllTipsEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $PostponeRoamingSignaturesUntilLater,
+
+        [Parameter()]
         [System.Object]
         $RemotePublicFolderMailboxes,
 
@@ -10684,6 +10709,103 @@ function Set-PerimeterConfig
         [Parameter()]
         [System.Object]
         $GatewayIPAddresses
+    )
+}
+function Set-Place
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PostalCode,
+
+        [Parameter()]
+        [System.String]
+        $Phone,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $CountryOrRegion,
+
+        [Parameter()]
+        [System.String]
+        $ParentId,
+
+        [Parameter()]
+        [System.String]
+        $Street,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsWheelChairAccessible,
+
+        [Parameter()]
+        [System.String]
+        $AudioDeviceName,
+
+        [Parameter()]
+        [System.String]
+        $DisplayDeviceName,
+
+        [Parameter()]
+        [System.Object[]]
+        $Desks,
+
+        [Parameter()]
+        [System.String]
+        $Building,
+
+        [Parameter()]
+        [System.String]
+        $State,
+
+        [Parameter()]
+        [System.String]
+        $City,
+
+        [Parameter()]
+        [System.Object]
+        $Floor,
+
+        [Parameter()]
+        [System.Object]
+        $ParentType,
+
+        [Parameter()]
+        [System.String]
+        $VideoDeviceName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String[]]
+        $Tags,
+
+        [Parameter()]
+        [System.String]
+        $FloorLabel,
+
+        [Parameter()]
+        [System.Object]
+        $Capacity,
+
+        [Parameter()]
+        [System.String]
+        $Label,
+
+        [Parameter()]
+        [System.Object]
+        $GeoCoordinates,
+
+        [Parameter()]
+        [System.Boolean]
+        $MTREnabled
     )
 }
 function Set-PolicyTipConfig
