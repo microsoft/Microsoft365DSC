@@ -365,7 +365,7 @@ function Export-TargetResource
         $totalCount = $instances.Length
         foreach ($item in $instances)
         {
-            $Group = Find-CsGroup -SearchQuery $item.GroupId
+            $Group = Find-CsGroup -SearchQuery $item.GroupId -ExactMatchOnly $true
             if ($null -eq $totalCount)
             {
                 $totalCount = 1
