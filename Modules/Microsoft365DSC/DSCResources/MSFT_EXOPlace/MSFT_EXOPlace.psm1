@@ -368,8 +368,9 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificatePassword') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
 
-    if ($null -eq $ParentId)
+    if ([System.String]::IsNullOrEmpty($ParentId) -and $null -ne $ParentType)
     {
+        Write-Verbose -Message 'ParentId is $null, removing ParentType.'
         $PSBoundParameters.Remove('ParentType') | Out-Null
     }
     Set-Place @PSBoundParameters
