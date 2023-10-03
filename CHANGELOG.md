@@ -12,6 +12,8 @@
   * Initial release.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.0.121.
+* TestHarness.psm1
+  * Added code around DscTestsPath parameter to target a single test file during development
 
 # 1.23.927.1
 
