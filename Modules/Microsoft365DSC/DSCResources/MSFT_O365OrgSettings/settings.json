@@ -96,32 +96,6 @@
                     }
                 ]
             }
-        },
-        "ProjectWorkManagement": {
-            "delegated": {
-                "read": [
-                    {
-                        "name": "OrgSettings-Planner.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "OrgSettings-Planner.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "OrgSettings-Planner.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "OrgSettings-Planner.ReadWrite.All"
-                    }
-                ]
-            }
         }
     }
 }

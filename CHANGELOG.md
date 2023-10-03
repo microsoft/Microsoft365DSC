@@ -2,16 +2,21 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementConnectedOrganization
+  * Fixed [[#3738](https://github.com/microsoft/Microsoft365DSC/issues/3738)]
 * EXOCalendarProcessing
   * Initial release.
 * EXOMailboxAutoReplyConfiguration
   * Initial release.
 * EXOPlace
   * Initial release.
-* DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.0.121.
 * IntunePolicySets
   * New Configuration for Intune Policy Sets
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.0.121.
+* MISC
+  * TestHarness.psm1
+    * Added code around DscTestsPath parameter to target a single test file during development
 
 # 1.23.927.1
 
