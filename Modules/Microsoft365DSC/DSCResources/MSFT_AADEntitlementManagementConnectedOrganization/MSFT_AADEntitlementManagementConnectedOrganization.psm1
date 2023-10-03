@@ -313,8 +313,9 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
-
-        $newConnectedOrganization = New-MgBetaEntitlementManagementConnectedOrganization -BodyParameter $CreateParameters
+        $TenantId = $CreateParameters.IdentitySources.ExternalTenantId
+        $DomainName = (Invoke-MgGraphRequest -Method 'GET' -Uri "https://graph.microsoft.com/beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$tenantid')").defaultDomainName
+        $newConnectedOrganization = New-MgBetaEntitlementManagementConnectedOrganization -Description $CreateParameters.Description -DisplayName $CreateParameters.DisplayName -State $CreateParameters.State -DomainName $DomainName
 
         foreach ($sponsor in $ExternalSponsors)
         {
