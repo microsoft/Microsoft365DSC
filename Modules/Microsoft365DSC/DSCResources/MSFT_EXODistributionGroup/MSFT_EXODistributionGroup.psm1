@@ -6,7 +6,23 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AcceptMessagesOnlyFrom,
+
+        [Parameter()]
+        [System.String[]]
+        $AcceptMessagesOnlyFromDLMembers,
+
+        [Parameter()]
+        [System.String[]]
+        $AcceptMessagesOnlyFromSendersOrMembers,
 
         [Parameter()]
         [System.String]
@@ -22,11 +38,79 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter()]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $EmailAddresses,
+
+        [Parameter()]
+        [System.String[]]
+        $GrantSendOnBehalfTo,
 
         [Parameter()]
         [System.Boolean]
@@ -79,13 +163,21 @@ function Get-TargetResource
         $RoomList,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
+        $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
         [ValidateSet('Always', 'Internal', 'Never')]
+        [System.String]
         $SendModerationNotifications,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
+        $SendOofMessageToOriginatorEnabled,
+
+        [Parameter()]
         [ValidateSet('Distribution', 'Security')]
+        [System.String]
         $Type,
 
         [Parameter()]
@@ -122,7 +214,7 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of Distribution Group for $Name"
+    Write-Verbose -Message "Getting configuration of Distribution Group for $Identity"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -155,20 +247,23 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+            $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+            $distributionGroupMembers = Get-DistributionGroupMember $Name  -ErrorAction Stop -ResultSize Unlimited
         }
         else
         {
-            $distributionGroup = Get-DistributionGroup -Filter "Name -eq ""$Name""" -ErrorAction Stop
+            $distributionGroup = Get-DistributionGroup -Identity $Identity -ErrorAction Stop
+            $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity  -ErrorAction Stop -ResultSize Unlimited
         }
 
         if ($null -eq $distributionGroup)
         {
-            Write-Verbose -Message "Distribution Group $($Name) does not exist."
+            Write-Verbose -Message "Distribution Group $($Identity) does not exist."
             return $nullReturn
         }
         else
         {
+            Write-Verbose -Message "Found existing Distribution Group {$Identity}."
             $descriptionValue = $null
             if ($distributionGroup.Description.Length -gt 0)
             {
@@ -182,38 +277,59 @@ function Get-TargetResource
             }
 
             $result = @{
-                Alias                              = $distributionGroup.Alias
-                BccBlocked                         = $distributionGroup.BccBlocked
-                BypassNestedModerationEnabled      = $distributionGroup.BypassNestedModerationEnabled
-                Description                        = $descriptionValue
-                DisplayName                        = $distributionGroup.DisplayName
-                HiddenGroupMembershipEnabled       = $distributionGroup.HiddenGroupMembershipEnabled
-                ManagedBy                          = $distributionGroup.ManagedBy
-                MemberDepartRestriction            = $distributionGroup.MemberDepartRestriction
-                MemberJoinRestriction              = $distributionGroup.MemberJoinRestriction
-                Members                            = $distributionGroup.Members
-                ModeratedBy                        = $distributionGroup.ModeratedBy
-                ModerationEnabled                  = $distributionGroup.ModerationEnabled
-                Name                               = $distributionGroup.Name
-                Notes                              = $distributionGroup.Notes
-                OrganizationalUnit                 = $distributionGroup.OrganizationalUnit
-                PrimarySmtpAddress                 = $distributionGroup.PrimarySmtpAddress
-                RequireSenderAuthenticationEnabled = $distributionGroup.RequireSenderAuthenticationEnabled
-                RoomList                           = $distributionGroup.RoomList
-                SendModerationNotifications        = $distributionGroup.SendModerationNotifications
-                Type                               = $groupTypeValue
-                Ensure                             = 'Present'
-                Credential                         = $Credential
-                ApplicationId                      = $ApplicationId
-                CertificateThumbprint              = $CertificateThumbprint
-                CertificatePath                    = $CertificatePath
-                CertificatePassword                = $CertificatePassword
-                Managedidentity                    = $ManagedIdentity.IsPresent
-                TenantId                           = $TenantId
+                Identity                                = $distributionGroup.Identity
+                Alias                                   = $distributionGroup.Alias
+                BccBlocked                              = $distributionGroup.BccBlocked
+                BypassNestedModerationEnabled           = $distributionGroup.BypassNestedModerationEnabled
+                Description                             = $descriptionValue
+                DisplayName                             = $distributionGroup.DisplayName
+                HiddenGroupMembershipEnabled            = $distributionGroup.HiddenGroupMembershipEnabled
+                ManagedBy                               = $distributionGroup.ManagedBy
+                MemberDepartRestriction                 = $distributionGroup.MemberDepartRestriction
+                MemberJoinRestriction                   = $distributionGroup.MemberJoinRestriction
+                Members                                 = $distributionGroupMembers.Name
+                ModeratedBy                             = $distributionGroup.ModeratedBy
+                ModerationEnabled                       = $distributionGroup.ModerationEnabled
+                Name                                    = $distributionGroup.Name
+                Notes                                   = $distributionGroup.Notes
+                OrganizationalUnit                      = $distributionGroup.OrganizationalUnit
+                PrimarySmtpAddress                      = $distributionGroup.PrimarySmtpAddress
+                RequireSenderAuthenticationEnabled      = $distributionGroup.RequireSenderAuthenticationEnabled
+                RoomList                                = $distributionGroup.RoomList
+                SendModerationNotifications             = $distributionGroup.SendModerationNotifications
+                AcceptMessagesOnlyFrom                  = [Array]$distributionGroup.AcceptMessagesOnlyFrom
+                AcceptMessagesOnlyFromDLMembers         = [Array]$distributionGroup.AcceptMessagesOnlyFromDLMembers
+                AcceptMessagesOnlyFromSendersOrMembers  = [Array]$distributionGroup.AcceptMessagesOnlyFromSendersOrMembers
+                CustomAttribute1                        = $distributionGroup.CustomAttribute1
+                CustomAttribute2                        = $distributionGroup.CustomAttribute2
+                CustomAttribute3                        = $distributionGroup.CustomAttribute3
+                CustomAttribute4                        = $distributionGroup.CustomAttribute4
+                CustomAttribute5                        = $distributionGroup.CustomAttribute5
+                CustomAttribute6                        = $distributionGroup.CustomAttribute6
+                CustomAttribute7                        = $distributionGroup.CustomAttribute7
+                CustomAttribute8                        = $distributionGroup.CustomAttribute8
+                CustomAttribute9                        = $distributionGroup.CustomAttribute9
+                CustomAttribute10                       = $distributionGroup.CustomAttribute10
+                CustomAttribute11                       = $distributionGroup.CustomAttribute11
+                CustomAttribute12                       = $distributionGroup.CustomAttribute12
+                CustomAttribute13                       = $distributionGroup.CustomAttribute13
+                CustomAttribute14                       = $distributionGroup.CustomAttribute14
+                CustomAttribute15                       = $distributionGroup.CustomAttribute15
+                EmailAddresses                          = [Array]$distributionGroup.EmailAddresses
+                GrantSendOnBehalfTo                     = [Array]$distributionGroup.GrantSendOnBehalfTo
+                HiddenFromAddressListsEnabled           = [Boolean]$distributionGroup.HiddenFromAddressListsEnabled
+                SendOofMessageToOriginatorEnabled       = [Boolean]$distributionGroup.SendOofMessageToOriginatorEnabled
+                Type                                    = $groupTypeValue
+                Ensure                                  = 'Present'
+                Credential                              = $Credential
+                ApplicationId                           = $ApplicationId
+                CertificateThumbprint                   = $CertificateThumbprint
+                CertificatePath                         = $CertificatePath
+                CertificatePassword                     = $CertificatePassword
+                Managedidentity                         = $ManagedIdentity.IsPresent
+                TenantId                                = $TenantId
             }
 
-            Write-Verbose -Message "Found Distribution Group $($Name)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
     }
@@ -236,7 +352,23 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AcceptMessagesOnlyFrom,
+
+        [Parameter()]
+        [System.String[]]
+        $AcceptMessagesOnlyFromDLMembers,
+
+        [Parameter()]
+        [System.String[]]
+        $AcceptMessagesOnlyFromSendersOrMembers,
 
         [Parameter()]
         [System.String]
@@ -252,11 +384,79 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter()]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $EmailAddresses,
+
+        [Parameter()]
+        [System.String[]]
+        $GrantSendOnBehalfTo,
 
         [Parameter()]
         [System.Boolean]
@@ -309,13 +509,21 @@ function Set-TargetResource
         $RoomList,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
+        $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
         [ValidateSet('Always', 'Internal', 'Never')]
+        [System.String]
         $SendModerationNotifications,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
+        $SendOofMessageToOriginatorEnabled,
+
+        [Parameter()]
         [ValidateSet('Distribution', 'Security')]
+        [System.String]
         $Type,
 
         [Parameter()]
@@ -352,10 +560,6 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting Distribution Group configuration for {$Name}"
-
-    $currentDistributionGroup = Get-TargetResource @PSBoundParameters
-
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -380,6 +584,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $currentDistributionGroup = Get-TargetResource @PSBoundParameters
+
     $currentParameters = $PSBoundParameters
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('Credential') | Out-Null
@@ -391,21 +597,47 @@ function Set-TargetResource
     $currentParameters.Remove('ManagedIdentity') | Out-Null
 
     # Distribution group doesn't exist but it should
+    $newGroup = $null
     if ($Ensure -eq 'Present' -and $currentDistributionGroup.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "The Distribution Group {$Name} does not exist but it should. Creating it."
-        New-DistributionGroup @currentParameters
+        $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
+        Write-Verbose -Message "The Distribution Group {$Identity} does not exist but it should. Creating it."
+        $CreateParameters.Remove('Identity') | Out-Null
+        $CreateParameters.Remove('AcceptMessagesOnlyFrom') | Out-Null
+        $CreateParameters.Remove('AcceptMessagesOnlyFromSendersOrMembers') | Out-Null
+        $CreateParameters.Remove('CustomAttribute1') | Out-Null
+        $CreateParameters.Remove('CustomAttribute2') | Out-Null
+        $CreateParameters.Remove('CustomAttribute3') | Out-Null
+        $CreateParameters.Remove('CustomAttribute4') | Out-Null
+        $CreateParameters.Remove('CustomAttribute5') | Out-Null
+        $CreateParameters.Remove('CustomAttribute6') | Out-Null
+        $CreateParameters.Remove('CustomAttribute7') | Out-Null
+        $CreateParameters.Remove('CustomAttribute8') | Out-Null
+        $CreateParameters.Remove('CustomAttribute9') | Out-Null
+        $CreateParameters.Remove('CustomAttribute10') | Out-Null
+        $CreateParameters.Remove('CustomAttribute11') | Out-Null
+        $CreateParameters.Remove('CustomAttribute12') | Out-Null
+        $CreateParameters.Remove('CustomAttribute13') | Out-Null
+        $CreateParameters.Remove('CustomAttribute14') | Out-Null
+        $CreateParameters.Remove('CustomAttribute15') | Out-Null
+        $CreateParameters.Remove('EmailAddresses') | Out-Null
+        $CreateParameters.Remove('GrantSendOnBehalfTo') | Out-Null
+        $CreateParameters.Remove('HiddenFromAddressListsEnabled') | Out-Null
+        $CreateParameters.Remove('SendOofMessageToOriginatorEnabled') | Out-Null
+        $newGroup = New-DistributionGroup @CreateParameters
+        Write-Verbose -Message "New Distribution Group with Identity {$($newGroup.Identity)} was successfully created"
     }
     # Distribution group exists but shouldn't
     elseif ($Ensure -eq 'Absent' -and $currentDistributionGroup.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "The Distribution Group {$Name} exists but shouldn't. Removing it."
-        Remove-DistributionGroup -Identity $Name -Confirm:$false
+        Write-Verbose -Message "The Distribution Group {$Identity} exists but shouldn't. Removing it."
+        Remove-DistributionGroup -Identity $Identity -Confirm:$false
     }
-    elseif ($Ensure -eq 'Present' -and $currentDistributionGroup.Ensure -eq 'Present')
+    # Update even if we just created the group. There are properties that can only be set with th set- cmdlet.
+    if ($Ensure -eq 'Present')
     {
-        Write-Verbose -Message "The Distribution Group {$Name} already exists. Updating settings"
-        Write-Verbose -Message "Setting Distribution Group {$Name} with values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
+        $currentParameters.Remove('Type') | Out-Null
+        Write-Verbose -Message "Updating Distribution Group {$Identity} with values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
 
         if ($null -ne $OrganizationalUnit -and $currentDistributionGroup.OrganizationalUnit -ne $OrganizationalUnit)
         {
@@ -413,7 +645,23 @@ function Set-TargetResource
         }
         $currentParameters.Remove('OrganizationalUnit') | Out-Null
         $currentParameters.Remove('Type') | Out-Null
-        Set-DistributionGroup @currentParameters -Identity $Name
+
+        if ($EmailAddresses.Length -gt 0)
+        {
+            $currentParameters.Remove('PrimarySmtpAddress') | Out-Null
+        }
+
+        if ($AcceptMessagesOnlyFrom.Length -gt 0)
+        {
+            $currentParameters.Remove('AcceptMessagesOnlyFromDLMembers') | Out-Null
+            $currentParameters.Remove('AcceptMessagesOnlyFromSendersOrMembers') | Out-Null
+        }
+
+        if ($null -ne $newGroup)
+        {
+            $currentParameters.Identity = $newGroup.Identity
+        }
+        Set-DistributionGroup @currentParameters
     }
 }
 
@@ -425,7 +673,23 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
+        $Identity,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
         $Name,
+
+        [Parameter()]
+        [System.String[]]
+        $AcceptMessagesOnlyFrom,
+
+        [Parameter()]
+        [System.String[]]
+        $AcceptMessagesOnlyFromDLMembers,
+
+        [Parameter()]
+        [System.String[]]
+        $AcceptMessagesOnlyFromSendersOrMembers,
 
         [Parameter()]
         [System.String]
@@ -441,11 +705,79 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+
+        [Parameter()]
+        [System.String]
         $Description,
 
         [Parameter()]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $EmailAddresses,
+
+        [Parameter()]
+        [System.String[]]
+        $GrantSendOnBehalfTo,
 
         [Parameter()]
         [System.Boolean]
@@ -498,13 +830,21 @@ function Test-TargetResource
         $RoomList,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
+        $HiddenFromAddressListsEnabled,
+
+        [Parameter()]
         [ValidateSet('Always', 'Internal', 'Never')]
+        [System.String]
         $SendModerationNotifications,
 
         [Parameter()]
-        [System.String]
+        [System.Boolean]
+        $SendOofMessageToOriginatorEnabled,
+
+        [Parameter()]
         [ValidateSet('Distribution', 'Security')]
+        [System.String]
         $Type,
 
         [Parameter()]
@@ -641,8 +981,9 @@ function Export-TargetResource
 
         foreach ($distributionGroup in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($distributionGroup.Name)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($distributionGroup.Identity)" -NoNewline
             $params = @{
+                Identity              = $distributionGroup.Identity
                 Name                  = $distributionGroup.Name
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -653,6 +994,22 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params
+
+            if ($Results.AcceptMessagesOnlyFromSendersOrMembers.Length -eq 0)
+            {
+                $Results.Remove('AcceptMessagesOnlyFromSendersOrMembers') | Out-Null
+            }
+
+            if ($Results.AcceptMessagesOnlyFrom.Length -eq 0)
+            {
+                $Results.Remove('AcceptMessagesOnlyFrom') | Out-Null
+            }
+
+            if ($Results.AcceptMessagesOnlyFromDLMembers.Length -eq 0)
+            {
+                $Results.Remove('AcceptMessagesOnlyFromDLMembers') | Out-Null
+            }
+
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

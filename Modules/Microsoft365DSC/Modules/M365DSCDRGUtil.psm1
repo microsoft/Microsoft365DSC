@@ -400,7 +400,7 @@ function Get-M365DSCDRGComplexTypeToString
                 $currentValue = $ComplexObject[$key]
                 if ($currentValue.GetType().Name -eq 'String')
                 {
-                    $currentValue = $ComplexObject[$key].Replace("'", "''").Replace("�", "''")
+                     $currentValue = $ComplexObject[$key].Replace("'", "''").Replace("�", "''")
                 }
                 $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $currentValue -Space ($indent)
             }
@@ -1010,7 +1010,8 @@ function New-IntuneSettingCatalogPolicy
 
     try
     {
-        $Uri = 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies'
+	$BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
+        $Uri = '$($BaseUrl)/beta/deviceManagement/configurationPolicies'
 
         $policy = @{
             'name'              = $Name
@@ -1073,7 +1074,8 @@ function Update-IntuneSettingCatalogPolicy
 
     try
     {
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
+        $BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
+        $Uri = "$($BaseUrl)/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
 
         $policy = @{
             'name'              = $Name
@@ -1124,7 +1126,8 @@ function Update-DeviceConfigurationPolicyAssignment
     try
     {
         $deviceManagementPolicyAssignments = @()
-        $Uri = "https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+        $BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
+        $Uri = "$($BaseUrl)/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
 
         foreach ($target in $targets)
         {
