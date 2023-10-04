@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'EXOMailboxPlan' -GenericStubModule $GenericStubPath
+    -DscResource 'EXOMailboxPermission' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -31,7 +31,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Set-MailboxPlan -MockWith {
+            Mock -CommandName Add-MailboxPermission -MockWith {
+            }
+
+            Mock -CommandName Remove-MailboxPermission -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -40,33 +43,57 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name 'MailboxPlan update not required.' -Fixture {
+        Context -Name 'Permission doesnt exist and it should' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                   = 'Present'
-                    Credential               = $Credential
-                    Identity                 = 'ExchangeOnlineEnterprise'
-                    IssueWarningQuota        = '98 GB (105,226,698,752 bytes)'
-                    MaxReceiveSize           = '25 MB (26,214,400 bytes)'
-                    MaxSendSize              = '25 MB (26,214,400 bytes)'
-                    ProhibitSendQuota        = '99 GB (106,300,440,576 bytes)'
-                    ProhibitSendReceiveQuota = '100 GB (107,374,182,400 bytes)'
-                    RetainDeletedItemsFor    = '14.00:00:00'
-                    RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                    AccessRights         = @("FullAccess","ReadPermission");
+                    Deny                 = $False;
+                    Identity             = "john.smith";
+                    InheritanceType      = "None";
+                    User                 = "NT AUTHORITY\SELF";
                 }
 
-                Mock -CommandName Get-MailboxPlan -MockWith {
+                Mock -CommandName Get-MailboxPermission -MockWith {
+                    return $null
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should return absent from the Get Method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
+            }
+
+            It 'Should add the permission in the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName Add-MailboxPermission -Exactly 1
+            }
+        }
+        Context -Name 'Permission exists and is not the Desired State' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                    AccessRights         = @("FullAccess","ReadPermission");
+                    Deny                 = $False;
+                    Identity             = "john.smith";
+                    InheritanceType      = "None";
+                    User                 = "NT AUTHORITY\SELF";
+                }
+
+                Mock -CommandName Get-MailboxPermission -MockWith {
                     return @{
                         Ensure                   = 'Present'
                         Credential               = $Credential
-                        Identity                 = 'ExchangeOnlineEnterprise'
-                        IssueWarningQuota        = '98 GB (105,226,698,752 bytes)'
-                        MaxReceiveSize           = '25 MB (26,214,400 bytes)'
-                        MaxSendSize              = '25 MB (26,214,400 bytes)'
-                        ProhibitSendQuota        = '99 GB (106,300,440,576 bytes)'
-                        ProhibitSendReceiveQuota = '100 GB (107,374,182,400 bytes)'
-                        RetainDeletedItemsFor    = '14.00:00:00'
-                        RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                        AccessRights         = @("FullAccess","ReadPermission");
+                        Deny                 = $False;
+                        Identity             = "john.smith";
+                        InheritanceType      = "None";
+                        User                 = "NT AUTHORITY\SELF";
                     }
                 }
             }
@@ -75,37 +102,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $true
             }
 
-            It 'Should not update anything in the Set Method' {
-                Set-TargetResource @testParams
+            It 'Should return present from the Get Method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
 
-        Context -Name 'MailboxPlan update needed.' -Fixture {
+        Context -Name 'Permission exist and it should not' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                   = 'Present'
-                    Credential               = $Credential
-                    Identity                 = 'ExchangeOnlineEnterprise'
-                    IssueWarningQuota        = '98 GB (105,226,698,752 bytes)'
-                    MaxReceiveSize           = '25 MB (26,214,400 bytes)'
-                    MaxSendSize              = '25 MB (26,214,400 bytes)'
-                    ProhibitSendQuota        = '99 GB (106,300,440,576 bytes)'
-                    ProhibitSendReceiveQuota = '100 GB (107,374,182,400 bytes)'
-                    RetainDeletedItemsFor    = '14.00:00:00'
-                    RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                    Ensure               = 'Absent'
+                    Credential           = $Credential
+                    AccessRights         = @("FullAccess","ReadPermission");
+                    Deny                 = $False;
+                    Identity             = "john.smith";
+                    InheritanceType      = "None";
+                    User                 = "NT AUTHORITY\SELF";
                 }
-                Mock -CommandName Get-MailboxPlan -MockWith {
+
+                Mock -CommandName Get-MailboxPermission -MockWith {
                     return @{
-                        Ensure                   = 'Present'
-                        Credential               = $Credential
-                        Identity                 = 'ExchangeOnlineEnterprise'
-                        IssueWarningQuota        = '98 GB (105,226,698,752 bytes)'
-                        MaxReceiveSize           = '25 MB (26,214,400 bytes)'
-                        MaxSendSize              = '25 MB (26,214,400 bytes)'
-                        ProhibitSendQuota        = '99 GB (106,300,440,576 bytes)'
-                        ProhibitSendReceiveQuota = '100 GB (107,374,182,400 bytes)'
-                        RetainDeletedItemsFor    = '30.00:00:00'
-                        RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                        AccessRights         = @("FullAccess","ReadPermission");
+                        Deny                 = $False;
+                        Identity             = "john.smith";
+                        InheritanceType      = "None";
+                        User                 = "NT AUTHORITY\SELF";
                     }
                 }
             }
@@ -114,8 +134,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should call the Set method' {
+            It 'Should return absent from the Get Method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should remove the permission in the Set method' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName Remove-MailboxPermission -Exactly 1
             }
         }
 
@@ -127,16 +152,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MailboxPlan -MockWith {
+                Mock -CommandName Get-MailboxPermission -MockWith {
                     return @{
-                        Identity                 = 'ExchangeOnlineEnterprise'
-                        IssueWarningQuota        = '98 GB (105,226,698,752 bytes)'
-                        MaxReceiveSize           = '25 MB (26,214,400 bytes)'
-                        MaxSendSize              = '25 MB (26,214,400 bytes)'
-                        ProhibitSendQuota        = '99 GB (106,300,440,576 bytes)'
-                        ProhibitSendReceiveQuota = '100 GB (107,374,182,400 bytes)'
-                        RetainDeletedItemsFor    = '14.00:00:00'
-                        RoleAssignmentPolicy     = 'Default Role Assignment Policy'
+                        AccessRights         = @("FullAccess","ReadPermission");
+                        Deny                 = $False;
+                        Identity             = "john.smith";
+                        InheritanceType      = "None";
+                        User                 = "NT AUTHORITY\SELF";
+                    }
+                }
+                Mock -CommandName Get-Mailbox -MockWith {
+                    return @{
+                        UserPrincipalName = "john.smith@contoso.com";
                     }
                 }
             }

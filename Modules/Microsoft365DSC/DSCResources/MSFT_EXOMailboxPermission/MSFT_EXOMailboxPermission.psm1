@@ -13,7 +13,7 @@ function Get-TargetResource
         [System.String[]]
         $AccessRights,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         [ValidateSet("None", "All", "Children", "Descendents", "SelfAndChildren")]
         $InheritanceType = 'All',
@@ -31,7 +31,7 @@ function Get-TargetResource
         $Deny,
 
         [Parameter()]
-        [ValidateSet('Present')]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -104,6 +104,11 @@ function Get-TargetResource
             $permission = $permission | Where-Object -FilterScript {$_.User -eq $User -and (Compare-Object -ReferenceObject $_.AccessRights.Replace(' ','').Split(',') -DifferenceObject $AccessRights).Count -eq 0}
         }
 
+        if ($permission.Length -gt 1)
+        {
+            $permission = $permission[0]
+        }
+
         if ($null -eq $permission)
         {
             Write-Verbose -Message "Permission for mailbox {$($Identity)} do not exist."
@@ -151,40 +156,30 @@ function Set-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("ChangeOwner", "ChangePermission", "DeleteItem", "ExternalAccount", "FullAccess", "ReadPermission")]
+        [System.String[]]
+        $AccessRights,
+
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $IssueWarningQuota,
+        [ValidateSet("None", "All", "Children", "Descendents", "SelfAndChildren")]
+        $InheritanceType = 'All',
 
         [Parameter()]
         [System.String]
-        $MaxReceiveSize,
+        $Owner,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $MaxSendSize,
+        $User,
 
         [Parameter()]
-        [System.String]
-        $ProhibitSendQuota,
+        [System.Boolean]
+        $Deny,
 
         [Parameter()]
-        [System.String]
-        $ProhibitSendReceiveQuota,
-
-        [Parameter()]
-        [System.String]
-        $RetainDeletedItemsFor,
-
-        [Parameter()]
-        [System.String]
-        $RetentionPolicy,
-
-        [Parameter()]
-        [System.String]
-        $RoleAssignmentPolicy,
-
-        [Parameter()]
-        [ValidateSet('Present')]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -217,7 +212,7 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration of MailboxPlan for $Identity"
+    Write-Verbose -Message "Setting configuration of Mailbox Permissions for {$Identity}"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -234,26 +229,26 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $MailboxPlanParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $MailboxPlanParams.Remove('Ensure') | Out-Null
-    $MailboxPlanParams.Remove('Credential') | Out-Null
-    $MailboxPlanParams.Remove('ApplicationId') | Out-Null
-    $MailboxPlanParams.Remove('TenantId') | Out-Null
-    $MailboxPlanParams.Remove('CertificateThumbprint') | Out-Null
-    $MailboxPlanParams.Remove('CertificatePath') | Out-Null
-    $MailboxPlanParams.Remove('CertificatePassword') | Out-Null
-    $MailboxPlanParams.Remove('ManagedIdentity') | Out-Null
+    $currentValues = Get-TargetResource @PSBoundParameters
+    $instanceParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $instanceParams.Remove('Ensure') | Out-Null
+    $instanceParams.Remove('Credential') | Out-Null
+    $instanceParams.Remove('ApplicationId') | Out-Null
+    $instanceParams.Remove('TenantId') | Out-Null
+    $instanceParams.Remove('CertificateThumbprint') | Out-Null
+    $instanceParams.Remove('CertificatePath') | Out-Null
+    $instanceParams.Remove('CertificatePassword') | Out-Null
+    $instanceParams.Remove('ManagedIdentity') | Out-Null
 
-    $MailboxPlan = Get-MailboxPlan -Identity $Identity
-
-    if ($null -ne $MailboxPlan)
+    if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Setting MailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $MailboxPlanParams)"
-        Set-MailboxPlan @MailboxPlanParams
+        Write-Verbose -Message "Adding new permission for user {$User} on Mailbox {$Identity}"
+        Add-MailboxPermission @instanceParams | Out-Null
     }
-    else
+    elseif ($Ensure -eq 'Absent')
     {
-        throw "The specified Mailbox Plan {$($Identity)} doesn't exist"
+        Write-Verbose -Message "Removing permission for user {$User} on Mailbox {$Identity}"
+        Remove-MailboxPermission @instanceParams
     }
 }
 
@@ -267,40 +262,30 @@ function Test-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
+        [ValidateSet("ChangeOwner", "ChangePermission", "DeleteItem", "ExternalAccount", "FullAccess", "ReadPermission")]
+        [System.String[]]
+        $AccessRights,
+
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $IssueWarningQuota,
+        [ValidateSet("None", "All", "Children", "Descendents", "SelfAndChildren")]
+        $InheritanceType = 'All',
 
         [Parameter()]
         [System.String]
-        $MaxReceiveSize,
+        $Owner,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $MaxSendSize,
+        $User,
 
         [Parameter()]
-        [System.String]
-        $ProhibitSendQuota,
+        [System.Boolean]
+        $Deny,
 
         [Parameter()]
-        [System.String]
-        $ProhibitSendReceiveQuota,
-
-        [Parameter()]
-        [System.String]
-        $RetainDeletedItemsFor,
-
-        [Parameter()]
-        [System.String]
-        $RetentionPolicy,
-
-        [Parameter()]
-        [System.String]
-        $RoleAssignmentPolicy,
-
-        [Parameter()]
-        [ValidateSet('Present')]
+        [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
 
@@ -344,7 +329,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of MailboxPlan for $Identity"
+    Write-Verbose -Message "Testing configuration of Mailbox Permission for {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -352,7 +337,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Ensure') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -442,6 +426,7 @@ function Export-TargetResource
                 $Params = @{
                     Identity              = $mailbox.UserPrincipalName
                     AccessRights          = [Array]$permission.AccessRights.Replace(' ','').Split(',')
+                    InheritanceType       = $permission.InheritanceType
                     User                  = $permission.User
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId

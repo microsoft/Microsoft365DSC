@@ -8,24 +8,21 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $credsCredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        EXOMailboxPlan 'ConfigureMailboxPlan'
+        EXOMailboxPermission "TestPermission"
         {
-            Ensure                   = "Present";
-            Identity                 = "ExchangeOnlineEnterprise";
-            IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
-            MaxReceiveSize           = "25 MB (26,214,400 bytes)";
-            MaxSendSize              = "25 MB (26,214,400 bytes)";
-            ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
-            ProhibitSendReceiveQuota = "100 GB (107,374,182,400 bytes)";
-            RetainDeletedItemsFor    = "14.00:00:00";
-            RoleAssignmentPolicy     = "Default Role Assignment Policy";
-            Credential               = $credsGlobalAdmin
+            AccessRights         = @("FullAccess","ReadPermission");
+            Credential           = $credsCredential;
+            Deny                 = $False;
+            Ensure               = "Present";
+            Identity             = "John.Smith";
+            InheritanceType      = "All";
+            User                 = "NT AUTHORITY\SELF";
         }
     }
 }

@@ -86,6 +86,51 @@ function Add-AvailabilityAddressSpace
         $AccessMethod
     )
 }
+function Add-MailboxPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Owner,
+
+        [Parameter()]
+        [System.Object[]]
+        $AccessRights,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GroupMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Deny,
+
+        [Parameter()]
+        [System.Object]
+        $AutoMapping,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $User,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDefaultScope,
+
+        [Parameter()]
+        [System.DirectoryServices.ActiveDirectorySecurityInheritance]
+        $InheritanceType
+    )
+}
 function Disable-JournalRule
 {
     [CmdletBinding()]
@@ -757,6 +802,55 @@ function Get-MailboxAutoReplyConfiguration
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
+function Get-MailboxPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ReadFromDomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeUnresolvedPermissions,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GroupMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSoftDeletedUserPermissions,
+
+        [Parameter()]
+        [System.Object]
+        $User,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Owner,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SoftDeletedMailbox,
 
         [Parameter()]
         [System.Object]
@@ -5590,6 +5684,59 @@ function Remove-Mailbox
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Migration
+    )
+}
+function Remove-MailboxPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ClearAutoMapping,
+
+        [Parameter()]
+        [System.Object[]]
+        $AccessRights,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GroupMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Deny,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $BypassMasterAccountSid,
+
+        [Parameter()]
+        [System.Object]
+        $User,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IgnoreDefaultScope,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SoftDeletedMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ResetDefault,
+
+        [Parameter()]
+        [System.DirectoryServices.ActiveDirectorySecurityInheritance]
+        $InheritanceType
     )
 }
 function Remove-MailContact
@@ -12707,7 +12854,6 @@ function Update-RoleGroupMember
     )
 }
 #endregion
-
 #region Microsoft.Graph.Applications
 function Get-MgApplication
 {
