@@ -101,6 +101,11 @@ function Get-TargetResource
     {
         $folder = Get-MailboxCalendarFolder -Identity $Identity -ErrorAction SilentlyContinue
 
+        if ($null -eq $folder)
+        {
+            return $nullReturn
+        }
+
         $result = @{
             Identity                    = $folder.Identity
             DetailLevel                 = $folder.DetailLevel

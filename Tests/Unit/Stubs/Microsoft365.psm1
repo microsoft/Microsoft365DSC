@@ -91,6 +91,10 @@ function Add-MailboxPermission
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Object]
+        $Owner,
+
+        [Parameter()]
         [System.Object[]]
         $AccessRights,
 
@@ -113,10 +117,6 @@ function Add-MailboxPermission
         [Parameter()]
         [System.Object]
         $User,
-
-        [Parameter()]
-        [System.Object]
-        $Owner,
 
         [Parameter()]
         [System.Object]
@@ -255,6 +255,14 @@ function Get-AntiPhishPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Impersonation,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Advanced,
+
+        [Parameter()]
         [System.Object]
         $Identity,
 
@@ -298,6 +306,15 @@ function Get-App
     )
 }
 function Get-ApplicationAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-AtpPolicyForO365
 {
     [CmdletBinding()]
     param(
@@ -1377,6 +1394,50 @@ function Get-RoleGroupMember
         $ResultSize
     )
 }
+function Get-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State
+    )
+}
+function Get-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State
+    )
+}
 function Get-ServicePrincipal
 {
     [CmdletBinding()]
@@ -1561,6 +1622,10 @@ function New-AddressBookPolicy
         $RoomList,
 
         [Parameter()]
+        [System.Object]
+        $OfflineAddressBook,
+
+        [Parameter()]
         [System.String]
         $Name,
 
@@ -1574,17 +1639,17 @@ function New-AddressBookPolicy
 
         [Parameter()]
         [System.Object[]]
-        $AddressLists,
-
-        [Parameter()]
-        [System.Object]
-        $OfflineAddressBook
+        $AddressLists
     )
 }
 function New-AddressList
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
         [Parameter()]
         [System.String]
         $RecipientFilter,
@@ -1662,10 +1727,6 @@ function New-AddressList
         $ConditionalCustomAttribute14,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $ConditionalCustomAttribute4,
 
@@ -1695,8 +1756,20 @@ function New-AntiPhishPolicy
         $MakeDefault,
 
         [Parameter()]
+        [System.Object]
+        $DmarcRejectAction,
+
+        [Parameter()]
+        [System.Int32]
+        $PhishThresholdLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
-        $EnableUnauthenticatedSender,
+        $EnableTargetedDomainsProtection,
 
         [Parameter()]
         [System.Boolean]
@@ -1715,28 +1788,52 @@ function New-AntiPhishPolicy
         $Name,
 
         [Parameter()]
+        [System.Object]
+        $TargetedDomainsToProtect,
+
+        [Parameter()]
         [System.Boolean]
         $EnableSpoofIntelligence,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedDomains,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainActionRecipients,
 
         [Parameter()]
         [System.Object]
         $DmarcQuarantineAction,
 
         [Parameter()]
-        [System.Object]
-        $RecommendedPolicyType,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Boolean]
+        $EnableMailboxIntelligence,
 
         [Parameter()]
         [System.String]
-        $SpoofQuarantineTag,
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $SimilarUsersSafetyTipsCustomText,
 
         [Parameter()]
         [System.Object]
-        $DmarcRejectAction,
+        $ImpersonationProtectionState,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainProtectionAction,
 
         [Parameter()]
         [System.String]
@@ -1744,7 +1841,75 @@ function New-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $AuthenticationFailAction
+        $TargetedUsersToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.String]
+        $UnusualCharactersSafetyTipsCustomText,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender,
+
+        [Parameter()]
+        [System.String]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection,
+
+        [Parameter()]
+        [System.Object]
+        $AuthenticationFailAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedSenders
     )
 }
 function New-AntiPhishRule
@@ -1760,12 +1925,12 @@ function New-AntiPhishRule
         $Name,
 
         [Parameter()]
-        [System.Object[]]
-        $SentToMemberOf,
-
-        [Parameter()]
         [System.Object]
         $AntiPhishPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
 
         [Parameter()]
         [System.Object[]]
@@ -1990,10 +2155,6 @@ function New-ClientAccessRule
     param(
         [Parameter()]
         [System.Object]
-        $ExceptAnyOfClientIPAddressesOrRanges,
-
-        [Parameter()]
-        [System.Object]
         $Action,
 
         [Parameter()]
@@ -2005,8 +2166,8 @@ function New-ClientAccessRule
         $Enabled,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $ExceptAnyOfClientIPAddressesOrRanges,
 
         [Parameter()]
         [System.String]
@@ -2031,6 +2192,10 @@ function New-ClientAccessRule
         [Parameter()]
         [System.Object]
         $UsernameMatchesAnyOfPatterns,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -2076,6 +2241,35 @@ function New-DataClassification
         [Parameter()]
         [System.Object]
         $ClassificationRuleCollectionIdentity
+    )
+}
+function New-DataEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object]
+        $DomainController,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $AzureKeyIDs,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-DistributionGroup
@@ -2188,12 +2382,12 @@ function New-DkimSigningConfig
         $BodyCanonicalization,
 
         [Parameter()]
-        [System.Object]
-        $HeaderCanonicalization,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $HeaderCanonicalization,
 
         [Parameter()]
         [System.UInt16]
@@ -2245,6 +2439,10 @@ function New-GlobalAddressList
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
         [Parameter()]
         [System.String]
         $RecipientFilter,
@@ -2314,10 +2512,6 @@ function New-GlobalAddressList
         $ConditionalCustomAttribute14,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $ConditionalCustomAttribute4,
 
@@ -2372,12 +2566,16 @@ function New-HostedContentFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
         $InlineSafetyTipsEnabled,
 
         [Parameter()]
         [System.Object]
-        $RegionBlockList,
+        $BulkSpamAction,
 
         [Parameter()]
         [System.String]
@@ -2386,10 +2584,6 @@ function New-HostedContentFilterPolicy
         [Parameter()]
         [System.Int32]
         $EndUserSpamNotificationFrequency,
-
-        [Parameter()]
-        [System.Int32]
-        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Int32]
@@ -2481,6 +2675,10 @@ function New-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
+        $RegionBlockList,
+
+        [Parameter()]
+        [System.Object]
         $MarkAsSpamFromAddressAuthFail,
 
         [Parameter()]
@@ -2505,10 +2703,6 @@ function New-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $BulkSpamAction,
-
-        [Parameter()]
-        [System.Object]
         $EndUserSpamNotificationLanguage,
 
         [Parameter()]
@@ -2516,8 +2710,8 @@ function New-HostedContentFilterPolicy
         $IncreaseScoreWithRedirectToOtherPort,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Int32]
+        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Object]
@@ -2751,12 +2945,12 @@ function New-HostedOutboundSpamFilterRule
         $From,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
     )
 }
 function New-InboundConnector
@@ -2927,6 +3121,10 @@ function New-Mailbox
         $ModerationEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableRoomMailboxAccount,
+
+        [Parameter()]
         [System.String]
         $Office,
 
@@ -3045,10 +3243,6 @@ function New-Mailbox
         [Parameter()]
         [System.Boolean]
         $ResetPasswordOnNextLogon,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableRoomMailboxAccount,
 
         [Parameter()]
         [System.String]
@@ -3258,12 +3452,12 @@ function New-MalwareFilterRule
         $RecipientDomainIs,
 
         [Parameter()]
-        [System.Object[]]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
         [System.Object]
         $MalwareFilterPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
 
         [Parameter()]
         [System.Object[]]
@@ -3410,6 +3604,10 @@ function New-MessageClassification
 
         [Parameter()]
         [System.Boolean]
+        $RetainClassificationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PermissionMenuVisible,
 
         [Parameter()]
@@ -3418,11 +3616,7 @@ function New-MessageClassification
 
         [Parameter()]
         [System.Object]
-        $DisplayPrecedence,
-
-        [Parameter()]
-        [System.Boolean]
-        $RetainClassificationEnabled
+        $DisplayPrecedence
     )
 }
 function New-MobileDeviceMailboxPolicy
@@ -3440,6 +3634,10 @@ function New-MobileDeviceMailboxPolicy
         [Parameter()]
         [System.Boolean]
         $AllowUnsignedInstallationPackages,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -3542,10 +3740,6 @@ function New-MobileDeviceMailboxPolicy
         $AllowBluetooth,
 
         [Parameter()]
-        [System.Boolean]
-        $WSSAccessEnabled,
-
-        [Parameter()]
         [System.Object]
         $RequireEncryptionSMIMEAlgorithm,
 
@@ -3583,15 +3777,15 @@ function New-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $PasswordRecoveryEnabled,
-
-        [Parameter()]
-        [System.Boolean]
         $RequireStorageCardEncryption,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $AttachmentsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -3603,7 +3797,7 @@ function New-MobileDeviceMailboxPolicy
 
         [Parameter()]
         [System.Boolean]
-        $AttachmentsEnabled,
+        $PasswordRecoveryEnabled,
 
         [Parameter()]
         [System.Object]
@@ -3638,8 +3832,8 @@ function New-MobileDeviceMailboxPolicy
         $AllowTextMessaging,
 
         [Parameter()]
-        [System.Object]
-        $MaxPasswordFailedAttempts,
+        [System.Boolean]
+        $WSSAccessEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -3667,16 +3861,73 @@ function New-OfflineAddressBook
         $Confirm,
 
         [Parameter()]
+        [System.Boolean]
+        $IsDefault,
+
+        [Parameter()]
         [System.Object]
         $DiffRetentionPeriod,
 
         [Parameter()]
         [System.Object[]]
-        $AddressLists,
+        $AddressLists
+    )
+}
+function New-OMEConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Double]
+        $ExternalMailExpiryInDays,
+
+        [Parameter()]
+        [System.String]
+        $ReadButtonText,
+
+        [Parameter()]
+        [System.String]
+        $PortalText,
+
+        [Parameter()]
+        [System.Byte[]]
+        $Image,
+
+        [Parameter()]
+        [System.String]
+        $IntroductionText,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $BackgroundColor,
+
+        [Parameter()]
+        [System.String]
+        $DisclaimerText,
+
+        [Parameter()]
+        [System.String]
+        $PrivacyStatementUrl,
 
         [Parameter()]
         [System.Boolean]
-        $IsDefault
+        $SocialIdSignIn,
+
+        [Parameter()]
+        [System.String]
+        $EmailText,
+
+        [Parameter()]
+        [System.Boolean]
+        $OTPEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function New-OnPremisesOrganization
@@ -3932,12 +4183,12 @@ function New-PartnerApplication
         $AcceptSecurityIdentifierInformation,
 
         [Parameter()]
-        [System.Object]
-        $AccountType,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled
+        [System.Object]
+        $AccountType
     )
 }
 function New-PolicyTipConfig
@@ -4121,10 +4372,6 @@ function New-RoleGroup
         $Confirm,
 
         [Parameter()]
-        [System.Object[]]
-        $Roles,
-
-        [Parameter()]
         [System.String]
         $WellKnownObject,
 
@@ -4133,8 +4380,240 @@ function New-RoleGroup
         $ManagedBy,
 
         [Parameter()]
+        [System.Object[]]
+        $Roles,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force
+    )
+}
+function New-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Boolean]
+        $Redirect,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MakeBuiltInProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enable,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectAddress,
+
+        [Parameter()]
+        [System.String]
+        $QuarantineTag,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function New-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
+function New-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseTranslatedNotificationText,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MakeBuiltInProtection,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForTeams,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableUrlRewrite,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForOffice,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Object]
+        $RecommendedPolicyType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $CustomNotificationText,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScanUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableForInternalSenders
+    )
+}
+function New-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-SharingPolicy
@@ -4345,10 +4824,6 @@ function New-TransportRule
         [Parameter()]
         [System.Object]
         $RuleSubType,
-
-        [Parameter()]
-        [System.Object[]]
-        $AnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -4719,6 +5194,10 @@ function New-TransportRule
         $ExceptIfRecipientADAttributeMatchesPatterns,
 
         [Parameter()]
+        [System.Boolean]
+        $StopRuleProcessing,
+
+        [Parameter()]
         [System.Object[]]
         $RecipientADAttributeContainsWords,
 
@@ -4855,8 +5334,8 @@ function New-TransportRule
         $ExceptIfAttachmentPropertyContainsWords,
 
         [Parameter()]
-        [System.Boolean]
-        $StopRuleProcessing,
+        [System.Object[]]
+        $AnyOfRecipientAddressMatchesPatterns,
 
         [Parameter()]
         [System.Object]
@@ -4925,15 +5404,15 @@ function Remove-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-AntiPhishRule
@@ -5214,6 +5693,10 @@ function Remove-Mailbox
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $PublicFolder,
 
         [Parameter()]
@@ -5234,11 +5717,7 @@ function Remove-Mailbox
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Migration,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Migration
     )
 }
 function Remove-MailboxPermission
@@ -5339,6 +5818,10 @@ function Remove-ManagementRole
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -5347,11 +5830,7 @@ function Remove-ManagementRole
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Recurse,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Recurse
     )
 }
 function Remove-ManagementRoleAssignment
@@ -5360,15 +5839,15 @@ function Remove-ManagementRoleAssignment
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-MessageClassification
@@ -5403,18 +5882,35 @@ function Remove-MobileDeviceMailboxPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-OfflineAddressBook
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-OMEConfiguration
 {
     [CmdletBinding()]
     param(
@@ -5424,11 +5920,7 @@ function Remove-OfflineAddressBook
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-OnPremisesOrganization
@@ -5476,15 +5968,15 @@ function Remove-OwaMailboxPolicy
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Identity
     )
 }
 function Remove-PartnerApplication
@@ -5558,6 +6050,10 @@ function Remove-RoleGroup
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
@@ -5566,11 +6062,67 @@ function Remove-RoleGroup
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $BypassSecurityGroupManagerCheck,
+        $BypassSecurityGroupManagerCheck
+    )
+}
+function Remove-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Remove-SharingPolicy
@@ -5605,6 +6157,10 @@ function Set-AcceptedDomain
     param(
         [Parameter()]
         [System.Boolean]
+        $CanHaveCloudCache,
+
+        [Parameter()]
+        [System.Boolean]
         $EnableNego2Authentication,
 
         [Parameter()]
@@ -5612,8 +6168,8 @@ function Set-AcceptedDomain
         $OutboundOnly,
 
         [Parameter()]
-        [System.Boolean]
-        $CanHaveCloudCache,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Boolean]
@@ -5622,10 +6178,6 @@ function Set-AcceptedDomain
         [Parameter()]
         [System.Object]
         $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Boolean]
@@ -5662,6 +6214,10 @@ function Set-AddressBookPolicy
         $RoomList,
 
         [Parameter()]
+        [System.Object]
+        $OfflineAddressBook,
+
+        [Parameter()]
         [System.String]
         $Name,
 
@@ -5679,17 +6235,17 @@ function Set-AddressBookPolicy
 
         [Parameter()]
         [System.Object[]]
-        $AddressLists,
-
-        [Parameter()]
-        [System.Object]
-        $OfflineAddressBook
+        $AddressLists
     )
 }
 function Set-AddressList
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
         [Parameter()]
         [System.Object]
         $Identity,
@@ -5767,10 +6323,6 @@ function Set-AddressList
         $ConditionalCustomAttribute14,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $ConditionalCustomAttribute4,
 
@@ -5793,15 +6345,15 @@ function Set-AdminAuditLogConfig
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Boolean]
-        $UnifiedAuditLogIngestionEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $UnifiedAuditLogIngestionEnabled
     )
 }
 function Set-AntiPhishPolicy
@@ -5810,51 +6362,7 @@ function Set-AntiPhishPolicy
     param(
         [Parameter()]
         [System.Boolean]
-        $HonorDmarcPolicy,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableUnauthenticatedSender,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableSpoofIntelligence,
-
-        [Parameter()]
-        [System.Boolean]
         $EnableFirstContactSafetyTips,
-
-        [Parameter()]
-        [System.String]
-        $AdminDisplayName,
-
-        [Parameter()]
-        [System.String]
-        $SpoofQuarantineTag,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableViaTag,
-
-        [Parameter()]
-        [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Object]
-        $AuthenticationFailAction,
-
-        [Parameter()]
-        [System.Object]
-        $DmarcQuarantineAction,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -5862,7 +6370,147 @@ function Set-AntiPhishPolicy
 
         [Parameter()]
         [System.Object]
-        $DmarcRejectAction
+        $DmarcRejectAction,
+
+        [Parameter()]
+        [System.Int32]
+        $PhishThresholdLevel,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedDomainsProtection,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $HonorDmarcPolicy,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableViaTag,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainsToProtect,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSpoofIntelligence,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarUsersSafetyTips,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedDomains,
+
+        [Parameter()]
+        [System.String]
+        $PolicyTag,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $DmarcQuarantineAction,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligence,
+
+        [Parameter()]
+        [System.String]
+        $TargetedDomainQuarantineTag,
+
+        [Parameter()]
+        [System.Object]
+        $ImpersonationProtectionState,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedDomainProtectionAction,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUsersToProtect,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserProtectionAction,
+
+        [Parameter()]
+        [System.Object]
+        $MailboxIntelligenceProtectionActionRecipients,
+
+        [Parameter()]
+        [System.String]
+        $MailboxIntelligenceQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSimilarDomainsSafetyTips,
+
+        [Parameter()]
+        [System.String]
+        $SpoofQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnauthenticatedSender,
+
+        [Parameter()]
+        [System.String]
+        $TargetedUserQuarantineTag,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationDomainsProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMailboxIntelligenceProtection,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUnusualCharactersSafetyTips,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableTargetedUserProtection,
+
+        [Parameter()]
+        [System.Object]
+        $AuthenticationFailAction,
+
+        [Parameter()]
+        [System.Object]
+        $TargetedUserActionRecipients,
+
+        [Parameter()]
+        [System.Object]
+        $ExcludedSenders
     )
 }
 function Set-AntiPhishRule
@@ -5923,12 +6571,12 @@ function Set-App
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $UserList,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PrivateCatalog,
+        [System.Object]
+        $UserList,
 
         [Parameter()]
         [System.Object]
@@ -5943,16 +6591,16 @@ function Set-App
         $OrganizationApp,
 
         [Parameter()]
-        [System.Object]
-        $ProvidedTo,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        $PrivateCatalog,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled
+        [System.Object]
+        $ProvidedTo
     )
 }
 function Set-ApplicationAccessPolicy
@@ -5970,6 +6618,31 @@ function Set-ApplicationAccessPolicy
         [Parameter()]
         [System.Object]
         $Identity
+    )
+}
+function Set-AtpPolicyForO365
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $EnableATPForSPOTeamsODB,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeDocs,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSafeDocsOpen,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
     )
 }
 function Set-AuthenticationPolicy
@@ -6195,16 +6868,16 @@ function Set-CalendarProcessing
         $OrganizerInfo,
 
         [Parameter()]
-        [System.Int32]
-        $MinimumDurationInMinutes,
-
-        [Parameter()]
         [System.Boolean]
         $AddAdditionalResponse,
 
         [Parameter()]
         [System.Boolean]
         $RemoveForwardedMeetingNotifications,
+
+        [Parameter()]
+        [System.Int32]
+        $MinimumDurationInMinutes,
 
         [Parameter()]
         [System.Int32]
@@ -6381,16 +7054,16 @@ function set-CASMailboxPlan
         $ImapEnabled,
 
         [Parameter()]
-        [System.Object]
-        $OwaMailboxPolicy,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Object]
         $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $OwaMailboxPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -6442,10 +7115,6 @@ function Set-ClientAccessRule
         $ExceptAnyOfProtocols,
 
         [Parameter()]
-        [System.Object]
-        $AnyOfProtocols,
-
-        [Parameter()]
         [System.Int32]
         $Priority,
 
@@ -6454,12 +7123,16 @@ function Set-ClientAccessRule
         $ExceptUsernameMatchesAnyOfPatterns,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Object]
         $AnyOfAuthenticationTypes,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $AnyOfProtocols,
 
         [Parameter()]
         [System.Object]
@@ -6491,22 +7164,34 @@ function Set-DataClassification
         $Confirm,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
+
+        [Parameter()]
         [System.Object]
         $Fingerprints,
 
         [Parameter()]
         [System.Object]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDefault
+        $Identity
     )
 }
 function Set-DataEncryptionPolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
         [Parameter()]
         [System.Object]
         $DomainController,
@@ -6518,6 +7203,10 @@ function Set-DataEncryptionPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -6533,7 +7222,7 @@ function Set-DataEncryptionPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force
+        $Refresh
     )
 }
 function Set-DistributionGroup
@@ -6790,6 +7479,10 @@ function Set-DkimSigningConfig
         $BodyCanonicalization,
 
         [Parameter()]
+        [System.Object]
+        $HeaderCanonicalization,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -6803,11 +7496,7 @@ function Set-DkimSigningConfig
 
         [Parameter()]
         [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Object]
-        $HeaderCanonicalization
+        $Enabled
     )
 }
 function Set-EmailAddressPolicy
@@ -6847,6 +7536,10 @@ function Set-GlobalAddressList
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
         [Parameter()]
         [System.Object]
         $Identity,
@@ -6920,10 +7613,6 @@ function Set-GlobalAddressList
         $ConditionalCustomAttribute14,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $ConditionalCustomAttribute4,
 
@@ -6982,12 +7671,16 @@ function Set-HostedContentFilterPolicy
     [CmdletBinding()]
     param(
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
         $InlineSafetyTipsEnabled,
 
         [Parameter()]
         [System.Object]
-        $RegionBlockList,
+        $BulkSpamAction,
 
         [Parameter()]
         [System.String]
@@ -6996,10 +7689,6 @@ function Set-HostedContentFilterPolicy
         [Parameter()]
         [System.Int32]
         $EndUserSpamNotificationFrequency,
-
-        [Parameter()]
-        [System.Int32]
-        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Int32]
@@ -7095,6 +7784,10 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
+        $RegionBlockList,
+
+        [Parameter()]
+        [System.Object]
         $MarkAsSpamFromAddressAuthFail,
 
         [Parameter()]
@@ -7115,10 +7808,6 @@ function Set-HostedContentFilterPolicy
 
         [Parameter()]
         [System.Object]
-        $BulkSpamAction,
-
-        [Parameter()]
-        [System.Object]
         $EndUserSpamNotificationLanguage,
 
         [Parameter()]
@@ -7126,8 +7815,8 @@ function Set-HostedContentFilterPolicy
         $IncreaseScoreWithRedirectToOtherPort,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Int32]
+        $QuarantineRetentionPeriod,
 
         [Parameter()]
         [System.Object]
@@ -7500,16 +8189,16 @@ function Set-IRMConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Uri]
-        $RMSOnlineKeySharingLocation,
-
-        [Parameter()]
         [System.Object]
         $Identity,
 
         [Parameter()]
         [System.Object]
         $TransportDecryptionSetting,
+
+        [Parameter()]
+        [System.Uri]
+        $RMSOnlineKeySharingLocation,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7521,7 +8210,7 @@ function Set-IRMConfiguration
 
         [Parameter()]
         [System.Boolean]
-        $EnablePdfEncryption,
+        $EnablePortalTrackingLogs,
 
         [Parameter()]
         [System.Boolean]
@@ -7546,6 +8235,10 @@ function Set-IRMConfiguration
         [Parameter()]
         [System.Boolean]
         $JournalReportDecryptionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnablePdfEncryption,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -7581,6 +8274,10 @@ function Set-JournalRule
         $Name,
 
         [Parameter()]
+        [System.Object]
+        $Scope,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
 
@@ -7590,15 +8287,11 @@ function Set-JournalRule
 
         [Parameter()]
         [System.Object]
-        $Recipient,
-
-        [Parameter()]
-        [System.Object]
         $Identity,
 
         [Parameter()]
         [System.Object]
-        $Scope
+        $Recipient
     )
 }
 function Set-Mailbox
@@ -7834,10 +8527,6 @@ function Set-Mailbox
         $CalendarRepairDisabled,
 
         [Parameter()]
-        [System.Object]
-        $AddressBookPolicy,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $RemoveMailboxProvisioningConstraint,
 
@@ -7895,7 +8584,7 @@ function Set-Mailbox
 
         [Parameter()]
         [System.Object]
-        $ExternalOofOptions,
+        $DataEncryptionPolicy,
 
         [Parameter()]
         [System.Object]
@@ -7904,6 +8593,10 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $LitigationHoldDate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Boolean]
@@ -7958,8 +8651,8 @@ function Set-Mailbox
         $RemoveDelayHoldApplied,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $ExternalOofOptions,
 
         [Parameter()]
         [System.Object]
@@ -8004,6 +8697,10 @@ function Set-Mailbox
         [Parameter()]
         [System.Object]
         $RecipientLimits,
+
+        [Parameter()]
+        [System.Object]
+        $AddressBookPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -8112,6 +8809,10 @@ function Set-MailboxAutoReplyConfiguration
 
         [Parameter()]
         [System.String]
+        $InternalMessage,
+
+        [Parameter()]
+        [System.String]
         $DeclineMeetingMessage,
 
         [Parameter()]
@@ -8157,10 +8858,6 @@ function Set-MailboxAutoReplyConfiguration
         [Parameter()]
         [System.DateTime]
         $EndTime,
-
-        [Parameter()]
-        [System.String]
-        $InternalMessage,
 
         [Parameter()]
         [System.String]
@@ -8234,11 +8931,11 @@ function Set-MailboxPlan
 
         [Parameter()]
         [System.Object]
-        $ProhibitSendReceiveQuota,
+        $MaxSendSize,
 
         [Parameter()]
         [System.Object]
-        $MaxSendSize,
+        $ProhibitSendReceiveQuota,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -8363,8 +9060,16 @@ function Set-MailContact
         $DisplayName,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.String]
         $CustomAttribute3,
+
+        [Parameter()]
+        [System.Object]
+        $RejectMessagesFrom,
 
         [Parameter()]
         [System.Object]
@@ -8448,19 +9153,11 @@ function Set-MailContact
 
         [Parameter()]
         [System.Object]
-        $RejectMessagesFrom,
-
-        [Parameter()]
-        [System.Object]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
         [System.Object]
         $MessageFormat,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -8740,6 +9437,10 @@ function Set-MessageClassification
 
         [Parameter()]
         [System.Boolean]
+        $RetainClassificationEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $PermissionMenuVisible,
 
         [Parameter()]
@@ -8752,11 +9453,7 @@ function Set-MessageClassification
 
         [Parameter()]
         [System.Object]
-        $DisplayPrecedence,
-
-        [Parameter()]
-        [System.Boolean]
-        $RetainClassificationEnabled
+        $DisplayPrecedence
     )
 }
 function Set-MobileDeviceMailboxPolicy
@@ -8774,6 +9471,10 @@ function Set-MobileDeviceMailboxPolicy
         [Parameter()]
         [System.Boolean]
         $AllowUnsignedInstallationPackages,
+
+        [Parameter()]
+        [System.Object]
+        $MaxPasswordFailedAttempts,
 
         [Parameter()]
         [System.Boolean]
@@ -8876,10 +9577,6 @@ function Set-MobileDeviceMailboxPolicy
         $AllowBluetooth,
 
         [Parameter()]
-        [System.Boolean]
-        $WSSAccessEnabled,
-
-        [Parameter()]
         [System.Object]
         $RequireEncryptionSMIMEAlgorithm,
 
@@ -8972,8 +9669,8 @@ function Set-MobileDeviceMailboxPolicy
         $AllowTextMessaging,
 
         [Parameter()]
-        [System.Object]
-        $MaxPasswordFailedAttempts,
+        [System.Boolean]
+        $WSSAccessEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -9058,8 +9755,8 @@ function Set-OMEConfiguration
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $IntroductionText,
+        [System.Double]
+        $ExternalMailExpiryInDays,
 
         [Parameter()]
         [System.String]
@@ -9074,8 +9771,8 @@ function Set-OMEConfiguration
         $Image,
 
         [Parameter()]
-        [System.Boolean]
-        $OTPEnabled,
+        [System.String]
+        $IntroductionText,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -9100,6 +9797,10 @@ function Set-OMEConfiguration
         [Parameter()]
         [System.String]
         $EmailText,
+
+        [Parameter()]
+        [System.Boolean]
+        $OTPEnabled,
 
         [Parameter()]
         [System.Object]
@@ -9149,15 +9850,15 @@ function Set-Organization
     param(
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
         $Confirm,
 
         [Parameter()]
         [System.Boolean]
-        $UnifiedAuditLogIngestionEnabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $UnifiedAuditLogIngestionEnabled
     )
 }
 function Set-OrganizationConfig
@@ -9246,10 +9947,6 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Boolean]
-        $ActivityBasedAuthenticationTimeoutEnabled,
-
-        [Parameter()]
-        [System.Boolean]
         $SmtpActionableMessagesEnabled,
 
         [Parameter()]
@@ -9263,10 +9960,6 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Boolean]
         $MailTipsAllTipsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $PostponeRoamingSignaturesUntilLater,
 
         [Parameter()]
         [System.Object]
@@ -9293,8 +9986,8 @@ function Set-OrganizationConfig
         $OnlineMeetingsByDefaultEnabled,
 
         [Parameter()]
-        [System.Uri]
-        $SiteMailboxCreationURL,
+        [System.Boolean]
+        $ConnectorsEnabledForOutlook,
 
         [Parameter()]
         [System.Object]
@@ -9325,6 +10018,10 @@ function Set-OrganizationConfig
         $OutlookMobileGCCRestrictionsEnabled,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
         [System.Boolean]
         $BookingsCreationOfCustomQuestionsRestricted,
 
@@ -9333,12 +10030,16 @@ function Set-OrganizationConfig
         $BookingsSmsMicrosoftEnabled,
 
         [Parameter()]
+        [System.Object]
+        $DefaultAuthenticationPolicy,
+
+        [Parameter()]
         [System.Boolean]
         $WebPushNotificationsDisabled,
 
         [Parameter()]
         [System.Boolean]
-        $ConnectorsEnabledForOutlook,
+        $ActivityBasedAuthenticationTimeoutEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -9351,10 +10052,6 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Object]
         $DefaultPublicFolderDeletedItemRetention,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsGroupMemberAllowedToEditContent,
 
         [Parameter()]
         [System.Int32]
@@ -9397,6 +10094,10 @@ function Set-OrganizationConfig
         $DistributionGroupNameBlockedWordsList,
 
         [Parameter()]
+        [System.Int32]
+        $RequiredCharsetCoverage,
+
+        [Parameter()]
         [System.Boolean]
         $AsyncSendEnabled,
 
@@ -9411,10 +10112,6 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Boolean]
         $ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $BookingsPaymentsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -9449,8 +10146,8 @@ function Set-OrganizationConfig
         $CalendarVersionStoreEnabled,
 
         [Parameter()]
-        [System.Int32]
-        $RequiredCharsetCoverage,
+        [System.Boolean]
+        $BookingsPaymentsEnabled,
 
         [Parameter()]
         [System.Object]
@@ -9493,8 +10190,8 @@ function Set-OrganizationConfig
         $BookingsMembershipApprovalRequired,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Boolean]
+        $IsGroupMemberAllowedToEditContent,
 
         [Parameter()]
         [System.Object]
@@ -9515,10 +10212,6 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Boolean]
         $ConnectorsActionableMessagesEnabled,
-
-        [Parameter()]
-        [System.Object]
-        $DefaultAuthenticationPolicy,
 
         [Parameter()]
         [System.Boolean]
@@ -9630,7 +10323,15 @@ function Set-OrganizationConfig
 
         [Parameter()]
         [System.Boolean]
+        $CustomerLockboxEnabled,
+
+        [Parameter()]
+        [System.Boolean]
         $OutlookMobileHelpShiftEnabled,
+
+        [Parameter()]
+        [System.Uri]
+        $SiteMailboxCreationURL,
 
         [Parameter()]
         [System.Int32]
@@ -9779,8 +10480,8 @@ function Set-OutboundConnector
         $AllAcceptedDomains,
 
         [Parameter()]
-        [System.Boolean]
-        $TestMode,
+        [System.Object]
+        $TlsDomain,
 
         [Parameter()]
         [System.String]
@@ -9827,8 +10528,8 @@ function Set-OutboundConnector
         $SenderRewritingEnabled,
 
         [Parameter()]
-        [System.Object]
-        $TlsDomain,
+        [System.Boolean]
+        $TestMode,
 
         [Parameter()]
         [System.Object]
@@ -9839,6 +10540,10 @@ function Set-OwaMailboxPolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
         [Parameter()]
         [System.Int32]
         $DefaultClientLanguage,
@@ -10096,8 +10801,8 @@ function Set-OwaMailboxPolicy
         $UseISO885915,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Boolean]
+        $RecoverDeletedItemsEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -10265,11 +10970,7 @@ function Set-OwaMailboxPolicy
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $DisableFacebook,
-
-        [Parameter()]
-        [System.Boolean]
-        $RecoverDeletedItemsEnabled
+        $DisableFacebook
     )
 }
 function Set-PartnerApplication
@@ -10305,12 +11006,12 @@ function Set-PartnerApplication
         $ActAsPermissions,
 
         [Parameter()]
-        [System.Object]
-        $AccountType,
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled
+        [System.Object]
+        $AccountType
     )
 }
 function Set-PerimeterConfig
@@ -10627,11 +11328,11 @@ function Set-RemoteDomain
 
         [Parameter()]
         [System.Boolean]
-        $NDRDiagnosticInfoEnabled,
+        $NDREnabled,
 
         [Parameter()]
         [System.Boolean]
-        $NDREnabled,
+        $NDRDiagnosticInfoEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -10672,12 +11373,12 @@ function Set-RoleAssignmentPolicy
         $Confirm,
 
         [Parameter()]
-        [System.Object]
-        $Identity,
+        [System.Management.Automation.SwitchParameter]
+        $IsDefault,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $IsDefault
+        [System.Object]
+        $Identity
     )
 }
 function Set-RoleGroup
@@ -10687,6 +11388,10 @@ function Set-RoleGroup
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
 
         [Parameter()]
         [System.String]
@@ -10714,11 +11419,219 @@ function Set-RoleGroup
 
         [Parameter()]
         [System.Object]
-        $ManagedBy,
+        $ManagedBy
+    )
+}
+function Set-SafeAttachmentPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Action,
+
+        [Parameter()]
+        [System.Boolean]
+        $Redirect,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enable,
+
+        [Parameter()]
+        [System.Object]
+        $RedirectAddress,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Force
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $QuarantineTag
+    )
+}
+function Set-SafeAttachmentRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $SafeAttachmentPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf
+    )
+}
+function Set-SafeLinksPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $AdminDisplayName,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseTranslatedNotificationText,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableUrlRewrite,
+
+        [Parameter()]
+        [System.Object]
+        $DoNotRewriteUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForTeams,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForOffice,
+
+        [Parameter()]
+        [System.Boolean]
+        $TrackClicks,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowClickThrough,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $CustomNotificationText,
+
+        [Parameter()]
+        [System.Boolean]
+        $DeliverMessageAfterScan,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableSafeLinksForEmail,
+
+        [Parameter()]
+        [System.Boolean]
+        $ScanUrls,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableForInternalSenders
+    )
+}
+function Set-SafeLinksRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.Object]
+        $SafeLinksPolicy,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object[]]
+        $ExceptIfSentToMemberOf
     )
 }
 function Set-SharingPolicy
@@ -10775,6 +11688,10 @@ function Set-TransportConfig
         $SmtpClientAuthenticationDisabled,
 
         [Parameter()]
+        [System.Globalization.CultureInfo]
+        $InternalDsnDefaultLanguage,
+
+        [Parameter()]
         [System.Object]
         $MessageExpiration,
 
@@ -10785,6 +11702,10 @@ function Set-TransportConfig
         [Parameter()]
         [System.Boolean]
         $ReplyAllStormProtectionEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $InternalDsnLanguageDetectionEnabled,
 
         [Parameter()]
         [System.Boolean]
@@ -10803,16 +11724,16 @@ function Set-TransportConfig
         $Rfc2231EncodingEnabled,
 
         [Parameter()]
-        [System.Boolean]
-        $InternalDsnLanguageDetectionEnabled,
+        [System.Object]
+        $HeaderPromotionModeSetting,
 
         [Parameter()]
         [System.Boolean]
         $VoicemailJournalingEnabled,
 
         [Parameter()]
-        [System.Object]
-        $HeaderPromotionModeSetting,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Object]
@@ -10831,10 +11752,6 @@ function Set-TransportConfig
         $JournalMessageExpirationDays,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
         [System.Object]
         $MaxRecipientEnvelopeLimit,
 
@@ -10849,10 +11766,6 @@ function Set-TransportConfig
         [Parameter()]
         [System.Globalization.CultureInfo]
         $ExternalDsnDefaultLanguage,
-
-        [Parameter()]
-        [System.Globalization.CultureInfo]
-        $InternalDsnDefaultLanguage,
 
         [Parameter()]
         [System.Object]
@@ -11862,10 +12775,6 @@ function Set-User
         $LastName,
 
         [Parameter()]
-        [System.Object]
-        $StsRefreshTokensValidFrom,
-
-        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $RemoveMailboxProvisioningConstraint,
 
@@ -11902,12 +12811,20 @@ function Set-User
         $AssistantName,
 
         [Parameter()]
+        [System.Object]
+        $OtherHomePhone,
+
+        [Parameter()]
         [System.String]
         $StateOrProvince,
 
         [Parameter()]
         [System.String]
         $Initials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.String]
@@ -11930,8 +12847,8 @@ function Set-User
         $Manager,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.Object]
+        $StsRefreshTokensValidFrom,
 
         [Parameter()]
         [System.Object]
@@ -11952,10 +12869,6 @@ function Set-User
         [Parameter()]
         [System.String]
         $Department,
-
-        [Parameter()]
-        [System.Object]
-        $OtherHomePhone,
 
         [Parameter()]
         [System.String]
@@ -12020,8 +12933,6 @@ function Update-RoleGroupMember
     )
 }
 #endregion
-
-
 #region Microsoft.Graph.Applications
 function Get-MgApplication
 {
