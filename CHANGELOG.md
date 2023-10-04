@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsComplianceREcordingPolicy
+  * FIXES [[#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)]
+
 # 1.23.1004.1
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
