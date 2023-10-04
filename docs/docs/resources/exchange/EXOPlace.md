@@ -35,11 +35,9 @@
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-# EXOInboundConnector
-
 ## Description
 
-This resource configures an Inbound connector in your cloud-based organization.
+This resource configures a place in Exchange Online (e.g., room).
 
 ## Permissions
 

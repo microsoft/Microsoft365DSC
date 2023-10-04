@@ -1,0 +1,29 @@
+{
+    "resourceName": "IntunePolicySets",
+    "description": "This resource configures an Intune Policy Sets.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+                                                 {
+                                                     "name":  "DeviceManagementConfiguration.Read.All"
+                                                 }
+                                             ],
+                                    "update":  [
+
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+                                                   {
+                                                       "name":  "DeviceManagementConfiguration.Read.All"
+                                                   }
+                                               ],
+                                      "update":  [
+
+                                                 ]
+                                  }
+              }
+}
+
+}

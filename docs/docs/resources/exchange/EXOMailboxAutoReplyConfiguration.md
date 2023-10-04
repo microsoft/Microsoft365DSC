@@ -27,12 +27,9 @@
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-# EXOAntiPhishPolicy
-
 ## Description
 
-This resource configures an Anti-Phish Policy in Exchange Online.
-Reference: https://docs.microsoft.com/en-us/powershell/module/exchange/advanced-threat-protection/new-antiphishpolicy?view=exchange-ps
+This resource configures the Auto Reply settings of mailboxes.
 
 ## Permissions
 

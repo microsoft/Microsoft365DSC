@@ -1,14 +1,14 @@
 ﻿{
-    "resourceName": "EXOMailboxAutoReplyConfiguration",
+    "resourceName": "EXOMailboxCalendarFolder",
+    "description": "",
     "roles": {
         "read": [
-            "Security Reader"
+            "Global Reader"
         ],
         "update": [
-            "Security Administrator"
+            "Exchange Administrator"
         ]
     },
-    "description": "",
     "permissions": {
         "graph": {
             "delegated": {
@@ -22,12 +22,13 @@
         },
         "exchange": {
             "requiredroles": [
-                "Transport Hygiene",
-                "Security Admin",
-                "View-Only Configuration",
-                "Security Reader"
+                "Organization Management",
+                "Recipient Management"
             ],
-            "requiredrolegroups": "Organization Management"
+            "requiredrolegroups": [
+               "Organization Management",
+               "Help Desk"
+            ]
         }
     }
 }

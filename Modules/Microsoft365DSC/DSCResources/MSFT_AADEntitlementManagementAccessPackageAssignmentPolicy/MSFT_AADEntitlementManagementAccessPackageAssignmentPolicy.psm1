@@ -271,11 +271,9 @@ function Get-TargetResource
         foreach ($customExtensionHandler in $getValue.CustomExtensionHandlers)
         {
             $customExt = @{
-                Id              = $customExtensionHandler.Id
+                #Id              = $customExtensionHandler.Id #Read Only
                 Stage           = $customExtensionHandler.Stage
-                CustomExtension = @{
-                    Id = $customExtensionHandler.CustomExtension.Id
-                }
+                CustomExtensionId = $customExtensionHandler.CustomExtension.Id
             }
             $formattedCustomExtensionHandlers += $customExt
         }
@@ -476,6 +474,21 @@ function Set-TargetResource
                 }
             }
         }
+        If ($null -ne $CreateParameters.CustomExtensionHandlers -and $CreateParameters.CustomExtensionHandlers.count -gt 0 )
+        {
+            $formattedCustomExtensionHandlers = @()
+            foreach ($customExtensionHandler in $CreateParameters.CustomExtensionHandlers)
+            {
+                $extensionId= $customExtensionHandler.CustomExtensionId
+                $formattedCustomExtensionHandlers += @{
+                    stage = $customExtensionHandler.Stage
+                    customExtension = @{
+                        id = $extensionId
+                    }
+                }
+            }
+            $CreateParameters.CustomExtensionHandlers = $formattedCustomExtensionHandlers
+        }
         New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -BodyParameter $CreateParameters
     }
@@ -503,7 +516,7 @@ function Set-TargetResource
         # Convert back user principal names to Ids
         if ($null -ne $UpdateParameters.AccessReviewSettings -and $null -ne $UpdateParameters.AccessReviewSettings.Reviewers)
         {
-            Write-Verbose -Message "Updating Reviewers' Id"
+            #Write-Verbose -Message "Updating Reviewers' Id"
             for ($i = 0; $i -lt $UpdateParameters.AccessReviewSettings.Reviewers.Length; $i++)
             {
                 $reviewer = $UpdateParameters.AccessReviewSettings.Reviewers[$i]
@@ -516,10 +529,10 @@ function Set-TargetResource
         }
         if ($null -ne $UpdateParameters.RequestorSettings -and $null -ne $UpdateParameters.RequestorSettings.AllowedRequestors)
         {
-            Write-Verbose -Message "Updating Requestors' Id"
+            #Write-Verbose -Message "Updating Requestors' Id"
             for ($i = 0; $i -lt $UpdateParameters.RequestorSettings.AllowedRequestors.Length; $i++)
             {
-                Write-Verbose -Message "Requestor: $($UpdateParameters.RequestorSettings.AllowedRequestors[$i].Id)"
+                #Write-Verbose -Message "Requestor: $($UpdateParameters.RequestorSettings.AllowedRequestors[$i].Id)"
                 $requestor = $UpdateParameters.RequestorSettings.AllowedRequestors[$i]
                 $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($requestor.Id.Split('@')[0])')" -ErrorAction SilentlyContinue
                 if ($null -ne $user)
@@ -528,6 +541,23 @@ function Set-TargetResource
                 }
             }
         }
+        If ($null -ne $UpdateParameters.CustomExtensionHandlers -and $UpdateParameters.CustomExtensionHandlers.count -gt 0 )
+        {
+            $formattedCustomExtensionHandlers = @()
+            foreach ($customExtensionHandler in $UpdateParameters.CustomExtensionHandlers)
+            {
+                $extensionId= $customExtensionHandler.CustomExtensionId
+                $formattedCustomExtensionHandlers += @{
+                    stage = $customExtensionHandler.Stage
+                    customExtension = @{
+                        id = $extensionId
+                    }
+                }
+            }
+            $UpdateParameters.CustomExtensionHandlers = $formattedCustomExtensionHandlers
+        }
+
+        #write-verbose ($UpdateParameters|convertto-json -Depth 100)
         Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -BodyParameter $UpdateParameters `
             -AccessPackageAssignmentPolicyId $currentInstance.Id
@@ -885,23 +915,6 @@ function Export-TargetResource
             }
             if ($null -ne $Results.CustomExtensionHandlers )
             {
-                $complexMapping = @(
-                    @{
-                        Name            = 'AuthenticationConfiguration'
-                        CimInstanceName = 'MicrosoftGraphcustomextensionauthenticationconfiguration'
-                        IsRequired      = $false
-                    }
-                    @{
-                        Name            = 'ClientConfiguration'
-                        CimInstanceName = 'MicrosoftGraphcustomextensionclientconfiguration'
-                        IsRequired      = $false
-                    }
-                    @{
-                        Name            = 'EndpointConfiguration'
-                        CimInstanceName = 'MicrosoftGraphcustomextensionauthenticationconfiguration'
-                        IsRequired      = $false
-                    }
-                )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.CustomExtensionHandlers `
                     -CIMInstanceName MicrosoftGraphcustomextensionhandler `
