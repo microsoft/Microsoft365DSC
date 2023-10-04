@@ -84,38 +84,10 @@ class MSFT_MicrosoftGraphrequestorsettings
 [ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphcustomextensionhandler
 {
-    [Write, Description("Indicates which custom workflow extension will be executed at this stage."), EmbeddedInstance("MSFT_MicrosoftGraphcustomaccesspackageworkflowextension")] String CustomExtension;
+    [Write, Description("Indicates which custom workflow extension will be executed at this stage.")] String CustomExtensionId;
     [Write, Description("Indicates the stage of the access package assignment request workflow when the access package custom extension runs."), ValueMap{"assignmentRequestCreated","assignmentRequestApproved","assignmentRequestGranted","assignmentRequestRemoved","assignmentFourteenDaysBeforeExpiration","assignmentOneDayBeforeExpiration","unknownFutureValue"}, Values{"assignmentRequestCreated","assignmentRequestApproved","assignmentRequestGranted","assignmentRequestRemoved","assignmentFourteenDaysBeforeExpiration","assignmentOneDayBeforeExpiration","unknownFutureValue"}] String Stage;
     [Write, Description("Identifier of the stage.")] String Id;
 };
-[ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphcustomaccesspackageworkflowextension
-{
-    [Write, Description("Configuration for securing the API call to the logic app. For example, using OAuth client credentials flow."), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration")] String AuthenticationConfiguration;
-    [Write, Description("HTTP connection settings that define how long Azure AD can wait for a connection to a logic app, how many times you can retry a timed-out connection and the exception scenarios when retries are allowed."), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionclientconfiguration")] String ClientConfiguration;
-    [Write, Description("Description for the customAccessPackageWorkflowExtension object.")] String Description;
-    [Write, Description("Display name for the customAccessPackageWorkflowExtension object.")] String DisplayName;
-    [Write, Description("The type and details for configuring the endpoint to call the logic app's workflow."), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionendpointconfiguration")] String EndpointConfiguration;
-    [Write, Description("Identifier for the customAccessPackageWorkflowExtension object.")] String Id;
-};
-[ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration
-{
-    [Write, Description("The appID of the Azure AD application to use to authenticate a logic app with a custom access package workflow extension.")] String ResourceId;
-};
-[ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphcustomextensionclientconfiguration
-{
-    [Write, Description("The max duration in milliseconds that Azure AD will wait for a response from the logic app before it shuts down the connection. The valid range is between 200 and 2000 milliseconds. Default duration is 1000.")] UInt32 TimeoutInMilliseconds;
-};
-[ClassVersion("1.0.0")]
-class MSFT_MicrosoftGraphcustomextensionendpointconfiguration
-{
-    [Write, Description("The name of the logic app."), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration")] String LogicAppWorkflowName;
-    [Write, Description("The Azure resource group name for the logic app."), EmbeddedInstance("MSFT_MicrosoftGraphcustomextensionclientconfiguration")] String ResourceGroupName;
-    [Write, Description("Identifier of the Azure subscription for the logic app.")] String SubscriptionId;
-};
-
 [ClassVersion("1.0.0.0"), FriendlyName("AADEntitlementManagementAccessPackageAssignmentPolicy")]
 class MSFT_AADEntitlementManagementAccessPackageAssignmentPolicy : OMI_BaseResource
 {

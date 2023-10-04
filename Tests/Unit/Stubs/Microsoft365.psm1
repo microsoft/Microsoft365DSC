@@ -588,6 +588,27 @@ function Get-DistributionGroup
         $Anr
     )
 }
+function Get-DistributionGroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSoftDeletedObjects,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize
+    )
+}
 function Get-DkimSigningConfig
 {
     [CmdletBinding()]
