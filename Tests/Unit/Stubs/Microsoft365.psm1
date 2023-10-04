@@ -829,6 +829,19 @@ function Get-MailboxAutoReplyConfiguration
         $ResultSize
     )
 }
+function Get-MailboxCalendarFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
 function Get-MailboxPermission
 {
     [CmdletBinding()]
@@ -8851,6 +8864,55 @@ function Set-MailboxAutoReplyConfiguration
         $ExternalMessage
     )
 }
+function Set-MailboxCalendarFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $SharedCalendarSyncStartDate,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SetAsSharingSource,
+
+        [Parameter()]
+        [System.Boolean]
+        $SearchableUrlEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PublishEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $PublishDateRangeTo,
+
+        [Parameter()]
+        [System.Object]
+        $PublishDateRangeFrom,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseHttps,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ResetUrl,
+
+        [Parameter()]
+        [System.Object]
+        $DetailLevel,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
 function Set-MailboxPlan
 {
     [CmdletBinding()]
@@ -9898,10 +9960,6 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Boolean]
         $MailTipsAllTipsEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $PostponeRoamingSignaturesUntilLater,
 
         [Parameter()]
         [System.Object]

@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
-  * [BREAKING CHANGE] Fixes customExtension property where the schema and assignement 
+  * [BREAKING CHANGE] Fixes customExtension property where the schema and assignement
     were not managed correctly.
     FIXES [#3639](https://github.com/microsoft/Microsoft365DSC/issues/3639)
 * AADEntitlementManagementConnectedOrganization
@@ -15,6 +15,8 @@
     FIXES [#3741](https://github.com/microsoft/Microsoft365DSC/issues/3741)
   * Added support for multiple new properties to align with supporting cmdlet.
 * EXOMailboxAutoReplyConfiguration
+  * Initial release.
+* EXOMailboxCalendarFolder
   * Initial release.
 * EXOMailboxPermission
   * Initial release.
