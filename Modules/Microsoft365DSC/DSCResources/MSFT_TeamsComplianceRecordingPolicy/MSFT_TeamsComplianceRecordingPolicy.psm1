@@ -214,6 +214,7 @@ function Set-TargetResource
         {
             if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
             {
+                $keyName = $key.substring(0, 1).ToLower() + $key.substring(1, $key.length - 1)
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
                 $CreateParameters.Remove($key) | Out-Null
                 $CreateParameters.Add($keyName, $keyValue)

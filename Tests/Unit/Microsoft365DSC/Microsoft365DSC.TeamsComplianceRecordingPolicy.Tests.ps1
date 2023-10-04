@@ -63,7 +63,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                         = 'FakeStringValue'
                     Enabled                                             = $True
                     DisableComplianceRecordingAudioNotificationForCalls = $True
-                    ComplianceRecordingApplications                     = 'FakeStringValue'
                     Identity                                            = 'FakeStringValue'
                     Ensure                                              = 'Present'
                     Credential                                          = $Credential
@@ -166,7 +165,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                                         = 'FakeStringValue'
                     Enabled                                             = $True
                     DisableComplianceRecordingAudioNotificationForCalls = $True
-                    ComplianceRecordingApplications                     = 'FakeStringValue'
                     Identity                                            = 'FakeStringValue'
                     Ensure                                              = 'Present'
                     Credential                                          = $Credential
