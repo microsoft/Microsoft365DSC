@@ -1,9 +1,9 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1004.1
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
-  * [BREAKING CHANGE] Fixes customExtension property where the schema and assignement 
+  * [BREAKING CHANGE] Fixes customExtension property where the schema and assignement
     were not managed correctly.
     FIXES [#3639](https://github.com/microsoft/Microsoft365DSC/issues/3639)
 * AADEntitlementManagementConnectedOrganization
@@ -26,7 +26,8 @@
   * Updated MSCloudLoginAssistant to version 1.0.121.
 * MISC
   * TestHarness.psm1
-    * Added code around DscTestsPath parameter to target a single test file during development
+    * Added code around DscTestsPath parameter to target a single test file
+      during development
 
 # 1.23.927.1
 
