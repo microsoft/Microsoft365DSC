@@ -1,5 +1,5 @@
-# EXOInboundConnector
+# EXOPlace
 
 ## Description
 
-This resource configures an Inbound connector in your cloud-based organization.
+This resource configures a place in Exchange Online (e.g., room).

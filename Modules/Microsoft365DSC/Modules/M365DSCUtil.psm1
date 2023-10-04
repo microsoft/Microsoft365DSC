@@ -5,8 +5,9 @@ $Global:SessionSecurityCompliance = $null
 
 #region Extraction Modes
 $Global:DefaultComponents = @('SPOApp', 'SPOSiteDesign')
+
 $Global:FullComponents = @('AADGroup', 'AADServicePrincipal', 'EXOCalendarProcessing', 'EXODistributionGroup', 'EXOMailboxAutoReplyConfiguration', `
-        'EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUSer', `
+        'EXOMailboxPermission','EXOMailboxSettings', 'EXOManagementRole', 'O365Group', 'AADUser', `
         'PlannerPlan', 'PlannerBucket', 'PlannerTask', 'PPPowerAppsEnvironment', 'PPTenantSettings', `
         'SPOSiteAuditSettings', 'SPOSiteGroup', 'SPOSite', 'SPOUserProfileProperty', 'SPOPropertyBag', 'TeamsTeam', 'TeamsChannel', `
         'TeamsUser', 'TeamsChannelTab', 'TeamsOnlineVoicemailUserSettings', 'TeamsUserCallingSettings')

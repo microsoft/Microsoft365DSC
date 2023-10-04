@@ -1,14 +1,14 @@
 ﻿{
-    "resourceName": "EXOMailboxAutoReplyConfiguration",
+    "resourceName": "EXOMailboxPermission",
+    "description": "",
     "roles": {
         "read": [
-            "Security Reader"
+            "Global Reader"
         ],
         "update": [
-            "Security Administrator"
+            "Exchange Administrator"
         ]
     },
-    "description": "",
     "permissions": {
         "graph": {
             "delegated": {
@@ -22,10 +22,11 @@
         },
         "exchange": {
             "requiredroles": [
-                "Transport Hygiene",
-                "Security Admin",
-                "View-Only Configuration",
-                "Security Reader"
+                "Unified Messaging",
+                "View-Only Recipients",
+                "Mail Recipient Creation",
+                "Mail Recipients",
+                "UM Mailboxes"
             ],
             "requiredrolegroups": "Organization Management"
         }

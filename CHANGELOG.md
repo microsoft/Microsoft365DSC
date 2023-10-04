@@ -16,6 +16,8 @@
   * Added support for multiple new properties to align with supporting cmdlet.
 * EXOMailboxAutoReplyConfiguration
   * Initial release.
+* EXOMailboxPermission
+  * Initial release.
 * EXOPlace
   * Initial release.
 * IntunePolicySets
