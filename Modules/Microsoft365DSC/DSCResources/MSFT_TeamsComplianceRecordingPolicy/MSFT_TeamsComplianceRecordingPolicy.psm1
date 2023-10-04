@@ -9,7 +9,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ComplianceRecordingApplications,
 
         [Parameter()]
@@ -79,7 +79,13 @@ function Get-TargetResource
             $ComplexComplianceRecordingApplications = @()
             foreach($CurrentComplianceRecordingApplications in $instance.ComplianceRecordingApplications){
                 $MyComplianceRecordingApplications = @{}
-                $MyComplianceRecordingApplications.Add('ComplianceRecordingPairedApplications', $CurrentComplianceRecordingApplications.ComplianceRecordingPairedApplications)
+                $ComplianceRecordingPairedApplications = @()
+                if($CurrentComplianceRecordingApplications.ComplianceRecordingPairedApplications.Count -gt 0){
+                    foreach($CurrentComplianceRecordingPairedApplications in $CurrentComplianceRecordingApplications.ComplianceRecordingPairedApplications){
+                        $ComplianceRecordingPairedApplications += $CurrentComplianceRecordingApplications.ComplianceRecordingPairedApplications.Id
+                    }
+                }
+                $MyComplianceRecordingApplications.Add('ComplianceRecordingPairedApplications', $ComplianceRecordingPairedApplications)
                 $MyComplianceRecordingApplications.Add('Id', $CurrentComplianceRecordingApplications.Id)
                 $MyComplianceRecordingApplications.Add('RequiredBeforeMeetingJoin', $CurrentComplianceRecordingApplications.RequiredBeforeMeetingJoin)
                 $MyComplianceRecordingApplications.Add('RequiredBeforeCallEstablishment', $CurrentComplianceRecordingApplications.RequiredBeforeCallEstablishment)
@@ -131,7 +137,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ComplianceRecordingApplications,
 
         [Parameter()]
@@ -215,6 +221,47 @@ function Set-TargetResource
         }
         Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
         New-CsTeamsComplianceRecordingPolicy @CreateParameters | Out-Null
+
+        if($ComplianceRecordingApplications.Count -gt 0){
+            foreach($CurrentComplianceRecordingApplications in $ComplianceRecordingApplications){
+                $Instance = $CurrentComplianceRecordingApplications.Id
+                $RequiredBeforeMeetingJoin = $CurrentComplianceRecordingApplications.RequiredBeforeMeetingJoin
+                $RequiredBeforeCallEstablishment = $CurrentComplianceRecordingApplications.RequiredBeforeCallEstablishment
+                $RequiredDuringMeeting = $CurrentComplianceRecordingApplications.RequiredDuringMeeting
+                $RequiredDuringCall = $CurrentComplianceRecordingApplications.RequiredDuringCall
+                $ConcurrentInvitationCount = $CurrentComplianceRecordingApplications.ConcurrentInvitationCount
+
+                $CsTeamsComplianceRecordingApplication = Get-CsTeamsComplianceRecordingApplication -Identity $CsTeamsComplianceRecordingApplicationIdentity -ErrorAction SilentlyContinue
+                if($null -eq $CsTeamsComplianceRecordingApplication){
+                    New-CsTeamsComplianceRecordingApplication `
+                        -RequiredBeforeMeetingJoin $RequiredBeforeMeetingJoin `
+                        -RequiredBeforeCallEstablishment $RequiredBeforeCallEstablishment `
+                        -RequiredDuringMeeting $RequiredDuringMeeting `
+                        -RequiredDuringCall $RequiredDuringCall `
+                        -ConcurrentInvitationCount $ConcurrentInvitationCount `
+                        -Parent $Identity -Id $Instance
+                }
+                else{
+                    Set-CsTeamsComplianceRecordingApplication `
+                    -Identity $CsTeamsComplianceRecordingApplicationIdentity `
+                        -RequiredBeforeMeetingJoin $RequiredBeforeMeetingJoin `
+                        -RequiredBeforeCallEstablishment $RequiredBeforeCallEstablishment `
+                        -RequiredDuringMeeting $RequiredDuringMeeting `
+                        -RequiredDuringCall $RequiredDuringCall `
+                        -ConcurrentInvitationCount $ConcurrentInvitationCount
+                }
+
+                if($CurrentComplianceRecordingApplications.ComplianceRecordingPairedApplications.Count -gt 0){
+                    Set-CsTeamsComplianceRecordingApplication `
+                        -Identity "$Identity + '/' + $Instance" `
+                        -ComplianceRecordingPairedApplications @(New-CsTeamsComplianceRecordingPairedApplication `
+                        -Id $CurrentComplianceRecordingApplications.ComplianceRecordingPairedApplications)
+                }
+            }
+            $NewCsTeamsComplianceRecordingApplication = Get-CsTeamsComplianceRecordingApplication | Where-Object{$_.Identity -match $Identity}
+            Set-CsTeamsComplianceRecordingPolicy -Identity $Identity -ComplianceRecordingApplications $NewCsTeamsComplianceRecordingApplication
+        }
+
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -235,6 +282,46 @@ function Set-TargetResource
         }
 
         Set-CsTeamsComplianceRecordingPolicy @UpdateParameters | Out-Null
+        if($ComplianceRecordingApplications.Count -gt 0){
+            foreach($CurrentComplianceRecordingApplications in $ComplianceRecordingApplications){
+                $Instance = $CurrentComplianceRecordingApplications.Id
+                $RequiredBeforeMeetingJoin = $CurrentComplianceRecordingApplications.RequiredBeforeMeetingJoin
+                $RequiredBeforeCallEstablishment = $CurrentComplianceRecordingApplications.RequiredBeforeCallEstablishment
+                $RequiredDuringMeeting = $CurrentComplianceRecordingApplications.RequiredDuringMeeting
+                $RequiredDuringCall = $CurrentComplianceRecordingApplications.RequiredDuringCall
+                $ConcurrentInvitationCount = $CurrentComplianceRecordingApplications.ConcurrentInvitationCount
+
+                $CsTeamsComplianceRecordingApplicationIdentity = $Identity + '/' + $Instance
+
+                $CsTeamsComplianceRecordingApplication = Get-CsTeamsComplianceRecordingApplication -Identity $CsTeamsComplianceRecordingApplicationIdentity -ErrorAction SilentlyContinue
+                if($null -eq $CsTeamsComplianceRecordingApplication){
+                    New-CsTeamsComplianceRecordingApplication `
+                        -RequiredBeforeMeetingJoin $RequiredBeforeMeetingJoin `
+                        -RequiredBeforeCallEstablishment $RequiredBeforeCallEstablishment `
+                        -RequiredDuringMeeting $RequiredDuringMeeting `
+                        -RequiredDuringCall $RequiredDuringCall `
+                        -ConcurrentInvitationCount $ConcurrentInvitationCount `
+                        -Parent $Identity -Id $Instance
+                }
+                else{
+                    Set-CsTeamsComplianceRecordingApplication `
+                    -Identity $CsTeamsComplianceRecordingApplicationIdentity `
+                        -RequiredBeforeMeetingJoin $RequiredBeforeMeetingJoin `
+                        -RequiredBeforeCallEstablishment $RequiredBeforeCallEstablishment `
+                        -RequiredDuringMeeting $RequiredDuringMeeting `
+                        -RequiredDuringCall $RequiredDuringCall `
+                        -ConcurrentInvitationCount $ConcurrentInvitationCount
+                }
+
+                if($CurrentComplianceRecordingApplications.ComplianceRecordingPairedApplications.Count -gt 0){
+                    [string]$CsTeamsComplianceRecordingApplicationIdentity = $Identity + '/' + $Instance
+                    [string]$ComplianceRecordingPairedApplications = $CurrentComplianceRecordingApplications.ComplianceRecordingPairedApplications
+                    Set-CsTeamsComplianceRecordingApplication -Identity $CsTeamsComplianceRecordingApplicationIdentity -ComplianceRecordingPairedApplications @(New-CsTeamsComplianceRecordingPairedApplication -Id $ComplianceRecordingPairedApplications)
+                }
+            }
+            $NewCsTeamsComplianceRecordingApplication = Get-CsTeamsComplianceRecordingApplication | Where-Object{$_.Identity -match $Identity}
+            Set-CsTeamsComplianceRecordingPolicy -Identity $Identity -ComplianceRecordingApplications $NewCsTeamsComplianceRecordingApplication
+        }
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -254,7 +341,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
         $ComplianceRecordingApplications,
 
         [Parameter()]
@@ -318,6 +405,30 @@ function Test-TargetResource
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
+    $testResult = $true
+
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
+    {
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($source.getType().Name -like '*CimInstance*')
+        {
+            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
+            if (-Not $testResult)
+            {
+                $testResult = $false
+                break
+            }
+
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -332,10 +443,13 @@ function Test-TargetResource
         }
     }
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    if ($testResult)
+    {
+        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
@@ -435,7 +549,7 @@ function Export-TargetResource
                 )
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.ComplianceRecordingApplications `
-                    -CIMInstanceName 'TeamsComplianceRecordingApplicationn' `
+                    -CIMInstanceName 'TeamsComplianceRecordingApplication' `
                     -ComplexTypeMapping $complexMapping
 
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))

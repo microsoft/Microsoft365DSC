@@ -1,14 +1,14 @@
-[ClassVersion("1.0.0"), FriendlyName("TeamsComplianceRecordingApplication)]
+[ClassVersion("1.0.0")]
 class MSFT_TeamsComplianceRecordingApplication
 {
-    [Write, Description("")] String Id;
-    [Write, Description("")] String[] ComplianceRecordingPairedApplications;
-    [Write, Description("")] Boolean RequiredBeforeMeetingJoin;
-    [Write, Description("")] Boolean RequiredBeforeCallEstablishment;
-    [Write, Description("")] Boolean RequiredDuringMeeting;
-    [Write, Description("")] Boolean RequiredDuringCall;
-    [Write, Description("")] String ConcurrentInvitationCount;
-}
+    [Write, Description("A name that uniquely identifies the application instance of the policy-based recording application.")] String Id;
+    [Write, Description("Determines the other policy-based recording applications to pair with this application to achieve application resiliency. Can only have one paired application.")] String ComplianceRecordingPairedApplications[];
+    [Write, Description("Indicates whether the policy-based recording application must be in the meeting before the user is allowed to join the meeting.")] Boolean RequiredBeforeMeetingJoin;
+    [Write, Description("Indicates whether the policy-based recording application must be in the call before the call is allowed to establish.")] Boolean RequiredBeforeCallEstablishment;
+    [Write, Description("Indicates whether the policy-based recording application must be in the meeting while the user is in the meeting.")] Boolean RequiredDuringMeeting;
+    [Write, Description("Indicates whether the policy-based recording application must be in the call while the call is active.")] Boolean RequiredDuringCall;
+    [Write, Description("Determines the number of invites to send out to the application instance of the policy-based recording application. Can be set to 1 or 2 only.")] String ConcurrentInvitationCount;
+};
 
 [ClassVersion("1.0.0.0"), FriendlyName("TeamsComplianceRecordingPolicy")]
 class MSFT_TeamsComplianceRecordingPolicy : OMI_BaseResource
