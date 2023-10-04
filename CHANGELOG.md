@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXODistributionGroup
+  * Fixes the export of group membership to use Identity.
+
 # 1.23.1004.1
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
