@@ -365,15 +365,15 @@ function Export-TargetResource
         $totalCount = $instances.Length
         foreach ($item in $instances)
         {
-            $Group = Find-CsGroup -SearchQuery $item.GroupId -ExactMatchOnly $true
+            [array]$Group = Find-CsGroup -SearchQuery $item.GroupId -ExactMatchOnly $true
             if ($null -eq $totalCount)
             {
                 $totalCount = 1
             }
             Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group.DisplayName)}" -NoNewline
             $results = @{
-                GroupDisplayName      = $Group.DisplayName
-                GroupId               = $Group.Id
+                GroupDisplayName      = $Group[0].DisplayName
+                GroupId               = $item.GroupId
                 PolicyType            = $item.PolicyType
                 PolicyName            = $item.PolicyName
                 Priority              = $item.Priority
