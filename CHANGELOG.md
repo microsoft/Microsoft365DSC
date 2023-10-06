@@ -4,6 +4,8 @@
 
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
+* TeamsTeam
+  * Check if Teams owners are null
 
 # 1.23.1004.1
 

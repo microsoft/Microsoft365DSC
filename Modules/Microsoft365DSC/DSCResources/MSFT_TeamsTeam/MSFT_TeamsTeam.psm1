@@ -176,6 +176,7 @@ function Get-TargetResource
         [array]$Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq 'owner' }
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
+
         $result = @{
             DisplayName                       = $team.DisplayName
             GroupID                           = $team.GroupId
@@ -201,6 +202,10 @@ function Get-TargetResource
             AllowDeleteChannels               = $team.AllowDeleteChannels
             ShowInTeamsSearchAndSuggestions   = $team.ShowInTeamsSearchAndSuggestions
             Ensure                            = 'Present'
+        }
+
+        if($null -ne $Owners){
+            $result.Add('Owner',$Owners[0].User.ToString())
         }
 
         if ($ConnectionMode.StartsWith('ServicePrincipal'))
