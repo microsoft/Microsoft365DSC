@@ -3331,7 +3331,7 @@ function Set-TargetResource
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
-        foreach ($assignment in $assignments)
+        foreach ($assignment in $Assignments)
         {
             if ($Assignment.dataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
                 $Assignment.dataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget")
