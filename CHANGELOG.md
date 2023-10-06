@@ -7,6 +7,8 @@
     was deleted.
 * AADConditionalAccessPolicy
   * Added support for the SigninFrequencyInterval parameter.
+* TeamsGroupPolicyAssignment
+  * Fixes the export of CsGroup, when the display name of a group is included in another display name. Fix [#3736](https://github.com/microsoft/Microsoft365DSC/issues/3736)
 
 # 1.23.1011.1
 
