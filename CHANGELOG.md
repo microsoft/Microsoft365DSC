@@ -4,6 +4,8 @@
 
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
+* IntuneDeviceConfigurationPolicyWindows10
+  * Support setting assignment groups by display name
 
 # 1.23.1004.1
 
