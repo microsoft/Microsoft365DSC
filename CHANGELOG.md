@@ -4,6 +4,8 @@
 
 * TeamsComplianceREcordingPolicy
   * FIXES [[#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)]
+* EXODistributionGroup
+  * Fixes the export of group membership to use Identity.
 
 # 1.23.1004.1
 
