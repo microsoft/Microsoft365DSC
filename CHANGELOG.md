@@ -4,6 +4,8 @@
 
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
+* TeamsUpdateManagementPolicy
+  * Add support for the new acceptable value for UseNewTeamsClient ( NewTeamsAsDefault )
 
 # 1.23.1004.1
 
