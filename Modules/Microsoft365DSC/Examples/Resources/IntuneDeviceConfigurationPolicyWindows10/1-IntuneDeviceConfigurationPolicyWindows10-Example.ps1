@@ -27,7 +27,7 @@ Configuration Example
             Assignments                                          = @(
                 MSFT_IntuneDeviceConfigurationPolicyWindows10Assignments{
                     deviceAndAppManagementAssignmentFilterType = 'none'
-                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                    odataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             );
             AuthenticationAllowSecondaryDevice                   = $False;

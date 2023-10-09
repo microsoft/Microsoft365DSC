@@ -1980,21 +1980,28 @@ function Get-TargetResource
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
-            $Group = Get-MgGroup -GroupId $assignmentEntry.Target.AdditionalProperties.groupId -ErrorAction SilentlyContinue
+            $ODataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+            $GroupId = $assignmentEntry.Target.AdditionalProperties.groupId
             $GroupDisplayName = $null
-            if ($Group.Count -eq 1)
-            {
-                $GroupDisplayName = $Group.DisplayName
+
+            if ($ODataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
+                $ODataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget") {
+                $Group = Get-MgGroup -GroupId $GroupId -ErrorAction SilentlyContinue
+                if ($Group.Count -eq 1)
+                {
+                    $GroupDisplayName = $Group.DisplayName
+                    $GroupId = $null
+                }
             }
 
             $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                odataType                                   = $ODataType
                 deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
                     {
                         $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
                     })
                 deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
+                groupId                                    = $GroupId
                 groupDisplayName                           = $GroupDisplayName
             }
             $assignmentResult += $assignmentValue
@@ -3333,8 +3340,8 @@ function Set-TargetResource
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
-            if ($Assignment.dataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
-                $Assignment.dataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget")
+            if ($Assignment.odataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
+                $Assignment.odataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget")
             {
                 if (![string]::IsNullOrEmpty($Assignment.groupId))
                 {
