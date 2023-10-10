@@ -9,6 +9,7 @@
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
 * DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.4.0.
   * Updated Micrsoft.Graph dependencies to version 2.7.0.
 
 # 1.23.1004.1
