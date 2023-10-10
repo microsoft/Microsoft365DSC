@@ -69,30 +69,6 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
     - Application.ReadWrite.All, ReportSettings.ReadWrite.All, 83f7232f-763c-47b2-a097-e35d2cbe1da5, OrgSettings-Forms.ReadWrite.All, OrgSettings-Todo.ReadWrite.All, OrgSettings-AppsAndServices.ReadWrite.All, OrgSettings-DynamicsVoice.ReadWrite.All, Tasks.ReadWrite.All
 
-### ProjectWorkManagement
-
-To authenticate with the Microsoft ProjectWorkManagement API, this resource required the following permissions:
-
-#### Delegated permissions
-
-- **Read**
-
-    - OrgSettings-Planner.Read.All
-
-- **Update**
-
-    - OrgSettings-Planner.ReadWrite.All
-
-#### Application permissions
-
-- **Read**
-
-    - OrgSettings-Planner.Read.All
-
-- **Update**
-
-    - OrgSettings-Planner.ReadWrite.All
-
 ## Examples
 
 ### Example 1

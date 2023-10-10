@@ -136,48 +136,9 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **CustomExtension** | Write | MSFT_MicrosoftGraphcustomaccesspackageworkflowextension | Indicates which custom workflow extension will be executed at this stage. | |
+| **CustomExtensionId** | Write | String | Indicates which custom workflow extension will be executed at this stage. | |
 | **Stage** | Write | String | Indicates the stage of the access package assignment request workflow when the access package custom extension runs. | `assignmentRequestCreated`, `assignmentRequestApproved`, `assignmentRequestGranted`, `assignmentRequestRemoved`, `assignmentFourteenDaysBeforeExpiration`, `assignmentOneDayBeforeExpiration`, `unknownFutureValue` |
 | **Id** | Write | String | Identifier of the stage. | |
-
-### MSFT_MicrosoftGraphcustomaccesspackageworkflowextension
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **AuthenticationConfiguration** | Write | MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration | Configuration for securing the API call to the logic app. For example, using OAuth client credentials flow. | |
-| **ClientConfiguration** | Write | MSFT_MicrosoftGraphcustomextensionclientconfiguration | HTTP connection settings that define how long Azure AD can wait for a connection to a logic app, how many times you can retry a timed-out connection and the exception scenarios when retries are allowed. | |
-| **Description** | Write | String | Description for the customAccessPackageWorkflowExtension object. | |
-| **DisplayName** | Write | String | Display name for the customAccessPackageWorkflowExtension object. | |
-| **EndpointConfiguration** | Write | MSFT_MicrosoftGraphcustomextensionendpointconfiguration | The type and details for configuring the endpoint to call the logic app's workflow. | |
-| **Id** | Write | String | Identifier for the customAccessPackageWorkflowExtension object. | |
-
-### MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **ResourceId** | Write | String | The appID of the Azure AD application to use to authenticate a logic app with a custom access package workflow extension. | |
-
-### MSFT_MicrosoftGraphcustomextensionclientconfiguration
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **TimeoutInMilliseconds** | Write | UInt32 | The max duration in milliseconds that Azure AD will wait for a response from the logic app before it shuts down the connection. The valid range is between 200 and 2000 milliseconds. Default duration is 1000. | |
-
-### MSFT_MicrosoftGraphcustomextensionendpointconfiguration
-
-#### Parameters
-
-| Parameter | Attribute | DataType | Description | Allowed Values |
-| --- | --- | --- | --- | --- |
-| **LogicAppWorkflowName** | Write | MSFT_MicrosoftGraphcustomextensionauthenticationconfiguration | The name of the logic app. | |
-| **ResourceGroupName** | Write | MSFT_MicrosoftGraphcustomextensionclientconfiguration | The Azure resource group name for the logic app. | |
-| **SubscriptionId** | Write | String | Identifier of the Azure subscription for the logic app. | |
 
 
 ## Description
