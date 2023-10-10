@@ -370,7 +370,7 @@ function Export-TargetResource
             {
                 $totalCount = 1
             }
-            Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group.DisplayName)}" -NoNewline
+            Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group[0].DisplayName)}" -NoNewline
             $results = @{
                 GroupDisplayName      = $Group[0].DisplayName
                 GroupId               = $item.GroupId
