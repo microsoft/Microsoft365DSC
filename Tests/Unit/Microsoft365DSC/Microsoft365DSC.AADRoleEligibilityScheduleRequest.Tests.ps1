@@ -24,7 +24,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Global:CurrentModeIsExport = $false
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
-
+            $Script:exportedInstances = $null
             Mock -CommandName Add-M365DSCTelemetryEvent -MockWith {
             }
 
@@ -49,6 +49,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return @{
                     DisplayName = 'Teams Communications Administrator'
                     Id          = '12345'
+                }
+            }
+            Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -MockWith {
+                return @{
+                    Id          = '12345-12345-12345-12345-12345'
                 }
             }
 
@@ -262,6 +267,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     type        = 'afterDateTime'
                                 }
                         };
+                        TargetScheduleId = "12345-12345-12345-12345-12345"
                     }
                 }
             }
