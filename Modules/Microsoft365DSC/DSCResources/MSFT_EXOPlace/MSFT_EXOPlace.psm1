@@ -586,7 +586,7 @@ function Export-TargetResource
     #endregion
     try
     {
-        [array]$places = Get-Place -ErrorAction Stop
+        [array]$places = Get-Place -ResultSize 'Unlimited' -ErrorAction Stop
         $dscContent = ''
 
         if ($places.Length -eq 0)

@@ -400,7 +400,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$mailboxes = Get-Mailbox -ErrorAction Stop
+        [array]$mailboxes = Get-Mailbox -ResultSize 'Unlimited' -ErrorAction Stop
 
         if ($mailboxes.Length -eq 0)
         {
