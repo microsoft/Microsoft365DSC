@@ -5,12 +5,13 @@
 * AADRoleEligibilityScheduleRequest
   * Added support for groups assignment.
     FIXES [#3744](https://github.com/microsoft/Microsoft365DSC/issues/3744)
-
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
+* TeamsUpgradeConfiguration
+  * Fixes an issue where the SfBMeetingJoinUx property wasn't properly updated.
 * DEPENDENCIES
   * Updated ExchangeOnlineManagement to version 3.4.0.
-  * Updated Micrsoft.Graph dependencies to version 2.7.0.
+  * Updated Microsoft.Graph dependencies to version 2.7.0.
 
 # 1.23.1004.1
 
