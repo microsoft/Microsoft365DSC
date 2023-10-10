@@ -2,8 +2,14 @@
 
 # UNRELEASED
 
+* AADRoleEligibilityScheduleRequest
+  * Added support for groups assignment.
+    FIXES [#3744](https://github.com/microsoft/Microsoft365DSC/issues/3744)
+
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
+* DEPENDENCIES
+  * Updated Micrsoft.Graph dependencies to version 2.7.0.
 
 # 1.23.1004.1
 
