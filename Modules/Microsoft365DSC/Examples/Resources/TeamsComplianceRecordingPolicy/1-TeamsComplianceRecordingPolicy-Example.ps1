@@ -44,4 +44,5 @@ Configuration Example
             Identity                                            = "Tag:MyTeamsComplianceRecordingPolicy";
             WarnUserOnRemoval                                   = $True;
         }
+    }
 }
