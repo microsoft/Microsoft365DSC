@@ -484,7 +484,7 @@ function Export-TargetResource
 
     try
     {
-        $mailboxes = Get-Mailbox
+        $mailboxes = Get-Mailbox -ResultSize 'Unlimited'
         $dscContent = ''
         $i = 1
 

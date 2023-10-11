@@ -1071,6 +1071,7 @@ function Get-M365DSCCIMInstanceKey
         [System.Collections.Hashtable]
         $CIMInstance
     )
+
     $primaryKey = ''
     if ($CIMInstance.ContainsKey('IsSingleInstance'))
     {
@@ -1108,6 +1109,11 @@ function Get-M365DSCCIMInstanceKey
     {
         $primaryKey = 'odataType'
     }
+    elseif ($CIMInstance.ContainsKey("dataType"))
+    {
+        $primaryKey = 'dataType'
+    }
+
     return $primaryKey
 }
 

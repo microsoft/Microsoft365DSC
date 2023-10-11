@@ -248,7 +248,7 @@ function Get-TargetResource
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
             $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
-            $distributionGroupMembers = Get-DistributionGroupMember $Name  -ErrorAction Stop -ResultSize Unlimited
+            $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity  -ErrorAction Stop -ResultSize Unlimited
         }
         else
         {
