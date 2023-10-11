@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADAuthenticationMethodPolicyAuthenticator
+  * Fixes an issue with the Get method when an assigned group
+    was deleted.
+
 # 1.23.1011.1
 
 * AADRoleEligibilityScheduleRequest
