@@ -11,6 +11,8 @@
   * Fixes the export of group membership to use Identity.
 * IntuneDeviceConfigurationPolicyWindows10
   * Support setting assignment groups by display name
+* MISC
+  * M365DSCReport: Also define property dataType, if present, as being primary key on CIM instances
 * TeamsUpgradeConfiguration
   * Fixes an issue where the SfBMeetingJoinUx property wasn't properly updated.
 * DEPENDENCIES
