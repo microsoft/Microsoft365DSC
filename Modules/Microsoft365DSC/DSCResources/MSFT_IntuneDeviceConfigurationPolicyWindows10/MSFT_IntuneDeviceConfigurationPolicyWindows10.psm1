@@ -1980,12 +1980,12 @@ function Get-TargetResource
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
-            $ODataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+            $DataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
             $GroupId = $assignmentEntry.Target.AdditionalProperties.groupId
             $GroupDisplayName = $null
 
-            if ($ODataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
-                $ODataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget") {
+            if ($DataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
+                $DataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget") {
                 $Group = Get-MgGroup -GroupId $GroupId -ErrorAction SilentlyContinue
                 if ($Group.Count -eq 1)
                 {
@@ -1995,7 +1995,7 @@ function Get-TargetResource
             }
 
             $assignmentValue = @{
-                odataType                                   = $ODataType
+                dataType                                   = $DataType
                 deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
                     {
                         $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
@@ -3340,8 +3340,8 @@ function Set-TargetResource
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
-            if ($Assignment.odataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
-                $Assignment.odataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget")
+            if ($Assignment.dataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
+                $Assignment.dataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget")
             {
                 if (![string]::IsNullOrEmpty($Assignment.groupId))
                 {
