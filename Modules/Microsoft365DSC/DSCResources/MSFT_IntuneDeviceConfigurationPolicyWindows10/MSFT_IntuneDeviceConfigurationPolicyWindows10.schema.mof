@@ -6,7 +6,6 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The Id of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterId;
     [Write, Description("The group Id that is the target of the assignment.")] String groupId;
     [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
-    [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 [ClassVersion("1.0.0")]
