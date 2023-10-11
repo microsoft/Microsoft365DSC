@@ -260,8 +260,8 @@ function Get-TargetResource
         {
             foreach ($user in $calendarProc.ResourceDelegates)
             {
-                $userInfo = Get-User -Identity $user
-                $ResourceDelegatesValue += $userInfo.UserPrincipalName
+                $userInfo = Get-Recipient -Identity $user
+                $ResourceDelegatesValue += $userInfo.PrimarySmtpAddress
             }
         }
 
@@ -868,7 +868,7 @@ function Export-TargetResource
 
     try
     {
-        $mailboxes = Get-Mailbox -ErrorAction Stop
+        $mailboxes = Get-Mailbox -ResultSize 'Unlimited' -ErrorAction Stop
 
         if ($null -eq $mailboxes)
         {
