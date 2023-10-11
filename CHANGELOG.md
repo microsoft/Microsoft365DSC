@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1011.1
 
 * AADRoleEligibilityScheduleRequest
   * Added support for groups assignment.
@@ -10,10 +10,11 @@
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
 * TeamsUpdateManagementPolicy
-  * Add support for the new acceptable value for UseNewTeamsClient (NewTeamsAsDefault).
+  * Add support for the new acceptable value for UseNewTeamsClient
+    (NewTeamsAsDefault).
 * MISC
-  * M365DSCReport: Also define property dataType, if present, as being primary key on
-    CIM instances.
+  * M365DSCReport: Also define property dataType, if present, as being primary
+     key on CIM instances.
 * TeamsUpgradeConfiguration
   * Fixes an issue where the SfBMeetingJoinUx property wasn't properly updated.
 * DEPENDENCIES
