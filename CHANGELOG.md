@@ -4,8 +4,18 @@
 
 * TeamsComplianceREcordingPolicy
   * FIXES [[#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)]
+* AADRoleEligibilityScheduleRequest
+  * Added support for groups assignment.
+    FIXES [#3744](https://github.com/microsoft/Microsoft365DSC/issues/3744)
+* EXOCalendarProcessing
+  * Added support for retrieved groups as calendar delegates.
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
+* TeamsUpgradeConfiguration
+  * Fixes an issue where the SfBMeetingJoinUx property wasn't properly updated.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.4.0.
+  * Updated Microsoft.Graph dependencies to version 2.7.0.
 
 # 1.23.1004.1
 
