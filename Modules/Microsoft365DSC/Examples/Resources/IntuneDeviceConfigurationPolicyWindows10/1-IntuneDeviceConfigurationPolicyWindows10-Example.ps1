@@ -25,7 +25,7 @@ Configuration Example
             AppsAllowTrustedAppsSideloading                      = "notConfigured";
             AppsBlockWindowsStoreOriginatedApps                  = $False;
             Assignments                                          = @(
-                MSFT_IntuneDeviceConfigurationPolicyWindows10Assignments{
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
