@@ -5,6 +5,8 @@
 * AADRoleEligibilityScheduleRequest
   * Added support for groups assignment.
     FIXES [#3744](https://github.com/microsoft/Microsoft365DSC/issues/3744)
+* EXOCalendarProcessing
+  * Added support for retrieved groups as calendar delegates.
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
 * TeamsUpgradeConfiguration
