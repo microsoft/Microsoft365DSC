@@ -370,9 +370,19 @@ function Export-TargetResource
             {
                 $totalCount = 1
             }
+            if ($totalCount -Eq 0)
+            {
+                $Message = "GPA The CSsGroup with ID {$($item.GroupId)} could not be found"
+                New-M365DSCLogEntry -Message $Message `
+                    -Source $MyInvocation.MyCommand.ModuleName
+                Write-Error $Message
+                $groupDisplayName = ""
+            } else {
+                $groupDisplayName = $Group[0].DisplayName
+            }
             Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group[0].DisplayName)}" -NoNewline
             $results = @{
-                GroupDisplayName      = $Group[0].DisplayName
+                GroupDisplayName      = $groupDisplayName
                 GroupId               = $item.GroupId
                 PolicyType            = $item.PolicyType
                 PolicyName            = $item.PolicyName
