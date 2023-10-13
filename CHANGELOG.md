@@ -7,6 +7,8 @@
     was deleted.
 * AADConditionalAccessPolicy
   * Added support for the SigninFrequencyInterval parameter.
+* TeamsUserPolicyAssignment
+  * Initial release.
 
 # 1.23.1011.1
 
