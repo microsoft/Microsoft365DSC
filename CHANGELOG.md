@@ -9,6 +9,7 @@
   * Added support for the SigninFrequencyInterval parameter.
 * TeamsUserPolicyAssignment
   * Initial release.
+  FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
 
 # 1.23.1011.1
 
