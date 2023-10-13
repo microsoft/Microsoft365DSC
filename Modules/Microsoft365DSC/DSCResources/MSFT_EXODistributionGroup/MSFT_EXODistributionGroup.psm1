@@ -686,7 +686,7 @@ function Set-TargetResource
         {
             $currentParameters.Identity = $newGroup.Identity
         }
-        Set-DistributionGroup @currentParameters
+        Set-DistributionGroup @currentParameters -BypassSecurityGroupManagerCheck
     }
 }
 
