@@ -669,6 +669,7 @@ function Set-TargetResource
         }
         $currentParameters.Remove('OrganizationalUnit') | Out-Null
         $currentParameters.Remove('Type') | Out-Null
+        $currentParameters.Remove('Members') | Out-Null
 
         if ($EmailAddresses.Length -gt 0)
         {
