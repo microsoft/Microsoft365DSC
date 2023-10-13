@@ -5,6 +5,8 @@
 * AADAuthenticationMethodPolicyAuthenticator
   * Fixes an issue with the Get method when an assigned group
     was deleted.
+* AADConditionalAccessPolicy
+  * Added support for the SigninFrequencyInterval parameter.
 
 # 1.23.1011.1
 
