@@ -24,6 +24,12 @@ class MSFT_AADAuthenticationMethodPolicyIncludeTarget
     [Write, Description("The kind of entity targeted. Possible values are: user, group."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
 };
 [ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphExcludeTarget
+{
+    [Write, Description("The object identifier of an Azure AD user or group.")] String Id;
+    [Write, Description("The type of the authentication method target. Possible values are: user, group, unknownFutureValue."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
+};
+[ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget
 {
     [Write, Description("The object identifier of an Azure AD user or group.")] String Id;
@@ -42,7 +48,7 @@ class MSFT_MicrosoftGraphSystemCredentialPreferences
 class MSFT_AADAuthenticationMethodPolicy : OMI_BaseResource
 {
     [Write, Description("A description of the policy.")] String Description;
-    [Key, Description("The name of the policy.")] String DisplayName;
+    [Required, Description("The name of the policy.")] String DisplayName;
     [Write, Description("The state of migration of the authentication methods policy from the legacy multifactor authentication and self-service password reset (SSPR) policies. The possible values are: premigration - means the authentication methods policy is used for authentication only, legacy policies are respected. migrationInProgress - means the authentication methods policy is used for both authenication and SSPR, legacy policies are respected. migrationComplete - means the authentication methods policy is used for authentication and SSPR, legacy policies are ignored. unknownFutureValue - Evolvable enumeration sentinel value. Do not use."), ValueMap{"preMigration","migrationInProgress","migrationComplete","unknownFutureValue"}, Values{"preMigration","migrationInProgress","migrationComplete","unknownFutureValue"}] String PolicyMigrationState;
     [Write, Description("The version of the policy in use.")] String PolicyVersion;
     [Write, Description("Days before the user will be asked to reconfirm their method.")] UInt32 ReconfirmationInDays;
