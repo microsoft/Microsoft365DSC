@@ -247,13 +247,37 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
-            $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity  -ErrorAction Stop -ResultSize Unlimited
+            if ($null -ne $PrimarySmtpAddress)
+            {
+                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimarySmtpAddress -eq $PrimarySmtpAddress}
+                $distributionGroupMembers = Get-DistributionGroupMember -Identity $PrimarySmtpAddress `
+                    -ErrorAction 'Stop' `
+                    -ResultSize 'Unlimited'
+            }
+            else
+            {
+                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+                $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity `
+                    -ErrorAction 'Stop' `
+                    -ResultSize 'Unlimited'
+            }
         }
         else
         {
-            $distributionGroup = Get-DistributionGroup -Identity $Identity -ErrorAction Stop
-            $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity  -ErrorAction Stop -ResultSize Unlimited
+            if ($null -ne $PrimarySmtpAddress)
+            {
+                $distributionGroup = Get-DistributionGroup -Identity $PrimarySmtpAddress -ErrorAction Stop
+                $distributionGroupMembers = Get-DistributionGroupMember -Identity $PrimarySmtpAddress `
+                    -ErrorAction 'Stop' `
+                    -ResultSize 'Unlimited'
+            }
+            else
+            {
+                $distributionGroup = Get-DistributionGroup -Identity $Identity -ErrorAction Stop
+                $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity `
+                    -ErrorAction 'Stop' `
+                    -ResultSize 'Unlimited'
+            }
         }
 
         if ($null -eq $distributionGroup)
@@ -984,6 +1008,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($distributionGroup.Identity)" -NoNewline
             $params = @{
                 Identity              = $distributionGroup.Identity
+                PrimarySmtpAddress    = $distributionGroup.PrimarySmtpAddress
                 Name                  = $distributionGroup.Name
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
