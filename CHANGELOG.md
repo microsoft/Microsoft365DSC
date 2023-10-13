@@ -7,6 +7,8 @@
     was deleted.
 * AADConditionalAccessPolicy
   * Added support for the SigninFrequencyInterval parameter.
+* EXODistributionGroup
+  * Changes the export logic to use PrimarySMTPAddress if provided.
 
 # 1.23.1011.1
 
