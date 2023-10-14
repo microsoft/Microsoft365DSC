@@ -12,6 +12,9 @@
 * TeamsUserPolicyAssignment
   * Initial release.
   FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
+* IntuneDeviceCleanupRule
+  * Initial release.
+    FIXES [#3599](https://github.com/microsoft/Microsoft365DSC/issues/3599)
 
 # 1.23.1011.1
 
