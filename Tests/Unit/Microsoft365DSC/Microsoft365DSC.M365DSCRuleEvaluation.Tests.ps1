@@ -45,7 +45,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ResourceName        = 'AADConditionalAccessPolicy'
-                    RuleDefinition      = "`$_.Enabled -eq `$true"
+                    RuleDefinition      = "`$_.State -eq 'Enabled'"
                     AfterRuleCountQuery = '-eq 1'
                     Credential          = $Credential
                 }
@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ResourceName        = 'AADConditionalAccessPolicy'
-                    RuleDefinition      = "`$_.Enabled -eq `$true"
+                    RuleDefinition      = "`$_.State -eq 'Enabled'"
                     Credential          = $Credential
                 }
             }
