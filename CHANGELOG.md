@@ -7,9 +7,14 @@
     was deleted.
 * AADConditionalAccessPolicy
   * Added support for the SigninFrequencyInterval parameter.
+* EXODistributionGroup
+  * Changes the export logic to use PrimarySMTPAddress if provided.
 * TeamsGroupPolicyAssignment
   * Fixes the export of CsGroup, when the display name of a group is included in another display name.
   Fix [#3736](https://github.com/microsoft/Microsoft365DSC/issues/3736)
+* TeamsUserPolicyAssignment
+  * Initial release.
+  FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
 
 # 1.23.1011.1
 
