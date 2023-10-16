@@ -9,9 +9,11 @@
   * Added support for the SigninFrequencyInterval parameter.
 * EXODistributionGroup
   * Changes the export logic to use PrimarySMTPAddress if provided.
-* MSFT_IntuneAntivirusPolicyWindows10SettingCatalog
+* IntuneAntivirusPolicyWindows10SettingCatalog
   * Added "-All" parameter to retrieve all settings from a template.
-  * FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
+    FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
+* TeamsUserPolicyAssignment
+  * Initial release.
 
 # 1.23.1011.1
 
