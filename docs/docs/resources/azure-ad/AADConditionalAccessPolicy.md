@@ -41,6 +41,7 @@
 | **CustomAuthenticationFactors** | Write | StringArray[] | Custom Controls assigned to the grant property of this policy. | |
 | **SignInFrequencyType** | Write | String | Sign in frequency unit (days/hours) to be interpreted by the policy. | `Days`, `Hours`, `` |
 | **SignInFrequencyIsEnabled** | Write | Boolean | Specifies, whether sign-in frequency is enforced by the Policy. | |
+| **SignInFrequencyInterval** | Write | String | Sign in frequency interval. Possible values are: timeBased, everyTime and unknownFutureValue. | `timeBased`, `everyTime`, `unknownFutureValue` |
 | **PersistentBrowserIsEnabled** | Write | Boolean | Specifies, whether Browser Persistence is controlled by the Policy. | |
 | **PersistentBrowserMode** | Write | String | Specifies, what Browser Persistence control is enforced by the Policy. | `Always`, `Never`, `` |
 | **AuthenticationStrength** | Write | String | Name of the associated authentication strength policy. | |

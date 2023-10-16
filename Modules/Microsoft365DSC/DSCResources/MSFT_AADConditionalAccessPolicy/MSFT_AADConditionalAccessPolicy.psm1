@@ -160,6 +160,11 @@ function Get-TargetResource
         $SignInFrequencyIsEnabled,
 
         [Parameter()]
+        [ValidateSet('timeBased', 'everyTime', 'unknownFutureValue')]
+        [System.String]
+        $SignInFrequencyInterval,
+
+        [Parameter()]
         [ValidateSet('Always', 'Never', '')]
         [System.String]
         $PersistentBrowserMode,
@@ -525,10 +530,12 @@ function Get-TargetResource
         if ($Policy.SessionControls.SignInFrequency.IsEnabled)
         {
             $SignInFrequencyType = [System.String]$Policy.SessionControls.SignInFrequency.Type
+            $SignInFrequencyIntervalValue = [System.String]$Policy.SessionControls.SignInFrequency.FrequencyInterval
         }
         else
         {
             $SignInFrequencyType = $null
+            $SignInFrequencyIntervalValue = $null
         }
         if ($Policy.SessionControls.PersistentBrowser.IsEnabled)
         {
@@ -626,6 +633,7 @@ function Get-TargetResource
             SignInFrequencyValue                     = $Policy.SessionControls.SignInFrequency.Value
             #no translation or conversion needed, $null returned if undefined
             SignInFrequencyType                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
+            SignInFrequencyInterval                  = $SignInFrequencyIntervalValue
             #no translation needed
             PersistentBrowserIsEnabled               = $false -or $Policy.SessionControls.PersistentBrowser.IsEnabled
             #make false if undefined, true if true
@@ -806,6 +814,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $SignInFrequencyIsEnabled,
+
+        [Parameter()]
+        [ValidateSet('timeBased', 'everyTime', 'unknownFutureValue')]
+        [System.String]
+        $SignInFrequencyInterval,
 
         [Parameter()]
         [ValidateSet('Always', 'Never', '')]
@@ -1421,16 +1434,32 @@ function Set-TargetResource
             if ($SignInFrequencyIsEnabled)
             {
                 $SigninFrequencyProp = @{
-                    IsEnabled = $true
-                    Type      = $null
-                    Value     = $null
+                    isEnabled         = $true
+                    type              = $null
+                    value             = $null
+                    frequencyInterval = $null
                 }
 
                 $sessioncontrols.Add('SignInFrequency', $SigninFrequencyProp)
                 #create and provision SignInFrequency object if used
-                $sessioncontrols.SignInFrequency.IsEnabled = $true
-                $sessioncontrols.SignInFrequency.Type = $SignInFrequencyType
-                $sessioncontrols.SignInFrequency.Value = $SignInFrequencyValue
+                $sessioncontrols.SignInFrequency.isEnabled = $true
+                if ($SignInFrequencyType -ne '')
+                {
+                    $sessioncontrols.SignInFrequency.type = $SignInFrequencyType
+                }
+                else
+                {
+                    $sessioncontrols.SignInFrequency.Remove("type") | Out-Null
+                }
+                if ($SignInFrequencyValue -gt 0)
+                {
+                    $sessioncontrols.SignInFrequency.value = $SignInFrequencyValue
+                }
+                else
+                {
+                    $sessioncontrols.SignInFrequency.Remove("value") | Out-Null
+                }
+                $sessioncontrols.SignInFrequency.frequencyInterval = $SignInFrequencyInterval
             }
             if ($PersistentBrowserIsEnabled)
             {
@@ -1669,6 +1698,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $SignInFrequencyIsEnabled,
+
+        [Parameter()]
+        [ValidateSet('timeBased', 'everyTime', 'unknownFutureValue')]
+        [System.String]
+        $SignInFrequencyInterval,
 
         [Parameter()]
         [ValidateSet('Always', 'Never', '')]
