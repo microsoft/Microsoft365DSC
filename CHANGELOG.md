@@ -2,10 +2,39 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicyAuthenticator
+  * Fixes an issue with the Get method when an assigned group
+    was deleted.
+* AADConditionalAccessPolicy
+  * Added support for the SigninFrequencyInterval parameter.
+* EXODistributionGroup
+  * Changes the export logic to use PrimarySMTPAddress if provided.
+* TeamsUserPolicyAssignment
+  * Initial release.
+  FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
+
+# 1.23.1011.1
+
+* AADRoleEligibilityScheduleRequest
+  * Added support for groups assignment.
+    FIXES [#3744](https://github.com/microsoft/Microsoft365DSC/issues/3744)
+* EXOCalendarProcessing
+  * Added support for retrieved groups as calendar delegates.
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
 * TeamsTeam
-  * Check if Teams owners are null Issue #3759
+  * Check if Teams owners are null
+* TeamsUpdateManagementPolicy
+  * Add support for the new acceptable value for UseNewTeamsClient
+    (NewTeamsAsDefault).
+* MISC
+  * M365DSCReport: Also define property dataType, if present, as being primary
+     key on CIM instances.
+* TeamsUpgradeConfiguration
+  * Fixes an issue where the SfBMeetingJoinUx property wasn't properly updated.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.4.0.
+  * Updated Microsoft.Graph dependencies to version 2.7.0.
 
 # 1.23.1004.1
 

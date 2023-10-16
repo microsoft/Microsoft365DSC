@@ -39,7 +39,7 @@ function Get-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled', 'NewTeamsAsDefault')]
         [System.String]
         $UseNewTeamsClient,
 
@@ -169,7 +169,7 @@ function Set-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled', 'NewTeamsAsDefault')]
         [System.String]
         $UseNewTeamsClient,
 
@@ -286,7 +286,7 @@ function Test-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled')]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled', 'NewTeamsAsDefault')]
         [System.String]
         $UseNewTeamsClient,
 

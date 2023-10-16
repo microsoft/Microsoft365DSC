@@ -260,8 +260,8 @@ function Get-TargetResource
         {
             foreach ($user in $calendarProc.ResourceDelegates)
             {
-                $userInfo = Get-User -Identity $user
-                $ResourceDelegatesValue += $userInfo.UserPrincipalName
+                $userInfo = Get-Recipient -Identity $user
+                $ResourceDelegatesValue += $userInfo.PrimarySmtpAddress
             }
         }
 
