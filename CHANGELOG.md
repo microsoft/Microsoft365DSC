@@ -9,6 +9,9 @@
   * Added support for the SigninFrequencyInterval parameter.
 * EXODistributionGroup
   * Changes the export logic to use PrimarySMTPAddress if provided.
+* TeamsUserPolicyAssignment
+  * Initial release.
+  FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
 
 # 1.23.1011.1
 
