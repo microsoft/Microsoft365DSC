@@ -60037,7 +60037,7 @@ function Remove-MgDeviceManagementRoleDefinition
         $Break
     )
 }
-function Update-MgDeviceManagementRoleAssignment
+function Update-MgBetaDeviceManagementRoleAssignment
 {
     [CmdletBinding()]
     param(
