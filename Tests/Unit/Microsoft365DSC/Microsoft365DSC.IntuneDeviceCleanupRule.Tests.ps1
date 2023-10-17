@@ -41,12 +41,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name 'When the policy already exists and is NOT in the Desired State' -Fixture {
+        Context -Name 'When the policy is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Enabled                                = $true
                     DeviceInactivityBeforeRetirementInDays = 30
                     Ensure                                 = 'Present'
+                    IsSingleInstance                       = 'Yes'
                     Credential                             = $Credential
                 }
 
@@ -71,12 +72,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
+        Context -Name 'When the policy IS in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Enabled                                = $true
                     DeviceInactivityBeforeRetirementInDays = 30
                     Ensure                                 = 'Present'
+                    IsSingleInstance                       = 'Yes'
                     Credential                             = $Credential
                 }
 

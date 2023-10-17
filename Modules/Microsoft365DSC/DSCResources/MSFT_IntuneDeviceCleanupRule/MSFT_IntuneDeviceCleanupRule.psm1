@@ -5,6 +5,11 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
+
+        [Parameter(Mandatory = $true)]
         [System.Boolean]
         $Enabled,
 
@@ -69,11 +74,12 @@ function Get-TargetResource
 
     try
     {
-        $url = "https://graph.microsoft.com/beta/deviceManagement/managedDeviceCleanupSettings"
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/managedDeviceCleanupSettings"
         $cleanupRule = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
 
         $return = @{
             Enabled                                = $cleanupRule.deviceInactivityBeforeRetirementInDays -gt 0
+            IsSingleInstance                       = 'Yes'
             Ensure                                 = 'Present'
             Credential                             = $Credential
             ApplicationId                          = $ApplicationId
@@ -107,6 +113,11 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
+
         [Parameter(Mandatory = $true)]
         [System.Boolean]
         $Enabled,
@@ -168,7 +179,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $url = "https://graph.microsoft.com/beta/deviceManagement/managedDeviceCleanupSettings"
+    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/managedDeviceCleanupSettings"
     $body = @{
         DeviceInactivityBeforeRetirementInDays = "$(if ($Enabled) { $DeviceInactivityBeforeRetirementInDays } else { 0 })"
     }
@@ -181,6 +192,11 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
+
         [Parameter(Mandatory = $true)]
         [System.Boolean]
         $Enabled,
@@ -310,7 +326,7 @@ function Export-TargetResource
 
     try
     {
-        $url = "https://graph.microsoft.com/beta/deviceManagement/managedDeviceCleanupSettings"
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/deviceManagement/managedDeviceCleanupSettings"
         [array]$cleanupRules = Invoke-MgGraphRequest -Method GET -Uri $url -ErrorAction Stop
         $i = 1
         $dscContent = ''
@@ -329,6 +345,7 @@ function Export-TargetResource
             $params = @{
                 Enabled                                = $cleanupRule.deviceInactivityBeforeRetirementInDays -gt 0
                 Ensure                                 = 'Present'
+                IsSingleInstance                       = 'Yes'
                 Credential                             = $Credential
                 ApplicationId                          = $ApplicationId
                 ApplicationSecret                      = $ApplicationSecret
