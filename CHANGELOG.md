@@ -11,7 +11,7 @@
   * Changes the export logic to use PrimarySMTPAddress if provided.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Added "-All" parameter to retrieve all settings from a template.
-    FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
+  FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
 * TeamsGroupPolicyAssignment
   * Fixes the export of CsGroup, when the display name of a group is included in another display name.
   FIXES [#3736](https://github.com/microsoft/Microsoft365DSC/issues/3736)
