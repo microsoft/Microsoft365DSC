@@ -24,6 +24,12 @@ class MSFT_AADAuthenticationMethodPolicyIncludeTarget
     [Write, Description("The kind of entity targeted. Possible values are: user, group."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
 };
 [ClassVersion("1.0.0")]
+class MSFT_MicrosoftGraphExcludeTarget
+{
+    [Write, Description("The object identifier of an Azure AD user or group.")] String Id;
+    [Write, Description("The type of the authentication method target. Possible values are: user, group, unknownFutureValue."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
+};
+[ClassVersion("1.0.0")]
 class MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget
 {
     [Write, Description("The object identifier of an Azure AD user or group.")] String Id;
