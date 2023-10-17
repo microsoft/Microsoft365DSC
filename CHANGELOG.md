@@ -25,6 +25,8 @@
   * Added support for retrieved groups as calendar delegates.
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
+* IntuneDeviceConfigurationPolicyWindows10
+  * Support setting assignment groups by display name
 * TeamsUpdateManagementPolicy
   * Add support for the new acceptable value for UseNewTeamsClient
     (NewTeamsAsDefault).

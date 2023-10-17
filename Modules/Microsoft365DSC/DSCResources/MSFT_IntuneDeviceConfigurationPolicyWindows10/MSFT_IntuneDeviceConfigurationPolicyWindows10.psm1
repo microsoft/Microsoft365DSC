@@ -1980,14 +1980,29 @@ function Get-TargetResource
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
+            $DataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+            $GroupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            $GroupDisplayName = $null
+
+            if ($DataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
+                $DataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget") {
+                $Group = Get-MgGroup -GroupId $GroupId -ErrorAction SilentlyContinue
+                if ($Group.Count -eq 1)
+                {
+                    $GroupDisplayName = $Group.DisplayName
+                    $GroupId = $null
+                }
+            }
+
             $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                dataType                                   = $DataType
                 deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
                     {
                         $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
                     })
                 deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
+                groupId                                    = $GroupId
+                groupDisplayName                           = $GroupDisplayName
             }
             $assignmentResult += $assignmentValue
         }
@@ -3325,7 +3340,66 @@ function Set-TargetResource
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            if ($Assignment.dataType -eq "#microsoft.graph.groupAssignmentTarget" -or `
+                $Assignment.dataType -eq "#microsoft.graph.exclusionGroupAssignmentTarget")
+            {
+                if (![string]::IsNullOrEmpty($Assignment.groupId))
+                {
+                    $Group = Get-MgGroup -GroupId $Assignment.groupId -ErrorAction SilentlyContinue
+                    $GroupId = $Assignment.groupId
+                }
+                else
+                {
+                    $Group = $null
+                    $GroupId = "null"
+                }
+
+                if ($Group.Count -eq 0)
+                {
+                    $Message = "Could not find assignment group with id {0}, trying with display name" -f $GroupId
+                    Write-Verbose -Message $Message
+
+                    if (![string]::IsNullOrEmpty($Assignment.groupDisplayName))
+                    {
+                        $Message = "Checking for the assignment group '{0}'" -f $Assignment.groupDisplayName
+                        Write-Verbose -Message $Message
+
+                        $Filter = "displayName eq '{0}'" -f $Assignment.groupDisplayName
+                        $Group = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
+                        if ($Group.Count -eq 1)
+                        {
+                            $Message = "Found assignment group '{0}' with id '{1}'" -f $Group.DisplayName, $Group.Id
+                            Write-Verbose -Message $Message
+
+                            $Assignment.groupId = $Group.Id
+                        }
+                        else
+                        {
+                            if ([string]::IsNullOrEmpty($Assignment.groupId))
+                            {
+                                $Message = "Could not find assignment group, skipping"
+                                continue
+                            }
+
+                            $Message = "Could not find assignment group '{0}', instead use group with id '{1}'" -f $Assignment.groupDisplayName, $Assignment.groupId
+                            Write-Verbose -Message $Message
+                        }
+                    }
+                    else
+                    {
+                        $Message = "Could not find assignment group, skipping"
+                        Write-Verbose -Message $Message
+                        continue
+                    }
+                }
+            }
+
+            $assignmentHash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            if (![string]::IsNullOrEmpty($Assignment.groupDisplayName))
+            {
+                $assignmentHash.Remove("groupDisplayName") | Out-Null
+            }
+            $assignmentsHash += $assignmentHash
         }
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.id `
