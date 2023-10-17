@@ -365,15 +365,25 @@ function Export-TargetResource
         $totalCount = $instances.Length
         foreach ($item in $instances)
         {
-            $Group = Find-CsGroup -SearchQuery $item.GroupId
+            [array]$Group = Find-CsGroup -SearchQuery $item.GroupId -ExactMatchOnly $true
             if ($null -eq $totalCount)
             {
                 $totalCount = 1
             }
-            Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group.DisplayName)}" -NoNewline
+            if ($totalCount -Eq 0)
+            {
+                $Message = "GPA The CSsGroup with ID {$($item.GroupId)} could not be found"
+                New-M365DSCLogEntry -Message $Message `
+                    -Source $MyInvocation.MyCommand.ModuleName
+                Write-Error $Message
+                $groupDisplayName = ""
+            } else {
+                $groupDisplayName = $Group[0].DisplayName
+            }
+            Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group[0].DisplayName)}" -NoNewline
             $results = @{
-                GroupDisplayName      = $Group.DisplayName
-                GroupId               = $Group.Id
+                GroupDisplayName      = $groupDisplayName
+                GroupId               = $item.GroupId
                 PolicyType            = $item.PolicyType
                 PolicyName            = $item.PolicyName
                 Priority              = $item.Priority
