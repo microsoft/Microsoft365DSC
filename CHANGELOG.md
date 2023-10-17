@@ -15,6 +15,8 @@
 * TeamsUserPolicyAssignment
   * Initial release.
   FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
+* MISC
+  * Fixes fancy quotes in complex objects for extraction.
 
 # 1.23.1011.1
 

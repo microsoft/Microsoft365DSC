@@ -447,6 +447,14 @@ function Get-M365DSCDRGComplexTypeToString
     {
         $currentProperty = $null
     }
+
+    if ($null -ne $currentProperty)
+    {
+        $fancySingleQuotes = "[\u2019\u2018]"
+        $fancyDoubleQuotes = "[\u201C\u201D]"
+        $currentProperty = [regex]::Replace($currentProperty, $fancySingleQuotes, "''")
+        $currentProperty = [regex]::Replace($currentProperty, $fancyDoubleQuotes, '"')
+    }
     return $currentProperty
 }
 
