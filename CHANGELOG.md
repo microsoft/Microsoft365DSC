@@ -20,6 +20,8 @@
   FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
 * MISC
   * Fixes fancy quotes in complex objects for extraction.
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 5.7.0.
 
 # 1.23.1011.1
 
