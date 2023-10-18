@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1018.1
 
 * AADAuthenticationMethodPolicyAuthenticator
   * Fixes an issue with the Get method when an assigned group
@@ -13,15 +13,14 @@
   * Added "-All" parameter to retrieve all settings from a template.
   FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
 * TeamsGroupPolicyAssignment
-  * Fixes the export of CsGroup, when the display name of a group is included in another display name.
+  * Fixes the export of CsGroup, when the display name of a group is included in
+    another display name.
   FIXES [#3736](https://github.com/microsoft/Microsoft365DSC/issues/3736)
 * TeamsUserPolicyAssignment
   * Initial release.
   FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
 * MISC
   * Fixes fancy quotes in complex objects for extraction.
-* DEPENDENCIES
-  * Updated MicrosoftTeams to version 5.7.0.
 
 # 1.23.1011.1
 
