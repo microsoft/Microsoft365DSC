@@ -1795,7 +1795,7 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
 
     $settings = @()
 
-    $templateSettings = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId
+    $templateSettings = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $templateReferenceId -All
 
     #write-verbose -Message ( $DSCParams|out-string)
 
