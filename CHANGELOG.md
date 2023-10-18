@@ -11,10 +11,10 @@
   * Changes the export logic to use PrimarySMTPAddress if provided.
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Added "-All" parameter to retrieve all settings from a template.
-    FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
+  FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
 * TeamsGroupPolicyAssignment
   * Fixes the export of CsGroup, when the display name of a group is included in another display name.
-  Fix [#3736](https://github.com/microsoft/Microsoft365DSC/issues/3736)
+  FIXES [#3736](https://github.com/microsoft/Microsoft365DSC/issues/3736)
 * TeamsUserPolicyAssignment
   * Initial release.
   FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
@@ -53,7 +53,7 @@
     were not managed correctly.
     FIXES [#3639](https://github.com/microsoft/Microsoft365DSC/issues/3639)
 * AADEntitlementManagementConnectedOrganization
-  * Fixed [[#3738](https://github.com/microsoft/Microsoft365DSC/issues/3738)]
+  * FIXES [[#3738](https://github.com/microsoft/Microsoft365DSC/issues/3738)]
 * EXOCalendarProcessing
   * Initial release.
 * EXODistributionGroup
