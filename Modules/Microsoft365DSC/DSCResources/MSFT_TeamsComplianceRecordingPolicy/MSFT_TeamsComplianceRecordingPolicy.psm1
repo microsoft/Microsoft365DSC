@@ -78,7 +78,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
             Identity                                            = $instance.Identity
-            ComplianceRecordingApplications                     = $instance.ComplianceRecordingApplications
+            ComplianceRecordingApplications                     = [Array]$instance.ComplianceRecordingApplications.Id
             Description                                         = $instance.Description
             DisableComplianceRecordingAudioNotificationForCalls = $instance.DisableComplianceRecordingAudioNotificationForCalls
             Enabled                                             = $instance.Enabled
