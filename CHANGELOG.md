@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADConditionalAccessPolicy
+  * Adds support for Authentication Context.
+    FIXES [#3813](https://github.com/microsoft/Microsoft365DSC/issues/3813)
+
 # 1.23.1018.1
 
 * AADAuthenticationMethodPolicyAuthenticator
