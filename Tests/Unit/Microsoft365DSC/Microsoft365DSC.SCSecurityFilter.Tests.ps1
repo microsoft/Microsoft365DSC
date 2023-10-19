@@ -263,7 +263,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
-                Should -Invoke -CommandName Get-ComplianceSecurityFilter -Exactly 2
+                Should -Invoke -CommandName Get-ComplianceSecurityFilter -Exactly 1
             }
         }
     }

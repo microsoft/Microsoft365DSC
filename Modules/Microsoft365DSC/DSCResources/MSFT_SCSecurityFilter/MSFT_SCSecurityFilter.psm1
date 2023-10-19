@@ -121,21 +121,7 @@ function Get-TargetResource
         else
         {
             Write-Verbose "Found existing Security Filter $($FilterName)"
-            $result = @{
-                FilterName                        = $secFilter.FilterName
-                Action                      = $secFilter.Action
-                Users                       = $secFilter.Users
-                Description                 = $secFilter.Description
-                Filters                     = $secFilter.Filters
-                Region                      = $secFilter.Region
-                Credential                  = $Credential
-                ApplicationId               = $ApplicationId
-                TenantId                    = $TenantId
-                CertificateThumbprint       = $CertificateThumbprint
-                CertificatePath             = $CertificatePath
-                CertificatePassword         = $CertificatePassword
-                Ensure                      = 'Present'
-            }
+            $result = MapSecurityFilter $secFilter $Credential $ApplicationId $TenantId $CertificateThumbprint $CertificatePath $CertificatePassword
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -152,6 +138,56 @@ function Get-TargetResource
         return $nullReturn
     }
 }
+
+function MapSecurityFilter
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [System.String]
+        $CertificatePath,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $CertificatePassword
+    )
+    $result = @{
+        FilterName                  = $Filter.FilterName
+        Action                      = $Filter.Action
+        Users                       = $Filter.Users
+        Description                 = $Filter.Description
+        Filters                     = $Filter.Filters
+        Region                      = $Filter.Region
+        Credential                  = $Credential
+        ApplicationId               = $ApplicationId
+        TenantId                    = $TenantId
+        CertificateThumbprint       = $CertificateThumbprint
+        CertificatePath             = $CertificatePath
+        CertificatePassword         = $CertificatePassword
+        Ensure                      = 'Present'
+    }
+    return $result
+}
+
+
 
 function Set-TargetResource
 {
@@ -495,7 +531,11 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($filters.Count)] $($filter.FilterName)" -NoNewline
 
-            $Results = Get-TargetResource @PSBoundParameters -FilterName $filter.FilterName
+            # $GetParams = ([Hashtable]$PSBoundParameters).Clone()
+            # $GetParams.Add("FilterName", $filter.FilterName)
+            # $Results = Get-TargetResource @GetParams
+            $Results = MapSecurityFilter -Filter $filter -Credential $Credential -ApplicationId $ApplicationId `
+                -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
