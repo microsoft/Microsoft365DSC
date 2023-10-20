@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAttributeSet
+  * Initial Release.
 * AADAuthenticationContext
   * Initial Release.
 * AADConditionalAccessPolicy
