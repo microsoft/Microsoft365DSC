@@ -8,6 +8,9 @@
 * TeamsComplianceRecordingPolicy
   * Fixes an issue where the Compliance Application ID wasn't properly retrieved.
     FIXES [#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.8.0.
+  * Updated MicrosoftTeams dependency to version 5.7.1.
 
 # 1.23.1018.1
 
