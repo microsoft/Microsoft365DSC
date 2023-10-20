@@ -185,7 +185,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the Attribute Set with Id {$($currentInstance.Id)}"
-        Remove-MgBetaDirectoryAttributeSet -AuthenticationContextClassReferenceId $Id | Out-Null
+        Remove-MgBetaDirectoryAttributeSet -AttributeSetId $Id | Out-Null
     }
 }
 
