@@ -10,7 +10,7 @@ function Get-TargetResource
         [System.String]
         $Id,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -124,7 +124,7 @@ function Set-TargetResource
         [System.String]
         $Id,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -179,41 +179,24 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Authentication Method Policy instance cannot be created"
+        Write-Verbose -Message "Creating new Authentication Context with Id {$Id}"
+        New-MgBetaIdentityConditionalAccessAuthenticationContextClassReference @BoundParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Authentication Method Policy with Id {$($currentInstance.Id)}"
-
-        $UpdateParameters = ([Hashtable]$BoundParameters).clone()
-        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
-        $UpdateParameters.Remove('Id') | Out-Null
-
-        $keys = (([Hashtable]$UpdateParameters).clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-        }
-        #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.AuthenticationMethodsPolicy")
-        Update-MgBetaPolicyAuthenticationMethodPolicy -BodyParameter $UpdateParameters
-        #endregion
+        Write-Verbose -Message "Updating the Authentication Context with Id {$($currentInstance.Id)}"
+        $BoundParameters.Add('AuthenticationContextClassReferenceId', $Id)
+        $BoundParameters.Remove('Id') | Out-Null
+        Update-MgBetaIdentityConditionalAccessAuthenticationContextClassReference @BoundParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Azure AD Authentication Method Policy with Id {$($currentInstance.Id)}"
-        #region resource generator code
-        Remove-MgBetaPolicyAuthenticationMethodPolicy
-        #endregion
+        Write-Verbose -Message "Removing the Authentication Context with Id {$($currentInstance.Id)}"
+        Remove-MgBetaIdentityConditionalAccessAuthenticationContextClassReference -AuthenticationContextClassReferenceId $Id | Out-Null
     }
 }
 
