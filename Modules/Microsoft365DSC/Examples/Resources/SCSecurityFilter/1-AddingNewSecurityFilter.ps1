@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        SCSecurityLabel 'ConfigureSecurityLabel'
+        SCSecurityFilter 'ConfigureSecurityLabel'
         {
             FilterName      = "My Filter Name"
             Action          = "All"
