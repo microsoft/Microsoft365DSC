@@ -17,11 +17,9 @@
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
 
-# AADAuthenticationMethodPolicy
-
 ## Description
 
-Azure AD Authentication Method Policy
+Represents a Microsoft Entra authentication context class reference. Authentication context class references are custom values that define a Conditional Access authentication requirement
 
 ## Permissions
 
@@ -33,21 +31,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.ReadWrite.AuthenticationMethod
+    - None
 
 - **Update**
 
-    - Policy.ReadWrite.AuthenticationMethod
+    - None
 
 #### Application permissions
 
 - **Read**
 
-    - Policy.ReadWrite.AuthenticationMethod
+    - Policy.Read.ConditionalAccess
 
 - **Update**
 
-    - Policy.ReadWrite.AuthenticationMethod
+    - Policy.ReadWrite.ConditionalAccess
 
 ## Examples
 
