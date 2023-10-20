@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAuthenticationContext
+  * Initial Release.
 * AADConditionalAccessPolicy
   * Adds support for Authentication Context.
     FIXES [#3813](https://github.com/microsoft/Microsoft365DSC/issues/3813)
