@@ -350,7 +350,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Id                = '12345-12345-12345-12345-54321'
                             MailNickName      = 'DynGroup'
                             Description       = '<...>'
-                            GroupTypes        = @()'DynamicMembership')
+                            GroupTypes        = @('DynamicMembership')
                         }
                     )
                 }
