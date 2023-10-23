@@ -16,6 +16,12 @@
                     },
                     {
                         "name": "User.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "GroupMember.Read.All"
                     }
                 ],
                 "update": [
@@ -32,8 +38,21 @@
                         "name": "User.Read.All"
                     },
                     {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "GroupMember.Read.All"
+                    },
+                    {
                         "name": "User.ReadWrite.All"
+                    },
+                    {
+                        "name": "Group.ReadWrite.All"
+                    },
+                    {
+                        "name": "GroupMember.ReadWrite.All"
                     }
+
                 ]
             },
             "application": {

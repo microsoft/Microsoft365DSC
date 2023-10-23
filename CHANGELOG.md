@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADUser
+  * Add support for property MemberOf
+    FIXES [#3820](https://github.com/microsoft/Microsoft365DSC/issues/3820)
 * AADAttributeSet
   * Initial Release.
 * AADAuthenticationContext
