@@ -20,12 +20,12 @@
             "application": {
                 "read": [
                     {
-                        "name": "CustomSecAttributeDefinition.Read.All"
+                        "name": "IdentityProvider.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "CustomSecAttributeDefinition.ReadWrite.All"
+                        "name": "IdentityProvider.ReadWrite.All"
                     }
                 ]
             }
