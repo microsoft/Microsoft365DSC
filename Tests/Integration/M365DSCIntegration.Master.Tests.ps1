@@ -684,6 +684,18 @@ Configuration Master
                 Credential = $GlobalAdmin
 
             }
+
+            SCSecurityFilter SCSecFilter
+            {
+                Action                = "All"
+                Description           = "My Desc"
+                FilterName            = "MYFILTER"
+                Filters               = @("Mailbox_CountryCode -eq '124'")
+                Region                = "FRA"
+                Users                 = @("John.Smith@$Domain")
+                Ensure                = "Present"
+                Credential            = $GlobalAdmin
+            }
             #endregion
 
             #region SPO

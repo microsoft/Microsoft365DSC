@@ -61244,6 +61244,28 @@ function Get-ComplianceTag
         $Identity
     )
 }
+function Get-ComplianceSecurityFilter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $FilterName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Search', 'All')]
+        [System.String]
+        $Action = 'All',
+
+        [Parameter()]
+        [System.String[]]
+        $Users
+    )
+}
 function Get-DeviceConditionalAccessPolicy
 {
     [CmdletBinding()]
@@ -62432,6 +62454,52 @@ function New-ComplianceTag
         [Parameter()]
         [System.String]
         $MultiStageReviewProperty
+    )
+}
+function New-ComplianceSecurityFilter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $FilterName,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Search', 'All')]
+        [System.String]
+        $Action = 'All',
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Filters,
+
+        [Parameter()]
+        [ValidateSet(
+            'APC', # Asia-Pacific
+            'AUS', #Australia
+            'CAN', # Canada
+            'EUR', #Europe, Middle East, Africa
+            'FRA', #France
+            'GBR', # United Kingdom
+            'IND', # India
+            'JPN', # Japan
+            'LAM', # Latin America
+            'NAM' # North America
+        )]
+        [System.String]
+        $Region
     )
 }
 function New-DeviceConditionalAccessPolicy
@@ -64364,6 +64432,19 @@ function Remove-ComplianceTag
         $ForceDeletion
     )
 }
+function Remove-ComplianceSecurityFilter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $FilterName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
 function Remove-DeviceConditionalAccessPolicy
 {
     [CmdletBinding()]
@@ -65381,6 +65462,52 @@ function Set-ComplianceTag
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force
+    )
+}
+function Set-ComplianceSecurityFilter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $FilterName,
+
+        [Parameter()]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Search', 'All')]
+        [System.String]
+        $Action = 'All',
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Filters,
+
+        [Parameter()]
+        [ValidateSet(
+            'APC', # Asia-Pacific
+            'AUS', #Australia
+            'CAN', # Canada
+            'EUR', #Europe, Middle East, Africa
+            'FRA', #France
+            'GBR', # United Kingdom
+            'IND', # India
+            'JPN', # Japan
+            'LAM', # Latin America
+            'NAM' # North America
+        )]
+        [System.String]
+        $Region
     )
 }
 function Set-DeviceConditionalAccessPolicy
