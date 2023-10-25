@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Fixes an issue where reviewers were not properly exported
+* M365DSCDRGUTIL
+  * Fixes an issue with Get-M365DSCDRGComplexTypeToHashtable where Beta cmdlet were not recognized for recursive calls
+  FIXES [#3448](https://github.com/microsoft/Microsoft365DSC/issues/3448)
 * AADAttributeSet
   * Initial Release.
 * AADAuthenticationContext
