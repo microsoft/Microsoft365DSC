@@ -1,0 +1,34 @@
+{
+    "resourceName": "AADAttributeSet",
+    "description": "Represents a group of related custom security attribute definitions.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Authentication Policy Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                ],
+                "update": [
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "IdentityProvider.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "IdentityProvider.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}

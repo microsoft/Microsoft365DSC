@@ -6,32 +6,21 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String[]]
-        $ComplianceRecordingApplications,
+        $Id,
 
         [Parameter()]
         [System.String]
         $Description,
 
         [Parameter()]
-        [System.Boolean]
-        $DisableComplianceRecordingAudioNotificationForCalls,
+        [ValidateRange(1,500)]
+        [System.Int32]
+        $MaxAttributesPerSet = $null,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $WarnUserOnRemoval,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure,
+        [ValidateSet('Absent', 'Present')]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -46,49 +35,64 @@ function Get-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
-    New-M365DSCConnection -Workload 'MicrosoftTeams' `
-        -InboundParameters $PSBoundParameters | Out-Null
-
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
-
-    #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
-    $CommandName = $MyInvocation.MyCommand
-    $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
-        -CommandName $CommandName `
-        -Parameters $PSBoundParameters
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
-
-    $nullResult = $PSBoundParameters
-    $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-CsTeamsComplianceRecordingPolicy -Identity $Identity -ErrorAction SilentlyContinue
-        if ($null -eq $instance)
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
+
+        #Ensure the proper dependencies are installed in the current environment.
+        Confirm-M365DSCDependencies
+
+        #region Telemetry
+        $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+        $CommandName = $MyInvocation.MyCommand
+        $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
+            -CommandName $CommandName `
+            -Parameters $PSBoundParameters
+        Add-M365DSCTelemetryEvent -Data $data
+        #endregion
+
+        $nullResult = $PSBoundParameters
+        $nullResult.Ensure = 'Absent'
+
+        $getValue = $null
+
+        $getValue = Get-MgBetaDirectoryAttributeSet `
+                        -AttributeSetId $Id `
+                        -ErrorAction SilentlyContinue
+
+        if ($null -eq $getValue)
         {
+            Write-Verbose -Message "Could not find Attribute Set with Id {$Id}"
             return $nullResult
         }
+        Write-Verbose -Message "Attribute Set with Id {$Id} was found."
 
-        Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
-            Identity                                            = $instance.Identity
-            ComplianceRecordingApplications                     = [Array]$instance.ComplianceRecordingApplications.Id
-            Description                                         = $instance.Description
-            DisableComplianceRecordingAudioNotificationForCalls = $instance.DisableComplianceRecordingAudioNotificationForCalls
-            Enabled                                             = $instance.Enabled
-            WarnUserOnRemoval                                   = $instance.WarnUserOnRemoval
-            Ensure                                              = 'Present'
-            Credential                                          = $Credential
-            ApplicationId                                       = $ApplicationId
-            TenantId                                            = $TenantId
-            CertificateThumbprint                               = $CertificateThumbprint
+            Id                    = $getValue.Id
+            Description           = $getValue.Description
+            MaxAttributesPerSet   = $getValue.MaxAttributesPerSet
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
+
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -110,32 +114,21 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String[]]
-        $ComplianceRecordingApplications,
+        $Id,
 
         [Parameter()]
         [System.String]
         $Description,
 
         [Parameter()]
-        [System.Boolean]
-        $DisableComplianceRecordingAudioNotificationForCalls,
+        [ValidateRange(1,500)]
+        [System.Int32]
+        $MaxAttributesPerSet = $null,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $WarnUserOnRemoval,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure,
+        [ValidateSet('Absent', 'Present')]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -150,12 +143,17 @@ function Set-TargetResource
         $TenantId,
 
         [Parameter()]
-        [System.String]
-        $CertificateThumbprint
-    )
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
 
-    New-M365DSCConnection -Workload 'MicrosoftTeams' `
-        -InboundParameters $PSBoundParameters | Out-Null
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
+    )
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -170,58 +168,24 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $CreateParameters = ([Hashtable]$PSBoundParameters).Clone()
-
-        $CreateParameters.Remove('Verbose') | Out-Null
-
-        $keys = $CreateParameters.Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-                $CreateParameters.Remove($key) | Out-Null
-                $CreateParameters.Add($keyName, $keyValue)
-            }
-        }
-        Write-Verbose -Message "Creating {$Identity} with Parameters:`r`n$(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
-        New-CsTeamsComplianceRecordingPolicy @CreateParameters | Out-Null
+        Write-Verbose -Message "Creating new Attribute Set with Id {$Id}"
+        New-MgBetaDirectoryAttributeSet @BoundParameters | Out-Null
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$Identity}"
-
-        $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
-        $UpdateParameters.Remove('Verbose') | Out-Null
-
-        $keys = $UpdateParameters.Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-                $UpdateParameters.Remove($key) | Out-Null
-                $UpdateParameters.Add($keyName, $keyValue)
-            }
-        }
-
-        Set-CsTeamsComplianceRecordingPolicy @UpdateParameters | Out-Null
+        Write-Verbose -Message "Updating the Attribute Set with Id {$($currentInstance.Id)}"
+        $BoundParameters.Add('AttributeSetId', $Id)
+        $BoundParameters.Remove('Id') | Out-Null
+        Update-MgBetaDirectoryAttributeSet @BoundParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing {$Identity}"
-        Remove-CsTeamsComplianceRecordingPolicy -Identity $currentInstance.Identity
+        Write-Verbose -Message "Removing the Attribute Set with Id {$($currentInstance.Id)}"
+        Remove-MgBetaDirectoryAttributeSet -AttributeSetId $Id | Out-Null
     }
 }
 
@@ -233,32 +197,21 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String[]]
-        $ComplianceRecordingApplications,
+        $Id,
 
         [Parameter()]
         [System.String]
         $Description,
 
         [Parameter()]
-        [System.Boolean]
-        $DisableComplianceRecordingAudioNotificationForCalls,
+        [ValidateRange(1,500)]
+        [System.Int32]
+        $MaxAttributesPerSet = $null,
 
         [Parameter()]
-        [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $WarnUserOnRemoval,
-
-        [Parameter()]
-        [ValidateSet('Present', 'Absent')]
         [System.String]
-        $Ensure,
+        [ValidateSet('Absent', 'Present')]
+        $Ensure = 'Present',
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -273,8 +226,16 @@ function Test-TargetResource
         $TenantId,
 
         [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ApplicationSecret,
+
+        [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -289,31 +250,13 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$Identity}"
+    Write-Verbose -Message "Testing configuration of the Attribute Set with Id {$Id}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-    $ValuesToCheck.Remove('Identity') | Out-Null
-
-    if ($CurrentValues.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    #Convert any DateTime to String
-    foreach ($key in $ValuesToCheck.Keys)
-    {
-        if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].GetType().Name -eq 'DateTime'))
-        {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
-        }
-    }
-
     $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
@@ -355,7 +298,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -372,7 +315,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-CsTeamsComplianceRecordingPolicy -ErrorAction Stop
+        [array]$getValue = Get-MgBetaDirectoryAttributeSet -All -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -386,20 +329,18 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
-            $displayedKey = $config.Identity
-            if (-not [String]::IsNullOrEmpty($config.displayName))
-            {
-                $displayedKey = $config.displayName
-            }
+            $displayedKey = $config.Id
+
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Identity              = $config.Identity
+                Id                    = $config.Id
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-
+                Managedidentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
@@ -411,6 +352,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

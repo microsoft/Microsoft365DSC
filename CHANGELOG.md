@@ -1,5 +1,26 @@
 # Change log for Microsoft365DSC
 
+# 1.23.1025.1
+
+* AADApplication
+  * Changes to how permissions drifts are logged.
+    FIXES [#3830](https://github.com/microsoft/Microsoft365DSC/issues/3830)
+* AADAttributeSet
+  * Initial Release.
+* AADAuthenticationContext
+  * Initial Release.
+* AADConditionalAccessPolicy
+  * Adds support for Authentication Context.
+    FIXES [#3813](https://github.com/microsoft/Microsoft365DSC/issues/3813)
+* AADSocialIdentityProvider
+  * Initial release.
+* TeamsComplianceRecordingPolicy
+  * Fixes an issue where the Compliance Application ID wasn't properly retrieved.
+    FIXES [#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.8.0.
+  * Updated MicrosoftTeams dependency to version 5.7.1.
+
 # 1.23.1018.1
 
 * AADAuthenticationMethodPolicyAuthenticator
@@ -21,6 +42,9 @@
   FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
 * MISC
   * Fixes fancy quotes in complex objects for extraction.
+* SCSecurityFilter
+  * Initial release
+  FIXES: [#3796](https://github.com/microsoft/Microsoft365DSC/issues/3796)
 
 # 1.23.1011.1
 

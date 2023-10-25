@@ -1,0 +1,34 @@
+{
+    "resourceName": "AADAuthenticationContextClassReference",
+    "description": "Represents a Microsoft Entra authentication context class reference. Authentication context class references are custom values that define a Conditional Access authentication requirement.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Authentication Policy Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                ],
+                "update": [
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.ConditionalAccess"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.ReadWrite.ConditionalAccess"
+                    }
+                ]
+            }
+        }
+    }
+}
