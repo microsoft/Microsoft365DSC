@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Changes to how permissions drifts are logged.
+    FIXES [#3830](https://github.com/microsoft/Microsoft365DSC/issues/3830)
 * AADAttributeSet
   * Initial Release.
 * AADAuthenticationContext
