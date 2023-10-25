@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1025.1
 
 * AADApplication
   * Changes to how permissions drifts are logged.
