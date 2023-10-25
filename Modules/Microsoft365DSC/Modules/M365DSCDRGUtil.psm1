@@ -134,21 +134,21 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return , [hashtable[]]$results
     }
 
+
     if ($ComplexObject.getType().fullname -like '*Dictionary*')
     {
         $results = @{}
 
         $ComplexObject = [hashtable]::new($ComplexObject)
         $keys = $ComplexObject.Keys
+
         foreach ($key in $keys)
         {
             if ($null -ne $ComplexObject.$key)
             {
                 $keyName = $key
-
                 $keyType = $ComplexObject.$key.gettype().fullname
-
-                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like '*[[\]]')
+                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like 'Microsoft.Graph.Beta.PowerShell.Models.*' -or $keyType -like '*[[\]]')
                 {
                     $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
 
@@ -185,7 +185,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         if ($null -ne $ComplexObject.$keyName)
         {
             $keyType = $ComplexObject.$keyName.gettype().fullname
-            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*')
+            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.*PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
