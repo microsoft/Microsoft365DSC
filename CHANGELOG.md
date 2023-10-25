@@ -12,6 +12,8 @@
 * AADConditionalAccessPolicy
   * Adds support for Authentication Context.
     FIXES [#3813](https://github.com/microsoft/Microsoft365DSC/issues/3813)
+* AADSocialIdentityProvider
+  * Initial release.
 * TeamsComplianceRecordingPolicy
   * Fixes an issue where the Compliance Application ID wasn't properly retrieved.
     FIXES [#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)
@@ -40,6 +42,9 @@
   FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
 * MISC
   * Fixes fancy quotes in complex objects for extraction.
+* SCSecurityFilter
+  * Initial release
+  FIXES: [#3796](https://github.com/microsoft/Microsoft365DSC/issues/3796)
 
 # 1.23.1011.1
 

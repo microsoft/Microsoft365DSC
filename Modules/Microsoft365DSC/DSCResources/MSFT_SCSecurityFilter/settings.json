@@ -1,0 +1,16 @@
+﻿{
+    "resourceName": "SCSecurityFilter",
+    "description": "",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        }
+    }
+}

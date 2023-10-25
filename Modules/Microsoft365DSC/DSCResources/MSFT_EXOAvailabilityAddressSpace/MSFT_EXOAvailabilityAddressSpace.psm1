@@ -259,7 +259,7 @@ function Set-TargetResource
         {
             $AvailabilityAddressSpaceParams.Remove('Identity') | Out-Null
             $AvailabilityAddressSpaceParams.Remove('Credentials') | Out-Null
-            add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
+            Add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
         }
         catch
         {
