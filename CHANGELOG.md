@@ -12,6 +12,7 @@
 * M365DSCDRGUTIL
   * Fixes an issue with Get-M365DSCDRGComplexTypeToHashtable where Beta cmdlet were not recognized for recursive calls
   FIXES [#3448](https://github.com/microsoft/Microsoft365DSC/issues/3448)
+
 * AADApplication
   * Changes to how permissions drifts are logged.
     FIXES [#3830](https://github.com/microsoft/Microsoft365DSC/issues/3830)
