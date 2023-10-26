@@ -5,6 +5,12 @@
 * AADUser
   * Add support for property MemberOf
     FIXES [#3820](https://github.com/microsoft/Microsoft365DSC/issues/3820)
+
+# 1.23.1025.1
+
+* AADApplication
+  * Changes to how permissions drifts are logged.
+    FIXES [#3830](https://github.com/microsoft/Microsoft365DSC/issues/3830)
 * AADAttributeSet
   * Initial Release.
 * AADAuthenticationContext
