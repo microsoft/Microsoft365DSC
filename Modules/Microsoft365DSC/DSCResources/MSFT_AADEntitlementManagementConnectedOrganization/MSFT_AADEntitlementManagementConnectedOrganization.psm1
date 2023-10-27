@@ -147,7 +147,7 @@ function Get-TargetResource
 
                 if (-not [String]::IsNullOrEmpty($source.AdditionalProperties.tenantId))
                 {
-                    $formattedSource.Add('ExternalTenantId', $source.AdditionalProperties.tenantId)
+                    $formattedSource.Add('tenantId', $source.AdditionalProperties.tenantId)
                 }
 
                 if (-not [String]::IsNullOrEmpty($source.AdditionalProperties.cloudInstance))
@@ -313,7 +313,7 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
-        $TenantId = $CreateParameters.IdentitySources.ExternalTenantId
+        $TenantId = $CreateParameters.IdentitySources.tenantId
         $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$tenantid')"
         $DomainName = (Invoke-MgGraphRequest -Method 'GET' -Uri $url).defaultDomainName
         $newConnectedOrganization = New-MgBetaEntitlementManagementConnectedOrganization -Description $CreateParameters.Description -DisplayName $CreateParameters.DisplayName -State $CreateParameters.State -DomainName $DomainName

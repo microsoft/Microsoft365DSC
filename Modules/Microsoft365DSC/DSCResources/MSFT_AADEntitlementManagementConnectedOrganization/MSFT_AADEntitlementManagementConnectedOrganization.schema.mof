@@ -4,7 +4,7 @@ class MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource
 {
     [Write, Description("Type of the identity source."), ValueMap{"#microsoft.graph.azureActiveDirectoryTenant","#microsoft.graph.crossCloudAzureActiveDirectoryTenant","#microsoft.graph.domainIdentitySource","#microsoft.graph.externalDomainFederation"}, Values{"#microsoft.graph.azureActiveDirectoryTenant","#microsoft.graph.crossCloudAzureActiveDirectoryTenant","#microsoft.graph.domainIdentitySource","#microsoft.graph.externalDomainFederation"}] String odataType;
     [Write, Description("The name of the Azure Active Directory tenant.")] String DisplayName;
-    [Write, Description("The ID of the Azure Active Directory tenant.")] String ExternalTenantId;
+    [Write, Description("The ID of the Azure Active Directory tenant.")] String tenantId;
     [Write, Description("The ID of the cloud where the tenant is located, one of microsoftonline.com, microsoftonline.us or partner.microsoftonline.cn.")] String CloudInstance;
     [Write, Description("The domain name.")] String DomainName;
     [Write, Description("The issuerURI of the incoming federation.")] String IssuerUri;

@@ -72,7 +72,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id               = 'ConnectedOrganization_Id'
                     IdentitySources  = @(
                             (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
-                            ExternalTenantId = 'IdentitySource_TenantId'
+                            tenantId = 'IdentitySource_TenantId'
                             odataType        = '#microsoft.graph.azureActiveDirectoryTenant'
                             displayName      = 'IdentitySource_DisplayName'
                         } -ClientOnly)
@@ -130,7 +130,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id               = 'ConnectedOrganization_Id'
                     IdentitySources  = @(
                         (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
-                            ExternalTenantId = 'IdentitySource_TenantId'
+                            tenantId = 'IdentitySource_TenantId'
                             odataType        = '#microsoft.graph.azureActiveDirectoryTenant'
                             displayName      = 'IdentitySource_DisplayName'
                         } -ClientOnly)
@@ -197,7 +197,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id               = '12345678-1234-1234-1234-123456789012'
                     IdentitySources  = @(
                         (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
-                            ExternalTenantId = 'IdentitySource_TenantId'
+                            tenantId = 'IdentitySource_TenantId'
                             odataType        = '#microsoft.graph.azureActiveDirectoryTenant'
                             displayName      = 'IdentitySource_DisplayName'
                         } -ClientOnly)
@@ -254,7 +254,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id               = '12345678-1234-1234-1234-123456789012'
                     IdentitySources  = @(
                         (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
-                            ExternalTenantId = 'IdentitySource_TenantId'
+                            tenantId = 'IdentitySource_TenantId'
                             odataType        = '#microsoft.graph.azureActiveDirectoryTenant'
                             displayName      = 'IdentitySource_DisplayName'
                         } -ClientOnly)
