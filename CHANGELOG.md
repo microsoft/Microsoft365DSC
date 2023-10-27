@@ -7,6 +7,7 @@
     FIXES [#3820](https://github.com/microsoft/Microsoft365DSC/issues/3820)
 
 # 1.23.1025.1
+
 * AADEntitlementManagementAccessPackageAssignmentPolicy
   * Fixes an issue where reviewers were not properly exported
 * M365DSCDRGUTIL
