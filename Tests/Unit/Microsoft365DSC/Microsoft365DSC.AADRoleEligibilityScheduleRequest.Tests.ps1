@@ -25,6 +25,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
             $Script:exportedInstances = $null
+            $Script:ExportMode = $null
             Mock -CommandName Add-M365DSCTelemetryEvent -MockWith {
             }
 
@@ -159,8 +160,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestSchedule -Property @{
                             
-                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{
-                                
+                            expiration = New-CimInstance -ClassName MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration -Property @{                                
                                 type        = 'afterDateTime'
                             } -ClientOnly
                         } -ClientOnly
@@ -168,6 +168,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -MockWith {
+                    return @{
+                        Action               = "AdminAssign";
+                        Id                   = '12345-12345-12345-12345-12345'
+                        DirectoryScopeId     = "/";
+                        IsValidationOnly     = $False;
+                        PrincipalId          = "123456";
+                        RoleDefinitionId     = "12345";
+                        ScheduleInfo         = @{
+                            expiration                = @{
+                                    type        = 'afterDateTime'
+                                }
+                        };
+                    }
+                }
+                Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -MockWith {
                     return @{
                         Action               = "AdminAssign";
                         Id                   = '12345-12345-12345-12345-12345'

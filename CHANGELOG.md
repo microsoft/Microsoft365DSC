@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADRoleEligibilityScheduleRequest
+  * Fixes how the Get method retrieves existing instances for Groups.
+    FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
 * TeamsComplianceRecordingPolicy
   * Fix an issue where the Compliance Application ID wasn't properly retrieved.
   FIXES [#3848](https://github.com/microsoft/Microsoft365DSC/issues/3848)
