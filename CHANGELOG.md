@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsComplianceRecordingPolicy
+  * Fix an issue where the Compliance Application ID wasn't properly retrieved.
+  FIXES [#3848](https://github.com/microsoft/Microsoft365DSC/issues/3848)
+
 # 1.23.1025.1
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
