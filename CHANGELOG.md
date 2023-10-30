@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADRoleEligibilityScheduleRequest
+  * Fixes how the Get method retrieves existing instances for Groups.
+    FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
+
 # 1.23.1025.1
 
 * AADEntitlementManagementAccessPackageAssignmentPolicy
