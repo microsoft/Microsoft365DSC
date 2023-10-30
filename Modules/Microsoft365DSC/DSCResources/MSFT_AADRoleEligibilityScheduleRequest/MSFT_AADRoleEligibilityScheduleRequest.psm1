@@ -181,6 +181,11 @@
                 $request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
             }
         }
+        else
+        {
+            $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
+            $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)' and RoleDefinitionId eq '$RoleDefinitionId'"
+        }
         if ($null -eq $schedule)
         {
             return $nullResult
@@ -189,12 +194,12 @@
         Write-Verbose -Message "Found existing AADRolelLigibilityScheduleRequest"
         if ($PrincipalType -eq 'User')
         {
-            $PrincipalInstance = Get-MgUser -UserId $schedule.PrincipalId -ErrorAction SilentlyContinue
+            $PrincipalInstance = Get-MgUser -UserId $request.PrincipalId -ErrorAction SilentlyContinue
             $PrincipalTypeValue = 'User'
         }
         if ($null -eq $PrincipalInstance -or $PrincipalType -eq 'Group')
         {
-            $PrincipalInstance = Get-MGGroup -GroupId $schedule.PrincipalId -ErrorAction SilentlyContinue
+            $PrincipalInstance = Get-MGGroup -GroupId $request.PrincipalId -ErrorAction SilentlyContinue
             $PrincipalTypeValue = 'Group'
         }
 
@@ -202,7 +207,6 @@
         {
             return $nullResult
         }
-        $RoleDefinitionValue = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $schedule.RoleDefinitionId
 
         $ScheduleInfoValue = @{}
 
@@ -255,11 +259,11 @@
         }
 
         $PrincipalValue = $null
-        if ($PrincipalTypeValue -eq 'User')
+        if ($PrincipalType -eq 'User')
         {
             $PrincipalValue = $PrincipalInstance.UserPrincipalName
         }
-        elseif ($PrincipalTypeValue -eq 'Group')
+        if ($null -eq $PrincipalValue -or $PrincipalTypeValue -eq 'Group')
         {
             $PrincipalValue = $PrincipalInstance.DisplayName
         }
@@ -267,7 +271,7 @@
         $results = @{
             Principal             = $PrincipalValue
             PrincipalType         = $PrincipalTypeValue
-            RoleDefinition        = $RoleDefinitionValue.DisplayName
+            RoleDefinition        = $RoleDefinition
             DirectoryScopeId      = $request.DirectoryScopeId
             AppScopeId            = $request.AppScopeId
             Action                = $request.Action
@@ -730,10 +734,10 @@ function Export-TargetResource
         #region resource generator code
         $schedules = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -All -ErrorAction Stop
         [array] $Script:exportedInstances = @()
-        foreach ($schedule in $schedules)
-        {
-            [array] $allRequests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -All `
+        [array] $allRequests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -All `
                 -Filter "Status ne 'Revoked'" -ErrorAction Stop
+        foreach ($schedule in $schedules)
+        {            
             [array] $Script:exportedInstances += $allRequests | Where-Object -FilterScript {$_.TargetScheduleId -eq $schedule.Id}
         }
         #endregion
@@ -752,10 +756,12 @@ function Export-TargetResource
         {
             $displayedKey = $request.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            
+            $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
             $params = @{
                 Id                    = $request.Id
                 Principal             = $request.PrincipalId
-                RoleDefinition        = 'TempDefinition'
+                RoleDefinition        = $RoleDefinitionId.DisplayName
                 ScheduleInfo          = 'TempSchedule'
                 Ensure                = 'Present'
                 Credential            = $Credential
