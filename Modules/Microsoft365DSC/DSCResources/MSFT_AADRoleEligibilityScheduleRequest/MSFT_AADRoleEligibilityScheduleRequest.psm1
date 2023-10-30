@@ -186,7 +186,7 @@
             $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
             $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)' and RoleDefinitionId eq '$RoleDefinitionId'"
         }
-        if ($null -eq $schedule)
+        if ($null -eq $schedule -or $null -eq $request)
         {
             return $nullResult
         }
