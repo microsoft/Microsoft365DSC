@@ -22,7 +22,7 @@ Configuration Example
             Id                    = "12345678-1234-1234-1234-123456789012";
             IdentitySources       = @(
                 MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
-                    ExternalTenantId = "12345678-1234-1234-1234-123456789012"
+                    tenantId = "12345678-1234-1234-1234-123456789012"
                     DisplayName = 'Contoso'
                     odataType = '#microsoft.graph.azureActiveDirectoryTenant'
                 }
