@@ -16,6 +16,7 @@ Configuration Example
         IntuneDeviceCleanupRule 'Example'
         {
             Enabled                                = $true
+            IsSingleInstance                       = 'Yes'
             DeviceInactivityBeforeRetirementInDays = 30
             Ensure                                 = 'Present'
             Credential                             = $credsGlobalAdmin
