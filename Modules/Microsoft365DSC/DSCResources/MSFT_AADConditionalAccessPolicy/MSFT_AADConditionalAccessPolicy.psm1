@@ -185,6 +185,10 @@ function Get-TargetResource
         [System.String]
         $AuthenticationStrength,
 
+        [Parameter()]
+        [System.String[]]
+        $AuthenticationContexts,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -575,6 +579,21 @@ function Get-TargetResource
             }
         }
 
+        $AuthenticationContextsValues = @()
+        if ($null -ne $Policy.Conditions.Applications.IncludeAuthenticationContextClassReferences)
+        {
+            foreach ($class in $Policy.Conditions.Applications.IncludeAuthenticationContextClassReferences)
+            {
+                $classReference = Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference `
+                                      -AuthenticationContextClassReferenceId $class `
+                                      -ErrorAction SilentlyContinue
+                if ($null -ne $classReference)
+                {
+                    $AuthenticationContextsValues += $classReference.DisplayName
+                }
+            }
+        }
+
         $result = @{
             DisplayName                              = $Policy.DisplayName
             Id                                       = $Policy.Id
@@ -640,6 +659,7 @@ function Get-TargetResource
             PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
             #no translation needed
             AuthenticationStrength                   = $AuthenticationStrengthValue
+            AuthenticationContexts                   = $AuthenticationContextsValues
             #Standard part
             TermsOfUse                               = $termOfUseName
             Ensure                                   = 'Present'
@@ -841,6 +861,10 @@ function Set-TargetResource
         [System.String]
         $AuthenticationStrength,
 
+        [Parameter()]
+        [System.String[]]
+        $AuthenticationContexts,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -924,6 +948,21 @@ function Set-TargetResource
         if ($IncludeUserActions)
         {
             $conditions.Applications.Add('IncludeUserActions', $IncludeUserActions)
+        }
+        if ($AuthenticationContexts)
+        {
+            # Retrieve the class reference based on display name.
+            $AuthenticationContextsValues = @()
+            $classReferences = Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference -ErrorAction SilentlyContinue
+            foreach ($authContext in $AuthenticationContexts)
+            {
+                $currentClassId = $classReferences | Where-Object -FilterScript {$_.DisplayName -eq $authContext}
+                if ($null -ne $currentClassId)
+                {
+                    $AuthenticationContextsValues += $currentClassId.Id
+                }
+            }
+            $conditions.Applications.Add('IncludeAuthenticationContextClassReferences', $AuthenticationContextsValues)
         }
 
         #create and provision User Condition object
@@ -1724,6 +1763,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $AuthenticationStrength,
+
+        [Parameter()]
+        [System.String[]]
+        $AuthenticationContexts,
 
         #generic
         [Parameter()]

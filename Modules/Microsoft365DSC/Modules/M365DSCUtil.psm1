@@ -472,7 +472,7 @@ $VerbosePreference = 'Continue'
                     $DesiredEntry.$PropertyName -ne $EquivalentEntryInCurrent.$PropertyName)
                 {
                     $drift = $true
-                    if ($DesiredEntry.$PropertyName.Contains('$OrganizationName'))
+                    if ($DesiredEntry.$PropertyName.GetType().Name -eq 'String' -and $DesiredEntry.$PropertyName.Contains('$OrganizationName'))
                     {
                         if ($DesiredEntry.$PropertyName.Split('@')[0] -eq $EquivalentEntryInCurrent.$PropertyName.Split('@')[0])
                         {
@@ -565,9 +565,13 @@ function Test-M365DSCParameterState
 
         [Parameter(Position = 5)]
         [System.String]
-        $Tenant
+        $Tenant,
+
+        [Parameter(Position = 6)]
+        [System.Collections.Hashtable]
+        $IncludedDrifts
     )
-    $verbosePreference = 'SilentlyContinue'
+    $VerbosePreference = 'SilentlyContinue'
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Resource', "$Source")
@@ -576,6 +580,12 @@ function Test-M365DSCParameterState
     $returnValue = $true
 
     $DriftedParameters = @{ }
+    if ($null -ne $IncludedDrifts -and $IncludedDrifts.Keys.Count -gt 0)
+    {
+        $DriftedParameters = $IncludedDrifts
+        Write-Verbose -Message "@@@@@@@@@@`r`n$($IncludedDrifts | Out-String)"
+        $returnValue = $false
+    }
 
     if (($DesiredValues.GetType().Name -ne 'HashTable') `
             -and ($DesiredValues.GetType().Name -ne 'CimInstance') `
@@ -659,7 +669,6 @@ function Test-M365DSCParameterState
                                 }
                                 $AllDesiredValuesAsArray += [PSCustomObject]$currentEntry
                             }
-
                             $arrayCompare = Compare-PSCustomObjectArrays -CurrentValues $CurrentValues.$fieldName `
                                 -DesiredValues $AllDesiredValuesAsArray
 
@@ -885,7 +894,7 @@ function Test-M365DSCParameterState
     {
         Write-Verbose -Message $_
     }
-    if ($returnValue -eq $false)
+    if ($returnValue -eq $false -or $DriftedParameters.Keys.Length -gt 0)
     {
         $EventMessage = [System.Text.StringBuilder]::New()
         $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null

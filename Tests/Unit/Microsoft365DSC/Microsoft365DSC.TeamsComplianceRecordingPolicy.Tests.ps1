@@ -107,7 +107,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                                         = 'FakeStringValue'
                         Enabled                                             = $True
                         DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = 'FakeStringValue'
+                        ComplianceRecordingApplications                     = @{Id='FakeStringValue'}
                         Identity                                            = 'FakeStringValue'
 
                     }
@@ -147,7 +147,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                                         = 'FakeStringValue'
                         Enabled                                             = $True
                         DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = 'FakeStringValue'
+                        ComplianceRecordingApplications                     = @{Id='FakeStringValue'}
                         Identity                                            = 'FakeStringValue'
 
                     }
@@ -175,10 +175,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsComplianceRecordingPolicy -MockWith {
                     return @{
                         WarnUserOnRemoval                                   = $False
-                        Description                                         = 'FakeStringValueDrift #Drift'
+                        Description                                         = 'FakeStringValueDrift' #Drift
                         Enabled                                             = $False
                         DisableComplianceRecordingAudioNotificationForCalls = $False
-                        ComplianceRecordingApplications                     = 'FakeStringValueDrift #Drift'
+                        ComplianceRecordingApplications                     = @{Id='FakeStringValueDrift'} #Drift
                         Identity                                            = 'FakeStringValue'
                     }
                 }
@@ -212,7 +212,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description                                         = 'FakeStringValue'
                         Enabled                                             = $True
                         DisableComplianceRecordingAudioNotificationForCalls = $True
-                        ComplianceRecordingApplications                     = 'FakeStringValue'
+                        ComplianceRecordingApplications                     = @{Id='FakeStringValue'}
                         Identity                                            = 'FakeStringValue'
 
                     }

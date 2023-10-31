@@ -1,5 +1,37 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADRoleEligibilityScheduleRequest
+  * Fixes how the Get method retrieves existing instances for Groups.
+    FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
+
+# 1.23.1025.1
+
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Fixes an issue where reviewers were not properly exported
+* M365DSCDRGUTIL
+  * Fixes an issue with Get-M365DSCDRGComplexTypeToHashtable where Beta cmdlet were not recognized for recursive calls
+  FIXES [#3448](https://github.com/microsoft/Microsoft365DSC/issues/3448)
+* AADApplication
+  * Changes to how permissions drifts are logged.
+    FIXES [#3830](https://github.com/microsoft/Microsoft365DSC/issues/3830)
+* AADAttributeSet
+  * Initial Release.
+* AADAuthenticationContext
+  * Initial Release.
+* AADConditionalAccessPolicy
+  * Adds support for Authentication Context.
+    FIXES [#3813](https://github.com/microsoft/Microsoft365DSC/issues/3813)
+* AADSocialIdentityProvider
+  * Initial release.
+* TeamsComplianceRecordingPolicy
+  * Fixes an issue where the Compliance Application ID wasn't properly retrieved.
+    FIXES [#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.8.0.
+  * Updated MicrosoftTeams dependency to version 5.7.1.
+
 # 1.23.1018.1
 
 * AADAuthenticationMethodPolicyAuthenticator
@@ -24,6 +56,9 @@
   FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
 * MISC
   * Fixes fancy quotes in complex objects for extraction.
+* SCSecurityFilter
+  * Initial release
+  FIXES: [#3796](https://github.com/microsoft/Microsoft365DSC/issues/3796)
 
 # 1.23.1011.1
 

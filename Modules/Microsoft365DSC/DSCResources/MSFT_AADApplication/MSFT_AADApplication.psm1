@@ -752,15 +752,14 @@ function Test-TargetResource
     if ($CurrentValues.Permissions.Length -gt 0 -and $null -ne $CurrentValues.Permissions.Name)
     {
         $permissionsDiff = Compare-Object -ReferenceObject ($CurrentValues.Permissions.Name) -DifferenceObject ($Permissions.Name)
+        $driftedParams = @{}
         if ($null -ne $permissionsDiff)
         {
             Write-Verbose -Message "Permissions differ: $($permissionsDiff | Out-String)"
             Write-Verbose -Message "Test-TargetResource returned $false"
-            $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
-                "They should contain {$($Permissions.Name)} but instead contained {$($CurrentValues.Permissions.Name)}"
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-            return $false
+            $EventValue = "<CurrentValue>$($CurrentValues.Permissions.Name)</CurrentValue>"
+            $EventValue += "<DesiredValue>$($Permissions.Name)</DesiredValue>"
+            $driftedParams.Add('Permissions', $EventValue)
         }
         else
         {
@@ -773,11 +772,10 @@ function Test-TargetResource
         {
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App, but permissions were specified for desired state'
             Write-Verbose -Message "Test-TargetResource returned $false"
-            $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
-                "They should contain {$($Permissions.Name)} but instead contained {`$null}"
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-            return $false
+
+            $EventValue = "<CurrentValue>`$null</CurrentValue>"
+            $EventValue += "<DesiredValue>$($Permissions.Name)</DesiredValue>"
+            $driftedParams.Add('Permissions', $EventValue)
         }
         else
         {
@@ -800,7 +798,8 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -IncludedDrifts $driftedParams
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
