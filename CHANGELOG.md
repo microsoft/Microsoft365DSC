@@ -5,6 +5,9 @@
 * AADRoleEligibilityScheduleRequest
   * Fixes how the Get method retrieves existing instances for Groups.
     FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
+* SCSecurityFilter
+  * Fixes an issue because Region could be empty
+  FIXES: [#3854](https://github.com/microsoft/Microsoft365DSC/issues/3854)
 
 # 1.23.1025.1
 
