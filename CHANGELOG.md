@@ -1,7 +1,27 @@
 # Change log for Microsoft365DSC
 
+# 1.23.1101.1
+
+* AADRoleEligibilityScheduleRequest
+  * Fixes how the Get method retrieves existing instances for Groups.
+    FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
+* SCSecurityFilter
+  * Fixes an issue because Region could be empty
+  FIXES: [#3854](https://github.com/microsoft/Microsoft365DSC/issues/3854)
+* SPOSharingSettings
+  * Fixes parameter validation of ExternalUserExpireInDays and ExternalUserExpirationRequired.
+    FIXES [#3856](https://github.com/microsoft/Microsoft365DSC/issues/3856)
+* TeamsComplianceRecordingPolicy
+  * Fix an issue where the Compliance Application ID wasn't properly retrieved.
+  FIXES [#3848](https://github.com/microsoft/Microsoft365DSC/issues/3848)
+
 # 1.23.1025.1
 
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Fixes an issue where reviewers were not properly exported
+* M365DSCDRGUTIL
+  * Fixes an issue with Get-M365DSCDRGComplexTypeToHashtable where Beta cmdlet were not recognized for recursive calls
+  FIXES [#3448](https://github.com/microsoft/Microsoft365DSC/issues/3448)
 * AADApplication
   * Changes to how permissions drifts are logged.
     FIXES [#3830](https://github.com/microsoft/Microsoft365DSC/issues/3830)
@@ -33,6 +53,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Added "-All" parameter to retrieve all settings from a template.
   FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
+* IntuneDeviceCleanupRule
+  * Initial release.
+    FIXES [#3599](https://github.com/microsoft/Microsoft365DSC/issues/3599)
 * TeamsGroupPolicyAssignment
   * Fixes the export of CsGroup, when the display name of a group is included in
     another display name.

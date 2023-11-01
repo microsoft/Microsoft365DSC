@@ -177,10 +177,16 @@
                 $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
                 Write-Verbose -Message "Found Role {$RoleDefinitionId}"
 
+                $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
                 $request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
             }
         }
-        if ($null -eq $request)
+        else
+        {
+            $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
+            $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)' and RoleDefinitionId eq '$RoleDefinitionId'"
+        }
+        if ($null -eq $schedule -or $null -eq $request)
         {
             return $nullResult
         }
@@ -201,47 +207,46 @@
         {
             return $nullResult
         }
-        $RoleDefinitionValue = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
 
         $ScheduleInfoValue = @{}
 
-        if ($null -ne $request.ScheduleInfo.Expiration)
+        if ($null -ne $schedule.ScheduleInfo.Expiration)
         {
             $expirationValue = @{
-                duration    = $request.ScheduleInfo.Expiration.Duration
-                type        = $request.ScheduleInfo.Expiration.Type
+                duration    = $schedule.ScheduleInfo.Expiration.Duration
+                type        = $schedule.ScheduleInfo.Expiration.Type
             }
-            if ($null -ne $request.ScheduleInfo.Expiration.EndDateTime)
+            if ($null -ne $schedule.ScheduleInfo.Expiration.EndDateTime)
             {
-                $expirationValue.Add('endDateTime', $request.ScheduleInfo.Expiration.EndDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
+                $expirationValue.Add('endDateTime', $schedule.ScheduleInfo.Expiration.EndDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
             }
             $ScheduleInfoValue.Add('expiration', $expirationValue)
         }
-        if ($null -ne $request.ScheduleInfo.Recurrence)
+        if ($null -ne $schedule.ScheduleInfo.Recurrence)
         {
             $recurrenceValue = @{
                 pattern = @{
-                    dayOfMonth     = $request.ScheduleInfo.Recurrence.Pattern.dayOfMonth
-                    daysOfWeek     = $request.ScheduleInfo.Recurrence.Pattern.daysOfWeek
-                    firstDayOfWeek = $request.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek
-                    index          = $request.ScheduleInfo.Recurrence.Pattern.index
-                    interval       = $request.ScheduleInfo.Recurrence.Pattern.interval
-                    month          = $request.ScheduleInfo.Recurrence.Pattern.month
-                    type           = $request.ScheduleInfo.Recurrence.Pattern.type
+                    dayOfMonth     = $schedule.ScheduleInfo.Recurrence.Pattern.dayOfMonth
+                    daysOfWeek     = $schedule.ScheduleInfo.Recurrence.Pattern.daysOfWeek
+                    firstDayOfWeek = $schedule.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek
+                    index          = $schedule.ScheduleInfo.Recurrence.Pattern.index
+                    interval       = $schedule.ScheduleInfo.Recurrence.Pattern.interval
+                    month          = $schedule.ScheduleInfo.Recurrence.Pattern.month
+                    type           = $schedule.ScheduleInfo.Recurrence.Pattern.type
                 }
                 range   = @{
-                    endDate             = $request.ScheduleInfo.Recurrence.Range.endDate
-                    numberOfOccurrences = $request.ScheduleInfo.Recurrence.Range.numberOfOccurrences
-                    recurrenceTimeZone  = $request.ScheduleInfo.Recurrence.Range.recurrenceTimeZone
-                    startDate           = $request.ScheduleInfo.Recurrence.Range.startDate
-                    type                = $request.ScheduleInfo.Recurrence.Range.type
+                    endDate             = $schedule.ScheduleInfo.Recurrence.Range.endDate
+                    numberOfOccurrences = $schedule.ScheduleInfo.Recurrence.Range.numberOfOccurrences
+                    recurrenceTimeZone  = $schedule.ScheduleInfo.Recurrence.Range.recurrenceTimeZone
+                    startDate           = $schedule.ScheduleInfo.Recurrence.Range.startDate
+                    type                = $schedule.ScheduleInfo.Recurrence.Range.type
                 }
             }
             $ScheduleInfoValue.Add('Recurrence', $recurrenceValue)
         }
-        if ($null -ne $request.ScheduleInfo.StartDateTime)
+        if ($null -ne $schedule.ScheduleInfo.StartDateTime)
         {
-            $ScheduleInfoValue.Add('StartDateTime', $request.ScheduleInfo.StartDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
+            $ScheduleInfoValue.Add('StartDateTime', $schedule.ScheduleInfo.StartDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
         }
 
         $ticketInfoValue = $null
@@ -254,11 +259,11 @@
         }
 
         $PrincipalValue = $null
-        if ($PrincipalTypeValue -eq 'User')
+        if ($PrincipalType -eq 'User')
         {
             $PrincipalValue = $PrincipalInstance.UserPrincipalName
         }
-        elseif ($PrincipalTypeValue -eq 'Group')
+        if ($null -eq $PrincipalValue -or $PrincipalTypeValue -eq 'Group')
         {
             $PrincipalValue = $PrincipalInstance.DisplayName
         }
@@ -266,7 +271,7 @@
         $results = @{
             Principal             = $PrincipalValue
             PrincipalType         = $PrincipalTypeValue
-            RoleDefinition        = $RoleDefinitionValue.DisplayName
+            RoleDefinition        = $RoleDefinition
             DirectoryScopeId      = $request.DirectoryScopeId
             AppScopeId            = $request.AppScopeId
             Action                = $request.Action
@@ -729,10 +734,10 @@ function Export-TargetResource
         #region resource generator code
         $schedules = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -All -ErrorAction Stop
         [array] $Script:exportedInstances = @()
-        foreach ($schedule in $schedules)
-        {
-            [array] $allRequests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -All `
+        [array] $allRequests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -All `
                 -Filter "Status ne 'Revoked'" -ErrorAction Stop
+        foreach ($schedule in $schedules)
+        {            
             [array] $Script:exportedInstances += $allRequests | Where-Object -FilterScript {$_.TargetScheduleId -eq $schedule.Id}
         }
         #endregion
@@ -751,10 +756,12 @@ function Export-TargetResource
         {
             $displayedKey = $request.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+            
+            $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
             $params = @{
                 Id                    = $request.Id
                 Principal             = $request.PrincipalId
-                RoleDefinition        = 'TempDefinition'
+                RoleDefinition        = $RoleDefinitionId.DisplayName
                 ScheduleInfo          = 'TempSchedule'
                 Ensure                = 'Present'
                 Credential            = $Credential
