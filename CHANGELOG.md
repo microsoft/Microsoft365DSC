@@ -8,6 +8,9 @@
 * SPOSharingSettings
   * Fixes parameter validation of ExternalUserExpireInDays and ExternalUserExpirationRequired.
     FIXES [#3856](https://github.com/microsoft/Microsoft365DSC/issues/3856)
+* TeamsComplianceRecordingPolicy
+  * Fix an issue where the Compliance Application ID wasn't properly retrieved.
+  FIXES [#3848](https://github.com/microsoft/Microsoft365DSC/issues/3848)
 
 # 1.23.1025.1
 
