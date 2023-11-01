@@ -8,12 +8,12 @@ function Get-TargetResource
         [System.String]
         $GroupDisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $GroupId,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
+        [ValidateSet('ApplicationAccessPolicy','CallingLineIdentity','OnlineAudioConferencingRoutingPolicy','OnlineVoicemailPolicy','OnlineVoiceRoutingPolicy','TeamsAudioConferencingPolicy','TeamsCallHoldPolicy','TeamsCallParkPolicy','TeamsChannelsPolicy','TeamsComplianceRecordingPolicy','TeamsCortanaPolicy','TeamsEmergencyCallingPolicy','TeamsEnhancedEncryptionPolicy','TeamsFeedbackPolicy','TeamsFilesPolicy','TeamsIPPhonePolicy','TeamsMediaLoggingPolicy','TeamsMeetingBroadcastPolicy','TeamsMeetingPolicy','TeamsMessagingPolicy','TeamsMobilityPolicy','TeamsRoomVideoTeleConferencingPolicy','TeamsShiftsPolicy','TeamsUpdateManagementPolicy','TeamsVdiPolicy','TeamsVideoInteropServicePolicy','TenantDialPlan','ExternalAccessPolicy','TeamsAppSetupPolicy','TeamsCallingPolicy','TeamsEventsPolicy','TeamsMeetingBrandingPolicy','TeamsMeetingTemplatePermissionPolicy')]
         [System.String]
         $PolicyType,
 
@@ -66,18 +66,21 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Getting GroupPOlicyAssignment for {$GroupId}"
-        $group = Find-CsGroup -SearchQuery $GroupId
-        if ($group.Length -gt 1)
+        if (-not [System.String]::IsNullOrEmpty($GroupId))
         {
-            Write-Verbose -Message "Found $($group.Length) groups with the id {$GroupId}"
-            $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
+            Write-Verbose -Message "Getting GroupPolicyAssignment for {$GroupId}"
+            $group = Find-CsGroup -SearchQuery $GroupId -ErrorAction SilentlyContinue
+            if ($group.Length -gt 1)
+            {
+                Write-Verbose -Message "Found $($group.Length) groups with the id {$GroupId}"
+                $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
+            }
         }
         else
         {
             Write-Verbose -Message "Getting GroupPolicyAssignment for {$GroupDisplayName}"
-            $Group = Find-CsGroup -SearchQuery $GroupDisplayName
-            if ($group.Length -gt 1)
+            $Group = Find-CsGroup -SearchQuery $GroupDisplayName -ErrorAction SilentlyContinue
+            if ($Group.Length -gt 1)
             {
                 Write-Verbose -Message "Found $($group.Length) groups with the name $GroupDisplayName"
                 $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
@@ -92,6 +95,7 @@ function Get-TargetResource
         if ($null -eq $GroupPolicyAssignment)
         {
             Write-Verbose -Message "GroupPolicyAssignment not found for $GroupDisplayName"
+            $nullReturn.GroupId = $Group.Id
             return $nullReturn
         }
         Write-Verbose -Message "Found GroupPolicyAssignment $($Group.Displayname) with PolicyType:$($GroupPolicyAssignment.PolicyType) and Policy Name:$($GroupPolicyAssignment.PolicyName)"
@@ -129,12 +133,12 @@ function Set-TargetResource
         [System.String]
         $GroupDisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $GroupId,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
+        [ValidateSet('ApplicationAccessPolicy','CallingLineIdentity','OnlineAudioConferencingRoutingPolicy','OnlineVoicemailPolicy','OnlineVoiceRoutingPolicy','TeamsAudioConferencingPolicy','TeamsCallHoldPolicy','TeamsCallParkPolicy','TeamsChannelsPolicy','TeamsComplianceRecordingPolicy','TeamsCortanaPolicy','TeamsEmergencyCallingPolicy','TeamsEnhancedEncryptionPolicy','TeamsFeedbackPolicy','TeamsFilesPolicy','TeamsIPPhonePolicy','TeamsMediaLoggingPolicy','TeamsMeetingBroadcastPolicy','TeamsMeetingPolicy','TeamsMessagingPolicy','TeamsMobilityPolicy','TeamsRoomVideoTeleConferencingPolicy','TeamsShiftsPolicy','TeamsUpdateManagementPolicy','TeamsVdiPolicy','TeamsVideoInteropServicePolicy','TenantDialPlan','ExternalAccessPolicy','TeamsAppSetupPolicy','TeamsCallingPolicy','TeamsEventsPolicy','TeamsMeetingBrandingPolicy','TeamsMeetingTemplatePermissionPolicy')]
         [System.String]
         $PolicyType,
 
@@ -183,53 +187,22 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    #check policyname
-    $command = 'get-cs' + $PolicyType
-    $policies = Invoke-Expression -Command $command -ErrorAction SilentlyContinue
-    $policymatch = $false
-    if ($null -ne $policies)
-    {
-        Foreach ($policy in $policies.Identity)
-        {
-            $match = '^Tag:' + $PolicyName + '$'
-            if ($policy -match $match)
-            {
-                $policymatch = $true
-            }
-        }
-    }
-    if ($null -eq $policies -or $policymatch -eq $false)
-    {
-        Write-Verbose -Message "No PolicyType found for $PolicyType"
-        return
-    }
-
-    #get groupid
-    if ($GroupId.Length -eq 0)
-    {
-        $Group = Find-CsGroup -SearchQuery $GroupDisplayName
-        if ($group.Length -gt 1)
-        {
-            Write-Verbose -Message "Found $($group.Length) groups with the name $GroupDisplayName"
-            $Group = $Group | Where-Object { $_.DisplayName -eq $GroupDisplayName }
-        }
-        if ($null -eq $Group)
-        {
-            Write-Verbose -Message "Group not found for $GroupDisplayName"
-            return
-        }
-        $GroupId = $Group.Id
-    }
-    Write-Verbose -Message "Retrieve GroupId for: $($GroupDisplayName)"
     try
     {
         if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
         {
             Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayName"
-            New-CsGroupPolicyAssignment -GroupId $GroupId `
-                -PolicyType $PolicyType `
-                -PolicyName $PolicyName `
-                -Rank $Priority `
+            $parameters = @{
+                GroupId    = $CurrentValues.GroupId
+                PolicyType = $PolicyType
+                PolicyName = $PolicyName
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($Priority))
+            {
+                $parameters.Add('Rank', $Priority)
+            }
+            New-CsGroupPolicyAssignment @parameters `
                 -ErrorAction Stop
         }
         elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
@@ -238,7 +211,7 @@ function Set-TargetResource
             Write-Verbose -Message "Remove GroupPolicyAssignment for $GroupDisplayName"
             Remove-CsGroupPolicyAssignment -GroupId $CurrentValues.GroupId -PolicyType $CurrentValues.PolicyType
             Write-Verbose -Message "Adding GroupPolicyAssignment for $GroupDisplayName"
-            New-CsGroupPolicyAssignment -GroupId $GroupId `
+            New-CsGroupPolicyAssignment -GroupId $CurrentValues.GroupId `
                 -PolicyType $PolicyType `
                 -PolicyName $PolicyName `
                 -Rank $Priority `
@@ -272,12 +245,12 @@ function Test-TargetResource
         [System.String]
         $GroupDisplayName,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $GroupId,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('CallingLineIdentity', 'TeamsAppSetupPolicy', 'TeamsAudioConferencingPolicy', 'TeamsCallingPolicy', 'TeamsCallParkPolicy', 'TeamsChannelsPolicy', 'TeamsComplianceRecordingPolicy', 'TenantDialPlan', 'TeamsMeetingBroadcastPolicy', 'TeamsMeetingPolicy', 'TeamsMessagingPolicy', 'TeamsShiftsPolicy', 'TeamsUpdateManagementPolicy', 'TeamsVerticalPackagePolicy')]
+        [ValidateSet('ApplicationAccessPolicy','CallingLineIdentity','OnlineAudioConferencingRoutingPolicy','OnlineVoicemailPolicy','OnlineVoiceRoutingPolicy','TeamsAudioConferencingPolicy','TeamsCallHoldPolicy','TeamsCallParkPolicy','TeamsChannelsPolicy','TeamsComplianceRecordingPolicy','TeamsCortanaPolicy','TeamsEmergencyCallingPolicy','TeamsEnhancedEncryptionPolicy','TeamsFeedbackPolicy','TeamsFilesPolicy','TeamsIPPhonePolicy','TeamsMediaLoggingPolicy','TeamsMeetingBroadcastPolicy','TeamsMeetingPolicy','TeamsMessagingPolicy','TeamsMobilityPolicy','TeamsRoomVideoTeleConferencingPolicy','TeamsShiftsPolicy','TeamsUpdateManagementPolicy','TeamsVdiPolicy','TeamsVideoInteropServicePolicy','TenantDialPlan','ExternalAccessPolicy','TeamsAppSetupPolicy','TeamsCallingPolicy','TeamsEventsPolicy','TeamsMeetingBrandingPolicy','TeamsMeetingTemplatePermissionPolicy')]
         [System.String]
         $PolicyType,
 
@@ -392,15 +365,25 @@ function Export-TargetResource
         $totalCount = $instances.Length
         foreach ($item in $instances)
         {
-            $Group = Find-CsGroup -SearchQuery $item.GroupId
+            [array]$Group = Find-CsGroup -SearchQuery $item.GroupId -ExactMatchOnly $true
             if ($null -eq $totalCount)
             {
                 $totalCount = 1
             }
-            Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group.DisplayName)}" -NoNewline
+            if ($totalCount -Eq 0)
+            {
+                $Message = "GPA The CSsGroup with ID {$($item.GroupId)} could not be found"
+                New-M365DSCLogEntry -Message $Message `
+                    -Source $MyInvocation.MyCommand.ModuleName
+                Write-Error $Message
+                $groupDisplayName = ""
+            } else {
+                $groupDisplayName = $Group[0].DisplayName
+            }
+            Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group[0].DisplayName)}" -NoNewline
             $results = @{
-                GroupDisplayName      = $Group.DisplayName
-                GroupId               = $Group.Id
+                GroupDisplayName      = $groupDisplayName
+                GroupId               = $item.GroupId
                 PolicyType            = $item.PolicyType
                 PolicyName            = $item.PolicyName
                 Priority              = $item.Priority

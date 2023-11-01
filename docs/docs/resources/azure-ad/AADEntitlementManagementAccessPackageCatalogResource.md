@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Id of the access package catalog resource. | |
-| **DisplayName** | Required | String | The display name of the resource, such as the application name, group name or site name. | |
+| **DisplayName** | Key | String | The display name of the resource, such as the application name, group name or site name. | |
+| **Id** | Write | String | Id of the access package catalog resource. | |
 | **CatalogId** | Write | String | The unique ID of the access package catalog. | |
 | **AddedBy** | Write | String | The name of the user or application that first added this resource. Read-only. | |
 | **AddedOn** | Write | String | The Timestamp type represents date and time information using ISO 8601 format and is always in UTC time. For example, midnight UTC on Jan 1, 2014 is 2014-01-01T00:00:00Z. Read-only. | |

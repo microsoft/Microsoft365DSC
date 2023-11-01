@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | The Id of the access package. | |
-| **DisplayName** | Required | String | The display name of the access package. | |
+| **DisplayName** | Key | String | The display name of the access package. | |
+| **Id** | Write | String | The Id of the access package. | |
 | **CatalogId** | Write | String | Identifier of the access package catalog referencing this access package. | |
 | **Description** | Write | String | The description of the access package. | |
 | **IsHidden** | Write | Boolean | Whether the access package is hidden from the requestor. | |

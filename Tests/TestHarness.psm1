@@ -68,10 +68,17 @@ function Invoke-TestHarness
     $testsToRun += @( $commonTestFiles.FullName )
 
     $filesToExecute = @()
-    foreach ($testToRun in $testsToRun)
-    {
-        $filesToExecute += $testToRun
-    }
+    if ($DscTestsPath -ne "")
+	{
+		$filesToExecute += $DscTestsPath
+	}
+	else
+	{
+		foreach ($testToRun in $testsToRun)
+		{
+			$filesToExecute += $testToRun
+		}
+	}
 
     $Params = [ordered]@{
         Path = $filesToExecute

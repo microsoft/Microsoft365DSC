@@ -92,7 +92,8 @@ function Get-TargetResource
             AccessGracePeriodMinutes       = $instance.AccessGracePeriodMinutes
             AccessType                     = $instance.AccessType
             EnableScheduleOwnerPermissions = $instance.EnableScheduleOwnerPermissions
-            EnableShiftPresence            = $instance.EnableShiftPresence
+            # DEPRECATED
+            #EnableShiftPresence            = $instance.EnableShiftPresence
             ShiftNoticeFrequency           = $instance.ShiftNoticeFrequency
             ShiftNoticeMessageCustom       = $instance.ShiftNoticeMessageCustom
             ShiftNoticeMessageType         = $instance.ShiftNoticeMessageType
@@ -202,6 +203,12 @@ function Set-TargetResource
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+
+    if ($PSBoundParameters.ContainsKey('EnableShiftPresence'))
+    {
+        Write-Verbose -Message "The EnableShiftPresence parameter was used but is deprecated. It will be ignored."
+        $PSBoundParameters.Remove('EnableShiftPresence') | Out-Null
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -329,6 +336,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $ValuesToCheck.Remove('Identity') | Out-Null
+    $ValuesToCheck.Remove('EnableShiftPresence') | Out-Null
 
     if ($CurrentValues.Ensure -eq 'Absent')
     {

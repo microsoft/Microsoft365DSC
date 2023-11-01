@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Specifies the GUID for the Policy. | |
-| **DisplayName** | Required | String | DisplayName of the AAD CA Policy | |
+| **DisplayName** | Key | String | DisplayName of the AAD CA Policy | |
+| **Id** | Write | String | Specifies the GUID for the Policy. | |
 | **State** | Write | String | Specifies the State of the Policy. | `disabled`, `enabled`, `enabledForReportingButNotEnforced` |
 | **IncludeApplications** | Write | StringArray[] | Cloud Apps in scope of the Policy. | |
 | **ExcludeApplications** | Write | StringArray[] | Cloud Apps out of scope of the Policy. | |
@@ -41,9 +41,11 @@
 | **CustomAuthenticationFactors** | Write | StringArray[] | Custom Controls assigned to the grant property of this policy. | |
 | **SignInFrequencyType** | Write | String | Sign in frequency unit (days/hours) to be interpreted by the policy. | `Days`, `Hours`, `` |
 | **SignInFrequencyIsEnabled** | Write | Boolean | Specifies, whether sign-in frequency is enforced by the Policy. | |
+| **SignInFrequencyInterval** | Write | String | Sign in frequency interval. Possible values are: timeBased, everyTime and unknownFutureValue. | `timeBased`, `everyTime`, `unknownFutureValue` |
 | **PersistentBrowserIsEnabled** | Write | Boolean | Specifies, whether Browser Persistence is controlled by the Policy. | |
 | **PersistentBrowserMode** | Write | String | Specifies, what Browser Persistence control is enforced by the Policy. | `Always`, `Never`, `` |
 | **AuthenticationStrength** | Write | String | Name of the associated authentication strength policy. | |
+| **AuthenticationContexts** | Write | StringArray[] | Authentication context class references. | |
 | **Ensure** | Write | String | Specify if the Azure AD CA Policy should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

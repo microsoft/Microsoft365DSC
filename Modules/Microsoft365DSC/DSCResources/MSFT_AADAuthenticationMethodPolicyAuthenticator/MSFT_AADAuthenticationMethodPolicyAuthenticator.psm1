@@ -29,7 +29,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
-
         #endregion
 
         [Parameter()]
@@ -248,8 +247,12 @@ function Get-TargetResource
             $myExcludeTargets = @{}
             if ($currentExcludeTargets.id -ne 'all_users')
             {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id
-                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id -ErrorAction SilentlyContinue
+
+                if ($null -ne $myIncludeTargetsDisplayName)
+                {
+                    $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                }
             }
             else
             {
@@ -272,8 +275,11 @@ function Get-TargetResource
             $myIncludeTargets = @{}
             if ($currentIncludeTargets.id -ne 'all_users')
             {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id
-                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id -ErrorAction SilentlyContinue
+                if ($null -ne $myIncludeTargetsDisplayName)
+                {
+                    $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                }
             }
             else
             {
@@ -921,6 +927,9 @@ function Export-TargetResource
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IncludeTargets' -IsCIMArray:$True
             }
             $currentDSCBlock = Remove-M365DSCCimInstanceTrailingCharacterFromExport -DSCBlock $currentDSCBlock
+
+            # FIX #3645
+            $currentDSCBlock = $currentDSCBlock.Replace("}                    State = 'default'`r`n","}`r`n                    State = 'default'`r`n")
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

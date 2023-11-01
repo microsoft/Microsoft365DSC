@@ -134,21 +134,21 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return , [hashtable[]]$results
     }
 
+
     if ($ComplexObject.getType().fullname -like '*Dictionary*')
     {
         $results = @{}
 
         $ComplexObject = [hashtable]::new($ComplexObject)
         $keys = $ComplexObject.Keys
+
         foreach ($key in $keys)
         {
             if ($null -ne $ComplexObject.$key)
             {
                 $keyName = $key
-
                 $keyType = $ComplexObject.$key.gettype().fullname
-
-                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like '*[[\]]')
+                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like 'Microsoft.Graph.Beta.PowerShell.Models.*' -or $keyType -like '*[[\]]')
                 {
                     $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
 
@@ -185,7 +185,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         if ($null -ne $ComplexObject.$keyName)
         {
             $keyType = $ComplexObject.$keyName.gettype().fullname
-            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*')
+            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.*PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
@@ -397,7 +397,12 @@ function Get-M365DSCDRGComplexTypeToString
             }
             else
             {
-                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $ComplexObject[$key] -Space ($indent)
+                $currentValue = $ComplexObject[$key]
+                if ($currentValue.GetType().Name -eq 'String')
+                {
+                     $currentValue = $ComplexObject[$key].Replace("'", "''").Replace("�", "''")
+                }
+                $currentProperty += Get-M365DSCDRGSimpleObjectTypeToString -Key $key -Value $currentValue -Space ($indent)
             }
         }
         else
@@ -425,12 +430,12 @@ function Get-M365DSCDRGComplexTypeToString
     }
 
     $currentProperty += "$indent}"
-    #if ($isArray -or $IndentLevel -gt 4)
-    #{
+    if ($isArray -or $IndentLevel -gt 4)
+    {
         $currentProperty += "`r`n"
-    #}
+    }
 
-    #Indenting last parenthese when the cim instance is an array
+    #Indenting last parenthesis when the cim instance is an array
     if ($IndentLevel -eq 5)
     {
         $indent = '    ' * ($IndentLevel -2)
@@ -441,6 +446,14 @@ function Get-M365DSCDRGComplexTypeToString
     if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
     {
         $currentProperty = $null
+    }
+
+    if ($null -ne $currentProperty)
+    {
+        $fancySingleQuotes = "[\u2019\u2018]"
+        $fancyDoubleQuotes = "[\u201C\u201D]"
+        $currentProperty = [regex]::Replace($currentProperty, $fancySingleQuotes, "''")
+        $currentProperty = [regex]::Replace($currentProperty, $fancyDoubleQuotes, '"')
     }
     return $currentProperty
 }
@@ -1005,7 +1018,8 @@ function New-IntuneSettingCatalogPolicy
 
     try
     {
-        $Uri = 'https://graph.microsoft.com/beta/deviceManagement/configurationPolicies'
+	$BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
+        $Uri = '$($BaseUrl)/beta/deviceManagement/configurationPolicies'
 
         $policy = @{
             'name'              = $Name
@@ -1068,7 +1082,8 @@ function Update-IntuneSettingCatalogPolicy
 
     try
     {
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
+        $BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
+        $Uri = "$($BaseUrl)/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
 
         $policy = @{
             'name'              = $Name
@@ -1119,7 +1134,8 @@ function Update-DeviceConfigurationPolicyAssignment
     try
     {
         $deviceManagementPolicyAssignments = @()
-        $Uri = "https://graph.microsoft.com/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+        $BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
+        $Uri = "$($BaseUrl)/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
 
         foreach ($target in $targets)
         {

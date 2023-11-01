@@ -5,12 +5,12 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Description** | Write | String | Policy description | |
-| **Name** | Required | String | Policy name | |
+| **Name** | Key | String | Policy name | |
 | **Platforms** | Write | String | Platforms for this policy. Possible values are: none, android, iOS, macOS, windows10X, windows10, linux, unknownFutureValue. | `none`, `android`, `iOS`, `macOS`, `windows10X`, `windows10`, `linux`, `unknownFutureValue` |
 | **Technologies** | Write | String | Technologies for this policy. Possible values are: none, mdm, windows10XManagement, configManager, appleRemoteManagement, microsoftSense, exchangeOnline, edgeMAM, linuxMdm, enrollment, endpointPrivilegeManagement, unknownFutureValue. | `none`, `mdm`, `windows10XManagement`, `configManager`, `appleRemoteManagement`, `microsoftSense`, `exchangeOnline`, `linuxMdm`, `enrollment`, `endpointPrivilegeManagement`, `unknownFutureValue` |
 | **TemplateReference** | Write | MSFT_MicrosoftGraphdeviceManagementConfigurationPolicyTemplateReference | Template reference information | |
 | **Settings** | Write | MSFT_MicrosoftGraphdeviceManagementConfigurationSetting[] | Policy settings | |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -30,6 +30,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphDeviceManagementConfigurationPolicyTemplateReference

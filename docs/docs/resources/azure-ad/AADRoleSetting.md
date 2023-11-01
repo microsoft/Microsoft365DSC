@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Specifies the RoleId. | |
-| **Displayname** | Required | String | RuleDefinition Displayname | |
+| **Displayname** | Key | String | RuleDefinition Displayname | |
+| **Id** | Write | String | Specifies the RoleId. | |
 | **ActivationMaxDuration** | Write | String | Activation maximum duration (hours). | |
 | **ActivationReqJustification** | Write | Boolean | Require justification on activation (True/False) | |
 | **ActivationReqTicket** | Write | Boolean | Require ticket information on activation (True/False) | |

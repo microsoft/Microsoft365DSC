@@ -61,6 +61,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PinRequired                                     = $True
                     DisableAppPinIfDevicePinIsSet                   = $False
                     PrintBlocked                                    = $False
+                    RequireClass3Biometrics                         = $False
+                    RequirePinAfterBiometricChange                  = $False
                     SaveAsBlocked                                   = $True
                     SimplePinBlocked                                = $False
                     ScreenCaptureBlocked                            = $False
@@ -161,6 +163,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     PinRequired                                     = $True
                     DisableAppPinIfDevicePinIsSet                   = $False
                     PrintBlocked                                    = $False
+                    RequireClass3Biometrics                         = $False
+                    RequirePinAfterBiometricChange                  = $False
                     SaveAsBlocked                                   = $True
                     SimplePinBlocked                                = $False
                     ScreenCaptureBlocked                            = $False

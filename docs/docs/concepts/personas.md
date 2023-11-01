@@ -69,7 +69,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
 <tr>
 <td width="25%" rowspan="2"><img src="/Images/Personas/SecurityAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
-<td><p>The Security Administrators are responsible for defining new Entra Identity policies, make updates to exsting ones and monitor them for configuration drifts at scale and across one or multiple tenants. Their goal is to ensure the overal security of the tenant by ensuring only authorized users can perform certain tasks. They are dealing with components such as:</p>
+<td><p>The Security Administrators are responsible for defining new Entra Identity policies, make updates to existing ones and monitor them for configuration drifts at scale and across one or multiple tenants. Their goal is to ensure the overal security of the tenant by ensuring only authorized users can perform certain tasks. They are dealing with components such as:</p>
 <ul>
     <li>AADAuthenticationMethodPolicy</li>
     <li>AADAuthorizationPolicy</li>
@@ -149,7 +149,7 @@ This article describes the personas we've identified for Microsoft365DSC and pro
 <tr>
 <td width="25%" rowspan="2"><img src="/Images/Personas/CollabAdmin.jpg"/></td>
 <td style="text-align:right"><strong>Description:</strong></td>
-<td><p>The Teams Collaboration Administrators are responsible for ensuring the proper functioning of the Teams collaboration features, such as managing channel, managing teams, etc. and for their associated policies (e.g., Teams Channel Policies, Teams Messaging Policies, etc.). They are dealing with components such as:</p>
+<td><p>The Teams Collaboration Administrators are responsible for ensuring the proper functioning of the Teams collaboration features, such as managing channels, managing teams, etc. and for their associated policies (e.g., Teams Channel Policies, Teams Messaging Policies, etc.). They are dealing with components such as:</p>
 <ul>
     <li>TeamsAppPermissionPolicy</li>
     <li>TeamsChannel</li>

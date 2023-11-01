@@ -98,6 +98,14 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $RequireClass3Biometrics,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequirePinAfterBiometricChange,
+
+        [Parameter()]
+        [System.Boolean]
         $FingerprintBlocked,
 
         [Parameter()]
@@ -448,6 +456,14 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $RequireClass3Biometrics,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequirePinAfterBiometricChange,
+
+        [Parameter()]
+        [System.Boolean]
         $FingerprintBlocked,
 
         [Parameter()]
@@ -789,6 +805,14 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $PrintBlocked,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequireClass3Biometrics,
+
+        [Parameter()]
+        [System.Boolean]
+        $RequirePinAfterBiometricChange,
 
         [Parameter()]
         [System.Boolean]
@@ -1352,6 +1376,8 @@ function Get-InputParameters
         PinCharacterSet                                 = @{Type = 'Parameter'        ; ExportFileType = 'String'; }
         PinRequired                                     = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
         PrintBlocked                                    = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        RequireClass3Biometrics                         = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
+        RequirePinAfterBiometricChange                  = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
         SaveAsBlocked                                   = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
         ScreenCaptureBlocked                            = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }
         SimplePinBlocked                                = @{Type = 'Parameter'        ; ExportFileType = 'NA'; }

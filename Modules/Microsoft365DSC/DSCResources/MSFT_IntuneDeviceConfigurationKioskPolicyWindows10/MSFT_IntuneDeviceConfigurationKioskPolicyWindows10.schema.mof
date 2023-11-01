@@ -5,6 +5,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude."), ValueMap{"none","include","exclude"}, Values{"none","include","exclude"}] String deviceAndAppManagementAssignmentFilterType;
     [Write, Description("The Id of the filter for the target assignment.")] String deviceAndAppManagementAssignmentFilterId;
     [Write, Description("The group Id that is the target of the assignment.")] String groupId;
+    [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 [ClassVersion("1.0.0")]
@@ -122,8 +123,8 @@ class MSFT_IntuneDeviceConfigurationKioskPolicyWindows10 : OMI_BaseResource
     [Write, Description("This policy setting allows to define a list of Kiosk profiles for a Kiosk configuration. This collection can contain a maximum of 3 elements."), EmbeddedInstance("MSFT_MicrosoftGraphwindowsKioskProfile")] String KioskProfiles[];
     [Write, Description("force update schedule for Kiosk devices."), EmbeddedInstance("MSFT_MicrosoftGraphwindowsKioskForceUpdateSchedule")] String WindowsKioskForceUpdateSchedule;
     [Write, Description("Admin provided description of the Device Configuration.")] String Description;
-    [Required, Description("Admin provided name of the device configuration.")] String DisplayName;
-    [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Key, Description("Admin provided name of the device configuration.")] String DisplayName;
+    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

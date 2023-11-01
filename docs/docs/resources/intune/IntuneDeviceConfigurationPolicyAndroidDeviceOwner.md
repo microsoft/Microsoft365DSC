@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | The Id of the policy. | |
-| **DisplayName** | Required | String | The display name of hte policy. | |
+| **Id** | Write | String | The Id of the policy. | |
+| **DisplayName** | Key | String | The display name of hte policy. | |
 | **Description** | Write | String | The description of the policy. | |
 | **AccountsBlockModification** | Write | Boolean | Block modification of accounts. Only supported on Dedicated devices. | |
 | **AppsAllowInstallFromUnknownSources** | Write | Boolean | When allowed, users can enable the 'unknown sources' setting to install apps from sources other than the Google Play Store. | |
@@ -160,6 +160,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphapplistitem

@@ -23,6 +23,7 @@
 | **BlockPersistenceThroughWMIEventSubscription** | Write | String | This rule prevents malware from abusing WMI to attain persistence on a device. | `off`, `block`, `audit`, `warn` |
 | **BlockProcessCreationsFromPSExecAndWMICommands** | Write | String | This rule blocks processes created through PsExec and WMI from running. | `off`, `block`, `audit`, `warn` |
 | **BlockUntrustedUnsignedProcessesThatRunFromUSB** | Write | String | With this rule, admins can prevent unsigned or untrusted executable files from running from USB removable drives, including SD cards. | `off`, `block`, `audit`, `warn` |
+| **BlockWebShellCreationForServers** | Write | String | This rule blocks webshell creation for servers. | `off`, `block`, `audit`, `warn` |
 | **BlockWin32APICallsFromOfficeMacros** | Write | String | This rule prevents VBA macros from calling Win32 APIs. | `off`, `block`, `audit`, `warn` |
 | **UseAdvancedProtectionAgainstRansomware** | Write | String | This rule provides an extra layer of protection against ransomware. | `off`, `block`, `audit`, `warn` |
 | **ControlledFolderAccessProtectedFolders** | Write | StringArray[] | List of additional folders that need to be protected | |
@@ -46,6 +47,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 

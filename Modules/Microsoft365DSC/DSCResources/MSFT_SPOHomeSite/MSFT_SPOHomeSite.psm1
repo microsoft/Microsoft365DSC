@@ -74,7 +74,7 @@ function Get-TargetResource
     {
         Write-Verbose -Message 'Getting current home site collection settings'
         $homeSiteUrl = Get-PnPHomeSite -ErrorAction Stop
-        if ($null -eq $homeSiteUrl)
+        if ([string]::IsNullOrEmpty($homeSiteUrl))
         {
             Write-Verbose -Message 'There is no Home Site Collection set.'
             return $nullReturn

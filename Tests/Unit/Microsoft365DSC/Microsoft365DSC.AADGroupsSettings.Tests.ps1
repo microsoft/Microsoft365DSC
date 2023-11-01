@@ -156,6 +156,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 Value = $true
                             },
                             @{
+                                Name  = 'EnableMIPLabels'
+                                Value = $false
+                            },
+                            @{
                                 Name  = 'AllowGuestsToBeGroupOwner'
                                 Value = $false
                             },
@@ -185,7 +189,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName 'Get-MgBetaDirectorySetting' -Exactly 1
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
@@ -200,6 +204,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowGuestsToBeGroupOwner     = $True
                     AllowToAddGuests              = $True
                     EnableGroupCreation           = $True
+                    EnableMIPLabels               = $True
                     Ensure                        = 'Present'
                     Credential                    = $Credential
                     GroupCreationAllowedGroupName = 'All Company'
@@ -222,6 +227,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             },
                             @{
                                 Name  = 'EnableGroupCreation'
+                                Value = $true
+                            },
+                            @{
+                                Name  = 'EnableMIPLabels'
                                 Value = $true
                             },
                             @{
@@ -273,6 +282,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowGuestsToBeGroupOwner     = $True
                     AllowToAddGuests              = $True
                     EnableGroupCreation           = $False #Drift
+                    EnableMIPLabels               = $True #Drift
                     Ensure                        = 'Present'
                     Credential                    = $Credential
                     GroupCreationAllowedGroupName = 'All Company'

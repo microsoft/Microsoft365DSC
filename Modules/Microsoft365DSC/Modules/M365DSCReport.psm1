@@ -885,7 +885,7 @@ function Compare-M365DSCConfigurations
                                         {
                                             foreach ($property in $instance.Keys)
                                             {
-                                                if ($null -eq $sourceRsourceInstance."$property" -or $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
+                                                if ($null -eq $sourceResourceInstance."$property" -or $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
                                                     -DifferenceObject ($sourceResourceInstance."$property")))
                                                 {
                                                     # Make sure we haven't already added this drift in the delta return object to prevent duplicates.
@@ -1071,6 +1071,7 @@ function Get-M365DSCCIMInstanceKey
         [System.Collections.Hashtable]
         $CIMInstance
     )
+
     $primaryKey = ''
     if ($CIMInstance.ContainsKey('IsSingleInstance'))
     {
@@ -1108,6 +1109,11 @@ function Get-M365DSCCIMInstanceKey
     {
         $primaryKey = 'odataType'
     }
+    elseif ($CIMInstance.ContainsKey("dataType"))
+    {
+        $primaryKey = 'dataType'
+    }
+
     return $primaryKey
 }
 

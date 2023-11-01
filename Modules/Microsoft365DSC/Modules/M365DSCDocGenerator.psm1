@@ -780,6 +780,74 @@ function New-DscMofResourceWikiPage
                         }
                         $null = $permissionsContent.AppendLine("    - $applicationUpdate")
                     }
+
+                    # ProjectWorkManagement API permissions
+                    if ($null -ne $settingsJson.permissions.ProjectWorkManagement)
+                    {
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('### ProjectWorkManagement')
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('To authenticate with the Microsoft ProjectWorkManagement API, this resource required the following permissions:')
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('#### Delegated permissions')
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('- **Read**')
+                        $null = $permissionsContent.AppendLine()
+
+                        if ($settingsJson.permissions.ProjectWorkManagement.delegated.read.Count -eq 0)
+                        {
+                            $delegatedRead = 'None'
+                        }
+                        else
+                        {
+                            $delegatedRead = $settingsJson.permissions.ProjectWorkManagement.delegated.read.name -join ', '
+                        }
+                        $null = $permissionsContent.AppendLine("    - $delegatedRead")
+
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('- **Update**')
+                        $null = $permissionsContent.AppendLine()
+
+                        if ($settingsJson.permissions.ProjectWorkManagement.delegated.update.Count -eq 0)
+                        {
+                            $delegatedUpdate = 'None'
+                        }
+                        else
+                        {
+                            $delegatedUpdate = $settingsJson.permissions.ProjectWorkManagement.delegated.update.name -join ', '
+                        }
+                        $null = $permissionsContent.AppendLine("    - $delegatedUpdate")
+
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('#### Application permissions')
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('- **Read**')
+                        $null = $permissionsContent.AppendLine()
+
+                        if ($settingsJson.permissions.ProjectWorkManagement.application.read.Count -eq 0)
+                        {
+                            $applicationRead = 'None'
+                        }
+                        else
+                        {
+                            $applicationRead = $settingsJson.permissions.ProjectWorkManagement.application.read.name -join ', '
+                        }
+                        $null = $permissionsContent.AppendLine("    - $applicationRead")
+
+                        $null = $permissionsContent.AppendLine()
+                        $null = $permissionsContent.AppendLine('- **Update**')
+                        $null = $permissionsContent.AppendLine()
+
+                        if ($settingsJson.permissions.ProjectWorkManagement.application.update.Count -eq 0)
+                        {
+                            $applicationUpdate = 'None'
+                        }
+                        else
+                        {
+                            $applicationUpdate = $settingsJson.permissions.ProjectWorkManagement.application.update.name -join ', '
+                        }
+                        $null = $permissionsContent.AppendLine("    - $applicationUpdate")
+                    }
                 }
             }
             else
@@ -861,6 +929,8 @@ function Update-M365DSCResourceDocumentationPage
         $Force
     )
 
+    Write-Output -InputObject 'Generating Resource Documentation pages'
+
     $tempPath = Join-Path -Path $env:TEMP -ChildPath 'ResourceMarkdown'
 
     if ((Test-Path -Path $tempPath) -eq $false)
@@ -877,6 +947,8 @@ function Update-M365DSCResourceDocumentationPage
     New-DscMofResourceWikiPage @newDscMofResourceWikiPageParameters
 
     $resourceDocsRoot = Join-Path -Path $PSScriptRoot -ChildPath '..\..\..\docs\docs\resources'
+
+    Write-Output -InputObject '  - Moving generated pages to the Docs folder'
 
     $files = Get-ChildItem -Path $tempPath
     foreach ($file in $files)
@@ -919,6 +991,8 @@ function Update-M365DSCResourceDocumentationPage
     }
 
     Remove-Item -Path $tempPath -Force -Confirm:$false
+
+    Write-Output -InputObject 'Generation of Resource Documentation pages completed'
 }
 
 Export-ModuleMember -Function @(

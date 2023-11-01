@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Id of the Intune policy | |
-| **DisplayName** | Required | String | Disaply name of the Intune policy | |
+| **Id** | Write | String | Id of the Intune policy | |
+| **DisplayName** | Key | String | Disaply name of the Intune policy | |
 | **Description** | Write | String | Description of the Intune policy | |
 | **ConnectAutomatically** | Write | Boolean | If the network is in range, automatically connect. | |
 | **ConnectWhenNetworkNameIsHidden** | Write | Boolean | Don't show this Wi-Fi network on an end-user's device in the list of available networks. The SSID will not be broadcasted. | |
@@ -38,6 +38,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 

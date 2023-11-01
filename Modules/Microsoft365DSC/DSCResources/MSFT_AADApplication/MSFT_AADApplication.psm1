@@ -421,7 +421,44 @@ function Set-TargetResource
     $currentParameters.Remove('LogoutURL') | Out-Null
     $currentParameters.Remove('Homepage') | Out-Null
 
+    $skipToUpdate = $false
+    $AppIdValue = $null
     if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Absent')
+    {
+        # Before attempting to create a new instance, let's first check to see if there is already an existing instance that is soft deleted
+        if (-not [System.String]::IsNullOrEmpty($AppId))
+        {
+            Write-Verbose "Trying to retrieve existing deleted Applications from soft delete by Id {$AppId}."
+            [Array]$deletedApp = Get-MgBetaDirectoryDeletedItemAsApplication -DirectoryObjectId $AppId -ErrorAction SilentlyContinue
+        }
+
+        if ($null -eq $deletedApp)
+        {
+            Write-Verbose "Trying to retrieve existing deleted Applications from soft delete by DisplayName {$DisplayName}."
+            [Array]$deletedApp = Get-MgBetaDirectoryDeletedItemAsApplication -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+        }
+
+        if ($null -ne $deletedApp -and $deletedApp.Length -eq 1)
+        {
+            $deletedSinceInDays = [System.DateTime]::Now.Subtract($deletedApp[0].DeletedDateTime).Days
+            if ($deletedSinceInDays -le 30)
+            {
+                Write-Verbose -Message "Found existing deleted instance of {$DisplayName}. Restoring it instead of creating a new one. This could take a few minutes to complete."
+                Restore-MgBetaDirectoryDeletedItem -DirectoryObjectId $deletedApp.Id
+                $skipToUpdate = $true
+                $AppIdValue = $deletedApp.Id
+            }
+            else
+            {
+                Write-Verbose -Message "Found existing deleted instance of {$DisplayName}. However, the deleted date was over days ago and it cannot be restored. Will recreate a new instance instead."
+            }
+        }
+        elseif ($deletedApp.Length -gt 1)
+        {
+            Write-Verbose -Message "Multiple instances of a deleted application with name {$DisplayName} wehre found. Creating a new instance since we can't determine what instance to restore."
+        }
+    }
+    if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Absent' -and -not $skipToUpdate)
     {
         Write-Verbose -Message "Creating New AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         $currentParameters.Remove('ObjectId') | Out-Null
@@ -441,14 +478,18 @@ function Set-TargetResource
 
     }
     # App should exist and will be configured to desired state
-    if ($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present')
+    elseif (($Ensure -eq 'Present' -and $currentAADApp.Ensure -eq 'Present') -or $skipToUpdate)
     {
         $currentParameters.Remove('ObjectId') | Out-Null
 
-        $currentParameters.Add('ApplicationId', $currentAADApp.ObjectId)
+        if (-not $skipToUpdate)
+        {
+            $AppIdValue = $currentAADApp.ObjectId
+        }
+        $currentParameters.Add('ApplicationId', $AppIdValue)
         Write-Verbose -Message "Updating existing AzureAD Application {$DisplayName} with values:`r`n$($currentParameters | Out-String)"
         Update-MgApplication @currentParameters
-        $currentAADApp.Add('ID', $currentAADApp.ObjectId)
+        $currentAADApp.Add('ID', $AppIdValue)
         $needToUpdatePermissions = $true
     }
     # App exists but should not
@@ -711,15 +752,14 @@ function Test-TargetResource
     if ($CurrentValues.Permissions.Length -gt 0 -and $null -ne $CurrentValues.Permissions.Name)
     {
         $permissionsDiff = Compare-Object -ReferenceObject ($CurrentValues.Permissions.Name) -DifferenceObject ($Permissions.Name)
+        $driftedParams = @{}
         if ($null -ne $permissionsDiff)
         {
             Write-Verbose -Message "Permissions differ: $($permissionsDiff | Out-String)"
             Write-Verbose -Message "Test-TargetResource returned $false"
-            $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
-                "They should contain {$($Permissions.Name)} but instead contained {$($CurrentValues.Permissions.Name)}"
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-            return $false
+            $EventValue = "<CurrentValue>$($CurrentValues.Permissions.Name)</CurrentValue>"
+            $EventValue += "<DesiredValue>$($Permissions.Name)</DesiredValue>"
+            $driftedParams.Add('Permissions', $EventValue)
         }
         else
         {
@@ -732,11 +772,10 @@ function Test-TargetResource
         {
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App, but permissions were specified for desired state'
             Write-Verbose -Message "Test-TargetResource returned $false"
-            $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
-                "They should contain {$($Permissions.Name)} but instead contained {`$null}"
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-            return $false
+
+            $EventValue = "<CurrentValue>`$null</CurrentValue>"
+            $EventValue += "<DesiredValue>$($Permissions.Name)</DesiredValue>"
+            $driftedParams.Add('Permissions', $EventValue)
         }
         else
         {
@@ -759,7 +798,8 @@ function Test-TargetResource
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -IncludedDrifts $driftedParams
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -815,7 +855,7 @@ function Export-TargetResource
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
-    
+
     $dscContent = [System.Text.StringBuilder]::new()
     $i = 1
     Write-Host "`r`n" -NoNewline

@@ -14,8 +14,8 @@ class MSFT_MicrosoftGraphScopedRoleMembership
 [ClassVersion("1.0.0.0"), FriendlyName("AADAdministrativeUnit")]
 class MSFT_AADAdministrativeUnit : OMI_BaseResource
 {
-    [Key, Description("Object-Id of the Administrative Unit")] String Id;
-    [Required, Description("DisplayName of the Administrative Unit")] String DisplayName;
+    [Key, Description("DisplayName of the Administrative Unit")] String DisplayName;
+    [Write, Description("Object-Id of the Administrative Unit")] String Id;
     [Write, Description("Description of the Administrative Unit")] String Description;
     [Write, Description("Visibility of the Administrative Unit. Specify HiddenMembership if members of the AU are hidden")] String Visibility;
     [Write, Description("Specify membership type. Possible values are Assigned and Dynamic. Note that the functionality is currently in preview.")] String MembershipType;

@@ -1,0 +1,28 @@
+﻿{
+    "resourceName": "AADRoleEligibilityScheduleRequest",
+    "description": "This resource configures an Azure Active Directory administrative unit.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Privileged Role Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "application": {
+                "read": [
+                    {
+                        "name": "RoleEligibilitySchedule.ReadWrite.Directory"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "RoleEligibilitySchedule.ReadWrite.Directory"
+                    }
+                ]
+            }
+        }
+    }
+}

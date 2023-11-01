@@ -103,7 +103,7 @@ function Get-TargetResource
         $getValue = $null
         if ($Id -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')
         {
-            $getValue = Get-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $id -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $id -ErrorAction SilentlyContinue
             if ($null -ne $getValue)
             {
                 Write-Verbose -Message "Found something with id {$id}"
@@ -113,7 +113,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Nothing with id {$id} was found"
             $Filter = "displayName eq '$DisplayName'"
-            $getValue = Get-MgDeviceManagementRoleAssignment -Filter $Filter -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaDeviceManagementRoleAssignment -Filter $Filter -ErrorAction SilentlyContinue
             if ($null -ne $getValue)
             {
                 Write-Verbose -Message "Found something with displayname {$DisplayName}"
@@ -386,7 +386,7 @@ function Set-TargetResource
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
-        $policy = New-MgDeviceManagementRoleAssignment -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementRoleAssignment -BodyParameter $CreateParameters
 
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -403,14 +403,14 @@ function Set-TargetResource
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
 
-        Update-MgDeviceManagementRoleAssignment -BodyParameter $UpdateParameters `
+        Update-MgBetaDeviceManagementRoleAssignment -BodyParameter $UpdateParameters `
             -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
-        Remove-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
+        Remove-MgBetaDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
     }
 }
 
@@ -644,7 +644,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-MgDeviceManagementRoleAssignment `
+        [array]$getValue = Get-MgBetaDeviceManagementRoleAssignment `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceAndAppManagementRoleAssignment'  `
@@ -652,7 +652,7 @@ function Export-TargetResource
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgDeviceManagementRoleAssignment `
+            [array]$getValue = Get-MgBetaDeviceManagementRoleAssignment `
                 -ErrorAction Stop
         }
 

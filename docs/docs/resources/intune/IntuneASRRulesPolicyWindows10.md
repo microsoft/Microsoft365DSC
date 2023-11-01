@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the endpoint protection attack surface protection rules policy for Windows 10. | |
-| **DisplayName** | Required | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
+| **Identity** | Write | String | Identity of the endpoint protection attack surface protection rules policy for Windows 10. | |
+| **DisplayName** | Key | String | Display name of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Description** | Write | String | Description of the endpoint protection attack surface protection rules policy for Windows 10. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
 | **ProcessCreationType** | Write | String | This rule blocks processes created through PsExec and WMI from running. | `notConfigured`, `userDefined`, `block`, `auditMode`, `warn`, `disable` |
@@ -45,6 +45,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 

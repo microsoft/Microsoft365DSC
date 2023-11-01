@@ -222,13 +222,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             durationInDays                  = 25
                         } -ClientOnly)
                     CanExtend               = $True
-                    CustomExtensionHandlers = @(
+                    CustomExtensionHandlers = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphcustomextensionhandler -Property @{
-                            CustomExtension = (New-CimInstance -ClassName MSFT_MicrosoftGraphcustomaccesspackageworkflowextension -Property @{
-                                    Id = 'MyCustomExtensionId'
-                                } -ClientOnly)
+                            CustomExtensionId = 'MyCustomExtensionId'
                             Stage           = 'assignmentRequestCreated'
-                            Id              = 'MyCustomExtensionHandlersId'
                         } -ClientOnly)
                     )
                     Description             = 'FakeStringValue'
@@ -346,11 +343,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                         } -ClientOnly)
                     CanExtend               = $True
-                    CustomExtensionHandlers = @(
+                    CustomExtensionHandlers = [CimInstance[]]@(
                             (New-CimInstance -ClassName MSFT_MicrosoftGraphcustomextensionhandler -Property @{
-                            isArray = $True
-                            CIMType = 'MSFT_MicrosoftGraphcustomextensionhandler'
-
+                            CustomExtensionId = 'MyCustomExtensionId'
+                            Stage           = 'assignmentRequestCreated'
                         } -ClientOnly)
                     )
                     Description             = 'FakeStringValue'
@@ -427,13 +423,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 acceptRequests = $True
 
                             }
-                            CustomExtensionHandlers = @(
-                                @{
-                                    isArray = $True
-
-                                }
-                            )
-
                         }
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
@@ -476,6 +465,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                 reviewerType                    = 'FakeStringValue'
                                 durationInDays                  = 25
                             } -ClientOnly)
+                        CustomExtensionHandlers = [CimInstance[]]@(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphcustomextensionhandler -Property @{
+                            CustomExtensionId = 'MyCustomExtensionId'
+                            Stage           = 'assignmentRequestCreated'
+                            } -ClientOnly)
+                        )
                         CanExtend               = $True
                         Description             = 'FakeStringValue'
                         DisplayName             = 'FakeStringValue'

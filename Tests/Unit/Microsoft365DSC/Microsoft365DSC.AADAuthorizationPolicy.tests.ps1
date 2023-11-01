@@ -73,21 +73,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Get-MgBetaPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
-                        Id                                        = 'authorizationPolicy'
-                        DisplayName                               = 'Authorization Policy'
-                        Description                               = 'something'
-                        allowedToSignUpEmailBasedSubscriptions    = $true
-                        allowedToUseSSPR                          = $true
-                        allowEmailVerifiedUsersToJoinOrganization = $true
-                        AllowInvitesFrom                          = 'Everyone'
-                        blockMsolPowerShell                       = $false
-                        defaultUserRolePermissions                = [pscustomobject]@{
-                            allowedToCreateApps             = $true
-                            allowedToCreateSecurityGroups   = $true
-                            allowedToReadOtherUsers         = $true
-                            PermissionGrantPoliciesAssigned = [string[]]@()
+                        Id                                                  = 'authorizationPolicy'
+                        DisplayName                                         = 'Authorization Policy'
+                        Description                                         = 'something'
+                        AllowedToSignUpEmailBasedSubscriptions              = $true
+                        AllowedToUseSspr                                    = $true
+                        AllowEmailVerifiedUsersToJoinOrganization           = $true
+                        AllowInvitesFrom                                    = 'Everyone'
+                        BlockMsolPowerShell                                 = $false
+                        PermissionGrantPolicyIdsAssignedToDefaultUserRole   = [string[]]@()
+                        DefaultUserRolePermissions                          = [pscustomobject]@{
+                        AllowedToCreateApps                    = $true
+                        AllowedToCreateSecurityGroups          = $true
+                        AllowedToReadOtherUsers                = $true
                         }
-                        GuestUserRoleId                           = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
+                        GuestUserRoleId                                     = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
                 }
@@ -129,21 +129,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
-                        Id                                        = 'authorizationPolicy'
-                        DisplayName                               = 'Authorization Policy'
-                        Description                               = 'something'
-                        allowedToSignUpEmailBasedSubscriptions    = $true
-                        allowedToUseSSPR                          = $true
-                        allowEmailVerifiedUsersToJoinOrganization = $true
-                        AllowInvitesFrom                          = 'Everyone'
-                        blockMsolPowerShell                       = $false
-                        defaultUserRolePermissions                = [pscustomobject]@{
+                        Id                                                  = 'authorizationPolicy'
+                        DisplayName                                         = 'Authorization Policy'
+                        Description                                         = 'something'
+                        allowedToSignUpEmailBasedSubscriptions              = $true
+                        allowedToUseSSPR                                    = $true
+                        allowEmailVerifiedUsersToJoinOrganization           = $true
+                        AllowInvitesFrom                                    = 'Everyone'
+                        blockMsolPowerShell                                 = $false
+                        PermissionGrantPolicyIdsAssignedToDefaultUserRole   = [string[]]@()
+                        defaultUserRolePermissions                          = [pscustomobject]@{
                             allowedToCreateApps             = $true
                             allowedToCreateSecurityGroups   = $true
                             allowedToReadOtherUsers         = $true
-                            PermissionGrantPoliciesAssigned = [string[]]@()
                         }
-                        GuestUserRoleId                           = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
+                        GuestUserRoleId                                     = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
                 }
@@ -183,20 +183,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaPolicyAuthorizationPolicy -MockWith {
                     $AADAuthPol = [pscustomobject]@{
-                        DisplayName                               = 'Authorization Policy'
-                        Description                               = 'something'
-                        allowedToSignUpEmailBasedSubscriptions    = $true
-                        allowedToUseSSPR                          = $true
-                        allowEmailVerifiedUsersToJoinOrganization = $true
-                        AllowInvitesFrom                          = 'Everyone'
-                        blockMsolPowerShell                       = $false
-                        defaultUserRolePermissions                = [pscustomobject]@{
+                        DisplayName                                         = 'Authorization Policy'
+                        Description                                         = 'something'
+                        allowedToSignUpEmailBasedSubscriptions              = $true
+                        allowedToUseSSPR                                    = $true
+                        allowEmailVerifiedUsersToJoinOrganization           = $true
+                        AllowInvitesFrom                                    = 'Everyone'
+                        blockMsolPowerShell                                 = $false
+                        PermissionGrantPolicyIdsAssignedToDefaultUserRole   = [string[]]@()
+                        defaultUserRolePermissions                          = [pscustomobject]@{
                             allowedToCreateApps             = $true
                             allowedToCreateSecurityGroups   = $true
                             allowedToReadOtherUsers         = $true
-                            PermissionGrantPoliciesAssigned = [string[]]@()
                         }
-                        GuestUserRoleId                           = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
+                        GuestUserRoleId                                     = '10dae51f-b6af-4016-8d66-8c2a99b929b3' # Guest
                     }
                     return $AADAuthPol
                 }

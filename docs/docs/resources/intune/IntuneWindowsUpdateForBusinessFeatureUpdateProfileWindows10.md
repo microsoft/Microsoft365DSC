@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
-| **DisplayName** | Required | String | The display name of the profile. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
+| **DisplayName** | Key | String | The display name of the profile. | |
 | **Description** | Write | String | The description of the profile which is specified by the user. | |
 | **FeatureUpdateVersion** | Write | String | The feature update version that will be deployed to the devices targeted by this profile. The version could be any supported version for example 1709, 1803 or 1809 and so on. | |
 | **RolloutSettings** | Write | MSFT_MicrosoftGraphwindowsUpdateRolloutSettings | The windows update rollout settings, including offer start date time, offer end date time, and days between each set of offers. | |
@@ -28,6 +28,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphWindowsUpdateRolloutSettings

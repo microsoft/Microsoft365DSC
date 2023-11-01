@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | The Id of the Connected organization object. | |
-| **DisplayName** | Required | String | The display name of the connected organization. | |
+| **DisplayName** | Key | String | The display name of the connected organization. | |
+| **Id** | Write | String | The Id of the Connected organization object. | |
 | **Description** | Write | String | The description of the connected organization. | |
 | **IdentitySources** | Write | MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource[] | The identity sources in this connected organization. | |
 | **State** | Write | String | The state of a connected organization defines whether assignment policies with requestor scope type AllConfiguredConnectedOrganizationSubjects are applicable or not. | `configured`, `proposed`, `unknownFutureValue` |

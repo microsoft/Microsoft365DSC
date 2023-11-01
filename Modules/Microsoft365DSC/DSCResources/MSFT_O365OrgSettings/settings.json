@@ -64,6 +64,9 @@
                     },
                     {
                         "name": "OrgSettings-DynamicsVoice.Read.All"
+                    },
+                    {
+                        "name": "Tasks.Read.All"
                     }
                 ],
                 "update": [
@@ -87,36 +90,9 @@
                     },
                     {
                         "name": "OrgSettings-DynamicsVoice.ReadWrite.All"
-                    }
-                ]
-            }
-        },
-        "exchange": {
-            "requiredroles": [],
-            "requiredrolegroups": []
-        },
-        "ProjectWorkManagement": {
-            "delegated": {
-                "read": [
+                    },
                     {
-                        "name": "OrgSettings-Planner.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "OrgSettings-Planner.ReadWrite.All"
-                    }
-                ]
-            },
-            "application": {
-                "read": [
-                    {
-                        "name": "OrgSettings-Planner.Read.All"
-                    }
-                ],
-                "update": [
-                    {
-                        "name": "OrgSettings-Planner.ReadWrite.All"
+                        "name": "Tasks.ReadWrite.All"
                     }
                 ]
             }

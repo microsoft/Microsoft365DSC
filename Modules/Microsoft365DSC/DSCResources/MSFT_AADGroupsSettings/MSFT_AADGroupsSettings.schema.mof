@@ -3,6 +3,7 @@ class MSFT_AADGroupsSettings : OMI_BaseResource
 {
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("The flag indicating whether Office 365 group creation is allowed in the directory by non-admin users. This setting does not require an Azure Active Directory Premium P1 license.")] Boolean EnableGroupCreation;
+    [Write, Description("Boolean indicating whether or not sensitivity labels can be assigned to M365-groups.")] Boolean EnableMIPLabels;
     [Write, Description("Boolean indicating whether or not a guest user can be an owner of groups.")] Boolean AllowGuestsToBeGroupOwner;
     [Write, Description("Boolean indicating whether or not a guest user can have access to Office 365 groups content. This setting does not require an Azure Active Directory Premium P1 license.")] Boolean AllowGuestsToAccessGroups;
     [Write, Description("The url of a link to the guest usage guidelines.")] String GuestUsageGuidelinesUrl;

@@ -15,6 +15,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $EnableMIPLabels,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowGuestsToBeGroupOwner,
 
         [Parameter()]
@@ -95,7 +99,7 @@ function Get-TargetResource
         }
         else
         {
-            Write-Verbose -Message 'Found existing AzureAD Groups Settings'
+            Write-Verbose -Message 'Found existing AzureAD DirectorySetting for Group.Unified'
             $AllowedGroupName = $null
             $GroupCreationValue = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GroupCreationAllowedGroupId' }
             if (-not [System.String]::IsNullOrEmpty($GroupCreationValue.Value))
@@ -109,6 +113,7 @@ function Get-TargetResource
             }
 
             $valueEnableGroupCreation = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableGroupCreation' }
+            $valueEnableMIPLabels = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableMIPLabels' }
             $valueAllowGuestsToBeGroupOwner = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToBeGroupOwner' }
             $valueAllowGuestsToAccessGroups = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToAccessGroups' }
             $valueGuestUsageGuidelinesUrl = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GuestUsageGuidelinesUrl' }
@@ -118,6 +123,7 @@ function Get-TargetResource
             $result = @{
                 IsSingleInstance          = 'Yes'
                 EnableGroupCreation       = [Boolean]::Parse($valueEnableGroupCreation.Value)
+                EnableMIPLabels           = [Boolean]::Parse($valueEnableMIPLabels.Value)
                 AllowGuestsToBeGroupOwner = [Boolean]::Parse($valueAllowGuestsToBeGroupOwner.Value)
                 AllowGuestsToAccessGroups = [Boolean]::Parse($valueAllowGuestsToAccessGroups.Value)
                 GuestUsageGuidelinesUrl   = $valueGuestUsageGuidelinesUrl.Value
@@ -166,6 +172,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableGroupCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMIPLabels,
 
         [Parameter()]
         [System.Boolean]
@@ -267,6 +277,11 @@ function Set-TargetResource
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableGroupCreation' }
                 $entry.Value = [System.Boolean]$EnableGroupCreation
             }
+            elseif ($property.Name -eq 'EnableMIPLabels')
+            {
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'EnableMIPLabels' }
+                $entry.Value = [System.Boolean]$EnableMIPLabels
+            }
             elseif ($property.Name -eq 'AllowGuestsToBeGroupOwner')
             {
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowGuestsToBeGroupOwner' }
@@ -324,6 +339,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnableGroupCreation,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableMIPLabels,
 
         [Parameter()]
         [System.Boolean]

@@ -1,0 +1,34 @@
+﻿{
+    "resourceName": "EXOMailboxPermission",
+    "description": "",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "Unified Messaging",
+                "View-Only Recipients",
+                "Mail Recipient Creation",
+                "Mail Recipients",
+                "UM Mailboxes"
+            ],
+            "requiredrolegroups": "Organization Management"
+        }
+    }
+}

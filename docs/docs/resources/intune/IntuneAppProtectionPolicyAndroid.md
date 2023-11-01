@@ -27,6 +27,8 @@
 | **ContactSyncBlocked** | Write | Boolean | Indicates whether contacts can be synced to the user's device. | |
 | **PeriodBeforePinReset** | Write | String | TimePeriod before the all-level pin must be reset if PinRequired is set to True. | |
 | **PrintBlocked** | Write | Boolean | Indicates whether printing is allowed from managed apps. | |
+| **RequireClass3Biometrics** | Write | Boolean | Require user to apply Class 3 Biometrics on their Android device. | |
+| **RequirePinAfterBiometricChange** | Write | Boolean | A PIN prompt will override biometric prompts if class 3 biometrics are updated on the device. | |
 | **FingerprintBlocked** | Write | Boolean | Indicates whether use of the fingerprint reader is allowed in place of a pin if PinRequired is set to True. | |
 | **Apps** | Write | StringArray[] | List of IDs representing the Android apps controlled by this protection policy. | |
 | **Assignments** | Write | StringArray[] | List of IDs of the groups assigned to this Android Protection Policy. | |

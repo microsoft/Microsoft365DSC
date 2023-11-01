@@ -164,7 +164,7 @@ function Get-TargetResource
             DefaultUserRoleAllowedToReadOtherUsers                  = $Policy.DefaultUserRolePermissions.AllowedToReadOtherUsers
             DefaultUserRoleAllowedToReadBitlockerKeysForOwnedDevice = $Policy.DefaultUserRolePermissions.AllowedToReadBitlockerKeysForOwnedDevice
             DefaultUserRoleAllowedToCreateTenants                   = $Policy.DefaultUserRolePermissions.AllowedToCreateTenants
-            PermissionGrantPolicyIdsAssignedToDefaultUserRole       = $Policy.DefaultUserRolePermissions.PermissionGrantPoliciesAssigned
+            PermissionGrantPolicyIdsAssignedToDefaultUserRole       = $Policy.PermissionGrantPolicyIdsAssignedToDefaultUserRole
             GuestUserRole                                           = Get-GuestUserRoleNameFromId -GuestUserRoleId $Policy.GuestUserRoleId
             Ensure                                                  = 'Present'
             Credential                                              = $Credential
@@ -296,15 +296,15 @@ function Set-TargetResource
     $currentPolicy = Get-TargetResource @PSBoundParameters
 
     Write-Verbose -Message 'Set-Targetresource: Cleaning up parameters'
-    $currentParameters = ([hashtable]$PSBoundParameters).Clone()
-    $currentParameters.Remove('IsSingleInstance') | Out-Null
-    $currentParameters.Remove('ApplicationId') | Out-Null
-    $currentParameters.Remove('TenantId') | Out-Null
-    $currentParameters.Remove('CertificateThumbprint') | Out-Null
-    $currentParameters.Remove('ApplicationSecret') | Out-Null
-    $currentParameters.Remove('Ensure') | Out-Null
-    $currentParameters.Remove('Credential') | Out-Null
-    $currentParameters.Remove('ManagedIdentity') | Out-Null
+    $desiredParameters = ([hashtable]$PSBoundParameters).Clone()
+    $desiredParameters.Remove('IsSingleInstance') | Out-Null
+    $desiredParameters.Remove('ApplicationId') | Out-Null
+    $desiredParameters.Remove('TenantId') | Out-Null
+    $desiredParameters.Remove('CertificateThumbprint') | Out-Null
+    $desiredParameters.Remove('ApplicationSecret') | Out-Null
+    $desiredParameters.Remove('Ensure') | Out-Null
+    $desiredParameters.Remove('Credential') | Out-Null
+    $desiredParameters.Remove('ManagedIdentity') | Out-Null
 
     Write-Verbose -Message 'Set-Targetresource: Authorization Policy Ensure Present'
     $UpdateParameters = @{
@@ -315,26 +315,26 @@ function Set-TargetResource
     # prepare object for default user role permissions
     $defaultUserRolePermissions = @{}
 
-    foreach ($param in $currentParameters.Keys)
+    foreach ($param in $desiredParameters.Keys)
     {
-        if ($currentParameters.$param -ne $currentPolicy.$param -or
-            ($null -eq $currentParementers.$param -and $null -ne $currentPolicy.$param) -or
-            ($null -ne $currentParementers.$param -and $null -eq $currentPolicy.$param))
+        $desiredParam = $desiredParameters.$param
+        $currentParam = $currentPolicy.$param
+
+        if (($desiredParam -is [System.Array] -and (Compare-Object -ReferenceObject $desiredParam -DifferenceObject $currentParam)) -or
+            ($desiredParam -isnot [System.Array] -and $desiredParam -ne $currentParam) -or
+           ($null -eq $desiredParam -and $null -ne $currentParam) -or
+           ($null -ne $desiredParam -and $null -eq $currentParam))
         {
             if ($param.ToLower() -match 'defaultuserrole')
             {
                 if ($param -like 'Permission*')
                 {
-                    #beta profile
-                    #$UpdateParameters.Add($param, $currentParameters.$param)
-                    #Write-Verbose -Message "Added '$param' to UpdateParameters"
-                    #v1.0 profile
-                    $defaultUserRolePermissions.Add('PermissionGrantPoliciesAssigned', $currentParameters.$param)
-                    Write-Verbose -Message "Added 'PermissionGrantPoliciesAssigned' ($param) to defaultUserRolePermissions"
+                    $UpdateParameters.Add($param, $desiredParam)
+                    Write-Verbose -Message "Added '$param' to UpdateParameters"
                 }
                 else
                 {
-                    $defaultUserRolePermissions.Add(($param -replace '^DefaultUserRole'), $currentParameters.$param)
+                    $defaultUserRolePermissions.Add(($param -replace '^DefaultUserRole'), $desiredParam)
                     Write-Verbose -Message "Added '$($param -replace '^DefaultUserRole')' ($param) to defaultUserRolePermissions"
                 }
             }
@@ -343,14 +343,14 @@ function Set-TargetResource
                 if ($param -eq 'GuestUserRole')
                 {
                     # translate displayvalue to corresponding GUID
-                    $guestUserRoleId = Get-GuestUserRoleIdFromName -GuestUserRole $currentParameters.$param
+                    $guestUserRoleId = Get-GuestUserRoleIdFromName -GuestUserRole $desiredParam
                     Write-Verbose -Message "Translated GuestUserRole '$param' to '$guestUserRoleId'"
                     $UpdateParameters.Add($param, $guestUserRoleId)
                     Write-Verbose -Message "Added '$param' to UpdateParameters"
                 }
                 else
                 {
-                    $UpdateParameters.Add($param, $currentParameters.$param)
+                    $UpdateParameters.Add($param, $desiredParam)
                     Write-Verbose -Message "added '$param' to UpdateParameters"
                 }
             }
@@ -381,7 +381,7 @@ function Set-TargetResource
             -Credential $Credential
 
         Write-Verbose -Message "Set-Targetresource: Failed change policy $DisplayName"
-        Write-Verbose -Message $_
+        throw $_
     }
     Write-Verbose -Message "Set-Targetresource: finished processing Policy $Displayname"
 }

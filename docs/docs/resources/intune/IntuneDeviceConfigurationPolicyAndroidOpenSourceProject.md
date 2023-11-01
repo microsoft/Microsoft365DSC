@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Id** | Key | String | Id of the Intune policy. | |
-| **DisplayName** | Required | String | Display name of the Intune policy. | |
+| **Id** | Write | String | Id of the Intune policy. | |
+| **DisplayName** | Key | String | Display name of the Intune policy. | |
 | **Description** | Write | String | Description of the Intune policy. | |
 | **AppsBlockInstallFromUnknownSources** | Write | Boolean | Prevent applications from unknown sources. | |
 | **BluetoothBlockConfiguration** | Write | Boolean | Prevent bluetooth configuration. | |
@@ -40,6 +40,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ## Description

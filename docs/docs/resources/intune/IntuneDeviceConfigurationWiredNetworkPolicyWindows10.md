@@ -29,8 +29,8 @@
 | **RootCertificateForClientValidationId** | Write | String | Specify root certificate for client validation. | |
 | **SecondaryRootCertificateForClientValidationId** | Write | String | Specify secondary root certificate for client validation. | |
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
-| **DisplayName** | Required | String | Admin provided name of the device configuration. | |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **DisplayName** | Key | String | Admin provided name of the device configuration. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
@@ -50,6 +50,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 

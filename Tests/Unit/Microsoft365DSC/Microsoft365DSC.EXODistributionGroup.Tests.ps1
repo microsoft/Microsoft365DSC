@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         BeforeAll {
             $secpasswd = ConvertTo-SecureString 'password' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
-
+            $Script:ExportMode = $false
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
@@ -49,6 +49,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+
+            Mock -CommandName Get-DistributionGroupMember -MockWith {
+            }
         }
 
         # Test contexts
@@ -66,6 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MemberJoinRestriction              = 'Closed'
                     ModeratedBy                        = @('admin@contoso.com')
                     ModerationEnabled                  = $False
+                    Identity                           = 'DemoDG'
                     Name                               = 'DemoDG'
                     OrganizationalUnit                 = 'nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/contoso.com'
                     PrimarySmtpAddress                 = 'demodg@contoso.com'
@@ -107,6 +111,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MemberJoinRestriction              = 'Closed'
                     ModeratedBy                        = @('admin@contoso.com')
                     ModerationEnabled                  = $False
+                    Identity                           = 'DemoDG'
                     Name                               = 'DemoDG'
                     OrganizationalUnit                 = 'nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/contoso.com'
                     PrimarySmtpAddress                 = 'demodg@contoso.com'
@@ -127,6 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MemberJoinRestriction              = 'Open' # Drift
                         ModeratedBy                        = @('admin@contoso.com')
                         ModerationEnabled                  = $False
+                        Identity                           = 'DemoDG'
                         Name                               = 'DemoDG'
                         OrganizationalUnit                 = 'nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/contoso.com'
                         PrimarySmtpAddress                 = 'demodg@contoso.com'
@@ -146,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName 'Set-DistributionGroup' -Exactly 1
             }
 
-            It 'Should return Absent from the Get method' {
+            It 'Should return Present from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
         }
@@ -165,6 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MemberJoinRestriction              = 'Closed'
                     ModeratedBy                        = @('admin@contoso.com')
                     ModerationEnabled                  = $False
+                    Identity                           = 'DemoDG'
                     Name                               = 'DemoDG'
                     OrganizationalUnit                 = 'nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/contoso.com'
                     PrimarySmtpAddress                 = 'demodg@contoso.com'
@@ -185,6 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MemberJoinRestriction              = 'Closed'
                         ModeratedBy                        = @('admin@contoso.com')
                         ModerationEnabled                  = $False
+                        Identity                           = 'DemoDG'
                         Name                               = 'DemoDG'
                         OrganizationalUnit                 = 'nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/contoso.com'
                         PrimarySmtpAddress                 = 'demodg@contoso.com'
@@ -218,6 +226,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     MemberJoinRestriction              = 'Closed'
                     ModeratedBy                        = @('admin@contoso.com')
                     ModerationEnabled                  = $False
+                    Identity                           = 'DemoDG'
                     Name                               = 'DemoDG'
                     OrganizationalUnit                 = 'nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/contoso.com'
                     PrimarySmtpAddress                 = 'demodg@contoso.com'
@@ -238,6 +247,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MemberJoinRestriction              = 'Closed'
                         ModeratedBy                        = @('admin@contoso.com')
                         ModerationEnabled                  = $False
+                        Identity                           = 'DemoDG'
                         Name                               = 'DemoDG'
                         OrganizationalUnit                 = 'nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/contoso.com'
                         PrimarySmtpAddress                 = 'demodg@contoso.com'
@@ -282,6 +292,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MemberJoinRestriction              = 'Closed'
                         ModeratedBy                        = @('admin@contoso.com')
                         ModerationEnabled                  = $False
+                        Identity                           = 'DemoDG'
                         Name                               = 'DemoDG'
                         OrganizationalUnit                 = 'nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/contoso.com'
                         PrimarySmtpAddress                 = 'demodg@contoso.com'

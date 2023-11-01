@@ -3351,18 +3351,28 @@ function Update-Microsoft365StubFile
         $CmdletNoun
     )
 
-    $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
-                        -ChildPath "..\Tests\Unit" `
-                        -Resolve
-    $filePath=(Join-Path -Path $M365DSCTestFolder `
-    -ChildPath "\Stubs\Microsoft365.psm1" `
-    -Resolve)
-
-    $content = Get-Content -Path $FilePath
-    if (($content|select-string -pattern "function Get-$CmdletNoun$").count -eq 0)
+    try
     {
-        $content += "#region $CmdletNoun`r`n" + (Get-ResourceStub -CmdletNoun $CmdletNoun) + "#endregion`r`n"
-        Set-Content -Path $FilePath -Value $content
+        $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
+                            -ChildPath "..\Tests\Unit" `
+                            -Resolve
+        $filePath=(Join-Path -Path $M365DSCTestFolder `
+        -ChildPath "\Stubs\Microsoft365.psm1" `
+        -Resolve)
+
+        $content = Get-Content -Path $FilePath
+        if (($content|select-string -pattern "function Get-$CmdletNoun$").count -eq 0)
+        {
+            $content += "#region $CmdletNoun`r`n" + (Get-ResourceStub -CmdletNoun $CmdletNoun) + "#endregion`r`n"
+            Set-Content -Path $FilePath -Value $content
+        }
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error Updating Stub File:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source)
+        Write-Error $_
     }
 }
 Export-ModuleMember -Function Get-MgGraphModuleCmdLetDifference, New-M365DSCResourceForGraphCmdLet, New-M365DSCResource, *

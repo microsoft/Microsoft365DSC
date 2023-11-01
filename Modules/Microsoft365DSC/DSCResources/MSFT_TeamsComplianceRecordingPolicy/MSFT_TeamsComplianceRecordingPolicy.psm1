@@ -74,11 +74,20 @@ function Get-TargetResource
         {
             return $nullResult
         }
+        $recordingApplications = [Array](Get-CsTeamsComplianceRecordingApplication -Filter "$($instance.Identity)/*")
+        if ($null -eq $recordingApplications)
+        {
+            $recordingApplications = @()
+        }
+        $recordApplicationIds = @()
+        foreach ($app in $recordingApplications) {
+            $recordApplicationIds += @{Id=$app.Id}
+        }
 
         Write-Verbose -Message "Found an instance with Identity {$Identity}"
         $results = @{
             Identity                                            = $instance.Identity
-            ComplianceRecordingApplications                     = $instance.ComplianceRecordingApplications
+            ComplianceRecordingApplications                     = $recordApplicationIds
             Description                                         = $instance.Description
             DisableComplianceRecordingAudioNotificationForCalls = $instance.DisableComplianceRecordingAudioNotificationForCalls
             Enabled                                             = $instance.Enabled

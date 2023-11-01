@@ -33,7 +33,7 @@ function Get-TargetResource
         [System.Boolean]
         $SupportsScopeTags,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -201,7 +201,7 @@ function Set-TargetResource
         [System.Boolean]
         $SupportsScopeTags,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -367,7 +367,7 @@ function Test-TargetResource
         [System.Boolean]
         $SupportsScopeTags,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 

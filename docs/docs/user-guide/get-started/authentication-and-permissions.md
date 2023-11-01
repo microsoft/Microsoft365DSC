@@ -50,7 +50,7 @@ It is also important to note that we have added logic inside of the commands tha
 
 ## Power Apps Permissions
 
-In order to authenticate to Power Apps using a Service Principal (Certificate Thumbprint or ApplicationSecret), you will first need to define your app as a Power App Management app. For details on how to proceed, please refer to the folloring link: <a href="https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application">https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application</a>
+In order to authenticate to Power Apps using a Service Principal (Certificate Thumbprint or ApplicationSecret), you will first need to define your app as a Power App Management app. For details on how to proceed, please refer to the following link: <a href="https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application">https://learn.microsoft.com/en-us/power-platform/admin/powershell-create-service-principal#registering-an-admin-management-application</a>
 
 Additionally, to be able to authenticate using a Certificate Thumbprint, the underlying Power Apps PowerShell module used by Microsoft365DSC requires the certificate's private key (.pfx) to be registered under the current user's certificate store at <strong>Cert:\CurrentUser\My\</strong>. Omitting to register the private key will result in Microsoft365DSC throwing the following error when trying to authenticate to the Power Platform:
 
@@ -106,7 +106,7 @@ Doing so will return an object with two properties. The **ReadPermissions** prop
 By default, this cmdlet outputs the permissions required for Delegated permissions. To output the Application permissions, use the PermissionsType parameter
 
 ```PowerShell
-Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUser', 'AADApplication') -Source 'Graph' -PermissionsType 'Application'
+Get-M365DSCCompiledPermissionList -ResourceNameList @('AADUser', 'AADApplication') -PermissionsType 'Application'
 ```
 
 If you are trying to interact with all available components in Microsoft365DSC, you can get a complete picture of all permissions required across all resources by running the following line of PowerShell.
@@ -193,7 +193,7 @@ For the Exchange Online resources, the service account needs certain permissions
 To request the permissions,
 
 ```PowerShell
-Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain') -Source 'Exchange'
+Get-M365DSCCompiledPermissionList -ResourceNameList @('EXOAcceptedDomain')
 ```
 
 <figure markdown>

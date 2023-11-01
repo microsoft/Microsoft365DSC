@@ -50,7 +50,7 @@ function Get-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $OutOfBoxExperienceSettings,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -279,7 +279,7 @@ function Set-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $OutOfBoxExperienceSettings,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -469,7 +469,7 @@ function Test-TargetResource
         [Microsoft.Management.Infrastructure.CimInstance]
         $OutOfBoxExperienceSettings,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 

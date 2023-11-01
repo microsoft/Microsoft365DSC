@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -111,8 +111,14 @@ function Get-TargetResource
 
         if ($null -eq $config)
         {
-            Write-Verbose -Message "No Device Enrollment Platform Restriction {$Identity} was found"
-            return $nullResult
+            Write-Verbose -Message "No Device Enrollment Platform Restriction {$Identity} was found. Trying to retrieve instance by name {$DisplayName}"
+            $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "DisplayName eq '$DisplayName'" `
+                -ErrorAction silentlyContinue
+            if ($null -eq $config)
+            {
+                Write-Verbose -Message "No instances found by name {$DisplayName}"
+                return $nullResult
+            }
         }
 
         Write-Verbose -Message "Found Device Enrollment Platform Restriction with Name {$($config.DisplayName)}"
@@ -170,7 +176,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -413,7 +419,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 

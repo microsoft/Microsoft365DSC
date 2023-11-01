@@ -16,7 +16,7 @@ class MSFT_EXOIRMConfiguration : OMI_BaseResource
     [Write, Description("The SimplifiedClientAccessDoNotForwardDisabled parameter specifies whether to disable Do not forward in Outlook on the web.")] Boolean SimplifiedClientAccessDoNotForwardDisabled;
     [Write, Description("The SimplifiedClientAccessEnabled parameter specifies whether to enable the Protect button in Outlook on the web.")] Boolean SimplifiedClientAccessEnabled;
     [Write, Description("The SimplifiedClientAccessEncryptOnlyDisabled parameter specifies whether to disable Encrypt only in Outlook on the web. ")] Boolean SimplifiedClientAccessEncryptOnlyDisabled;
-    [Write, Description("The TransportDecryptionSetting parameter specifies the transport decryption configuration."), ValueMap{"Disabled","Mandatory","Optional"}, Values{"Disables","Mandatory","Optional"}] String TransportDecryptionSetting;
+    [Write, Description("The TransportDecryptionSetting parameter specifies the transport decryption configuration."), ValueMap{"Disabled","Mandatory","Optional"}, Values{"Disabled","Mandatory","Optional"}] String TransportDecryptionSetting;
     [Write, Description("Specifies if this Outbound connector should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
