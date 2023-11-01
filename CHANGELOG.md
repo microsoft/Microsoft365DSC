@@ -47,6 +47,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Added "-All" parameter to retrieve all settings from a template.
   FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
+* IntuneDeviceCleanupRule
+  * Initial release.
+    FIXES [#3599](https://github.com/microsoft/Microsoft365DSC/issues/3599)
 * TeamsGroupPolicyAssignment
   * Fixes the export of CsGroup, when the display name of a group is included in
     another display name.
