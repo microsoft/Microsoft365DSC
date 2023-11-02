@@ -70486,6 +70486,19 @@ function Get-CsTeamsComplianceRecordingPolicy
         $Identity
     )
 }
+function Get-CsTeamsComplianceRecordingApplication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
 function Get-CsTeamsEmergencyCallingPolicy
 {
     [CmdletBinding()]

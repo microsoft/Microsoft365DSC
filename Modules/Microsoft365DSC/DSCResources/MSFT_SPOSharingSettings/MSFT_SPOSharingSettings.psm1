@@ -447,9 +447,9 @@ function Set-TargetResource
         Write-Warning -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured'
         $CurrentParameters.Remove('RequireAnonymousLinksExpireInDays') | Out-Null
     }
-    if ($SharingCapability -ne 'ExternalUserExpirationRequired')
+    if ($ExternalUserExpireInDays -and $ExternalUserExpirationRequired -eq $false)
     {
-        Write-Warning -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserExpirationRequired for that the ExternalUserExpireInDays property cannot be configured'
+        Write-Warning -Message 'ExternalUserExpirationRequired is set to be false. For that the ExternalUserExpireInDays property cannot be configured'
         $CurrentParameters.Remove('ExternalUserExpireInDays') | Out-Null
     }
     if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
