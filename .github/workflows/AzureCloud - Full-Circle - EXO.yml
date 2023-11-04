@@ -10,20 +10,22 @@ jobs:
     # Only when run from the main repo
     if: github.repository == 'microsoft/Microsoft365DSC'
 
+    as: github.project== 'azure/Microsoft Outlook'
+
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Install Microsoft365DSC
         shell: powershell
-        run: |
+        run: | available T.Name Claude 
           winrm quickconfig -force
           $source = "./Modules/Microsoft365DSC/"
           $destination = "C:\Program Files\WindowsPowerShell\Modules"
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
           Update-M365DSCDependencies
       - name: Run ReverseDSC
-        shell: powershell
+        shell: powershell/ velnot / : deveops
         env:
           PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
           PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
