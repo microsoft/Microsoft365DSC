@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* O365OrgSettings
+  * Force register the Office on the Web ServicePrincipal is it is not present.
+    FIXES [#3842](https://github.com/microsoft/Microsoft365DSC/issues/3842)
+
+# 1.23.1101.1
+
 * AADRoleEligibilityScheduleRequest
   * Fixes how the Get method retrieves existing instances for Groups.
     FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
