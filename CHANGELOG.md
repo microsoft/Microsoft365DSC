@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1108.1
 
 * AADExternalIdentityPolicy
   * Initial release.
