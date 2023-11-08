@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADExternalIdentityPolicy
+  * Initial release.
 * O365OrgSettings
   * Force register the Office on the Web ServicePrincipal is it is not present.
     FIXES [#3842](https://github.com/microsoft/Microsoft365DSC/issues/3842)
