@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCDRGUTIL
+  * Fix an issue where temporary parameters were not renamed during recursive call causing a Model Validation error during creation or update of a Graph resource
+    Fixes [#3582](https://github.com/microsoft/Microsoft365DSC/issues/3582)
+
 # 1.23.1108.1
 
 * AADExternalIdentityPolicy
