@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+  * IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+    * fix typo in Get-TargetResource
+    Fixes [#3869](https://github.com/microsoft/Microsoft365DSC/issues/3869)
+
 # 1.23.1108.1
 
 * AADExternalIdentityPolicy
