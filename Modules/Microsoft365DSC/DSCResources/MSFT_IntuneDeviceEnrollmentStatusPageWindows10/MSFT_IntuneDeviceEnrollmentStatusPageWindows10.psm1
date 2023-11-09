@@ -9,7 +9,7 @@ function Get-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -219,7 +219,7 @@ function Set-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -443,7 +443,7 @@ function Test-TargetResource
         [System.String]
         $DisplayName,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
@@ -764,17 +764,21 @@ function Update-DeviceEnrollmentConfigurationPriority
     try
     {
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$DeviceEnrollmentConfigurationId/setpriority"
-        $body = @{'priority' = $Priority } | ConvertTo-Json -Depth 20
+        $body = @{'priority' = $Priority } | ConvertTo-Json -Depth 100
         #write-verbose -Message $body
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop 4> Out-Null
+        Invoke-MgGraphRequest `
+            -Method POST `
+            -Body $body `
+            -Uri $Uri  `
+            -ErrorAction Stop 4> Out-Null
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error updating data:'
-        -Exception $_
-        -Source $($MyInvocation.MyCommand.Source)
-        -TenantId $TenantId
-        -Credential $Credential
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
 
         return $null
     }
