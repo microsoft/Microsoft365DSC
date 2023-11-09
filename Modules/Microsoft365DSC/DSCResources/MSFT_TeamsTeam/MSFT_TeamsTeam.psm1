@@ -174,13 +174,17 @@ function Get-TargetResource
 
         Write-Verbose -Message "Getting Team {$DisplayName} Owners"
         [array]$Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq 'owner' }
+        if ($null -eq $Owners) { # Without Users, Get-TeamUser return null instead on empty array
+            $Owners = @()
+        }
+
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
         $result = @{
             DisplayName                       = $team.DisplayName
             GroupID                           = $team.GroupId
             Description                       = $team.Description
-            Owner                             = $Owners[0].User.ToString()
+            Owner                             = [array]$Owners.User
             MailNickName                      = $team.MailNickName
             Visibility                        = $team.Visibility
             AllowAddRemoveApps                = $team.AllowAddRemoveApps
