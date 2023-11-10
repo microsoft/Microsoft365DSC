@@ -2,9 +2,29 @@
 
 # UNRELEASED
 
-  * IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
-    * fix typo in Get-TargetResource
-    Fixes [#3869](https://github.com/microsoft/Microsoft365DSC/issues/3869)
+* AADRoleEligibilityScheduleRequest
+  * Fixed incorrect subclass MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange for range property
+    FIXES [#3847](https://github.com/microsoft/Microsoft365DSC/issues/3847)
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
+* IntuneAccountProtectionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * fix typo in Get-TargetResource
+    FIXES [#3869](https://github.com/microsoft/Microsoft365DSC/issues/3869)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fix typo in the catch of Update-DeviceEnrollmentConfigurationPriority
+    FIXES [#3442](https://github.com/microsoft/Microsoft365DSC/issues/3442)
+* M365DSCDRGUTIL
+  * Fix an issue where temporary parameters were not renamed during recursive call causing a Model Validation error during creation or update of a Graph resource
+    FIXES [#3582](https://github.com/microsoft/Microsoft365DSC/issues/3582)
+* MISC
+  * Added a QA check to test if all used subclasses actually exist in the MOF schema.
 
 # 1.23.1108.1
 

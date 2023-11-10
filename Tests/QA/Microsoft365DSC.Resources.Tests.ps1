@@ -104,9 +104,35 @@ Describe -Name "Check schema for resource '<ResourceName>'" -ForEach $schemaFile
     }
 
     It 'Schema should have a Key parameter' {
-        $schema = Get-MofSchemaObject -FileName $FullName 
-        $attributes = ($schema | Where-Object { [String]::IsNullOrEmpty($_.FriendlyName) -eq $false }).Attributes
+        $mofSchemas = Get-MofSchemaObject -FileName $FullName
+        $attributes = ($mofSchemas | Where-Object { [String]::IsNullOrEmpty($_.FriendlyName) -eq $false }).Attributes
         $keyCount = ($attributes | Where-Object { $_.State -eq 'Key' }).Count
         $keyCount | Should -BeGreaterThan 1
     }
+
+    It 'Schema should contain an instance of all used subclasses' {
+        $mofSchemas = Get-MofSchemaObject -FileName $FullName
+
+        $errors = 0
+
+        $availableClasses = $mofSchemas.ClassName | Where-Object -FilterScript { $_ -ne $ResourceName }
+
+        foreach ($mofSchema in $mofSchemas)
+        {
+            foreach ($attribute in $mofSchema.Attributes)
+            {
+                if ([String]::IsNullOrEmpty($attribute.EmbeddedInstance) -eq $false -and $attribute.EmbeddedInstance -ne "MSFT_Credential")
+                {
+                    if ($attribute.EmbeddedInstance -notin $availableClasses)
+                    {
+                        Write-Host "[ERROR] Property $($attribute.Name) in class $($mofSchema.ClassName) / Specified EmbeddedInstance: $($attribute.EmbeddedInstance) not found!" -ForegroundColor Red
+                        $errors++
+                    }
+                }
+            }
+        }
+
+        $errors | Should -Be 0
+    }
+
 }
