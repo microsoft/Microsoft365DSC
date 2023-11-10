@@ -160,6 +160,11 @@ function Get-TargetResource
         $SignInFrequencyIsEnabled,
 
         [Parameter()]
+        [ValidateSet('timeBased', 'everyTime', 'unknownFutureValue')]
+        [System.String]
+        $SignInFrequencyInterval,
+
+        [Parameter()]
         [ValidateSet('Always', 'Never', '')]
         [System.String]
         $PersistentBrowserMode,
@@ -179,6 +184,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $AuthenticationStrength,
+
+        [Parameter()]
+        [System.String[]]
+        $AuthenticationContexts,
 
         #generic
         [Parameter()]
@@ -525,10 +534,12 @@ function Get-TargetResource
         if ($Policy.SessionControls.SignInFrequency.IsEnabled)
         {
             $SignInFrequencyType = [System.String]$Policy.SessionControls.SignInFrequency.Type
+            $SignInFrequencyIntervalValue = [System.String]$Policy.SessionControls.SignInFrequency.FrequencyInterval
         }
         else
         {
             $SignInFrequencyType = $null
+            $SignInFrequencyIntervalValue = $null
         }
         if ($Policy.SessionControls.PersistentBrowser.IsEnabled)
         {
@@ -565,6 +576,21 @@ function Get-TargetResource
             if ($null -ne $strengthPolicy)
             {
                 $AuthenticationStrengthValue = $strengthPolicy.DisplayName
+            }
+        }
+
+        $AuthenticationContextsValues = @()
+        if ($null -ne $Policy.Conditions.Applications.IncludeAuthenticationContextClassReferences)
+        {
+            foreach ($class in $Policy.Conditions.Applications.IncludeAuthenticationContextClassReferences)
+            {
+                $classReference = Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference `
+                                      -AuthenticationContextClassReferenceId $class `
+                                      -ErrorAction SilentlyContinue
+                if ($null -ne $classReference)
+                {
+                    $AuthenticationContextsValues += $classReference.DisplayName
+                }
             }
         }
 
@@ -626,12 +652,14 @@ function Get-TargetResource
             SignInFrequencyValue                     = $Policy.SessionControls.SignInFrequency.Value
             #no translation or conversion needed, $null returned if undefined
             SignInFrequencyType                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
+            SignInFrequencyInterval                  = $SignInFrequencyIntervalValue
             #no translation needed
             PersistentBrowserIsEnabled               = $false -or $Policy.SessionControls.PersistentBrowser.IsEnabled
             #make false if undefined, true if true
             PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
             #no translation needed
             AuthenticationStrength                   = $AuthenticationStrengthValue
+            AuthenticationContexts                   = $AuthenticationContextsValues
             #Standard part
             TermsOfUse                               = $termOfUseName
             Ensure                                   = 'Present'
@@ -808,6 +836,11 @@ function Set-TargetResource
         $SignInFrequencyIsEnabled,
 
         [Parameter()]
+        [ValidateSet('timeBased', 'everyTime', 'unknownFutureValue')]
+        [System.String]
+        $SignInFrequencyInterval,
+
+        [Parameter()]
         [ValidateSet('Always', 'Never', '')]
         [System.String]
         $PersistentBrowserMode,
@@ -827,6 +860,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $AuthenticationStrength,
+
+        [Parameter()]
+        [System.String[]]
+        $AuthenticationContexts,
 
         #generic
         [Parameter()]
@@ -911,6 +948,21 @@ function Set-TargetResource
         if ($IncludeUserActions)
         {
             $conditions.Applications.Add('IncludeUserActions', $IncludeUserActions)
+        }
+        if ($AuthenticationContexts)
+        {
+            # Retrieve the class reference based on display name.
+            $AuthenticationContextsValues = @()
+            $classReferences = Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference -ErrorAction SilentlyContinue
+            foreach ($authContext in $AuthenticationContexts)
+            {
+                $currentClassId = $classReferences | Where-Object -FilterScript {$_.DisplayName -eq $authContext}
+                if ($null -ne $currentClassId)
+                {
+                    $AuthenticationContextsValues += $currentClassId.Id
+                }
+            }
+            $conditions.Applications.Add('IncludeAuthenticationContextClassReferences', $AuthenticationContextsValues)
         }
 
         #create and provision User Condition object
@@ -1421,16 +1473,32 @@ function Set-TargetResource
             if ($SignInFrequencyIsEnabled)
             {
                 $SigninFrequencyProp = @{
-                    IsEnabled = $true
-                    Type      = $null
-                    Value     = $null
+                    isEnabled         = $true
+                    type              = $null
+                    value             = $null
+                    frequencyInterval = $null
                 }
 
                 $sessioncontrols.Add('SignInFrequency', $SigninFrequencyProp)
                 #create and provision SignInFrequency object if used
-                $sessioncontrols.SignInFrequency.IsEnabled = $true
-                $sessioncontrols.SignInFrequency.Type = $SignInFrequencyType
-                $sessioncontrols.SignInFrequency.Value = $SignInFrequencyValue
+                $sessioncontrols.SignInFrequency.isEnabled = $true
+                if ($SignInFrequencyType -ne '')
+                {
+                    $sessioncontrols.SignInFrequency.type = $SignInFrequencyType
+                }
+                else
+                {
+                    $sessioncontrols.SignInFrequency.Remove("type") | Out-Null
+                }
+                if ($SignInFrequencyValue -gt 0)
+                {
+                    $sessioncontrols.SignInFrequency.value = $SignInFrequencyValue
+                }
+                else
+                {
+                    $sessioncontrols.SignInFrequency.Remove("value") | Out-Null
+                }
+                $sessioncontrols.SignInFrequency.frequencyInterval = $SignInFrequencyInterval
             }
             if ($PersistentBrowserIsEnabled)
             {
@@ -1671,6 +1739,11 @@ function Test-TargetResource
         $SignInFrequencyIsEnabled,
 
         [Parameter()]
+        [ValidateSet('timeBased', 'everyTime', 'unknownFutureValue')]
+        [System.String]
+        $SignInFrequencyInterval,
+
+        [Parameter()]
         [ValidateSet('Always', 'Never', '')]
         [System.String]
         $PersistentBrowserMode,
@@ -1690,6 +1763,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $AuthenticationStrength,
+
+        [Parameter()]
+        [System.String[]]
+        $AuthenticationContexts,
 
         #generic
         [Parameter()]

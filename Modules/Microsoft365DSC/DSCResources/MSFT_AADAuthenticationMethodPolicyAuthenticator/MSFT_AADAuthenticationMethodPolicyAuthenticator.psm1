@@ -247,8 +247,12 @@ function Get-TargetResource
             $myExcludeTargets = @{}
             if ($currentExcludeTargets.id -ne 'all_users')
             {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id
-                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id -ErrorAction SilentlyContinue
+
+                if ($null -ne $myIncludeTargetsDisplayName)
+                {
+                    $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+                }
             }
             else
             {
@@ -271,8 +275,11 @@ function Get-TargetResource
             $myIncludeTargets = @{}
             if ($currentIncludeTargets.id -ne 'all_users')
             {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id
-                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $currentIncludeTargets.id -ErrorAction SilentlyContinue
+                if ($null -ne $myIncludeTargetsDisplayName)
+                {
+                    $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+                }
             }
             else
             {

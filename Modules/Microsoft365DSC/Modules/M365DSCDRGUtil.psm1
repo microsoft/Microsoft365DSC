@@ -63,7 +63,7 @@ function Rename-M365DSCCimInstanceParameter
         $values = @()
         foreach ($item in $Properties)
         {
-            $values += Rename-M365DSCCimInstanceParameter $item
+            $values += Rename-M365DSCCimInstanceParameter $item -KeyMapping $KeyMapping
         }
         $result = $values
 
@@ -76,6 +76,7 @@ function Rename-M365DSCCimInstanceParameter
     {
         $result = ([Hashtable]$Properties).clone()
     }
+
     if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
@@ -92,7 +93,7 @@ function Rename-M365DSCCimInstanceParameter
             if ($null -ne $property)
             {
                 $hashProperties.Remove($key)
-                $hashProperties.add($keyName, (Rename-M365DSCCimInstanceParameter $property))
+                $hashProperties.add($keyName, (Rename-M365DSCCimInstanceParameter $property -KeyMapping $KeyMapping))
             }
         }
         $result = $hashProperties
@@ -134,21 +135,21 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return , [hashtable[]]$results
     }
 
+
     if ($ComplexObject.getType().fullname -like '*Dictionary*')
     {
         $results = @{}
 
         $ComplexObject = [hashtable]::new($ComplexObject)
         $keys = $ComplexObject.Keys
+
         foreach ($key in $keys)
         {
             if ($null -ne $ComplexObject.$key)
             {
                 $keyName = $key
-
                 $keyType = $ComplexObject.$key.gettype().fullname
-
-                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like '*[[\]]')
+                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like 'Microsoft.Graph.Beta.PowerShell.Models.*' -or $keyType -like '*[[\]]')
                 {
                     $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
 
@@ -185,7 +186,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         if ($null -ne $ComplexObject.$keyName)
         {
             $keyType = $ComplexObject.$keyName.gettype().fullname
-            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*')
+            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.*PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
@@ -446,6 +447,14 @@ function Get-M365DSCDRGComplexTypeToString
     if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
     {
         $currentProperty = $null
+    }
+
+    if ($null -ne $currentProperty)
+    {
+        $fancySingleQuotes = "[\u2019\u2018]"
+        $fancyDoubleQuotes = "[\u201C\u201D]"
+        $currentProperty = [regex]::Replace($currentProperty, $fancySingleQuotes, "''")
+        $currentProperty = [regex]::Replace($currentProperty, $fancyDoubleQuotes, '"')
     }
     return $currentProperty
 }

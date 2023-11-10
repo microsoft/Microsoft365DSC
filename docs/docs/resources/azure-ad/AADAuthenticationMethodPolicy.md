@@ -57,6 +57,15 @@
 | **Id** | Write | String | The ID of the entity targeted. | |
 | **TargetType** | Write | String | The kind of entity targeted. Possible values are: user, group. | `user`, `group`, `unknownFutureValue` |
 
+### MSFT_MicrosoftGraphExcludeTarget
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **Id** | Write | String | The object identifier of an Azure AD user or group. | |
+| **TargetType** | Write | String | The type of the authentication method target. Possible values are: user, group, unknownFutureValue. | `user`, `group`, `unknownFutureValue` |
+
 ### MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget
 
 #### Parameters

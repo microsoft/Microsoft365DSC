@@ -141,7 +141,8 @@ function Set-TargetResource
     $SetParameters.Remove('ApplicationId') | Out-Null
     $SetParameters.Remove('TenantId') | Out-Null
     $SetParameters.Remove('CertificateThumbprint') | Out-Null
-
+    $SetParameters.Add("Identity", "Global")
+    Write-Verbose -Message "Updating with Values: $(Convert-M365DscHashtableToString -Hashtable $SetParameters)"
     Set-CsTeamsUpgradeConfiguration @SetParameters
 }
 

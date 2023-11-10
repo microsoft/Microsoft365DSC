@@ -2,8 +2,116 @@
 
 # UNRELEASED
 
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fix typo in the catch of Update-DeviceEnrollmentConfigurationPriority
+  Fixes [#3442](https://github.com/microsoft/Microsoft365DSC/issues/3442)
+
+* M365DSCDRGUTIL
+  * Fix an issue where temporary parameters were not renamed during recursive call causing a Model Validation error during creation or update of a Graph resource
+    Fixes [#3582](https://github.com/microsoft/Microsoft365DSC/issues/3582)
+
+# 1.23.1108.1
+
+* AADExternalIdentityPolicy
+  * Initial release.
+* O365OrgSettings
+  * Force register the Office on the Web ServicePrincipal is it is not present.
+    FIXES [#3842](https://github.com/microsoft/Microsoft365DSC/issues/3842)
+* TeamsTeam
+  * Fixes incomplete import due to error "Cannot index into a null array"
+    FIXES: [#3759](https://github.com/microsoft/Microsoft365DSC/issues/3759)
+
+# 1.23.1101.1
+
+* AADRoleEligibilityScheduleRequest
+  * Fixes how the Get method retrieves existing instances for Groups.
+    FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
+* SCSecurityFilter
+  * Fixes an issue because Region could be empty
+  FIXES: [#3854](https://github.com/microsoft/Microsoft365DSC/issues/3854)
+* SPOSharingSettings
+  * Fixes parameter validation of ExternalUserExpireInDays and ExternalUserExpirationRequired.
+    FIXES [#3856](https://github.com/microsoft/Microsoft365DSC/issues/3856)
+* TeamsComplianceRecordingPolicy
+  * Fix an issue where the Compliance Application ID wasn't properly retrieved.
+  FIXES [#3848](https://github.com/microsoft/Microsoft365DSC/issues/3848)
+
+# 1.23.1025.1
+
+* AADEntitlementManagementAccessPackageAssignmentPolicy
+  * Fixes an issue where reviewers were not properly exported
+* M365DSCDRGUTIL
+  * Fixes an issue with Get-M365DSCDRGComplexTypeToHashtable where Beta cmdlet were not recognized for recursive calls
+  FIXES [#3448](https://github.com/microsoft/Microsoft365DSC/issues/3448)
+* AADApplication
+  * Changes to how permissions drifts are logged.
+    FIXES [#3830](https://github.com/microsoft/Microsoft365DSC/issues/3830)
+* AADAttributeSet
+  * Initial Release.
+* AADAuthenticationContext
+  * Initial Release.
+* AADConditionalAccessPolicy
+  * Adds support for Authentication Context.
+    FIXES [#3813](https://github.com/microsoft/Microsoft365DSC/issues/3813)
+* AADSocialIdentityProvider
+  * Initial release.
+* TeamsComplianceRecordingPolicy
+  * Fixes an issue where the Compliance Application ID wasn't properly retrieved.
+    FIXES [#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.8.0.
+  * Updated MicrosoftTeams dependency to version 5.7.1.
+
+# 1.23.1018.1
+
+* AADAuthenticationMethodPolicyAuthenticator
+  * Fixes an issue with the Get method when an assigned group
+    was deleted.
+* AADConditionalAccessPolicy
+  * Added support for the SigninFrequencyInterval parameter.
+* EXODistributionGroup
+  * Changes the export logic to use PrimarySMTPAddress if provided.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Added "-All" parameter to retrieve all settings from a template.
+  FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
+* IntuneDeviceCleanupRule
+  * Initial release.
+    FIXES [#3599](https://github.com/microsoft/Microsoft365DSC/issues/3599)
+* TeamsGroupPolicyAssignment
+  * Fixes the export of CsGroup, when the display name of a group is included in
+    another display name.
+  FIXES [#3736](https://github.com/microsoft/Microsoft365DSC/issues/3736)
+* TeamsUserPolicyAssignment
+  * Initial release.
+  FIXES [#3777](https://github.com/microsoft/Microsoft365DSC/issues/3777)
+* MISC
+  * Fixes fancy quotes in complex objects for extraction.
+* SCSecurityFilter
+  * Initial release
+  FIXES: [#3796](https://github.com/microsoft/Microsoft365DSC/issues/3796)
+
+# 1.23.1011.1
+
+* AADRoleEligibilityScheduleRequest
+  * Added support for groups assignment.
+    FIXES [#3744](https://github.com/microsoft/Microsoft365DSC/issues/3744)
+* EXOCalendarProcessing
+  * Added support for retrieved groups as calendar delegates.
 * EXODistributionGroup
   * Fixes the export of group membership to use Identity.
+* IntuneDeviceConfigurationPolicyWindows10
+  * Support setting assignment groups by display name
+* TeamsUpdateManagementPolicy
+  * Add support for the new acceptable value for UseNewTeamsClient
+    (NewTeamsAsDefault).
+* MISC
+  * M365DSCReport: Also define property dataType, if present, as being primary
+     key on CIM instances.
+* TeamsUpgradeConfiguration
+  * Fixes an issue where the SfBMeetingJoinUx property wasn't properly updated.
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.4.0.
+  * Updated Microsoft.Graph dependencies to version 2.7.0.
 
 # 1.23.1004.1
 
@@ -12,7 +120,7 @@
     were not managed correctly.
     FIXES [#3639](https://github.com/microsoft/Microsoft365DSC/issues/3639)
 * AADEntitlementManagementConnectedOrganization
-  * Fixed [[#3738](https://github.com/microsoft/Microsoft365DSC/issues/3738)]
+  * FIXES [[#3738](https://github.com/microsoft/Microsoft365DSC/issues/3738)]
 * EXOCalendarProcessing
   * Initial release.
 * EXODistributionGroup

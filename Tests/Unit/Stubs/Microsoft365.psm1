@@ -30128,6 +30128,83 @@ function Get-MgBetaIdentityConditionalAccess
         $Break
     )
 }
+function Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextClassReferenceId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgBetaIdentityConditionalAccessNamedLocation
 {
     [CmdletBinding()]
@@ -30236,6 +30313,83 @@ function Get-MgBetaIdentityConditionalAccessPolicy
         [Parameter()]
         [System.String]
         $ConditionalAccessPolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgBetaIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $IdentityProviderBaseId,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
 
         [Parameter()]
         [System.Int32]
@@ -30778,6 +30932,43 @@ function Get-MgBetaPolicyCrossTenantAccessPolicyPartner
         $HttpPipelineAppend
     )
 }
+function Get-MgBetaPolicyExternalIdentityPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy
 {
     [CmdletBinding()]
@@ -31127,6 +31318,63 @@ function Get-MgBetaPolicyTokenLifetimePolicy
         $HttpPipelineAppend
     )
 }
+function New-MgBetaIdentityConditionalAccessAuthenticationContextClassReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAvailable,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function New-MgBetaIdentityConditionalAccessPolicy
 {
     [CmdletBinding()]
@@ -31194,6 +31442,55 @@ function New-MgBetaIdentityConditionalAccessPolicy
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -31356,11 +31653,11 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
 
         [Parameter()]
         [PSObject]
-        $AutomaticUserConsentSettings,
+        $InboundTrust,
 
         [Parameter()]
         [PSObject]
-        $InboundTrust,
+        $AutomaticUserConsentSettings,
 
         [Parameter()]
         [PSObject]
@@ -31369,6 +31666,10 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [PSObject]
         $B2BDirectConnectOutbound,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsInMultiTenantOrganization,
 
         [Parameter()]
         [PSObject]
@@ -31525,6 +31826,55 @@ function Remove-MgBetaIdentityConditionalAccess
         $HttpPipelineAppend
     )
 }
+function Remove-MgBetaIdentityConditionalAccessAuthenticationContextClassReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextClassReferenceId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Remove-MgBetaIdentityConditionalAccessNamedLocation
 {
     [CmdletBinding()]
@@ -31623,6 +31973,55 @@ function Remove-MgBetaIdentityConditionalAccessPolicy
         $HttpPipelineAppend
     )
 }
+function Remove-MgBetaIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $IdentityProviderBaseId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function Remove-MgBetaPolicyAuthenticationMethodPolicy
 {
     [CmdletBinding()]
@@ -31693,16 +32092,16 @@ function Remove-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfig
         $InputObject,
 
         [Parameter()]
-        [System.String]
-        $AuthenticationMethodConfigurationId,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.String]
+        $AuthenticationMethodConfigurationId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -31717,10 +32116,6 @@ function Remove-MgBetaPolicyAuthenticationStrengthPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.String]
-        $AuthenticationStrengthPolicyId,
-
         [Parameter()]
         [PSObject]
         $HttpPipelinePrepend,
@@ -31756,6 +32151,10 @@ function Remove-MgBetaPolicyAuthenticationStrengthPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationStrengthPolicyId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -31970,6 +32369,71 @@ function Update-MgBetaIdentityConditionalAccess
         $HttpPipelineAppend
     )
 }
+function Update-MgBetaIdentityConditionalAccessAuthenticationContextClassReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAvailable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextClassReferenceId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Update-MgBetaIdentityConditionalAccessPolicy
 {
     [CmdletBinding()]
@@ -32055,6 +32519,63 @@ function Update-MgBetaIdentityConditionalAccessPolicy
         $HttpPipelineAppend
     )
 }
+function Update-MgBetaIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $IdentityProviderBaseId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function Update-MgBetaPolicyAuthenticationMethodPolicy
 {
     [CmdletBinding()]
@@ -32120,6 +32641,10 @@ function Update-MgBetaPolicyAuthenticationMethodPolicy
         $Confirm,
 
         [Parameter()]
+        [PSObject]
+        $ReportSuspiciousActivitySettings,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
 
@@ -32165,8 +32690,8 @@ function Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfig
         $InputObject,
 
         [Parameter()]
-        [System.String]
-        $AuthenticationMethodConfigurationId,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -32177,8 +32702,8 @@ function Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfig
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.String]
+        $AuthenticationMethodConfigurationId,
 
         [Parameter()]
         [System.String]
@@ -32457,6 +32982,10 @@ function Update-MgBetaPolicyCrossTenantAccessPolicy
         $Description,
 
         [Parameter()]
+        [PSObject]
+        $Templates,
+
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -32471,10 +33000,6 @@ function Update-MgBetaPolicyCrossTenantAccessPolicy
         [Parameter()]
         [PSObject]
         $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
 
         [Parameter()]
         [PSObject]
@@ -32495,6 +33020,10 @@ function Update-MgBetaPolicyCrossTenantAccessPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
 
         [Parameter()]
         [System.DateTime]
@@ -32526,6 +33055,10 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyDefault
         $IsServiceDefault,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $InvitationRedemptionIdentityProviderConfiguration,
+
+        [Parameter()]
         [PSObject]
         $TenantRestrictions,
 
@@ -32539,11 +33072,11 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyDefault
 
         [Parameter()]
         [PSObject]
-        $AutomaticUserConsentSettings,
+        $InboundTrust,
 
         [Parameter()]
         [PSObject]
-        $InboundTrust,
+        $AutomaticUserConsentSettings,
 
         [Parameter()]
         [PSObject]
@@ -32635,6 +33168,10 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyPartner
         $B2BDirectConnectOutbound,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsInMultiTenantOrganization,
+
+        [Parameter()]
         [System.String]
         $CrossTenantAccessPolicyConfigurationPartnerTenantId,
 
@@ -32673,6 +33210,71 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgBetaPolicyExternalIdentityPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowExternalIdentitiesToLeave,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $AllowDeletedIdentitiesDataRemoval,
+
+        [Parameter()]
+        [System.DateTime]
+        $DeletedDateTime,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -32972,6 +33574,7 @@ function Update-MgBetaPolicyTokenLifetimePolicy
     )
 }
 #endregion
+
 #region Microsoft.Graph.Beta.Teams
 function Get-MgBetaTeam
 {
@@ -49448,6 +50051,83 @@ function Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember
         $HttpPipelineAppend
     )
 }
+function Get-MgBetaDirectoryAttributeSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $AttributeSetId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgBetaDirectoryDeletedItem
 {
     [CmdletBinding()]
@@ -50543,6 +51223,59 @@ function New-MgBetaDirectoryAdministrativeUnitScopedRoleMember
         $HttpPipelineAppend
     )
 }
+function New-MgBetaDirectoryAttributeSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxAttributesPerSet,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function New-MgBetaDirectoryRole
 {
     [CmdletBinding()]
@@ -50932,6 +51665,55 @@ function Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Break
+    )
+}
+function Remove-MgBetaDirectoryAttributeSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $AttributeSetId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
     )
 }
 function Remove-MgBetaDirectoryRole
@@ -51549,6 +52331,67 @@ function Update-MgBetaDirectoryAdministrativeUnit
         $HttpPipelineAppend
     )
 }
+function Update-MgBetaDirectoryAttributeSet
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $AttributeSetId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Int32]
+        $MaxAttributesPerSet,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function Update-MgBetaDirectorySetting
 {
     [CmdletBinding()]
@@ -51991,6 +52834,7 @@ function Update-MgBetaOrganizationSettingPersonInsight
     )
 }
 #endregion
+
 #region Microsoft.Graph.Beta.Identity.Governance
 function Get-MgBetaAgreement
 {
@@ -55567,6 +56411,83 @@ function Get-MgBetaIdentityConditionalAccess
         $Break
     )
 }
+function Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextClassReferenceId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Get-MgBetaIdentityConditionalAccessNamedLocation
 {
     [CmdletBinding()]
@@ -55675,6 +56596,83 @@ function Get-MgBetaIdentityConditionalAccessPolicy
         [Parameter()]
         [System.String]
         $ConditionalAccessPolicyId,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Get-MgBetaIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $IdentityProviderBaseId,
+
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
 
         [Parameter()]
         [System.Int32]
@@ -56566,6 +57564,63 @@ function Get-MgBetaPolicyTokenLifetimePolicy
         $HttpPipelineAppend
     )
 }
+function New-MgBetaIdentityConditionalAccessAuthenticationContextClassReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAvailable,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function New-MgBetaIdentityConditionalAccessPolicy
 {
     [CmdletBinding()]
@@ -56633,6 +57688,55 @@ function New-MgBetaIdentityConditionalAccessPolicy
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -56795,11 +57899,11 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
 
         [Parameter()]
         [PSObject]
-        $AutomaticUserConsentSettings,
+        $InboundTrust,
 
         [Parameter()]
         [PSObject]
-        $InboundTrust,
+        $AutomaticUserConsentSettings,
 
         [Parameter()]
         [PSObject]
@@ -56808,6 +57912,10 @@ function New-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [PSObject]
         $B2BDirectConnectOutbound,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsInMultiTenantOrganization,
 
         [Parameter()]
         [PSObject]
@@ -56964,6 +58072,55 @@ function Remove-MgBetaIdentityConditionalAccess
         $HttpPipelineAppend
     )
 }
+function Remove-MgBetaIdentityConditionalAccessAuthenticationContextClassReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextClassReferenceId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Remove-MgBetaIdentityConditionalAccessNamedLocation
 {
     [CmdletBinding()]
@@ -57062,6 +58219,55 @@ function Remove-MgBetaIdentityConditionalAccessPolicy
         $HttpPipelineAppend
     )
 }
+function Remove-MgBetaIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $IdentityProviderBaseId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function Remove-MgBetaPolicyAuthenticationMethodPolicy
 {
     [CmdletBinding()]
@@ -57132,16 +58338,16 @@ function Remove-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfig
         $InputObject,
 
         [Parameter()]
-        [System.String]
-        $AuthenticationMethodConfigurationId,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.String]
+        $AuthenticationMethodConfigurationId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -57156,10 +58362,6 @@ function Remove-MgBetaPolicyAuthenticationStrengthPolicy
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
-        [System.String]
-        $AuthenticationStrengthPolicyId,
-
         [Parameter()]
         [PSObject]
         $HttpPipelinePrepend,
@@ -57195,6 +58397,10 @@ function Remove-MgBetaPolicyAuthenticationStrengthPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationStrengthPolicyId,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -57409,6 +58615,71 @@ function Update-MgBetaIdentityConditionalAccess
         $HttpPipelineAppend
     )
 }
+function Update-MgBetaIdentityConditionalAccessAuthenticationContextClassReference
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsAvailable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextClassReferenceId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
 function Update-MgBetaIdentityConditionalAccessPolicy
 {
     [CmdletBinding()]
@@ -57494,6 +58765,63 @@ function Update-MgBetaIdentityConditionalAccessPolicy
         $HttpPipelineAppend
     )
 }
+function Update-MgBetaIdentityProvider
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $IdentityProviderBaseId,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
 function Update-MgBetaPolicyAuthenticationMethodPolicy
 {
     [CmdletBinding()]
@@ -57559,6 +58887,10 @@ function Update-MgBetaPolicyAuthenticationMethodPolicy
         $Confirm,
 
         [Parameter()]
+        [PSObject]
+        $ReportSuspiciousActivitySettings,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
 
@@ -57604,8 +58936,8 @@ function Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfig
         $InputObject,
 
         [Parameter()]
-        [System.String]
-        $AuthenticationMethodConfigurationId,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
         [PSObject]
@@ -57616,8 +58948,8 @@ function Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfig
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
+        [System.String]
+        $AuthenticationMethodConfigurationId,
 
         [Parameter()]
         [System.String]
@@ -57896,6 +59228,10 @@ function Update-MgBetaPolicyCrossTenantAccessPolicy
         $Description,
 
         [Parameter()]
+        [PSObject]
+        $Templates,
+
+        [Parameter()]
         [System.String]
         $DisplayName,
 
@@ -57910,10 +59246,6 @@ function Update-MgBetaPolicyCrossTenantAccessPolicy
         [Parameter()]
         [PSObject]
         $HttpPipelinePrepend,
-
-        [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $ProxyCredential,
 
         [Parameter()]
         [PSObject]
@@ -57934,6 +59266,10 @@ function Update-MgBetaPolicyCrossTenantAccessPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
 
         [Parameter()]
         [System.DateTime]
@@ -57965,6 +59301,10 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyDefault
         $IsServiceDefault,
 
         [Parameter()]
+        [System.Collections.Hashtable]
+        $InvitationRedemptionIdentityProviderConfiguration,
+
+        [Parameter()]
         [PSObject]
         $TenantRestrictions,
 
@@ -57978,11 +59318,11 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyDefault
 
         [Parameter()]
         [PSObject]
-        $AutomaticUserConsentSettings,
+        $InboundTrust,
 
         [Parameter()]
         [PSObject]
-        $InboundTrust,
+        $AutomaticUserConsentSettings,
 
         [Parameter()]
         [PSObject]
@@ -58072,6 +59412,10 @@ function Update-MgBetaPolicyCrossTenantAccessPolicyPartner
         [Parameter()]
         [PSObject]
         $B2BDirectConnectOutbound,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IsInMultiTenantOrganization,
 
         [Parameter()]
         [System.String]
@@ -58411,6 +59755,7 @@ function Update-MgBetaPolicyTokenLifetimePolicy
     )
 }
 #endregion
+
 #region Microsoft.Graph.Beta.Teams
 function Get-MgBetaTeam
 {
@@ -60037,7 +61382,84 @@ function Remove-MgDeviceManagementRoleDefinition
         $Break
     )
 }
-function Update-MgDeviceManagementRoleAssignment
+function Get-MgBetaDeviceManagementRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String[]]
+        $Property,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.Int32]
+        $PageSize,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Int32]
+        $Skip,
+
+        [Parameter()]
+        [System.Int32]
+        $Top,
+
+        [Parameter()]
+        [System.String]
+        $CountVariable,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String]
+        $DeviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.String[]]
+        $Sort,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $All,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.String]
+        $Search,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [System.String[]]
+        $ExpandProperty,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function New-MgBetaDeviceManagementRoleAssignment
 {
     [CmdletBinding()]
     param(
@@ -60062,8 +61484,8 @@ function Update-MgDeviceManagementRoleAssignment
         $ProxyUseDefaultCredentials,
 
         [Parameter()]
-        [System.String]
-        $DeviceAndAppManagementRoleAssignmentId,
+        [PSObject]
+        $RoleScopeTags,
 
         [Parameter()]
         [PSObject]
@@ -60071,7 +61493,7 @@ function Update-MgDeviceManagementRoleAssignment
 
         [Parameter()]
         [PSObject]
-        $InputObject,
+        $ScopeType,
 
         [Parameter()]
         [System.String[]]
@@ -60080,6 +61502,10 @@ function Update-MgDeviceManagementRoleAssignment
         [Parameter()]
         [System.Uri]
         $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $ScopeMembers,
 
         [Parameter()]
         [PSObject]
@@ -60100,6 +61526,140 @@ function Update-MgDeviceManagementRoleAssignment
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $ProxyCredential,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Remove-MgBetaDeviceManagementRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $IfMatch,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DeviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend
+    )
+}
+function Update-MgBetaDeviceManagementRoleAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $ResourceScopes,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Collections.Hashtable]
+        $AdditionalProperties,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $DeviceAndAppManagementRoleAssignmentId,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [PSObject]
+        $ScopeType,
+
+        [Parameter()]
+        [System.String[]]
+        $Members,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.String[]]
+        $ScopeMembers,
+
+        [Parameter()]
+        [PSObject]
+        $BodyParameter,
+
+        [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [PSObject]
+        $RoleDefinition,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $RoleScopeTags,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -60517,6 +62077,28 @@ function Get-ComplianceTag
         [Parameter()]
         [System.Object]
         $Identity
+    )
+}
+function Get-ComplianceSecurityFilter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $FilterName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Search', 'All')]
+        [System.String]
+        $Action = 'All',
+
+        [Parameter()]
+        [System.String[]]
+        $Users
     )
 }
 function Get-DeviceConditionalAccessPolicy
@@ -61707,6 +63289,52 @@ function New-ComplianceTag
         [Parameter()]
         [System.String]
         $MultiStageReviewProperty
+    )
+}
+function New-ComplianceSecurityFilter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $FilterName,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Search', 'All')]
+        [System.String]
+        $Action = 'All',
+
+        [Parameter(Mandatory = $true)]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Filters,
+
+        [Parameter()]
+        [ValidateSet(
+            'APC', # Asia-Pacific
+            'AUS', #Australia
+            'CAN', # Canada
+            'EUR', #Europe, Middle East, Africa
+            'FRA', #France
+            'GBR', # United Kingdom
+            'IND', # India
+            'JPN', # Japan
+            'LAM', # Latin America
+            'NAM' # North America
+        )]
+        [System.String]
+        $Region
     )
 }
 function New-DeviceConditionalAccessPolicy
@@ -63639,6 +65267,19 @@ function Remove-ComplianceTag
         $ForceDeletion
     )
 }
+function Remove-ComplianceSecurityFilter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $FilterName,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm
+    )
+}
 function Remove-DeviceConditionalAccessPolicy
 {
     [CmdletBinding()]
@@ -64656,6 +66297,52 @@ function Set-ComplianceTag
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force
+    )
+}
+function Set-ComplianceSecurityFilter
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $FilterName,
+
+        [Parameter()]
+        [ValidateSet('Export', 'Preview', 'Purge', 'Search', 'All')]
+        [System.String]
+        $Action = 'All',
+
+        [Parameter()]
+        [System.String[]]
+        $Users,
+
+        [Parameter()]
+        [System.Boolean]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String[]]
+        $Filters,
+
+        [Parameter()]
+        [ValidateSet(
+            'APC', # Asia-Pacific
+            'AUS', #Australia
+            'CAN', # Canada
+            'EUR', #Europe, Middle East, Africa
+            'FRA', #France
+            'GBR', # United Kingdom
+            'IND', # India
+            'JPN', # Japan
+            'LAM', # Latin America
+            'NAM' # North America
+        )]
+        [System.String]
+        $Region
     )
 }
 function Set-DeviceConditionalAccessPolicy
@@ -69133,6 +70820,19 @@ function Get-CsTeamsComplianceRecordingPolicy
         $Identity
     )
 }
+function Get-CsTeamsComplianceRecordingApplication
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
 function Get-CsTeamsEmergencyCallingPolicy
 {
     [CmdletBinding()]
@@ -69160,6 +70860,19 @@ function Get-CsTeamsEventsPolicy
     )
 }
 function Get-CsTeamsFeedbackPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+function Get-CsTeamsMeetingConfiguration
 {
     [CmdletBinding()]
     param(
@@ -69324,6 +71037,151 @@ function Get-TeamUser
         [Parameter()]
         [System.String]
         $Role
+    )
+}
+function Grant-CsExternalAccessPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.Int32]
+        $Rank,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Grant-CsTeamsAppPermissionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.Int32]
+        $Rank,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Grant-CsTeamsAppSetupPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.Int32]
+        $Rank,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Grant-CsTeamsCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.Int32]
+        $Rank,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
+    )
+}
+function Grant-CsTeamsEventsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.Int32]
+        $Rank,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force
     )
 }
 function New-CsOnlineVoicemailPolicy
@@ -69681,6 +71539,14 @@ function New-CsTeamsComplianceRecordingPolicy
         $Description,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $CustomPromptsPackageId,
+
+        [Parameter()]
         [System.Boolean]
         $RecordReroutedCalls,
 
@@ -69690,7 +71556,7 @@ function New-CsTeamsComplianceRecordingPolicy
 
         [Parameter()]
         [System.String]
-        $CustomPromptsPackageId,
+        $CustomBanner,
 
         [Parameter()]
         [System.Boolean]
@@ -69714,11 +71580,7 @@ function New-CsTeamsComplianceRecordingPolicy
 
         [Parameter()]
         [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Enabled
     )
 }
 function New-CsTeamsEmergencyCallingPolicy
@@ -69990,10 +71852,6 @@ function New-CsTeamsMeetingPolicy
         $ScreenSharingMode,
 
         [Parameter()]
-        [System.String]
-        $AllowCartCaptionsScheduling,
-
-        [Parameter()]
         [System.Boolean]
         $AllowPrivateMeetNow,
 
@@ -70004,6 +71862,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.String]
         $AllowEngagementReport,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopyRestriction,
 
         [Parameter()]
         [System.String]
@@ -70028,6 +71890,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowOrganizersToOverrideLobbySettings,
+
+        [Parameter()]
+        [System.String]
+        $CopilotWithoutTranscript,
 
         [Parameter()]
         [System.Boolean]
@@ -70060,6 +71926,10 @@ function New-CsTeamsMeetingPolicy
         [Parameter()]
         [System.String]
         $LiveInterpretationEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveView,
 
         [Parameter()]
         [System.Boolean]
@@ -70102,8 +71972,8 @@ function New-CsTeamsMeetingPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowImmersiveView,
+        [System.String]
+        $AllowCartCaptionsScheduling,
 
         [Parameter()]
         [System.Boolean]
@@ -71253,6 +73123,14 @@ function Set-CsTeamsComplianceRecordingPolicy
         $Description,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.String]
+        $CustomPromptsPackageId,
+
+        [Parameter()]
         [System.Boolean]
         $RecordReroutedCalls,
 
@@ -71262,7 +73140,7 @@ function Set-CsTeamsComplianceRecordingPolicy
 
         [Parameter()]
         [System.String]
-        $CustomPromptsPackageId,
+        $CustomBanner,
 
         [Parameter()]
         [System.Boolean]
@@ -71286,11 +73164,7 @@ function Set-CsTeamsComplianceRecordingPolicy
 
         [Parameter()]
         [System.Boolean]
-        $Enabled,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Force
+        $Enabled
     )
 }
 function Set-CsTeamsEmergencyCallingPolicy
@@ -71436,6 +73310,83 @@ function Set-CsTeamsFeedbackPolicy
         $Force
     )
 }
+function Set-CsTeamsMeetingConfiguration
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $ClientVideoPortRange,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAnonymousJoin,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $LegalURL,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Force,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableQoS,
+
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $ClientAppSharingPortRange,
+
+        [Parameter()]
+        [System.Boolean]
+        $LimitPresenterRolePermissions,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableAppInteractionForAnonymousUsers,
+
+        [Parameter()]
+        [System.String]
+        $LogoURL,
+
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $ClientAppSharingPort,
+
+        [Parameter()]
+        [System.String]
+        $CustomFooterText,
+
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $ClientVideoPort,
+
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $ClientAudioPortRange,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $ClientMediaPortRangeEnabled,
+
+        [Parameter()]
+        [System.Nullable`1[System.UInt32]]
+        $ClientAudioPort,
+
+        [Parameter()]
+        [System.String]
+        $HelpURL
+    )
+}
 function Set-CsTeamsMeetingPolicy
 {
     [CmdletBinding()]
@@ -71553,10 +73504,6 @@ function Set-CsTeamsMeetingPolicy
         $ScreenSharingMode,
 
         [Parameter()]
-        [System.String]
-        $AllowCartCaptionsScheduling,
-
-        [Parameter()]
         [System.Boolean]
         $AllowPrivateMeetNow,
 
@@ -71567,6 +73514,10 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.String]
         $AllowEngagementReport,
+
+        [Parameter()]
+        [System.Boolean]
+        $CopyRestriction,
 
         [Parameter()]
         [System.String]
@@ -71591,6 +73542,10 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.Boolean]
         $AllowOrganizersToOverrideLobbySettings,
+
+        [Parameter()]
+        [System.String]
+        $CopilotWithoutTranscript,
 
         [Parameter()]
         [System.Boolean]
@@ -71623,6 +73578,10 @@ function Set-CsTeamsMeetingPolicy
         [Parameter()]
         [System.String]
         $LiveInterpretationEnabledType,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowImmersiveView,
 
         [Parameter()]
         [System.Boolean]
@@ -71665,8 +73624,8 @@ function Set-CsTeamsMeetingPolicy
         $Identity,
 
         [Parameter()]
-        [System.Boolean]
-        $AllowImmersiveView,
+        [System.String]
+        $AllowCartCaptionsScheduling,
 
         [Parameter()]
         [System.Boolean]
@@ -72928,23 +74887,6 @@ function Get-CsTeamsMeetingBroadcastPolicy
         $MsftInternalProcessingMode
     )
 }
-function Get-CsTeamsMeetingConfiguration
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Filter,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode
-    )
-}
 function Get-CsTeamsMobilityPolicy
 {
     [CmdletBinding()]
@@ -73270,6 +75212,602 @@ function Get-CsUserCallingSettings
         $Break
     )
 }
+function Get-CsUserPolicyAssignment
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [PSObject]
+        $HttpPipelinePrepend,
+
+        [Parameter()]
+        [System.Uri]
+        $Proxy,
+
+        [Parameter()]
+        [System.Management.Automation.PSCredential]
+        $ProxyCredential,
+
+        [Parameter()]
+        [PSObject]
+        $InputObject,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ProxyUseDefaultCredentials,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [PSObject]
+        $HttpPipelineAppend,
+
+        [Parameter()]
+        [System.String]
+        $PolicyType,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Break
+    )
+}
+function Grant-CsCallingLineIdentity
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsOnlineVoicemailPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsOnlineVoiceRoutingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsAudioConferencingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsCallHoldPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsCallParkPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsChannelsPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsEmergencyCallingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsEmergencyCallRoutingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsEnhancedEncryptionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsMeetingBroadcastPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsMeetingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsMessagingPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsMobilityPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
+function Grant-CsTeamsUpdateManagementPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
+    )
+}
 function Grant-CsTeamsUpgradePolicy
 {
     [CmdletBinding()]
@@ -73313,6 +75851,43 @@ function Grant-CsTeamsUpgradePolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force
+    )
+}
+function Grant-CsTenantDialPlan
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PassThru,
+
+        [Parameter()]
+        [System.String]
+        $PolicyName,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Global,
+
+        [Parameter()]
+        [System.String]
+        $Group,
+
+        [Parameter()]
+        [System.String]
+        $MsftInternalProcessingMode,
+
+        [Parameter()]
+        [System.Nullable`1[System.Int32]]
+        $Rank
     )
 }
 function Import-CsOnlineAudioFile
@@ -76030,79 +78605,6 @@ function Set-CsTeamsMeetingBroadcastPolicy
         $Confirm
     )
 }
-function Set-CsTeamsMeetingConfiguration
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.UInt32]
-        $ClientVideoPortRange,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableAnonymousJoin,
-
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.String]
-        $HelpURL,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableQoS,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientAppSharingPortRange,
-
-        [Parameter()]
-        [System.Boolean]
-        $DisableAppInteractionForAnonymousUsers,
-
-        [Parameter()]
-        [System.String]
-        $LogoURL,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientAppSharingPort,
-
-        [Parameter()]
-        [System.String]
-        $CustomFooterText,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientVideoPort,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientAudioPortRange,
-
-        [Parameter()]
-        [System.Boolean]
-        $ClientMediaPortRangeEnabled,
-
-        [Parameter()]
-        [System.UInt32]
-        $ClientAudioPort,
-
-        [Parameter()]
-        [System.String]
-        $MsftInternalProcessingMode,
-
-        [Parameter()]
-        [System.String]
-        $LegalURL
-    )
-}
 function Set-CsTeamsMobilityPolicy
 {
     [CmdletBinding()]
@@ -76671,6 +79173,8 @@ function Set-CsUserCallingSettings
     )
 }
 #endregion
+
+
 #region Microsoft.Graph.Beta.DeviceManagement.Administration
 function Get-MgBetaDeviceManagementRoleDefinition
 {
