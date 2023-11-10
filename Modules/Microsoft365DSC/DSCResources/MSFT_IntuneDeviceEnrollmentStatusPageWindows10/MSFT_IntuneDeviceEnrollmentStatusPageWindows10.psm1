@@ -148,6 +148,12 @@ function Get-TargetResource
             Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with DisplayName {$DisplayName}"
             return $nullResult
         }
+
+        if($getValue -is [Array])
+        {
+            Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
+        }
+
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
