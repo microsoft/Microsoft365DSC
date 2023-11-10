@@ -10,6 +10,16 @@
   * Fix an issue where temporary parameters were not renamed during recursive call causing a Model Validation error during creation or update of a Graph resource
     Fixes [#3582](https://github.com/microsoft/Microsoft365DSC/issues/3582)
 
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
+* IntuneAccountProtectionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
+
 # 1.23.1108.1
 
 * AADExternalIdentityPolicy
@@ -205,15 +215,6 @@
     FIXES [#3656](https://github.com/microsoft/Microsoft365DSC/issues/3656)
   * Added support for compliantNetworkNamedLocation.
     FIXES [#3422](https://github.com/microsoft/Microsoft365DSC/issues/3422)
-* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
-  * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
-* IntuneAccountProtectionLocalUserGroupMembershipPolicy
-  * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
-* IntuneAccountProtectionPolicy
-  * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
 * IntuneAppProtectionPolicyAndroid
   * Added support for 'RequireClass3Biometrics' parameter
   * Added support for 'RequirePinAfterBiometricChange' parameter
