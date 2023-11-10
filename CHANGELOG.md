@@ -14,6 +14,16 @@
 * MISC
   * Added a QA check to test if all used subclasses actually exist in the MOF schema.
 
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
+* IntuneAccountProtectionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
+
 # 1.23.1108.1
 
 * AADExternalIdentityPolicy
