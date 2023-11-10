@@ -148,6 +148,12 @@ function Get-TargetResource
             Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with DisplayName {$DisplayName}"
             return $nullResult
         }
+
+        if($getValue -is [Array])
+        {
+            Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
+        }
+
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
@@ -764,17 +770,21 @@ function Update-DeviceEnrollmentConfigurationPriority
     try
     {
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$DeviceEnrollmentConfigurationId/setpriority"
-        $body = @{'priority' = $Priority } | ConvertTo-Json -Depth 20
+        $body = @{'priority' = $Priority } | ConvertTo-Json -Depth 100
         #write-verbose -Message $body
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop 4> Out-Null
+        Invoke-MgGraphRequest `
+            -Method POST `
+            -Body $body `
+            -Uri $Uri  `
+            -ErrorAction Stop 4> Out-Null
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error updating data:'
-        -Exception $_
-        -Source $($MyInvocation.MyCommand.Source)
-        -TenantId $TenantId
-        -Credential $Credential
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
 
         return $null
     }
