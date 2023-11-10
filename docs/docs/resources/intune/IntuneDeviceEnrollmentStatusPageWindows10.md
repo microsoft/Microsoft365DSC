@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | The display name of the device enrollment configuration | |
-| **Id** | Required | String | The unique identifier for an entity. Read-only. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Description** | Write | String | The description of the device enrollment configuration | |
 | **AllowDeviceResetOnInstallFailure** | Write | Boolean | Allow or block device reset on installation failure | |
 | **AllowDeviceUseOnInstallFailure** | Write | Boolean | Allow the user to continue using the device on installation failure | |
