@@ -63,7 +63,7 @@ function Rename-M365DSCCimInstanceParameter
         $values = @()
         foreach ($item in $Properties)
         {
-            $values += Rename-M365DSCCimInstanceParameter $item
+            $values += Rename-M365DSCCimInstanceParameter $item -KeyMapping $KeyMapping
         }
         $result = $values
 
@@ -76,6 +76,7 @@ function Rename-M365DSCCimInstanceParameter
     {
         $result = ([Hashtable]$Properties).clone()
     }
+
     if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
@@ -92,7 +93,7 @@ function Rename-M365DSCCimInstanceParameter
             if ($null -ne $property)
             {
                 $hashProperties.Remove($key)
-                $hashProperties.add($keyName, (Rename-M365DSCCimInstanceParameter $property))
+                $hashProperties.add($keyName, (Rename-M365DSCCimInstanceParameter $property -KeyMapping $KeyMapping))
             }
         }
         $result = $hashProperties

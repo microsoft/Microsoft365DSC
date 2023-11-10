@@ -4,10 +4,20 @@
 
 * EXOMailbox
   * Initial release
+* M365DSCDRGUTIL
+  * Fix an issue where temporary parameters were not renamed during recursive call causing a Model Validation error during creation or update of a Graph resource
+    Fixes [#3582](https://github.com/microsoft/Microsoft365DSC/issues/3582)
 
+# 1.23.1108.1
+
+* AADExternalIdentityPolicy
+  * Initial release.
 * O365OrgSettings
   * Force register the Office on the Web ServicePrincipal is it is not present.
     FIXES [#3842](https://github.com/microsoft/Microsoft365DSC/issues/3842)
+* TeamsTeam
+  * Fixes incomplete import due to error "Cannot index into a null array"
+    FIXES: [#3759](https://github.com/microsoft/Microsoft365DSC/issues/3759)
 
 # 1.23.1101.1
 
