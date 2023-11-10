@@ -4,6 +4,9 @@
 
 * EXOMailbox
   * Initial release
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fix typo in the catch of Update-DeviceEnrollmentConfigurationPriority
+  Fixes [#3442](https://github.com/microsoft/Microsoft365DSC/issues/3442)
 * M365DSCDRGUTIL
   * Fix an issue where temporary parameters were not renamed during recursive call causing a Model Validation error during creation or update of a Graph resource
     Fixes [#3582](https://github.com/microsoft/Microsoft365DSC/issues/3582)
