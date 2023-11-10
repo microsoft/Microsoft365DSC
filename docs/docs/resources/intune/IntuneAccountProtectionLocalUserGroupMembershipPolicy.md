@@ -1,12 +1,12 @@
-﻿# IntuneAccountProtectionPolicyLocalUserGroupMembership
+﻿# IntuneAccountProtectionLocalUserGroupMembershipPolicy
 
 ## Parameters
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity of the account protection policy. | |
-| **DisplayName** | Required | String | Display name of the account protection policy. | |
-| **Description** | Write | String | Description of the account protection policy. | |
+| **DisplayName** | Required | String | Display name of the account protection rules policy. | |
+| **Description** | Write | String | Description of the account protection rules policy. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
 | **LocalUserGroupCollection** | Write | MSFT_IntuneAccountProtectionLocalUserGroupCollection[] | Local User Group Collections of the Intune Policy. | |
 | **Ensure** | Write | String | Present ensures the site collection exists, absent ensures it is removed | `Present`, `Absent` |
@@ -30,12 +30,16 @@
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_IntuneAccountProtectionLocalUserGroupCollection
+
+#### Parameters
+
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **UserSelectionType** | Write | String | The type of the selection. Either users / groups from AzureAD, or by manual identifier. | `users`, `manual` |
 | **Action** | Write | String | The action to use for adding / removing members. | `add_update`, `remove_update`, `add_replace` |
-| **LocalGroups** | Write | String[] | The local groups to add / remove the members to / from. | List of the following values: `administrators`, `users`, `guests`, `powerusers`, `remotedesktopusers`, `remotemanagementusers` |
-| **Members** | Write | String[] | The members to add / remove to / from the group. For AzureAD Users, use the format `AzureAD\<UserPrincipalName>`. For groups, use the security identifier (SID). | |
+| **LocalGroups** | Write | StringArray[] | The local groups to add / remove the members to / from. List of the following values: `administrators`, `users`, `guests`, `powerusers`, `remotedesktopusers`, `remotemanagementusers` | |
+| **Members** | Write | StringArray[] | The members to add / remove to / from the group. For AzureAD Users, use the format `AzureAD\<UserPrincipalName>`. For groups, use the security identifier (SID). | |
+| **UserSelectionType** | Write | String | The type of the selection. Either users / groups from AzureAD, or by manual identifier. | `users`, `manual` |
+
 
 ## Description
 
