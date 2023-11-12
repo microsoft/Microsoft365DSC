@@ -5,6 +5,15 @@
 * AADRoleEligibilityScheduleRequest
   * Fixed incorrect subclass MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange for range property
     FIXES [#3847](https://github.com/microsoft/Microsoft365DSC/issues/3847)
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034)
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034)
+* IntuneAccountProtectionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034)
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Fix typo in the catch of Update-DeviceEnrollmentConfigurationPriority
     FIXES [#3442](https://github.com/microsoft/Microsoft365DSC/issues/3442)
@@ -13,16 +22,8 @@
     FIXES [#3582](https://github.com/microsoft/Microsoft365DSC/issues/3582)
 * MISC
   * Added a QA check to test if all used subclasses actually exist in the MOF schema.
-
-* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
-  * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
-* IntuneAccountProtectionLocalUserGroupMembershipPolicy
-  * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
-* IntuneAccountProtectionPolicy
-  * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
+* DEPENDENCIES
+  * Updated Microsoft. Graph dependencies to version 2.9.0.
 
 # 1.23.1108.1
 
