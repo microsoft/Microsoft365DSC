@@ -4842,6 +4842,7 @@ function Test-TargetResource
         }
     }
 
+    $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
