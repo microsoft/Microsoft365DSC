@@ -7,7 +7,7 @@
 | **Identity** | Key | String | Identity of the account protection policy. | |
 | **DisplayName** | Required | String | Display name of the account protection rules policy. | |
 | **Description** | Write | String | Description of the account protection rules policy. | |
-| **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
+| **Assignments** | Write | MSFT_IntuneAccountProtectionPolicyAssignments[] | Assignments of the Intune Policy. | |
 | **WindowsHelloForBusinessBlocked** | Write | String | Block Windows Hello for Business. | `notConfigured`, `true`, `false` |
 | **PinMinimumLength** | Write | UInt32 | Minimum PIN length must be between 4 and 127. (4-127) | |
 | **PinMaximumLength** | Write | UInt32 | Maximum PIN length must be between 4 and 127. (4-127) | |
@@ -31,7 +31,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-### MSFT_DeviceManagementConfigurationPolicyAssignments
+### MSFT_IntuneAccountProtectionPolicyAssignments
 
 #### Parameters
 

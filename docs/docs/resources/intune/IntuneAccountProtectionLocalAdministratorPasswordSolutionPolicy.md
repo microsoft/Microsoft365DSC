@@ -7,7 +7,7 @@
 | **Identity** | Key | String | Identity of the account protection local administrator password solution policy. | |
 | **DisplayName** | Required | String | Display name of the account protection local administrator password solution policy. | |
 | **Description** | Write | String | Description of the account protection local administrator password solution policy. | |
-| **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the account protection local administrator password solution policy. | |
+| **Assignments** | Write | MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments[] | Assignments of the account protection local administrator password solution policy. | |
 | **BackupDirectory** | Write | UInt32 | Configures which directory the local admin account password is backed up to. 0 - Disabled, 1 - Azure AD, 2 - AD | `0`, `1`, `2` |
 | **PasswordAgeDays_AAD** | Write | UInt32 | Configures the maximum password age of the managed local administrator account for Azure AD. Minimum - 7, Maximum - 365 | |
 | **PasswordAgeDays** | Write | UInt32 | Configures the maximum password age of the managed local administrator account for Active Directory. Minimum - 1, Maximum - 365 | |
@@ -28,7 +28,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-### MSFT_DeviceManagementConfigurationPolicyAssignments
+### MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments
 
 #### Parameters
 
@@ -98,7 +98,7 @@ Configuration Example
             Ensure                   = "Present";
             Credential               = $credsGlobalAdmin
             Assignments              = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments{
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 }

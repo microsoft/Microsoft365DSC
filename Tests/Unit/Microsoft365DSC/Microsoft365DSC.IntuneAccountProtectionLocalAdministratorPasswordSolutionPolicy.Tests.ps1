@@ -85,7 +85,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Assignments = @(
-                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                        (New-CimInstance -ClassName MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
@@ -121,7 +121,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                        (New-CimInstance -ClassName MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
@@ -189,7 +189,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Present'
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                     Assignments = [CimInstance[]]@(
-                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                        (New-CimInstance -ClassName MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
@@ -236,7 +236,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Assignments = @(
-                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                        (New-CimInstance -ClassName MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)

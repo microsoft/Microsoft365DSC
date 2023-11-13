@@ -22,7 +22,7 @@ Configuration Example
             Ensure                   = "Present";
             Credential               = $credsGlobalAdmin
             Assignments              = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                MSFT_IntuneAccountProtectionLocalUserGroupMembershipPolicyAssignments{
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 }

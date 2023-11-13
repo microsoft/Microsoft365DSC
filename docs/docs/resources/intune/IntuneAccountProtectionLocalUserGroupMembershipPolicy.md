@@ -7,7 +7,7 @@
 | **Identity** | Key | String | Identity of the account protection policy. | |
 | **DisplayName** | Required | String | Display name of the account protection rules policy. | |
 | **Description** | Write | String | Description of the account protection rules policy. | |
-| **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
+| **Assignments** | Write | MSFT_IntuneAccountProtectionLocalUserGroupMembershipPolicyAssignments[] | Assignments of the Intune Policy. | |
 | **LocalUserGroupCollection** | Write | MSFT_IntuneAccountProtectionLocalUserGroupCollection[] | Local User Group Collections of the Intune Policy. | |
 | **Ensure** | Write | String | Present ensures the site collection exists, absent ensures it is removed | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
@@ -17,7 +17,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
-### MSFT_DeviceManagementConfigurationPolicyAssignments
+### MSFT_IntuneAccountProtectionLocalUserGroupMembershipPolicyAssignments
 
 #### Parameters
 
@@ -99,7 +99,7 @@ Configuration Example
             Ensure                   = "Present";
             Credential               = $credsGlobalAdmin
             Assignments              = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                MSFT_IntuneAccountProtectionLocalUserGroupMembershipPolicyAssignments{
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 }
