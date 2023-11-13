@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * fix an issue where the firewall settings were not populate correctly
+  FIXES [#3851](https://github.com/microsoft/Microsoft365DSC/issues/3851)
 * AADRoleEligibilityScheduleRequest
   * Fixed incorrect subclass MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange for range property
     FIXES [#3847](https://github.com/microsoft/Microsoft365DSC/issues/3847)
