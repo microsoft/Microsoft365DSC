@@ -743,7 +743,7 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
             }
 
-            $Results = Get-TargetResource @params -Verbose
+            $Results = Get-TargetResource @params
 
             if ($Results.Ensure -eq 'Present')
             {
@@ -1178,7 +1178,6 @@ function Update-DeviceManagementConfigurationPolicy
         'templateReference' = $templateReference
         'settings'          = $Settings
     }
-    # Write-Verbose ($policy | ConvertTo-Json -Depth 20) -Verbose
     Invoke-MgGraphRequest -Method PUT `
         -Uri $Uri `
         -ContentType 'application/json' `
