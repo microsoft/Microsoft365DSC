@@ -7,13 +7,16 @@
     FIXES [#3847](https://github.com/microsoft/Microsoft365DSC/issues/3847)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034)
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
 * IntuneAccountProtectionLocalUserGroupMembershipPolicy
   * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034)
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
 * IntuneAccountProtectionPolicy
   * Initial release
-    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034)
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * fix typo in Get-TargetResource
+    FIXES [#3869](https://github.com/microsoft/Microsoft365DSC/issues/3869)
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Fix typo in the catch of Update-DeviceEnrollmentConfigurationPriority
     FIXES [#3442](https://github.com/microsoft/Microsoft365DSC/issues/3442)
