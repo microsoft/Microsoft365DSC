@@ -444,7 +444,6 @@ function Compare-PSCustomObjectArrays
         [System.Object[]]
         $CurrentValues
     )
-$VerbosePreference = 'Continue'
     $DriftedProperties = @()
     foreach ($DesiredEntry in $DesiredValues)
     {
