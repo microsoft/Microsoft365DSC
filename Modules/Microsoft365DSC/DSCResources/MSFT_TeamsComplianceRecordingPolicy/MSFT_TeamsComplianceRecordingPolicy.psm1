@@ -81,7 +81,7 @@ function Get-TargetResource
         }
         $recordApplicationIds = @()
         foreach ($app in $recordingApplications) {
-            $recordApplicationIds += @{Id=$app.Id}
+            $recordApplicationIds += $app.Id
         }
 
         Write-Verbose -Message "Found an instance with Identity {$Identity}"

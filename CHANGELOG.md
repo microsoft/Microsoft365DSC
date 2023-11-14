@@ -74,6 +74,9 @@
   * Added a QA check to test if all used subclasses actually exist in the MOF schema.
 * DEPENDENCIES
   * Updated Microsoft. Graph dependencies to version 2.9.0.
+* TeamsTeam
+  * Fixes incompatible type for ComplianceRecordingApplications, expected string[] but receive object[]
+    FIXES: [#3890](https://github.com/microsoft/Microsoft365DSC/issues/3890)
 
 # 1.23.1108.1
 
