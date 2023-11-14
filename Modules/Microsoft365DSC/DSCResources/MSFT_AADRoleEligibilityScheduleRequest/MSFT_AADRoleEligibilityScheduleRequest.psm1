@@ -110,17 +110,17 @@
         {
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
-                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+                [Array]$request = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
             }
             else
             {
                 Write-Verbose -Message "Getting Role Eligibility by Id {$Id}"
-                $request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -UnifiedRoleEligibilityScheduleRequestId $Id `
+                [Array]$request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -UnifiedRoleEligibilityScheduleRequestId $Id `
                     -ErrorAction SilentlyContinue
             }
         }
 
-        if ($null -eq $request)
+        if ($null -eq $request -or $request.Length -eq 0)
         {
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
@@ -146,7 +146,7 @@
                     }
                     Write-Verbose -Message "Found Principal {$PrincipalId}"
                     $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
-                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalId -and $_.RoleDefinitionId -eq $RoleDefinition}
+                    [Array]$request = $Script:exportedInstances | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalId -and $_.RoleDefinitionId -eq $RoleDefinition}
             }
             else
             {
@@ -178,15 +178,15 @@
                 Write-Verbose -Message "Found Role {$RoleDefinitionId}"
 
                 $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
-                $request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
+                [Array]$request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
             }
         }
         else
         {
             $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
-            $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)' and RoleDefinitionId eq '$RoleDefinitionId'"
+            $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request[0].PrincipalId)' and RoleDefinitionId eq '$RoleDefinitionId'"
         }
-        if ($null -eq $schedule -or $null -eq $request)
+        if ($null -eq $schedule -or $null -eq $request -or $request.Length -eq 0)
         {
             return $nullResult
         }
@@ -194,12 +194,12 @@
         Write-Verbose -Message "Found existing AADRolelLigibilityScheduleRequest"
         if ($PrincipalType -eq 'User')
         {
-            $PrincipalInstance = Get-MgUser -UserId $request.PrincipalId -ErrorAction SilentlyContinue
+            $PrincipalInstance = Get-MgUser -UserId $request[0].PrincipalId -ErrorAction SilentlyContinue
             $PrincipalTypeValue = 'User'
         }
         if ($null -eq $PrincipalInstance -or $PrincipalType -eq 'Group')
         {
-            $PrincipalInstance = Get-MGGroup -GroupId $request.PrincipalId -ErrorAction SilentlyContinue
+            $PrincipalInstance = Get-MGGroup -GroupId $request[0].PrincipalId -ErrorAction SilentlyContinue
             $PrincipalTypeValue = 'Group'
         }
 
@@ -250,11 +250,11 @@
         }
 
         $ticketInfoValue = $null
-        if ($null -ne $request.TicketInfo)
+        if ($null -ne $request[0].TicketInfo)
         {
             $ticketInfoValue = @{
-                ticketNumber = $request.TicketInfo.TicketNumber
-                ticketSystem = $request.TicketInfo.TicketSystem
+                ticketNumber = $request[0].TicketInfo.TicketNumber
+                ticketSystem = $request[0].TicketInfo.TicketSystem
             }
         }
 
@@ -272,12 +272,12 @@
             Principal             = $PrincipalValue
             PrincipalType         = $PrincipalTypeValue
             RoleDefinition        = $RoleDefinition
-            DirectoryScopeId      = $request.DirectoryScopeId
-            AppScopeId            = $request.AppScopeId
-            Action                = $request.Action
-            Id                    = $request.Id
-            Justification         = $request.Justification
-            IsValidationOnly      = $request.IsValidationOnly
+            DirectoryScopeId      = $request[0].DirectoryScopeId
+            AppScopeId            = $request[0].AppScopeId
+            Action                = $request[0].Action
+            Id                    = $request[0].Id
+            Justification         = $request[0].Justification
+            IsValidationOnly      = $request[0].IsValidationOnly
             ScheduleInfo          = $ScheduleInfoValue
             TicketInfo            = $ticketInfoValue
             Ensure                = 'Present'
@@ -737,7 +737,7 @@ function Export-TargetResource
         [array] $allRequests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -All `
                 -Filter "Status ne 'Revoked'" -ErrorAction Stop
         foreach ($schedule in $schedules)
-        {            
+        {
             [array] $Script:exportedInstances += $allRequests | Where-Object -FilterScript {$_.TargetScheduleId -eq $schedule.Id}
         }
         #endregion
@@ -756,7 +756,7 @@ function Export-TargetResource
         {
             $displayedKey = $request.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
-            
+
             $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
             $params = @{
                 Id                    = $request.Id
