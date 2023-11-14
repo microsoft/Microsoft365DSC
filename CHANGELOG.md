@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# 1.23.1108.2
+# 1.23.1108.3
 
 * AADRoleEligibilityScheduleRequest
   * Fixed incorrect subclass MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange
