@@ -2,6 +2,13 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10,
+  IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10,
+  IntuneDeviceConfigurationIdentityProtectionPolicyWindows10,
+  IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined,
+  IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Removed Id parameter from PSBoundParameters in Test-TargetResource
+  FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
 * IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
   * fix an issue where the firewall settings were not populate correctly
   FIXES [#3851](https://github.com/microsoft/Microsoft365DSC/issues/3851)
