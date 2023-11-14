@@ -196,7 +196,7 @@ function Get-TargetResource
                     }
                     '*.groupPolicyPresentationValueMultiText'
                     {
-                        $complexPresentationValue.Add('StringValue', $presentationValue.AdditionalProperties.values)
+                        $complexPresentationValue.Add('StringValues', $presentationValue.AdditionalProperties.values)
                     }
                     '*.groupPolicyPresentationValueText'
                     {
