@@ -91,33 +91,36 @@ function Get-TargetResource
     try
     {
         $CASMailboxPlan = Get-CASMailboxPlan -Identity $Identity -ErrorAction Stop
+        if ($null -eq $MailboxPlan)
+        {
+            Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
 
-        if ($null -eq $CASMailboxPlan)
-        {
-            Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
-            return $nullResult
-        }
-        else
-        {
-            $result = @{
-                Identity              = $Identity
-                ActiveSyncEnabled     = $CASMailboxPlan.ActiveSyncEnabled
-                ImapEnabled           = $CASMailboxPlan.ImapEnabled
-                OwaMailboxPolicy      = $CASMailboxPlan.OwaMailboxPolicy
-                PopEnabled            = $CASMailboxPlan.PopEnabled
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-                TenantId              = $TenantId
+            $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
+            if ($null -eq $CASMailboxPlan)
+            {
+                Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
+                return $nullResult
             }
-
-            Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
         }
+
+        $result = @{
+            Identity              = $Identity
+            ActiveSyncEnabled     = $CASMailboxPlan.ActiveSyncEnabled
+            ImapEnabled           = $CASMailboxPlan.ImapEnabled
+            OwaMailboxPolicy      = $CASMailboxPlan.OwaMailboxPolicy
+            PopEnabled            = $CASMailboxPlan.PopEnabled
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
+        }
+
+        Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -217,11 +220,11 @@ function Set-TargetResource
     $CASMailboxPlanParams.Remove('CertificatePassword') | Out-Null
     $CASMailboxPlanParams.Remove('ManagedIdentity') | Out-Null
 
-    $CASMailboxPlans = Get-CASMailboxPlan
-    $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
 
     if ($null -ne $CASMailboxPlan)
     {
+        $CasMailboxPlanParams.Identity = $CASMailboxPlan.Identity
         Write-Verbose -Message "Setting CASMailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $CASMailboxPlanParams)"
         Set-CASMailboxPlan @CASMailboxPlanParams
     }

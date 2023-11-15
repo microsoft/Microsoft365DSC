@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOCASMailboxPlan
+  * Fixes an issue where we are not able to set the settings of a CAS
+    Mailbox Plan by specifying the Identity without the GUID in the name.
+    FIXES [#3900](https://github.com/microsoft/Microsoft365DSC/issues/3900)
+
 # 1.23.1108.3
 
 * AADRoleEligibilityScheduleRequest
