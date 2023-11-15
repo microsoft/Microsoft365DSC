@@ -95,7 +95,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
 
-            $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])*'"
+            $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
             if ($null -eq $CASMailboxPlan)
             {
                 Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
@@ -220,7 +220,7 @@ function Set-TargetResource
     $CASMailboxPlanParams.Remove('CertificatePassword') | Out-Null
     $CASMailboxPlanParams.Remove('ManagedIdentity') | Out-Null
 
-    $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$Identity*'"
+    $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
 
     if ($null -ne $CASMailboxPlan)
     {
