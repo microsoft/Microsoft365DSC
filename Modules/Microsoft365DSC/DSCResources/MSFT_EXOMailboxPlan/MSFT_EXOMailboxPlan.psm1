@@ -112,7 +112,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
 
-            $MailboxPlan = Get-MailboxPlan -Filter "Name like '$($Identity.Split('-')[0])*'"
+            $MailboxPlan = Get-MailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])*'"
             if ($null -eq $MailboxPlan)
             {
                 return $nullResult
