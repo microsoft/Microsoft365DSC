@@ -9,6 +9,10 @@ function Get-TargetResource
         $AppId,
 
         [Parameter()]
+        [System.String[]]
+        $AppRoleAssignedTo,
+
+        [Parameter()]
         [System.String]
         $ObjectId,
 
@@ -125,6 +129,7 @@ function Get-TargetResource
                 else
                 {
                     $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
+                        -Expand 'AppRoleAssignedTo' `
                         -ErrorAction Stop
                 }
             }
@@ -142,7 +147,8 @@ function Get-TargetResource
             }
             else
             {
-                $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
+                $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'" `
+                                                              -Expand 'AppRoleAssignedTo'
             }
         }
         if ($null -eq $AADServicePrincipal)
@@ -151,8 +157,32 @@ function Get-TargetResource
         }
         else
         {
+            $AppRoleAssignedToValues = @()
+            foreach ($principal in $AADServicePrincipal.AppRoleAssignedTo)
+            {
+                $currentAssignment = @{
+                    PrincipalType = $null
+                    Identity      = $null
+                }
+                if ($principal.PrincipalType -eq 'User')
+                {
+                    $user = Get-MgUser -UserId $principal.PrincipalId
+                    $currentAssignment.PrincipalType = 'User'
+                    $currentAssignment.Identity = $user.UserPrincipalName
+                    $AppRoleAssignedToValues += $currentAssignment
+                }
+                elseif ($principal.PrincipalType -eq 'Group')
+                {
+                    $group = Get-MgGroup -GroupId $principal.PrincipalId
+                    $currentAssignment.PrincipalType = 'Group'
+                    $currentAssignment.Identity = $group.DisplayName
+                    $AppRoleAssignedToValues += $currentAssignment
+                }
+            }
+
             $result = @{
                 AppId                     = $AADServicePrincipal.AppId
+                AppRoleAssignedTo         = $AppRoleAssignedToValue
                 ObjectID                  = $AADServicePrincipal.Id
                 DisplayName               = $AADServicePrincipal.DisplayName
                 AlternativeNames          = $AADServicePrincipal.AlternativeNames
@@ -199,6 +229,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $AppId,
+
+        [Parameter()]
+        [System.String[]]
+        $AppRoleAssignedTo,
 
         [Parameter()]
         [System.String]
@@ -347,6 +381,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $AppId,
+
+        [Parameter()]
+        [System.String[]]
+        $AppRoleAssignedTo,
 
         [Parameter()]
         [System.String]
@@ -544,11 +582,20 @@ function Export-TargetResource
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
+                if ($Results.AppRoleAssignedTo.Count -gt 0)
+                {
+                    $Results.AppRoleAssignedTo = Get-M365DSCAzureADServicePrincipalAssignmentAsString -Assignments $Results.AppRoleAssignedTo
+                }
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
+                if ($null -ne $Results.Permissions)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName 'AppRoleAssignedTo'
+                }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -571,6 +618,28 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-M365DSCAzureADServicePrincipalAssignmentAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $Assignments
+    )
+
+    $StringContent = '@('
+    foreach ($assignment in $Assignments)
+    {
+        $StringContent += "MSFT_AADServicePrincipalRoleAssignment {`r`n"
+        $StringContent += "                PrincipalType = '" + $assignment.PrincipalType + "'`r`n"
+        $StringContent += "                Identity      = '" + $permission.Identity + "'`r`n"
+        $StringContent += "            }`r`n"
+    }
+    $StringContent += '            )'
+    return $StringContent
 }
 
 Export-ModuleMember -Function *-TargetResource
