@@ -368,86 +368,87 @@ function Set-TargetResource
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
 
-        [Array]$currentPrincipals = $currentAADServicePrincipal.AppRoleAssignedTo.Identity
-        [Array]$desiredPrincipals = $AppRoleAssignedTo.Identity
-
-        Write-Verbose -Message "Current: $currentPrincipals"
-        Write-Verbose -Message "Desired: $desiredPrincipals"
-        [Array]$differences = Compare-Object -ReferenceObject $currentPrincipals -DifferenceObject $desiredPrincipals
-        [Array]$membersToAdd = $differences | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
-        [Array]$membersToRemove = $differences | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
-
-        if ($differences.Count -gt 0)
+        if ($AppRoleAssignedTo)
         {
-            if ($membersToAdd.Count -gt 0)
-            {
-                $AppRoleAssignedToValues = @()
-                foreach ($assignment in $AppRoleAssignedTo)
-                {
-                    $AppRoleAssignedToValues += @{
-                        PrincipalType = $assignment.PrincipalType
-                        Identity      = $assignment.Identity
-                    }
-                }
-                foreach ($member in $membersToAdd)
-                {
-                    $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript {$_.Identity -eq $member.InputObject}
-                    if ($assignment.PrincipalType -eq 'User')
-                    {
-                        Write-Verbose -Message "Retrieving user {$($assignment.Identity)}"
-                        $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($assignment.Identity)')"
-                        $PrincipalIdValue = $user.Id
-                    }
-                    else
-                    {
-                        Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
-                        $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
-                        $PrincipalIdValue = $group.Id
-                    }
+            [Array]$currentPrincipals = $currentAADServicePrincipal.AppRoleAssignedTo.Identity
+            [Array]$desiredPrincipals = $AppRoleAssignedTo.Identity
 
-                    $bodyParam = @{
-                        principalId = $PrincipalIdValue
-                        resourceId  = $currentAADServicePrincipal.ObjectID
-                        appRoleId   = "00000000-0000-0000-0000-000000000000"
-                    }
-                    Write-Verbose -Message "Adding member {$($member.InputObject.ToString())}"
-                    New-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `
-                        -BodyParameter $bodyParam | Out-Null
-                }
-            }
+            [Array]$differences = Compare-Object -ReferenceObject $currentPrincipals -DifferenceObject $desiredPrincipals
+            [Array]$membersToAdd = $differences | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
+            [Array]$membersToRemove = $differences | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
 
-            if ($membersToRemove.Count -gt 0)
+            if ($differences.Count -gt 0)
             {
-                $AppRoleAssignedToValues = @()
-                foreach ($assignment in $currentAADServicePrincipal.AppRoleAssignedTo)
+                if ($membersToAdd.Count -gt 0)
                 {
-                    $AppRoleAssignedToValues += @{
-                        PrincipalType = $assignment.PrincipalType
-                        Identity      = $assignment.Identity
+                    $AppRoleAssignedToValues = @()
+                    foreach ($assignment in $AppRoleAssignedTo)
+                    {
+                        $AppRoleAssignedToValues += @{
+                            PrincipalType = $assignment.PrincipalType
+                            Identity      = $assignment.Identity
+                        }
+                    }
+                    foreach ($member in $membersToAdd)
+                    {
+                        $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript {$_.Identity -eq $member.InputObject}
+                        if ($assignment.PrincipalType -eq 'User')
+                        {
+                            Write-Verbose -Message "Retrieving user {$($assignment.Identity)}"
+                            $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($assignment.Identity)')"
+                            $PrincipalIdValue = $user.Id
+                        }
+                        else
+                        {
+                            Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
+                            $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
+                            $PrincipalIdValue = $group.Id
+                        }
+
+                        $bodyParam = @{
+                            principalId = $PrincipalIdValue
+                            resourceId  = $currentAADServicePrincipal.ObjectID
+                            appRoleId   = "00000000-0000-0000-0000-000000000000"
+                        }
+                        Write-Verbose -Message "Adding member {$($member.InputObject.ToString())}"
+                        New-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `
+                            -BodyParameter $bodyParam | Out-Null
                     }
                 }
-                foreach ($member in $membersToRemove)
+
+                if ($membersToRemove.Count -gt 0)
                 {
-                    $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript {$_.Identity -eq $member.InputObject}
-                    if ($assignment.PrincipalType -eq 'User')
+                    $AppRoleAssignedToValues = @()
+                    foreach ($assignment in $currentAADServicePrincipal.AppRoleAssignedTo)
                     {
-                        Write-Verbose -Message "Retrieving user {$($assignment.Identity)}"
-                        $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($assignment.Identity)')"
-                        $PrincipalIdValue = $user.Id
+                        $AppRoleAssignedToValues += @{
+                            PrincipalType = $assignment.PrincipalType
+                            Identity      = $assignment.Identity
+                        }
                     }
-                    else
+                    foreach ($member in $membersToRemove)
                     {
-                        Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
-                        $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
-                        $PrincipalIdValue = $group.Id
+                        $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript {$_.Identity -eq $member.InputObject}
+                        if ($assignment.PrincipalType -eq 'User')
+                        {
+                            Write-Verbose -Message "Retrieving user {$($assignment.Identity)}"
+                            $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($assignment.Identity)')"
+                            $PrincipalIdValue = $user.Id
+                        }
+                        else
+                        {
+                            Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
+                            $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
+                            $PrincipalIdValue = $group.Id
+                        }
+                        Write-Verbose -Message "PrincipalID Value = '$PrincipalIdValue'"
+                        Write-Verbose -Message "ServicePrincipalId = '$($currentAADServicePrincipal.ObjectID)'"
+                        $allAssignments = Get-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID
+                        $assignmentToRemove = $allAssignments | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalIdValue}
+                        Write-Verbose -Message "Removing member {$($member.InputObject.ToString())}"
+                        Remove-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `
+                            -AppRoleAssignmentId $assignmentToRemove.Id | Out-Null
                     }
-                    Write-Verbose -Message "PrincipalID Value = '$PrincipalIdValue'"
-                    Write-Verbose -Message "ServicePrincipalId = '$($currentAADServicePrincipal.ObjectID)'"
-                    $allAssignments = Get-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID
-                    $assignmentToRemove = $allAssignments | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalIdValue}
-                    Write-Verbose -Message "Removing member {$($member.InputObject.ToString())}"
-                    Remove-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `
-                        -AppRoleAssignmentId $assignmentToRemove.Id | Out-Null
                 }
             }
         }
