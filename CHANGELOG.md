@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Added support for the IsFallbackPublicClient property.
+    FIXES [#3906](https://github.com/microsoft/Microsoft365DSC/issues/3906)
 * AADServicePrincipal
   * Added support to define members.
     FIXES [#3902](https://github.com/microsoft/Microsoft365DSC/issues/3902)
