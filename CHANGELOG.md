@@ -6,6 +6,7 @@
   IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10,
   IntuneDeviceConfigurationIdentityProtectionPolicyWindows10,
   IntuneDeviceConfigurationEndpointProtectionPolicyWindows10,
+  IntuneDeviceEnrollmentStatusPageWindows10,
   IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined,
   IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Removed Id and all authentication parameters from PSBoundParameters in Test-TargetResource
