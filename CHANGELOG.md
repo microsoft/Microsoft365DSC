@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy,
+  IntuneAccountProtectionLocalUserGroupMembershipPolicy,
+  IntuneAccountProtectionPolicy,
+  * Fixes export if Assignments is set on existing policies
+    FIXES [3913](https://github.com/microsoft/Microsoft365DSC/issues/3913)
+  * Add groupDisplayName to Assignments embedded instance
+
 # 1.23.1115.1
 
 * AADApplication
