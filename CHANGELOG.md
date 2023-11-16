@@ -1,10 +1,78 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1115.1
+
+* AADApplication
+  * Added support for the IsFallbackPublicClient property.
+    FIXES [#3906](https://github.com/microsoft/Microsoft365DSC/issues/3906)
+* AADServicePrincipal
+  * Added support to define members.
+    FIXES [#3902](https://github.com/microsoft/Microsoft365DSC/issues/3902)
+* EXOCASMailboxPlan
+  * Fixes an issue where we are not able to set the settings of a CAS
+    Mailbox Plan by specifying the Identity without the GUID in the name.
+    FIXES [#3900](https://github.com/microsoft/Microsoft365DSC/issues/3900)
+
+# 1.23.1108.3
+
+* AADRoleEligibilityScheduleRequest
+  * Fixed incorrect subclass MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange
+    for range property
+    FIXES [#3847](https://github.com/microsoft/Microsoft365DSC/issues/3847)
+  * Fixes issue where creating an entry that was previously removed threw an error
+    complaining that the role eligibility already existed.
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 2/3
+* IntuneAccountProtectionPolicy
+  * Initial release
+    FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Fixes typo in Get-TargetResource
+    FIXES [#3869](https://github.com/microsoft/Microsoft365DSC/issues/3869)
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Fix an issue where the firewall settings were not populate correctly
+  FIXES [#3851](https://github.com/microsoft/Microsoft365DSC/issues/3851)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fix typo in the catch of Update-DeviceEnrollmentConfigurationPriority
+    FIXES [#3442](https://github.com/microsoft/Microsoft365DSC/issues/3442)
+* M365DSCDRGUTIL
+  * Fix an issue where temporary parameters were not renamed during recursive call causing a Model Validation
+    error during creation or update of a Graph resource
+    FIXES [#3582](https://github.com/microsoft/Microsoft365DSC/issues/3582)
+* MISC
+  * Added a QA check to test if all used subclasses actually exist in the MOF schema.
+* DEPENDENCIES
+  * Updated Microsoft. Graph dependencies to version 2.9.0.
+
+# 1.23.1108.1
+
+* AADExternalIdentityPolicy
+  * Initial release.
+* O365OrgSettings
+  * Force register the Office on the Web ServicePrincipal is it is not present.
+    FIXES [#3842](https://github.com/microsoft/Microsoft365DSC/issues/3842)
+* TeamsTeam
+  * Fixes incomplete import due to error "Cannot index into a null array"
+    FIXES: [#3759](https://github.com/microsoft/Microsoft365DSC/issues/3759)
+
+# 1.23.1101.1
 
 * AADRoleEligibilityScheduleRequest
   * Fixes how the Get method retrieves existing instances for Groups.
     FIXES [#3787](https://github.com/microsoft/Microsoft365DSC/issues/3787)
+* SCSecurityFilter
+  * Fixes an issue because Region could be empty
+  FIXES: [#3854](https://github.com/microsoft/Microsoft365DSC/issues/3854)
+* SPOSharingSettings
+  * Fixes parameter validation of ExternalUserExpireInDays and ExternalUserExpirationRequired.
+    FIXES [#3856](https://github.com/microsoft/Microsoft365DSC/issues/3856)
+* TeamsComplianceRecordingPolicy
+  * Fix an issue where the Compliance Application ID wasn't properly retrieved.
+  FIXES [#3848](https://github.com/microsoft/Microsoft365DSC/issues/3848)
 
 # 1.23.1025.1
 
@@ -44,6 +112,9 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Added "-All" parameter to retrieve all settings from a template.
   FIXES [#3722](https://github.com/microsoft/Microsoft365DSC/issues/3722)
+* IntuneDeviceCleanupRule
+  * Initial release.
+    FIXES [#3599](https://github.com/microsoft/Microsoft365DSC/issues/3599)
 * TeamsGroupPolicyAssignment
   * Fixes the export of CsGroup, when the display name of a group is included in
     another display name.

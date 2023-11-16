@@ -33,6 +33,10 @@ function Get-TargetResource
         $IdentifierUris,
 
         [Parameter()]
+        [System.Boolean]
+        $IsFallbackPublicClient,
+
+        [Parameter()]
         [System.String]
         $LogoutURL,
 
@@ -177,12 +181,18 @@ function Get-TargetResource
                 }
             }
 
+            $IsFallbackPublicClientValue = $false
+            if ($AADApp.IsFallbackPublicClient)
+            {
+                $IsFallbackPublicClientValue = $AADApp.IsFallbackPublicClient
+            }
             $result = @{
                 DisplayName             = $AADApp.DisplayName
                 AvailableToOtherTenants = $AvailableToOtherTenantsValue
                 GroupMembershipClaims   = $AADApp.GroupMembershipClaims
                 Homepage                = $AADApp.web.HomepageUrl
                 IdentifierUris          = $AADApp.IdentifierUris
+                IsFallbackPublicClient  = $IsFallbackPublicClientValue
                 KnownClientApplications = $AADApp.Api.KnownClientApplications
                 LogoutURL               = $AADApp.web.LogoutURL
                 PublicClient            = $isPublicClient
@@ -258,6 +268,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $KnownClientApplications,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFallbackPublicClient,
 
         [Parameter()]
         [System.String]
@@ -679,6 +693,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $IdentifierUris,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFallbackPublicClient,
 
         [Parameter()]
         [System.String[]]

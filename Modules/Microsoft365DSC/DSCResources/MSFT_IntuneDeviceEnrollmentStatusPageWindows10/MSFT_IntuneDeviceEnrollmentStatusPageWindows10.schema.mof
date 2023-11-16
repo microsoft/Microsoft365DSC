@@ -13,7 +13,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 class MSFT_IntuneDeviceEnrollmentStatusPageWindows10 : OMI_BaseResource
 {
     [Key, Description("The display name of the device enrollment configuration")] String DisplayName;
-    [Required, Description("The unique identifier for an entity. Read-only.")] String Id;
+    [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
     [Write, Description("The description of the device enrollment configuration")] String Description;
     [Write, Description("Allow or block device reset on installation failure")] Boolean AllowDeviceResetOnInstallFailure;
     [Write, Description("Allow the user to continue using the device on installation failure")] Boolean AllowDeviceUseOnInstallFailure;

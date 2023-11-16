@@ -37,13 +37,13 @@ function Get-TargetResource
             'IND', # India
             'JPN', # Japan
             'LAM', # Latin America
-            'NAM' # North America
+            'NAM', # North America
+            '' # NOT MANDATORY
         )]
         [System.String]
         $Region,
 
         # And the DSC ones
-
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
@@ -227,7 +227,8 @@ function Set-TargetResource
             'IND', # India
             'JPN', # Japan
             'LAM', # Latin America
-            'NAM' # North America
+            'NAM', # North America
+            '' # NOT MANDATORY
         )]
         [System.String]
         $Region,
@@ -393,7 +394,8 @@ function Test-TargetResource
             'IND', # India
             'JPN', # Japan
             'LAM', # Latin America
-            'NAM' # North America
+            'NAM', # North America
+            '' # NOT MANDATORY
         )]
         [System.String]
         $Region,

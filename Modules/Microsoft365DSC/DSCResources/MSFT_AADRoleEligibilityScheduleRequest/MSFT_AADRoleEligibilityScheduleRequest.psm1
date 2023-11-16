@@ -199,6 +199,12 @@
         }
         if ($null -eq $PrincipalInstance -or $PrincipalType -eq 'Group')
         {
+            $requestArray = [Array]$request
+            if ($requestArray.Count -gt 1)
+            {
+                $requestArray = $requestArray | Sort-Object -Property CreatedDateTime -Descending
+                $request = $requestArray[0]
+            }
             $PrincipalInstance = Get-MGGroup -GroupId $request.PrincipalId -ErrorAction SilentlyContinue
             $PrincipalTypeValue = 'Group'
         }
@@ -737,7 +743,7 @@ function Export-TargetResource
         [array] $allRequests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -All `
                 -Filter "Status ne 'Revoked'" -ErrorAction Stop
         foreach ($schedule in $schedules)
-        {            
+        {
             [array] $Script:exportedInstances += $allRequests | Where-Object -FilterScript {$_.TargetScheduleId -eq $schedule.Id}
         }
         #endregion
@@ -756,7 +762,7 @@ function Export-TargetResource
         {
             $displayedKey = $request.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
-            
+
             $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
             $params = @{
                 Id                    = $request.Id
