@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10,
+  IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10,
+  IntuneDeviceConfigurationIdentityProtectionPolicyWindows10,
+  IntuneDeviceConfigurationEndpointProtectionPolicyWindows10,
+  IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined,
+  IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Removed Id and all authentication parameters from PSBoundParameters in Test-TargetResource
+  FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
+
 # 1.23.1115.1
 
 * AADApplication
@@ -15,19 +26,6 @@
 
 # 1.23.1108.3
 
-<<<<<<< HEAD
-* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10,
-  IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10,
-  IntuneDeviceConfigurationIdentityProtectionPolicyWindows10,
-  IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined,
-  IntuneWindowsAutopilotDeploymentProfileAzureADJoined
-  * Removed Id parameter from PSBoundParameters in Test-TargetResource
-  FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
-* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
-  * fix an issue where the firewall settings were not populate correctly
-  FIXES [#3851](https://github.com/microsoft/Microsoft365DSC/issues/3851)
-=======
->>>>>>> 433af4dd57c69d0b3466b352664643dc453f4d78
 * AADRoleEligibilityScheduleRequest
   * Fixed incorrect subclass MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange
     for range property
