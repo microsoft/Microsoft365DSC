@@ -1,7 +1,13 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1115.1
 
+* AADApplication
+  * Added support for the IsFallbackPublicClient property.
+    FIXES [#3906](https://github.com/microsoft/Microsoft365DSC/issues/3906)
+* AADServicePrincipal
+  * Added support to define members.
+    FIXES [#3902](https://github.com/microsoft/Microsoft365DSC/issues/3902)
 * EXOCASMailboxPlan
   * Fixes an issue where we are not able to set the settings of a CAS
     Mailbox Plan by specifying the Identity without the GUID in the name.

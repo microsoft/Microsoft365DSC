@@ -1,7 +1,15 @@
+[ClassVersion("1.0.0")]
+class MSFT_AADServicePrincipalRoleAssignment
+{
+    [Write, Description("Type of principal. Accepted values are User or Group"), ValueMap{"Group","User"}, Values{"Group","User"}] String PrincipalType;
+    [Write, Description("Unique identity representing the principal.")] String Identity;
+};
+
 [ClassVersion("1.0.0.0"), FriendlyName("AADServicePrincipal")]
 class MSFT_AADServicePrincipal : OMI_BaseResource
 {
     [Key, Description("The unique identifier for the associated application.")] String AppId;
+    [Write, Description("App role assignments for this app or service, granted to users, groups, and other service principals."), EmbeddedInstance("MSFT_AADServicePrincipalRoleAssignment")] String AppRoleAssignedTo[];
     [Write, Description("The ObjectID of the ServicePrincipal")] String ObjectID;
     [Write, Description("Displayname of the ServicePrincipal.")] String DisplayName;
     [Write, Description("The alternative names for this service principal")] String AlternativeNames[];
