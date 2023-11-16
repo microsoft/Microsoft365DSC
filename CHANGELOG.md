@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1115.1
 
 * AADApplication
   * Added support for the IsFallbackPublicClient property.
