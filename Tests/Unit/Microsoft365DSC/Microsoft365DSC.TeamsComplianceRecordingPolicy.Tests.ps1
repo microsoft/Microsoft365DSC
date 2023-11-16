@@ -124,7 +124,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Result = (Get-TargetResource @testParams)
                 $Result.Ensure | Should -Be 'Present'
                 $Result.ComplianceRecordingApplications.Length | Should -Be 1
-                $Result.ComplianceRecordingApplications[0].Id | Should -Be '123456'
+                $Result.ComplianceRecordingApplications[0] | Should -Be '123456'
                 Should -Invoke -CommandName Get-CsTeamsComplianceRecordingPolicy -Exactly 1
                 Should -Invoke -CommandName Get-CsTeamsComplianceRecordingApplication -ParameterFilter {$Filter -eq 'FakeStringValue/*'} -Exactly 1
 
