@@ -1,5 +1,8 @@
 # Change log for Microsoft365DSC
 
+* SPOSharingSettings
+  * Fixes typo to reenable export of ExternalUserExpireInDays and ExternalUserExpirationRequired.
+
 # 1.23.1115.1
 
 * AADApplication
