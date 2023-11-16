@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **AppId** | Key | String | The unique identifier for the associated application. | |
+| **AppRoleAssignedTo** | Write | MSFT_AADServicePrincipalRoleAssignment[] | App role assignments for this app or service, granted to users, groups, and other service principals. | |
 | **ObjectID** | Write | String | The ObjectID of the ServicePrincipal | |
 | **DisplayName** | Write | String | Displayname of the ServicePrincipal. | |
 | **AlternativeNames** | Write | StringArray[] | The alternative names for this service principal | |
@@ -26,6 +27,15 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **Credential** | Write | PSCredential | Credentials of the Azure AD Admin | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+
+### MSFT_AADServicePrincipalRoleAssignment
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **PrincipalType** | Write | String | Type of principal. Accepted values are User or Group | `Group`, `User` |
+| **Identity** | Write | String | Unique identity representing the principal. | |
 
 ## Description
 
