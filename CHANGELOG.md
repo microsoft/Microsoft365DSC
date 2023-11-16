@@ -1,7 +1,21 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1115.1
 
+* AADApplication
+  * Added support for the IsFallbackPublicClient property.
+    FIXES [#3906](https://github.com/microsoft/Microsoft365DSC/issues/3906)
+* AADServicePrincipal
+  * Added support to define members.
+    FIXES [#3902](https://github.com/microsoft/Microsoft365DSC/issues/3902)
+* EXOCASMailboxPlan
+  * Fixes an issue where we are not able to set the settings of a CAS
+    Mailbox Plan by specifying the Identity without the GUID in the name.
+    FIXES [#3900](https://github.com/microsoft/Microsoft365DSC/issues/3900)
+
+# 1.23.1108.3
+
+<<<<<<< HEAD
 * IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10,
   IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10,
   IntuneDeviceConfigurationIdentityProtectionPolicyWindows10,
@@ -12,9 +26,14 @@
 * IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
   * fix an issue where the firewall settings were not populate correctly
   FIXES [#3851](https://github.com/microsoft/Microsoft365DSC/issues/3851)
+=======
+>>>>>>> 433af4dd57c69d0b3466b352664643dc453f4d78
 * AADRoleEligibilityScheduleRequest
-  * Fixed incorrect subclass MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange for range property
+  * Fixed incorrect subclass MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange
+    for range property
     FIXES [#3847](https://github.com/microsoft/Microsoft365DSC/issues/3847)
+  * Fixes issue where creating an entry that was previously removed threw an error
+    complaining that the role eligibility already existed.
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Initial release
     FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 3/3
@@ -25,13 +44,17 @@
   * Initial release
     FIXES [#3034](https://github.com/microsoft/Microsoft365DSC/issues/3034) 1/3
 * IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
-  * fix typo in Get-TargetResource
+  * Fixes typo in Get-TargetResource
     FIXES [#3869](https://github.com/microsoft/Microsoft365DSC/issues/3869)
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Fix an issue where the firewall settings were not populate correctly
+  FIXES [#3851](https://github.com/microsoft/Microsoft365DSC/issues/3851)
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Fix typo in the catch of Update-DeviceEnrollmentConfigurationPriority
     FIXES [#3442](https://github.com/microsoft/Microsoft365DSC/issues/3442)
 * M365DSCDRGUTIL
-  * Fix an issue where temporary parameters were not renamed during recursive call causing a Model Validation error during creation or update of a Graph resource
+  * Fix an issue where temporary parameters were not renamed during recursive call causing a Model Validation
+    error during creation or update of a Graph resource
     FIXES [#3582](https://github.com/microsoft/Microsoft365DSC/issues/3582)
 * MISC
   * Added a QA check to test if all used subclasses actually exist in the MOF schema.
