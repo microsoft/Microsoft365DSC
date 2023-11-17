@@ -14,7 +14,7 @@
 * MISC
   * M365DSCReport: Also define property dataType, if present, as being primary key on
     CIM instances.
-* TeamsComplianceREcordingPolicy
+* TeamsComplianceRecordingPolicy
   * FIXES [[#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)]
 * TeamsUpgradeConfiguration
   * Fixes an issue where the SfBMeetingJoinUx property wasn't properly updated.
