@@ -2,8 +2,6 @@
 
 # UNRELEASED
 
-* TeamsComplianceREcordingPolicy
-  * FIXES [[#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)]
 * AADRoleEligibilityScheduleRequest
   * Added support for groups assignment.
     FIXES [#3744](https://github.com/microsoft/Microsoft365DSC/issues/3744)
@@ -16,6 +14,8 @@
 * MISC
   * M365DSCReport: Also define property dataType, if present, as being primary key on
     CIM instances.
+* TeamsComplianceREcordingPolicy
+  * FIXES [[#3712](https://github.com/microsoft/Microsoft365DSC/issues/3712)]
 * TeamsUpgradeConfiguration
   * Fixes an issue where the SfBMeetingJoinUx property wasn't properly updated.
 * DEPENDENCIES
