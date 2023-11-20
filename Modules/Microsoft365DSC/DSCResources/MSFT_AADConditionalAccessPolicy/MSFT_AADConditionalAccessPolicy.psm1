@@ -941,10 +941,7 @@ function Set-TargetResource
         {
             $conditions.Applications.Add('IncludeApplications', $IncludeApplications)
         }
-        if ($ExcludeApplications)
-        {
-            $conditions.Applications.Add('ExcludeApplications', $ExcludeApplications)
-        }
+        $conditions.Applications.Add('ExcludeApplications', $ExcludeApplications)
         if ($IncludeUserActions)
         {
             $conditions.Applications.Add('IncludeUserActions', $IncludeUserActions)
