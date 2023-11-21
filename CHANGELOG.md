@@ -1,5 +1,8 @@
 # Change log for Microsoft365DSC
 
+* AADRoleSetting
+  * Export sorted by DisplayName for better comparison
+  * Enable Filter property to be used on export
 # 1.23.1115.1
 
 * AADApplication
