@@ -2,6 +2,9 @@
 
 # 1.23.1122.1
 
+* SPOSharingSettings
+  * Fixes typo to re-enable export of ExternalUserExpireInDays and
+    ExternalUserExpirationRequired.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.9.1.
   * Updated MicrosoftTeams to version 5.8.0.
