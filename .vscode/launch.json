@@ -6,9 +6,7 @@
             "request": "launch",
             "name": "Run current unit test",
             "script": "${file}",
-            "args": [
-                "${workspaceRoot}/Tests/Unit/Stubs/Microsoft365.psm1"
-            ],
+            "args": [],
             "cwd": "${file}",
             "createTemporaryIntegratedConsole": true
         },
