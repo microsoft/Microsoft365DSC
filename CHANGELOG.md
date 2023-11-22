@@ -6,6 +6,7 @@
   * Fixes typo to re-enable export of ExternalUserExpireInDays and
     ExternalUserExpirationRequired.
 * DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.0.
   * Updated Microsoft.Graph to version 2.9.1.
   * Updated MicrosoftTeams to version 5.8.0.
 
