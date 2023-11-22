@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# 1.23.1122.1
+
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.9.1.
+  * Updated MicrosoftTeams to version 5.8.0.
+
 # 1.23.1115.1
 
 * AADApplication
