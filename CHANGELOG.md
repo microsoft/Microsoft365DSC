@@ -34,16 +34,6 @@
   * Fixes an issue where we are not able to set the settings of a CAS
     Mailbox Plan by specifying the Identity without the GUID in the name.
     FIXES [#3900](https://github.com/microsoft/Microsoft365DSC/issues/3900)
-* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10,
-  IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10,
-  IntuneDeviceConfigurationIdentityProtectionPolicyWindows10,
-  IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined,
-  IntuneWindowsAutopilotDeploymentProfileAzureADJoined
-  * Removed Id parameter from PSBoundParameters in Test-TargetResource
-    FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
-* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
-  * Fixes an issue where the firewall settings were not populate correctly
-    FIXES [#3851](https://github.com/microsoft/Microsoft365DSC/issues/3851)
 
 # 1.23.1108.3
 
