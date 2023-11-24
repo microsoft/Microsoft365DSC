@@ -126,6 +126,12 @@ function Get-TargetResource
             Write-Verbose -Message "Could not find an Intune Windows Autopilot Deployment Profile Azure AD Joined with DisplayName {$DisplayName}"
             return $nullResult
         }
+
+        if($getValue -is [Array])
+        {
+            Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
+        }
+
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Windows Autopilot Deployment Profile Azure AD Joined with Id {$Id} and DisplayName {$DisplayName} was found."
 
@@ -192,20 +198,13 @@ function Get-TargetResource
             Managedidentity                = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id
+
+        $rawAssignments = @()
+        $rawAssignments =  Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id -All
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        if($null -ne $rawAssignments -and $rawAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {
-                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
-                    })
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $rawAssignments -IncludeDeviceFilter $false
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -351,17 +350,15 @@ function Set-TargetResource
         #region resource generator code
         $CreateParameters.Add("@odata.type", "#microsoft.graph.azureADWindowsAutopilotDeploymentProfile")
         $policy = New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -BodyParameter $CreateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        #endregion
 
-        if ($policy.id)
+        #region new Intune assignment management
+        $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        foreach ($assignment in $intuneAssignments)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/windowsAutopilotDeploymentProfiles'
+            New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
+                -WindowsAutopilotDeploymentProfileId $policy.id `
+                -BodyParameter $assignment
         }
         #endregion
     }
@@ -388,20 +385,47 @@ function Set-TargetResource
         Update-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile  `
             -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
             -BodyParameter $UpdateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
+        #endregion
+
+        #region new Intune assignment management
+        $currentAssignments = @()
+        $currentAssignments += Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $currentInstance.id
+
+        $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        foreach ($assignment in $intuneAssignments)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type' }))
+            {
+                New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
+                    -WindowsAutopilotDeploymentProfileId $currentInstance.id `
+                    -BodyParameter $assignment
+            }
+            else
+            {
+                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type') }
+            }
         }
-        Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentInstance.id `
-            -Targets $assignmentsHash `
-            -Repository 'deviceManagement/windowsAutopilotDeploymentProfiles'
+        if($currentAssignments.count -gt 0)
+        {
+            foreach ($assignment in $currentAssignments)
+            {
+                Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
+                    -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
+                    -WindowsAutopilotDeploymentProfileAssignmentId $assignment.Id
+            }
+        }
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the Intune Windows Autopilot Deployment Profile Azure AD Joined with Id {$($currentInstance.Id)}"
+        $currentAssignments = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $currentInstance.Id -All
+        foreach ($assignment in $currentAssignments)
+        {
+            Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
+                -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
+                -WindowsAutopilotDeploymentProfileAssignmentId $assignment.Id
+        }
         #region resource generator code
         Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $currentInstance.Id
         #endregion
@@ -532,16 +556,40 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult)
-            {
-                $testResult = $false
-                break
-            }
+                if( $key -eq "Assignments")
+                {
+                    $testResult = $source.count -eq $target.count
+                    if (-Not $testResult) { break }
+                    foreach ($assignment in $source)
+                    {
+                        if ($assignment.dataType -like '*GroupAssignmentTarget')
+                        {
+                            $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId})
+                            #Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
+                            if (-not $testResult)
+                            {
+                                $groupNotFound =  $null -eq (Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue)
+                            }
+                            if (-not $testResult -and $groupNotFound)
+                            {
+                                $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName})
+                            }
+                        }
+                        else
+                        {
+                            $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType})
+                        }
+                        if (-Not $testResult) { break }
+                    }
+                    if (-Not $testResult) { break }
+                }
+                if (-Not $testResult) { break }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
 
+    $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
