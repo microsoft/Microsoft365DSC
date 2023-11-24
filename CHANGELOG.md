@@ -17,6 +17,9 @@
 * IntuneDeviceConfigurationPolicyWindows10
   * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
   FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed assignments using API call
+  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
 
 # 1.23.1122.1
 

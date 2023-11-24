@@ -1216,7 +1216,7 @@ function ConvertTo-IntunePolicyAssignment
 
         if ($target)
         {
-            $assignmentResult += @{Target = $target}
+            $assignmentResult += @{target = $target}
         }
     }
 
