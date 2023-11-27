@@ -8,6 +8,9 @@
   * Fixes export if Assignments is set on existing policies
     FIXES [3913](https://github.com/microsoft/Microsoft365DSC/issues/3913)
   * Add groupDisplayName to Assignments embedded instance
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.10.0.
+  * Updated MSCloudLoginAssistant to version 1.1.0.
 
 # 1.23.1122.1
 
