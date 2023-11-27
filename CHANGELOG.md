@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Skipped settingValueTemplateReference and settingInstanceTemplateReference for severethreats, highseveritythreats, moderateseveritythreats, lowseveritythreats as per API requirements observed in the Intune portal
+  FIXES [#3818](https://github.com/microsoft/Microsoft365DSC/issues/3818)
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.10.0.
   * Updated MSCloudLoginAssistant to version 1.1.0.

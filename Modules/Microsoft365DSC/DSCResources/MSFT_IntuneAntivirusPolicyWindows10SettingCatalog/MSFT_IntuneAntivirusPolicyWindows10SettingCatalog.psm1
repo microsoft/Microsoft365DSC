@@ -1590,7 +1590,7 @@ function New-IntuneDeviceConfigurationPolicy
             'settings'          = $Settings
         }
         $body = $policy | ConvertTo-Json -Depth 20
-        Write-Verbose -Message $body
+        #Write-Verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
     }
@@ -1602,6 +1602,7 @@ function New-IntuneDeviceConfigurationPolicy
             -TenantId $TenantId `
             -Credential $Credential
 
+        #write-verbose ($_ | out-string)
         return $null
     }
 }
@@ -1819,6 +1820,11 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
             $setting.add('@odata.type', '#microsoft.graph.deviceManagementConfigurationSetting')
 
             $includeValueReference = $true
+            $includeSettingInstanceReference = $true
+            $doNotIncludesettingInstanceReferenceKeys = @(
+                'highseveritythreats'
+                'lowseveritythreats'
+            )
             $noValueReferenceKeys = @(
                 'excludedpaths'
                 'excludedprocesses'
@@ -1828,9 +1834,14 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
             {
                 $includeValueReference = $false
             }
+            if ($originalKey -in $doNotIncludesettingInstanceReferenceKeys)
+            {
+                $includeSettingInstanceReference = $false
+            }
             $myFormattedSetting = Format-M365DSCParamsToSettingInstance -DSCParams @{$settingKey = $DSCParams."$originalKey" } `
                 -TemplateSetting $templateSetting `
-                -IncludeSettingValueTemplateId $includeValueReference
+                -IncludeSettingValueTemplateId $includeValueReference `
+                -IncludeSettingInstanceTemplateId $includeSettingInstanceReference
 
             $setting.add('settingInstance', $myFormattedSetting)
             $settings += $setting
@@ -1871,9 +1882,36 @@ function Format-M365DSCIntuneSettingCatalogPolicySettings
                 -FilterScript { $_.settingDefinitionId -like "*$key" }
             if ($templateValue)
             {
+                $includeValueReference = $true
+                $includeSettingInstanceReference = $true
+                $doNotIncludesettingInstanceReferenceKeys = @(
+                    'highseveritythreats'
+                    'lowseveritythreats'
+                    'moderateseveritythreats'
+                    'severethreats'
+                )
+                $noValueReferenceKeys = @(
+                    'excludedpaths'
+                    'excludedprocesses'
+                    'excludedextensions'
+                    'highseveritythreats'
+                    'lowseveritythreats'
+                    'moderateseveritythreats'
+                    'severethreats'
+                )
+                if ($key -in $noValueReferenceKeys)
+                {
+                    $includeValueReference = $false
+                }
+                if ($key -in $doNotIncludesettingInstanceReferenceKeys)
+                {
+                    $includeSettingInstanceReference = $false
+                }
                 $groupSettingCollectionValueChild = Format-M365DSCParamsToSettingInstance `
                     -DSCParams @{$key = $DSCParams."$key" } `
-                    -TemplateSetting $templateValue
+                    -TemplateSetting $templateValue `
+                    -IncludeSettingValueTemplateId $includeValueReference `
+                    -IncludeSettingInstanceTemplateId $includeSettingInstanceReference
 
                 $groupSettingCollectionValueChildren += $groupSettingCollectionValueChild
             }
