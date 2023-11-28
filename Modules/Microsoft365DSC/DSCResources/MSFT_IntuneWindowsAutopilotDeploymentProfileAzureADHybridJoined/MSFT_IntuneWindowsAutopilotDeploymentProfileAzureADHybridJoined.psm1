@@ -354,7 +354,11 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -BodyParameter $CreateParameters
         #endregion
         #region new Intune assignment management
-        $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        $intuneAssignments = @()
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        {
+            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        }
         foreach ($assignment in $intuneAssignments)
         {
             New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
@@ -390,8 +394,11 @@ function Set-TargetResource
         #region new Intune assignment management
         $currentAssignments = @()
         $currentAssignments += Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $currentInstance.id
-
-        $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        $intuneAssignments = @()
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        {
+            $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        }
         foreach ($assignment in $intuneAssignments)
         {
             if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type' }))

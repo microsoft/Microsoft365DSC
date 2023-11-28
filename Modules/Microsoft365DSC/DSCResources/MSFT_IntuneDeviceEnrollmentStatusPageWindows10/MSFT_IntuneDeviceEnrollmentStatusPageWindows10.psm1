@@ -378,7 +378,10 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $CreateParameters
 
         $intuneAssignments = @()
-        $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        {
+            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        }
         $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments} | ConvertTo-Json -Depth 100
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$($policy.Id)/assign"
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
@@ -413,7 +416,10 @@ function Set-TargetResource
         if ($currentInstance.Id -notlike '*_DefaultWindows10EnrollmentCompletionPageConfiguration')
         {
             $intuneAssignments = @()
-            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+            if($null -ne $Assignments -and $Assignments.count -gt 0)
+            {
+                $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+            }
             $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments} | ConvertTo-Json -Depth 100
             $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$($currentInstance.Id)/assign"
             Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop

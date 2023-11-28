@@ -3282,7 +3282,11 @@ function Set-TargetResource
         #region new Intune assignment management
         if ($policy.id)
         {
-            $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+            $intuneAssignments = @()
+            if($null -ne $Assignments -and $Assignments.count -gt 0)
+            {
+                $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+            }
             foreach ($assignment in $intuneAssignments)
             {
                 New-MgBetaDeviceManagementDeviceConfigurationAssignment `
@@ -3320,7 +3324,11 @@ function Set-TargetResource
         $currentAssignments = @()
         $currentAssignments += Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $currentInstance.id
 
-        $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        $intuneAssignments = @()
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        {
+            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        }
         foreach ($assignment in $intuneAssignments)
         {
             if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type' }))
