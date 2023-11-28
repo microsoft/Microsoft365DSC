@@ -22,6 +22,7 @@
   * Removed Id and all authentication parameters from PSBoundParameters in Test-TargetResource
   FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
 * DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.1.
   * Updated Microsoft.Graph to version 2.10.0.
   * Updated MSCloudLoginAssistant to version 1.1.0.
 
