@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.10.0.
+  * Updated MSCloudLoginAssistant to version 1.1.0.
 * M365DSCDRGUtil
   * Added ConvertFrom-IntunePolicyAssignment and ConvertTo-IntunePolicyAssignment
   FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
