@@ -1,7 +1,10 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADRoleSetting
+  * Export sorted by DisplayName for better comparison
+  * Enable Filter property to be used on export
+    FIXES [#3919](https://github.com/microsoft/Microsoft365DSC/issues/3919)
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.10.0.
   * Updated MSCloudLoginAssistant to version 1.1.0.
