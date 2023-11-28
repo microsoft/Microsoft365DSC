@@ -13,6 +13,7 @@
     FIXES [3913](https://github.com/microsoft/Microsoft365DSC/issues/3913)
   * Add groupDisplayName to Assignments embedded instance
 * DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.1.
   * Updated Microsoft.Graph to version 2.10.0.
   * Updated MSCloudLoginAssistant to version 1.1.0.
 
