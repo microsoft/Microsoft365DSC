@@ -4063,8 +4063,8 @@ function Test-M365DSCModuleValidity
 
     $InformationPreference = 'Continue'
 
-    # validate only one installation of the module is present (and it's the latest version available from the psgallery)
-    $latestVersion = (Find-Module -Name 'Microsoft365DSC' -Repository 'PSGallery' -Includes 'DSCResource').Version
+    # validate only one installation of the module is present (and it's the latest version available)
+    $latestVersion = (Find-Module -Name 'Microsoft365DSC' -Includes 'DSCResource').Version
     $localVersion = (Get-Module -Name 'Microsoft365DSC').Version
 
     if ($latestVersion -gt $localVersion)
