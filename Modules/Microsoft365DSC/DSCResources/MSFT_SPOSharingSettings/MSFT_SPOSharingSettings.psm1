@@ -206,8 +206,8 @@ function Get-TargetResource
             BccExternalSharingInvitations              = $SPOSharingSettings.BccExternalSharingInvitations
             BccExternalSharingInvitationsList          = $SPOSharingSettings.BccExternalSharingInvitationsList
             RequireAnonymousLinksExpireInDays          = $SPOSharingSettings.RequireAnonymousLinksExpireInDays
-            ExternalUserExpireInDays                   = $SPOCCSharingSettings.ExternalUserExpireInDays
-            ExternalUserExpirationRequired             = $SPOCCSharingSettings.ExternalUserExpirationRequired
+            ExternalUserExpireInDays                   = $SPOSharingSettings.ExternalUserExpireInDays
+            ExternalUserExpirationRequired             = $SPOSharingSettings.ExternalUserExpirationRequired
             SharingAllowedDomainList                   = $allowDomains
             SharingBlockedDomainList                   = $blockDomains
             SharingDomainRestrictionMode               = $SPOSharingSettings.SharingDomainRestrictionMode
