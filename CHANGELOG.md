@@ -1,6 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* AADConditionalAccessPolicy
+  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
 * AADRoleSetting
   * Export sorted by DisplayName for better comparison
   * Enable Filter property to be used on export
