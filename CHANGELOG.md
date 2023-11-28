@@ -16,6 +16,9 @@
   * Updated DSCParser to version 1.4.0.1.
   * Updated Microsoft.Graph to version 2.10.0.
   * Updated MSCloudLoginAssistant to version 1.1.0.
+* TeamsTeam
+  * Fixes incompatible type for ComplianceRecordingApplications, expected string[] but receive object[]
+    FIXES: [#3890](https://github.com/microsoft/Microsoft365DSC/issues/3890)
 
 # 1.23.1122.1
 
@@ -74,9 +77,6 @@
   * Added a QA check to test if all used subclasses actually exist in the MOF schema.
 * DEPENDENCIES
   * Updated Microsoft. Graph dependencies to version 2.9.0.
-* TeamsTeam
-  * Fixes incompatible type for ComplianceRecordingApplications, expected string[] but receive object[]
-    FIXES: [#3890](https://github.com/microsoft/Microsoft365DSC/issues/3890)
 
 # 1.23.1108.1
 
