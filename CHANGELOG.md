@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Skipped settingValueTemplateReference and settingInstanceTemplateReference for severethreats, highseveritythreats, moderateseveritythreats, lowseveritythreats as per API requirements observed in the Intune portal
+  FIXES [#3818](https://github.com/microsoft/Microsoft365DSC/issues/3818)
+  FIXES [#3955](https://github.com/microsoft/Microsoft365DSC/issues/3955)
 * AADRoleSetting
   * Export sorted by DisplayName for better comparison
   * Enable Filter property to be used on export
