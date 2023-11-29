@@ -1283,6 +1283,7 @@ function Test-TargetResource
         [Switch]
         $ManagedIdentity
     )
+    $Script:ExportMode = $false
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1379,7 +1380,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgBetaRoleManagementDirectoryRoleDefinition -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter $Filter -Sort DisplayName -ErrorAction Stop
         $i = 1
         $dscContent = ''
         Write-Host "`r`n" -NoNewline
