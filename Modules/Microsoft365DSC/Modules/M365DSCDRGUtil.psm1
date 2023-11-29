@@ -1109,7 +1109,119 @@ function Update-IntuneSettingCatalogPolicy
         return $null
     }
 }
+function ConvertFrom-IntunePolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [Array]
+        $Assignments,
+        [Parameter()]
+        [System.Boolean]
+        $IncludeDeviceFilter = $true
+    )
 
+    $assignmentResult = @()
+    foreach ($assignment in $Assignments)
+    {
+        $hashAssignment = @{}
+        $dataType = $assignment.Target.AdditionalProperties."@odata.type"
+        $groupId = $assignment.Target.AdditionalProperties.groupId
+
+        $hashAssignment.add('dataType',$dataType)
+        if (-not [string]::IsNullOrEmpty($groupId))
+        {
+            $hashAssignment.add('groupId', $groupId)
+
+            $group = Get-MgGroup -GroupId ($groupId) -ErrorAction SilentlyContinue
+            if ($null -ne $group)
+            {
+                $hashAssignment.add('groupDisplayName', $group.DisplayName)
+            }
+        }
+        if ($IncludeDeviceFilter)
+        {
+            if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterType)
+            {
+                $hashAssignment.add('deviceAndAppManagementAssignmentFilterType', $assignment.Target.DeviceAndAppManagementAssignmentFilterType.ToString())
+            }
+            if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
+            {
+                $hashAssignment.add('deviceAndAppManagementAssignmentFilterId', $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
+            }
+        }
+
+        $assignmentResult += $hashAssignment
+    }
+
+    return $assignmentResult
+}
+
+function ConvertTo-IntunePolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([Hashtable[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        $Assignments,
+        [Parameter()]
+        [System.Boolean]
+        $IncludeDeviceFilter = $true
+    )
+
+    $assignmentResult = @()
+    foreach ($assignment in $Assignments)
+    {
+        $target = @{"@odata.type" = $assignment.dataType}
+        if ($IncludeDeviceFilter)
+        {
+            if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterId)
+            {
+                $target.add('deviceAndAppManagementAssignmentFilterId', $assignment.DeviceAndAppManagementAssignmentFilterId)
+            }
+            if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterType)
+            {
+                $target.add('deviceAndAppManagementAssignmentFilterType',$assignment.DeviceAndAppManagementAssignmentFilterType)
+            }
+        }
+        if ($assignment.dataType -like '*GroupAssignmentTarget')
+        {
+            $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
+            if ($null -eq $group)
+            {
+                $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.groupDisplayName)'" -ErrorAction SilentlyContinue
+                if ($null -eq $group)
+                {
+                    $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it could not be found in the directory.`r`n"
+                    $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
+                    write-verbose -Message $message
+                    $target = $null
+                }
+                if ($group -and $group.count -gt 1)
+                {
+                    $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it is not unique in the directory.`r`n"
+                    $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                    write-verbose -Message $message
+                    $group = $null
+                    $target = $null
+                }
+            }
+            #Skipping assignment if group not found from either groupId or groupDisplayName
+            if ($null -ne $group)
+            {
+                $target.add('groupId',$group.Id)
+            }
+        }
+
+        if ($target)
+        {
+            $assignmentResult += @{target = $target}
+        }
+    }
+
+    return $assignmentResult
+}
 function Update-DeviceConfigurationPolicyAssignment
 {
     [CmdletBinding()]
