@@ -377,13 +377,14 @@ function Set-TargetResource
         $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $CreateParameters
 
-        foreach ($assignment in $Assignments)
+        $intuneAssignments = @()
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
-            -Targets $assignmentsHash `
-            -Repository 'deviceManagement/deviceEnrollmentConfigurations'
+        $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments} | ConvertTo-Json -Depth 100
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$($policy.Id)/assign"
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
         Update-DeviceEnrollmentConfigurationPriority `
             -DeviceEnrollmentConfigurationId $policy.id `
@@ -414,14 +415,14 @@ function Set-TargetResource
 
         if ($currentInstance.Id -notlike '*_DefaultWindows10EnrollmentCompletionPageConfiguration')
         {
-            foreach ($assignment in $Assignments)
+            $intuneAssignments = @()
+            if($null -ne $Assignments -and $Assignments.count -gt 0)
             {
-                $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+                $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
             }
-
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $currentInstance.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceEnrollmentConfigurations'
+            $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments} | ConvertTo-Json -Depth 100
+            $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$($currentInstance.Id)/assign"
+            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
             Update-DeviceEnrollmentConfigurationPriority `
                 -DeviceEnrollmentConfigurationId $currentInstance.id `

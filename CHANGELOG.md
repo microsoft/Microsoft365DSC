@@ -16,6 +16,28 @@
   * Updated DSCParser to version 1.4.0.1.
   * Updated Microsoft.Graph to version 2.10.0.
   * Updated MSCloudLoginAssistant to version 1.1.0.
+* M365DSCDRGUtil
+  * Added ConvertFrom-IntunePolicyAssignment and ConvertTo-IntunePolicyAssignment
+  FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed assignments using API call
+  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+  FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+  FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+* IntuneDeviceConfigurationPolicyWindows10
+  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed assignments using API call
+  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
 
 # 1.23.1122.1
 

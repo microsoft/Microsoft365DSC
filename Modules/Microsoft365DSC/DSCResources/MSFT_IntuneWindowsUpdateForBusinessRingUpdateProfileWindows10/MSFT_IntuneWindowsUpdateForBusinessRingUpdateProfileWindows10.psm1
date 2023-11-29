@@ -411,23 +411,15 @@ function Get-TargetResource
             Managedidentity                         = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+
+        $rawAssignments = @()
+        $rawAssignments =  Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id -All
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        if($null -ne $rawAssignments -and $rawAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {
-                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
-                    })
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $rawAssignments
         }
         $results.Add('Assignments', $assignmentResult)
-
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -683,17 +675,18 @@ function Set-TargetResource
         #region resource generator code
         $CreateParameters.Add("@odata.type", "#microsoft.graph.windowsUpdateForBusinessConfiguration")
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        #endregion
+        #region new Intune assignment management
+        $intuneAssignments = @()
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
-
-        if ($policy.id)
+        foreach ($assignment in $intuneAssignments)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceConfigurations'
+            New-MgBetaDeviceManagementDeviceConfigurationAssignmentAssignment `
+                -DeviceConfigurationAssignmentId $policy.id `
+                -BodyParameter $assignment
         }
         #endregion
     }
@@ -720,11 +713,38 @@ function Set-TargetResource
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.id `
             -BodyParameter $UpdateParameters
+        #endregion
+        #region new Intune assignment management
+        $currentAssignments = @()
+        $currentAssignments += Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $currentInstance.id
 
-        $assignmentsHash = @()
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
-            -Targets $assignmentsHash `
-            -Repository 'deviceManagement/deviceConfigurations'
+        $intuneAssignments = @()
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
+        {
+            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
+        }
+        foreach ($assignment in $intuneAssignments)
+        {
+            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type' }))
+            {
+                New-MgBetaDeviceManagementDeviceConfigurationAssignment `
+                    -DeviceConfigurationId $currentInstance.id `
+                    -BodyParameter $assignment
+            }
+            else
+            {
+                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type') }
+            }
+        }
+        if($currentAssignments.count -gt 0)
+        {
+            foreach ($assignment in $currentAssignments)
+            {
+                Remove-MgBetaDeviceManagementDeviceConfigurationAssignment `
+                    -DeviceConfigurationId $currentInstance.Id `
+                    -DeviceConfigurationAssignmentId $assignment.Id
+            }
+        }
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -971,11 +991,34 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult)
+            if( $key -eq "Assignments")
             {
-                $testResult = $false
-                break
+                $testResult = $source.count -eq $target.count
+                if (-Not $testResult) { break }
+                foreach ($assignment in $source)
+                {
+                    if ($assignment.dataType -like '*GroupAssignmentTarget')
+                    {
+                        $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId})
+                        #Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
+                        if (-not $testResult)
+                        {
+                            $groupNotFound =  $null -eq (Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue)
+                        }
+                        if (-not $testResult -and $groupNotFound)
+                        {
+                            $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName})
+                        }
+                    }
+                    else
+                    {
+                        $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType})
+                    }
+                    if (-Not $testResult) { break }
+                }
+                if (-Not $testResult) { break }
             }
+            if (-Not $testResult) { break }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
