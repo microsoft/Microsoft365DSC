@@ -147,6 +147,13 @@ function Start-M365DSCConfigurationExtract
             $AuthMethods += 'Credentials'
         }
         if ($null -ne $Credential -and `
+                [System.String]::IsNullOrEmpty($ApplicationId) -and `
+                -not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            Write-Host -Object '- Credentials with Tenant Id'
+            $AuthMethods += 'CredentialsWithTenantId'
+        }
+        if ($null -ne $Credential -and `
                 -not [System.String]::IsNullOrEmpty($ApplicationId))
         {
             Write-Host -Object '- CredentialsWithApplicationId'
@@ -232,7 +239,7 @@ function Start-M365DSCConfigurationExtract
 
             Write-Host '[WARNING]' -NoNewline -ForegroundColor Yellow
             Write-Host ' Based on the provided Authentication parameters, the following resources cannot be extracted: ' -ForegroundColor Gray
-            Write-Host "$resourcesNotSupported" -ForegroundColor Gray
+            Write-Host "$($resourcesNotSupported -join ',')" -ForegroundColor Gray
 
             # If all selected resources are not valid based on the authentication method used, simply return.
             if ($ComponentsToSkip.Length -eq $selectedResources.Length)
@@ -409,7 +416,7 @@ function Start-M365DSCConfigurationExtract
                     -Value $ApplicationSecret `
                     -Description 'Azure AD Application Secret for Authentication'
             }
-            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId', 'CredentialsWithTenantId' }
             {
                 if ($newline)
                 {
@@ -485,9 +492,15 @@ function Start-M365DSCConfigurationExtract
                 if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
                         (-not $Components -and $null -eq $Workloads)) -and `
                     ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
-                        $resourcesNotSupported -notcontains $resourceName)
+                        $resourcesNotSupported -notcontains $resourceName -and `
+                    -not $resourceName.StartsWith("M365DSC"))
                 {
-                    $ResourcesToExport += $ResourceName
+                    $authMethod = $allSupportedResourcesWithMostSecureAuthMethod | Where-Object -FilterScript {$_.Resource -eq $ResourceName}
+                    $resourceInfo = @{
+                        Name = $ResourceName
+                        AuthenticationMethod = $authMethod.AuthMethod
+                    }
+                    $ResourcesToExport += $resourceInfo
                     $ResourcesPath += $ResourceModule
                 }
             }
@@ -506,9 +519,9 @@ function Start-M365DSCConfigurationExtract
         }
         foreach ($Workload in $WorkloadsToConnectTo)
         {
-            Write-Host "Connecting to {$Workload}..." -NoNewline
+            Write-Host "Connecting to {$($Workload.Name)}..." -NoNewline
             $ConnectionParams = @{
-                Workload              = $Workload
+                Workload              = $Workload.Name
                 ApplicationId         = $ApplicationId
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
@@ -517,6 +530,12 @@ function Start-M365DSCConfigurationExtract
                 CertificatePassword   = $CertificatePassword.Password
                 Credential            = $Credential
                 Identity              = $ManagedIdentity.IsPresent
+            }
+
+            if ($workload.AuthenticationMethod -eq 'Credentials')
+            {
+                $ConnectionParams.Remove('TenantId') | Out-Null
+                $ConnectionParams.Remove('ApplicationId') | Out-Null
             }
 
             try
@@ -569,6 +588,11 @@ function Start-M365DSCConfigurationExtract
                         $parameters.Add('ApplicationId', $ApplicationId)
                     }
                     $parameters.Add('Credential', $Credential)
+                }
+                'CredentialsWithTenantId'
+                {
+                    $parameters.Add('Credential', $Credential)
+                    $parameters.Add('TenantId', $TenantId)
                 }
                 'ManagedIdentity'
                 {

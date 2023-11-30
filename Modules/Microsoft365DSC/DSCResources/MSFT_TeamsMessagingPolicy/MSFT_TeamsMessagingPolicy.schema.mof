@@ -2,6 +2,9 @@
 class MSFT_TeamsMessagingPolicy : OMI_BaseResource
 {
     [Key, Description("Identity for the teams messaging policy you're modifying. To modify the global policy, use this syntax: -Identity global. To modify a per-user policy, use syntax similar to this: -Identity TeamsMessagingPolicy.")] string Identity;
+    [Write, Description("Report inappropriate content.")] boolean AllowCommunicationComplianceEndUserReporting;
+    [Write, Description("Determines is Fluid Collaboration should be enabled or not.")] boolean AllowFluidCollaborate;
+    [Write, Description("Report a security concern.")] boolean AllowSecurityEndUserReporting;
     [Write, Description("Determines whether a user is allowed to access and post Giphys. Set this to TRUE to allow. Set this FALSE to prohibit.")] boolean AllowGiphy;
     [Write, Description("Determines whether a user is allowed to access and post memes. Set this to TRUE to allow. Set this FALSE to prohibit.")] boolean AllowMemes;
     [Write, Description("Determines whether owners are allowed to delete all the messages in their team. Set this to TRUE to allow. Set this to FALSE to prohibit.")] boolean AllowOwnerDeleteMessage;

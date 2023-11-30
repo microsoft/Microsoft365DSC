@@ -3,10 +3,10 @@
     "description": "Represents a group of related custom security attribute definitions.",
     "roles": {
         "read": [
-            "Security Reader"
+            "Attribute Definition Reader"
         ],
         "update": [
-            "Authentication Policy Administrator"
+            "Attribute Definition Administrator"
         ]
     },
     "permissions": {

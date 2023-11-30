@@ -188,6 +188,14 @@
         }
         if ($null -eq $schedule -or $null -eq $request)
         {
+            if ($null -eq $schedule)
+            {
+                Write-Verbose -Message "Could not retrieve the schedule for {$($request.PrincipalId)} & RoleDefinitionId {$RoleDefinitionId}"
+            }
+            if ($null -eq $request)
+            {
+                Write-Verbose -Message "Could not request the schedule for {$RoleDefinition}"
+            }
             return $nullResult
         }
 
@@ -211,6 +219,7 @@
 
         if ($null -eq $PrincipalInstance)
         {
+            Write-Verbose -Message "Couldn't retrieve Principal {$($request.PrincipalId)}"
             return $nullResult
         }
 
@@ -298,7 +307,7 @@
     }
     catch
     {
-        Write-Verbose "Verbose: $($_.ErrorDetails.Message)"
+        Write-Verbose "Error: $($_.ErrorDetails.Message)"
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -814,15 +823,20 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "Exception: $($_.Exception.Message)"
-
-        Write-Host $Global:M365DSCEmojiRedX
-
-        New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+        if ($_.ErrorDetails.Message -like "*The tenant needs an AAD Premium*")
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
+        }
+        else
+        {
+            Write-Verbose -Message "Exception: $($_.Exception.Message)"
+            Write-Host $Global:M365DSCEmojiRedX
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return ''
     }
