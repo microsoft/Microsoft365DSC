@@ -1,6 +1,6 @@
 {
-    "resourceName": "IntuneWifiConfigurationPolicyAndroidDeviceAdministrator",
-    "description": "This resource configures an Intune Wifi Configuration Policy Android Device Administrator Device.",
+    "resourceName": "IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic",
+    "description": "This resource configures an Intune Android Device Administrator Basic Wifi Configuration Policy.",
     "permissions": {
         "graph": {
             "delegated": {

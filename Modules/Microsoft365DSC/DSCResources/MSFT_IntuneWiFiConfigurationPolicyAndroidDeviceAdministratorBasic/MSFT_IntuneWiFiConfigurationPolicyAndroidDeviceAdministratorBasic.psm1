@@ -19,10 +19,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ConnectAutomatically,
-
-        [Parameter()]
-        [System.Boolean]
         $ConnectWhenNetworkNameIsHidden,
 
         [Parameter()]
@@ -34,7 +30,7 @@ function Get-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -108,6 +104,7 @@ function Get-TargetResource
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWiFiConfiguration' `
             }
+            $Id = $getValue.Id
         }
         #endregion
 
@@ -123,7 +120,6 @@ function Get-TargetResource
             Id                             = $getValue.Id
             Description                    = $getValue.Description
             DisplayName                    = $getValue.DisplayName
-            ConnectAutomatically           = $getValue.AdditionalProperties.connectAutomatically
             ConnectWhenNetworkNameIsHidden = $getValue.AdditionalProperties.connectWhenNetworkNameIsHidden
             NetworkName                    = $getValue.AdditionalProperties.networkName
             Ssid                           = $getValue.AdditionalProperties.ssid
@@ -187,10 +183,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ConnectAutomatically,
-
-        [Parameter()]
-        [System.Boolean]
         $ConnectWhenNetworkNameIsHidden,
 
         [Parameter()]
@@ -202,7 +194,7 @@ function Set-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -281,6 +273,7 @@ function Set-TargetResource
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+        $CreateParameters.Add('ConnectAutomatically', $false)
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
         foreach ($key in $AdditionalProperties.keys)
@@ -403,10 +396,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ConnectAutomatically,
-
-        [Parameter()]
-        [System.Boolean]
         $ConnectWhenNetworkNameIsHidden,
 
         [Parameter()]
@@ -418,7 +407,7 @@ function Test-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 

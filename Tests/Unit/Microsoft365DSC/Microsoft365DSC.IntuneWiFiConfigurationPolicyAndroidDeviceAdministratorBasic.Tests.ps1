@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneWifiConfigurationPolicyAndroidDeviceAdministrator' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -54,10 +54,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministrator should exist but it DOES NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ConnectAutomatically           = $True
                     ConnectWhenNetworkNameIsHidden = $True
                     Description                    = 'FakeStringValue'
                     DisplayName                    = 'FakeStringValue'
@@ -65,7 +64,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     NetworkName                    = 'FakeStringValue'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
-
                     Ensure                         = 'Present'
                     Credential                     = $Credential
                 }
@@ -86,10 +84,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministrator exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ConnectAutomatically           = $True
                     ConnectWhenNetworkNameIsHidden = $True
                     Description                    = 'FakeStringValue'
                     DisplayName                    = 'FakeStringValue'
@@ -134,10 +131,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministrator Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ConnectAutomatically           = $True
                     ConnectWhenNetworkNameIsHidden = $True
                     Description                    = 'FakeStringValue'
                     DisplayName                    = 'FakeStringValue'
@@ -169,16 +165,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministrator exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    ConnectAutomatically           = $True
                     ConnectWhenNetworkNameIsHidden = $True
                     Description                    = 'FakeStringValue'
                     DisplayName                    = 'FakeStringValue'

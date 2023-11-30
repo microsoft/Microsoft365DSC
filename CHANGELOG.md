@@ -1,7 +1,19 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator
+  * Renamed resource to IntuneWiFiConfigurationPolicyAndroidDeviceAdministratorBasic
+  * Updated properties
+  * Fixed import, update and test of the resource
+  FIXES [#3975](https://github.com/microsoft/Microsoft365DSC/issues/3975)
+
 # 1.23.1129.1
 
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Skipped settingValueTemplateReference and settingInstanceTemplateReference for severethreats, highseveritythreats, moderateseveritythreats, lowseveritythreats as per API requirements observed in the Intune portal
+  FIXES [#3818](https://github.com/microsoft/Microsoft365DSC/issues/3818)
+  FIXES [#3955](https://github.com/microsoft/Microsoft365DSC/issues/3955)
 * AADRoleSetting
   * Export sorted by DisplayName for better comparison
   * Enable Filter property to be used on export

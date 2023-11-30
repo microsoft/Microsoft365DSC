@@ -14,7 +14,7 @@ Configuration Example
 
     node localhost
     {
-        IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator 'myWifiConfigAndroidDevicePolicy'
+        IntuneWiFiConfigurationPolicyAndroidDeviceAdministratorBasic 'myWifiConfigAndroidDevicePolicy'
         {
             Id                             = '41869a42-3217-4bfa-9929-92668fc674c5'
             Assignments                    = @(
@@ -23,12 +23,11 @@ Configuration Example
                     dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             )
-            ConnectAutomatically           = $False
             ConnectWhenNetworkNameIsHidden = $True
-            DisplayName                    = 'Wifi Configuration Androind Device'
+            DisplayName                    = 'Android Device Admin Basic Wi-Fi Profile'
             NetworkName                    = 'b71f8c63-8140-4c7e-b818-f9b4aa98b79b'
-            Ssid                           = 'sf'
-            WiFiSecurityType               = 'wpaEnterprise'
+            Ssid                           = 'ssid'
+            WiFiSecurityType               = 'open'
             Ensure                         = 'Present'
             Credential                     = $credsGlobalAdmin
         }
