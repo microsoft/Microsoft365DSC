@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1129.1
 
 * AADRoleSetting
   * Export sorted by DisplayName for better comparison
