@@ -289,6 +289,7 @@ function Export-TargetResource
         [Switch]
         $ManagedIdentity
     )
+    Write-Host "`r`n" -NoNewline
     return $null
 }
 

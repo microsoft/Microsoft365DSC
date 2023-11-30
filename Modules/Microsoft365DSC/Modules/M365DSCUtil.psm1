@@ -1216,14 +1216,6 @@ function Export-M365DSCConfiguration
         return
     }
 
-    if ($PSBoundParameters.ContainsKey('ApplicationId') -eq $false -and `
-            $ManagedIdentity.IsPresent -eq $false -and `
-            $PSBoundParameters.ContainsKey('TenantId') -eq $true)
-    {
-        Write-Host -Object '[ERROR] You have to specify ApplicationId when you specify TenantId' -ForegroundColor Red
-        return
-    }
-
     if ($PSBoundParameters.ContainsKey('ApplicationId') -eq $true -and `
             $PSBoundParameters.ContainsKey('TenantId') -eq $true -and `
         ($PSBoundParameters.ContainsKey('CertificateThumbprint') -eq $false -and `
@@ -1712,14 +1704,13 @@ function New-M365DSCConnection
 
     # Case both authentication methods are attempted
     if ($null -ne $InboundParameters.Credential -and `
-        (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
+        -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
     {
         $message = 'Both Authentication methods are attempted'
         Write-Verbose -Message $message
         $data.Add('Event', 'Error')
         $data.Add('Exception', $message)
-        $errorText = "You can't specify both the Credential and one of {TenantId, CertificateThumbprint}"
+        $errorText = "You can't specify both the Credential and CertificateThumbprint"
         $data.Add('CustomMessage', $errorText)
         Add-M365DSCTelemetryEvent -Type 'Error' -Data $data
         throw $errorText
@@ -1865,22 +1856,8 @@ function New-M365DSCConnection
         }
         #endregion
 
-        # Case both authentication methods are attempted
-        if ($null -ne $InboundParameters.Credential -and `
-            (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -or `
-                    -not [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint)))
-        {
-            $message = 'Both Authentication methods are attempted'
-            Write-Verbose -Message $message
-            $data.Add('Event', 'Error')
-            $data.Add('Exception', $message)
-            $errorText = "You can't specify both the Credential and one of {TenantId, CertificateThumbprint}"
-            $data.Add('CustomMessage', $errorText)
-            Add-M365DSCTelemetryEvent -Type 'Error' -Data $data
-            throw $errorText
-        }
         # Case no authentication method is specified
-        elseif ($null -eq $InboundParameters.Credential -and `
+        if ($null -eq $InboundParameters.Credential -and `
                 [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
                 [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
                 [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
@@ -1895,58 +1872,14 @@ function New-M365DSCConnection
             Add-M365DSCTelemetryEvent -Type 'Error' -Data $data
             throw $errorText
         }
-        # Case only Credential is specified
-        elseif ($null -ne $InboundParameters.Credential -and `
-                [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
-                [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
-                [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint))
+        else
         {
-            Write-Verbose -Message 'Credential was specified. Connecting via User Principal'
-            if ([System.String]::IsNullOrEmpty($Url))
-            {
-                Connect-M365Tenant -Workload $Platform `
-                    -Credential $InboundParameters.Credential `
-                    -SkipModuleReload $Global:CurrentModeIsExport
-            }
-            else
-            {
-                Connect-M365Tenant -Workload $Platform `
-                    -Credential $InboundParameters.Credential `
-                    -ConnectionUrl $Url `
-                    -SkipModuleReload $Global:CurrentModeIsExport
-            }
-
-            $data.Add('ConnectionType', 'Credential')
-            try
-            {
-                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
-                $data.Add('Tenant', $tenantId)
-            }
-            catch
-            {
-                Write-Verbose -Message $_
-            }
+            $data.Add('ConnectionType', 'ServicePrincipalWithPath')
+            $data.Add('Tenant', $InboundParameters.TenantId)
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
-            return 'Credentials'
-        }
-        # Case only the ApplicationID and Credentials parameters are specified
-        elseif ($null -ne $InboundParameters.Credential -and `
-                -not [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId))
-        {
 
-            Connect-M365Tenant -Workload $Workload `
-                -ApplicationId $InboundParameters.ApplicationId `
-                -TenantId $InboundParameters.TenantId `
-                -CertificatePassword $InboundParameters.CertificatePassword.Password `
-                -CertificatePath $InboundParameters.CertificatePath `
-                -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport
+            return 'ServicePrincipalWithPath'
         }
-        $data.Add('ConnectionType', 'ServicePrincipalWithPath')
-        $data.Add('Tenant', $InboundParameters.TenantId)
-        Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
-
-        return 'ServicePrincipalWithPath'
     }
     # Case only the ApplicationSecret, TenantId and ApplicationID are specified
     elseif ($null -eq $InboundParameters.Credential -and `
@@ -1999,6 +1932,17 @@ function New-M365DSCConnection
         $data.Add('Tenant', $InboundParameters.TenantId)
         Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
         return 'ServicePrincipalWithThumbprint'
+    }
+    # Case only the TenantId and Credentials parameters are specified
+    elseif ($null -ne $InboundParameters.Credential -and `
+    -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId))
+    {
+        Connect-M365Tenant -Workload $Workload `
+            -TenantId $InboundParameters.TenantId `
+            -Credential $InboundParameters.Credential `
+            -Url $Url `
+            -SkipModuleReload $Global:CurrentModeIsExport
+        return "CredentialsWithTenantId"
     }
     # Case only Managed Identity and TenantId are specified
     elseif ($InboundParameters.ManagedIdentity -and `
@@ -3062,7 +3006,7 @@ function Update-M365DSCExportAuthenticationResults
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('ServicePrincipalWithThumbprint', 'ServicePrincipalWithSecret', 'ServicePrincipalWithPath', 'CredentialsWithApplicationId', 'Credentials', 'ManagedIdentity')]
+        [ValidateSet('ServicePrincipalWithThumbprint', 'ServicePrincipalWithSecret', 'ServicePrincipalWithPath', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'Credentials', 'ManagedIdentity')]
         $ConnectionMode,
 
         [Parameter(Mandatory = $true)]
@@ -3084,6 +3028,30 @@ function Update-M365DSCExportAuthenticationResults
         if ($Results.ContainsKey('TenantId'))
         {
             $Results.Remove('TenantId') | Out-Null
+        }
+        if ($Results.ContainsKey('ApplicationSecret'))
+        {
+            $Results.Remove('ApplicationSecret') | Out-Null
+        }
+        if ($Results.ContainsKey('CertificateThumbprint'))
+        {
+            $Results.Remove('CertificateThumbprint') | Out-Null
+        }
+        if ($Results.ContainsKey('CertificatePath'))
+        {
+            $Results.Remove('CertificatePath') | Out-Null
+        }
+        if ($Results.ContainsKey('CertificatePassword'))
+        {
+            $Results.Remove('CertificatePassword') | Out-Null
+        }
+    }
+    elseif ($ConnectionMode -eq 'CredentialsWithTenantId')
+    {
+        $Results.Credential = Resolve-Credentials -UserName 'credential'
+        if ($Results.ContainsKey('ApplicationId'))
+        {
+            $Results.Remove('ApplicationId') | Out-Null
         }
         if ($Results.ContainsKey('ApplicationSecret'))
         {
@@ -3225,7 +3193,7 @@ function Get-M365DSCExportContentForResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('ServicePrincipalWithThumbprint', 'ServicePrincipalWithSecret', 'ServicePrincipalWithPath', 'CredentialsWithApplicationId', 'Credentials', 'ManagedIdentity')]
+        [ValidateSet('ServicePrincipalWithThumbprint', 'ServicePrincipalWithSecret', 'ServicePrincipalWithPath', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'Credentials', 'ManagedIdentity')]
         $ConnectionMode,
 
         [Parameter(Mandatory = $true)]
@@ -3470,7 +3438,7 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
     (
         [Parameter()]
         [System.String[]]
-        [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'CredentialsWithApplicationId', 'ManagedIdentity')]
+        [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'ManagedIdentity')]
         $AuthenticationMethod,
 
         [Parameter()]
@@ -3520,6 +3488,18 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
                 $Components += @{
                     Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
                     AuthMethod = 'ApplicationSecret'
+                }
+            }
+            # Case - Resource supports CredentialWithTenantId
+            elseif ($AuthenticationMethod.Contains('CredentialsWithTenantId') -and `
+                    $parameters.Contains('Credential') -and $parameters.Contains('TenantId') -and `
+                    -not $resource.Name.StartsWith('MSFT_SPO') -and `
+                    -not $resource.Name.StartsWith('MSFT_OD') -and `
+                    -not $resource.Name.StartsWith('MSFT_PP'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'CredentialsWithTenantId'
                 }
             }
             # Case - Resource supports Credential using CredentialsWithApplicationId
@@ -3628,89 +3608,119 @@ Public
 function Get-M365DSCWorkloadsListFromResourceNames
 {
     [CmdletBinding()]
-    [OutputType([System.Boolean])]
+    [OutputType([System.Collections.Hashtable])]
     param
     (
         [Parameter(Mandatory = $true, Position = 1)]
-        [String[]]
+        [System.Array]
         $ResourceNames
     )
 
     [Array] $workloads = @()
     foreach ($resource in $ResourceNames)
     {
-        switch ($resource.Substring(0, 2).ToUpper())
+        switch ($resource.Name.Substring(0, 2).ToUpper())
         {
             'AA'
             {
-                if (-not $workloads.Contains('MicrosoftGraph'))
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph'))
                 {
-                    $workloads += 'MicrosoftGraph'
+                    $workloads += @{
+                        Name                 = 'MicrosoftGraph'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
             }
             'EX'
             {
-                if (-not $workloads.Contains('ExchangeOnline'))
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('ExchangeOnline'))
                 {
-                    $workloads += 'ExchangeOnline'
+                    $workloads += @{
+                        Name                 = 'ExchangeOnline'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
             }
             'In'
             {
-                if (-not $workloads.Contains('MicrosoftGraph'))
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph'))
                 {
-                    $workloads += 'MicrosoftGraph'
+                    $workloads += @{
+                        Name                 = 'MicrosoftGraph'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
             }
             'O3'
             {
-                if (-not $workloads.Contains('MicrosoftGraph') -and $resource -eq 'O365Group')
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph') -and $resource -eq 'O365Group')
                 {
-                    $workloads += 'MicrosoftGraph'
+                    $workloads += @{
+                        Name                 = 'MicrosoftGraph'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
-                elseif (-not $workloads.Contains('ExchangeOnline'))
+                elseif (-not $workloads.Name -or -not $workloads.Name.Contains('ExchangeOnline'))
                 {
-                    $workloads += 'ExchangeOnline'
+                    $workloads += @{
+                        Name                 = 'ExchangeOnline'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
             }
             'OD'
             {
-                if (-not $workloads.Contains('PnP'))
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('PnP'))
                 {
-                    $workloads += 'PnP'
+                    $workloads += @{
+                        Name                 = 'PnP'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
             }
             'Pl'
             {
-                if (-not $workloads.Contains('MicrosoftGraph'))
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftGraph'))
                 {
-                    $workloads += 'MicrosoftGraph'
+                    $workloads += @{
+                        Name                 = 'MicrosoftGraph'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
             }
             'SP'
             {
-                if (-not $workloads.Contains('PnP'))
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('PnP'))
                 {
-                    $workloads += 'PnP'
+                    $workloads += @{
+                        Name                 = 'PnP'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
             }
             'SC'
             {
-                if (-not $workloads.Contains('SecurityComplianceCenter'))
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('SecurityComplianceCenter'))
                 {
-                    $workloads += 'SecurityComplianceCenter'
+                    $workloads += @{
+                        Name                 = 'SecurityComplianceCenter'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
             }
             'Te'
             {
-                if (-not $workloads.Contains('MicrosoftTeams'))
+                if (-not $workloads.Name -or -not $workloads.Name.Contains('MicrosoftTeams'))
                 {
-                    $workloads += 'MicrosoftTeams'
+                    $workloads += @{
+                        Name                 = 'MicrosoftTeams'
+                        AuthenticationMethod = $resource.AuthenticationMethod
+                    }
                 }
             }
         }
     }
-    return ($workloads | Sort-Object)
+    return ($workloads | Sort-Object {$_.Name})
 }
 
 <#
