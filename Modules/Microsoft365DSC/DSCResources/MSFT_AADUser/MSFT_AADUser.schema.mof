@@ -13,6 +13,7 @@ class MSFT_AADUser : OMI_BaseResource
     [Write, Description("The Country name of the user")] String Country;
     [Write, Description("The Department name of the user")] String Department;
     [Write, Description("The Fax Number of the user")] String Fax;
+    [Write, Description("The Groups that the user is a direct member of")] String MemberOf[];
     [Write, Description("The Mobile Phone Number of the user")] String MobilePhone;
     [Write, Description("The Office Name of the user")] String Office;
     [Write, Description("Specifies whether the user password expires periodically. Default value is false")] Boolean PasswordNeverExpires;
