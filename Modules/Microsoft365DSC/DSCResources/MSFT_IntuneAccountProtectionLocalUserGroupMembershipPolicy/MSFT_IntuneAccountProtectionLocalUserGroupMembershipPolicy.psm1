@@ -624,7 +624,7 @@ function Export-TargetResource
 
             if ($Results.Assignments)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName IntuneAccountProtectionLocalUserGroupMembershipPolicyAssignments
 
                 if ($complexTypeStringResult)
                 {
