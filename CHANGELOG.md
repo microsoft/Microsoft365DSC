@@ -48,6 +48,10 @@
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Fixed assignments using API call
     FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* TeamsMessagingPolicy
+  * Added support for properties AllowCommunicationComplianceEndUserReporting,
+    AllowFluidCollaborate and AllowSecurityEndUserReporting.
+    FIXES [#3968](https://github.com/microsoft/Microsoft365DSC/issues/3968)
 * TeamsTeam
   * Fixes incompatible type for ComplianceRecordingApplications, expected string[] but receive object[]
     FIXES: [#3890](https://github.com/microsoft/Microsoft365DSC/issues/3890)
@@ -59,6 +63,7 @@
   * M365DSCDRGUtil
     * Added ConvertFrom-IntunePolicyAssignment and ConvertTo-IntunePolicyAssignment
       FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+  * Support for Multi-Tenancy (Credentials + TenantId).
 
 # 1.23.1122.1
 
