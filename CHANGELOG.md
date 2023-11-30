@@ -29,6 +29,9 @@
   * Updated DSCParser to version 1.4.0.1.
   * Updated Microsoft.Graph to version 2.10.0.
   * Updated MSCloudLoginAssistant to version 1.1.0.
+* TeamsTeam
+  * Fixes incompatible type for ComplianceRecordingApplications, expected string[] but receive object[]
+    FIXES: [#3890](https://github.com/microsoft/Microsoft365DSC/issues/3890)
 * M365DSCDRGUtil
   * Added ConvertFrom-IntunePolicyAssignment and ConvertTo-IntunePolicyAssignment
   FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
