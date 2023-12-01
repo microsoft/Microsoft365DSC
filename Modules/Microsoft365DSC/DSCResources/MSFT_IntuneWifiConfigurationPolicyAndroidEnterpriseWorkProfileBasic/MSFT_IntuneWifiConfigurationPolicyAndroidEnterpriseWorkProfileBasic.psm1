@@ -34,7 +34,7 @@ function Get-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -99,25 +99,26 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         #region resource generator code
         if ($null -eq $getValue)
         {
             $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWiFiConfiguration' `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileWiFiConfiguration' `
             }
+            $Id = $getValue.Id
         }
         #endregion
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            Write-Verbose -Message "Nothing with id {$Id} was found"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
+        Write-Verbose -Message "Found something with id {$Id}"
         $results = @{
             #region resource generator code
             Id                             = $getValue.Id
@@ -134,7 +135,7 @@ function Get-TargetResource
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
-            Managedidentity                = $ManagedIdentity.IsPresent
+            ManagedIdentity                = $ManagedIdentity.IsPresent
         }
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
@@ -171,7 +172,6 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-
         #region resource generator code
         [Parameter()]
         [System.String]
@@ -202,7 +202,7 @@ function Set-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -272,7 +272,6 @@ function Set-TargetResource
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -418,7 +417,7 @@ function Test-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -474,7 +473,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -485,7 +484,6 @@ function Test-TargetResource
     {
         if ($PSBoundParameters[$key].getType().Name -like '*CimInstance*')
         {
-
             $CIMArraySource = @()
             $CIMArrayTarget = @()
             $CIMArraySource += $PSBoundParameters[$key]
@@ -600,17 +598,13 @@ function Export-TargetResource
 
     try
     {
-
         #region resource generator code
         [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWiFiConfiguration'  `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileWiFiConfiguration'  `
         }
-
-
         #endregion
-
 
         $i = 1
         $dscContent = ''
@@ -634,13 +628,12 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-
 
             if ($Results.Assignments)
             {
@@ -660,7 +653,6 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
 
             if ($Results.Assignments)
             {
@@ -702,6 +694,7 @@ function Export-TargetResource
 }
 
 
+
 function Get-M365DSCAdditionalProperties
 {
     [CmdletBinding()]
@@ -721,7 +714,7 @@ function Get-M365DSCAdditionalProperties
         'WiFiSecurityType'
     )
 
-    $results = @{'@odata.type' = '#microsoft.graph.androidWiFiConfiguration' }
+    $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileWiFiConfiguration' }
     $cloneProperties = $Properties.clone()
     foreach ($property in $cloneProperties.Keys)
     {
@@ -736,6 +729,7 @@ function Get-M365DSCAdditionalProperties
                     foreach ($item in $properties.$property)
                     {
                         $array += Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
+
                     }
                     $propertyValue = $array
                 }
@@ -743,6 +737,7 @@ function Get-M365DSCAdditionalProperties
                 {
                     $propertyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $properties.$property
                 }
+
             }
             else
             {
