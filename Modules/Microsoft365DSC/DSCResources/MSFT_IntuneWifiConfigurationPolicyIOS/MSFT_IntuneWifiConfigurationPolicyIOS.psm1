@@ -30,6 +30,10 @@ function Get-TargetResource
         $DisableMacAddressRandomization,
 
         [Parameter()]
+        [System.Boolean]
+        $ForcePreSharedKeyUpdate,
+
+        [Parameter()]
         [System.String]
         $NetworkName,
 
@@ -59,7 +63,7 @@ function Get-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise')]
+        [ValidateSet('open', 'wpaPersonal', 'wep')]
         [System.String]
         $WiFiSecurityType,
 
@@ -133,6 +137,7 @@ function Get-TargetResource
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosWiFiConfiguration' `
             }
+            $Id = $getValue.Id
         }
         #endregion
 
@@ -165,7 +170,7 @@ function Get-TargetResource
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
-            Managedidentity                = $ManagedIdentity.IsPresent
+            ManagedIdentity                = $ManagedIdentity.IsPresent
         }
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
@@ -228,6 +233,10 @@ function Set-TargetResource
         $DisableMacAddressRandomization,
 
         [Parameter()]
+        [System.Boolean]
+        $ForcePreSharedKeyUpdate,
+
+        [Parameter()]
         [System.String]
         $NetworkName,
 
@@ -257,7 +266,7 @@ function Set-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise')]
+        [ValidateSet('open', 'wpaPersonal', 'wep')]
         [System.String]
         $WiFiSecurityType,
 
@@ -296,6 +305,14 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
+    if ($ProxySetting -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+        throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySetting is not "automatic"'
+    }
+
+    if ($WiFiSecurityType -ne 'wpaPersonal' -and $PreSharedKey -eq '') {
+        throw 'PreSharedKey is required but was not set.'
+    }
+
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -320,6 +337,7 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
+    $PSBoundParameters.Remove('ForcePreSharedKeyUpdate') | Out-Null
     $PSBoundParameters.Remove('Ensure') | Out-Null
     $PSBoundParameters.Remove('Credential') | Out-Null
     $PSBoundParameters.Remove('ApplicationId') | Out-Null
@@ -359,6 +377,9 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+                $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
+            }
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
@@ -409,6 +430,9 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+                $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
+            }
             $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
@@ -466,6 +490,10 @@ function Test-TargetResource
         $DisableMacAddressRandomization,
 
         [Parameter()]
+        [System.Boolean]
+        $ForcePreSharedKeyUpdate,
+
+        [Parameter()]
         [System.String]
         $NetworkName,
 
@@ -495,7 +523,7 @@ function Test-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaPersonal', 'wpaEnterprise', 'wep', 'wpa2Personal', 'wpa2Enterprise')]
+        [ValidateSet('open', 'wpaPersonal', 'wep')]
         [System.String]
         $WiFiSecurityType,
 
@@ -534,6 +562,20 @@ function Test-TargetResource
         $ManagedIdentity
     )
 
+    if ($ProxySetting -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+        throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySetting is not "automatic".'
+    }
+
+    if ($WiFiSecurityType -ne 'wpaPersonal' -and $PreSharedKey -eq '') {
+        throw 'PreSharedKey is required but was not set.'
+    }
+
+    if ($ForcePreSharedKeyUpdate) {
+        Write-Verbose -Message "ForcePreSharedKeyUpdate was set, always force an update."
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -551,7 +593,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -596,6 +638,8 @@ function Test-TargetResource
         }
     }
 
+    $ValuesToCheck.Remove('ForcePreSharedKeyUpdate') | Out-Null
+    $ValuesToCheck.Remove('PreSharedKey') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
@@ -707,7 +751,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
