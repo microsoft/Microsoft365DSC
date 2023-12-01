@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator
+  * Renamed resource to IntuneWiFiConfigurationPolicyAndroidDeviceAdministratorBasic
+  * Updated properties
+  * Fixed import, update and test of the resource
+  FIXES [#3975](https://github.com/microsoft/Microsoft365DSC/issues/3975)
+
 # 1.23.1129.1
 
 * AADRoleSetting
