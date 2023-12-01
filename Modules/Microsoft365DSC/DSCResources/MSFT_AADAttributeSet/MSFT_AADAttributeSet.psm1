@@ -363,13 +363,19 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
-
-        New-M365DSCLogEntry -Message 'Error during Export:' `
+        if ($_.ErrorDetails.Message -like "*Insufficient privileges*")
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Insufficient permissions or license to export Attribute Sets."
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
+            New-M365DSCLogEntry -Message 'Error during Export:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
+        }
 
         return ''
     }

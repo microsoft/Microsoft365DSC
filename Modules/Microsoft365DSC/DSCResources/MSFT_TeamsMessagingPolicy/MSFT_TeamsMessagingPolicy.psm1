@@ -10,7 +10,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowCommunicationComplianceEndUserReporting,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowGiphy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFluidCollaborate,
 
         [Parameter()]
         [System.Boolean]
@@ -19,6 +27,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowOwnerDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSecurityEndUserReporting,
 
         [Parameter()]
         [System.Boolean]
@@ -156,32 +168,35 @@ function Get-TargetResource
             }
             return @{
                 Identity                      = $currentPolicy
-                AllowGiphy                    = $policy.AllowGiphy
-                AllowMemes                    = $policy.AllowMemes
-                AllowOwnerDeleteMessage       = $policy.AllowOwnerDeleteMessage
-                AllowStickers                 = $policy.AllowStickers
-                AllowUrlPreviews              = $policy.AllowUrlPreviews
-                AllowUserChat                 = $policy.AllowUserChat
-                AllowUserDeleteMessage        = $policy.AllowUserDeleteMessage
-                AllowUserEditMessage          = $policy.AllowUserEditMessage
-                AllowSmartCompose             = $policy.AllowSmartCompose
-                AllowSmartReply               = $policy.AllowSmartReply
-                AllowUserTranslation          = $policy.AllowUserTranslation
-                GiphyRatingType               = $policy.GiphyRatingType
-                ReadReceiptsEnabledType       = $policy.ReadReceiptsEnabledType
-                AllowImmersiveReader          = $policy.AllowImmersiveReader
-                AllowRemoveUser               = $policy.AllowRemoveUser
-                AllowPriorityMessages         = $policy.AllowPriorityMessages
-                AllowUserDeleteChat           = $policy.AllowUserDeleteChat
-                ChannelsInChatListEnabledType = $policy.ChannelsInChatListEnabledType
-                AudioMessageEnabledType       = $policy.AudioMessageEnabledType
-                Description                   = $policy.Description
-                Tenant                        = $policy.Tenant
-                Ensure                        = 'Present'
-                Credential                    = $Credential
-                ApplicationId                 = $ApplicationId
-                TenantId                      = $TenantId
-                CertificateThumbprint         = $CertificateThumbprint
+                AllowCommunicationComplianceEndUserReporting = $policy.AllowCommunicationComplianceEndUserReporting
+                AllowGiphy                                   = $policy.AllowGiphy
+                AllowFluidCollaborate                        = $policy.AllowFluidCollaborate
+                AllowMemes                                   = $policy.AllowMemes
+                AllowOwnerDeleteMessage                      = $policy.AllowOwnerDeleteMessage
+                AllowSecurityEndUserReporting                = $policy.AllowSecurityEndUserReporting
+                AllowStickers                                = $policy.AllowStickers
+                AllowUrlPreviews                             = $policy.AllowUrlPreviews
+                AllowUserChat                                = $policy.AllowUserChat
+                AllowUserDeleteMessage                       = $policy.AllowUserDeleteMessage
+                AllowUserEditMessage                         = $policy.AllowUserEditMessage
+                AllowSmartCompose                            = $policy.AllowSmartCompose
+                AllowSmartReply                              = $policy.AllowSmartReply
+                AllowUserTranslation                         = $policy.AllowUserTranslation
+                GiphyRatingType                              = $policy.GiphyRatingType
+                ReadReceiptsEnabledType                      = $policy.ReadReceiptsEnabledType
+                AllowImmersiveReader                         = $policy.AllowImmersiveReader
+                AllowRemoveUser                              = $policy.AllowRemoveUser
+                AllowPriorityMessages                        = $policy.AllowPriorityMessages
+                AllowUserDeleteChat                          = $policy.AllowUserDeleteChat
+                ChannelsInChatListEnabledType                = $policy.ChannelsInChatListEnabledType
+                AudioMessageEnabledType                      = $policy.AudioMessageEnabledType
+                Description                                  = $policy.Description
+                Tenant                                       = $policy.Tenant
+                Ensure                                       = 'Present'
+                Credential                                   = $Credential
+                ApplicationId                                = $ApplicationId
+                TenantId                                     = $TenantId
+                CertificateThumbprint                        = $CertificateThumbprint
             }
         }
     }
@@ -208,7 +223,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowCommunicationComplianceEndUserReporting,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowGiphy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFluidCollaborate,
 
         [Parameter()]
         [System.Boolean]
@@ -217,6 +240,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowOwnerDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSecurityEndUserReporting,
 
         [Parameter()]
         [System.Boolean]
@@ -368,7 +395,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $AllowCommunicationComplianceEndUserReporting,
+
+        [Parameter()]
+        [System.Boolean]
         $AllowGiphy,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowFluidCollaborate,
 
         [Parameter()]
         [System.Boolean]
@@ -377,6 +412,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowOwnerDeleteMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowSecurityEndUserReporting,
 
         [Parameter()]
         [System.Boolean]
