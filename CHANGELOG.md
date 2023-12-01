@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile
+  * Renamed resource to IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile
+  * Updated properties
+  * Fixed import, update and test of the resource
+  FIXES [#3979](https://github.com/microsoft/Microsoft365DSC/issues/3979)
 * IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator
   * Renamed resource to IntuneWiFiConfigurationPolicyAndroidDeviceAdministratorBasic
   * Updated properties

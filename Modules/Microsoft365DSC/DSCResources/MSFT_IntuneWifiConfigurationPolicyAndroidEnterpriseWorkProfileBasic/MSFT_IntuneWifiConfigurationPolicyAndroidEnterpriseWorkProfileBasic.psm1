@@ -34,7 +34,7 @@ function Get-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -99,25 +99,26 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         #region resource generator code
-        if ($null -ne $getValue)
+        if ($null -eq $getValue)
         {
             $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileWiFiConfiguration' `
             }
+            $Id = $getValue.Id
         }
         #endregion
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            Write-Verbose -Message "Nothing with id {$Id} was found"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
+        Write-Verbose -Message "Found something with id {$Id}"
         $results = @{
             #region resource generator code
             Id                             = $getValue.Id
@@ -134,7 +135,7 @@ function Get-TargetResource
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
-            Managedidentity                = $ManagedIdentity.IsPresent
+            ManagedIdentity                = $ManagedIdentity.IsPresent
         }
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
@@ -201,7 +202,7 @@ function Set-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -416,7 +417,7 @@ function Test-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -472,7 +473,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -601,7 +602,7 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileEnterpriseWiFiConfiguration'  `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileWiFiConfiguration'  `
         }
         #endregion
 
@@ -627,7 +628,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
@@ -713,7 +714,7 @@ function Get-M365DSCAdditionalProperties
         'WiFiSecurityType'
     )
 
-    $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileEnterpriseWiFiConfiguration' }
+    $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileWiFiConfiguration' }
     $cloneProperties = $Properties.clone()
     foreach ($property in $cloneProperties.Keys)
     {
