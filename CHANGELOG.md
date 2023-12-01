@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Fixed Schema Validation with parameter Identity made Mandatory
+  FIXES [#3961](https://github.com/microsoft/Microsoft365DSC/issues/3961)
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Skipped settingValueTemplateReference and settingInstanceTemplateReference for severethreats, highseveritythreats, moderateseveritythreats, lowseveritythreats as per API requirements observed in the Intune portal
   FIXES [#3818](https://github.com/microsoft/Microsoft365DSC/issues/3818)
