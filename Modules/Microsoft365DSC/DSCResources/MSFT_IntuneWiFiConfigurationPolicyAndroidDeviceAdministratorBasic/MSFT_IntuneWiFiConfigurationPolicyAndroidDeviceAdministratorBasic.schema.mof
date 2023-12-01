@@ -15,6 +15,7 @@ class MSFT_IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic : OMI_Ba
     [Write, Description("Id of the Intune Policy.")] String Id;
     [Key, Description("Display name of the Intune Policy.")] String DisplayName;
     [Write, Description("Description of the Intune Policy.")] String Description;
+    [Write, Description("Connect automatically.")] Boolean ConnectAutomatically;
     [Write, Description("Connect if the network name is hidden.")] Boolean ConnectWhenNetworkNameIsHidden;
     [Write, Description("Network name.")] String NetworkName;
     [Write, Description("SSID.")] String Ssid;

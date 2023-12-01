@@ -23,6 +23,7 @@ Configuration Example
                     dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             )
+            ConnectAutomatically           = $True
             ConnectWhenNetworkNameIsHidden = $True
             DisplayName                    = 'Android Device Admin Basic Wi-Fi Profile'
             NetworkName                    = 'b71f8c63-8140-4c7e-b818-f9b4aa98b79b'
