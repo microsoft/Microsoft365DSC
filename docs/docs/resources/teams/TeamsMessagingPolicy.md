@@ -5,6 +5,9 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity for the teams messaging policy you're modifying. To modify the global policy, use this syntax: -Identity global. To modify a per-user policy, use syntax similar to this: -Identity TeamsMessagingPolicy. | |
+| **AllowCommunicationComplianceEndUserReporting** | Write | Boolean | Report inappropriate content. | |
+| **AllowFluidCollaborate** | Write | Boolean | Determines is Fluid Collaboration should be enabled or not. | |
+| **AllowSecurityEndUserReporting** | Write | Boolean | Report a security concern. | |
 | **AllowGiphy** | Write | Boolean | Determines whether a user is allowed to access and post Giphys. Set this to TRUE to allow. Set this FALSE to prohibit. | |
 | **AllowMemes** | Write | Boolean | Determines whether a user is allowed to access and post memes. Set this to TRUE to allow. Set this FALSE to prohibit. | |
 | **AllowOwnerDeleteMessage** | Write | Boolean | Determines whether owners are allowed to delete all the messages in their team. Set this to TRUE to allow. Set this to FALSE to prohibit. | |

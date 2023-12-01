@@ -1,15 +1,19 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1129.1
 
-* IntuneAntivirusPolicyWindows10SettingCatalog
-  * Skipped settingValueTemplateReference and settingInstanceTemplateReference for severethreats, highseveritythreats, moderateseveritythreats, lowseveritythreats as per API requirements observed in the Intune portal
-  FIXES [#3818](https://github.com/microsoft/Microsoft365DSC/issues/3818)
-  FIXES [#3955](https://github.com/microsoft/Microsoft365DSC/issues/3955)
 * AADRoleSetting
   * Export sorted by DisplayName for better comparison
   * Enable Filter property to be used on export
     FIXES [#3919](https://github.com/microsoft/Microsoft365DSC/issues/3919)
+* AADUser
+  * Added the MemberOf Property.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Skipped settingValueTemplateReference and settingInstanceTemplateReference
+    for severethreats, highseveritythreats, moderateseveritythreats,
+    lowseveritythreats as per API requirements observed in the Intune portal.
+    FIXES [#3818](https://github.com/microsoft/Microsoft365DSC/issues/3818)
+    FIXES [#3955](https://github.com/microsoft/Microsoft365DSC/issues/3955)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy,
   IntuneAccountProtectionLocalUserGroupMembershipPolicy,
   IntuneAccountProtectionPolicy,
@@ -24,36 +28,42 @@
   IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined,
   IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Removed Id and all authentication parameters from PSBoundParameters in Test-TargetResource
-  FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
+    FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed assignments using API call
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+    FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+    FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+* IntuneDeviceConfigurationPolicyWindows10
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed assignments using API call
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* TeamsMessagingPolicy
+  * Added support for properties AllowCommunicationComplianceEndUserReporting,
+    AllowFluidCollaborate and AllowSecurityEndUserReporting.
+    FIXES [#3968](https://github.com/microsoft/Microsoft365DSC/issues/3968)
+* TeamsTeam
+  * Fixes incompatible type for ComplianceRecordingApplications, expected string[] but receive object[]
+    FIXES: [#3890](https://github.com/microsoft/Microsoft365DSC/issues/3890)
 * DEPENDENCIES
   * Updated DSCParser to version 1.4.0.1.
   * Updated Microsoft.Graph to version 2.10.0.
   * Updated MSCloudLoginAssistant to version 1.1.0.
-* TeamsTeam
-  * Fixes incompatible type for ComplianceRecordingApplications, expected string[] but receive object[]
-    FIXES: [#3890](https://github.com/microsoft/Microsoft365DSC/issues/3890)
-* M365DSCDRGUtil
-  * Added ConvertFrom-IntunePolicyAssignment and ConvertTo-IntunePolicyAssignment
-  FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
-* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
-  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
-  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
-* IntuneDeviceEnrollmentStatusPageWindows10
-  * Fixed assignments using API call
-  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
-* IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
-  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
-  FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
-* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
-  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
-  FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
-* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
-  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
-* IntuneDeviceConfigurationPolicyWindows10
-  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
-* IntuneDeviceEnrollmentStatusPageWindows10
-  * Fixed assignments using API call
-  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* MISC
+  * M365DSCDRGUtil
+    * Added ConvertFrom-IntunePolicyAssignment and ConvertTo-IntunePolicyAssignment
+      FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+  * Support for Multi-Tenancy (Credentials + TenantId).
 
 # 1.23.1122.1
 

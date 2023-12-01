@@ -656,13 +656,21 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        if ($_.Exception -like "*401*" -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or
+            $_.Exception -like "* Unauthorized*")
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return ''
     }
