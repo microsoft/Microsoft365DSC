@@ -65,7 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
                     PreSharedKey                   = 'FakeStringValue'
-                    ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                    ProxyAutomaticConfigurationUrl = ''
                     ProxyManualAddress             = 'FakeStringValue'
                     ProxyManualPort                = 25
                     ProxySettings                  = 'none'
@@ -103,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
                     PreSharedKey                   = 'FakeStringValue'
-                    ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                    ProxyAutomaticConfigurationUrl = ''
                     ProxyManualAddress             = 'FakeStringValue'
                     ProxyManualPort                = 25
                     ProxySettings                  = 'none'
@@ -123,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             WiFiSecurityType               = 'open'
                             DisableMacAddressRandomization = $True
                             ConnectAutomatically           = $True
-                            ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                            ProxyAutomaticConfigurationUrl = $null
                             PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
                             ProxySettings                  = 'none'
@@ -163,7 +163,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
                     PreSharedKey                   = 'FakeStringValue'
-                    ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                    ProxyAutomaticConfigurationUrl = ''
                     ProxyManualAddress             = 'FakeStringValue'
                     ProxyManualPort                = 25
                     ProxySettings                  = 'none'
@@ -183,7 +183,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             WiFiSecurityType               = 'open'
                             DisableMacAddressRandomization = $True
                             ConnectAutomatically           = $True
-                            ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                            ProxyAutomaticConfigurationUrl = $null
                             PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
                             ProxySettings                  = 'none'
@@ -216,7 +216,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
                     PreSharedKey                   = 'FakeStringValue'
-                    ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                    ProxyAutomaticConfigurationUrl = ''
                     ProxyManualAddress             = 'FakeStringValue'
                     ProxyManualPort                = 25
                     ProxySettings                  = 'none'
@@ -233,7 +233,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             '@odata.type'                  = '#microsoft.graph.iosWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
-                            ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                            ProxyAutomaticConfigurationUrl = $null
                             PreSharedKey                   = 'FakeStringValue'
                             ProxyManualPort                = 7
                             ProxySettings                  = 'none'
@@ -278,7 +278,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             WiFiSecurityType               = 'open'
                             DisableMacAddressRandomization = $True
                             ConnectAutomatically           = $True
-                            ProxyAutomaticConfigurationUrl = 'FakeStringValue'
+                            ProxyAutomaticConfigurationUrl = ''
                             PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
                             ProxySettings                  = 'none'
