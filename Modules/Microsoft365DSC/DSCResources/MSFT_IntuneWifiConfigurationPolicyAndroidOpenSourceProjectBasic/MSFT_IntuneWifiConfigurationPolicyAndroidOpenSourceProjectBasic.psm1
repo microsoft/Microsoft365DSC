@@ -26,6 +26,10 @@ function Get-TargetResource
         $ConnectWhenNetworkNameIsHidden,
 
         [Parameter()]
+        [System.Boolean]
+        $ForcePreSharedKeyUpdate,
+
+        [Parameter()]
         [System.String]
         $NetworkName,
 
@@ -39,10 +43,30 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $ProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $ProxyExclusionList,
+
+        [Parameter()]
+        [System.String]
+        $ProxyManualAddress,
+
+        [Parameter()]
+        [System.Int32]
+        $ProxyManualPort,
+
+        [Parameter()]
+        [ValidateSet('none', 'manual', 'automatic')]
+        $ProxySetting,
+
+        [Parameter()]
+        [System.String]
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wep', 'wpaPersonal', 'wpaEnterprise')]
+        [ValidateSet('open', 'wep', 'wpaPersonal')]
         [System.String]
         $WiFiSecurityType,
 
@@ -116,6 +140,7 @@ function Get-TargetResource
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.aospDeviceOwnerWiFiConfiguration' `
             }
+            $Id = $getValue.Id
         }
         #endregion
 
@@ -136,6 +161,11 @@ function Get-TargetResource
             NetworkName                    = $getValue.AdditionalProperties.networkName
             PreSharedKey                   = $getValue.AdditionalProperties.preSharedKey
             PreSharedKeyIsSet              = $getValue.AdditionalProperties.preSharedKeyIsSet
+            ProxyAutomaticConfigurationUrl = $getValue.AdditionalProperties.proxyAutomaticConfigurationUrl
+            ProxyExclusionList             = $getValue.AdditionalProperties.proxyExclusionList
+            ProxyManualAddress             = $getValue.AdditionalProperties.proxyManualAddress
+            ProxyManualPort                = $getValue.AdditionalProperties.proxyManualPort
+            ProxySetting                   = $getValue.AdditionalProperties.proxySetting
             Ssid                           = $getValue.AdditionalProperties.ssid
             WiFiSecurityType               = $getValue.AdditionalProperties.wiFiSecurityType
             Ensure                         = 'Present'
@@ -144,7 +174,7 @@ function Get-TargetResource
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
-            Managedidentity                = $ManagedIdentity.IsPresent
+            ManagedIdentity                = $ManagedIdentity.IsPresent
         }
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
@@ -203,6 +233,10 @@ function Set-TargetResource
         $ConnectWhenNetworkNameIsHidden,
 
         [Parameter()]
+        [System.Boolean]
+        $ForcePreSharedKeyUpdate,
+
+        [Parameter()]
         [System.String]
         $NetworkName,
 
@@ -216,10 +250,30 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $ProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $ProxyExclusionList,
+
+        [Parameter()]
+        [System.String]
+        $ProxyManualAddress,
+
+        [Parameter()]
+        [System.Int32]
+        $ProxyManualPort,
+
+        [Parameter()]
+        [ValidateSet('none', 'manual', 'automatic')]
+        $ProxySetting,
+
+        [Parameter()]
+        [System.String]
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wep', 'wpaPersonal', 'wpaEnterprise')]
+        [ValidateSet('open', 'wep', 'wpaPersonal')]
         [System.String]
         $WiFiSecurityType,
 
@@ -258,6 +312,14 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
+    if ($ProxySetting -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+        throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySetting is not "automatic"'
+    }
+
+    if ($PreSharedKeyIsSet -and $PreSharedKey -eq '') {
+        throw 'PreSharedKey is required but was not set.'
+    }
+
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -282,6 +344,7 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
+    $PSBoundParameters.Remove('ForcePreSharedKeyUpdate') | Out-Null
     $PSBoundParameters.Remove('Ensure') | Out-Null
     $PSBoundParameters.Remove('Credential') | Out-Null
     $PSBoundParameters.Remove('ApplicationId') | Out-Null
@@ -321,6 +384,9 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+                $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
+            }
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
@@ -371,6 +437,9 @@ function Set-TargetResource
 
         if ($AdditionalProperties)
         {
+            if ($AdditionalProperties['proxyAutomaticConfigurationUrl'] -eq '') {
+                $AdditionalProperties['proxyAutomaticConfigurationUrl'] = $null
+            }
             $UpdateParameters.add('AdditionalProperties', $AdditionalProperties)
         }
 
@@ -425,6 +494,10 @@ function Test-TargetResource
         $ConnectWhenNetworkNameIsHidden,
 
         [Parameter()]
+        [System.Boolean]
+        $ForcePreSharedKeyUpdate,
+
+        [Parameter()]
         [System.String]
         $NetworkName,
 
@@ -438,10 +511,30 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $ProxyAutomaticConfigurationUrl,
+
+        [Parameter()]
+        [System.String[]]
+        $ProxyExclusionList,
+
+        [Parameter()]
+        [System.String]
+        $ProxyManualAddress,
+
+        [Parameter()]
+        [System.Int32]
+        $ProxyManualPort,
+
+        [Parameter()]
+        [ValidateSet('none', 'manual', 'automatic')]
+        $ProxySetting,
+
+        [Parameter()]
+        [System.String]
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wep', 'wpaPersonal', 'wpaEnterprise')]
+        [ValidateSet('open', 'wep', 'wpaPersonal')]
         [System.String]
         $WiFiSecurityType,
 
@@ -480,6 +573,20 @@ function Test-TargetResource
         $ManagedIdentity
     )
 
+    if ($ProxySetting -ne 'automatic' -and $ProxyAutomaticConfigurationUrl -ne '') {
+        throw 'ProxyAutomaticConfigurationUrl must be empty if ProxySetting is not "automatic".'
+    }
+
+    if ($PreSharedKeyIsSet -and $PreSharedKey -eq '') {
+        throw 'PreSharedKey is required but was not set.'
+    }
+
+    if ($ForcePreSharedKeyUpdate) {
+        Write-Verbose -Message "ForcePreSharedKeyUpdate was set, always force an update."
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -497,7 +604,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -542,6 +649,8 @@ function Test-TargetResource
         }
     }
 
+    $ValuesToCheck.Remove('ForcePreSharedKeyUpdate') | Out-Null
+    $ValuesToCheck.Remove('PreSharedKey') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
@@ -652,7 +761,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
@@ -733,6 +842,11 @@ function Get-M365DSCAdditionalProperties
         'NetworkName'
         'PreSharedKey'
         'PreSharedKeyIsSet'
+        'ProxyAutomaticConfigurationUrl'
+        'ProxyExclusionList'
+        'ProxyManualAddress'
+        'ProxyManualPort'
+        'ProxySetting'
         'Ssid'
         'WiFiSecurityType'
     )

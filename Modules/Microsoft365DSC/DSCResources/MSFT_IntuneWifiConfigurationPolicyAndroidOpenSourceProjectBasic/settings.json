@@ -1,6 +1,6 @@
 {
-    "resourceName": "IntuneWifiConfigurationPolicyAndroidOpenSourceProject",
-    "description": "This resource configures an Intune Wifi Configuration Policy Android Open Source Project Device.",
+    "resourceName": "IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic",
+    "description": "This resource configures an Intune Android Open Source Project Basic Wifi Configuration Policy.",
     "permissions": {
         "graph": {
             "delegated": {

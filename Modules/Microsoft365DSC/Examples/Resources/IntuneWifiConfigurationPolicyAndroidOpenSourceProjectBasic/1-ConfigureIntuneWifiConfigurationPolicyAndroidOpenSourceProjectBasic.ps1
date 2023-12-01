@@ -14,10 +14,10 @@ Configuration Example
 
     node localhost
     {
-        IntuneWifiConfigurationPolicyAndroidOpenSourceProject 'myWifiConfigAndroidOpensourcePolicy'
+        IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic 'myWifiConfigAndroidOpensourcePolicy'
         {
             Id                             = 'fe0a93dc-e9cc-4d4b-8dd6-361c51c70f77'
-            DisplayName                    = 'wifi aosp'
+            DisplayName                    = 'Android Aosp Basic Wi-Fi Profile'
             Assignments                    = @(
                 MSFT_DeviceManagementConfigurationPolicyAssignments {
                     deviceAndAppManagementAssignmentFilterType = 'none'
@@ -26,10 +26,16 @@ Configuration Example
             )
             ConnectAutomatically           = $False
             ConnectWhenNetworkNameIsHidden = $True
-            NetworkName                    = 'aaaa'
+            NetworkName                    = 'Network Name'
+            PreSharedKey                   = "ABCDE"
             PreSharedKeyIsSet              = $True
-            Ssid                           = 'aaaaa'
-            WiFiSecurityType               = 'wpaPersonal'
+            ProxyExclusionList             = @("Some.Proxy.Name")
+            ProxyManualAddress             = "proxy.internal.domain"
+            ProxyManualPort                = 8080
+            ForcePreSharedKeyUpdate        = $false
+            ProxySetting                   = "manual"
+            Ssid                           = 'ssid'
+            WiFiSecurityType               = 'wep'
             Ensure                         = 'Present'
             Credential                     = $credsGlobalAdmin
         }

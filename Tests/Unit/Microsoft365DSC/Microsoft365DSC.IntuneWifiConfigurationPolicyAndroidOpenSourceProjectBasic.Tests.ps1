@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneWifiConfigurationPolicyAndroidOpenSourceProject' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -54,7 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProject should exist but it DOES NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -88,7 +88,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProject exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -140,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProject Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic exists and values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -185,7 +185,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProject exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
