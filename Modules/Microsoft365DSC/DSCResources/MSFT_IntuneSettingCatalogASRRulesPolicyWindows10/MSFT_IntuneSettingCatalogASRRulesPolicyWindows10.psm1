@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -239,19 +239,8 @@ function Get-TargetResource
             }
         }
 
-        $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $returnAssignments)
-        {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
-        }
+        $returnAssignments = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
+        $assignmentResult = ConvertFrom-IntunePolicyAssignment -Assignments $returnAssignments
         $returnHashtable.Add('Assignments', $assignmentResult)
 
         Write-Verbose -Message "Found Endpoint Protection Attack Surface Protection rules Policy {$($policy.name)}"
@@ -283,7 +272,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -490,8 +479,9 @@ function Set-TargetResource
         }
         if ($policy.id)
         {
+            $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $assignmentsHash
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
-                -Targets $assignmentsHash
+                -Targets $intuneAssignments
         }
         #endregion
     }
@@ -540,7 +530,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 
@@ -746,6 +736,19 @@ function Test-TargetResource
                 if (-not $source)
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
+                    $testResult = $false
+                    break
+                }
+                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+            }
+            #GroupDisplayName Assignment
+            if (-not [String]::IsNullOrEmpty($assignment.groupDisplayName))
+            {
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupDisplayName -eq $assignment.groupDisplayName }
+                if (-not $source)
+                {
+                    Write-Verbose -Message "Configuration drift: groupDisplayName {$($assignment.groupDisplayName)} not found"
                     $testResult = $false
                     break
                 }
