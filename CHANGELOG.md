@@ -34,26 +34,26 @@
   IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined,
   IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Removed Id and all authentication parameters from PSBoundParameters in Test-TargetResource
-  FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
+    FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
 * IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
-  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Fixed assignments using API call
-  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
 * IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
   * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
-  FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+    FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
 * IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
-  FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+    FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
 * IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
   * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
 * IntuneDeviceConfigurationPolicyWindows10
-  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Fixed assignments using API call
-  FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
 * TeamsMessagingPolicy
   * Added support for properties AllowCommunicationComplianceEndUserReporting,
     AllowFluidCollaborate and AllowSecurityEndUserReporting.
