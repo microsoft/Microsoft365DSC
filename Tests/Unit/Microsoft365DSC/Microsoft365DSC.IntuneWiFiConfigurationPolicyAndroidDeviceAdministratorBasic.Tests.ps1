@@ -56,6 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    ConnectAutomatically           = $True
                     ConnectWhenNetworkNameIsHidden = $True
                     Description                    = 'FakeStringValue'
                     DisplayName                    = 'FakeStringValue'
@@ -86,6 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    ConnectAutomatically           = $True
                     ConnectWhenNetworkNameIsHidden = $True
                     Description                    = 'FakeStringValue'
                     DisplayName                    = 'FakeStringValue'
@@ -133,6 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    ConnectAutomatically           = $True
                     ConnectWhenNetworkNameIsHidden = $True
                     Description                    = 'FakeStringValue'
                     DisplayName                    = 'FakeStringValue'
@@ -172,6 +175,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
+                    ConnectAutomatically           = $True
                     ConnectWhenNetworkNameIsHidden = $True
                     Description                    = 'FakeStringValue'
                     DisplayName                    = 'FakeStringValue'

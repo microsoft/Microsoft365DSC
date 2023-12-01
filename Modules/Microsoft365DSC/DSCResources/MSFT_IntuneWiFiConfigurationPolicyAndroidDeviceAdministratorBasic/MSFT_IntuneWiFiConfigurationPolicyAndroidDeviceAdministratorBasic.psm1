@@ -19,6 +19,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $ConnectAutomatically,
+
+        [Parameter()]
+        [System.Boolean]
         $ConnectWhenNetworkNameIsHidden,
 
         [Parameter()]
@@ -120,6 +124,7 @@ function Get-TargetResource
             Id                             = $getValue.Id
             Description                    = $getValue.Description
             DisplayName                    = $getValue.DisplayName
+            ConnectAutomatically           = $getValue.AdditionalProperties.connectAutomatically
             ConnectWhenNetworkNameIsHidden = $getValue.AdditionalProperties.connectWhenNetworkNameIsHidden
             NetworkName                    = $getValue.AdditionalProperties.networkName
             Ssid                           = $getValue.AdditionalProperties.ssid
@@ -180,6 +185,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectAutomatically,
 
         [Parameter()]
         [System.Boolean]
@@ -273,7 +282,6 @@ function Set-TargetResource
 
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Add('ConnectAutomatically', $false)
 
         $AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
         foreach ($key in $AdditionalProperties.keys)
@@ -393,6 +401,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [System.Boolean]
+        $ConnectAutomatically,
 
         [Parameter()]
         [System.Boolean]
