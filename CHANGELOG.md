@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Fix typo in assignment cmdlet
+    FIXES [#3996](https://github.com/microsoft/Microsoft365DSC/issues/3996)
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.1.
 
