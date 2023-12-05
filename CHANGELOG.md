@@ -3,7 +3,8 @@
 # UNRELEASED
 
 * IntuneSettingCatalogASRRulesPolicyWindows10
-  * Fixed Schema Validation with parameter Identity made Mandatory
+  * Fixed Schema Validation
+  * Fixed Import with unknown ID of Policy and Assignments by using DisplayName
   FIXES [#3961](https://github.com/microsoft/Microsoft365DSC/issues/3961)
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.1.
