@@ -5,6 +5,8 @@
 * IntuneSettingCatalogASRRulesPolicyWindows10
   * Fixed Schema Validation with parameter Identity made Mandatory
   FIXES [#3961](https://github.com/microsoft/Microsoft365DSC/issues/3961)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.1.
 
 # 1.23.1129.1
 
