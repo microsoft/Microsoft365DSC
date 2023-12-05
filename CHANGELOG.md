@@ -4,6 +4,9 @@
 
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.1.
+* MISC
+  * Fix Compare-M365DSCConfigurations to exclude resources correctly
+  FIXES [#4000](https://github.com/microsoft/Microsoft365DSC/issues/4000)
 
 # 1.23.1129.1
 
