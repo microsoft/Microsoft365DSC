@@ -188,7 +188,7 @@ function Get-TargetResource
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$Identity} was found"
-            $policy = Get-MgBetaDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" }  -ErrorAction silentlyContinue
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" } | Select-Object -First 1
         }
 
         if ($null -eq $policy)
@@ -240,7 +240,14 @@ function Get-TargetResource
         }
 
         $returnAssignments = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
-        $assignmentResult = ConvertFrom-IntunePolicyAssignment -Assignments $returnAssignments
+        if ($returnAssignments.Count -gt 0)
+        {
+            $assignmentResult = ConvertFrom-IntunePolicyAssignment -Assignments $returnAssignments
+        }
+        else
+        {
+            $assignmentResult = @()
+        }
         $returnHashtable.Add('Assignments', $assignmentResult)
 
         Write-Verbose -Message "Found Endpoint Protection Attack Surface Protection rules Policy {$($policy.name)}"
@@ -479,9 +486,9 @@ function Set-TargetResource
         }
         if ($policy.id)
         {
-            $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $assignmentsHash
+            $intuneAssignments = [Hashtable[]] (ConvertTo-IntunePolicyAssignment -Assignments $assignmentsHash)
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
-                -Targets $intuneAssignments
+                -Targets ([Array]($intuneAssignments.target))
         }
         #endregion
     }
@@ -499,7 +506,7 @@ function Set-TargetResource
         #write-verbose -message ($settings|convertto-json -Depth 20)
 
         Update-IntuneDeviceConfigurationPolicy `
-            -DeviceConfigurationPolicyId $Identity `
+            -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Name $DisplayName `
             -Description $Description `
             -TemplateReferenceId $templateReferenceId `
@@ -513,8 +520,9 @@ function Set-TargetResource
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $Identity `
-            -Targets $assignmentsHash
+        $intuneAssignments = [Hashtable[]] (ConvertTo-IntunePolicyAssignment -Assignments $assignmentsHash)
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentPolicy.Identity `
+            -Targets ([Array]($intuneAssignments.target))
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
