@@ -645,16 +645,17 @@ function Compare-M365DSCConfigurations
         [Array] $DestinationObject = Initialize-M365DSCReporting -ConfigurationPath $Destination
     }
 
+    if ($ExcludedResources.Count -gt 0)
+    {
+        [Array]$SourceObject = $SourceObject | Where-Object -FilterScript { $_.ResourceName -notin $ExcludedResources }
+        [Array]$DestinationObject = $DestinationObject | Where-Object -FilterScript { $_.ResourceName -notin $ExcludedResources }
+    }
+
     $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
     # Loop through all items in the source array
     $i = 1
     foreach ($sourceResource in $SourceObject)
     {
-        if ($sourceResource.ResourceName -in $ExcludedResources)
-        {
-            continue
-        }
-
         try
         {
             [array]$key = Get-M365DSCResourceKey -Resource $sourceResource -DSCResourceInfo $dscResourceInfo

@@ -950,6 +950,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -989,12 +993,14 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    
+    
+
     try
     {
         $Script:ExportMode = $true
         #region resource generator code
-        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit -All `
-            -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit -Filter $Filter -All:$true -ErrorAction Stop
         #endregion
 
         $i = 1
