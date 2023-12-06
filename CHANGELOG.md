@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.1.1.
+  * Updated MSCloudLoginAssistant to version 1.1.2.
 
 # 1.23.1129.1
 
