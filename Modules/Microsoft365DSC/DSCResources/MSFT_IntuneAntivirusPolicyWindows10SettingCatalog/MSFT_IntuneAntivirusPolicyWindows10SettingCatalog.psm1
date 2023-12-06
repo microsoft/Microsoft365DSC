@@ -1286,9 +1286,9 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck.Remove('Identity') | Out-Null
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
-        Write-Verbose -Message 'The policy was not found'
+        Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
     $testResult = $true

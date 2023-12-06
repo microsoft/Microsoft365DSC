@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fix condition in Test-TargetResource to check if resource was removed or not
+  FIXES [#3958](https://github.com/microsoft/Microsoft365DSC/issues/3958)
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.2.
 * MISC
