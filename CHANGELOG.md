@@ -1,5 +1,19 @@
 # Change log for Microsoft365DSC
 
+# 1.23.1206.1
+
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fix condition in Test-TargetResource to check if resource was removed or not
+    FIXES [#3958](https://github.com/microsoft/Microsoft365DSC/issues/3958)
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Fix typo in assignment cmdlet
+    FIXES [#3996](https://github.com/microsoft/Microsoft365DSC/issues/3996)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.2.
+* MISC
+  * Fix Compare-M365DSCConfigurations to exclude resources correctly
+    FIXES [#4000](https://github.com/microsoft/Microsoft365DSC/issues/4000)
+
 # 1.23.1129.1
 
 * AADRoleSetting
