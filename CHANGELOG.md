@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Fix parameter name in assignment cmdlet
+    FIXES [#4007](https://github.com/microsoft/Microsoft365DSC/issues/4007)
+
 # 1.23.1206.1
 
 * IntuneAntivirusPolicyWindows10SettingCatalog
