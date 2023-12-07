@@ -23,6 +23,9 @@
                         "name": "Policy.Read.All"
                     },
                     {
+                        "name": "Application.Read.All"
+                    },
+                    {
                         "name": "RoleManagement.Read.Directory"
                     },
                     {
@@ -40,6 +43,9 @@
                         "name": "Policy.Read.All"
                     },
                     {
+                        "name": "Application.Read.All"
+                    },
+                    {
                         "name": "Policy.ReadWrite.ConditionalAccess"
                     },
                     {
@@ -54,6 +60,9 @@
                 "read": [
                     {
                         "name": "Policy.Read.All"
+                    },
+                    {
+                        "name": "Application.Read.All"
                     }
                 ],
                 "update": [
