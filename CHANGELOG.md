@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue with assignments
+    FIXES [#3904](https://github.com/microsoft/Microsoft365DSC/issues/3904)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fix issue with Set-TargetResource when retieving a policy from displayName
+    FIXES [#4003](https://github.com/microsoft/Microsoft365DSC/issues/3904)
+
 # 1.23.1206.1
 
 * IntuneAntivirusPolicyWindows10SettingCatalog

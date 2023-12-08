@@ -1222,6 +1222,46 @@ function ConvertTo-IntunePolicyAssignment
 
     return $assignmentResult
 }
+
+function Compare-M365DSCIntunePolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param (
+        [Parameter()]
+        $Source,
+        [Parameter()]
+        $Target
+    )
+
+    $testResult = $source.count -eq $target.count
+    if ($testResult)
+    {
+        foreach ($assignment in $source)
+        {
+            if ($assignment.dataType -like '*GroupAssignmentTarget')
+            {
+                $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId})
+                #Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
+                if (-not $testResult)
+                {
+                    $groupNotFound =  $null -eq (Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue)
+                }
+                if (-not $testResult -and $groupNotFound)
+                {
+                    $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName})
+                }
+            }
+            else
+            {
+                $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType})
+            }
+            if (-Not $testResult) { break }
+        }
+    }
+
+    return $testResult
+}
 function Update-DeviceConfigurationPolicyAssignment
 {
     [CmdletBinding()]
@@ -1272,7 +1312,7 @@ function Update-DeviceConfigurationPolicyAssignment
             $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
         }
         $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
-        #write-verbose -Message $body
+        write-verbose -Message $body
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
     }
     catch
