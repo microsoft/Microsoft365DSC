@@ -2005,18 +2005,18 @@ function Test-TargetResource
                     $spnUnique = Get-MgServicePrincipal -Filter "DisplayName eq '$($spn.DisplayName)'"
                     if ($spnUnique.Count -gt 1)
                     {
-                        write-verbose "Test-TargetResource: IncludeApplications GUID $app used as-is since the app name $($spn.DisplayName) is ambiguous"
+                        write-verbose "Test-TargetResource: IncludeApplications AppId $app used as-is since the app name $($spn.DisplayName) is ambiguous"
                         $formatApps += $app
                     }
                     else
                     {
-                        Write-verbose "Test-TargetResource: Translated IncludeApplications GUID $app to unique name $($spn.DisplayName)"
+                        Write-verbose "Test-TargetResource: Translated IncludeApplications AppId $app to unique name $($spn.DisplayName)"
                         $formatApps += $spn.DisplayName
                     }
                 }
                 else
                 {
-                    Add-M365DSCEvent -Message "Couldn't find ServicePrincipal with AppId '$app' used in IncludeApplications for Conditional Access policy $DisplayName" `
+                    Add-M365DSCEvent -Message "Couldn't find ServicePrincipal with AppId $app used in IncludeApplications for Conditional Access policy $DisplayName" `
                         -Source $($MyInvocation.MyCommand.Source) `
                         -EntryType Warning `
                         -EventType Warning `
@@ -2036,7 +2036,7 @@ function Test-TargetResource
                     $spnUnique = Get-MgServicePrincipal -Filter "DisplayName eq '$app'"
                     if ($spnUnique.Count -gt 1)
                     {
-                        Add-M365DSCEvent -Message "Test-TargetResource: IncludeApplications Name $app used as-is BUT the name is ambiguous" `
+                        Add-M365DSCEvent -Message "Test-TargetResource: IncludeApplications App name '$app' used as-is BUT the name is ambiguous" `
                             -Source $($MyInvocation.MyCommand.Source) `
                             -EntryType Warning `
                             -EventType Warning `
@@ -2045,7 +2045,7 @@ function Test-TargetResource
                     }
                     else
                     {
-                        Write-verbose "Test-TargetResource: IncludeApplications Name $app is unique and used as-is"
+                        Write-verbose "Test-TargetResource: IncludeApplications App name $app is unique and used as-is"
                         $formatApps += $app
                     }
                 }
@@ -2070,12 +2070,12 @@ function Test-TargetResource
                     $spnUnique = Get-MgServicePrincipal -Filter "DisplayName eq '$($spn.DisplayName)'"
                     if ($spnUnique.Count -gt 1)
                     {
-                        Write-verbose "Test-TargetResource: ExcludeApplications GUID $app used as-is since the app name ($($spn.DisplayName)) is ambiguous"
+                        Write-verbose "Test-TargetResource: ExcludeApplications AppId $app used as-is since the app name ($($spn.DisplayName)) is ambiguous"
                         $formatApps += $app
                     }
                     else
                     {
-                        Write-verbose "Test-TargetResource: Translated ExcludeApplications GUID $app to unique SPN $($spn.DisplayName)"
+                        Write-verbose "Test-TargetResource: Translated ExcludeApplications AppId $app to unique SPN $($spn.DisplayName)"
                         $formatApps += $spn.DisplayName
                     }
                 }
@@ -2093,7 +2093,7 @@ function Test-TargetResource
             {
                 if (Test-MSLogicalAppName -Name $app)
                 {
-                    Write-verbose "Test-TargetResource: ExcludeApplications: Logical App Name $app used as-is"
+                    Write-verbose "Test-TargetResource: ExcludeApplications: Logical App name $app used as-is"
                     $formatApps += $app
                 }
                 else
@@ -2101,7 +2101,7 @@ function Test-TargetResource
                     $spnUnique = Get-MgServicePrincipal -Filter "DisplayName eq '$app'"
                     if ($spnUnique.Count -gt 1)
                     {
-                        Add-M365DSCEvent -Message "Test-TargetResource: ExcludeApplications Name $app used as-is BUT the name is ambiguous" `
+                        Add-M365DSCEvent -Message "Test-TargetResource: ExcludeApplications App name '$app' used as-is BUT the name is ambiguous" `
                             -Source $($MyInvocation.MyCommand.Source) `
                             -EntryType Warning `
                             -EventType Warning `
@@ -2110,7 +2110,7 @@ function Test-TargetResource
                     }
                     else
                     {
-                        Write-verbose "Test-TargetResource: ExcludeApplications Name $app is unique and used as-is"
+                        Write-verbose "Test-TargetResource: ExcludeApplications App name '$app' is unique and used as-is"
                         $formatApps += $app
                     }
                 }
