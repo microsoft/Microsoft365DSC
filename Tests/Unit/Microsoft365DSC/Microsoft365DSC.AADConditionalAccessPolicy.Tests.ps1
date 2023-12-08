@@ -51,8 +51,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             # Mock Write-Host to hide output during the tests
-            #Mock -CommandName Write-Host -MockWith {
-            #}
+            Mock -CommandName Write-Host -MockWith {
+            }
         }
 
         # Test contexts
@@ -109,7 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-MgServicePrincipal -ParameterFilter {$Filter -eq "DisplayName eq 'Fake Application'" }       -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         AppId       = '00000012-0000-0000-c000-000000000000'
                         DisplayName = 'Fake Application'
                     }
@@ -214,7 +214,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgServicePrincipal -ParameterFilter {$Filter -eq "DisplayName eq 'Fake Application'" }       -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         AppId       = '00000012-0000-0000-c000-000000000000'
                         DisplayName = 'Fake Application'
                     }
@@ -472,7 +472,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-MgServicePrincipal -ParameterFilter {$Filter -eq "DisplayName eq 'Fake Application'" }       -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         AppId       = '00000012-0000-0000-c000-000000000000'
                         DisplayName = 'Fake Application'
                     }
@@ -655,7 +655,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-MgServicePrincipal -ParameterFilter {$Filter -eq "DisplayName eq 'Fake Application'" }       -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         AppId       = '00000012-0000-0000-c000-000000000000'
                         DisplayName = 'Fake Application'
                     }
@@ -838,7 +838,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-MgServicePrincipal -ParameterFilter {$Filter -eq "DisplayName eq 'Fake Application'" }       -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         AppId       = '00000012-0000-0000-c000-000000000000'
                         DisplayName = 'Fake Application'
                     }
@@ -994,7 +994,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgServicePrincipal -ParameterFilter {$Filter -eq "DisplayName eq 'Fake Application'" }       -MockWith {
-                    return @{
+                    return [pscustomobject]@{
                         AppId       = '00000012-0000-0000-c000-000000000000'
                         DisplayName = 'Fake Application'
                     }
@@ -1036,6 +1036,152 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should remove the policy from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-MgBetaIdentityConditionalAccessPolicy -Exactly 1
+            }
+        }
+
+        Context -Name 'An ambigous app name is specified in ExcludeApps' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    BuiltInControls                          = @('Mfa')
+                    DisplayName                              = 'Allin'
+                    Ensure                                   = 'Present'
+                    ExcludeApplications                      = @('Ambiguous Name')
+                    Credential                               = $Credsglobaladmin
+                    TenantId                                 = 'faketenant.onmicrosoft.com'
+                    GrantControlOperator                     = 'AND'
+                    Id                                       = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                    State                                    = 'disabled'
+                }
+
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
+                    return @{
+                        Id              = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                        DisplayName     = 'Allin'
+                        State           = 'disabled'
+                        Conditions      = @{
+                            Users            = @{
+                                IncludeUsers = @('All')
+                            }
+                        }
+                        GrantControls   = @{
+                            Operator               = 'AND'
+                            BuiltInControls        = @('Mfa')
+                        }
+                    }
+                }
+                Mock -CommandName Get-MgServicePrincipal -ParameterFilter {$Filter -eq "DisplayName eq 'Ambiguous Name'" }       -MockWith {
+                    return @(
+                        @{
+                            AppId       = '00000011-0000-0000-c000-000000000000'
+                            DisplayName = 'Ambiguous Name'
+                        },
+                        @{
+                            AppId       = '00000022-0000-0000-c000-000000000000'
+                            DisplayName = 'Ambiguous Name'
+                        }
+                    )
+                }
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should throw in the Set method due to ambiguous app name' {
+                {Set-TargetResource @testParams} | Should -Throw
+            }
+        }
+
+        Context -Name 'An unknown app name is specified in ExcludeApps' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    BuiltInControls                          = @('Mfa')
+                    DisplayName                              = 'Allin'
+                    Ensure                                   = 'Present'
+                    ExcludeApplications                      = @('Unknown Application')
+                    Credential                               = $Credsglobaladmin
+                    TenantId                                 = 'faketenant.onmicrosoft.com'
+                    GrantControlOperator                     = 'AND'
+                    Id                                       = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                    State                                    = 'disabled'
+                }
+
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
+                    return @{
+                        Id              = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                        DisplayName     = 'Allin'
+                        State           = 'disabled'
+                        Conditions      = @{
+                            Users            = @{
+                                IncludeUsers = @('All')
+                            }
+                        }
+                        GrantControls   = @{
+                            Operator               = 'AND'
+                            BuiltInControls        = @('Mfa')
+                        }
+                    }
+                }
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should throw in the Set method due to unknown app name' {
+                {Set-TargetResource @testParams} | Should -Throw
+            }
+        }
+
+        Context -Name 'An unknown app id is specified in ExcludeApps' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    BuiltInControls                          = @('Mfa')
+                    DisplayName                              = 'Allin'
+                    Ensure                                   = 'Present'
+                    ExcludeApplications                      = @('00000011-0000-0000-c000-000000000000')
+                    Credential                               = $Credsglobaladmin
+                    GrantControlOperator                     = 'AND'
+                    Id                                       = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                    State                                    = 'disabled'
+                }
+
+                Mock -CommandName Get-MgBetaIdentityConditionalAccessPolicy -MockWith {
+                    return @{
+                        Id              = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
+                        DisplayName     = 'Allin'
+                        State           = 'disabled'
+                        Conditions      = @{
+                            Users            = @{
+                                IncludeUsers = @('All')
+                            }
+                        }
+                        GrantControls   = @{
+                            Operator               = 'AND'
+                            BuiltInControls        = @('Mfa')
+                        }
+                    }
+                }
+            }
+
+            It 'Should return Present from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should not throw in the Set method' {
+                {Set-TargetResource @testParams} | Should -Not -Throw
             }
         }
 
