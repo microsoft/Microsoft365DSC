@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.11.0.
+
 # 1.23.1206.1
 
 * IntuneAntivirusPolicyWindows10SettingCatalog
