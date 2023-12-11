@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.11.0.
+
+# 1.23.1206.1
+
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fix condition in Test-TargetResource to check if resource was removed or not
     FIXES [#3958](https://github.com/microsoft/Microsoft365DSC/issues/3958)
@@ -16,7 +21,7 @@
   * Updated MSCloudLoginAssistant to version 1.1.2.
 * MISC
   * Fix Compare-M365DSCConfigurations to exclude resources correctly
-  FIXES [#4000](https://github.com/microsoft/Microsoft365DSC/issues/4000)
+    FIXES [#4000](https://github.com/microsoft/Microsoft365DSC/issues/4000)
 
 # 1.23.1129.1
 
