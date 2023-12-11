@@ -4,6 +4,7 @@
 
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.11.0.
+  * Updated MSCloudLoginAssistant to version 1.1.3.
 
 # 1.23.1206.1
 
