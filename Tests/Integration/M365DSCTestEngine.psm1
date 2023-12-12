@@ -109,7 +109,7 @@ function New-M365DSCIntegrationTest
 '@
 
     # Saving Master Integration configuration to file
-    Set-Content -Value $masterIntegrationConfig -Path ".\Microsoft365DSC\M365DSCIntegration.$Workload.Tests.ps1"
+    Set-Content -Value $masterIntegrationConfig -Path ".Tests\Integration\Microsoft365DSC\M365DSCIntegration.$Workload.Tests.ps1"
 }
 
 Export-ModuleMember -Function @(
