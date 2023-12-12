@@ -1,10 +1,5 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
-* AADConditionalAccessPolicy
-  * Allow applications to be specified by name if the name is unique
-    Implements [#4011](https://github.com/microsoft/Microsoft365DSC/issues/4011)
-    
 # 1.23.1206.1
 
 * IntuneAntivirusPolicyWindows10SettingCatalog
