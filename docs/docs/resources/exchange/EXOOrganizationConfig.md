@@ -151,7 +151,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -220,7 +220,7 @@ Configuration Example
             AutoExpandingArchive                                      = $null
             ConnectorsEnabledForSharepoint                            = $True
             ReadTrackingEnabled                                       = $False
-            Credential                                                = $credsGlobalAdmin
+            Credential                                                = $Credscredential
         }
     }
 }

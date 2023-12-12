@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -35,7 +35,7 @@ Configuration Example
             Ssid                           = 'ssid'
             WifiSecurityType               = 'wpa2Personal'
             Ensure                         = 'Present'
-            Credential                     = $credsGlobalAdmin
+            Credential                     = $Credscredential
         }
     }
 }

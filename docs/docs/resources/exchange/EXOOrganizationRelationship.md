@@ -66,7 +66,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -88,7 +88,7 @@ Configuration Example
             TargetApplicationUri  = "mail.contoso.com"
             TargetAutodiscoverEpr = "https://mail.contoso.com/autodiscover/autodiscover.svc/wssecurity"
             Ensure                = "Present"
-            Credential            = $credsGlobalAdmin
+            Credential            = $Credscredential
         }
     }
 }

@@ -56,7 +56,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName      = 'Security Defaults'
                     Description      = 'Security Defaults description'
                     IsEnabled        = $True
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
@@ -88,7 +88,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName      = 'Security Defaults'
                     Description      = 'Security Defaults description'
                     IsEnabled        = $True
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {

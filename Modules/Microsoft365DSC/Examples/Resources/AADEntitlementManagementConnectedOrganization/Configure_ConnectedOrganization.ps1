@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -30,7 +30,7 @@ Configuration Example
             InternalSponsors      = @("12345678-1234-1234-1234-123456789012");
             State                 = "configured";
             Ensure                = "Present"
-            Credential            = $credsGlobalAdmin
+            Credential            = $Credscredential
         }
     }
 }

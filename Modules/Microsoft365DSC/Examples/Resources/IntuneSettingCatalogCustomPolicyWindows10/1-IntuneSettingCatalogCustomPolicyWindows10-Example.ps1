@@ -16,7 +16,7 @@ Configuration Example
     {
         IntuneSettingCatalogCustomPolicyWindows10 'Example'
         {
-            Credential                                                                 = $credsGlobalAdmin
+            Credential                                                                 = $Credscredential
             Assignments           = @(
                 MSFT_DeviceManagementConfigurationPolicyAssignments{
                     deviceAndAppManagementAssignmentFilterType = 'none'

@@ -20,7 +20,7 @@
         (
             [Parameter(Mandatory = $true)]
             [System.Management.Automation.PSCredential]
-            $credsGlobalAdmin,
+            $Credscredential,
 
             [Parameter()]
             [System.String]
@@ -29,7 +29,7 @@
         )
 
         Import-DscResource -ModuleName Microsoft365DSC
-        $Domain = $credsGlobalAdmin.Username.Split('@')[1]
+        $Domain = $Credscredential.Username.Split('@')[1]
         Node Localhost
         {
                 IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy 'My Account Protection LAPS Policy'
@@ -38,7 +38,7 @@
                     DisplayName              = "Account Protection LAPS Policy";
                     Description              = "My revised description";
                     Ensure                   = "Present";
-                    Credential               = $credsGlobalAdmin
+                    Credential               = $Credscredential
                     Assignments              = @(
                         MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments{
                             deviceAndAppManagementAssignmentFilterType = 'none'
@@ -56,7 +56,7 @@
                     DisplayName              = "Account Protection LUGM Policy";
                     Description              = "My revised description";
                     Ensure                   = "Present";
-                    Credential               = $credsGlobalAdmin
+                    Credential               = $Credscredential
                     Assignments              = @(
                         MSFT_IntuneAccountProtectionLocalUserGroupMembershipPolicyAssignments{
                             deviceAndAppManagementAssignmentFilterType = 'none'
@@ -81,7 +81,7 @@
                     PinMinimumLength                                       = 5
                     PinSpecialCharactersUsage                              = 'required'
                     Ensure                                                 = 'Present'
-                    Credential                                             = $credsGlobalAdmin
+                    Credential                                             = $Credscredential
                 }
                 IntuneAntivirusPolicyWindows10SettingCatalog 'myAVWindows10Policy'
                 {
@@ -98,21 +98,21 @@
                     excludedprocesses  = @('processes.exe', 'process2.exe')
                     templateId         = '45fea5e9-280d-4da1-9792-fb5736da0ca9_1'
                     Ensure             = 'Present'
-                    Credential         = $credsGlobalAdmin
+                    Credential         = $Credscredential
                 }
                 IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
                 {
                     DisplayName = 'ContosoNew'
                     Description = 'New Contoso Policy'
                     Ensure      = 'Present'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
                 IntuneAppConfigurationPolicy 'RemoveAppConfigPolicy'
                 {
                     DisplayName = 'ContosoOld'
                     Description = 'Old Contoso Policy'
                     Ensure      = 'Absent'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
                 IntuneApplicationControlPolicyWindows10 'ConfigureApplicationControlPolicyWindows10'
                 {
@@ -122,7 +122,7 @@
                     SmartScreenBlockOverrideForFiles = $True
                     SmartScreenEnableInShell         = $True
                     Ensure                           = 'Present'
-                    Credential                       = $credsGlobalAdmin
+                    Credential                       = $Credscredential
                 }
                 IntuneAppProtectionPolicyAndroid 'ConfigureAppProtectionPolicyAndroid'
                 {
@@ -149,7 +149,7 @@
                     SaveAsBlocked                           = $True
                     SimplePinBlocked                        = $True
                     Ensure                                  = 'Present'
-                    Credential                              = $credsGlobalAdmin
+                    Credential                              = $Credscredential
                 }
                 IntuneAppProtectionPolicyiOS 'MyCustomiOSPolicy'
                 {
@@ -181,7 +181,7 @@
                     SaveAsBlocked                           = $True
                     SimplePinBlocked                        = $False
                     Ensure                                  = 'Present'
-                    Credential                              = $credsGlobalAdmin
+                    Credential                              = $Credscredential
                 }
                 IntuneASRRulesPolicyWindows10 'myASRRulesPolicy'
                 {
@@ -209,7 +209,7 @@
                     UntrustedExecutableType                         = 'block'
                     UntrustedUSBProcessType                         = 'block'
                     Ensure                                          = 'Present'
-                    Credential                                      = $credsGlobalAdmin
+                    Credential                                      = $Credscredential
                 }
                 IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager 'myASRReductionRules'
                 {
@@ -218,7 +218,7 @@
                     Assignments = @()
                     Description = 'My revised description'
                     Ensure      = 'Present'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
                 IntuneDeviceAndAppManagementAssignmentFilter 'AssignmentFilter'
                 {
@@ -234,7 +234,7 @@
                     DisplayName = 'Contoso'
                     Description = 'Contoso Category'
                     Ensure      = 'Present'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
                 IntuneDeviceCleanupRule 'Example'
                 {
@@ -242,7 +242,7 @@
                     IsSingleInstance                       = 'Yes'
                     DeviceInactivityBeforeRetirementInDays = 30
                     Ensure                                 = 'Present'
-                    Credential                             = $credsGlobalAdmin
+                    Credential                             = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyAndroid 'AddDeviceCompliancePolicy'
                 {
@@ -268,13 +268,13 @@
                     SecurityRequireVerifyApps                          = $False
                     StorageRequireEncryption                           = $True
                     Ensure                                             = 'Present'
-                    Credential                                         = $credsglobaladmin
+                    Credential                                         = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyAndroid 'RemoveDeviceCompliancePolicyAndroid'
                 {
                     DisplayName = 'Test Android Device Compliance Policy'
                     Ensure      = 'Absent'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyAndroidDeviceOwner 'ConfigureAndroidDeviceCompliancePolicyOwner'
                 {
@@ -295,13 +295,13 @@
                     PasswordPreviousPasswordCountToBlock               = 13
                     StorageRequireEncryption                           = $True
                     Ensure                                             = 'Present'
-                    Credential                                         = $credsGlobalAdmin
+                    Credential                                         = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyAndroidDeviceOwner 'RemoveAndroidDeviceCompliancePolicyOwner'
                 {
                     DisplayName = 'DeviceOwner'
                     Ensure      = 'Absent'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyAndroidWorkProfile 'ConfigureAndroidDeviceCompliancePolicyWorkProfile'
                 {
@@ -325,13 +325,13 @@
                     SecurityRequireVerifyApps                          = $False
                     StorageRequireEncryption                           = $True
                     Ensure                                             = 'Present'
-                    Credential                                         = $credsglobaladmin
+                    Credential                                         = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyAndroidWorkProfile 'RemoveDeviceCompliancePolicyAndroidWorkProfile'
                 {
                     DisplayName = 'Test Android Work Profile Device Compliance Policy'
                     Ensure      = 'Absent'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyiOs 'ConfigureDeviceCompliancePolicyiOS'
                 {
@@ -352,14 +352,14 @@
                     DeviceThreatProtectionRequiredSecurityLevel = 'medium'
                     ManagedEmailProfileRequired                 = $True
                     Ensure                                      = 'Present'
-                    Credential                                  = $credsGlobalAdmin
-        
+                    Credential                                  = $Credscredential
+
                 }
                 IntuneDeviceCompliancePolicyiOs 'RemoveDeviceCompliancePolicyiOS'
                 {
                     DisplayName          = 'Demo iOS Device Compliance Policy'
                     Ensure               = 'Absent'
-                    Credential           = $credsGlobalAdmin
+                    Credential           = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyMacOS 'ConfigureDeviceCompliancePolicyMacOS'
                 {
@@ -383,13 +383,13 @@
                     FirewallBlockAllIncoming                    = $False
                     FirewallEnableStealthMode                   = $False
                     Ensure                                      = 'Present'
-                    Credential                                  = $credsGlobalAdmin
+                    Credential                                  = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyMacOS 'RemoveDeviceCompliancePolicyMacOS'
                 {
                     DisplayName          = 'Demo MacOS Device Compliance Policy'
                     Ensure               = 'Absent'
-                    Credential           = $credsGlobalAdmin
+                    Credential           = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyWindows10 'ConfigureDeviceCompliancePolicyWindows10'
                 {
@@ -428,13 +428,13 @@
                     deviceCompliancePolicyScript                = $null
                     ValidOperatingSystemBuildRanges             = @()
                     Ensure                                      = 'Present'
-                    Credential                                  = $credsGlobalAdmin
+                    Credential                                  = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyWindows10 'RemoveDeviceCompliancePolicyWindows10'
                 {
                     DisplayName          = 'Demo Windows 10 Device Compliance Policy'
                     Ensure               = 'Absent'
-                    Credential           = $credsGlobalAdmin
+                    Credential           = $Credscredential
                 }
                 IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 'Example'
                 {
@@ -475,7 +475,7 @@
                                         {
                                             Name = 'hosted_app'
                                         }
-        
+
                                         MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair
                                         {
                                             Name = 'user_script'
@@ -509,7 +509,7 @@
                                     Id                          = '14c48993-35af-4b77-a4f8-12de917b1bb9'
                                     odataType                   = '#microsoft.graph.groupPolicyPresentationValueDecimal'
                                 }
-        
+
                                 MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
                                 {
                                     presentationDefinitionId    = '98998e7f-cc2a-4d96-8c47-35dd4b2ce56b'
@@ -518,7 +518,7 @@
                                     Id                          = '4d654df9-6826-470f-af4e-d37491663c76'
                                     odataType                   = '#microsoft.graph.groupPolicyPresentationValueDecimal'
                                 }
-        
+
                                 MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
                                 {
                                     presentationDefinitionId    = '6900e752-4bc3-463b-9fc8-36d78c77bc3e'
@@ -1191,7 +1191,7 @@
                     WebBrowserCookieSettings                 = 'allowAlways'
                     WiFiBlocked                              = $False
                     Ensure                                   = 'Present'
-                    Credential                               = $credsGlobalAdmin
+                    Credential                               = $Credscredential
                 }
                 IntuneDeviceConfigurationPolicyAndroidDeviceOwner 'myAndroidDeviceOwnerPolicy'
                 {
@@ -1238,7 +1238,7 @@
                     WorkProfilePasswordRequiredType       = 'deviceDefault'
                     WorkProfilePasswordRequireUnlock      = 'deviceDefault'
                     Ensure                                = 'Present'
-                    Credential                            = $credsGlobalAdmin
+                    Credential                            = $Credscredential
                 }
                 IntuneDeviceConfigurationPolicyAndroidOpenSourceProject 'myAndroidOpenSourceProjectPolicy'
                 {
@@ -1256,7 +1256,7 @@
                     ScreenCaptureBlocked      = $True
                     StorageBlockExternalMedia = $True
                     Ensure                    = 'Present'
-                    Credential                = $credsGlobalAdmin
+                    Credential                = $Credscredential
                 }
                 IntuneDeviceConfigurationPolicyAndroidWorkProfile '97ed22e9-1429-40dc-ab3c-0055e538383b'
                 {
@@ -1282,7 +1282,7 @@
                     WorkProfilePasswordRequiredType                = 'deviceDefault'
                     WorkProfileRequirePassword                     = $False
                     Ensure                                         = 'Present'
-                    Credential                                     = $Credsglobaladmin
+                    Credential                                     = $Credscredential
                 }
                 IntuneDeviceConfigurationPolicyiOS 'ConfigureDeviceConfigurationPolicyiOS'
                 {
@@ -1396,7 +1396,7 @@
                     VoiceDialingBlocked                            = $False
                     WallpaperBlockModification                     = $False
                     Ensure                                         = 'Present'
-                    Credential                                     = $credsGlobalAdmin
+                    Credential                                     = $Credscredential
                 }
                 IntuneDeviceConfigurationPolicyMacOS 'myMacOSDevicePolicy'
                 {
@@ -1494,7 +1494,7 @@
                     UpdateDelayPolicy                               = @('delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'delayMajorOsUpdateVisibility')
                     WallpaperModificationBlocked                    = $False
                     Ensure                                          = 'Present'
-                    Credential                                      = $credsGlobalAdmin
+                    Credential                                      = $Credscredential
                 }
                 IntuneDeviceConfigurationPolicyWindows10 'Example'
                 {
@@ -1982,7 +1982,7 @@
                     Description = 'My Restriction'
                     Limit       = 12
                     Ensure      = 'Present'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
                 IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
                 {
@@ -1999,7 +1999,7 @@
                             deviceAndAppManagementAssignmentFilterType = 'none'
                             dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                         });
-                    Credential                        = $credsGlobalAdmin
+                    Credential                        = $Credscredential
                     Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
                     DeviceEnrollmentConfigurationType = "platformRestrictions";
                     DisplayName                       = "All users and all devices";
@@ -2064,7 +2064,7 @@
                     Assignments = @()
                     Description = 'My revised description'
                     Ensure      = 'Present'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
                 IntuneExploitProtectionPolicyWindows10SettingCatalog 'myWindows10ExploitProtectionPolicy'
                 {
@@ -2224,7 +2224,7 @@
           </AppConfig>
         </MitigationPolicy>"
                     Ensure                            = 'Present'
-                    Credential                        = $credsGlobalAdmin
+                    Credential                        = $Credscredential
                 }
                 IntunePolicySets 'Example'
                 {
@@ -2270,7 +2270,7 @@
                     RoleDefinition             = '2d00d0fd-45e9-4166-904f-b76ac5eed2c7'
                     RoleDefinitionDisplayName  = 'This is my role'
                     Ensure                     = 'Present'
-                    Credential                 = $credsGlobalAdmin
+                    Credential                 = $Credscredential
                 }
                 IntuneRoleDefinition 'IntuneRoleDefinition'
                 {
@@ -2282,7 +2282,7 @@
                     notallowedResourceActions = @()
                     roleScopeTagIds           = @('0', '1')
                     Ensure                    = 'Present'
-                    Credential                = $credsGlobalAdmin
+                    Credential                = $Credscredential
                 }
                 IntuneSettingCatalogASRRulesPolicyWindows10 'myASRRulesPolicy'
                 {
@@ -2298,11 +2298,11 @@
                     blockexecutablefilesrunningunlesstheymeetprevalenceagetrustedlistcriterion = 'audit'
                     Description                                                                = 'Post'
                     Ensure                                                                     = 'Present'
-                    Credential                                                                 = $credsGlobalAdmin
+                    Credential                                                                 = $Credscredential
                 }
                 IntuneSettingCatalogCustomPolicyWindows10 'Example'
                 {
-                    Credential                                                                 = $credsGlobalAdmin
+                    Credential                                                                 = $Credscredential
                     Assignments           = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments{
                             deviceAndAppManagementAssignmentFilterType = 'none'
@@ -2389,7 +2389,7 @@
                     Ssid                           = 'sf'
                     WiFiSecurityType               = 'wpaEnterprise'
                     Ensure                         = 'Present'
-                    Credential                     = $credsGlobalAdmin
+                    Credential                     = $Credscredential
                 }
                 IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner 'myWifiConfigAndroidDeviceOwnerPolicy'
                 {
@@ -2409,7 +2409,7 @@
                     ProxySettings                  = 'none'
                     Ssid                           = 'MySSID - 3'
                     Ensure                         = 'Present'
-                    Credential                     = $credsGlobalAdmin
+                    Credential                     = $Credscredential
                 }
                 IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
                 {
@@ -2428,7 +2428,7 @@
                     Ssid                           = 'MySSID'
                     WiFiSecurityType               = 'open'
                     Ensure                         = 'Present'
-                    Credential                     = $credsGlobalAdmin
+                    Credential                     = $Credscredential
                 }
                 IntuneWifiConfigurationPolicyAndroidForWork 'Example'
                 {
@@ -2469,7 +2469,7 @@
                     Ssid                           = 'aaaaa'
                     WiFiSecurityType               = 'wpaPersonal'
                     Ensure                         = 'Present'
-                    Credential                     = $credsGlobalAdmin
+                    Credential                     = $Credscredential
                 }
                 IntuneWifiConfigurationPolicyIOS 'myWifiConfigIOSPolicy'
                 {
@@ -2490,7 +2490,7 @@
                     Ssid                           = 'aaaaa'
                     WiFiSecurityType               = 'wpaPersonal'
                     Ensure                         = 'Present'
-                    Credential                     = $credsGlobalAdmin
+                    Credential                     = $Credscredential
                 }
                 IntuneWifiConfigurationPolicyMacOS 'myWifiConfigMacOSPolicy'
                 {
@@ -2510,7 +2510,7 @@
                     Ssid                           = 'aaaaaaaaaaaaa'
                     WiFiSecurityType               = 'wpaPersonal'
                     Ensure                         = 'Present'
-                    Credential                     = $credsGlobalAdmin
+                    Credential                     = $Credscredential
                 }
                 IntuneWifiConfigurationPolicyWindows10 'myWifiConfigWindows10Policy'
                 {
@@ -2533,7 +2533,7 @@
                     Ssid                           = 'ssid'
                     WifiSecurityType               = 'wpa2Personal'
                     Ensure                         = 'Present'
-                    Credential                     = $credsGlobalAdmin
+                    Credential                     = $Credscredential
                 }
                 IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined 'Example'
                 {

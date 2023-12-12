@@ -8,7 +8,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -33,7 +33,7 @@ Configuration Example
             OptimizeDeviceDialing = $true
             SimpleName            = 'DemoPlan'
             Ensure                = 'Present'
-            Credential            = $credsGlobalAdmin
+            Credential            = $Credscredential
         }
     }
 }

@@ -31,7 +31,7 @@ To authenticate with Microsoft Exchange, this resource required the following pe
 
 #### Role Groups
 
-- 
+-
 
 ## Examples
 
@@ -47,7 +47,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -59,7 +59,7 @@ Configuration Example
             IsSingleInstance       = 'Yes'
             ResourcePropertySchema = @('Room/TV', 'Equipment/Laptop')
             Ensure                 = 'Present'
-            Credential             = $credsGlobalAdmin
+            Credential             = $Credscredential
         }
     }
 }
