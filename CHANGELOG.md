@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Allow applications to be specified by name if the name is unique
+    IMPLEMENTS [#4011](https://github.com/microsoft/Microsoft365DSC/issues/4011)
+
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.11.0.
   * Updated MSCloudLoginAssistant to version 1.1.3.
