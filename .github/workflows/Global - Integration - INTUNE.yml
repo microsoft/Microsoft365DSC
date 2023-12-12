@@ -45,7 +45,7 @@ jobs:
           $SHA = git rev-parse HEAD
           echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
       - name: Run Integration Tests
-        shell: pwsh
+        shell: powershell
         env:
           PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
           PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
