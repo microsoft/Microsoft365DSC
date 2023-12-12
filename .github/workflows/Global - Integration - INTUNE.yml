@@ -26,7 +26,6 @@ jobs:
         run: |
           Set-ExecutionPolicy Unrestricted -Force
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
-          $GlobalAdminPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
           Set-M365DSCTelemetryOption -Enabled $false
           Set-Item -Path WSMan:\localhost\MaxEnvelopeSizekb -Value 99999
       - name: Generate Integration Tests from Examples
@@ -34,7 +33,7 @@ jobs:
         run: |
           Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
           New-M365DSCIntegrationTest -Workload INTUNE
-      - name: Commit files # commit the output folder
+      - name: Commit Integration Tests
         shell: pwsh
         run: |
           git config --local user.email "nicharl@microsoft.com"
