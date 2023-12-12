@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -23,7 +23,7 @@ Configuration Example
             PinMinimumLength                                       = 5
             PinSpecialCharactersUsage                              = 'required'
             Ensure                                                 = 'Present'
-            Credential                                             = $credsGlobalAdmin
+            Credential                                             = $Credscredential
         }
     }
 }

@@ -101,7 +101,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -126,7 +126,7 @@ Configuration Example
             DeviceThreatProtectionRequiredSecurityLevel = 'medium'
             ManagedEmailProfileRequired                 = $True
             Ensure                                      = 'Present'
-            Credential                                  = $credsGlobalAdmin
+            Credential                                  = $Credscredential
 
         }
     }
@@ -143,7 +143,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -153,7 +153,7 @@ Configuration Example
         {
             DisplayName          = 'Demo iOS Device Compliance Policy'
             Ensure               = 'Absent'
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
         }
     }
 }

@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -21,7 +21,7 @@ Configuration Example
             IsSingleInstance       = 'Yes'
             ResourcePropertySchema = @('Room/TV', 'Equipment/Laptop')
             Ensure                 = 'Present'
-            Credential             = $credsGlobalAdmin
+            Credential             = $Credscredential
         }
     }
 }

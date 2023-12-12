@@ -65,7 +65,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -84,7 +84,7 @@ Configuration Example
             RoleDefinition             = '2d00d0fd-45e9-4166-904f-b76ac5eed2c7'
             RoleDefinitionDisplayName  = 'This is my role'
             Ensure                     = 'Present'
-            Credential                 = $credsGlobalAdmin
+            Credential                 = $Credscredential
         }
     }
 }

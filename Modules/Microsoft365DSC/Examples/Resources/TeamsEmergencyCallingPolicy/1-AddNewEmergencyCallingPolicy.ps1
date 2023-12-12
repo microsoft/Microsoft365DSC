@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -21,7 +21,7 @@ Configuration Example
             NotificationGroup         = 'john.smith@contoso.com'
             NotificationMode          = "NotificationOnly"
             Ensure                    = 'Present'
-            Credential                = $credsGlobalAdmin
+            Credential                = $Credscredential
         }
     }
 }

@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -18,7 +18,7 @@ Configuration Example
         {
             AccessPackageId         = "5d05114c-b4d9-4ae7-bda6-4bade48e60f2";
             CanExtend               = $False;
-            Credential              = $credsGlobalAdmin
+            Credential              = $Credscredential
             Description             = "Initial Policy";
             DisplayName             = "Initial Policy";
             DurationInDays          = 365;

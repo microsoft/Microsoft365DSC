@@ -47,7 +47,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -58,7 +58,7 @@ Configuration Example
             Name                 = "en\NotifyOnly"
             Value                = "This message contains content that is restricted by Contoso company policy."
             Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
         }
     }
 }

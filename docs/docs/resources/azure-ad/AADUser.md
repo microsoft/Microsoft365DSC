@@ -81,7 +81,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -99,7 +99,7 @@ Configuration Example
             LicenseAssignment  = @("O365dsc1:ENTERPRISEPREMIUM")
             UsageLocation      = "US"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }
@@ -116,7 +116,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -134,7 +134,7 @@ Configuration Example
             MemberOf           = @('Group-M365-Standard-License', 'Group-PowerBI-Pro-License')
             UsageLocation      = "US"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }

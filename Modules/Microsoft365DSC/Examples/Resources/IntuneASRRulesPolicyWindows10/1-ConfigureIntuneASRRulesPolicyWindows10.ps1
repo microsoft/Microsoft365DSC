@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -40,7 +40,7 @@ Configuration Example
             UntrustedExecutableType                         = 'block'
             UntrustedUSBProcessType                         = 'block'
             Ensure                                          = 'Present'
-            Credential                                      = $credsGlobalAdmin
+            Credential                                      = $Credscredential
         }
     }
 }

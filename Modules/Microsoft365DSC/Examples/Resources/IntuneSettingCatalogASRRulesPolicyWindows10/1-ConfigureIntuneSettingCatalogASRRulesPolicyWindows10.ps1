@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -28,7 +28,7 @@ Configuration Example
             blockexecutablefilesrunningunlesstheymeetprevalenceagetrustedlistcriterion = 'audit'
             Description                                                                = 'Post'
             Ensure                                                                     = 'Present'
-            Credential                                                                 = $credsGlobalAdmin
+            Credential                                                                 = $Credscredential
         }
     }
 }

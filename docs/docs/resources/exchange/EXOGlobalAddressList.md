@@ -66,7 +66,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -79,7 +79,7 @@ Configuration Example
             ConditionalDepartment        = "Human Resources"
             ConditionalStateOrProvince   = "Washington"
             Ensure                       = "Present"
-            Credential                   = $credsGlobalAdmin
+            Credential                   = $Credscredential
         }
     }
 }

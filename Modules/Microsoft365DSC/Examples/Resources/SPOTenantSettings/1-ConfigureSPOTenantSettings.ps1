@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -35,7 +35,7 @@ Configuration Example
             HideDefaultThemes                             = $false
             MarkNewFilesSensitiveByDefault                = "AllowExternalSharing"
             Ensure                                        = "Present"
-            Credential                                    = $credsGlobalAdmin
+            Credential                                    = $Credscredential
         }
     }
 }

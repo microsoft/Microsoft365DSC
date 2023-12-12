@@ -13,17 +13,8 @@ function New-M365DSCIntegrationTest
     param
     (
         [Parameter()]
-        [System.String]
-        $GlobalAdminUser,
-
-        [Parameter()]
-        [System.String]
-        $GlobalAdminPassword,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
-        $Environment = 'Public'
+        [System.Management.Automation.PSCredential]
+        $Credential
     )
 
     Configuration Master
@@ -32,16 +23,11 @@ function New-M365DSCIntegrationTest
         (
             [Parameter(Mandatory = $true)]
             [System.Management.Automation.PSCredential]
-            $credsGlobalAdmin,
-
-            [Parameter()]
-            [System.String]
-            [ValidateSet('Public', 'GCC', 'GCCH', 'Germany', 'China')]
-            $Environment = 'Public'
+            $Credscredential
         )
 
         Import-DscResource -ModuleName Microsoft365DSC
-        $Domain = $credsGlobalAdmin.Username.Split('@')[1]
+        $Domain = $Credscredential.Username.Split('@')[1]
         Node Localhost
         {
 
@@ -102,9 +88,7 @@ function New-M365DSCIntegrationTest
     }
 
     # Compile and deploy configuration
-    $password = ConvertTo-SecureString $GlobalAdminPassword -AsPlainText -Force
-    $credential = New-Object System.Management.Automation.PSCredential ($GlobalAdminUser, $password)
-    Master -ConfigurationData $ConfigurationData -credsGlobalAdmin $credential -Environment $Environment
+    Master -ConfigurationData $ConfigurationData -Credscredential $Credential
     Start-DscConfiguration Master -Wait -Force -Verbose
 '@
 

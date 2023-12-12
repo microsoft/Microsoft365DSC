@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -18,21 +18,21 @@ Configuration Example
         {
             Workload           = "Exchange"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
 
         SCAuditConfigurationPolicy 'OneDriveAuditPolicy'
         {
             Workload           = "OneDriveForBusiness"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
 
         SCAuditConfigurationPolicy 'SharePointAuditPolicy'
         {
             Workload           = "SharePoint"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }

@@ -67,7 +67,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ServicePrincipalType      = 'Application'
                     Tags                      = '{WindowsAzureActiveDirectoryIntegratedApp}'
                     Ensure                    = 'Present'
-                    Credential                = $credsGlobalAdmin
+                    Credential                = $Credscredential
                 }
 
                 Mock -CommandName Get-MgServicePrincipal -MockWith {
@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ServicePrincipalType      = 'Application'
                     Tags                      = '{WindowsAzureActiveDirectoryIntegratedApp}'
                     Ensure                    = 'Absent'
-                    Credential                = $credsGlobalAdmin
+                    Credential                = $Credscredential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -166,7 +166,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ServicePrincipalType      = 'Application'
                     Tags                      = '{WindowsAzureActiveDirectoryIntegratedApp}'
                     Ensure                    = 'Present'
-                    Credential                = $credsGlobalAdmin
+                    Credential                = $Credscredential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
@@ -222,7 +222,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ServicePrincipalType      = 'Application'
                     Tags                      = '{WindowsAzureActiveDirectoryIntegratedApp}'
                     Ensure                    = 'Present'
-                    Credential                = $credsGlobalAdmin
+                    Credential                = $Credscredential
                 }
 
                 Mock -CommandName New-M365DSCConnection -MockWith {
