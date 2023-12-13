@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1213.1
 
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.11.0.
