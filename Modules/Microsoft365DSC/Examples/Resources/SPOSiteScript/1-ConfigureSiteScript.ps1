@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -30,7 +30,7 @@ Configuration Example
             }'
             Description          = "My custom site script"
             Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
         }
     }
 }

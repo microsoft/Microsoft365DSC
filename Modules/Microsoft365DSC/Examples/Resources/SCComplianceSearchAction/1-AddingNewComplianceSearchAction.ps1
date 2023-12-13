@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -22,7 +22,7 @@ Configuration Example
             RetryOnError      = $False
             SearchName        = "Demo Search"
             Ensure            = "Present"
-            Credential        = $credsGlobalAdmin
+            Credential        = $Credscredential
         }
 
         SCComplianceSearchAction 'ComplianceSearchActionExport'
@@ -36,7 +36,7 @@ Configuration Example
             ActionScope                         = "IndexedItemsOnly"
             EnableDedupe                        = $False
             Ensure                              = "Present"
-            Credential                          = $credsGlobalAdmin
+            Credential                          = $Credscredential
         }
 
         SCComplianceSearchAction 'ComplianceSearchActionRetention'
@@ -50,7 +50,7 @@ Configuration Example
             ActionScope                         = "IndexedItemsOnly"
             EnableDedupe                        = $False
             Ensure                              = "Present"
-            Credential                          = $credsGlobalAdmin
+            Credential                          = $Credscredential
         }
     }
 }

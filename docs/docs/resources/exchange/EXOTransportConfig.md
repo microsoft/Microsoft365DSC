@@ -71,7 +71,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -101,7 +101,7 @@ Configuration Example
             ReplyAllStormProtectionEnabled          = $True;
             Rfc2231EncodingEnabled                  = $False;
             SmtpClientAuthenticationDisabled        = $True;
-            Credential                              = $credsGlobalAdmin
+            Credential                              = $Credscredential
         }
     }
 }

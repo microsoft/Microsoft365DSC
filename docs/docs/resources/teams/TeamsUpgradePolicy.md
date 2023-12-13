@@ -57,7 +57,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -68,7 +68,7 @@ Configuration Example
             Identity               = 'Islands'
             Users                  = @("John.Smith@contoso.com", "Nik.Charlebois@contoso.com")
             MigrateMeetingsToTeams = $true
-            Credential             = $credsGlobalAdmin
+            Credential             = $Credscredential
         }
     }
 }

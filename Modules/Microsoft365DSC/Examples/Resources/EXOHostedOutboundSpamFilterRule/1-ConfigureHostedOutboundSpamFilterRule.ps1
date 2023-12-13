@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -23,7 +23,7 @@ Configuration Example
             ExceptIfFrom                   = "Elizabeth Brunner"
             HostedOutboundSpamFilterPolicy = "Default"
             Ensure                         = "Present"
-            Credential                     = $credsGlobalAdmin
+            Credential                     = $Credscredential
         }
     }
 }

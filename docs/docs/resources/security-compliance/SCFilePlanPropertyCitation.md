@@ -59,7 +59,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -71,7 +71,7 @@ Configuration Example
             CitationURL          = "https://contoso.com"
             CitationJurisdiction = "Federal"
             Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
         }
     }
 }

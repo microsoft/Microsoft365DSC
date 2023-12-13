@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -32,7 +32,7 @@ Configuration Example
             DeviceThreatProtectionRequiredSecurityLevel = 'medium'
             ManagedEmailProfileRequired                 = $True
             Ensure                                      = 'Present'
-            Credential                                  = $credsGlobalAdmin
+            Credential                                  = $Credscredential
 
         }
     }

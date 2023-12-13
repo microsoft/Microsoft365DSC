@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -90,7 +90,7 @@ Configuration Example
             WeatherEnabled                                       = $True
             WebPartsFrameOptionsType                             = "SameOrigin"
             Ensure                                               = "Present"
-            Credential                                           = $credsGlobalAdmin
+            Credential                                           = $Credscredential
         }
     }
 }
