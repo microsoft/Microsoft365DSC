@@ -52,4 +52,35 @@ jobs:
         run: |
           $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
           $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
-          & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.INTUNE.Tests.ps1 -Credential $Credential
+          try
+          {
+            & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.INTUNE.Tests.ps1 -Credential $Credential
+          }
+          catch
+          {
+            throw $_
+          }
+
+          try
+          {
+            $Result = Test-DSCConfiguration -Detailed -Verbose
+          }
+          catch
+          {
+            throw $_
+          }
+
+          if ($Result.InDesiredState -eq $false)
+          {
+            Write-Host -Message "Resources below are not in the Desired State:"
+            foreach ($Resource in $Result.ResourcesNotInDesiredState)
+            {
+                Write-Host $Resource.InstanceName
+            }
+
+            throw "Could not validate that the Tenant is in the Desired State"
+          }
+          else
+          {
+            Write-Host "All resources in the Tenant are in the Desired State"
+          }
