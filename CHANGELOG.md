@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue when trying to remove policy and an Identity set to a random GUID
+    or from another tenant
+  FIXES [#4041](https://github.com/microsoft/Microsoft365DSC/issues/4041)
+
 # 1.23.1213.1
 
 * IntuneEndpointDetectionAndResponsePolicyWindows10
