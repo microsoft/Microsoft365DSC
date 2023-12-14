@@ -137,7 +137,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -158,7 +158,7 @@ Configuration Example
             excludedprocesses  = @('processes.exe', 'process2.exe')
             templateId         = '45fea5e9-280d-4da1-9792-fb5736da0ca9_1'
             Ensure             = 'Present'
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }

@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -36,7 +36,7 @@ Configuration Example
             Refinable                   = "Yes"
             TokenNormalization          = $True
             Ensure                      = "Present"
-            Credential                  = $credsGlobalAdmin
+            Credential                  = $Credscredential
         }
     }
 }

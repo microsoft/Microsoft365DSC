@@ -57,7 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IpRanges    = @('2.1.1.1/32', '1.2.2.2/32')
                     IsTrusted   = $True
                     OdataType   = '#microsoft.graph.ipNamedLocation'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
@@ -84,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IpRanges    = @('2.1.1.1/32', '1.2.2.2/32')
                     IsTrusted   = $True
                     OdataType   = '#microsoft.graph.ipNamedLocation'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
@@ -125,7 +125,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IpRanges    = @('2.1.1.1/32', '1.2.2.2/32')
                     IsTrusted   = $True
                     OdataType   = '#microsoft.graph.ipNamedLocation'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {
@@ -161,7 +161,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IpRanges    = @('2.1.1.1/32', '1.2.2.2/32')
                     IsTrusted   = $True
                     OdataType   = '#microsoft.graph.ipNamedLocation'
-                    Credential  = $credsGlobalAdmin
+                    Credential  = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaIdentityConditionalAccessNamedLocation -MockWith {

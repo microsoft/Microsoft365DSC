@@ -23,8 +23,8 @@ jobs:
         if: always()
         shell: pwsh
         run: |
-          git config --local user.email "nik.charlebois@microsoft.com"
-          git config --local user.name "Nik Charlebois"
+          git config --local user.email "nicharl@microsoft.com"
+          git config --local user.name "NikCharlebois"
           git add D:/a/Microsoft365DSC/Microsoft365DSC/docs/docs/*
           git pull
           git commit -m "Updated Resources and Cmdlet documentation pages"

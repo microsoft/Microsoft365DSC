@@ -91,7 +91,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -102,7 +102,7 @@ Configuration Example
             IsSingleInstance = "Yes"
             Url              = "https://contoso.sharepoint.com/sites/Marketing"
             Ensure           = "Present"
-            Credential       = $credsGlobalAdmin
+            Credential       = $Credscredential
         }
     }
 }

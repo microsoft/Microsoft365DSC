@@ -107,7 +107,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -143,7 +143,7 @@ Configuration Example
             SaveAsBlocked                           = $True
             SimplePinBlocked                        = $False
             Ensure                                  = 'Present'
-            Credential                              = $credsGlobalAdmin
+            Credential                              = $Credscredential
         }
     }
 }

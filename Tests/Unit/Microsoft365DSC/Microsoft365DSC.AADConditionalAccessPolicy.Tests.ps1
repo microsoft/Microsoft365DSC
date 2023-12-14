@@ -75,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludeExternalTenantsMembers        = @()
                     ExcludeExternalTenantsMembershipKind = 'all'
                     ExcludeGuestOrExternalUserTypes      = @('internalGuest', 'b2bCollaborationMember')
-                    Credential                           = $Credsglobaladmin
+                    Credential                           = $Credscredential
                     GrantControlOperator                 = 'AND'
                     Id                                   = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
                     IncludeApplications                  = @('All')
@@ -181,7 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludeExternalTenantsMembers            = @()
                     ExcludeExternalTenantsMembershipKind     = 'all'
                     ExcludeGuestOrExternalUserTypes          = @('internalGuest', 'b2bCollaborationMember')
-                    Credential                               = $Credsglobaladmin
+                    Credential                               = $Credscredential
                     GrantControlOperator                     = 'AND'
                     Id                                       = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
                     IncludeApplications                      = @('All')
@@ -349,7 +349,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludeExternalTenantsMembers            = @()
                     ExcludeExternalTenantsMembershipKind     = 'all'
                     ExcludeGuestOrExternalUserTypes          = @('internalGuest', 'b2bCollaborationMember')
-                    Credential                               = $Credsglobaladmin
+                    Credential                               = $Credscredential
                     GrantControlOperator                     = 'AND'
                     Id                                       = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
                     IncludeApplications                      = @('All')
@@ -895,7 +895,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExcludePlatforms                         = @('Windows', 'WindowsPhone', 'MacOS')
                     ExcludeRoles                             = @('Compliance Administrator')
                     ExcludeUsers                             = 'alexw@contoso.com'
-                    Credential                               = $Credsglobaladmin
+                    Credential                               = $Credscredential
                     GrantControlOperator                     = 'AND'
                     Id                                       = 'bcc0cf19-ee89-46f0-8e12-4b89123ee6f9'
                     IncludeApplications                      = @('All')

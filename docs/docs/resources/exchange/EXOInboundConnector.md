@@ -62,7 +62,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -81,7 +81,7 @@ Configuration Example
             TlsSenderCertificateName     = "contoso.com"
             TreatMessagesAsInternal      = $True
             Ensure                       = "Present"
-            Credential                   = $credsGlobalAdmin
+            Credential                   = $Credscredential
         }
     }
 }

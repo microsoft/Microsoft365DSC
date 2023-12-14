@@ -66,7 +66,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -81,7 +81,7 @@ Configuration Example
             RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
             Version                       = "1.0"
             Ensure                        = "Present"
-            Credential                    = $credsGlobalAdmin
+            Credential                    = $Credscredential
         }
     }
 }

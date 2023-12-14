@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -20,7 +20,7 @@ Configuration Example
             DisplayName              = "Account Protection LUGM Policy";
             Description              = "My revised description";
             Ensure                   = "Present";
-            Credential               = $credsGlobalAdmin
+            Credential               = $Credscredential
             Assignments              = @(
                 MSFT_IntuneAccountProtectionLocalUserGroupMembershipPolicyAssignments{
                     deviceAndAppManagementAssignmentFilterType = 'none'

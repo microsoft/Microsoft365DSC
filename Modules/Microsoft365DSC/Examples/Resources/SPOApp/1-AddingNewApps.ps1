@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -20,7 +20,7 @@ Configuration Example
             Path       = "C:\Demo\DemoApp.sppkg"
             Publish    = $true
             Ensure     = "Present"
-            Credential = $credsGlobalAdmin
+            Credential = $Credscredential
         }
 
         SPOApp 'ConfigureDemoApp2'
@@ -29,7 +29,7 @@ Configuration Example
             Path       = "C:\Demo\DemoApp2.app"
             Publish    = $true
             Ensure     = "Present"
-            Credential = $credsGlobalAdmin
+            Credential = $Credscredential
         }
     }
 }

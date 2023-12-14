@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -19,7 +19,7 @@ Configuration Example
         AADRoleEligibilityScheduleRequest "MyRequest"
         {
             Action               = "AdminAssign";
-            Credential           = $credsGlobalAdmin;
+            Credential           = $Credscredential;
             DirectoryScopeId     = "/";
             Ensure               = "Present";
             IsValidationOnly     = $False;

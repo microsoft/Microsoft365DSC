@@ -59,7 +59,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -73,7 +73,7 @@ Configuration Example
             BroadcastAttendeeVisibilityMode = "EveryoneInCompany"
             BroadcastRecordingMode          = "AlwaysEnabled"
             Ensure                          = "Present"
-            Credential                      = $credsGlobalAdmin
+            Credential                      = $Credscredential
         }
     }
 }

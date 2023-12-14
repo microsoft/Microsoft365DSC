@@ -17,7 +17,7 @@ Configuration Example
         {
             DisplayName = 'Test Android Work Profile Device Compliance Policy'
             Ensure      = 'Absent'
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
         }
     }
 }
