@@ -2681,5 +2681,12 @@
     }
 
     # Compile and deploy configuration
-    Master -ConfigurationData $ConfigurationData -Credscredential $Credential
-    Start-DscConfiguration Master -Wait -Force -Verbose
+    try
+    {
+        Master -ConfigurationData $ConfigurationData -Credscredential $Credential
+        Start-DscConfiguration Master -Wait -Force -Verbose
+    }
+    catch
+    {
+        throw $_
+    }
