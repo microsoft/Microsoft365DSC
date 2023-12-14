@@ -67,7 +67,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -89,7 +89,7 @@ Configuration Example
             HelpURL                     = "https://github.com/Microsoft/Office365DSC/Help"
             LegalURL                    = "https://github.com/Microsoft/Office365DSC/Legal"
             LogoURL                     = "https://github.com/Microsoft/Office365DSC/Logo.png"
-            Credential                  = $credsglobaladmin
+            Credential                  = $Credscredential
         }
     }
 }

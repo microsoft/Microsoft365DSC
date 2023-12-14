@@ -53,7 +53,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -70,7 +70,7 @@ Configuration Example
             OrganizationName  = 'Contoso'
             OutboundConnector = 'Outbound to Contoso'
             Ensure            = 'Present'
-            Credential        = $credsGlobalAdmin
+            Credential        = $Credscredential
         }
     }
 }

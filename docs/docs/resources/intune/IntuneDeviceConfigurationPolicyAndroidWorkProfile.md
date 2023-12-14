@@ -115,7 +115,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -145,7 +145,7 @@ Configuration Example
             WorkProfilePasswordRequiredType                = 'deviceDefault'
             WorkProfileRequirePassword                     = $False
             Ensure                                         = 'Present'
-            Credential                                     = $Credsglobaladmin
+            Credential                                     = $Credscredential
         }
     }
 }

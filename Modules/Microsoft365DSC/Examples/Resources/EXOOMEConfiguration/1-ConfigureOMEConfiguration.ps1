@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -27,7 +27,7 @@ Configuration Example
             PortalText               = "This portal is encrypted."
             SocialIdSignIn           = $True
             Ensure                   = "Present"
-            Credential               = $credsGlobalAdmin
+            Credential               = $Credscredential
         }
     }
 }

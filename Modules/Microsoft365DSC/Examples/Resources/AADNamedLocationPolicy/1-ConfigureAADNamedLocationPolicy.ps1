@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -21,7 +21,7 @@ Configuration Example
             IsTrusted   = $True
             OdataType   = "#microsoft.graph.ipNamedLocation"
             Ensure      = "Present"
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
         }
         AADNamedLocationPolicy 'AllowedCountries'
         {
@@ -30,7 +30,7 @@ Configuration Example
             IncludeUnknownCountriesAndRegions = $False
             OdataType                         = "#microsoft.graph.countryNamedLocation"
             Ensure                            = "Present"
-            Credential                        = $credsGlobalAdmin
+            Credential                        = $Credscredential
         }
     }
 }

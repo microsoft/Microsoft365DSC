@@ -56,7 +56,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -76,7 +76,7 @@ Configuration Example
             SentToMemberOf            = @("msteams_bb15d4@contoso.onmicrosoft.com")
             Priority                  = 1
             Ensure                    = "Present"
-            Credential                = $credsGlobalAdmin
+            Credential                = $Credscredential
         }
     }
 }

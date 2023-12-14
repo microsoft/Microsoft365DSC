@@ -54,7 +54,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -71,7 +71,7 @@ Configuration Example
             SenderDescription           = "Shown to senders"
             RetainClassificationEnabled = $True
             Ensure                      = "Present"
-            Credential                  = $credsGlobalAdmin
+            Credential                  = $Credscredential
         }
     }
 }
