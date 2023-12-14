@@ -90,7 +90,6 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null
         #region resource generator code
         try
         {
