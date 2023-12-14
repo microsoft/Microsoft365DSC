@@ -1,5 +1,15 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneSettingCatalogCustomPolicyWindows10
+  * Fix Get-TargetResource when the parameter Id is not present
+  FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
+
+* AADConditionalAccessPolicy
+  * Fix Get-TargetResource when the parameter Id is not present
+  FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
+
 # 1.23.1213.1
 
 * IntuneEndpointDetectionAndResponsePolicyWindows10
