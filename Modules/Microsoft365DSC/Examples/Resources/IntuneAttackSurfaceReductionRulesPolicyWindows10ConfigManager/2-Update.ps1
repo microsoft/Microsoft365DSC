@@ -17,7 +17,7 @@ Configuration Example
         IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager 'myASRReductionRules'
         {
             DisplayName = 'asr ConfigMgr'
-            blockadobereaderfromcreatingchildprocesses = "enable"; # Updated Property
+            blockadobereaderfromcreatingchildprocesses = "audit"; # Updated Property
             Description = 'My revised description'
             Ensure      = 'Present'
             Credential  = $Credscredential

@@ -33,7 +33,7 @@ Configuration Example
             OfficeCommunicationAppsLaunchChildProcess       = 'auditMode'
             OfficeMacroCodeAllowWin32ImportsType            = 'block'
             PreventCredentialStealingType                   = 'enable'
-            ProcessCreationType                             = 'enable' # Updated Property
+            ProcessCreationType                             = 'userDefined' # Updated Property
             ScriptDownloadedPayloadExecutionType            = 'block'
             ScriptObfuscatedMacroCodeType                   = 'block'
             UntrustedExecutableType                         = 'block'

@@ -137,7 +137,7 @@ Configuration Example
             Description                      = ''
             DisplayName                      = 'admin template'
             Ensure                           = 'Present'
-            PolicyConfigurationIngestionType = 'block' # Updated Property
+            PolicyConfigurationIngestionType = 'builtIn' # Updated Property
         }
     }
 }

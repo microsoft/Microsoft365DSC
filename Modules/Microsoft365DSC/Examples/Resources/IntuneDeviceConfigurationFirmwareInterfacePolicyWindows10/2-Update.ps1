@@ -25,7 +25,7 @@ Configuration Example
             Bluetooth                      = "notConfigured";
             BootFromBuiltInNetworkAdapters = "notConfigured";
             BootFromExternalMedia          = "notConfigured";
-            Cameras                        = "block"; # Updated Property
+            Cameras                        = "enabled"; # Updated Property
             ChangeUefiSettingsPermission   = "notConfiguredOnly";
             Credential                     = $Credscredential;
             DisplayName                    = "firmware";

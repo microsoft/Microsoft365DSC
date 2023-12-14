@@ -23,7 +23,7 @@ Configuration Example
                     dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
                 })
             attacksurfacereductiononlyexclusions                                       = @('Test 10', 'Test2', 'Test3')
-            blockabuseofexploitedvulnerablesigneddrivers                               = 'enable' # Updated Property
+            blockabuseofexploitedvulnerablesigneddrivers                               = 'userDefined' # Updated Property
             blockexecutablefilesrunningunlesstheymeetprevalenceagetrustedlistcriterion = 'audit'
             Description                                                                = 'Post'
             Ensure                                                                     = 'Present'
