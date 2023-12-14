@@ -896,7 +896,7 @@ function Set-TargetResource
             -TemplateReferenceId $templateReferenceId
 
         Update-IntuneDeviceConfigurationPolicy `
-            -DeviceConfigurationPolicyId $Identity `
+            -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Name $DisplayName `
             -Description $Description `
             -TemplateReferenceId $templateReferenceId `
