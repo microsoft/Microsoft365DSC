@@ -12,7 +12,7 @@
   * Fix parameter name in assignment cmdlet
     FIXES [#4007](https://github.com/microsoft/Microsoft365DSC/issues/4007)
 * DEPENDENCIES
-  * Updated Microsoft.Graph to version 2.11.0.
+  * Updated Microsoft.Graph to version 2.11.1.
   * Updated MSCloudLoginAssistant to version 1.1.3.
 
 # 1.23.1206.1
