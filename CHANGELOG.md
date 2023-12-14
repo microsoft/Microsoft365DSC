@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue with assignments
+    FIXES [#3904](https://github.com/microsoft/Microsoft365DSC/issues/3904)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fix issue with Set-TargetResource when retieving a policy from displayName
+    FIXES [#4003](https://github.com/microsoft/Microsoft365DSC/issues/3904)
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.11.0.
   * Updated MSCloudLoginAssistant to version 1.1.3.
