@@ -96,7 +96,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -112,7 +112,7 @@ Configuration Example
             AllowedToJoin        = @("admin@contoso.onmicrosoft.com", "superuser@contoso.onmicrosoft.com")
             SiteDesignId         = "f7eba920-9cca-4de8-b5aa-1da75a2a893c"
             Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
         }
     }
 }

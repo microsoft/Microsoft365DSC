@@ -79,7 +79,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -102,7 +102,7 @@ Configuration Example
             Ssid                           = 'MySSID'
             WiFiSecurityType               = 'open'
             Ensure                         = 'Present'
-            Credential                     = $credsGlobalAdmin
+            Credential                     = $Credscredential
         }
     }
 }

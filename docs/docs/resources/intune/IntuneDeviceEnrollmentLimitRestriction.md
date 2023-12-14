@@ -58,7 +58,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -70,7 +70,7 @@ Configuration Example
             Description = 'My Restriction'
             Limit       = 12
             Ensure      = 'Present'
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
         }
     }
 }

@@ -92,25 +92,26 @@ function Get-TargetResource
 
         if ($null -eq $policy)
         {
-            Write-Verbose -Message "No Endpoint Protection Policy {id: '$Identity'} was found"
+            Write-Verbose -Message "No Endpoint Detection And Response Policy with Id {$Identity} was found"
             $policyTemplateID = '0385b795-0f2f-44ac-8602-9f65bf6adede_1'
             $filter = "name eq '$DisplayName' and templateReference/TemplateId eq '$policyTemplateID'"
             $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $filter -ErrorAction SilentlyContinue
             if ($null -eq $policy)
             {
-                Write-Verbose -Message "No Endpoint Protection Policy {displayName: '$DisplayName'} was found"
+                Write-Verbose -Message "No Endpoint Detection And Response Policy with displayName {$DisplayName} was found"
                 return $nullResult
             }
         }
 
+        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $policy.Id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
+
         $Identity = $policy.Id
 
-        Write-Verbose -Message "Found Endpoint Protection Policy {$($policy.id):$($policy.Name)}"
+        Write-Verbose -Message "Found Endpoint Detection And Response Policy with Id {$($policy.id)} and displayName {$($policy.Name)}"
 
         #Retrieve policy specific settings
-        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Identity `
-            -ErrorAction Stop
+        $settings = @()
+        $settings += $policy.settings
 
         $returnHashtable = @{}
         $returnHashtable.Add('Identity', $Identity)
@@ -165,8 +166,18 @@ function Get-TargetResource
             }
 
         }
+
+        #Removing telemetryreportingfrequency as deprecated and doen't need to be evaluated adn enforced
+        $returnHashtable.Remove('telemetryreportingfrequency')
+
         $returnAssignments = @()
-        $returnAssignments += Get-DeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity
+        $currentAssignments = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity -All
+
+        if ($null -ne $currentAssignments -and $currentAssignments.count -gt 0 )
+        {
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment -Assignments ($currentAssignments)
+        }
+
         $returnHashtable.Add('Assignments', $returnAssignments)
 
         Write-Verbose -Message "Found Endpoint Protection Policy {$($policy.name)}"
@@ -286,35 +297,56 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating new Endpoint Protection Policy {$DisplayName}"
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
-        $settings = Get-IntuneSettingCatalogPolicySetting `
+        $settings = @()
+        $formattedSettings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
             -TemplateId $templateReferenceId
 
-        $createParameters = @{
-            Name              = $DisplayName
-            Description       = $Description
-            TemplateReference = @{templateId = $templateReferenceId }
-            Platforms         = $platforms
-            Technologies      = $technologies
-            Settings          = $settings
+        if ($null -ne $formattedSettings)
+        {
+            $settings += $formattedSettings
         }
-        New-MgBetaDeviceManagementConfigurationPolicy -bodyParameter $createParameters
 
-        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        $createParameters = @{
+            name              = $DisplayName
+            description       = $Description
+            templateReference = @{templateId = $templateReferenceId }
+            platforms         = $platforms
+            technologies      = $technologies
+            settings          = $settings
+        }
+
+        write-verbose ($createParameters|convertto-json -depth 100)
+        $policy = New-MgBetaDeviceManagementConfigurationPolicy -bodyParameter $createParameters
+
+        $assignmentsHash = @()
+        if ($null -ne $Assignments -and $Assignments.count -gt 0 )
+        {
+            $assignmentsHash +=  Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        }
+
         Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $Identity `
+            -DeviceConfigurationPolicyId $policy.id `
             -Targets $assignmentsHash
 
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating existing Endpoint Protection Policy {$($currentPolicy.DisplayName)}"
+        $PSBoundParameters.Remove('Assignments') | Out-Null
 
         #format settings from PSBoundParameters for update
-        $settings = Get-IntuneSettingCatalogPolicySetting `
+        $settings = @()
+        $formattedSettings = Get-IntuneSettingCatalogPolicySetting `
             -DSCParams ([System.Collections.Hashtable]$PSBoundParameters) `
             -TemplateId $templateReferenceId
+
+        if ($null -ne $formattedSettings)
+        {
+            $settings += $formattedSettings
+        }
 
         Update-DeviceManagementConfigurationPolicy `
             -DeviceManagementConfigurationPolicyId $currentPolicy.Identity `
@@ -326,7 +358,12 @@ function Set-TargetResource
             -Settings $settings
 
         #region update policy assignments
-        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        $assignmentsHash = @()
+        if ($null -ne $Assignments -and $Assignments.count -gt 0 )
+        {
+            $assignmentsHash +=  Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        }
+
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Targets $assignmentsHash
@@ -423,65 +460,19 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = ([hashtable]$PSBoundParameters).clone()
     $ValuesToCheck.Remove('Identity') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Identity') | Out-Null
     $ValuesToCheck.Remove('ConfigurationBlob') | Out-Null
 
-    $testResult = $true
-    if ([Array]$Assignments.count -ne $CurrentValues.Assignments.count)
-    {
-        Write-Verbose -Message "Configuration drift:Number of assignments does not match: Source=$([Array]$Assignments.count) Target=$($CurrentValues.Assignments.count)"
-        $testResult = $false
-    }
-    if ($testResult)
-    {
-        foreach ($assignment in $CurrentValues.Assignments)
-        {
-            if ($null -ne $Assignment)
-            {
-                #GroupId Assignment
-                if (-not [String]::IsNullOrEmpty($assignment.groupId))
-                {
-                    $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
-                    if (-not $source)
-                    {
-                        Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                        $testResult = $false
-                        break
-                    }
-                    $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                    $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-                }
-                #AllDevices/AllUsers assignment
-                else
-                {
-                    $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
-                    if (-not $source)
-                    {
-                        Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                        $testResult = $false
-                        break
-                    }
-                    $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                    $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-                }
-            }
-
-            if (-not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-        }
-
-    }
+    $source = $PSBoundParameters.Assignments
+    $target = $CurrentValues.Assignments
     $ValuesToCheck.Remove('Assignments') | Out-Null
+
+    $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
 
     if ($testResult)
     {
@@ -870,56 +861,6 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
     return $settingValueReturn
 }
 
-function New-DeviceManagementConfigurationPolicy
-{
-    [CmdletBinding()]
-    param (
-
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DisplayName,
-
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $TemplateReferenceId,
-
-        [Parameter()]
-        [System.String]
-        $Platforms,
-
-        [Parameter()]
-        [System.String]
-        $Technologies,
-
-        [Parameter()]
-        [System.Array]
-        $Settings
-    )
-
-    $templateReference = @{
-        'templateId' = $TemplateReferenceId
-    }
-
-    $Uri = 'https://graph.microsoft.com/beta/deviceManagement/ConfigurationPolicies'
-    $policy = [ordered]@{
-        'name'              = $DisplayName
-        'description'       = $Description
-        'platforms'         = $Platforms
-        'technologies'      = $Technologies
-        'templateReference' = $templateReference
-        'settings'          = $Settings
-    }
-    #write-verbose (($policy|ConvertTo-Json -Depth 20))
-    Invoke-MgGraphRequest -Method POST `
-        -Uri $Uri `
-        -ContentType 'application/json' `
-        -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
-}
-
 function Update-DeviceManagementConfigurationPolicy
 {
     [CmdletBinding()]
@@ -971,62 +912,6 @@ function Update-DeviceManagementConfigurationPolicy
         -Uri $Uri `
         -ContentType 'application/json' `
         -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
-}
-
-function Get-DeviceManagementConfigurationPolicyAssignment
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DeviceManagementConfigurationPolicyId
-    )
-
-    try
-    {
-        $configurationPolicyAssignments = @()
-
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop 4> out-null
-        foreach ($result in $results.value.target)
-        {
-            $configurationPolicyAssignments += @{
-                dataType                                   = $result.'@odata.type'
-                groupId                                    = $result.groupId
-                collectionId                               = $result.collectionId
-                deviceAndAppManagementAssignmentFilterType = $result.deviceAndAppManagementAssignmentFilterType
-                deviceAndAppManagementAssignmentFilterId   = $result.deviceAndAppManagementAssignmentFilterId
-            }
-        }
-
-        while ($results.'@odata.nextLink')
-        {
-            $Uri = $results.'@odata.nextLink'
-            $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop 4> out-null
-            foreach ($result in $results.value.target)
-            {
-                $configurationPolicyAssignments += @{
-                    dataType                                   = $result.'@odata.type'
-                    groupId                                    = $result.groupId
-                    collectionId                               = $result.collectionId
-                    deviceAndAppManagementAssignmentFilterType = $result.deviceAndAppManagementAssignmentFilterType
-                    deviceAndAppManagementAssignmentFilterId   = $result.deviceAndAppManagementAssignmentFilterId
-                }
-            }
-        }
-        return $configurationPolicyAssignments
-    }
-    catch
-    {
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
-
-        return $null
-    }
 }
 
 Export-ModuleMember -Function *-TargetResource

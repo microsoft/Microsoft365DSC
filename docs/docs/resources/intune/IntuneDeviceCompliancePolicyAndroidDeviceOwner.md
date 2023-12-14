@@ -207,7 +207,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -233,7 +233,7 @@ Configuration Example
             PasswordPreviousPasswordCountToBlock               = 13
             StorageRequireEncryption                           = $True
             Ensure                                             = 'Present'
-            Credential                                         = $credsGlobalAdmin
+            Credential                                         = $Credscredential
         }
     }
 }
@@ -249,7 +249,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -257,9 +257,9 @@ Configuration Example
     {
         IntuneDeviceCompliancePolicyAndroidDeviceOwner 'RemoveAndroidDeviceCompliancePolicyOwner'
         {
-            DisplayName = 'DeviceOwner'
+            DisplayName = 'DeviceOwnerPolicy'
             Ensure      = 'Absent'
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
         }
     }
 }

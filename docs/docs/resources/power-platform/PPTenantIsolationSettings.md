@@ -69,7 +69,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -92,7 +92,7 @@ Configuration Example
                     Direction  = 'Both'
                 }
             )
-            Credential       = $credsGlobalAdmin
+            Credential       = $Credscredential
         }
     }
 }
@@ -109,7 +109,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -134,7 +134,7 @@ Configuration Example
                     Direction  = 'Both'
                 }
             )
-            Credential       = $credsGlobalAdmin
+            Credential       = $Credscredential
         }
     }
 }

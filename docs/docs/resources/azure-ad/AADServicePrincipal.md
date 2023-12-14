@@ -80,7 +80,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -103,7 +103,7 @@ Configuration Example
             ServicePrincipalType          = "Application"
             Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
             Ensure                        = "Present"
-            Credential                    = $credsGlobalAdmin
+            Credential                    = $Credscredential
         }
     }
 }

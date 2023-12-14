@@ -66,7 +66,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -83,7 +83,7 @@ Configuration Example
             GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage"
             UsageGuidelinesUrl            = "https://contoso.com/usage"
             Ensure                        = "Present"
-            Credential                    = $credsGlobalAdmin
+            Credential                    = $Credscredential
         }
     }
 }

@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -25,7 +25,7 @@ Configuration Example
             ProhibitSendReceiveQuota = "100 GB (107,374,182,400 bytes)";
             RetainDeletedItemsFor    = "14.00:00:00";
             RoleAssignmentPolicy     = "Default Role Assignment Policy";
-            Credential               = $credsGlobalAdmin
+            Credential               = $Credscredential
         }
     }
 }

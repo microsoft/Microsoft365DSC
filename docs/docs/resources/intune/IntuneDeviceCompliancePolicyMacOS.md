@@ -172,7 +172,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -200,7 +200,7 @@ Configuration Example
             FirewallBlockAllIncoming                    = $False
             FirewallEnableStealthMode                   = $False
             Ensure                                      = 'Present'
-            Credential                                  = $credsGlobalAdmin
+            Credential                                  = $Credscredential
         }
     }
 }
@@ -216,7 +216,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -226,7 +226,7 @@ Configuration Example
         {
             DisplayName          = 'Demo MacOS Device Compliance Policy'
             Ensure               = 'Absent'
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
         }
     }
 }

@@ -69,7 +69,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -90,7 +90,7 @@ Configuration Example
             ContentPin                       = "RequiredOutsideScheduleMeeting"
             Identity                         = "Global"
             ResourceAccountContentAccess     = "NoAccess"
-            Credential                       = $credsGlobalAdmin
+            Credential                       = $Credscredential
         }
     }
 }

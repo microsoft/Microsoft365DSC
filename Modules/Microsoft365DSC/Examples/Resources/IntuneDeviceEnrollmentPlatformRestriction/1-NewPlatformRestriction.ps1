@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -28,7 +28,7 @@ Configuration Example
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 });
-            Credential                        = $credsGlobalAdmin
+            Credential                        = $Credscredential
             Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
             DeviceEnrollmentConfigurationType = "platformRestrictions";
             DisplayName                       = "All users and all devices";

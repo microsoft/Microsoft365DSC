@@ -50,7 +50,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -64,7 +64,7 @@ Configuration Example
             OfflineAddressBook   = "\Fabrikam-All-OAB"
             GlobalAddressList    = "\All Fabrikam"
             Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
         }
     }
 }

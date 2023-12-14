@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -19,7 +19,7 @@ Configuration Example
             OnlinePstnUsages = @('Long Distance', 'Local', 'Internal')
             Description      = 'This is a sample Voice Routing Policy'
             Ensure           = 'Present'
-            Credential       = $credsGlobalAdmin
+            Credential       = $Credscredential
         }
     }
 }

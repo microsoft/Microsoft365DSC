@@ -81,7 +81,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -92,7 +92,7 @@ Configuration Example
             DisplayName = 'ContosoNew'
             Description = 'New Contoso Policy'
             Ensure      = 'Present'
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
         }
     }
 }
@@ -108,7 +108,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -119,7 +119,7 @@ Configuration Example
             DisplayName = 'ContosoOld'
             Description = 'Old Contoso Policy'
             Ensure      = 'Absent'
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
         }
     }
 }

@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -26,7 +26,7 @@ Configuration Example
             LicenseAssignment  = @("O365dsc1:ENTERPRISEPREMIUM")
             UsageLocation      = "US"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }
