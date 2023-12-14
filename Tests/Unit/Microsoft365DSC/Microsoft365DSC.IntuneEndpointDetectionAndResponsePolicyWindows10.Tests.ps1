@@ -50,10 +50,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-DeviceManagementConfigurationPolicyAssignment -MockWith {
-                return @(@{
-                        dataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                        collectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
+                    return @(@{
+                        Id       = '12345-12345-12345-12345-12345'
+                        Source   = 'direct'
+                        SourceId = '12345-12345-12345-12345-12345'
+                        Target   = @{
+                            DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
+                            DeviceAndAppManagementAssignmentFilterType = 'none'
+                            AdditionalProperties                       = @(
+                                @{
+                                    "@odata.type"     = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                                    collectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                                }
+                            )
+                        }
                     })
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
@@ -199,10 +210,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Id    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                         Description = 'My Test Description'
                         Name        = 'My Test'
+                        Settings = @{
+                            Id                   = 0
+                            SettingDefinitions   = $null
+                            SettingInstance      = @{
+                                SettingDefinitionId              = 'device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing'
+                                SettingInstanceTemplateReference = @{
+                                    SettingInstanceTemplateId = '6998c81e-2814-4f5e-b492-a6159128a97b'
+                                }
+                                AdditionalProperties             = @{
+                                    '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                    choiceSettingValue = @{
+                                        children = @()
+                                        value = "device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing_0"
+                                    }
+                                }
+                            }
+                            AdditionalProperties = $null
+                        }
                     }
                 }
 
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
+                <#Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
                         Id                   = 0
                         SettingDefinitions   = $null
@@ -221,7 +250,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                         AdditionalProperties = $null
                     }
-                }
+                }#>
             }
 
             It 'Should return true from the Test method' {

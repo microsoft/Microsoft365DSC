@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue with assignments
+    FIXES [#3904](https://github.com/microsoft/Microsoft365DSC/issues/3904)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fix issue with Set-TargetResource when retieving a policy from displayName
+    FIXES [#4003](https://github.com/microsoft/Microsoft365DSC/issues/3904)
 * IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
   * Fix parameter name in assignment cmdlet
     FIXES [#4007](https://github.com/microsoft/Microsoft365DSC/issues/4007)
