@@ -58,7 +58,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -71,7 +71,7 @@ Configuration Example
             NewDisplayName     = "SP2016 Review teams group"
             Description        = "SP2016 Code reviews for SPFX"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }

@@ -685,7 +685,7 @@ function Set-TargetResource
         foreach ($assignment in $intuneAssignments)
         {
             New-MgBetaDeviceManagementDeviceConfigurationAssignment `
-                -DeviceConfigurationAssignmentId $policy.id `
+                -DeviceConfigurationId $policy.id `
                 -BodyParameter $assignment
         }
         #endregion

@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -25,7 +25,7 @@ Configuration Example
             Ensure             = "Present"
             IsAssignableToRole = $True
             AssignedToRole     = "Identity Governance Administrator"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }

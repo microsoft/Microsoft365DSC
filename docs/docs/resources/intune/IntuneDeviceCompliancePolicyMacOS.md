@@ -172,7 +172,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -200,7 +200,7 @@ Configuration Example
             FirewallBlockAllIncoming                    = $False
             FirewallEnableStealthMode                   = $False
             Ensure                                      = 'Present'
-            Credential                                  = $credsGlobalAdmin
+            Credential                                  = $Credscredential
         }
     }
 }
@@ -208,7 +208,7 @@ Configuration Example
 
 ### Example 2
 
-This example removes an existing Device Compliance Policy for MacOS devices
+This example creates a new Device Comliance Policy for MacOS.
 
 ```powershell
 Configuration Example
@@ -216,17 +216,61 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyMacOS 'RemoveDeviceCompliancePolicyMacOS'
+        IntuneDeviceCompliancePolicyMacOS 'ConfigureDeviceCompliancePolicyMacOS'
         {
-            DisplayName          = 'Demo MacOS Device Compliance Policy'
-            Ensure               = 'Absent'
-            Credential           = $credsGlobalAdmin
+            DisplayName                                 = 'MacOS DSC Policy'
+            Description                                 = 'Test policy'
+            PasswordRequired                            = $False
+            PasswordBlockSimple                         = $False
+            PasswordExpirationDays                      = 365
+            PasswordMinimumLength                       = 8 # Updated Property
+            PasswordMinutesOfInactivityBeforeLock       = 5
+            PasswordPreviousPasswordBlockCount          = 13
+            PasswordMinimumCharacterSetCount            = 1
+            PasswordRequiredType                        = 'DeviceDefault'
+            OsMinimumVersion                            = 10
+            OsMaximumVersion                            = 13
+            SystemIntegrityProtectionEnabled            = $False
+            DeviceThreatProtectionEnabled               = $False
+            DeviceThreatProtectionRequiredSecurityLevel = 'Unavailable'
+            StorageRequireEncryption                    = $False
+            FirewallEnabled                             = $False
+            FirewallBlockAllIncoming                    = $False
+            FirewallEnableStealthMode                   = $False
+            Ensure                                      = 'Present'
+            Credential                                  = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Comliance Policy for MacOS.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceCompliancePolicyMacOS 'ConfigureDeviceCompliancePolicyMacOS'
+        {
+            DisplayName                                 = 'MacOS DSC Policy'
+            Ensure                                      = 'Absent'
+            Credential                                  = $Credscredential
         }
     }
 }

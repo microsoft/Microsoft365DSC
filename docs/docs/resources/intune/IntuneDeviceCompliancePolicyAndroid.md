@@ -263,7 +263,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -293,7 +293,7 @@ Configuration Example
             SecurityRequireVerifyApps                          = $False
             StorageRequireEncryption                           = $True
             Ensure                                             = 'Present'
-            Credential                                         = $credsglobaladmin
+            Credential                                         = $Credscredential
         }
     }
 }
@@ -301,7 +301,7 @@ Configuration Example
 
 ### Example 2
 
-This example removes an existing Device Compliance Policy for iOs devices
+This example creates a new Device Compliance Policy for Android devices
 
 ```powershell
 Configuration Example
@@ -309,17 +309,63 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyAndroid 'RemoveDeviceCompliancePolicyAndroid'
+        IntuneDeviceCompliancePolicyAndroid 'AddDeviceCompliancePolicy'
         {
-            DisplayName = 'Test Android Device Compliance Policy'
-            Ensure      = 'Absent'
-            Credential  = $credsGlobalAdmin
+            DisplayName                                        = 'Test Policy'
+            Description                                        = ''
+            DeviceThreatProtectionEnabled                      = $False
+            DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+            osMinimumVersion                                   = '7'
+            PasswordExpirationDays                             = 90
+            PasswordMinimumLength                              = 8 # Updated Property
+            PasswordMinutesOfInactivityBeforeLock              = 5
+            PasswordPreviousPasswordBlockCount                 = 10
+            PasswordRequired                                   = $True
+            PasswordRequiredType                               = 'deviceDefault'
+            SecurityBlockJailbrokenDevices                     = $False
+            SecurityDisableUsbDebugging                        = $False
+            SecurityPreventInstallAppsFromUnknownSources       = $False
+            SecurityRequireCompanyPortalAppIntegrity           = $False
+            SecurityRequireGooglePlayServices                  = $False
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $False
+            SecurityRequireUpToDateSecurityProviders           = $False
+            SecurityRequireVerifyApps                          = $False
+            StorageRequireEncryption                           = $True
+            Ensure                                             = 'Present'
+            Credential                                         = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Compliance Policy for Android devices
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceCompliancePolicyAndroid 'AddDeviceCompliancePolicy'
+        {
+            DisplayName                                        = 'Test Policy'
+            Ensure                                             = 'Absent'
+            Credential                                         = $Credscredential
         }
     }
 }

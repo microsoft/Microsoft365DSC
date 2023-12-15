@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -54,7 +54,7 @@ Configuration Example
             ReportSeverityLevel                 = 'Low'
             StopPolicyProcessing                = $False
             Ensure                              = 'Present'
-            Credential                          = $credsGlobalAdmin
+            Credential                          = $Credscredential
         }
     }
 }

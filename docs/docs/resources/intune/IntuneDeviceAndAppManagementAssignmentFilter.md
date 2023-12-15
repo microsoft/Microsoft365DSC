@@ -81,3 +81,58 @@ Configuration Example
 }
 ```
 
+### Example 2
+
+This example creates a new Device and App Management Assignment Filter.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $intuneAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceAndAppManagementAssignmentFilter 'AssignmentFilter'
+        {
+            DisplayName = 'Test Device Filter'
+            Description = 'This is a new Filter'
+            Platform    = 'windows10AndLater'
+            Rule        = "(device.manufacturer -ne `"Apple`")" # Updated Property
+            Ensure      = 'Present'
+            Credential  = $intuneAdmin
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device and App Management Assignment Filter.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $intuneAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceAndAppManagementAssignmentFilter 'AssignmentFilter'
+        {
+            DisplayName = 'Test Device Filter'
+            Ensure      = 'Absent'
+            Credential  = $intuneAdmin
+        }
+    }
+}
+```
+

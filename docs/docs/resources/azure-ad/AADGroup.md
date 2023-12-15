@@ -82,7 +82,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -98,7 +98,7 @@ Configuration Example
             MailNickname    = "M365DSC"
             Visibility      = "Private"
             Ensure          = "Present"
-            Credential      = $credsGlobalAdmin
+            Credential      = $Credscredential
         }
     }
 }
@@ -115,7 +115,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -132,7 +132,7 @@ Configuration Example
             Ensure             = "Present"
             IsAssignableToRole = $True
             AssignedToRole     = "Identity Governance Administrator"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }
@@ -149,7 +149,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -164,7 +164,7 @@ Configuration Example
             GroupTypes         = @()
             MailNickname       = "M365DSCG"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
         AADGroup 'MyGroups2'
         {
@@ -176,7 +176,7 @@ Configuration Example
             MailNickname       = "M365DSCMG"
             Ensure             = "Present"
             MemberOf           = @("DSCGroup")
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }

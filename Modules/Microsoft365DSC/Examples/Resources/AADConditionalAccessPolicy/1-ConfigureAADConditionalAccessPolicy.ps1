@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -52,7 +52,7 @@ Configuration Example
             State                                = 'disabled'
             UserRiskLevels                       = @('High', 'Medium')
             Ensure                               = 'Present'
-            Credential                           = $credsGlobalAdmin
+            Credential                           = $Credscredential
         }
     }
 }

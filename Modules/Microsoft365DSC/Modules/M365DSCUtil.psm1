@@ -3932,7 +3932,7 @@ function Create-M365DSCResourceExample
 
     $params = Get-DSCFakeParameters -ModulePath $resource.Path
 
-    $params.Credential = '$credsGlobalAdmin'
+    $params.Credential = '$Credscredential'
 
     if ($params.ContainsKey('ApplicationId'))
     {
@@ -3985,7 +3985,7 @@ Configuration Example
     (
         [Parameter(Mandatory = `$true)]
         [PSCredential]
-        `$credsGlobalAdmin
+        `$Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 

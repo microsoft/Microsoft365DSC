@@ -8,9 +8,9 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
-    $OrganizationName = $credsGlobalAdmin.UserName.Split('@')[1]
+    $OrganizationName = $Credscredential.UserName.Split('@')[1]
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
@@ -21,7 +21,7 @@ Configuration Example
             ESNEnabled                        = $False;
             Identity                          = "$OrganizationName\DefaultFullAccessPolicy";
             Ensure                            = "Present"
-            Credential                        = $credsGlobalAdmin
+            Credential                        = $Credscredential
         }
     }
 }

@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -24,7 +24,7 @@ Configuration Example
             SafeAttachmentPolicy      = "Research Block Attachments"
             SentToMemberOf            = "Research Department"
             Ensure                    = "Present"
-            Credential                = $credsGlobalAdmin
+            Credential                = $Credscredential
         }
     }
 }

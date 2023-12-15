@@ -7,7 +7,7 @@ Configuration Example
   param(
     [Parameter(Mandatory = $true)]
     [PSCredential]
-    $credsGlobalAdmin
+    $Credscredential
   )
   Import-DscResource -ModuleName Microsoft365DSC
 
@@ -31,7 +31,7 @@ Configuration Example
       DisableShareWithEveryone                       = $false
       EnableGuestsToMake                             = $false
       ShareWithColleaguesUserLimit                   = 10000
-      Credential                                     = $credsGlobalAdmin
+      Credential                                     = $Credscredential
     }
   }
 }
