@@ -326,10 +326,10 @@ function Set-TargetResource
         }
         $PSBoundParameters.add('@odata.type', $policyType)
 
-        Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
+        #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
 
         $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-            -BodyParameter $PSBoundParameters
+            -BodyParameter ([hashtable]$PSBoundParameters)
 
         #Assignments from DefaultPolicy are not editable and will raise an alert
         if ($policy.Id -notlike '*_DefaultPlatformRestrictions')
@@ -384,9 +384,9 @@ function Set-TargetResource
             $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
         }
         $PSBoundParameters.add('@odata.type', $policyType)
-        Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
+        #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
         Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-            -BodyParameter $PSBoundParameters `
+            -BodyParameter ([hashtable]$PSBoundParameters) `
             -DeviceEnrollmentConfigurationId $Identity
 
         #Assignments from DefaultPolicy are not editable and will raise an alert

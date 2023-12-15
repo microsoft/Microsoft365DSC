@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Fix Set-TargetResource due to an issue were the bodyparameter not cast correctly
+  FIXES [#3730](https://github.com/microsoft/Microsoft365DSC/issues/3730)
+
 # 1.23.1213.1
 
 * IntuneEndpointDetectionAndResponsePolicyWindows10
