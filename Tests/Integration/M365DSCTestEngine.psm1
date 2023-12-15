@@ -88,8 +88,15 @@ function New-M365DSCIntegrationTest
     }
 
     # Compile and deploy configuration
-    Master -ConfigurationData $ConfigurationData -Credscredential $Credential
-    Start-DscConfiguration Master -Wait -Force -Verbose
+    try
+    {
+        Master -ConfigurationData $ConfigurationData -Credscredential $Credential
+        Start-DscConfiguration Master -Wait -Force -Verbose
+    }
+    catch
+    {
+        throw $_
+    }
 '@
 
     # Saving Master Integration configuration to file

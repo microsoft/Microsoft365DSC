@@ -20,7 +20,6 @@
         {
                 IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy 'My Account Protection LAPS Policy'
                 {
-                    Identity                 = "cb0a561b-7677-46fb-a7f8-635cf64660e9";
                     DisplayName              = "Account Protection LAPS Policy";
                     Description              = "My revised description";
                     Ensure                   = "Present";
@@ -36,9 +35,32 @@
                     AdministratorAccountName = "Administrator";
                     PasswordAgeDays          = 20;
                 }
+                IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy 'My Account Protection LAPS Policy'
+                {
+                    DisplayName              = "Account Protection LAPS Policy";
+                    Description              = "My revised description";
+                    Ensure                   = "Present";
+                    Credential               = $Credscredential
+                    Assignments              = @(
+                        MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    BackupDirectory          = "1";
+                    PasswordAgeDays_AAD      = 15; # Updated Property
+                    AdministratorAccountName = "Administrator";
+                    PasswordAgeDays          = 20;
+                }
+                IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy 'My Account Protection LAPS Policy'
+                {
+                    DisplayName              = "Account Protection LAPS Policy";
+                    Description              = "My revised description";
+                    Ensure                   = "Absent";
+                    Credential               = $Credscredential
+                }
                 IntuneAccountProtectionLocalUserGroupMembershipPolicy 'My Account Protection Local User Group Membership Policy'
                 {
-                    Identity                 = "cb0a561b-7677-46fb-a7f8-635cf64660e9";
                     DisplayName              = "Account Protection LUGM Policy";
                     Description              = "My revised description";
                     Ensure                   = "Present";
@@ -58,9 +80,31 @@
                         }
                     );
                 }
+                IntuneAccountProtectionLocalUserGroupMembershipPolicy 'My Account Protection Local User Group Membership Policy'
+                {
+                    DisplayName              = "Account Protection LUGM Policy";
+                    Description              = "My revised description";
+                    Ensure                   = "Present";
+                    Credential               = $Credscredential
+                    Assignments              = @(); # Updated Property
+                    LocalUserGroupCollection = @(
+                        MSFT_IntuneAccountProtectionLocalUserGroupCollection{
+                            LocalGroups = @('administrators', 'users')
+                            Members = @('S-1-12-1-1167842105-1150511762-402702254-1917434032')
+                            Action = 'add_update'
+                            UserSelectionType = 'users'
+                        }
+                    );
+                }
+                IntuneAccountProtectionLocalUserGroupMembershipPolicy 'My Account Protection Local User Group Membership Policy'
+                {
+                    DisplayName              = "Account Protection LUGM Policy";
+                    Description              = "My revised description";
+                    Ensure                   = "Absent";
+                    Credential               = $Credscredential
+                }
                 IntuneAccountProtectionPolicy 'myAccountProtectionPolicy'
                 {
-                    Identity                                               = '355e88e2-dd1f-4956-bafe-9000d8267ad5'
                     DisplayName                                            = 'test'
                     deviceGuardLocalSystemAuthorityCredentialGuardSettings = "notConfigured"
                     WindowsHelloForBusinessBlocked                         = $true
@@ -69,9 +113,24 @@
                     Ensure                                                 = 'Present'
                     Credential                                             = $Credscredential
                 }
+                IntuneAccountProtectionPolicy 'myAccountProtectionPolicy'
+                {
+                    DisplayName                                            = 'test'
+                    deviceGuardLocalSystemAuthorityCredentialGuardSettings = "notConfigured"
+                    WindowsHelloForBusinessBlocked                         = $true
+                    PinMinimumLength                                       = 10 # Updated Property
+                    PinSpecialCharactersUsage                              = 'required'
+                    Ensure                                                 = 'Present'
+                    Credential                                             = $Credscredential
+                }
+                IntuneAccountProtectionPolicy 'myAccountProtectionPolicy'
+                {
+                    DisplayName                                            = 'test'
+                    Ensure                                                 = 'Absent'
+                    Credential                                             = $Credscredential
+                }
                 IntuneAntivirusPolicyWindows10SettingCatalog 'myAVWindows10Policy'
                 {
-                    Identity           = 'd64d4ab7-d0ac-4157-8823-a9db57b47cf1'
                     DisplayName        = 'av exclusions'
                     Assignments        = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -86,19 +145,74 @@
                     Ensure             = 'Present'
                     Credential         = $Credscredential
                 }
+                IntuneAntivirusPolicyWindows10SettingCatalog 'myAVWindows10Policy'
+                {
+                    DisplayName        = 'av exclusions'
+                    Assignments        = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        })
+                    Description        = ''
+                    excludedextensions = @('.exe')
+                    excludedpaths      = @('c:\folders\', 'c:\folders2\')
+                    excludedprocesses  = @('processes.exe', 'process3.exe') # Updated Property
+                    templateId         = '45fea5e9-280d-4da1-9792-fb5736da0ca9_1'
+                    Ensure             = 'Present'
+                    Credential         = $Credscredential
+                }
+                IntuneAntivirusPolicyWindows10SettingCatalog 'myAVWindows10Policy'
+                {
+                    DisplayName        = 'av exclusions'
+                    Ensure             = 'Absent'
+                    Credential         = $Credscredential
+                }
+                IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
+                {
+                    DisplayName          = 'ContosoNew'
+                    Description          = 'New Contoso Policy'
+                    Credential           = $Credscredential;
+                    CustomSettings       = @(
+                        MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                            name  = 'com.microsoft.intune.mam.managedbrowser.BlockListURLs'
+                            value = 'https://www.aol.com'
+                        }
+                        MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                            name  = 'com.microsoft.intune.mam.managedbrowser.bookmarks'
+                            value = 'Outlook Web|https://outlook.office.com||Bing|https://www.bing.com'
+                        }
+                        MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                            name  = 'Test'
+                            value = 'TestValue'
+                        });
+                    Ensure      = 'Present'
+                }
+                IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
+                {
+                    DisplayName          = 'ContosoNew'
+                    Description          = 'New Contoso Policy'
+                    Credential           = $Credscredential;
+                    CustomSettings       = @(
+                        MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                            name  = 'com.microsoft.intune.mam.managedbrowser.BlockListURLs'
+                            value = 'https://www.aol.com'
+                        }
+                        MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                            name  = 'com.microsoft.intune.mam.managedbrowser.bookmarks'
+                            value = 'Outlook Web|https://outlook.office.com||Bing|https://www.bing.com'
+                        }
+                        MSFT_IntuneAppConfigurationPolicyCustomSetting { # Updated Property
+                            name  = 'Test2'
+                            value = 'TestValue2'
+                        });
+                    Ensure      = 'Present'
+                }
                 IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
                 {
                     DisplayName = 'ContosoNew'
                     Description = 'New Contoso Policy'
-                    Ensure      = 'Present'
-                    Credential  = $Credscredential
-                }
-                IntuneAppConfigurationPolicy 'RemoveAppConfigPolicy'
-                {
-                    DisplayName = 'ContosoOld'
-                    Description = 'Old Contoso Policy'
+                    Credential  = $Credscredential;
                     Ensure      = 'Absent'
-                    Credential  = $Credscredential
                 }
                 IntuneApplicationControlPolicyWindows10 'ConfigureApplicationControlPolicyWindows10'
                 {
@@ -110,6 +224,23 @@
                     Ensure                           = 'Present'
                     Credential                       = $Credscredential
                 }
+                IntuneApplicationControlPolicyWindows10 'ConfigureApplicationControlPolicyWindows10'
+                {
+                    DisplayName                      = 'Windows 10 Desktops'
+                    Description                      = 'All windows 10 Desktops'
+                    AppLockerApplicationControl      = 'enforceComponentsAndStoreApps'
+                    SmartScreenBlockOverrideForFiles = $False # Updated Property
+                    SmartScreenEnableInShell         = $True
+                    Ensure                           = 'Present'
+                    Credential                       = $Credscredential
+                }
+                IntuneApplicationControlPolicyWindows10 'ConfigureApplicationControlPolicyWindows10'
+                {
+                    DisplayName                      = 'Windows 10 Desktops'
+                    Description                      = 'All windows 10 Desktops'
+                    Ensure                           = 'Absent'
+                    Credential                       = $Credscredential
+                }
                 IntuneAppProtectionPolicyAndroid 'ConfigureAppProtectionPolicyAndroid'
                 {
                     DisplayName                             = 'My DSC Android App Protection Policy'
@@ -118,13 +249,11 @@
                     AllowedOutboundClipboardSharingLevel    = 'managedAppsWithPasteIn'
                     AllowedOutboundDataTransferDestinations = 'managedApps'
                     Apps                                    = @('com.cisco.jabberimintune.ios', 'com.pervasent.boardpapers.ios', 'com.sharefile.mobile.intune.ios')
-                    Assignments                             = @('6ee86c9f-2b3c-471d-ad38-ff4673ed723e')
                     ContactSyncBlocked                      = $false
                     DataBackupBlocked                       = $false
                     Description                             = ''
                     DeviceComplianceRequired                = $True
                     DisableAppPinIfDevicePinIsSet           = $True
-                    ExcludedGroups                          = @('3eacc231-d77b-4efb-bb5f-310f68bd6198')
                     FingerprintBlocked                      = $False
                     ManagedBrowserToOpenLinksRequired       = $True
                     MaximumPinRetries                       = 5
@@ -137,9 +266,39 @@
                     Ensure                                  = 'Present'
                     Credential                              = $Credscredential
                 }
+                IntuneAppProtectionPolicyAndroid 'ConfigureAppProtectionPolicyAndroid'
+                {
+                    DisplayName                             = 'My DSC Android App Protection Policy'
+                    AllowedDataStorageLocations             = @('sharePoint')
+                    AllowedInboundDataTransferSources       = 'managedApps'
+                    AllowedOutboundClipboardSharingLevel    = 'managedAppsWithPasteIn'
+                    AllowedOutboundDataTransferDestinations = 'managedApps'
+                    Apps                                    = @('com.cisco.jabberimintune.ios', 'com.pervasent.boardpapers.ios', 'com.sharefile.mobile.intune.ios')
+                    ContactSyncBlocked                      = $true # Updated Property
+                    DataBackupBlocked                       = $false
+                    Description                             = ''
+                    DeviceComplianceRequired                = $True
+                    DisableAppPinIfDevicePinIsSet           = $True
+                    FingerprintBlocked                      = $False
+                    ManagedBrowserToOpenLinksRequired       = $True
+                    MaximumPinRetries                       = 5
+                    MinimumPinLength                        = 4
+                    OrganizationalCredentialsRequired       = $false
+                    PinRequired                             = $True
+                    PrintBlocked                            = $True
+                    SaveAsBlocked                           = $True
+                    SimplePinBlocked                        = $True
+                    Ensure                                  = 'Present'
+                    Credential                              = $Credscredential
+                }
+                IntuneAppProtectionPolicyAndroid 'ConfigureAppProtectionPolicyAndroid'
+                {
+                    DisplayName                             = 'My DSC Android App Protection Policy'
+                    Ensure                                  = 'Absent'
+                    Credential                              = $Credscredential
+                }
                 IntuneAppProtectionPolicyiOS 'MyCustomiOSPolicy'
                 {
-                    Identity                                = '1352a41f-bd32-4ee3-b227-2f11b17b8614'
                     DisplayName                             = 'My DSC iOS App Protection Policy'
                     AllowedDataStorageLocations             = @('sharePoint')
                     AllowedInboundDataTransferSources       = 'managedApps'
@@ -147,12 +306,10 @@
                     AllowedOutboundDataTransferDestinations = 'managedApps'
                     AppDataEncryptionType                   = 'whenDeviceLocked'
                     Apps                                    = @('com.cisco.jabberimintune.ios', 'com.pervasent.boardpapers.ios', 'com.sharefile.mobile.intune.ios')
-                    Assignments                             = @('6ee86c9f-2b3c-471d-ad38-ff4673ed723e')
                     ContactSyncBlocked                      = $False
                     DataBackupBlocked                       = $False
                     Description                             = ''
                     DeviceComplianceRequired                = $True
-                    ExcludedGroups                          = @('3eacc231-d77b-4efb-bb5f-310f68bd6198')
                     FingerprintBlocked                      = $False
                     ManagedBrowserToOpenLinksRequired       = $True
                     MaximumPinRetries                       = 5
@@ -169,9 +326,43 @@
                     Ensure                                  = 'Present'
                     Credential                              = $Credscredential
                 }
+                IntuneAppProtectionPolicyiOS 'MyCustomiOSPolicy'
+                {
+                    DisplayName                             = 'My DSC iOS App Protection Policy'
+                    AllowedDataStorageLocations             = @('sharePoint')
+                    AllowedInboundDataTransferSources       = 'managedApps'
+                    AllowedOutboundClipboardSharingLevel    = 'managedAppsWithPasteIn'
+                    AllowedOutboundDataTransferDestinations = 'managedApps'
+                    AppDataEncryptionType                   = 'whenDeviceLocked'
+                    Apps                                    = @('com.cisco.jabberimintune.ios', 'com.pervasent.boardpapers.ios', 'com.sharefile.mobile.intune.ios')
+                    ContactSyncBlocked                      = $False
+                    DataBackupBlocked                       = $False
+                    Description                             = ''
+                    DeviceComplianceRequired                = $True
+                    FingerprintBlocked                      = $False
+                    ManagedBrowserToOpenLinksRequired       = $True
+                    MaximumPinRetries                       = 7 # Updated Property
+                    MinimumPinLength                        = 4
+                    OrganizationalCredentialsRequired       = $False
+                    PeriodOfflineBeforeAccessCheck          = 'PT12H'
+                    PeriodOfflineBeforeWipeIsEnforced       = 'P90D'
+                    PeriodOnlineBeforeAccessCheck           = 'PT30M'
+                    PinCharacterSet                         = 'alphanumericAndSymbol'
+                    PinRequired                             = $True
+                    PrintBlocked                            = $False
+                    SaveAsBlocked                           = $True
+                    SimplePinBlocked                        = $False
+                    Ensure                                  = 'Present'
+                    Credential                              = $Credscredential
+                }
+                IntuneAppProtectionPolicyiOS 'MyCustomiOSPolicy'
+                {
+                    DisplayName                             = 'My DSC iOS App Protection Policy'
+                    Ensure                                  = 'Absent'
+                    Credential                              = $Credscredential
+                }
                 IntuneASRRulesPolicyWindows10 'myASRRulesPolicy'
                 {
-                    Identity                                        = '1902b7f6-ac2c-4c00-bc17-8ada967cc6a8'
                     DisplayName                                     = 'test'
                     AdditionalGuardedFolders                        = @()
                     AdobeReaderLaunchChildProcess                   = 'auditMode'
@@ -197,13 +388,59 @@
                     Ensure                                          = 'Present'
                     Credential                                      = $Credscredential
                 }
+                IntuneASRRulesPolicyWindows10 'myASRRulesPolicy'
+                {
+                    DisplayName                                     = 'test'
+                    AdditionalGuardedFolders                        = @()
+                    AdobeReaderLaunchChildProcess                   = 'auditMode'
+                    AdvancedRansomewareProtectionType               = 'enable'
+                    Assignments                                     = @()
+                    AttackSurfaceReductionExcludedPaths             = @('c:\Novo')
+                    BlockPersistenceThroughWmiType                  = 'auditMode'
+                    Description                                     = ''
+                    EmailContentExecutionType                       = 'auditMode'
+                    GuardedFoldersAllowedAppPaths                   = @()
+                    GuardMyFoldersType                              = 'enable'
+                    OfficeAppsExecutableContentCreationOrLaunchType = 'block'
+                    OfficeAppsLaunchChildProcessType                = 'auditMode'
+                    OfficeAppsOtherProcessInjectionType             = 'block'
+                    OfficeCommunicationAppsLaunchChildProcess       = 'auditMode'
+                    OfficeMacroCodeAllowWin32ImportsType            = 'block'
+                    PreventCredentialStealingType                   = 'enable'
+                    ProcessCreationType                             = 'userDefined' # Updated Property
+                    ScriptDownloadedPayloadExecutionType            = 'block'
+                    ScriptObfuscatedMacroCodeType                   = 'block'
+                    UntrustedExecutableType                         = 'block'
+                    UntrustedUSBProcessType                         = 'block'
+                    Ensure                                          = 'Present'
+                    Credential                                      = $Credscredential
+                }
+                IntuneASRRulesPolicyWindows10 'myASRRulesPolicy'
+                {
+                    DisplayName                                     = 'test'
+                    Ensure                                          = 'Absent'
+                    Credential                                      = $Credscredential
+                }
                 IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager 'myASRReductionRules'
                 {
-                    Identity    = 'f6d1d1bc-d78f-4a5a-8f1b-0d95a60b0bc1'
                     DisplayName = 'asr ConfigMgr'
-                    Assignments = @()
+                    blockadobereaderfromcreatingchildprocesses = "block";
                     Description = 'My revised description'
                     Ensure      = 'Present'
+                    Credential  = $Credscredential
+                }
+                IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager 'myASRReductionRules'
+                {
+                    DisplayName = 'asr ConfigMgr'
+                    blockadobereaderfromcreatingchildprocesses = "audit"; # Updated Property
+                    Description = 'My revised description'
+                    Ensure      = 'Present'
+                    Credential  = $Credscredential
+                }
+                IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager 'myASRReductionRules'
+                {
+                    DisplayName = 'asr ConfigMgr'
+                    Ensure      = 'Absent'
                     Credential  = $Credscredential
                 }
                 IntuneDeviceAndAppManagementAssignmentFilter 'AssignmentFilter'
@@ -215,6 +452,21 @@
                     Ensure      = 'Present'
                     Credential  = $intuneAdmin
                 }
+                IntuneDeviceAndAppManagementAssignmentFilter 'AssignmentFilter'
+                {
+                    DisplayName = 'Test Device Filter'
+                    Description = 'This is a new Filter'
+                    Platform    = 'windows10AndLater'
+                    Rule        = "(device.manufacturer -ne `"Apple`")" # Updated Property
+                    Ensure      = 'Present'
+                    Credential  = $intuneAdmin
+                }
+                IntuneDeviceAndAppManagementAssignmentFilter 'AssignmentFilter'
+                {
+                    DisplayName = 'Test Device Filter'
+                    Ensure      = 'Absent'
+                    Credential  = $intuneAdmin
+                }
                 IntuneDeviceCategory 'ConfigureDeviceCategory'
                 {
                     DisplayName = 'Contoso'
@@ -222,11 +474,24 @@
                     Ensure      = 'Present'
                     Credential  = $Credscredential
                 }
+                IntuneDeviceCategory 'ConfigureDeviceCategory'
+                {
+                    DisplayName = 'Contoso'
+                    Description = 'Contoso Category - Updated' # Updated Property
+                    Ensure      = 'Present'
+                    Credential  = $Credscredential
+                }
+                IntuneDeviceCategory 'ConfigureDeviceCategory'
+                {
+                    DisplayName = 'Contoso'
+                    Ensure      = 'Absent'
+                    Credential  = $Credscredential
+                }
                 IntuneDeviceCleanupRule 'Example'
                 {
                     Enabled                                = $true
                     IsSingleInstance                       = 'Yes'
-                    DeviceInactivityBeforeRetirementInDays = 30
+                    DeviceInactivityBeforeRetirementInDays = 25 # Updated Property
                     Ensure                                 = 'Present'
                     Credential                             = $Credscredential
                 }
@@ -256,11 +521,37 @@
                     Ensure                                             = 'Present'
                     Credential                                         = $Credscredential
                 }
-                IntuneDeviceCompliancePolicyAndroid 'RemoveDeviceCompliancePolicyAndroid'
+                IntuneDeviceCompliancePolicyAndroid 'AddDeviceCompliancePolicy'
                 {
-                    DisplayName = 'Test Android Device Compliance Policy'
-                    Ensure      = 'Absent'
-                    Credential  = $Credscredential
+                    DisplayName                                        = 'Test Policy'
+                    Description                                        = ''
+                    DeviceThreatProtectionEnabled                      = $False
+                    DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+                    osMinimumVersion                                   = '7'
+                    PasswordExpirationDays                             = 90
+                    PasswordMinimumLength                              = 8 # Updated Property
+                    PasswordMinutesOfInactivityBeforeLock              = 5
+                    PasswordPreviousPasswordBlockCount                 = 10
+                    PasswordRequired                                   = $True
+                    PasswordRequiredType                               = 'deviceDefault'
+                    SecurityBlockJailbrokenDevices                     = $False
+                    SecurityDisableUsbDebugging                        = $False
+                    SecurityPreventInstallAppsFromUnknownSources       = $False
+                    SecurityRequireCompanyPortalAppIntegrity           = $False
+                    SecurityRequireGooglePlayServices                  = $False
+                    SecurityRequireSafetyNetAttestationBasicIntegrity  = $False
+                    SecurityRequireSafetyNetAttestationCertifiedDevice = $False
+                    SecurityRequireUpToDateSecurityProviders           = $False
+                    SecurityRequireVerifyApps                          = $False
+                    StorageRequireEncryption                           = $True
+                    Ensure                                             = 'Present'
+                    Credential                                         = $Credscredential
+                }
+                IntuneDeviceCompliancePolicyAndroid 'AddDeviceCompliancePolicy'
+                {
+                    DisplayName                                        = 'Test Policy'
+                    Ensure                                             = 'Absent'
+                    Credential                                         = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyAndroidDeviceOwner 'ConfigureAndroidDeviceCompliancePolicyOwner'
                 {
@@ -283,11 +574,47 @@
                     Ensure                                             = 'Present'
                     Credential                                         = $Credscredential
                 }
-                IntuneDeviceCompliancePolicyAndroidDeviceOwner 'RemoveAndroidDeviceCompliancePolicyOwner'
+                IntuneDeviceCompliancePolicyAndroidDeviceOwner 'ConfigureAndroidDeviceCompliancePolicyOwner'
                 {
-                    DisplayName = 'DeviceOwnerPolicy'
-                    Ensure      = 'Absent'
-                    Credential  = $Credscredential
+                    DisplayName                                        = 'DeviceOwner'
+                    Description                                        = ''
+                    DeviceThreatProtectionEnabled                      = $False
+                    DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+                    AdvancedThreatProtectionRequiredSecurityLevel      = 'unavailable'
+                    SecurityRequireSafetyNetAttestationBasicIntegrity  = $False
+                    SecurityRequireSafetyNetAttestationCertifiedDevice = $False
+                    OsMinimumVersion                                   = '10'
+                    OsMaximumVersion                                   = '11'
+                    PasswordRequired                                   = $True
+                    PasswordMinimumLength                              = 8 # Updated Property
+                    PasswordRequiredType                               = 'numericComplex'
+                    PasswordMinutesOfInactivityBeforeLock              = 5
+                    PasswordExpirationDays                             = 90
+                    PasswordPreviousPasswordCountToBlock               = 13
+                    StorageRequireEncryption                           = $True
+                    Ensure                                             = 'Present'
+                    Credential                                         = $Credscredential
+                }
+                IntuneDeviceCompliancePolicyAndroidDeviceOwner 'ConfigureAndroidDeviceCompliancePolicyOwner'
+                {
+                    DisplayName                                        = 'DeviceOwner'
+                    Description                                        = ''
+                    DeviceThreatProtectionEnabled                      = $False
+                    DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+                    AdvancedThreatProtectionRequiredSecurityLevel      = 'unavailable'
+                    SecurityRequireSafetyNetAttestationBasicIntegrity  = $False
+                    SecurityRequireSafetyNetAttestationCertifiedDevice = $False
+                    OsMinimumVersion                                   = '10'
+                    OsMaximumVersion                                   = '11'
+                    PasswordRequired                                   = $True
+                    PasswordMinimumLength                              = 8 # Updated Property
+                    PasswordRequiredType                               = 'numericComplex'
+                    PasswordMinutesOfInactivityBeforeLock              = 5
+                    PasswordExpirationDays                             = 90
+                    PasswordPreviousPasswordCountToBlock               = 13
+                    StorageRequireEncryption                           = $True
+                    Ensure                                             = 'Present'
+                    Credential                                         = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyAndroidWorkProfile 'ConfigureAndroidDeviceCompliancePolicyWorkProfile'
                 {
@@ -313,11 +640,35 @@
                     Ensure                                             = 'Present'
                     Credential                                         = $Credscredential
                 }
-                IntuneDeviceCompliancePolicyAndroidWorkProfile 'RemoveDeviceCompliancePolicyAndroidWorkProfile'
+                IntuneDeviceCompliancePolicyAndroidWorkProfile 'ConfigureAndroidDeviceCompliancePolicyWorkProfile'
                 {
-                    DisplayName = 'Test Android Work Profile Device Compliance Policy'
-                    Ensure      = 'Absent'
-                    Credential  = $Credscredential
+                    DisplayName                                        = 'Test Policy'
+                    Description                                        = ''
+                    DeviceThreatProtectionEnabled                      = $False
+                    DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+                    PasswordExpirationDays                             = 90
+                    PasswordMinimumLength                              = 8 # Updated Property
+                    PasswordMinutesOfInactivityBeforeLock              = 5
+                    PasswordRequired                                   = $True
+                    PasswordRequiredType                               = 'numericComplex'
+                    SecurityBlockJailbrokenDevices                     = $True
+                    SecurityDisableUsbDebugging                        = $False
+                    SecurityPreventInstallAppsFromUnknownSources       = $False
+                    SecurityRequireCompanyPortalAppIntegrity           = $False
+                    SecurityRequireGooglePlayServices                  = $False
+                    SecurityRequireSafetyNetAttestationBasicIntegrity  = $False
+                    SecurityRequireSafetyNetAttestationCertifiedDevice = $False
+                    SecurityRequireUpToDateSecurityProviders           = $False
+                    SecurityRequireVerifyApps                          = $False
+                    StorageRequireEncryption                           = $True
+                    Ensure                                             = 'Present'
+                    Credential                                         = $Credscredential
+                }
+                IntuneDeviceCompliancePolicyAndroidWorkProfile 'ConfigureAndroidDeviceCompliancePolicyWorkProfile'
+                {
+                    DisplayName                                        = 'Test Policy'
+                    Ensure                                             = 'Absent'
+                    Credential                                         = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyiOs 'ConfigureDeviceCompliancePolicyiOS'
                 {
@@ -341,11 +692,34 @@
                     Credential                                  = $Credscredential
         
                 }
-                IntuneDeviceCompliancePolicyiOs 'RemoveDeviceCompliancePolicyiOS'
+                IntuneDeviceCompliancePolicyiOs 'ConfigureDeviceCompliancePolicyiOS'
                 {
-                    DisplayName          = 'Demo iOS Device Compliance Policy'
-                    Ensure               = 'Absent'
-                    Credential           = $Credscredential
+                    DisplayName                                 = 'Test iOS Device Compliance Policy'
+                    Description                                 = 'Test iOS Device Compliance Policy Description'
+                    PasscodeBlockSimple                         = $True
+                    PasscodeExpirationDays                      = 365
+                    PasscodeMinimumLength                       = 8 # Updated Property
+                    PasscodeMinutesOfInactivityBeforeLock       = 5
+                    PasscodePreviousPasscodeBlockCount          = 3
+                    PasscodeMinimumCharacterSetCount            = 2
+                    PasscodeRequiredType                        = 'numeric'
+                    PasscodeRequired                            = $True
+                    OsMinimumVersion                            = 10
+                    OsMaximumVersion                            = 12
+                    SecurityBlockJailbrokenDevices              = $True
+                    DeviceThreatProtectionEnabled               = $True
+                    DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+                    ManagedEmailProfileRequired                 = $True
+                    Ensure                                      = 'Present'
+                    Credential                                  = $Credscredential
+        
+                }
+                IntuneDeviceCompliancePolicyiOs 'ConfigureDeviceCompliancePolicyiOS'
+                {
+                    DisplayName                                 = 'Test iOS Device Compliance Policy'
+                    Ensure                                      = 'Absent'
+                    Credential                                  = $Credscredential
+        
                 }
                 IntuneDeviceCompliancePolicyMacOS 'ConfigureDeviceCompliancePolicyMacOS'
                 {
@@ -371,11 +745,35 @@
                     Ensure                                      = 'Present'
                     Credential                                  = $Credscredential
                 }
-                IntuneDeviceCompliancePolicyMacOS 'RemoveDeviceCompliancePolicyMacOS'
+                IntuneDeviceCompliancePolicyMacOS 'ConfigureDeviceCompliancePolicyMacOS'
                 {
-                    DisplayName          = 'Demo MacOS Device Compliance Policy'
-                    Ensure               = 'Absent'
-                    Credential           = $Credscredential
+                    DisplayName                                 = 'MacOS DSC Policy'
+                    Description                                 = 'Test policy'
+                    PasswordRequired                            = $False
+                    PasswordBlockSimple                         = $False
+                    PasswordExpirationDays                      = 365
+                    PasswordMinimumLength                       = 8 # Updated Property
+                    PasswordMinutesOfInactivityBeforeLock       = 5
+                    PasswordPreviousPasswordBlockCount          = 13
+                    PasswordMinimumCharacterSetCount            = 1
+                    PasswordRequiredType                        = 'DeviceDefault'
+                    OsMinimumVersion                            = 10
+                    OsMaximumVersion                            = 13
+                    SystemIntegrityProtectionEnabled            = $False
+                    DeviceThreatProtectionEnabled               = $False
+                    DeviceThreatProtectionRequiredSecurityLevel = 'Unavailable'
+                    StorageRequireEncryption                    = $False
+                    FirewallEnabled                             = $False
+                    FirewallBlockAllIncoming                    = $False
+                    FirewallEnableStealthMode                   = $False
+                    Ensure                                      = 'Present'
+                    Credential                                  = $Credscredential
+                }
+                IntuneDeviceCompliancePolicyMacOS 'ConfigureDeviceCompliancePolicyMacOS'
+                {
+                    DisplayName                                 = 'MacOS DSC Policy'
+                    Ensure                                      = 'Absent'
+                    Credential                                  = $Credscredential
                 }
                 IntuneDeviceCompliancePolicyWindows10 'ConfigureDeviceCompliancePolicyWindows10'
                 {
@@ -416,11 +814,50 @@
                     Ensure                                      = 'Present'
                     Credential                                  = $Credscredential
                 }
-                IntuneDeviceCompliancePolicyWindows10 'RemoveDeviceCompliancePolicyWindows10'
+                IntuneDeviceCompliancePolicyWindows10 'ConfigureDeviceCompliancePolicyWindows10'
                 {
-                    DisplayName          = 'Demo Windows 10 Device Compliance Policy'
-                    Ensure               = 'Absent'
-                    Credential           = $Credscredential
+                    DisplayName                                 = 'Windows 10 DSC Policy'
+                    Description                                 = 'Test policy'
+                    PasswordRequired                            = $False
+                    PasswordBlockSimple                         = $False
+                    PasswordRequiredToUnlockFromIdle            = $True
+                    PasswordMinutesOfInactivityBeforeLock       = 15
+                    PasswordExpirationDays                      = 365
+                    PasswordMinimumLength                       = 8 # Updated Property
+                    PasswordPreviousPasswordBlockCount          = 13
+                    PasswordMinimumCharacterSetCount            = 1
+                    PasswordRequiredType                        = 'Devicedefault'
+                    RequireHealthyDeviceReport                  = $True
+                    OsMinimumVersion                            = 10
+                    OsMaximumVersion                            = 10.19
+                    MobileOsMinimumVersion                      = 10
+                    MobileOsMaximumVersion                      = 10.19
+                    EarlyLaunchAntiMalwareDriverEnabled         = $False
+                    BitLockerEnabled                            = $False
+                    SecureBootEnabled                           = $True
+                    CodeIntegrityEnabled                        = $True
+                    StorageRequireEncryption                    = $True
+                    ActiveFirewallRequired                      = $True
+                    DefenderEnabled                             = $True
+                    DefenderVersion                             = ''
+                    SignatureOutOfDate                          = $True
+                    RtpEnabled                                  = $True
+                    AntivirusRequired                           = $True
+                    AntiSpywareRequired                         = $True
+                    DeviceThreatProtectionEnabled               = $True
+                    DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
+                    ConfigurationManagerComplianceRequired      = $False
+                    TPMRequired                                 = $False
+                    deviceCompliancePolicyScript                = $null
+                    ValidOperatingSystemBuildRanges             = @()
+                    Ensure                                      = 'Present'
+                    Credential                                  = $Credscredential
+                }
+                IntuneDeviceCompliancePolicyWindows10 'ConfigureDeviceCompliancePolicyWindows10'
+                {
+                    DisplayName                                 = 'Windows 10 DSC Policy'
+                    Ensure                                      = 'Absent'
+                    Credential                                  = $Credscredential
                 }
                 IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 'Example'
                 {
@@ -545,8 +982,138 @@
                     Description                      = ''
                     DisplayName                      = 'admin template'
                     Ensure                           = 'Present'
-                    Id                               = '2e72acda-30a8-4955-a4ca-c5e28527c81c'
                     PolicyConfigurationIngestionType = 'unknown'
+                }
+                IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 'Example'
+                {
+                    Credential                       = $Credscredential
+                    Assignments                      = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments
+                        {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    )
+                    DefinitionValues                 = @(
+                        MSFT_IntuneGroupPolicyDefinitionValue
+                        {
+                            ConfigurationType = 'policy'
+                            Id                = 'f41bbbec-0807-4ae3-8a61-5580a2f310f0'
+                            Definition        = MSFT_IntuneGroupPolicyDefinitionValueDefinition
+                            {
+                                Id           = '50b2626d-f092-4e71-8983-12a5c741ebe0'
+                                DisplayName  = 'Do not display the lock screen'
+                                CategoryPath = '\Control Panel\Personalization'
+                                PolicyType   = 'admxBacked'
+                                SupportedOn  = 'At least Windows Server 2012, Windows 8 or Windows RT'
+                                ClassType    = 'machine'
+                            }
+                            Enabled           = $False
+                        }
+                        MSFT_IntuneGroupPolicyDefinitionValue
+                        {
+                            ConfigurationType  = 'policy'
+                            PresentationValues = @(
+                                MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
+                                {
+                                    presentationDefinitionId    = '98210829-af9b-4020-8d96-3e4108557a95'
+                                    presentationDefinitionLabel = 'Types of extensions/apps that are allowed to be installed'
+                                    KeyValuePairValues          = @(
+                                        MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair
+                                        {
+                                            Name = 'hosted_app'
+                                        }
+        
+                                        MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair
+                                        {
+                                            Name = 'user_script'
+                                        }
+                                    )
+                                    Id                          = '7312a452-e087-4290-9b9f-3f14a304c18d'
+                                    odataType                   = '#microsoft.graph.groupPolicyPresentationValueList'
+                                }
+                            )
+                            Id                 = 'f3047f6a-550e-4b5e-b3da-48fc951b72fc'
+                            Definition         = MSFT_IntuneGroupPolicyDefinitionValueDefinition
+                            {
+                                Id           = '37ab8b81-47d7-46d8-8b99-81d9cecdcce9'
+                                DisplayName  = 'Configure allowed app/extension types'
+                                CategoryPath = '\Google\Google Chrome\Extensions'
+                                PolicyType   = 'admxIngested'
+                                SupportedOn  = 'Microsoft Windows 7 or later'
+                                ClassType    = 'machine'
+                            }
+                            Enabled            = $True
+                        }
+                        MSFT_IntuneGroupPolicyDefinitionValue
+                        {
+                            ConfigurationType  = 'policy'
+                            PresentationValues = @(
+                                MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
+                                {
+                                    presentationDefinitionId    = 'a8a0ae11-58d9-41d5-b258-1c16d9f1e328'
+                                    presentationDefinitionLabel = 'Password Length'
+                                    DecimalValue                = 15
+                                    Id                          = '14c48993-35af-4b77-a4f8-12de917b1bb9'
+                                    odataType                   = '#microsoft.graph.groupPolicyPresentationValueDecimal'
+                                }
+        
+                                MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
+                                {
+                                    presentationDefinitionId    = '98998e7f-cc2a-4d96-8c47-35dd4b2ce56b'
+                                    presentationDefinitionLabel = 'Password Age (Days)'
+                                    DecimalValue                = 30
+                                    Id                          = '4d654df9-6826-470f-af4e-d37491663c76'
+                                    odataType                   = '#microsoft.graph.groupPolicyPresentationValueDecimal'
+                                }
+        
+                                MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
+                                {
+                                    presentationDefinitionId    = '6900e752-4bc3-463b-9fc8-36d78c77bc3e'
+                                    presentationDefinitionLabel = 'Password Complexity'
+                                    StringValue                 = '4'
+                                    Id                          = '17e2ff15-8573-4e7e-a6f9-64baebcb5312'
+                                    odataType                   = '#microsoft.graph.groupPolicyPresentationValueText'
+                                }
+                            )
+                            Id                 = '426c9e99-0084-443a-ae07-b8f40c11910f'
+                            Definition         = MSFT_IntuneGroupPolicyDefinitionValueDefinition
+                            {
+                                Id           = 'c4df131a-d415-44fc-9254-a717ff7dbee3'
+                                DisplayName  = 'Password Settings'
+                                CategoryPath = '\LAPS'
+                                PolicyType   = 'admxBacked'
+                                SupportedOn  = 'At least Microsoft Windows Vista or Windows Server 2003 family'
+                                ClassType    = 'machine'
+                            }
+                            Enabled            = $True
+                        }
+                        MSFT_IntuneGroupPolicyDefinitionValue
+                        {
+                            ConfigurationType = 'policy'
+                            Id                = 'a3577119-b240-4093-842c-d8e959dfe317'
+                            Definition        = MSFT_IntuneGroupPolicyDefinitionValueDefinition
+                            {
+                                Id           = '986073b6-e149-495f-a131-aa0e3c697225'
+                                DisplayName  = 'Ability to change properties of an all user remote access connection'
+                                CategoryPath = '\Network\Network Connections'
+                                PolicyType   = 'admxBacked'
+                                SupportedOn  = 'At least Windows 2000 Service Pack 1'
+                                ClassType    = 'user'
+                            }
+                            Enabled           = $True
+                        }
+                    )
+                    Description                      = ''
+                    DisplayName                      = 'admin template'
+                    Ensure                           = 'Present'
+                    PolicyConfigurationIngestionType = 'builtIn' # Updated Property
+                }
+                IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10 'Example'
+                {
+                    Credential                       = $Credscredential
+                    DisplayName                      = 'admin template'
+                    Ensure                           = 'Absent'
                 }
                 IntuneDeviceConfigurationCustomPolicyWindows10 'Example'
                 {
@@ -559,7 +1126,6 @@
                     Credential           = $Credscredential;
                     DisplayName          = "custom";
                     Ensure               = "Present";
-                    Id                   = "e072d616-12bc-4ea3-9171-ab080e4c120d";
                     OmaSettings          = @(
                         MSFT_MicrosoftGraphomaSetting{
                             Description = 'custom'
@@ -582,6 +1148,45 @@
                     );
                     SupportsScopeTags    = $True;
                 }
+                IntuneDeviceConfigurationCustomPolicyWindows10 'Example'
+                {
+                    Assignments          = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Credential           = $Credscredential;
+                    DisplayName          = "custom";
+                    Ensure               = "Present";
+                    OmaSettings          = @(
+                        MSFT_MicrosoftGraphomaSetting{
+                            Description = 'custom'
+                            OmaUri = '/oma/custom'
+                            odataType = '#microsoft.graph.omaSettingString'
+                            SecretReferenceValueId = '5b0e1dba-4523-455e-9fdd-e36c833b57bf_e072d616-12bc-4ea3-9171-ab080e4c120d_1f958162-15d4-42ba-92c4-17c2544b2179'
+                            Value = '****'
+                            IsEncrypted = $True
+                            DisplayName = 'oma'
+                        }
+                        MSFT_MicrosoftGraphomaSetting{ # Updated Property
+                            Description = 'custom 3'
+                            OmaUri = '/oma/custom3'
+                            odataType = '#microsoft.graph.omaSettingInteger'
+                            Value = 2
+                            IsReadOnly = $False
+                            IsEncrypted = $False
+                            DisplayName = 'custom 3'
+                        }
+                    );
+                    SupportsScopeTags    = $True;
+                }
+                IntuneDeviceConfigurationCustomPolicyWindows10 'Example'
+                {
+                    Credential           = $Credscredential;
+                    DisplayName          = "custom";
+                    Ensure               = "Absent";
+                }
                 IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10 'Example'
                 {
                     AdvancedThreatProtectionAutoPopulateOnboardingBlob = $False;
@@ -598,7 +1203,28 @@
                     DisplayName                                        = "MDE onboarding Legacy";
                     EnableExpeditedTelemetryReporting                  = $True;
                     Ensure                                             = "Present";
-                    Id                                                 = "510e4742-9c7b-414d-84a1-a1128fcf57a8";
+                }
+                IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10 'Example'
+                {
+                    AdvancedThreatProtectionAutoPopulateOnboardingBlob = $True; # Updated Property
+                    AdvancedThreatProtectionOnboardingFilename         = "WindowsDefenderATP.onboarding";
+                    AllowSampleSharing                                 = $True;
+                    Assignments                                        = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Credential                                         = $Credscredential;
+                    DisplayName                                        = "MDE onboarding Legacy";
+                    EnableExpeditedTelemetryReporting                  = $True;
+                    Ensure                                             = "Present";
+                }
+                IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10 'Example'
+                {
+                    Credential                                         = $Credscredential;
+                    DisplayName                                        = "MDE onboarding Legacy";
+                    Ensure                                             = "Absent";
                 }
                 IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10 'Example'
                 {
@@ -626,7 +1252,6 @@
                         GroupIdSourceOption = 'adSite'
                         odataType = '#microsoft.graph.deliveryOptimizationGroupIdSourceOptions'
                     };
-                    Id                                                        = "c86efa80-248b-4002-80d4-e70ea151a4c7";
                     MaximumCacheAgeInDays                                     = 3;
                     MaximumCacheSize                                          = MSFT_MicrosoftGraphdeliveryOptimizationMaxCacheSize{
                         MaximumCacheSizeInGigabytes = 4
@@ -640,6 +1265,52 @@
                     RestrictPeerSelectionBy                                   = "subnetMask";
                     SupportsScopeTags                                         = $True;
                     VpnPeerCaching                                            = "enabled";
+                }
+                IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10 'Example'
+                {
+                    Assignments                                               = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    BackgroundDownloadFromHttpDelayInSeconds                  = 4;
+                    BandwidthMode                                             = MSFT_MicrosoftGraphdeliveryOptimizationBandwidth{
+                        MaximumDownloadBandwidthInKilobytesPerSecond = 22
+                        MaximumUploadBandwidthInKilobytesPerSecond = 33
+                        odataType = '#microsoft.graph.deliveryOptimizationBandwidthAbsolute'
+                    };
+                    CacheServerBackgroundDownloadFallbackToHttpDelayInSeconds = 5; # Updated Property
+                    CacheServerForegroundDownloadFallbackToHttpDelayInSeconds = 3;
+                    CacheServerHostNames                                      = @("domain.com");
+                    Credential                                                = $Credscredential;
+                    DeliveryOptimizationMode                                  = "httpWithPeeringPrivateGroup";
+                    DisplayName                                               = "delivery optimisation";
+                    Ensure                                                    = "Present";
+                    ForegroundDownloadFromHttpDelayInSeconds                  = 234;
+                    GroupIdSource                                             = MSFT_MicrosoftGraphdeliveryOptimizationGroupIdSource{
+                        GroupIdSourceOption = 'adSite'
+                        odataType = '#microsoft.graph.deliveryOptimizationGroupIdSourceOptions'
+                    };
+                    MaximumCacheAgeInDays                                     = 3;
+                    MaximumCacheSize                                          = MSFT_MicrosoftGraphdeliveryOptimizationMaxCacheSize{
+                        MaximumCacheSizeInGigabytes = 4
+                        odataType = '#microsoft.graph.deliveryOptimizationMaxCacheSizeAbsolute'
+                    };
+                    MinimumBatteryPercentageAllowedToUpload                   = 4;
+                    MinimumDiskSizeAllowedToPeerInGigabytes                   = 3;
+                    MinimumFileSizeToCacheInMegabytes                         = 3;
+                    MinimumRamAllowedToPeerInGigabytes                        = 3;
+                    ModifyCacheLocation                                       = "%systemdrive%";
+                    RestrictPeerSelectionBy                                   = "subnetMask";
+                    SupportsScopeTags                                         = $True;
+                    VpnPeerCaching                                            = "enabled";
+                }
+                IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10 'Example'
+                {
+                    Credential                                                = $Credscredential;
+                    DisplayName                                               = "delivery optimisation";
+                    Ensure                                                    = "Absent";
                 }
                 IntuneDeviceConfigurationDomainJoinPolicyWindows10 'Example'
                 {
@@ -655,9 +1326,31 @@
                     Credential                        = $Credscredential;
                     DisplayName                       = "Domain Join";
                     Ensure                            = "Present";
-                    Id                                = "1ab2945b-36b5-4b34-bbf5-717885c15654";
                     OrganizationalUnit                = "OU=workstation,CN=domain,CN=com";
                     SupportsScopeTags                 = $True;
+                }
+                IntuneDeviceConfigurationDomainJoinPolicyWindows10 'Example'
+                {
+                    ActiveDirectoryDomainName         = "domain.com";
+                    Assignments                       = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    ComputerNameStaticPrefix          = "WK-";
+                    ComputerNameSuffixRandomCharCount = 12;
+                    Credential                        = $Credscredential;
+                    DisplayName                       = "Domain Join";
+                    Ensure                            = "Present";
+                    OrganizationalUnit                = "OU=workstation,CN=domain,CN=com";
+                    SupportsScopeTags                 = $False; # Updated Property
+                }
+                IntuneDeviceConfigurationDomainJoinPolicyWindows10 'Example'
+                {
+                    Credential                        = $Credscredential;
+                    DisplayName                       = "Domain Join";
+                    Ensure                            = "Absent";
                 }
                 IntuneDeviceConfigurationEmailProfilePolicyWindows10 'Example'
                 {
@@ -675,11 +1368,37 @@
                     EmailSyncSchedule     = "fifteenMinutes";
                     Ensure                = "Present";
                     HostName              = "outlook.office365.com";
-                    Id                    = "776bcf45-35f7-4436-93fb-7a74828c6477";
                     RequireSsl            = $True;
                     SyncCalendar          = $True;
                     SyncContacts          = $True;
                     SyncTasks             = $True;
+                }
+                IntuneDeviceConfigurationEmailProfilePolicyWindows10 'Example'
+                {
+                    AccountName           = "Corp email2";
+                    Assignments           = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    Credential            = $Credscredential;
+                    DisplayName           = "email";
+                    DurationOfEmailToSync = "unlimited";
+                    EmailAddressSource    = "primarySmtpAddress";
+                    EmailSyncSchedule     = "fifteenMinutes";
+                    Ensure                = "Present";
+                    HostName              = "outlook.office365.com";
+                    RequireSsl            = $False; # Updated Property
+                    SyncCalendar          = $True;
+                    SyncContacts          = $True;
+                    SyncTasks             = $True;
+                }
+                IntuneDeviceConfigurationEmailProfilePolicyWindows10 'Example'
+                {
+                    Credential            = $Credscredential;
+                    DisplayName           = "email";
+                    Ensure                = "Absent";
                 }
                 IntuneDeviceConfigurationEndpointProtectionPolicyWindows10 'Example'
                 {
@@ -849,7 +1568,6 @@
                             EdgeTraversal = 'notConfigured'
                         }
                     );
-                    Id                                                                           = "447262e3-74b8-44c8-ac6f-7f036fd25e67";
                     LanManagerAuthenticationLevel                                                = "lmNtlmAndNtlmV2";
                     LanManagerWorkstationDisableInsecureGuestLogons                              = $False;
                     LocalSecurityOptionsAdministratorElevationPromptBehavior                     = "notConfigured";
@@ -910,6 +1628,240 @@
                     XboxServicesLiveGameSaveServiceStartupMode                                   = "manual";
                     XboxServicesLiveNetworkingServiceStartupMode                                 = "manual";
                 }
+                IntuneDeviceConfigurationEndpointProtectionPolicyWindows10 'Example'
+                {
+                    ApplicationGuardAllowFileSaveOnHost                                          = $True;
+                    ApplicationGuardAllowPersistence                                             = $True;
+                    ApplicationGuardAllowPrintToLocalPrinters                                    = $True;
+                    ApplicationGuardAllowPrintToNetworkPrinters                                  = $False; # Updated Property
+                    ApplicationGuardAllowPrintToPDF                                              = $True;
+                    ApplicationGuardAllowPrintToXPS                                              = $True;
+                    ApplicationGuardAllowVirtualGPU                                              = $True;
+                    ApplicationGuardBlockClipboardSharing                                        = "blockContainerToHost";
+                    ApplicationGuardBlockFileTransfer                                            = "blockImageFile";
+                    ApplicationGuardBlockNonEnterpriseContent                                    = $True;
+                    ApplicationGuardCertificateThumbprints                                       = @();
+                    ApplicationGuardEnabled                                                      = $True;
+                    ApplicationGuardEnabledOptions                                               = "enabledForEdge";
+                    ApplicationGuardForceAuditing                                                = $True;
+                    AppLockerApplicationControl                                                  = "enforceComponentsStoreAppsAndSmartlocker";
+                    Assignments                                                                  = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    BitLockerAllowStandardUserEncryption                                         = $True;
+                    BitLockerDisableWarningForOtherDiskEncryption                                = $True;
+                    BitLockerEnableStorageCardEncryptionOnMobile                                 = $True;
+                    BitLockerEncryptDevice                                                       = $True;
+                    BitLockerFixedDrivePolicy                                                    = MSFT_MicrosoftGraphbitLockerFixedDrivePolicy{
+                        RecoveryOptions = MSFT_MicrosoftGraphBitLockerRecoveryOptions{
+                            RecoveryInformationToStore = 'passwordAndKey'
+                            HideRecoveryOptions = $True
+                            BlockDataRecoveryAgent = $True
+                            RecoveryKeyUsage = 'allowed'
+                            EnableBitLockerAfterRecoveryInformationToStore = $True
+                            EnableRecoveryInformationSaveToStore = $True
+                            RecoveryPasswordUsage = 'allowed'
+                        }
+                                    RequireEncryptionForWriteAccess = $True
+                        EncryptionMethod = 'xtsAes128'
+                    };
+                    BitLockerRecoveryPasswordRotation                                            = "notConfigured";
+                    BitLockerRemovableDrivePolicy                                                = MSFT_MicrosoftGraphbitLockerRemovableDrivePolicy{
+                        RequireEncryptionForWriteAccess = $True
+                        BlockCrossOrganizationWriteAccess = $True
+                        EncryptionMethod = 'aesCbc128'
+                    };
+                    BitLockerSystemDrivePolicy                                                   = MSFT_MicrosoftGraphbitLockerSystemDrivePolicy{
+                        PrebootRecoveryEnableMessageAndUrl = $True
+                        StartupAuthenticationTpmPinUsage = 'allowed'
+                        EncryptionMethod = 'xtsAes128'
+                        StartupAuthenticationTpmPinAndKeyUsage = 'allowed'
+                        StartupAuthenticationRequired = $True
+                        RecoveryOptions = MSFT_MicrosoftGraphBitLockerRecoveryOptions{
+                            RecoveryInformationToStore = 'passwordAndKey'
+                            HideRecoveryOptions = $False
+                            BlockDataRecoveryAgent = $True
+                            RecoveryKeyUsage = 'allowed'
+                            EnableBitLockerAfterRecoveryInformationToStore = $True
+                            EnableRecoveryInformationSaveToStore = $False
+                            RecoveryPasswordUsage = 'allowed'
+                        }
+                                    StartupAuthenticationTpmUsage = 'allowed'
+                        StartupAuthenticationTpmKeyUsage = 'allowed'
+                        StartupAuthenticationBlockWithoutTpmChip = $False
+                    };
+                    Credential                                                                   = $Credscredential;
+                    DefenderAdditionalGuardedFolders                                             = @();
+                    DefenderAdobeReaderLaunchChildProcess                                        = "notConfigured";
+                    DefenderAdvancedRansomewareProtectionType                                    = "notConfigured";
+                    DefenderAttackSurfaceReductionExcludedPaths                                  = @();
+                    DefenderBlockPersistenceThroughWmiType                                       = "userDefined";
+                    DefenderEmailContentExecution                                                = "userDefined";
+                    DefenderEmailContentExecutionType                                            = "userDefined";
+                    DefenderExploitProtectionXml                                                 = "PD94bWwgdmVyc2lvbj0iMS4wIiBlbmNvZGluZz0iVVRGLTgiPz4NCjxNaXRpZ2F0aW9uUG9saWN5Pg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9IkFjcm9SZDMyLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJBY3JvUmQzMkluZm8uZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9ImNsdmlldy5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0iY25mbm90MzIuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9ImV4Y2VsLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJleGNlbGNudi5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0iRXh0RXhwb3J0LmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJncmFwaC5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0iaWU0dWluaXQuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9ImllaW5zdGFsLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJpZWxvd3V0aWwuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9ImllVW5hdHQuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9ImlleHBsb3JlLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJseW5jLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJtc2FjY2Vzcy5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0ibXNjb3JzdncuZXhlIj4NCiAgICA8RXh0ZW5zaW9uUG9pbnRzIERpc2FibGVFeHRlbnNpb25Qb2ludHM9InRydWUiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9Im1zZmVlZHNzeW5jLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJtc2h0YS5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0ibXNvYWRmc2IuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9Im1zb2FzYi5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0ibXNvaHRtZWQuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9Im1zb3NyZWMuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9Im1zb3htbGVkLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJtc3B1Yi5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0ibXNxcnkzMi5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0iTXNTZW5zZS5leGUiPg0KICAgIDxFeHRlbnNpb25Qb2ludHMgRGlzYWJsZUV4dGVuc2lvblBvaW50cz0idHJ1ZSIgLz4NCiAgICA8SW1hZ2VMb2FkIFByZWZlclN5c3RlbTMyPSJ0cnVlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJuZ2VuLmV4ZSI+DQogICAgPEV4dGVuc2lvblBvaW50cyBEaXNhYmxlRXh0ZW5zaW9uUG9pbnRzPSJ0cnVlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJuZ2VudGFzay5leGUiPg0KICAgIDxFeHRlbnNpb25Qb2ludHMgRGlzYWJsZUV4dGVuc2lvblBvaW50cz0idHJ1ZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0ib25lbm90ZS5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0ib25lbm90ZW0uZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9Im9yZ2NoYXJ0LmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJvdXRsb29rLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJwb3dlcnBudC5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0iUHJlc2VudGF0aW9uSG9zdC5leGUiPg0KICAgIDxERVAgRW5hYmxlPSJ0cnVlIiBFbXVsYXRlQXRsVGh1bmtzPSJmYWxzZSIgLz4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIEJvdHRvbVVwPSJ0cnVlIiBIaWdoRW50cm9weT0idHJ1ZSIgLz4NCiAgICA8U0VIT1AgRW5hYmxlPSJ0cnVlIiBUZWxlbWV0cnlPbmx5PSJmYWxzZSIgLz4NCiAgICA8SGVhcCBUZXJtaW5hdGVPbkVycm9yPSJ0cnVlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJQcmludERpYWxvZy5leGUiPg0KICAgIDxFeHRlbnNpb25Qb2ludHMgRGlzYWJsZUV4dGVuc2lvblBvaW50cz0idHJ1ZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0iUmRyQ0VGLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJSZHJTZXJ2aWNlc1VwZGF0ZXIuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9InJ1bnRpbWVicm9rZXIuZXhlIj4NCiAgICA8RXh0ZW5zaW9uUG9pbnRzIERpc2FibGVFeHRlbnNpb25Qb2ludHM9InRydWUiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9InNjYW5vc3QuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9InNjYW5wc3QuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9InNkeGhlbHBlci5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQogIDxBcHBDb25maWcgRXhlY3V0YWJsZT0ic2VsZmNlcnQuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9InNldGxhbmcuZXhlIj4NCiAgICA8QVNMUiBGb3JjZVJlbG9jYXRlSW1hZ2VzPSJ0cnVlIiBSZXF1aXJlSW5mbz0iZmFsc2UiIC8+DQogIDwvQXBwQ29uZmlnPg0KICA8QXBwQ29uZmlnIEV4ZWN1dGFibGU9IlN5c3RlbVNldHRpbmdzLmV4ZSI+DQogICAgPEV4dGVuc2lvblBvaW50cyBEaXNhYmxlRXh0ZW5zaW9uUG9pbnRzPSJ0cnVlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJ3aW53b3JkLmV4ZSI+DQogICAgPEFTTFIgRm9yY2VSZWxvY2F0ZUltYWdlcz0idHJ1ZSIgUmVxdWlyZUluZm89ImZhbHNlIiAvPg0KICA8L0FwcENvbmZpZz4NCiAgPEFwcENvbmZpZyBFeGVjdXRhYmxlPSJ3b3JkY29udi5leGUiPg0KICAgIDxBU0xSIEZvcmNlUmVsb2NhdGVJbWFnZXM9InRydWUiIFJlcXVpcmVJbmZvPSJmYWxzZSIgLz4NCiAgPC9BcHBDb25maWc+DQo8L01pdGlnYXRpb25Qb2xpY3k+";
+                    DefenderExploitProtectionXmlFileName                                         = "Settings.xml";
+                    DefenderFileExtensionsToExclude                                              = @();
+                    DefenderFilesAndFoldersToExclude                                             = @();
+                    DefenderGuardedFoldersAllowedAppPaths                                        = @();
+                    DefenderGuardMyFoldersType                                                   = "auditMode";
+                    DefenderNetworkProtectionType                                                = "enable";
+                    DefenderOfficeAppsExecutableContentCreationOrLaunch                          = "userDefined";
+                    DefenderOfficeAppsExecutableContentCreationOrLaunchType                      = "userDefined";
+                    DefenderOfficeAppsLaunchChildProcess                                         = "userDefined";
+                    DefenderOfficeAppsLaunchChildProcessType                                     = "userDefined";
+                    DefenderOfficeAppsOtherProcessInjection                                      = "userDefined";
+                    DefenderOfficeAppsOtherProcessInjectionType                                  = "userDefined";
+                    DefenderOfficeCommunicationAppsLaunchChildProcess                            = "notConfigured";
+                    DefenderOfficeMacroCodeAllowWin32Imports                                     = "userDefined";
+                    DefenderOfficeMacroCodeAllowWin32ImportsType                                 = "userDefined";
+                    DefenderPreventCredentialStealingType                                        = "enable";
+                    DefenderProcessCreation                                                      = "userDefined";
+                    DefenderProcessCreationType                                                  = "userDefined";
+                    DefenderProcessesToExclude                                                   = @();
+                    DefenderScriptDownloadedPayloadExecution                                     = "userDefined";
+                    DefenderScriptDownloadedPayloadExecutionType                                 = "userDefined";
+                    DefenderScriptObfuscatedMacroCode                                            = "userDefined";
+                    DefenderScriptObfuscatedMacroCodeType                                        = "userDefined";
+                    DefenderSecurityCenterBlockExploitProtectionOverride                         = $False;
+                    DefenderSecurityCenterDisableAccountUI                                       = $False;
+                    DefenderSecurityCenterDisableClearTpmUI                                      = $True;
+                    DefenderSecurityCenterDisableFamilyUI                                        = $False;
+                    DefenderSecurityCenterDisableHardwareUI                                      = $True;
+                    DefenderSecurityCenterDisableHealthUI                                        = $False;
+                    DefenderSecurityCenterDisableNetworkUI                                       = $False;
+                    DefenderSecurityCenterDisableNotificationAreaUI                              = $False;
+                    DefenderSecurityCenterDisableRansomwareUI                                    = $False;
+                    DefenderSecurityCenterDisableVirusUI                                         = $False;
+                    DefenderSecurityCenterDisableVulnerableTpmFirmwareUpdateUI                   = $True;
+                    DefenderSecurityCenterHelpEmail                                              = "me@domain.com";
+                    DefenderSecurityCenterHelpPhone                                              = "yes";
+                    DefenderSecurityCenterITContactDisplay                                       = "displayInAppAndInNotifications";
+                    DefenderSecurityCenterNotificationsFromApp                                   = "blockNoncriticalNotifications";
+                    DefenderSecurityCenterOrganizationDisplayName                                = "processes.exe";
+                    DefenderUntrustedExecutable                                                  = "userDefined";
+                    DefenderUntrustedExecutableType                                              = "userDefined";
+                    DefenderUntrustedUSBProcess                                                  = "userDefined";
+                    DefenderUntrustedUSBProcessType                                              = "userDefined";
+                    DeviceGuardEnableSecureBootWithDMA                                           = $True;
+                    DeviceGuardEnableVirtualizationBasedSecurity                                 = $True;
+                    DeviceGuardLaunchSystemGuard                                                 = "notConfigured";
+                    DeviceGuardLocalSystemAuthorityCredentialGuardSettings                       = "enableWithoutUEFILock";
+                    DeviceGuardSecureBootWithDMA                                                 = "notConfigured";
+                    DisplayName                                                                  = "endpoint protection legacy - dsc v2.0";
+                    DmaGuardDeviceEnumerationPolicy                                              = "deviceDefault";
+                    Ensure                                                                       = "Present";
+                    FirewallCertificateRevocationListCheckMethod                                 = "deviceDefault";
+                    FirewallIPSecExemptionsAllowDHCP                                             = $False;
+                    FirewallIPSecExemptionsAllowICMP                                             = $False;
+                    FirewallIPSecExemptionsAllowNeighborDiscovery                                = $False;
+                    FirewallIPSecExemptionsAllowRouterDiscovery                                  = $False;
+                    FirewallIPSecExemptionsNone                                                  = $False;
+                    FirewallPacketQueueingMethod                                                 = "deviceDefault";
+                    FirewallPreSharedKeyEncodingMethod                                           = "deviceDefault";
+                    FirewallProfileDomain                                                        = MSFT_MicrosoftGraphwindowsFirewallNetworkProfile{
+                        PolicyRulesFromGroupPolicyNotMerged = $False
+                        InboundNotificationsBlocked = $True
+                        OutboundConnectionsRequired = $True
+                        GlobalPortRulesFromGroupPolicyNotMerged = $True
+                        ConnectionSecurityRulesFromGroupPolicyNotMerged = $True
+                        UnicastResponsesToMulticastBroadcastsRequired = $True
+                        PolicyRulesFromGroupPolicyMerged = $False
+                        UnicastResponsesToMulticastBroadcastsBlocked = $False
+                        IncomingTrafficRequired = $False
+                        IncomingTrafficBlocked = $True
+                        ConnectionSecurityRulesFromGroupPolicyMerged = $False
+                        StealthModeRequired = $False
+                        InboundNotificationsRequired = $False
+                        AuthorizedApplicationRulesFromGroupPolicyMerged = $False
+                        InboundConnectionsBlocked = $True
+                        OutboundConnectionsBlocked = $False
+                        StealthModeBlocked = $True
+                        GlobalPortRulesFromGroupPolicyMerged = $False
+                        SecuredPacketExemptionBlocked = $False
+                        SecuredPacketExemptionAllowed = $False
+                        InboundConnectionsRequired = $False
+                        FirewallEnabled = 'allowed'
+                        AuthorizedApplicationRulesFromGroupPolicyNotMerged = $True
+                    };
+                    FirewallRules                                                                = @(
+                        MSFT_MicrosoftGraphwindowsFirewallRule{
+                            Action = 'allowed'
+                            InterfaceTypes = 'notConfigured'
+                            DisplayName = 'ICMP'
+                            TrafficDirection = 'in'
+                            ProfileTypes = 'domain'
+                            EdgeTraversal = 'notConfigured'
+                        }
+                    );
+                    LanManagerAuthenticationLevel                                                = "lmNtlmAndNtlmV2";
+                    LanManagerWorkstationDisableInsecureGuestLogons                              = $False;
+                    LocalSecurityOptionsAdministratorElevationPromptBehavior                     = "notConfigured";
+                    LocalSecurityOptionsAllowAnonymousEnumerationOfSAMAccountsAndShares          = $False;
+                    LocalSecurityOptionsAllowPKU2UAuthenticationRequests                         = $False;
+                    LocalSecurityOptionsAllowRemoteCallsToSecurityAccountsManagerHelperBool      = $False;
+                    LocalSecurityOptionsAllowSystemToBeShutDownWithoutHavingToLogOn              = $True;
+                    LocalSecurityOptionsAllowUIAccessApplicationElevation                        = $False;
+                    LocalSecurityOptionsAllowUIAccessApplicationsForSecureLocations              = $False;
+                    LocalSecurityOptionsAllowUndockWithoutHavingToLogon                          = $True;
+                    LocalSecurityOptionsBlockMicrosoftAccounts                                   = $True;
+                    LocalSecurityOptionsBlockRemoteLogonWithBlankPassword                        = $True;
+                    LocalSecurityOptionsBlockRemoteOpticalDriveAccess                            = $True;
+                    LocalSecurityOptionsBlockUsersInstallingPrinterDrivers                       = $True;
+                    LocalSecurityOptionsClearVirtualMemoryPageFile                               = $True;
+                    LocalSecurityOptionsClientDigitallySignCommunicationsAlways                  = $False;
+                    LocalSecurityOptionsClientSendUnencryptedPasswordToThirdPartySMBServers      = $False;
+                    LocalSecurityOptionsDetectApplicationInstallationsAndPromptForElevation      = $False;
+                    LocalSecurityOptionsDisableAdministratorAccount                              = $True;
+                    LocalSecurityOptionsDisableClientDigitallySignCommunicationsIfServerAgrees   = $False;
+                    LocalSecurityOptionsDisableGuestAccount                                      = $True;
+                    LocalSecurityOptionsDisableServerDigitallySignCommunicationsAlways           = $False;
+                    LocalSecurityOptionsDisableServerDigitallySignCommunicationsIfClientAgrees   = $False;
+                    LocalSecurityOptionsDoNotAllowAnonymousEnumerationOfSAMAccounts              = $True;
+                    LocalSecurityOptionsDoNotRequireCtrlAltDel                                   = $True;
+                    LocalSecurityOptionsDoNotStoreLANManagerHashValueOnNextPasswordChange        = $False;
+                    LocalSecurityOptionsFormatAndEjectOfRemovableMediaAllowedUser                = "administrators";
+                    LocalSecurityOptionsHideLastSignedInUser                                     = $False;
+                    LocalSecurityOptionsHideUsernameAtSignIn                                     = $False;
+                    LocalSecurityOptionsInformationDisplayedOnLockScreen                         = "notConfigured";
+                    LocalSecurityOptionsInformationShownOnLockScreen                             = "notConfigured";
+                    LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedClients             = "none";
+                    LocalSecurityOptionsMinimumSessionSecurityForNtlmSspBasedServers             = "none";
+                    LocalSecurityOptionsOnlyElevateSignedExecutables                             = $False;
+                    LocalSecurityOptionsRestrictAnonymousAccessToNamedPipesAndShares             = $True;
+                    LocalSecurityOptionsSmartCardRemovalBehavior                                 = "lockWorkstation";
+                    LocalSecurityOptionsStandardUserElevationPromptBehavior                      = "notConfigured";
+                    LocalSecurityOptionsSwitchToSecureDesktopWhenPromptingForElevation           = $False;
+                    LocalSecurityOptionsUseAdminApprovalMode                                     = $False;
+                    LocalSecurityOptionsUseAdminApprovalModeForAdministrators                    = $False;
+                    LocalSecurityOptionsVirtualizeFileAndRegistryWriteFailuresToPerUserLocations = $False;
+                    SmartScreenBlockOverrideForFiles                                             = $True;
+                    SmartScreenEnableInShell                                                     = $True;
+                    SupportsScopeTags                                                            = $True;
+                    UserRightsAccessCredentialManagerAsTrustedCaller                             = MSFT_MicrosoftGraphdeviceManagementUserRightsSetting{
+                        State = 'allowed'
+                        LocalUsersOrGroups = @(
+                            MSFT_MicrosoftGraphDeviceManagementUserRightsLocalUserOrGroup{
+                                Name = 'NT AUTHORITY\Local service'
+                                SecurityIdentifier = '*S-1-5-19'
+                            }
+                        )
+                    };
+                    WindowsDefenderTamperProtection                                              = "enable";
+                    XboxServicesAccessoryManagementServiceStartupMode                            = "manual";
+                    XboxServicesEnableXboxGameSaveTask                                           = $True;
+                    XboxServicesLiveAuthManagerServiceStartupMode                                = "manual";
+                    XboxServicesLiveGameSaveServiceStartupMode                                   = "manual";
+                    XboxServicesLiveNetworkingServiceStartupMode                                 = "manual";
+                }
+                IntuneDeviceConfigurationEndpointProtectionPolicyWindows10 'Example'
+                {
+                    DisplayName                                                                  = "endpoint protection legacy - dsc v2.0";
+                    Credential                                                                   = $Credscredential;
+                    Ensure                                                                       = "Absent";
+                }
                 IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10 'Example'
                 {
                     Assignments                    = @(
@@ -927,7 +1879,6 @@
                     DisplayName                    = "firmware";
                     Ensure                         = "Present";
                     FrontCamera                    = "enabled";
-                    Id                             = "16599412-1827-4837-b2c1-da2c8260d16e";
                     InfraredCamera                 = "enabled";
                     Microphone                     = "notConfigured";
                     MicrophonesAndSpeakers         = "enabled";
@@ -945,6 +1896,46 @@
                     WindowsPlatformBinaryTable     = "enabled";
                     WirelessWideAreaNetwork        = "notConfigured";
                 }
+                IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10 'Example'
+                {
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Bluetooth                      = "notConfigured";
+                    BootFromBuiltInNetworkAdapters = "notConfigured";
+                    BootFromExternalMedia          = "notConfigured";
+                    Cameras                        = "enabled"; # Updated Property
+                    ChangeUefiSettingsPermission   = "notConfiguredOnly";
+                    Credential                     = $Credscredential;
+                    DisplayName                    = "firmware";
+                    Ensure                         = "Present";
+                    FrontCamera                    = "enabled";
+                    InfraredCamera                 = "enabled";
+                    Microphone                     = "notConfigured";
+                    MicrophonesAndSpeakers         = "enabled";
+                    NearFieldCommunication         = "notConfigured";
+                    Radios                         = "enabled";
+                    RearCamera                     = "enabled";
+                    SdCard                         = "notConfigured";
+                    SimultaneousMultiThreading     = "enabled";
+                    SupportsScopeTags              = $True;
+                    UsbTypeAPort                   = "notConfigured";
+                    VirtualizationOfCpuAndIO       = "enabled";
+                    WakeOnLAN                      = "notConfigured";
+                    WakeOnPower                    = "notConfigured";
+                    WiFi                           = "notConfigured";
+                    WindowsPlatformBinaryTable     = "enabled";
+                    WirelessWideAreaNetwork        = "notConfigured";
+                }
+                IntuneDeviceConfigurationFirmwareInterfacePolicyWindows10 'Example'
+                {
+                    Credential                     = $Credscredential;
+                    DisplayName                    = "firmware";
+                    Ensure                         = "Absent";
+                }
                 IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10 'Example'
                 {
                     AllowDeviceHealthMonitoring       = "enabled";
@@ -958,8 +1949,28 @@
                     Credential                        = $Credscredential;
                     DisplayName                       = "Health Monitoring Configuration";
                     Ensure                            = "Present";
-                    Id                                = "ea1bbbf2-1593-4156-9995-62b93a474e01";
                     SupportsScopeTags                 = $True;
+                }
+                IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10 'Example'
+                {
+                    AllowDeviceHealthMonitoring       = "enabled";
+                    Assignments                       = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    ConfigDeviceHealthMonitoringScope = @("bootPerformance","windowsUpdates");
+                    Credential                        = $Credscredential;
+                    DisplayName                       = "Health Monitoring Configuration";
+                    Ensure                            = "Present";
+                    SupportsScopeTags                 = $False; # Updated Property
+                }
+                IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10 'Example'
+                {
+                    Credential                        = $Credscredential;
+                    DisplayName                       = "Health Monitoring Configuration";
+                    Ensure                            = "Absent";
                 }
                 IntuneDeviceConfigurationIdentityProtectionPolicyWindows10 'Example'
                 {
@@ -973,7 +1984,6 @@
                     DisplayName                                  = "identity protection";
                     EnhancedAntiSpoofingForFacialFeaturesEnabled = $True;
                     Ensure                                       = "Present";
-                    Id                                           = "e0f7e513-6b34-4a74-8d90-fe7648c0ce30";
                     PinExpirationInDays                          = 5;
                     PinLowercaseCharactersUsage                  = "allowed";
                     PinMaximumLength                             = 4;
@@ -989,6 +1999,39 @@
                     UseSecurityKeyForSignin                      = $True;
                     WindowsHelloForBusinessBlocked               = $False;
                 }
+                IntuneDeviceConfigurationIdentityProtectionPolicyWindows10 'Example'
+                {
+                    Assignments                                  = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    Credential                                   = $Credscredential;
+                    DisplayName                                  = "identity protection";
+                    EnhancedAntiSpoofingForFacialFeaturesEnabled = $True;
+                    Ensure                                       = "Present";
+                    PinExpirationInDays                          = 5;
+                    PinLowercaseCharactersUsage                  = "allowed";
+                    PinMaximumLength                             = 4;
+                    PinMinimumLength                             = 4;
+                    PinPreviousBlockCount                        = 4; # Updated Property
+                    PinRecoveryEnabled                           = $True;
+                    PinSpecialCharactersUsage                    = "allowed";
+                    PinUppercaseCharactersUsage                  = "allowed";
+                    SecurityDeviceRequired                       = $True;
+                    SupportsScopeTags                            = $True;
+                    UnlockWithBiometricsEnabled                  = $True;
+                    UseCertificatesForOnPremisesAuthEnabled      = $True;
+                    UseSecurityKeyForSignin                      = $True;
+                    WindowsHelloForBusinessBlocked               = $False;
+                }
+                IntuneDeviceConfigurationIdentityProtectionPolicyWindows10 'Example'
+                {
+                    Credential                                   = $Credscredential;
+                    DisplayName                                  = "identity protection";
+                    Ensure                                       = "Absent";
+                }
                 IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10 'Example'
                 {
                     Assignments                    = @(
@@ -1002,12 +2045,36 @@
                     Credential                     = $Credscredential;
                     DisplayName                    = "PKCS Imported";
                     Ensure                         = "Present";
-                    Id                             = "01a4f283-7bb6-4b11-99fa-e56826d986d0";
                     IntendedPurpose                = "unassigned";
                     KeyStorageProvider             = "useSoftwareKsp";
                     RenewalThresholdPercentage     = 50;
                     SubjectAlternativeNameType     = "emailAddress";
                     SubjectNameFormat              = "commonName";
+                }
+                IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10 'Example'
+                {
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    CertificateValidityPeriodScale = "years";
+                    CertificateValidityPeriodValue = 1;
+                    Credential                     = $Credscredential;
+                    DisplayName                    = "PKCS Imported";
+                    Ensure                         = "Present";
+                    IntendedPurpose                = "unassigned";
+                    KeyStorageProvider             = "useSoftwareKsp";
+                    RenewalThresholdPercentage     = 60; # Updated Property
+                    SubjectAlternativeNameType     = "emailAddress";
+                    SubjectNameFormat              = "commonName";
+                }
+                IntuneDeviceConfigurationImportedPfxCertificatePolicyWindows10 'Example'
+                {
+                    Credential                     = $Credscredential;
+                    DisplayName                    = "PKCS Imported";
+                    Ensure                         = "Absent";
                 }
                 IntuneDeviceConfigurationKioskPolicyWindows10 'Example'
                 {
@@ -1021,7 +2088,6 @@
                     DisplayName                         = "kiosk";
                     EdgeKioskEnablePublicBrowsing       = $False;
                     Ensure                              = "Present";
-                    Id                                  = "7fea73fd-20d3-439a-9fa4-73955e082dc5";
                     KioskBrowserBlockedUrlExceptions    = @();
                     KioskBrowserBlockedURLs             = @();
                     KioskBrowserDefaultUrl              = "http://bing.com";
@@ -1059,6 +2125,61 @@
                         DayofWeek = 'sunday'
                     };
                 }
+                IntuneDeviceConfigurationKioskPolicyWindows10 'Example'
+                {
+                    Assignments                         = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    Credential                          = $Credscredential;
+                    DisplayName                         = "kiosk";
+                    EdgeKioskEnablePublicBrowsing       = $False; # Updated Property
+                    Ensure                              = "Present";
+                    KioskBrowserBlockedUrlExceptions    = @();
+                    KioskBrowserBlockedURLs             = @();
+                    KioskBrowserDefaultUrl              = "http://bing.com";
+                    KioskBrowserEnableEndSessionButton  = $False;
+                    KioskBrowserEnableHomeButton        = $True;
+                    KioskBrowserEnableNavigationButtons = $False;
+                    KioskProfiles                       = @(
+                        MSFT_MicrosoftGraphwindowsKioskProfile{
+                            ProfileId = '17f9e980-3435-4bd5-a7a1-ca3c06d0bf2c'
+                            UserAccountsConfiguration = @(
+                                MSFT_MicrosoftGraphWindowsKioskUser{
+                                    odataType = '#microsoft.graph.windowsKioskAutologon'
+                                }
+                            )
+                            ProfileName = 'profile'
+                            AppConfiguration = MSFT_MicrosoftGraphWindowsKioskAppConfiguration{
+                                Win32App = MSFT_MicrosoftGraphWindowsKioskWin32App{
+                                    EdgeNoFirstRun = $True
+                                    EdgeKiosk = 'https://domain.com'
+                                    ClassicAppPath = 'msedge.exe'
+                                    AutoLaunch = $False
+                                    StartLayoutTileSize = 'hidden'
+                                    AppType = 'unknown'
+                                    EdgeKioskType = 'publicBrowsing'
+                                }
+                                odataType = '#microsoft.graph.windowsKioskSingleWin32App'
+                            }
+                        }
+                    );
+                    WindowsKioskForceUpdateSchedule     = MSFT_MicrosoftGraphwindowsKioskForceUpdateSchedule{
+                        RunImmediatelyIfAfterStartDateTime = $False
+                        StartDateTime = '2023-04-15T23:00:00.0000000+00:00'
+                        DayofMonth = 1
+                        Recurrence = 'daily'
+                        DayofWeek = 'sunday'
+                    };
+                }
+                IntuneDeviceConfigurationKioskPolicyWindows10 'Example'
+                {
+                    Credential                          = $Credscredential;
+                    DisplayName                         = "kiosk";
+                    Ensure                              = "Absent";
+                }
                 IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10 'Example'
                 {
                     Assignments                   = @(
@@ -1070,7 +2191,6 @@
                     Credential                    = $Credscredential;
                     DisplayName                   = "network boundary";
                     Ensure                        = "Present";
-                    Id                            = "16c280a3-a04f-4847-b3bb-3cef06cb2be3";
                     SupportsScopeTags             = $True;
                     WindowsNetworkIsolationPolicy = MSFT_MicrosoftGraphwindowsNetworkIsolationPolicy{
                         EnterpriseProxyServers = @()
@@ -1087,6 +2207,40 @@
                         )
                         NeutralDomainResources = @()
                     };
+                }
+                IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10 'Example'
+                {
+                    Assignments                   = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Credential                    = $Credscredential;
+                    DisplayName                   = "network boundary";
+                    Ensure                        = "Present";
+                    SupportsScopeTags             = $False; # Updated Property
+                    WindowsNetworkIsolationPolicy = MSFT_MicrosoftGraphwindowsNetworkIsolationPolicy{
+                        EnterpriseProxyServers = @()
+                        EnterpriseInternalProxyServers = @()
+                        EnterpriseIPRangesAreAuthoritative = $True
+                        EnterpriseProxyServersAreAuthoritative = $True
+                        EnterpriseNetworkDomainNames = @('domain.com')
+                        EnterpriseIPRanges = @(
+                            MSFT_MicrosoftGraphIpRange1{
+                                UpperAddress = '1.1.1.255'
+                                LowerAddress = '1.1.1.0'
+                                odataType = '#microsoft.graph.iPv4Range'
+                            }
+                        )
+                        NeutralDomainResources = @()
+                    };
+                }
+                IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10 'Example'
+                {
+                    Credential                    = $Credscredential;
+                    DisplayName                   = "network boundary";
+                    Ensure                        = "Absent";
                 }
                 IntuneDeviceConfigurationPkcsCertificatePolicyWindows10 'Example'
                 {
@@ -1111,16 +2265,49 @@
                     );
                     DisplayName                    = "PKCS";
                     Ensure                         = "Present";
-                    Id                             = "2abd77a6-b656-4231-ab64-89c31e871ca6";
                     KeyStorageProvider             = "usePassportForWorkKspOtherwiseFail";
                     RenewalThresholdPercentage     = 20;
                     SubjectAlternativeNameType     = "none";
                     SubjectNameFormat              = "custom";
                     SubjectNameFormatString        = "CN={{UserName}},E={{EmailAddress}}";
                 }
+                IntuneDeviceConfigurationPkcsCertificatePolicyWindows10 'Example'
+                {
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    CertificateStore               = "user";
+                    CertificateTemplateName        = "Template DSC";
+                    CertificateValidityPeriodScale = "years";
+                    CertificateValidityPeriodValue = 1;
+                    CertificationAuthority         = "CA=Name";
+                    CertificationAuthorityName     = "Test";
+                    Credential                     = $Credscredential;
+                    CustomSubjectAlternativeNames  = @(
+                        MSFT_MicrosoftGraphcustomSubjectAlternativeName{
+                            SanType = 'domainNameService'
+                            Name = 'certificate.com'
+                        }
+                    );
+                    DisplayName                    = "PKCS";
+                    Ensure                         = "Present";
+                    KeyStorageProvider             = "usePassportForWorkKspOtherwiseFail";
+                    RenewalThresholdPercentage     = 30; # Updated Property
+                    SubjectAlternativeNameType     = "none";
+                    SubjectNameFormat              = "custom";
+                    SubjectNameFormatString        = "CN={{UserName}},E={{EmailAddress}}";
+                }
+                IntuneDeviceConfigurationPkcsCertificatePolicyWindows10 'Example'
+                {
+                    Credential                     = $Credscredential;
+                    DisplayName                    = "PKCS";
+                    Ensure                         = "Absent";
+                }
                 IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator 'myAndroidDeviceAdmin'
                 {
-                    Id                                       = '4feff881-d635-4e9d-bd07-d1227d1ab230'
                     DisplayName                              = 'Android device admin'
                     AppsBlockClipboardSharing                = $True
                     AppsBlockCopyPaste                       = $True
@@ -1179,9 +2366,74 @@
                     Ensure                                   = 'Present'
                     Credential                               = $Credscredential
                 }
+                IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator 'myAndroidDeviceAdmin'
+                {
+                    DisplayName                              = 'Android device admin'
+                    AppsBlockClipboardSharing                = $True
+                    AppsBlockCopyPaste                       = $False # Updated Property
+                    AppsBlockYouTube                         = $False
+                    Assignments                              = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    )
+                    BluetoothBlocked                         = $True
+                    CameraBlocked                            = $True
+                    CellularBlockDataRoaming                 = $False
+                    CellularBlockMessaging                   = $False
+                    CellularBlockVoiceRoaming                = $False
+                    CellularBlockWiFiTethering               = $False
+                    CompliantAppListType                     = 'appsInListCompliant'
+                    CompliantAppsList                        = @(
+                        MSFT_MicrosoftGraphAppListitem {
+                            name        = 'customApp'
+                            publisher   = 'google2'
+                            appStoreUrl = 'https://appUrl.com'
+                            appId       = 'com.custom.google.com'
+                        }
+                    )
+                    DateAndTimeBlockChanges                  = $True
+                    DeviceSharingAllowed                     = $False
+                    DiagnosticDataBlockSubmission            = $False
+                    FactoryResetBlocked                      = $False
+                    GoogleAccountBlockAutoSync               = $False
+                    GooglePlayStoreBlocked                   = $False
+                    KioskModeBlockSleepButton                = $False
+                    KioskModeBlockVolumeButtons              = $True
+                    LocationServicesBlocked                  = $False
+                    NfcBlocked                               = $False
+                    PasswordBlockFingerprintUnlock           = $False
+                    PasswordBlockTrustAgents                 = $False
+                    PasswordRequired                         = $True
+                    PasswordRequiredType                     = 'numeric'
+                    PowerOffBlocked                          = $False
+                    RequiredPasswordComplexity               = 'low'
+                    ScreenCaptureBlocked                     = $False
+                    SecurityRequireVerifyApps                = $False
+                    StorageBlockGoogleBackup                 = $False
+                    StorageBlockRemovableStorage             = $False
+                    StorageRequireDeviceEncryption           = $False
+                    StorageRequireRemovableStorageEncryption = $True
+                    VoiceAssistantBlocked                    = $False
+                    VoiceDialingBlocked                      = $False
+                    WebBrowserBlockAutofill                  = $False
+                    WebBrowserBlocked                        = $False
+                    WebBrowserBlockJavaScript                = $False
+                    WebBrowserBlockPopups                    = $False
+                    WebBrowserCookieSettings                 = 'allowAlways'
+                    WiFiBlocked                              = $False
+                    Ensure                                   = 'Present'
+                    Credential                               = $Credscredential
+                }
+                IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator 'myAndroidDeviceAdmin'
+                {
+                    DisplayName                              = 'Android device admin'
+                    Ensure                                   = 'Absent'
+                    Credential                               = $Credscredential
+                }
                 IntuneDeviceConfigurationPolicyAndroidDeviceOwner 'myAndroidDeviceOwnerPolicy'
                 {
-                    Id                                    = '57853b98-db50-4605-9292-3ade98e25bc3'
                     DisplayName                           = 'general confi - AndroidDeviceOwner'
                     Assignments                           = @()
                     AzureAdSharedDeviceDataClearApps      = @()
@@ -1226,9 +2478,60 @@
                     Ensure                                = 'Present'
                     Credential                            = $Credscredential
                 }
+                IntuneDeviceConfigurationPolicyAndroidDeviceOwner 'myAndroidDeviceOwnerPolicy'
+                {
+                    DisplayName                           = 'general confi - AndroidDeviceOwner'
+                    Assignments                           = @()
+                    AzureAdSharedDeviceDataClearApps      = @()
+                    CameraBlocked                         = $False # Updated Property
+                    CrossProfilePoliciesAllowDataSharing  = 'notConfigured'
+                    EnrollmentProfile                     = 'notConfigured'
+                    FactoryResetDeviceAdministratorEmails = @()
+                    GlobalProxy                           = MSFT_MicrosoftGraphandroiddeviceownerglobalproxy {
+                        odataType = '#microsoft.graph.androidDeviceOwnerGlobalProxyDirect'
+                        host      = 'myproxy.com'
+                        port      = 8083
+                    }
+                    KioskCustomizationStatusBar           = 'notConfigured'
+                    KioskCustomizationSystemNavigation    = 'notConfigured'
+                    KioskModeAppPositions                 = @()
+                    KioskModeApps                         = @()
+                    KioskModeManagedFolders               = @()
+                    KioskModeUseManagedHomeScreenApp      = 'notConfigured'
+                    KioskModeWifiAllowedSsids             = @()
+                    MicrophoneForceMute                   = $True
+                    NfcBlockOutgoingBeam                  = $True
+                    PasswordBlockKeyguardFeatures         = @()
+                    PasswordRequiredType                  = 'deviceDefault'
+                    PasswordRequireUnlock                 = 'deviceDefault'
+                    PersonalProfilePersonalApplications   = @()
+                    PersonalProfilePlayStoreMode          = 'notConfigured'
+                    ScreenCaptureBlocked                  = $True
+                    SecurityRequireVerifyApps             = $True
+                    StayOnModes                           = @()
+                    StorageBlockExternalMedia             = $True
+                    SystemUpdateFreezePeriods             = @(
+                        MSFT_MicrosoftGraphandroiddeviceownersystemupdatefreezeperiod {
+                            startMonth = 12
+                            startDay   = 23
+                            endMonth   = 12
+                            endDay     = 30
+                        })
+                    VpnAlwaysOnLockdownMode               = $False
+                    VpnAlwaysOnPackageIdentifier          = ''
+                    WorkProfilePasswordRequiredType       = 'deviceDefault'
+                    WorkProfilePasswordRequireUnlock      = 'deviceDefault'
+                    Ensure                                = 'Present'
+                    Credential                            = $Credscredential
+                }
+                IntuneDeviceConfigurationPolicyAndroidDeviceOwner 'myAndroidDeviceOwnerPolicy'
+                {
+                    DisplayName                           = 'general confi - AndroidDeviceOwner'
+                    Ensure                                = 'Absent'
+                    Credential                            = $Credscredential
+                }
                 IntuneDeviceConfigurationPolicyAndroidOpenSourceProject 'myAndroidOpenSourceProjectPolicy'
                 {
-                    Id                        = '9191730e-6e01-4b77-b23c-9648b5c7bb1e'
                     DisplayName               = 'aosp'
                     Assignments               = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -1242,6 +2545,29 @@
                     ScreenCaptureBlocked      = $True
                     StorageBlockExternalMedia = $True
                     Ensure                    = 'Present'
+                    Credential                = $Credscredential
+                }
+                IntuneDeviceConfigurationPolicyAndroidOpenSourceProject 'myAndroidOpenSourceProjectPolicy'
+                {
+                    DisplayName               = 'aosp'
+                    Assignments               = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    )
+                    CameraBlocked             = $True # Updated Property
+                    FactoryResetBlocked       = $True
+                    PasswordRequiredType      = 'deviceDefault'
+                    ScreenCaptureBlocked      = $True
+                    StorageBlockExternalMedia = $True
+                    Ensure                    = 'Present'
+                    Credential                = $Credscredential
+                }
+                IntuneDeviceConfigurationPolicyAndroidOpenSourceProject 'myAndroidOpenSourceProjectPolicy'
+                {
+                    DisplayName               = 'aosp'
+                    Ensure                    = 'Absent'
                     Credential                = $Credscredential
                 }
                 IntuneDeviceConfigurationPolicyAndroidWorkProfile '97ed22e9-1429-40dc-ab3c-0055e538383b'
@@ -1270,9 +2596,40 @@
                     Ensure                                         = 'Present'
                     Credential                                     = $Credscredential
                 }
+                IntuneDeviceConfigurationPolicyAndroidWorkProfile '97ed22e9-1429-40dc-ab3c-0055e538383b'
+                {
+                    DisplayName                                    = 'Android Work Profile - Device Restrictions - Standard'
+                    PasswordBlockFingerprintUnlock                 = $False
+                    PasswordBlockTrustAgents                       = $True # Updated Property
+                    PasswordMinimumLength                          = 6
+                    PasswordMinutesOfInactivityBeforeScreenTimeout = 15
+                    PasswordRequiredType                           = 'atLeastNumeric'
+                    SecurityRequireVerifyApps                      = $True
+                    WorkProfileBlockAddingAccounts                 = $True
+                    WorkProfileBlockCamera                         = $False
+                    WorkProfileBlockCrossProfileCallerId           = $False
+                    WorkProfileBlockCrossProfileContactsSearch     = $False
+                    WorkProfileBlockCrossProfileCopyPaste          = $True
+                    WorkProfileBlockNotificationsWhileDeviceLocked = $True
+                    WorkProfileBlockScreenCapture                  = $True
+                    WorkProfileBluetoothEnableContactSharing       = $False
+                    WorkProfileDataSharingType                     = 'allowPersonalToWork'
+                    WorkProfileDefaultAppPermissionPolicy          = 'deviceDefault'
+                    WorkProfilePasswordBlockFingerprintUnlock      = $False
+                    WorkProfilePasswordBlockTrustAgents            = $False
+                    WorkProfilePasswordRequiredType                = 'deviceDefault'
+                    WorkProfileRequirePassword                     = $False
+                    Ensure                                         = 'Present'
+                    Credential                                     = $Credscredential
+                }
+                IntuneDeviceConfigurationPolicyAndroidWorkProfile '97ed22e9-1429-40dc-ab3c-0055e538383b'
+                {
+                    DisplayName                                    = 'Android Work Profile - Device Restrictions - Standard'
+                    Ensure                                         = 'Absent'
+                    Credential                                     = $Credscredential
+                }
                 IntuneDeviceConfigurationPolicyiOS 'ConfigureDeviceConfigurationPolicyiOS'
                 {
-                    Id                                             = '901c99e3-6429-4f02-851f-54b49a53f103'
                     DisplayName                                    = 'iOS DSC Policy'
                     AccountBlockModification                       = $False
                     ActivationLockAllowWhenSupervised              = $False
@@ -1384,9 +2741,127 @@
                     Ensure                                         = 'Present'
                     Credential                                     = $Credscredential
                 }
+                IntuneDeviceConfigurationPolicyiOS 'ConfigureDeviceConfigurationPolicyiOS'
+                {
+                    DisplayName                                    = 'iOS DSC Policy'
+                    AccountBlockModification                       = $False
+                    ActivationLockAllowWhenSupervised              = $False
+                    AirDropBlocked                                 = $True # Updated Property
+                    AirDropForceUnmanagedDropTarget                = $False
+                    AirPlayForcePairingPasswordForOutgoingRequests = $False
+                    AppleNewsBlocked                               = $False
+                    AppleWatchBlockPairing                         = $False
+                    AppleWatchForceWristDetection                  = $False
+                    AppStoreBlockAutomaticDownloads                = $False
+                    AppStoreBlocked                                = $False
+                    AppStoreBlockInAppPurchases                    = $False
+                    AppStoreBlockUIAppInstallation                 = $False
+                    AppStoreRequirePassword                        = $False
+                    AppsVisibilityList                             = @()
+                    AppsVisibilityListType                         = 'none'
+                    BluetoothBlockModification                     = $True
+                    CameraBlocked                                  = $False
+                    CellularBlockDataRoaming                       = $False
+                    CellularBlockGlobalBackgroundFetchWhileRoaming = $False
+                    CellularBlockPerAppDataModification            = $False
+                    CellularBlockVoiceRoaming                      = $False
+                    CertificatesBlockUntrustedTlsCertificates      = $False
+                    ClassroomAppBlockRemoteScreenObservation       = $False
+                    CompliantAppListType                           = 'none'
+                    CompliantAppsList                              = @()
+                    ConfigurationProfileBlockChanges               = $False
+                    DefinitionLookupBlocked                        = $False
+                    Description                                    = 'iOS Device Restriction Policy'
+                    DeviceBlockEnableRestrictions                  = $True
+                    DeviceBlockEraseContentAndSettings             = $False
+                    DeviceBlockNameModification                    = $False
+                    DiagnosticDataBlockSubmission                  = $False
+                    DiagnosticDataBlockSubmissionModification      = $False
+                    DocumentsBlockManagedDocumentsInUnmanagedApps  = $False
+                    DocumentsBlockUnmanagedDocumentsInManagedApps  = $False
+                    EmailInDomainSuffixes                          = @()
+                    EnterpriseAppBlockTrust                        = $False
+                    EnterpriseAppBlockTrustModification            = $False
+                    FaceTimeBlocked                                = $False
+                    FindMyFriendsBlocked                           = $False
+                    GameCenterBlocked                              = $False
+                    GamingBlockGameCenterFriends                   = $True
+                    GamingBlockMultiplayer                         = $False
+                    HostPairingBlocked                             = $False
+                    iBooksStoreBlocked                             = $False
+                    iBooksStoreBlockErotica                        = $False
+                    iCloudBlockActivityContinuation                = $False
+                    iCloudBlockBackup                              = $True
+                    iCloudBlockDocumentSync                        = $True
+                    iCloudBlockManagedAppsSync                     = $False
+                    iCloudBlockPhotoLibrary                        = $False
+                    iCloudBlockPhotoStreamSync                     = $True
+                    iCloudBlockSharedPhotoStream                   = $False
+                    iCloudRequireEncryptedBackup                   = $False
+                    iTunesBlockExplicitContent                     = $False
+                    iTunesBlockMusicService                        = $False
+                    iTunesBlockRadio                               = $False
+                    KeyboardBlockAutoCorrect                       = $False
+                    KeyboardBlockPredictive                        = $False
+                    KeyboardBlockShortcuts                         = $False
+                    KeyboardBlockSpellCheck                        = $False
+                    KioskModeAllowAssistiveSpeak                   = $False
+                    KioskModeAllowAssistiveTouchSettings           = $False
+                    KioskModeAllowAutoLock                         = $False
+                    KioskModeAllowColorInversionSettings           = $False
+                    KioskModeAllowRingerSwitch                     = $False
+                    KioskModeAllowScreenRotation                   = $False
+                    KioskModeAllowSleepButton                      = $False
+                    KioskModeAllowTouchscreen                      = $False
+                    KioskModeAllowVoiceOverSettings                = $False
+                    KioskModeAllowVolumeButtons                    = $False
+                    KioskModeAllowZoomSettings                     = $False
+                    KioskModeRequireAssistiveTouch                 = $False
+                    KioskModeRequireColorInversion                 = $False
+                    KioskModeRequireMonoAudio                      = $False
+                    KioskModeRequireVoiceOver                      = $False
+                    KioskModeRequireZoom                           = $False
+                    LockScreenBlockControlCenter                   = $False
+                    LockScreenBlockNotificationView                = $False
+                    LockScreenBlockPassbook                        = $False
+                    LockScreenBlockTodayView                       = $False
+                    MediaContentRatingApps                         = 'allAllowed'
+                    messagesBlocked                                = $False
+                    NotificationsBlockSettingsModification         = $False
+                    PasscodeBlockFingerprintUnlock                 = $False
+                    PasscodeBlockModification                      = $False
+                    PasscodeBlockSimple                            = $True
+                    PasscodeMinimumLength                          = 4
+                    PasscodeRequired                               = $True
+                    PasscodeRequiredType                           = 'deviceDefault'
+                    PodcastsBlocked                                = $False
+                    SafariBlockAutofill                            = $False
+                    SafariBlocked                                  = $False
+                    SafariBlockJavaScript                          = $False
+                    SafariBlockPopups                              = $False
+                    SafariCookieSettings                           = 'browserDefault'
+                    SafariManagedDomains                           = @()
+                    SafariPasswordAutoFillDomains                  = @()
+                    SafariRequireFraudWarning                      = $False
+                    ScreenCaptureBlocked                           = $False
+                    SiriBlocked                                    = $False
+                    SiriBlockedWhenLocked                          = $False
+                    SiriBlockUserGeneratedContent                  = $False
+                    SiriRequireProfanityFilter                     = $False
+                    SpotlightBlockInternetResults                  = $False
+                    VoiceDialingBlocked                            = $False
+                    WallpaperBlockModification                     = $False
+                    Ensure                                         = 'Present'
+                    Credential                                     = $Credscredential
+                }
+                IntuneDeviceConfigurationPolicyiOS 'ConfigureDeviceConfigurationPolicyiOS'
+                {
+                    DisplayName                                    = 'iOS DSC Policy'
+                    Ensure                                         = 'Absent'
+                    Credential                                     = $Credscredential
+                }
                 IntuneDeviceConfigurationPolicyMacOS 'myMacOSDevicePolicy'
                 {
-                    Id                                              = '01fc772e-a2ef-4c33-8b57-29b7aa5243cb'
                     DisplayName                                     = 'MacOS device restriction'
                     AddingGameCenterFriendsBlocked                  = $True
                     AirDropBlocked                                  = $False
@@ -1480,6 +2955,109 @@
                     UpdateDelayPolicy                               = @('delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'delayMajorOsUpdateVisibility')
                     WallpaperModificationBlocked                    = $False
                     Ensure                                          = 'Present'
+                    Credential                                      = $Credscredential
+                }
+                IntuneDeviceConfigurationPolicyMacOS 'myMacOSDevicePolicy'
+                {
+                    DisplayName                                     = 'MacOS device restriction'
+                    AddingGameCenterFriendsBlocked                  = $True
+                    AirDropBlocked                                  = $True # Updated Property
+                    AppleWatchBlockAutoUnlock                       = $False
+                    Assignments                                     = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.groupAssignmentTarget'
+                            groupId                                    = 'e8cbd84d-be6a-4b72-87f0-0e677541fda0'
+                        }
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.groupAssignmentTarget'
+                            groupId                                    = 'ea9199b8-3e6e-407b-afdc-e0943e0d3c20'
+                        })
+                    CameraBlocked                                   = $False
+                    ClassroomAppBlockRemoteScreenObservation        = $False
+                    ClassroomAppForceUnpromptedScreenObservation    = $False
+                    ClassroomForceAutomaticallyJoinClasses          = $False
+                    ClassroomForceRequestPermissionToLeaveClasses   = $False
+                    ClassroomForceUnpromptedAppAndDeviceLock        = $False
+                    CompliantAppListType                            = 'appsNotInListCompliant'
+                    CompliantAppsList                               = @(
+                        MSFT_MicrosoftGraphapplistitemMacOS {
+                            name      = 'appname2'
+                            publisher = 'publisher'
+                            appId     = 'bundle'
+                        }
+                    )
+                    ContentCachingBlocked                           = $False
+                    DefinitionLookupBlocked                         = $True
+                    EmailInDomainSuffixes                           = @()
+                    EraseContentAndSettingsBlocked                  = $False
+                    GameCenterBlocked                               = $False
+                    ICloudBlockActivityContinuation                 = $False
+                    ICloudBlockAddressBook                          = $False
+                    ICloudBlockBookmarks                            = $False
+                    ICloudBlockCalendar                             = $False
+                    ICloudBlockDocumentSync                         = $False
+                    ICloudBlockMail                                 = $False
+                    ICloudBlockNotes                                = $False
+                    ICloudBlockPhotoLibrary                         = $False
+                    ICloudBlockReminders                            = $False
+                    ICloudDesktopAndDocumentsBlocked                = $False
+                    ICloudPrivateRelayBlocked                       = $False
+                    ITunesBlockFileSharing                          = $False
+                    ITunesBlockMusicService                         = $False
+                    KeyboardBlockDictation                          = $False
+                    KeychainBlockCloudSync                          = $False
+                    MultiplayerGamingBlocked                        = $False
+                    PasswordBlockAirDropSharing                     = $False
+                    PasswordBlockAutoFill                           = $False
+                    PasswordBlockFingerprintUnlock                  = $False
+                    PasswordBlockModification                       = $False
+                    PasswordBlockProximityRequests                  = $False
+                    PasswordBlockSimple                             = $False
+                    PasswordRequired                                = $False
+                    PasswordRequiredType                            = 'deviceDefault'
+                    PrivacyAccessControls                           = @(
+                        MSFT_MicrosoftGraphmacosprivacyaccesscontrolitem {
+                            displayName                  = 'test'
+                            identifier                   = 'test45'
+                            identifierType               = 'path'
+                            codeRequirement              = 'test'
+                            blockCamera                  = $True
+                            speechRecognition            = 'notConfigured'
+                            accessibility                = 'notConfigured'
+                            addressBook                  = 'enabled'
+                            calendar                     = 'notConfigured'
+                            reminders                    = 'notConfigured'
+                            photos                       = 'notConfigured'
+                            mediaLibrary                 = 'notConfigured'
+                            fileProviderPresence         = 'notConfigured'
+                            systemPolicyAllFiles         = 'notConfigured'
+                            systemPolicySystemAdminFiles = 'notConfigured'
+                            systemPolicyDesktopFolder    = 'notConfigured'
+                            systemPolicyDocumentsFolder  = 'notConfigured'
+                            systemPolicyDownloadsFolder  = 'notConfigured'
+                            systemPolicyNetworkVolumes   = 'notConfigured'
+                            systemPolicyRemovableVolumes = 'notConfigured'
+                            postEvent                    = 'notConfigured'
+                        }
+                    )
+                    SafariBlockAutofill                             = $False
+                    ScreenCaptureBlocked                            = $False
+                    SoftwareUpdateMajorOSDeferredInstallDelayInDays = 30
+                    SoftwareUpdateMinorOSDeferredInstallDelayInDays = 30
+                    SoftwareUpdateNonOSDeferredInstallDelayInDays   = 30
+                    SoftwareUpdatesEnforcedDelayInDays              = 30
+                    SpotlightBlockInternetResults                   = $False
+                    UpdateDelayPolicy                               = @('delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'delayMajorOsUpdateVisibility')
+                    WallpaperModificationBlocked                    = $False
+                    Ensure                                          = 'Present'
+                    Credential                                      = $Credscredential
+                }
+                IntuneDeviceConfigurationPolicyMacOS 'myMacOSDevicePolicy'
+                {
+                    DisplayName                                     = 'MacOS device restriction'
+                    Ensure                                          = 'Absent'
                     Credential                                      = $Credscredential
                 }
                 IntuneDeviceConfigurationPolicyWindows10 'Example'
@@ -1597,7 +3175,6 @@
                     ExperienceDoNotSyncBrowserSettings                   = "notConfigured";
                     FindMyFiles                                          = "notConfigured";
                     GameDvrBlocked                                       = $True;
-                    Id                                                   = "d48e4053-8e5f-4856-82d3-c9e293567135";
                     InkWorkspaceAccess                                   = "notConfigured";
                     InkWorkspaceAccessState                              = "notConfigured";
                     InkWorkspaceBlockSuggestedApps                       = $False;
@@ -1737,6 +3314,266 @@
                     WirelessDisplayBlockUserInputFromReceiver            = $False;
                     WirelessDisplayRequirePinForPairing                  = $False;
                 }
+                IntuneDeviceConfigurationPolicyWindows10 'Example'
+                {
+                    AccountsBlockAddingNonMicrosoftAccountEmail          = $False;
+                    ActivateAppsWithVoice                                = "notConfigured";
+                    AntiTheftModeBlocked                                 = $True; # Updated Property
+                    AppManagementMSIAllowUserControlOverInstall          = $False;
+                    AppManagementMSIAlwaysInstallWithElevatedPrivileges  = $False;
+                    AppManagementPackageFamilyNamesToLaunchAfterLogOn    = @();
+                    AppsAllowTrustedAppsSideloading                      = "notConfigured";
+                    AppsBlockWindowsStoreOriginatedApps                  = $False;
+                    Assignments                                          = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    AuthenticationAllowSecondaryDevice                   = $False;
+                    AuthenticationWebSignIn                              = "notConfigured";
+                    BluetoothAllowedServices                             = @();
+                    BluetoothBlockAdvertising                            = $True;
+                    BluetoothBlockDiscoverableMode                       = $False;
+                    BluetoothBlocked                                     = $True;
+                    BluetoothBlockPrePairing                             = $True;
+                    BluetoothBlockPromptedProximalConnections            = $False;
+                    CameraBlocked                                        = $False;
+                    CellularBlockDataWhenRoaming                         = $False;
+                    CellularBlockVpn                                     = $True;
+                    CellularBlockVpnWhenRoaming                          = $True;
+                    CellularData                                         = "allowed";
+                    CertificatesBlockManualRootCertificateInstallation   = $False;
+                    ConnectedDevicesServiceBlocked                       = $False;
+                    CopyPasteBlocked                                     = $False;
+                    CortanaBlocked                                       = $False;
+                    Credential                                           = $Credscredential;
+                    CryptographyAllowFipsAlgorithmPolicy                 = $False;
+                    DefenderBlockEndUserAccess                           = $False;
+                    DefenderBlockOnAccessProtection                      = $False;
+                    DefenderCloudBlockLevel                              = "notConfigured";
+                    DefenderDisableCatchupFullScan                       = $False;
+                    DefenderDisableCatchupQuickScan                      = $False;
+                    DefenderFileExtensionsToExclude                      = @();
+                    DefenderFilesAndFoldersToExclude                     = @();
+                    DefenderMonitorFileActivity                          = "userDefined";
+                    DefenderPotentiallyUnwantedAppActionSetting          = "userDefined";
+                    DefenderProcessesToExclude                           = @();
+                    DefenderPromptForSampleSubmission                    = "userDefined";
+                    DefenderRequireBehaviorMonitoring                    = $False;
+                    DefenderRequireCloudProtection                       = $False;
+                    DefenderRequireNetworkInspectionSystem               = $False;
+                    DefenderRequireRealTimeMonitoring                    = $False;
+                    DefenderScanArchiveFiles                             = $False;
+                    DefenderScanDownloads                                = $False;
+                    DefenderScanIncomingMail                             = $False;
+                    DefenderScanMappedNetworkDrivesDuringFullScan        = $False;
+                    DefenderScanNetworkFiles                             = $False;
+                    DefenderScanRemovableDrivesDuringFullScan            = $False;
+                    DefenderScanScriptsLoadedInInternetExplorer          = $False;
+                    DefenderScanType                                     = "userDefined";
+                    DefenderScheduleScanEnableLowCpuPriority             = $False;
+                    DefenderSystemScanSchedule                           = "userDefined";
+                    DeveloperUnlockSetting                               = "notConfigured";
+                    DeviceManagementBlockFactoryResetOnMobile            = $False;
+                    DeviceManagementBlockManualUnenroll                  = $False;
+                    DiagnosticsDataSubmissionMode                        = "userDefined";
+                    DisplayAppListWithGdiDPIScalingTurnedOff             = @();
+                    DisplayAppListWithGdiDPIScalingTurnedOn              = @();
+                    DisplayName                                          = "device config";
+                    EdgeAllowStartPagesModification                      = $False;
+                    EdgeBlockAccessToAboutFlags                          = $False;
+                    EdgeBlockAddressBarDropdown                          = $False;
+                    EdgeBlockAutofill                                    = $False;
+                    EdgeBlockCompatibilityList                           = $False;
+                    EdgeBlockDeveloperTools                              = $False;
+                    EdgeBlocked                                          = $False;
+                    EdgeBlockEditFavorites                               = $False;
+                    EdgeBlockExtensions                                  = $False;
+                    EdgeBlockFullScreenMode                              = $False;
+                    EdgeBlockInPrivateBrowsing                           = $False;
+                    EdgeBlockJavaScript                                  = $False;
+                    EdgeBlockLiveTileDataCollection                      = $False;
+                    EdgeBlockPasswordManager                             = $False;
+                    EdgeBlockPopups                                      = $False;
+                    EdgeBlockPrelaunch                                   = $False;
+                    EdgeBlockPrinting                                    = $False;
+                    EdgeBlockSavingHistory                               = $False;
+                    EdgeBlockSearchEngineCustomization                   = $False;
+                    EdgeBlockSearchSuggestions                           = $False;
+                    EdgeBlockSendingDoNotTrackHeader                     = $False;
+                    EdgeBlockSendingIntranetTrafficToInternetExplorer    = $False;
+                    EdgeBlockSideloadingExtensions                       = $False;
+                    EdgeBlockTabPreloading                               = $False;
+                    EdgeBlockWebContentOnNewTabPage                      = $False;
+                    EdgeClearBrowsingDataOnExit                          = $False;
+                    EdgeCookiePolicy                                     = "userDefined";
+                    EdgeDisableFirstRunPage                              = $False;
+                    EdgeFavoritesBarVisibility                           = "notConfigured";
+                    EdgeHomeButtonConfigurationEnabled                   = $False;
+                    EdgeHomepageUrls                                     = @();
+                    EdgeKioskModeRestriction                             = "notConfigured";
+                    EdgeOpensWith                                        = "notConfigured";
+                    EdgePreventCertificateErrorOverride                  = $False;
+                    EdgeRequiredExtensionPackageFamilyNames              = @();
+                    EdgeRequireSmartScreen                               = $False;
+                    EdgeSendIntranetTrafficToInternetExplorer            = $False;
+                    EdgeShowMessageWhenOpeningInternetExplorerSites      = "notConfigured";
+                    EdgeSyncFavoritesWithInternetExplorer                = $False;
+                    EdgeTelemetryForMicrosoft365Analytics                = "notConfigured";
+                    EnableAutomaticRedeployment                          = $False;
+                    Ensure                                               = "Present";
+                    ExperienceBlockDeviceDiscovery                       = $False;
+                    ExperienceBlockErrorDialogWhenNoSIM                  = $False;
+                    ExperienceBlockTaskSwitcher                          = $False;
+                    ExperienceDoNotSyncBrowserSettings                   = "notConfigured";
+                    FindMyFiles                                          = "notConfigured";
+                    GameDvrBlocked                                       = $True;
+                    InkWorkspaceAccess                                   = "notConfigured";
+                    InkWorkspaceAccessState                              = "notConfigured";
+                    InkWorkspaceBlockSuggestedApps                       = $False;
+                    InternetSharingBlocked                               = $False;
+                    LocationServicesBlocked                              = $False;
+                    LockScreenActivateAppsWithVoice                      = "notConfigured";
+                    LockScreenAllowTimeoutConfiguration                  = $False;
+                    LockScreenBlockActionCenterNotifications             = $False;
+                    LockScreenBlockCortana                               = $False;
+                    LockScreenBlockToastNotifications                    = $False;
+                    LogonBlockFastUserSwitching                          = $False;
+                    MessagingBlockMMS                                    = $False;
+                    MessagingBlockRichCommunicationServices              = $False;
+                    MessagingBlockSync                                   = $False;
+                    MicrosoftAccountBlocked                              = $False;
+                    MicrosoftAccountBlockSettingsSync                    = $False;
+                    MicrosoftAccountSignInAssistantSettings              = "notConfigured";
+                    NetworkProxyApplySettingsDeviceWide                  = $False;
+                    NetworkProxyDisableAutoDetect                        = $True;
+                    NetworkProxyServer                                   = MSFT_MicrosoftGraphwindows10NetworkProxyServer{
+                        UseForLocalAddresses = $True
+                        Exceptions = @('*.domain2.com')
+                        Address = 'proxy.domain.com:8080'
+                    };
+                    NfcBlocked                                           = $False;
+                    OneDriveDisableFileSync                              = $False;
+                    PasswordBlockSimple                                  = $False;
+                    PasswordRequired                                     = $False;
+                    PasswordRequiredType                                 = "deviceDefault";
+                    PasswordRequireWhenResumeFromIdleState               = $False;
+                    PowerButtonActionOnBattery                           = "notConfigured";
+                    PowerButtonActionPluggedIn                           = "notConfigured";
+                    PowerHybridSleepOnBattery                            = "notConfigured";
+                    PowerHybridSleepPluggedIn                            = "notConfigured";
+                    PowerLidCloseActionOnBattery                         = "notConfigured";
+                    PowerLidCloseActionPluggedIn                         = "notConfigured";
+                    PowerSleepButtonActionOnBattery                      = "notConfigured";
+                    PowerSleepButtonActionPluggedIn                      = "notConfigured";
+                    PrinterBlockAddition                                 = $False;
+                    PrinterNames                                         = @();
+                    PrivacyAdvertisingId                                 = "notConfigured";
+                    PrivacyAutoAcceptPairingAndConsentPrompts            = $False;
+                    PrivacyBlockActivityFeed                             = $False;
+                    PrivacyBlockInputPersonalization                     = $False;
+                    PrivacyBlockPublishUserActivities                    = $False;
+                    PrivacyDisableLaunchExperience                       = $False;
+                    ResetProtectionModeBlocked                           = $False;
+                    SafeSearchFilter                                     = "userDefined";
+                    ScreenCaptureBlocked                                 = $False;
+                    SearchBlockDiacritics                                = $False;
+                    SearchBlockWebResults                                = $False;
+                    SearchDisableAutoLanguageDetection                   = $False;
+                    SearchDisableIndexerBackoff                          = $False;
+                    SearchDisableIndexingEncryptedItems                  = $False;
+                    SearchDisableIndexingRemovableDrive                  = $False;
+                    SearchDisableLocation                                = $False;
+                    SearchDisableUseLocation                             = $False;
+                    SearchEnableAutomaticIndexSizeManangement            = $False;
+                    SearchEnableRemoteQueries                            = $False;
+                    SecurityBlockAzureADJoinedDevicesAutoEncryption      = $False;
+                    SettingsBlockAccountsPage                            = $False;
+                    SettingsBlockAddProvisioningPackage                  = $False;
+                    SettingsBlockAppsPage                                = $False;
+                    SettingsBlockChangeLanguage                          = $False;
+                    SettingsBlockChangePowerSleep                        = $False;
+                    SettingsBlockChangeRegion                            = $False;
+                    SettingsBlockChangeSystemTime                        = $False;
+                    SettingsBlockDevicesPage                             = $False;
+                    SettingsBlockEaseOfAccessPage                        = $False;
+                    SettingsBlockEditDeviceName                          = $False;
+                    SettingsBlockGamingPage                              = $False;
+                    SettingsBlockNetworkInternetPage                     = $False;
+                    SettingsBlockPersonalizationPage                     = $False;
+                    SettingsBlockPrivacyPage                             = $False;
+                    SettingsBlockRemoveProvisioningPackage               = $False;
+                    SettingsBlockSettingsApp                             = $False;
+                    SettingsBlockSystemPage                              = $False;
+                    SettingsBlockTimeLanguagePage                        = $False;
+                    SettingsBlockUpdateSecurityPage                      = $False;
+                    SharedUserAppDataAllowed                             = $False;
+                    SmartScreenAppInstallControl                         = "notConfigured";
+                    SmartScreenBlockPromptOverride                       = $False;
+                    SmartScreenBlockPromptOverrideForFiles               = $False;
+                    SmartScreenEnableAppInstallControl                   = $False;
+                    StartBlockUnpinningAppsFromTaskbar                   = $False;
+                    StartMenuAppListVisibility                           = "userDefined";
+                    StartMenuHideChangeAccountSettings                   = $False;
+                    StartMenuHideFrequentlyUsedApps                      = $False;
+                    StartMenuHideHibernate                               = $False;
+                    StartMenuHideLock                                    = $False;
+                    StartMenuHidePowerButton                             = $False;
+                    StartMenuHideRecentJumpLists                         = $False;
+                    StartMenuHideRecentlyAddedApps                       = $False;
+                    StartMenuHideRestartOptions                          = $False;
+                    StartMenuHideShutDown                                = $False;
+                    StartMenuHideSignOut                                 = $False;
+                    StartMenuHideSleep                                   = $False;
+                    StartMenuHideSwitchAccount                           = $False;
+                    StartMenuHideUserTile                                = $False;
+                    StartMenuMode                                        = "userDefined";
+                    StartMenuPinnedFolderDocuments                       = "notConfigured";
+                    StartMenuPinnedFolderDownloads                       = "notConfigured";
+                    StartMenuPinnedFolderFileExplorer                    = "notConfigured";
+                    StartMenuPinnedFolderHomeGroup                       = "notConfigured";
+                    StartMenuPinnedFolderMusic                           = "notConfigured";
+                    StartMenuPinnedFolderNetwork                         = "notConfigured";
+                    StartMenuPinnedFolderPersonalFolder                  = "notConfigured";
+                    StartMenuPinnedFolderPictures                        = "notConfigured";
+                    StartMenuPinnedFolderSettings                        = "notConfigured";
+                    StartMenuPinnedFolderVideos                          = "notConfigured";
+                    StorageBlockRemovableStorage                         = $False;
+                    StorageRequireMobileDeviceEncryption                 = $False;
+                    StorageRestrictAppDataToSystemVolume                 = $False;
+                    StorageRestrictAppInstallToSystemVolume              = $False;
+                    SupportsScopeTags                                    = $True;
+                    TaskManagerBlockEndTask                              = $False;
+                    TenantLockdownRequireNetworkDuringOutOfBoxExperience = $False;
+                    UninstallBuiltInApps                                 = $False;
+                    UsbBlocked                                           = $False;
+                    VoiceRecordingBlocked                                = $False;
+                    WebRtcBlockLocalhostIpAddress                        = $False;
+                    WiFiBlockAutomaticConnectHotspots                    = $False;
+                    WiFiBlocked                                          = $True;
+                    WiFiBlockManualConfiguration                         = $True;
+                    WindowsSpotlightBlockConsumerSpecificFeatures        = $False;
+                    WindowsSpotlightBlocked                              = $False;
+                    WindowsSpotlightBlockOnActionCenter                  = $False;
+                    WindowsSpotlightBlockTailoredExperiences             = $False;
+                    WindowsSpotlightBlockThirdPartyNotifications         = $False;
+                    WindowsSpotlightBlockWelcomeExperience               = $False;
+                    WindowsSpotlightBlockWindowsTips                     = $False;
+                    WindowsSpotlightConfigureOnLockScreen                = "notConfigured";
+                    WindowsStoreBlockAutoUpdate                          = $False;
+                    WindowsStoreBlocked                                  = $False;
+                    WindowsStoreEnablePrivateStoreOnly                   = $False;
+                    WirelessDisplayBlockProjectionToThisDevice           = $False;
+                    WirelessDisplayBlockUserInputFromReceiver            = $False;
+                    WirelessDisplayRequirePinForPairing                  = $False;
+                }
+                IntuneDeviceConfigurationPolicyWindows10 'Example'
+                {
+                    Credential                                           = $Credscredential;
+                    DisplayName                                          = "device config";
+                    Ensure                                               = "Absent";
+                }
                 IntuneDeviceConfigurationScepCertificatePolicyWindows10 'Example'
                 {
                     Assignments                    = @(
@@ -1764,7 +3601,6 @@
                         }
                     );
                     HashAlgorithm                  = "sha2";
-                    Id                             = "0b9aef2f-1671-4260-8eb9-3ab3138e176a";
                     KeySize                        = "size2048";
                     KeyStorageProvider             = "useTpmKspOtherwiseUseSoftwareKsp";
                     KeyUsage                       = "digitalSignature";
@@ -1774,6 +3610,49 @@
                     SubjectNameFormat              = "custom";
                     SubjectNameFormatString        = "CN={{UserName}},E={{EmailAddress}}";
                     RootCertificateId              = "169bf4fc-5914-40f4-ad33-48c225396183";
+                }
+                IntuneDeviceConfigurationScepCertificatePolicyWindows10 'Example'
+                {
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    CertificateStore               = "user";
+                    CertificateValidityPeriodScale = "years";
+                    CertificateValidityPeriodValue = 5;
+                    Credential                     = $Credscredential;
+                    CustomSubjectAlternativeNames  = @(
+                        MSFT_MicrosoftGraphcustomSubjectAlternativeName{
+                            SanType = 'domainNameService'
+                            Name = 'dns'
+                        }
+                    );
+                    DisplayName                    = "SCEP";
+                    Ensure                         = "Present";
+                    ExtendedKeyUsages              = @(
+                        MSFT_MicrosoftGraphextendedKeyUsage{
+                            ObjectIdentifier = '1.3.6.1.5.5.7.3.2'
+                            Name = 'Client Authentication'
+                        }
+                    );
+                    HashAlgorithm                  = "sha2";
+                    KeySize                        = "size2048";
+                    KeyStorageProvider             = "useTpmKspOtherwiseUseSoftwareKsp";
+                    KeyUsage                       = "digitalSignature";
+                    RenewalThresholdPercentage     = 30; # Updated Property
+                    ScepServerUrls                 = @("https://mydomain.com/certsrv/mscep/mscep.dll");
+                    SubjectAlternativeNameType     = "none";
+                    SubjectNameFormat              = "custom";
+                    SubjectNameFormatString        = "CN={{UserName}},E={{EmailAddress}}";
+                    RootCertificateId              = "169bf4fc-5914-40f4-ad33-48c225396183";
+                }
+                IntuneDeviceConfigurationScepCertificatePolicyWindows10 'Example'
+                {
+                    Credential                     = $Credscredential;
+                    DisplayName                    = "SCEP";
+                    Ensure                         = "Absent";
                 }
                 IntuneDeviceConfigurationSecureAssessmentPolicyWindows10 'Example'
                 {
@@ -1792,9 +3671,34 @@
                     Credential               = $Credscredential;
                     DisplayName              = "Secure Assessment";
                     Ensure                   = "Present";
-                    Id                       = "b46822c4-48af-422a-960b-92473bee56e0";
                     LaunchUri                = "https://assessment.domain.com";
                     LocalGuestAccountName    = "";
+                }
+                IntuneDeviceConfigurationSecureAssessmentPolicyWindows10 'Example'
+                {
+                    AllowPrinting            = $True;
+                    AllowScreenCapture       = $False; # Updated Property
+                    AllowTextSuggestion      = $True;
+                    AssessmentAppUserModelId = "";
+                    Assignments              = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    ConfigurationAccount     = "user@domain.com";
+                    ConfigurationAccountType = "azureADAccount";
+                    Credential               = $Credscredential;
+                    DisplayName              = "Secure Assessment";
+                    Ensure                   = "Present";
+                    LaunchUri                = "https://assessment.domain.com";
+                    LocalGuestAccountName    = "";
+                }
+                IntuneDeviceConfigurationSecureAssessmentPolicyWindows10 'Example'
+                {
+                    Credential               = $Credscredential;
+                    DisplayName              = "Secure Assessment";
+                    Ensure                   = "Absent";
                 }
                 IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10 'Example'
                 {
@@ -1820,7 +3724,6 @@
                     Enabled                      = $True;
                     Ensure                       = "Present";
                     FastFirstSignIn              = "notConfigured";
-                    Id                           = "e77026f6-707e-417c-ad1a-8e1182d36832";
                     IdleTimeBeforeSleepInSeconds = 60;
                     LocalStorage                 = "enabled";
                     MaintenanceStartTime         = "00:03:00";
@@ -1828,6 +3731,44 @@
                     SetEduPolicies               = "enabled";
                     SetPowerPolicies             = "enabled";
                     SignInOnResume               = "enabled";
+                }
+                IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10 'Example'
+                {
+                    AccountManagerPolicy         = MSFT_MicrosoftGraphsharedPCAccountManagerPolicy{
+                        CacheAccountsAboveDiskFreePercentage = 60 # Updated Property
+                        AccountDeletionPolicy = 'diskSpaceThreshold'
+                        RemoveAccountsBelowDiskFreePercentage = 20
+                    };
+                    AllowedAccounts              = @("guest","domain");
+                    AllowLocalStorage            = $True;
+                    Assignments                  = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Credential                   = $Credscredential;
+                    DisableAccountManager        = $False;
+                    DisableEduPolicies           = $False;
+                    DisablePowerPolicies         = $False;
+                    DisableSignInOnResume        = $False;
+                    DisplayName                  = "Shared Multi device";
+                    Enabled                      = $True;
+                    Ensure                       = "Present";
+                    FastFirstSignIn              = "notConfigured";
+                    IdleTimeBeforeSleepInSeconds = 60;
+                    LocalStorage                 = "enabled";
+                    MaintenanceStartTime         = "00:03:00";
+                    SetAccountManager            = "enabled";
+                    SetEduPolicies               = "enabled";
+                    SetPowerPolicies             = "enabled";
+                    SignInOnResume               = "enabled";
+                }
+                IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10 'Example'
+                {
+                    Credential                   = $Credscredential;
+                    DisplayName                  = "Shared Multi device";
+                    Ensure                       = "Absent";
                 }
                 IntuneDeviceConfigurationTrustedCertificatePolicyWindows10 'Example'
                 {
@@ -1842,8 +3783,28 @@
                     DestinationStore       = "computerCertStoreRoot";
                     DisplayName            = "Trusted Cert";
                     Ensure                 = "Present";
-                    Id                     = "169bf4fc-5914-40f4-ad33-48c225396183";
                     TrustedRootCertificate = "MIIEEjCCAvqgAwIBAgIPAMEAizw8iBHRPvZj7N9AMA0GCSqGSIb3DQEBBAUAMHAxKzApBgNVBAsTIkNvcHlyaWdodCAoYykgMTk5NyBNaWNyb3NvZnQgQ29ycC4xHjAcBgNVBAsTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEhMB8GA1UEAxMYTWljcm9zb2Z0IFJvb3QgQXV0aG9yaXR5MB4XDTk3MDExMDA3MDAwMFoXDTIwMTIzMTA3MDAwMFowcDErMCkGA1UECxMiQ29weXJpZ2h0IChjKSAxOTk3IE1pY3Jvc29mdCBDb3JwLjEeMBwGA1UECxMVTWljcm9zb2Z0IENvcnBvcmF0aW9uMSEwHwYDVQQDExhNaWNyb3NvZnQgUm9vdCBBdXRob3JpdHkwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCpAr3BcOY78k4bKJ+XeF4w6qKpjSVf+P6VTKO3/p2iID58UaKboo9gMmvRQmR57qx2yVTa8uuchhyPn4Rms8VremIj1h083g8BkuiWxL8tZpqaaCaZ0Dosvwy1WCbBRucKPjiWLKkoOajsSYNC44QPu5psVWGsgnyhYC13TOmZtGQ7mlAcMQgkFJ+p55ErGOY9mGMUYFgFZZ8dN1KH96fvlALGG9O/VUWziYC/OuxUlE6u/ad6bXROrxjMlgkoIQBXkGBpN7tLEgc8Vv9b+6RmCgim0oFWV++2O14WgXcE2va+roCV/rDNf9anGnJcPMq88AijIjCzBoXJsyB3E4XfAgMBAAGjgagwgaUwgaIGA1UdAQSBmjCBl4AQW9Bw72lyniNRfhSyTY7/y6FyMHAxKzApBgNVBAsTIkNvcHlyaWdodCAoYykgMTk5NyBNaWNyb3NvZnQgQ29ycC4xHjAcBgNVBAsTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEhMB8GA1UEAxMYTWljcm9zb2Z0IFJvb3QgQXV0aG9yaXR5gg8AwQCLPDyIEdE+9mPs30AwDQYJKoZIhvcNAQEEBQADggEBAJXoC8CN85cYNe24ASTYdxHzXGAyn54Lyz4FkYiPyTrmIfLwV5MstaBHyGLv/NfMOztaqTZUaf4kbT/JzKreBXzdMY09nxBwarv+Ek8YacD80EPjEVogT+pie6+qGcgrNyUtvmWhEoolD2Oj91Qc+SHJ1hXzUqxuQzIH/YIX+OVnbA1R9r3xUse958Qw/CAxCYgdlSkaTdUdAqXxgOADtFv0sd3IV+5lScdSVLa0AygS/5DW8AiPfriXxas3LOR65Kh343agANBqP8HSNorgQRKoNWobats14dQcBOSoRQTIWjM4bk0cDWK3CqKM09VUP0bNHFWmcNsSOoeTdZ+n0qA=";
+                }
+                IntuneDeviceConfigurationTrustedCertificatePolicyWindows10 'Example'
+                {
+                    Assignments            = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    CertFileName           = "RootNew.cer"; # Updated Property
+                    Credential             = $Credscredential;
+                    DestinationStore       = "computerCertStoreRoot";
+                    DisplayName            = "Trusted Cert";
+                    Ensure                 = "Present";
+                    TrustedRootCertificate = "MIIEEjCCAvqgAwIBAgIPAMEAizw8iBHRPvZj7N9AMA0GCSqGSIb3DQEBBAUAMHAxKzApBgNVBAsTIkNvcHlyaWdodCAoYykgMTk5NyBNaWNyb3NvZnQgQ29ycC4xHjAcBgNVBAsTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEhMB8GA1UEAxMYTWljcm9zb2Z0IFJvb3QgQXV0aG9yaXR5MB4XDTk3MDExMDA3MDAwMFoXDTIwMTIzMTA3MDAwMFowcDErMCkGA1UECxMiQ29weXJpZ2h0IChjKSAxOTk3IE1pY3Jvc29mdCBDb3JwLjEeMBwGA1UECxMVTWljcm9zb2Z0IENvcnBvcmF0aW9uMSEwHwYDVQQDExhNaWNyb3NvZnQgUm9vdCBBdXRob3JpdHkwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQCpAr3BcOY78k4bKJ+XeF4w6qKpjSVf+P6VTKO3/p2iID58UaKboo9gMmvRQmR57qx2yVTa8uuchhyPn4Rms8VremIj1h083g8BkuiWxL8tZpqaaCaZ0Dosvwy1WCbBRucKPjiWLKkoOajsSYNC44QPu5psVWGsgnyhYC13TOmZtGQ7mlAcMQgkFJ+p55ErGOY9mGMUYFgFZZ8dN1KH96fvlALGG9O/VUWziYC/OuxUlE6u/ad6bXROrxjMlgkoIQBXkGBpN7tLEgc8Vv9b+6RmCgim0oFWV++2O14WgXcE2va+roCV/rDNf9anGnJcPMq88AijIjCzBoXJsyB3E4XfAgMBAAGjgagwgaUwgaIGA1UdAQSBmjCBl4AQW9Bw72lyniNRfhSyTY7/y6FyMHAxKzApBgNVBAsTIkNvcHlyaWdodCAoYykgMTk5NyBNaWNyb3NvZnQgQ29ycC4xHjAcBgNVBAsTFU1pY3Jvc29mdCBDb3Jwb3JhdGlvbjEhMB8GA1UEAxMYTWljcm9zb2Z0IFJvb3QgQXV0aG9yaXR5gg8AwQCLPDyIEdE+9mPs30AwDQYJKoZIhvcNAQEEBQADggEBAJXoC8CN85cYNe24ASTYdxHzXGAyn54Lyz4FkYiPyTrmIfLwV5MstaBHyGLv/NfMOztaqTZUaf4kbT/JzKreBXzdMY09nxBwarv+Ek8YacD80EPjEVogT+pie6+qGcgrNyUtvmWhEoolD2Oj91Qc+SHJ1hXzUqxuQzIH/YIX+OVnbA1R9r3xUse958Qw/CAxCYgdlSkaTdUdAqXxgOADtFv0sd3IV+5lScdSVLa0AygS/5DW8AiPfriXxas3LOR65Kh343agANBqP8HSNorgQRKoNWobats14dQcBOSoRQTIWjM4bk0cDWK3CqKM09VUP0bNHFWmcNsSOoeTdZ+n0qA=";
+                }
+                IntuneDeviceConfigurationTrustedCertificatePolicyWindows10 'Example'
+                {
+                    Credential             = $Credscredential;
+                    DisplayName            = "Trusted Cert";
+                    Ensure                 = "Absent";
                 }
                 IntuneDeviceConfigurationVpnPolicyWindows10 'Example'
                 {
@@ -1874,7 +3835,6 @@
                     EnableSingleSignOnWithAlternateCertificate = $False;
                     EnableSplitTunneling                       = $False;
                     Ensure                                     = "Present";
-                    Id                                         = "9f3734d4-eb1e-46dc-b668-2f13bfa572ee";
                     ProfileTarget                              = "user";
                     ProxyServer                                = MSFT_MicrosoftGraphwindows10VpnProxyServer{
                         Port = 8081
@@ -1906,6 +3866,72 @@
                     );
                     TrustedNetworkDomains                      = @();
                 }
+                IntuneDeviceConfigurationVpnPolicyWindows10 'Example'
+                {
+                    Assignments                                = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    AuthenticationMethod                       = "usernameAndPassword";
+                    ConnectionName                             = "Cisco VPN";
+                    ConnectionType                             = "ciscoAnyConnect";
+                    Credential                                 = $Credscredential;
+                    CustomXml                                  = "";
+                    DisplayName                                = "VPN";
+                    DnsRules                                   = @(
+                        MSFT_MicrosoftGraphvpnDnsRule{
+                            Servers = @('10.0.1.10')
+                            Name = 'NRPT rule'
+                            Persistent = $True
+                            AutoTrigger = $True
+                        }
+                    );
+                    DnsSuffixes                                = @("mydomain.com");
+                    EnableAlwaysOn                             = $True;
+                    EnableConditionalAccess                    = $True;
+                    EnableDnsRegistration                      = $True;
+                    EnableSingleSignOnWithAlternateCertificate = $True; # Updated Property
+                    EnableSplitTunneling                       = $False;
+                    Ensure                                     = "Present";
+                    ProfileTarget                              = "user";
+                    ProxyServer                                = MSFT_MicrosoftGraphwindows10VpnProxyServer{
+                        Port = 8081
+                        BypassProxyServerForLocalAddress = $True
+                        AutomaticConfigurationScriptUrl = ''
+                        Address = '10.0.10.100'
+                    };
+                    RememberUserCredentials                    = $True;
+                    ServerCollection                           = @(
+                        MSFT_MicrosoftGraphvpnServer{
+                            IsDefaultServer = $True
+                            Description = 'gateway1'
+                            Address = '10.0.1.10'
+                        }
+                    );
+                    TrafficRules                               = @(
+                        MSFT_MicrosoftGraphvpnTrafficRule{
+                            Name = 'VPN rule'
+                            AppType = 'none'
+                            LocalAddressRanges = @(
+                                MSFT_MicrosoftGraphIPv4Range{
+                                    UpperAddress = '10.0.2.240'
+                                    LowerAddress = '10.0.2.0'
+                                }
+                            )
+                            RoutingPolicyType = 'forceTunnel'
+                            VpnTrafficDirection = 'outbound'
+                        }
+                    );
+                    TrustedNetworkDomains                      = @();
+                }
+                IntuneDeviceConfigurationVpnPolicyWindows10 'Example'
+                {
+                    Credential                                 = $Credscredential;
+                    DisplayName                                = "VPN";
+                    Ensure                                     = "Absent";
+                }
                 IntuneDeviceConfigurationWindowsTeamPolicyWindows10 'Example'
                 {
                     Assignments                            = @(
@@ -1919,7 +3945,6 @@
                     Credential                             = $Credscredential;
                     DisplayName                            = "Device restrictions (Windows 10 Team)";
                     Ensure                                 = "Present";
-                    Id                                     = "55308358-a4b9-4e26-bc75-7a6871836436";
                     MaintenanceWindowBlocked               = $False;
                     MaintenanceWindowDurationInHours       = 1;
                     MaintenanceWindowStartTime             = "00:00:00";
@@ -1932,6 +3957,38 @@
                     SupportsScopeTags                      = $True;
                     WelcomeScreenBlockAutomaticWakeUp      = $True;
                     WelcomeScreenMeetingInformation        = "showOrganizerAndTimeOnly";
+                }
+                IntuneDeviceConfigurationWindowsTeamPolicyWindows10 'Example'
+                {
+                    Assignments                            = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    );
+                    AzureOperationalInsightsBlockTelemetry = $False; # Updated Property
+                    ConnectAppBlockAutoLaunch              = $True;
+                    Credential                             = $Credscredential;
+                    DisplayName                            = "Device restrictions (Windows 10 Team)";
+                    Ensure                                 = "Present";
+                    MaintenanceWindowBlocked               = $False;
+                    MaintenanceWindowDurationInHours       = 1;
+                    MaintenanceWindowStartTime             = "00:00:00";
+                    MiracastBlocked                        = $True;
+                    MiracastChannel                        = "oneHundredFortyNine";
+                    MiracastRequirePin                     = $True;
+                    SettingsBlockMyMeetingsAndFiles        = $True;
+                    SettingsBlockSessionResume             = $True;
+                    SettingsBlockSigninSuggestions         = $True;
+                    SupportsScopeTags                      = $True;
+                    WelcomeScreenBlockAutomaticWakeUp      = $True;
+                    WelcomeScreenMeetingInformation        = "showOrganizerAndTimeOnly";
+                }
+                IntuneDeviceConfigurationWindowsTeamPolicyWindows10 'Example'
+                {
+                    Credential                             = $Credscredential;
+                    DisplayName                            = "Device restrictions (Windows 10 Team)";
+                    Ensure                                 = "Absent";
                 }
                 IntuneDeviceConfigurationWiredNetworkPolicyWindows10 'Example'
                 {
@@ -1954,7 +4011,6 @@
                     EapType                                               = 'teap'
                     Enforce8021X                                          = $True
                     Ensure                                                = 'Present'
-                    Id                                                    = 'ff8049cd-a1f8-4417-b937-d455a02cce2a'
                     MaximumAuthenticationFailures                         = 5
                     MaximumEAPOLStartMessages                             = 5
                     SecondaryAuthenticationMethod                         = 'certificate'
@@ -1962,12 +4018,60 @@
                     RootCertificatesForServerValidationIds                = @('a485d322-13cd-43ef-beda-733f656f48ea', '169bf4fc-5914-40f4-ad33-48c225396183')
                     SecondaryIdentityCertificateForClientAuthenticationId = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
                 }
+                IntuneDeviceConfigurationWiredNetworkPolicyWindows10 'Example'
+                {
+                    Assignments                                           = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments
+                        {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    )
+                    AuthenticationBlockPeriodInMinutes                    = 5
+                    AuthenticationMethod                                  = 'usernameAndPassword'
+                    AuthenticationPeriodInSeconds                         = 55 # Updated Property
+                    AuthenticationRetryDelayPeriodInSeconds               = 5
+                    AuthenticationType                                    = 'machine'
+                    CacheCredentials                                      = $True
+                    Credential                                            = $Credscredential
+                    DisplayName                                           = 'Wired Network'
+                    EapolStartPeriodInSeconds                             = 5
+                    EapType                                               = 'teap'
+                    Enforce8021X                                          = $True
+                    Ensure                                                = 'Present'
+                    MaximumAuthenticationFailures                         = 5
+                    MaximumEAPOLStartMessages                             = 5
+                    SecondaryAuthenticationMethod                         = 'certificate'
+                    TrustedServerCertificateNames                         = @('srv.domain.com')
+                    RootCertificatesForServerValidationIds                = @('a485d322-13cd-43ef-beda-733f656f48ea', '169bf4fc-5914-40f4-ad33-48c225396183')
+                    SecondaryIdentityCertificateForClientAuthenticationId = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                }
+                IntuneDeviceConfigurationWiredNetworkPolicyWindows10 'Example'
+                {
+                    Credential                                            = $Credscredential
+                    DisplayName                                           = 'Wired Network'
+                    Ensure                                                = 'Present'
+                }
                 IntuneDeviceEnrollmentLimitRestriction 'DeviceEnrollmentLimitRestriction'
                 {
                     DisplayName = 'My DSC Limit'
                     Description = 'My Restriction'
                     Limit       = 12
                     Ensure      = 'Present'
+                    Credential  = $Credscredential
+                }
+                IntuneDeviceEnrollmentLimitRestriction 'DeviceEnrollmentLimitRestriction'
+                {
+                    DisplayName = 'My DSC Limit'
+                    Description = 'My Restriction'
+                    Limit       = 11 # Updated Property
+                    Ensure      = 'Present'
+                    Credential  = $Credscredential
+                }
+                IntuneDeviceEnrollmentLimitRestriction 'DeviceEnrollmentLimitRestriction'
+                {
+                    DisplayName = 'My DSC Limit'
+                    Ensure      = 'Absent'
                     Credential  = $Credscredential
                 }
                 IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
@@ -1990,7 +4094,6 @@
                     DeviceEnrollmentConfigurationType = "platformRestrictions";
                     DisplayName                       = "All users and all devices";
                     Ensure                            = "Present";
-                    Identity                          = "5b0e1dba-4523-455e-9fdd-e36c833b57bf_DefaultPlatformRestrictions";
                     IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
                         platformBlocked = $False
                         personalDeviceEnrollmentBlocked = $False
@@ -2016,6 +4119,57 @@
                         personalDeviceEnrollmentBlocked = $False
                     };
                 }
+                IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
+                {
+                    AndroidForWorkRestriction         = MSFT_DeviceEnrollmentPlatformRestriction{
+                        platformBlocked = $False
+                        personalDeviceEnrollmentBlocked = $False
+                    };
+                    AndroidRestriction                = MSFT_DeviceEnrollmentPlatformRestriction{
+                        platformBlocked = $False
+                        personalDeviceEnrollmentBlocked = $False
+                    };
+                    Assignments                       = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        });
+                    Credential                        = $Credscredential
+                    Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
+                    DeviceEnrollmentConfigurationType = "platformRestrictions";
+                    DisplayName                       = "All users and all devices";
+                    Ensure                            = "Present";
+                    IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
+                        platformBlocked = $True # Updated Property
+                        personalDeviceEnrollmentBlocked = $False
+                    };
+                    MacOSRestriction                  = MSFT_DeviceEnrollmentPlatformRestriction{
+                        platformBlocked = $False
+                        personalDeviceEnrollmentBlocked = $False
+                    };
+                    MacRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
+                        platformBlocked = $False
+                        personalDeviceEnrollmentBlocked = $False
+                    };
+                    WindowsHomeSkuRestriction         = MSFT_DeviceEnrollmentPlatformRestriction{
+                        platformBlocked = $False
+                        personalDeviceEnrollmentBlocked = $False
+                    };
+                    WindowsMobileRestriction          = MSFT_DeviceEnrollmentPlatformRestriction{
+                        platformBlocked = $True
+                        personalDeviceEnrollmentBlocked = $False
+                    };
+                    WindowsRestriction                = MSFT_DeviceEnrollmentPlatformRestriction{
+                        platformBlocked = $False
+                        personalDeviceEnrollmentBlocked = $False
+                    };
+                }
+                IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
+                {
+                    Credential                        = $Credscredential
+                    DisplayName                       = "All users and all devices";
+                    Ensure                            = "Absent";
+                }
                 IntuneDeviceEnrollmentStatusPageWindows10 '6b43c039-c1d0-4a9f-aab9-48c5531acbd6'
                 {
                     AllowDeviceResetOnInstallFailure        = $True;
@@ -2034,7 +4188,6 @@
                     DisableUserStatusTrackingAfterFirstUser = $True;
                     DisplayName                             = "All users and all devices";
                     Ensure                                  = "Present";
-                    Id                                      = "5b0e1dba-4523-455e-9fdd-e36c833b57bf_DefaultWindows10EnrollmentCompletionPageConfiguration";
                     InstallProgressTimeoutInMinutes         = 60;
                     InstallQualityUpdates                   = $False;
                     Priority                                = 0;
@@ -2043,18 +4196,62 @@
                     TrackInstallProgressForAutopilotOnly    = $True;
                     Credential                              = $Credscredential
                 }
+                IntuneDeviceEnrollmentStatusPageWindows10 '6b43c039-c1d0-4a9f-aab9-48c5531acbd6'
+                {
+                    AllowDeviceResetOnInstallFailure        = $True;
+                    AllowDeviceUseOnInstallFailure          = $False; # Updated Property
+                    AllowLogCollectionOnInstallFailure      = $True;
+                    AllowNonBlockingAppInstallation         = $False;
+                    Assignments                             = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    BlockDeviceSetupRetryByUser             = $False;
+                    CustomErrorMessage                      = "Setup could not be completed. Please try again or contact your support person for help.";
+                    Description                             = "This is the default enrollment status screen configuration applied with the lowest priority to all users and all devices regardless of group membership.";
+                    DisableUserStatusTrackingAfterFirstUser = $True;
+                    DisplayName                             = "All users and all devices";
+                    Ensure                                  = "Present";
+                    InstallProgressTimeoutInMinutes         = 60;
+                    InstallQualityUpdates                   = $False;
+                    Priority                                = 0;
+                    SelectedMobileAppIds                    = @();
+                    ShowInstallationProgress                = $True;
+                    TrackInstallProgressForAutopilotOnly    = $True;
+                    Credential                              = $Credscredential
+                }
+                IntuneDeviceEnrollmentStatusPageWindows10 '6b43c039-c1d0-4a9f-aab9-48c5531acbd6'
+                {
+                    DisplayName                             = "All users and all devices";
+                    Ensure                                  = "Absent";
+                    Credential                              = $Credscredential
+                }
                 IntuneEndpointDetectionAndResponsePolicyWindows10 'myEDRPolicy'
                 {
-                    Identity    = 'f6d1d1bc-d78f-4a5a-8f1b-0d95a60b0bc1'
                     DisplayName = 'Edr Policy'
                     Assignments = @()
                     Description = 'My revised description'
                     Ensure      = 'Present'
                     Credential  = $Credscredential
                 }
+                IntuneEndpointDetectionAndResponsePolicyWindows10 'myEDRPolicy'
+                {
+                    DisplayName = 'Edr Policy'
+                    Assignments = @()
+                    Description = 'My updated description' # Updated Property
+                    Ensure      = 'Present'
+                    Credential  = $Credscredential
+                }
+                IntuneEndpointDetectionAndResponsePolicyWindows10 'myEDRPolicy'
+                {
+                    DisplayName = 'Edr Policy'
+                    Ensure      = 'Absent'
+                    Credential  = $Credscredential
+                }
                 IntuneExploitProtectionPolicyWindows10SettingCatalog 'myWindows10ExploitProtectionPolicy'
                 {
-                    Identity                          = '130539f6-2be7-4dbc-a58e-ed638cadb186'
                     DisplayName                       = 'exploit Protection policy with assignments'
                     Assignments                       = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -2212,6 +4409,171 @@
                     Ensure                            = 'Present'
                     Credential                        = $Credscredential
                 }
+                IntuneExploitProtectionPolicyWindows10SettingCatalog 'myWindows10ExploitProtectionPolicy'
+                {
+                    DisplayName                       = 'exploit Protection policy with assignments'
+                    Assignments                       = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId                                    = 'e8cbd84d-be6a-4b72-87f0-0e677541fda0'
+                        })
+                    Description                       = ''
+                    disallowexploitprotectionoverride = '1'
+                    exploitprotectionsettings         = "<?xml version=`"1.0`" encoding=`"UTF-8`"?>
+        <MitigationPolicy>
+          <AppConfig Executable=`"AcroRd3Updated.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"AcroRd32Info.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"clview.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"cnfnot32.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"excel.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"excelcnv.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"ExtExport.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"graph.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"ie4uinit.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"ieinstal.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"ielowutil.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"ieUnatt.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"iexplore.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"lync.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"msaccess.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"mscorsvw.exe`">
+            <ExtensionPoints DisableExtensionPoints=`"true`" />
+          </AppConfig>
+          <AppConfig Executable=`"msfeedssync.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"mshta.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"msoadfsb.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"msoasb.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"msohtmed.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"msosrec.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"msoxmled.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"mspub.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"msqry32.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"MsSense.exe`">
+            <StrictHandle Enable=`"true`" />
+            <SEHOP Enable=`"true`" TelemetryOnly=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"ngen.exe`">
+            <ExtensionPoints DisableExtensionPoints=`"true`" />
+          </AppConfig>
+          <AppConfig Executable=`"ngentask.exe`">
+            <ExtensionPoints DisableExtensionPoints=`"true`" />
+          </AppConfig>
+          <AppConfig Executable=`"onenote.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"onenotem.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"orgchart.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"outlook.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"powerpnt.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"PresentationHost.exe`">
+            <DEP Enable=`"true`" EmulateAtlThunks=`"false`" />
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" BottomUp=`"true`" HighEntropy=`"true`" />
+            <SEHOP Enable=`"true`" TelemetryOnly=`"false`" />
+            <Heap TerminateOnError=`"true`" />
+          </AppConfig>
+          <AppConfig Executable=`"PrintDialog.exe`">
+            <ExtensionPoints DisableExtensionPoints=`"true`" />
+          </AppConfig>
+          <AppConfig Executable=`"RdrCEF.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"RdrServicesUpdater.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"runtimebroker.exe`">
+            <ExtensionPoints DisableExtensionPoints=`"true`" />
+          </AppConfig>
+          <AppConfig Executable=`"scanost.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"scanpst.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"sdxhelper.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"selfcert.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"setlang.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"SystemSettings.exe`">
+            <ExtensionPoints DisableExtensionPoints=`"true`" />
+          </AppConfig>
+          <AppConfig Executable=`"winword.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+          <AppConfig Executable=`"wordconv.exe`">
+            <ASLR ForceRelocateImages=`"true`" RequireInfo=`"false`" />
+          </AppConfig>
+        </MitigationPolicy>" # Updated Property
+                    Ensure                            = 'Present'
+                    Credential                        = $Credscredential
+                }
+                IntuneExploitProtectionPolicyWindows10SettingCatalog 'myWindows10ExploitProtectionPolicy'
+                {
+                    DisplayName                       = 'exploit Protection policy with assignments'
+                    Ensure                            = 'Absent'
+                    Credential                        = $Credscredential
+                }
                 IntunePolicySets 'Example'
                 {
                     Credential           = $Credscredential;
@@ -2231,7 +4593,6 @@
                     DisplayName          = "Example";
                     Ensure               = "Present";
                     GuidedDeploymentTags = @();
-                    Id                   = "12345678-5678-5678-5678-1234567890ab";
                     Items                = @(
                         MSFT_DeviceManagementConfigurationPolicyItems{
                             guidedDeploymentTags = @()
@@ -2243,9 +4604,44 @@
                     );
                     RoleScopeTags        = @("0","1");
                 }
+                IntunePolicySets 'Example'
+                {
+                    Credential           = $Credscredential;
+                    Assignments          = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.groupAssignmentTarget'
+                            groupId = '12345678-1234-1234-1234-1234567890ab'
+                        }
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId = '12345678-4321-4321-4321-1234567890ab'
+                        }
+                    );
+                    Description          = "Example";
+                    DisplayName          = "Example";
+                    Ensure               = "Present";
+                    GuidedDeploymentTags = @();
+                    Items                = @(
+                        MSFT_DeviceManagementConfigurationPolicyItems{
+                            guidedDeploymentTags = @()
+                            payloadId = 'T_12345678-90ab-90ab-90ab-1234567890ab'
+                            displayName = 'Example-Policy'
+                            dataType = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                            itemType = '#microsoft.graph.androidManagedAppProtection'
+                        }
+                    );
+                    RoleScopeTags        = @("0","1","2"); # Updated Property
+                }
+                IntunePolicySets 'Example'
+                {
+                    Credential           = $Credscredential;
+                    DisplayName          = "Example";
+                    Ensure               = "Absent";
+                }
                 IntuneRoleAssignment 'IntuneRoleAssignment'
                 {
-                    Id                         = '20556aad-3d16-465a-890c-cf915ae1cd60'
                     DisplayName                = 'test2'
                     Description                = 'test2'
                     Members                    = @('')
@@ -2258,9 +4654,28 @@
                     Ensure                     = 'Present'
                     Credential                 = $Credscredential
                 }
+                IntuneRoleAssignment 'IntuneRoleAssignment'
+                {
+                    DisplayName                = 'test2'
+                    Description                = 'test Updated' # Updated Property
+                    Members                    = @('')
+                    MembersDisplayNames        = @('SecGroup2')
+                    ResourceScopes             = @('6eb76881-f56f-470f-be0d-672145d3dcb1')
+                    ResourceScopesDisplayNames = @('')
+                    ScopeType                  = 'resourceScope'
+                    RoleDefinition             = '2d00d0fd-45e9-4166-904f-b76ac5eed2c7'
+                    RoleDefinitionDisplayName  = 'This is my role'
+                    Ensure                     = 'Present'
+                    Credential                 = $Credscredential
+                }
+                IntuneRoleAssignment 'IntuneRoleAssignment'
+                {
+                    DisplayName                = 'test2'
+                    Ensure                     = 'Absent'
+                    Credential                 = $Credscredential
+                }
                 IntuneRoleDefinition 'IntuneRoleDefinition'
                 {
-                    Id                        = 'f84bc63b-a377-4d90-8f4a-1de84d36a429'
                     DisplayName               = 'This is my role'
                     allowedResourceActions    = @('Microsoft.Intune_Organization_Read', 'Microsoft.Intune_Roles_Create', 'Microsoft.Intune_Roles_Read', 'Microsoft.Intune_Roles_Update')
                     Description               = 'My role defined by me.'
@@ -2270,9 +4685,25 @@
                     Ensure                    = 'Present'
                     Credential                = $Credscredential
                 }
+                IntuneRoleDefinition 'IntuneRoleDefinition'
+                {
+                    DisplayName               = 'This is my role'
+                    allowedResourceActions    = @('Microsoft.Intune_Organization_Read', 'Microsoft.Intune_Roles_Create', 'Microsoft.Intune_Roles_Read', 'Microsoft.Intune_Roles_Update')
+                    Description               = 'My role defined by me.'
+                    IsBuiltIn                 = $True # Updated Property
+                    notallowedResourceActions = @()
+                    roleScopeTagIds           = @('0', '1')
+                    Ensure                    = 'Present'
+                    Credential                = $Credscredential
+                }
+                IntuneRoleDefinition 'IntuneRoleDefinition'
+                {
+                    DisplayName               = 'This is my role'
+                    Ensure                    = 'Absent'
+                    Credential                = $Credscredential
+                }
                 IntuneSettingCatalogASRRulesPolicyWindows10 'myASRRulesPolicy'
                 {
-                    Identity                                                                   = '80d22119-b8cf-466d-bfc5-c2dca1d90f43'
                     DisplayName                                                                = 'asr 2'
                     Assignments                                                                = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -2286,6 +4717,27 @@
                     Ensure                                                                     = 'Present'
                     Credential                                                                 = $Credscredential
                 }
+                IntuneSettingCatalogASRRulesPolicyWindows10 'myASRRulesPolicy'
+                {
+                    DisplayName                                                                = 'asr 2'
+                    Assignments                                                                = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        })
+                    attacksurfacereductiononlyexclusions                                       = @('Test 10', 'Test2', 'Test3')
+                    blockabuseofexploitedvulnerablesigneddrivers                               = 'audit' # Updated Property
+                    blockexecutablefilesrunningunlesstheymeetprevalenceagetrustedlistcriterion = 'audit'
+                    Description                                                                = 'Post'
+                    Ensure                                                                     = 'Present'
+                    Credential                                                                 = $Credscredential
+                }
+                IntuneSettingCatalogASRRulesPolicyWindows10 'myASRRulesPolicy'
+                {
+                    DisplayName                                                                = 'asr 2'
+                    Ensure                                                                     = 'Absent'
+                    Credential                                                                 = $Credscredential
+                }
                 IntuneSettingCatalogCustomPolicyWindows10 'Example'
                 {
                     Credential                                                                 = $Credscredential
@@ -2297,7 +4749,6 @@
                     );
                     Description           = "";
                     Ensure                = "Present";
-                    Id                    = "4e300eed-1d37-493e-a680-12988874587g";
                     Name                  = "Setting Catalog Raw - DSC";
                     Platforms             = "windows10";
                     Settings              = @(
@@ -2359,9 +4810,86 @@
                     );
                     Technologies          = "mdm";
                 }
+                IntuneSettingCatalogCustomPolicyWindows10 'Example'
+                {
+                    Credential                                                                 = $Credscredential
+                    Assignments           = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Description           = "Updated Description"; # Updated Property
+                    Ensure                = "Present";
+                    Name                  = "Setting Catalog Raw - DSC";
+                    Platforms             = "windows10";
+                    Settings              = @(
+                        MSFT_MicrosoftGraphdeviceManagementConfigurationSetting{
+                            SettingInstance = MSFT_MicrosoftGraphDeviceManagementConfigurationSettingInstance{
+                                choiceSettingValue = MSFT_MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue{
+                                    Value = 'device_vendor_msft_policy_config_abovelock_allowcortanaabovelock_1'
+                                }
+                                SettingDefinitionId = 'device_vendor_msft_policy_config_abovelock_allowcortanaabovelock'
+                                odataType = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            }
+                        }
+                        MSFT_MicrosoftGraphdeviceManagementConfigurationSetting{
+                            SettingInstance = MSFT_MicrosoftGraphDeviceManagementConfigurationSettingInstance{
+                                SettingDefinitionId = 'device_vendor_msft_policy_config_applicationdefaults_defaultassociationsconfiguration'
+                                simpleSettingValue = MSFT_MicrosoftGraphDeviceManagementConfigurationSimpleSettingValue{
+                                    odataType = '#microsoft.graph.deviceManagementConfigurationStringSettingValue'
+                                    StringValue = ''
+                                }
+                                odataType = '#microsoft.graph.deviceManagementConfigurationSimpleSettingInstance'
+                            }
+                        }
+                        MSFT_MicrosoftGraphdeviceManagementConfigurationSetting{
+                            SettingInstance = MSFT_MicrosoftGraphDeviceManagementConfigurationSettingInstance{
+                                choiceSettingValue = MSFT_MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue{
+                                    Value = 'device_vendor_msft_policy_config_applicationdefaults_enableappurihandlers_1'
+                                }
+                                SettingDefinitionId = 'device_vendor_msft_policy_config_applicationdefaults_enableappurihandlers'
+                                odataType = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            }
+                        }
+                        MSFT_MicrosoftGraphdeviceManagementConfigurationSetting{
+                            SettingInstance = MSFT_MicrosoftGraphDeviceManagementConfigurationSettingInstance{
+                                choiceSettingValue = MSFT_MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue{
+                                    Value = 'device_vendor_msft_policy_config_defender_allowarchivescanning_1'
+                                }
+                                SettingDefinitionId = 'device_vendor_msft_policy_config_defender_allowarchivescanning'
+                                odataType = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            }
+                        }
+                        MSFT_MicrosoftGraphdeviceManagementConfigurationSetting{
+                            SettingInstance = MSFT_MicrosoftGraphDeviceManagementConfigurationSettingInstance{
+                                choiceSettingValue = MSFT_MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue{
+                                    Value = 'device_vendor_msft_policy_config_defender_allowbehaviormonitoring_1'
+                                }
+                                SettingDefinitionId = 'device_vendor_msft_policy_config_defender_allowbehaviormonitoring'
+                                odataType = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            }
+                        }
+                        MSFT_MicrosoftGraphdeviceManagementConfigurationSetting{
+                            SettingInstance = MSFT_MicrosoftGraphDeviceManagementConfigurationSettingInstance{
+                                choiceSettingValue = MSFT_MicrosoftGraphDeviceManagementConfigurationChoiceSettingValue{
+                                    Value = 'device_vendor_msft_policy_config_defender_allowcloudprotection_1'
+                                }
+                                SettingDefinitionId = 'device_vendor_msft_policy_config_defender_allowcloudprotection'
+                                odataType = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                            }
+                        }
+                    );
+                    Technologies          = "mdm";
+                }
+                IntuneSettingCatalogCustomPolicyWindows10 'Example'
+                {
+                    Credential                                                                 = $Credscredential
+                    Ensure                = "Absent";
+                    Name                  = "Setting Catalog Raw - DSC";
+                }
                 IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator 'myWifiConfigAndroidDevicePolicy'
                 {
-                    Id                             = '41869a42-3217-4bfa-9929-92668fc674c5'
                     Assignments                    = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments {
                             deviceAndAppManagementAssignmentFilterType = 'none'
@@ -2377,9 +4905,31 @@
                     Ensure                         = 'Present'
                     Credential                     = $Credscredential
                 }
+                IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator 'myWifiConfigAndroidDevicePolicy'
+                {
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    )
+                    ConnectAutomatically           = $True # Updated Property
+                    ConnectWhenNetworkNameIsHidden = $True
+                    DisplayName                    = 'Wifi Configuration Androind Device'
+                    NetworkName                    = 'b71f8c63-8140-4c7e-b818-f9b4aa98b79b'
+                    Ssid                           = 'sf'
+                    WiFiSecurityType               = 'wpaEnterprise'
+                    Ensure                         = 'Present'
+                    Credential                     = $Credscredential
+                }
+                IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator 'myWifiConfigAndroidDevicePolicy'
+                {
+                    DisplayName                    = 'Wifi Configuration Androind Device'
+                    Ensure                         = 'Absent'
+                    Credential                     = $Credscredential
+                }
                 IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner 'myWifiConfigAndroidDeviceOwnerPolicy'
                 {
-                    Id                             = '7d9c4870-e07f-488a-be17-9e1beec45ac3'
                     DisplayName                    = 'Wifi - androidForWork'
                     Assignments                    = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments
@@ -2397,9 +4947,33 @@
                     Ensure                         = 'Present'
                     Credential                     = $Credscredential
                 }
+                IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner 'myWifiConfigAndroidDeviceOwnerPolicy'
+                {
+                    DisplayName                    = 'Wifi - androidForWork'
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments
+                        {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    )
+                    ConnectAutomatically           = $True # Updated Property
+                    ConnectWhenNetworkNameIsHidden = $False
+                    NetworkName                    = 'myNetwork'
+                    PreSharedKeyIsSet              = $True
+                    ProxySettings                  = 'none'
+                    Ssid                           = 'MySSID - 3'
+                    Ensure                         = 'Present'
+                    Credential                     = $Credscredential
+                }
+                IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner 'myWifiConfigAndroidDeviceOwnerPolicy'
+                {
+                    DisplayName                    = 'Wifi - androidForWork'
+                    Ensure                         = 'Absent'
+                    Credential                     = $Credscredential
+                }
                 IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
                 {
-                    Id                             = 'b6c59816-7f9b-4f7a-a2a2-13a29c8bc315'
                     DisplayName                    = 'wifi - android BYOD'
                     Assignments                    = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments
@@ -2416,9 +4990,32 @@
                     Ensure                         = 'Present'
                     Credential                     = $Credscredential
                 }
+                IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
+                {
+                    DisplayName                    = 'wifi - android BYOD'
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments
+                        {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    )
+                    ConnectAutomatically           = $True # Updated Property
+                    ConnectWhenNetworkNameIsHidden = $False
+                    NetworkName                    = 'f8b79489-84fc-4434-b964-2a18dfe08f88'
+                    Ssid                           = 'MySSID'
+                    WiFiSecurityType               = 'open'
+                    Ensure                         = 'Present'
+                    Credential                     = $Credscredential
+                }
+                IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile 'myWifiConfigAndroidWorkProfilePolicy'
+                {
+                    DisplayName                    = 'wifi - android BYOD'
+                    Ensure                         = 'Absent'
+                    Credential                     = $Credscredential
+                }
                 IntuneWifiConfigurationPolicyAndroidForWork 'Example'
                 {
-                    Id                             = '41b6b491-9938-42d1-861a-c41762040ddb'
                     DisplayName                    = 'AndroindForWork'
                     Description                    = 'DSC'
                     Assignments                    = @(
@@ -2438,9 +5035,35 @@
                     Ensure                         = 'Present'
                     Credential                     = $Credscredential
                 }
+                IntuneWifiConfigurationPolicyAndroidForWork 'Example'
+                {
+                    DisplayName                    = 'AndroindForWork'
+                    Description                    = 'DSC'
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                            deviceAndAppManagementAssignmentFilterType = 'include'
+                            deviceAndAppManagementAssignmentFilterId   = '17cb2318-cd4f-4a66-b742-6b79d4966ac7'
+                            groupId                                    = 'b9b732df-9f18-4c5f-99d1-682e151ec62b'
+                            collectionId                               = '2a8ea71f-039a-4ec8-8e41-5fba3ef9efba'
+                        }
+                    )
+                    ConnectAutomatically           = $true # Updated Property
+                    ConnectWhenNetworkNameIsHidden = $true
+                    NetworkName                    = 'CorpNet'
+                    Ssid                           = 'WiFi'
+                    WiFiSecurityType               = 'wpa2Enterprise'
+                    Ensure                         = 'Present'
+                    Credential                     = $Credscredential
+                }
+                IntuneWifiConfigurationPolicyAndroidForWork 'Example'
+                {
+                    DisplayName                    = 'AndroindForWork'
+                    Ensure                         = 'Absent'
+                    Credential                     = $Credscredential
+                }
                 IntuneWifiConfigurationPolicyAndroidOpenSourceProject 'myWifiConfigAndroidOpensourcePolicy'
                 {
-                    Id                             = 'fe0a93dc-e9cc-4d4b-8dd6-361c51c70f77'
                     DisplayName                    = 'wifi aosp'
                     Assignments                    = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -2457,9 +5080,32 @@
                     Ensure                         = 'Present'
                     Credential                     = $Credscredential
                 }
+                IntuneWifiConfigurationPolicyAndroidOpenSourceProject 'myWifiConfigAndroidOpensourcePolicy'
+                {
+                    DisplayName                    = 'wifi aosp'
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    )
+                    ConnectAutomatically           = $False
+                    ConnectWhenNetworkNameIsHidden = $True
+                    NetworkName                    = 'Updated Network' # Updated Property
+                    PreSharedKeyIsSet              = $True
+                    Ssid                           = 'aaaaa'
+                    WiFiSecurityType               = 'wpaPersonal'
+                    Ensure                         = 'Present'
+                    Credential                     = $Credscredential
+                }
+                IntuneWifiConfigurationPolicyAndroidOpenSourceProject 'myWifiConfigAndroidOpensourcePolicy'
+                {
+                    DisplayName                    = 'wifi aosp'
+                    Ensure                         = 'Absent'
+                    Credential                     = $Credscredential
+                }
                 IntuneWifiConfigurationPolicyIOS 'myWifiConfigIOSPolicy'
                 {
-                    Id                             = '8e809b9e-0032-40b7-b263-e6029daf8e9c'
                     DisplayName                    = 'ios wifi'
                     Assignments                    = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -2478,9 +5124,34 @@
                     Ensure                         = 'Present'
                     Credential                     = $Credscredential
                 }
+                IntuneWifiConfigurationPolicyIOS 'myWifiConfigIOSPolicy'
+                {
+                    DisplayName                    = 'ios wifi'
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    )
+                    ConnectAutomatically           = $True
+                    ConnectWhenNetworkNameIsHidden = $True
+                    DisableMacAddressRandomization = $True
+                    NetworkName                    = 'Updated Network' # Updated Property
+                    ProxyAutomaticConfigurationUrl = 'THSCP.local'
+                    ProxySettings                  = 'automatic'
+                    Ssid                           = 'aaaaa'
+                    WiFiSecurityType               = 'wpaPersonal'
+                    Ensure                         = 'Present'
+                    Credential                     = $Credscredential
+                }
+                IntuneWifiConfigurationPolicyIOS 'myWifiConfigIOSPolicy'
+                {
+                    DisplayName                    = 'ios wifi'
+                    Ensure                         = 'Absent'
+                    Credential                     = $Credscredential
+                }
                 IntuneWifiConfigurationPolicyMacOS 'myWifiConfigMacOSPolicy'
                 {
-                    Id                             = 'cad22363-785b-4820-9909-28d5f35048c2'
                     DisplayName                    = 'macos wifi'
                     Assignments                    = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -2498,9 +5169,33 @@
                     Ensure                         = 'Present'
                     Credential                     = $Credscredential
                 }
+                IntuneWifiConfigurationPolicyMacOS 'myWifiConfigMacOSPolicy'
+                {
+                    DisplayName                    = 'macos wifi'
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    )
+                    ConnectAutomatically           = $True
+                    ConnectWhenNetworkNameIsHidden = $False # Updated Property
+                    NetworkName                    = 'ea1cf5d7-8d3e-40ca-9cb8-b8c8a4c6170b'
+                    ProxyAutomaticConfigurationUrl = 'AZ500PrivateEndpoint22'
+                    ProxySettings                  = 'automatic'
+                    Ssid                           = 'aaaaaaaaaaaaa'
+                    WiFiSecurityType               = 'wpaPersonal'
+                    Ensure                         = 'Present'
+                    Credential                     = $Credscredential
+                }
+                IntuneWifiConfigurationPolicyMacOS 'myWifiConfigMacOSPolicy'
+                {
+                    DisplayName                    = 'macos wifi'
+                    Ensure                         = 'Absent'
+                    Credential                     = $Credscredential
+                }
                 IntuneWifiConfigurationPolicyWindows10 'myWifiConfigWindows10Policy'
                 {
-                    Id                             = '2273c683-7590-4c56-81d3-14adb6b3d19c'
                     DisplayName                    = 'win10 wifi - revised'
                     Assignments                    = @(
                         MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -2521,6 +5216,34 @@
                     Ensure                         = 'Present'
                     Credential                     = $Credscredential
                 }
+                IntuneWifiConfigurationPolicyWindows10 'myWifiConfigWindows10Policy'
+                {
+                    DisplayName                    = 'win10 wifi - revised'
+                    Assignments                    = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    )
+                    ConnectAutomatically           = $True
+                    ConnectToPreferredNetwork      = $False # Updated Property
+                    ConnectWhenNetworkNameIsHidden = $True
+                    ForceFIPSCompliance            = $True
+                    MeteredConnectionLimit         = 'fixed'
+                    NetworkName                    = 'MyWifi'
+                    ProxyAutomaticConfigurationUrl = 'https://proxy.contoso.com'
+                    ProxySetting                   = 'automatic'
+                    Ssid                           = 'ssid'
+                    WifiSecurityType               = 'wpa2Personal'
+                    Ensure                         = 'Present'
+                    Credential                     = $Credscredential
+                }
+                IntuneWifiConfigurationPolicyWindows10 'myWifiConfigWindows10Policy'
+                {
+                    DisplayName                    = 'win10 wifi - revised'
+                    Ensure                         = 'Absent'
+                    Credential                     = $Credscredential
+                }
                 IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined 'Example'
                 {
                     Assignments                            = @();
@@ -2533,7 +5256,6 @@
                     Ensure                                 = "Present";
                     ExtractHardwareHash                    = $False;
                     HybridAzureADJoinSkipConnectivityCheck = $True;
-                    Id                                     = "36b4d209-c9af-487f-8cf2-8397cefbc29a";
                     Language                               = "os-default";
                     OutOfBoxExperienceSettings             = MSFT_MicrosoftGraphoutOfBoxExperienceSettings{
                         HideEULA = $True
@@ -2543,6 +5265,34 @@
                         SkipKeyboardSelectionPage = $False
                         UserType = 'standard'
                     };
+                }
+                IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined 'Example'
+                {
+                    Assignments                            = @();
+                    Credential                             = $Credscredential;
+                    Description                            = "";
+                    DeviceNameTemplate                     = "";
+                    DeviceType                             = "windowsPc";
+                    DisplayName                            = "hybrid";
+                    EnableWhiteGlove                       = $False; # Updated Property
+                    Ensure                                 = "Present";
+                    ExtractHardwareHash                    = $False;
+                    HybridAzureADJoinSkipConnectivityCheck = $True;
+                    Language                               = "os-default";
+                    OutOfBoxExperienceSettings             = MSFT_MicrosoftGraphoutOfBoxExperienceSettings{
+                        HideEULA = $True
+                        HideEscapeLink = $True
+                        HidePrivacySettings = $True
+                        DeviceUsageType = 'singleUser'
+                        SkipKeyboardSelectionPage = $False
+                        UserType = 'standard'
+                    };
+                }
+                IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined 'Example'
+                {
+                    Credential                             = $Credscredential;
+                    DisplayName                            = "hybrid";
+                    Ensure                                 = "Absent";
                 }
                 IntuneWindowsAutopilotDeploymentProfileAzureADJoined 'Example'
                 {
@@ -2560,7 +5310,6 @@
                     EnableWhiteGlove           = $True;
                     Ensure                     = "Present";
                     ExtractHardwareHash        = $True;
-                    Id                         = "30914319-d49b-46da-b054-625d933c5769";
                     Language                   = "";
                     OutOfBoxExperienceSettings = MSFT_MicrosoftGraphoutOfBoxExperienceSettings1{
                         HideEULA = $False
@@ -2571,9 +5320,40 @@
                         UserType = 'administrator'
                     };
                 }
+                IntuneWindowsAutopilotDeploymentProfileAzureADJoined 'Example'
+                {
+                    Assignments                = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Credential                 = $Credscredential;
+                    Description                = "";
+                    DeviceNameTemplate         = "test";
+                    DeviceType                 = "windowsPc";
+                    DisplayName                = "AAD";
+                    EnableWhiteGlove           = $False; # Updated Property
+                    Ensure                     = "Present";
+                    ExtractHardwareHash        = $True;
+                    Language                   = "";
+                    OutOfBoxExperienceSettings = MSFT_MicrosoftGraphoutOfBoxExperienceSettings1{
+                        HideEULA = $False
+                        HideEscapeLink = $True
+                        HidePrivacySettings = $True
+                        DeviceUsageType = 'singleUser'
+                        SkipKeyboardSelectionPage = $True
+                        UserType = 'administrator'
+                    };
+                }
+                IntuneWindowsAutopilotDeploymentProfileAzureADJoined 'Example'
+                {
+                    Credential                 = $Credscredential;
+                    DisplayName                = "AAD";
+                    Ensure                     = "Absent";
+                }
                 IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled 'Example'
                 {
-                    Id                                     = 'M_5c927889-a683-4588-afdb-4c90aa5e7e93'
                     DisplayName                            = 'WIP'
                     AzureRightsManagementServicesAllowed   = $False
                     Description                            = 'DSC'
@@ -2610,9 +5390,52 @@
                     Ensure                                 = 'Present'
                     Credential                             = $Credscredential
                 }
+                IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled 'Example'
+                {
+                    DisplayName                            = 'WIP'
+                    AzureRightsManagementServicesAllowed   = $False
+                    Description                            = 'DSC'
+                    EnforcementLevel                       = 'encryptAndAuditOnly'
+                    EnterpriseDomain                       = 'domain.com' # Updated Property
+                    EnterpriseIPRanges                     = @(
+                        MSFT_MicrosoftGraphwindowsInformationProtectionIPRangeCollection {
+                            DisplayName = 'ipv4 range'
+                            Ranges      = @(
+                                MSFT_MicrosoftGraphIpRange {
+                                    UpperAddress = '1.1.1.3'
+                                    LowerAddress = '1.1.1.1'
+                                    odataType    = '#microsoft.graph.iPv4Range'
+                                }
+                            )
+                        }
+                    )
+                    EnterpriseIPRangesAreAuthoritative     = $True
+                    EnterpriseProxyServersAreAuthoritative = $True
+                    IconsVisible                           = $False
+                    IndexingEncryptedStoresOrItemsBlocked  = $False
+                    ProtectedApps                          = @(
+                        MSFT_MicrosoftGraphwindowsInformationProtectionApp {
+                            Description   = 'Microsoft.MicrosoftEdge'
+                            odataType     = '#microsoft.graph.windowsInformationProtectionStoreApp'
+                            Denied        = $False
+                            PublisherName = 'CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US'
+                            ProductName   = 'Microsoft.MicrosoftEdge'
+                            DisplayName   = 'Microsoft Edge'
+                        }
+                    )
+                    ProtectionUnderLockConfigRequired      = $False
+                    RevokeOnUnenrollDisabled               = $False
+                    Ensure                                 = 'Present'
+                    Credential                             = $Credscredential
+                }
+                IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled 'Example'
+                {
+                    DisplayName                            = 'WIP'
+                    Ensure                                 = 'Absent'
+                    Credential                             = $Credscredential
+                }
                 IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 'Example'
                 {
-                    Id                   = 'b5d1020d-f641-42a0-a882-82f3358bf4c5'
                     DisplayName          = 'WUfB Feature -dsc'
                     Assignments          = @()
                     Description          = 'test 2'
@@ -2623,9 +5446,26 @@
                     Ensure               = 'Present'
                     Credential           = $Credscredential
                 }
+                IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 'Example'
+                {
+                    DisplayName          = 'WUfB Feature -dsc'
+                    Assignments          = @()
+                    Description          = 'test 2'
+                    FeatureUpdateVersion = 'Windows 10, version 22H2'
+                    RolloutSettings = MSFT_MicrosoftGraphwindowsUpdateRolloutSettings {
+                        OfferStartDateTimeInUTC = '2023-02-05T16:00:00.0000000+00:00' # Updated Property
+                    }
+                    Ensure               = 'Present'
+                    Credential           = $Credscredential
+                }
+                IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 'Example'
+                {
+                    DisplayName          = 'WUfB Feature -dsc'
+                    Ensure               = 'Absent'
+                    Credential           = $Credscredential
+                }
                 IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
                 {
-                    Id                                  = 'f2a9a546-6087-45b9-81da-59994e79dfd2'
                     DisplayName                         = 'WUfB Ring'
                     AllowWindows11Upgrade               = $False
                     Assignments                         = @(
@@ -2668,6 +5508,56 @@
                     Ensure                              = 'Present'
                     Credential                          = $Credscredential
                 }
+                IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
+                {
+                    DisplayName                         = 'WUfB Ring'
+                    AllowWindows11Upgrade               = $True # Updated Property
+                    Assignments                         = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments
+                        {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                        }
+                    )
+                    AutomaticUpdateMode                 = 'autoInstallAtMaintenanceTime'
+                    AutoRestartNotificationDismissal    = 'notConfigured'
+                    BusinessReadyUpdatesOnly            = 'userDefined'
+                    DeadlineForFeatureUpdatesInDays     = 1
+                    DeadlineForQualityUpdatesInDays     = 2
+                    DeadlineGracePeriodInDays           = 3
+                    DeliveryOptimizationMode            = 'userDefined'
+                    Description                         = ''
+                    DriversExcluded                     = $False
+                    FeatureUpdatesDeferralPeriodInDays  = 0
+                    FeatureUpdatesPaused                = $False
+                    FeatureUpdatesPauseExpiryDateTime   = '0001-01-01T00:00:00.0000000+00:00'
+                    FeatureUpdatesRollbackStartDateTime = '0001-01-01T00:00:00.0000000+00:00'
+                    FeatureUpdatesRollbackWindowInDays  = 10
+                    InstallationSchedule = MSFT_MicrosoftGraphwindowsUpdateInstallScheduleType {
+                        ActiveHoursStart = '08:00:00'
+                        ActiveHoursEnd   = '17:00:00'
+                        odataType        = '#microsoft.graph.windowsUpdateActiveHoursInstall'
+                    }
+                    MicrosoftUpdateServiceAllowed       = $True
+                    PostponeRebootUntilAfterDeadline    = $False
+                    PrereleaseFeatures                  = 'userDefined'
+                    QualityUpdatesDeferralPeriodInDays  = 0
+                    QualityUpdatesPaused                = $False
+                    QualityUpdatesPauseExpiryDateTime   = '0001-01-01T00:00:00.0000000+00:00'
+                    QualityUpdatesRollbackStartDateTime = '0001-01-01T00:00:00.0000000+00:00'
+                    SkipChecksBeforeRestart             = $False
+                    UpdateNotificationLevel             = 'defaultNotifications'
+                    UserPauseAccess                     = 'enabled'
+                    UserWindowsUpdateScanAccess         = 'enabled'
+                    Ensure                              = 'Present'
+                    Credential                          = $Credscredential
+                }
+                IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
+                {
+                    DisplayName                         = 'WUfB Ring'
+                    Ensure                              = 'Absent'
+                    Credential                          = $Credscredential
+                }
         }
     }
 
@@ -2681,5 +5571,12 @@
     }
 
     # Compile and deploy configuration
-    Master -ConfigurationData $ConfigurationData -Credscredential $Credential
-    Start-DscConfiguration Master -Wait -Force -Verbose
+    try
+    {
+        Master -ConfigurationData $ConfigurationData -Credscredential $Credential
+        Start-DscConfiguration Master -Wait -Force -Verbose
+    }
+    catch
+    {
+        throw $_
+    }

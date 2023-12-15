@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the account protection policy. | |
-| **DisplayName** | Required | String | Display name of the account protection rules policy. | |
+| **Identity** | Write | String | Identity of the account protection policy. | |
+| **DisplayName** | Key | String | Display name of the account protection rules policy. | |
 | **Description** | Write | String | Description of the account protection rules policy. | |
 | **Assignments** | Write | MSFT_IntuneAccountProtectionLocalUserGroupMembershipPolicyAssignments[] | Assignments of the Intune Policy. | |
 | **LocalUserGroupCollection** | Write | MSFT_IntuneAccountProtectionLocalUserGroupCollection[] | Local User Group Collections of the Intune Policy. | |
@@ -94,7 +94,6 @@ Configuration Example
     {
         IntuneAccountProtectionLocalUserGroupMembershipPolicy "My Account Protection Local User Group Membership Policy"
         {
-            Identity                 = "cb0a561b-7677-46fb-a7f8-635cf64660e9";
             DisplayName              = "Account Protection LUGM Policy";
             Description              = "My revised description";
             Ensure                   = "Present";
@@ -113,6 +112,71 @@ Configuration Example
                     UserSelectionType = 'users'
                 }
             );
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAccountProtectionLocalUserGroupMembershipPolicy "My Account Protection Local User Group Membership Policy"
+        {
+            DisplayName              = "Account Protection LUGM Policy";
+            Description              = "My revised description";
+            Ensure                   = "Present";
+            Credential               = $Credscredential
+            Assignments              = @(); # Updated Property
+            LocalUserGroupCollection = @(
+                MSFT_IntuneAccountProtectionLocalUserGroupCollection{
+                    LocalGroups = @('administrators', 'users')
+                    Members = @('S-1-12-1-1167842105-1150511762-402702254-1917434032')
+                    Action = 'add_update'
+                    UserSelectionType = 'users'
+                }
+            );
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAccountProtectionLocalUserGroupMembershipPolicy "My Account Protection Local User Group Membership Policy"
+        {
+            DisplayName              = "Account Protection LUGM Policy";
+            Description              = "My revised description";
+            Ensure                   = "Absent";
+            Credential               = $Credscredential
         }
     }
 }

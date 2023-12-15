@@ -68,7 +68,7 @@ Configuration Example
         {
             Enabled                                = $true
             IsSingleInstance                       = 'Yes'
-            DeviceInactivityBeforeRetirementInDays = 30
+            DeviceInactivityBeforeRetirementInDays = 25 # Updated Property
             Ensure                                 = 'Present'
             Credential                             = $Credscredential
         }
