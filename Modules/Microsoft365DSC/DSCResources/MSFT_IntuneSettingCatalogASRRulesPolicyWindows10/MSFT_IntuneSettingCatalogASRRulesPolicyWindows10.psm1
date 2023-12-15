@@ -188,7 +188,12 @@ function Get-TargetResource
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$Identity} was found"
-            $policy = Get-MgBetaDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" } | Select-Object -First 1
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" }
+
+            if ($policy.Count -gt 1)
+            {
+                throw "Multiple Endpoint Protection Attack Surface Protection rules Policies with DisplayName '{$DisplayName}' were found!"
+            }
         }
 
         if ($null -eq $policy)
