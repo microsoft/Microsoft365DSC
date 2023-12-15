@@ -47,8 +47,8 @@ jobs:
       - name: Run {Create} Integration Tests
         shell: powershell
         env:
-          PUBLIC_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
-          PUBLIC_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
+          INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
+          INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
         run: |
           $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
           $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)
