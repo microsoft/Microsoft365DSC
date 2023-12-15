@@ -4,9 +4,14 @@ function New-M365DSCIntegrationTest
 {
     [CmdletBinding()]
     param(
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
-        $Workload
+        $Workload,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('1-Create', '2-Update', '3-Remove')]
+        [System.String]
+        $Step
     )
     # Initialize Master Integration configuration
     $masterIntegrationConfig = @'
@@ -34,7 +39,7 @@ function New-M365DSCIntegrationTest
 '@
 
     # Fetching examples
-    $exampleFiles = Get-ChildItem -Path ".\Modules\Microsoft365DSC\Examples\Resources\*.ps1" -Recurse
+    $exampleFiles = Get-ChildItem -Path ".\Modules\Microsoft365DSC\Examples\Resources\*$Step.ps1" -Recurse
     foreach ($file in $exampleFiles)
     {
         if ($file.FullName -like "*Modules\Microsoft365DSC\Examples\Resources\$Workload*")
@@ -100,7 +105,8 @@ function New-M365DSCIntegrationTest
 '@
 
     # Saving Master Integration configuration to file
-    Set-Content -Value $masterIntegrationConfig -Path ".\Tests\Integration\Microsoft365DSC\M365DSCIntegration.$Workload.Tests.ps1"
+    $StepValue = $Step.Split('-')[1]
+    Set-Content -Value $masterIntegrationConfig -Path ".\Tests\Integration\Microsoft365DSC\M365DSCIntegration.$Workload.$StepValue.Tests.ps1"
 }
 
 Export-ModuleMember -Function @(
