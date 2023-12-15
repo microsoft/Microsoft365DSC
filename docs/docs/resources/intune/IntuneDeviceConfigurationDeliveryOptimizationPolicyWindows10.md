@@ -168,7 +168,6 @@ Configuration Example
                 GroupIdSourceOption = 'adSite'
                 odataType = '#microsoft.graph.deliveryOptimizationGroupIdSourceOptions'
             };
-            Id                                                        = "c86efa80-248b-4002-80d4-e70ea151a4c7";
             MaximumCacheAgeInDays                                     = 3;
             MaximumCacheSize                                          = MSFT_MicrosoftGraphdeliveryOptimizationMaxCacheSize{
                 MaximumCacheSizeInGigabytes = 4
@@ -182,6 +181,94 @@ Configuration Example
             RestrictPeerSelectionBy                                   = "subnetMask";
             SupportsScopeTags                                         = $True;
             VpnPeerCaching                                            = "enabled";
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10 'Example'
+        {
+            Assignments                                               = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            );
+            BackgroundDownloadFromHttpDelayInSeconds                  = 4;
+            BandwidthMode                                             = MSFT_MicrosoftGraphdeliveryOptimizationBandwidth{
+                MaximumDownloadBandwidthInKilobytesPerSecond = 22
+                MaximumUploadBandwidthInKilobytesPerSecond = 33
+                odataType = '#microsoft.graph.deliveryOptimizationBandwidthAbsolute'
+            };
+            CacheServerBackgroundDownloadFallbackToHttpDelayInSeconds = 5; # Updated Property
+            CacheServerForegroundDownloadFallbackToHttpDelayInSeconds = 3;
+            CacheServerHostNames                                      = @("domain.com");
+            Credential                                                = $Credscredential;
+            DeliveryOptimizationMode                                  = "httpWithPeeringPrivateGroup";
+            DisplayName                                               = "delivery optimisation";
+            Ensure                                                    = "Present";
+            ForegroundDownloadFromHttpDelayInSeconds                  = 234;
+            GroupIdSource                                             = MSFT_MicrosoftGraphdeliveryOptimizationGroupIdSource{
+                GroupIdSourceOption = 'adSite'
+                odataType = '#microsoft.graph.deliveryOptimizationGroupIdSourceOptions'
+            };
+            MaximumCacheAgeInDays                                     = 3;
+            MaximumCacheSize                                          = MSFT_MicrosoftGraphdeliveryOptimizationMaxCacheSize{
+                MaximumCacheSizeInGigabytes = 4
+                odataType = '#microsoft.graph.deliveryOptimizationMaxCacheSizeAbsolute'
+            };
+            MinimumBatteryPercentageAllowedToUpload                   = 4;
+            MinimumDiskSizeAllowedToPeerInGigabytes                   = 3;
+            MinimumFileSizeToCacheInMegabytes                         = 3;
+            MinimumRamAllowedToPeerInGigabytes                        = 3;
+            ModifyCacheLocation                                       = "%systemdrive%";
+            RestrictPeerSelectionBy                                   = "subnetMask";
+            SupportsScopeTags                                         = $True;
+            VpnPeerCaching                                            = "enabled";
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10 'Example'
+        {
+            Credential                                                = $Credscredential;
+            DisplayName                                               = "delivery optimisation";
+            Ensure                                                    = "Absent";
         }
     }
 }

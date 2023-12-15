@@ -21,7 +21,7 @@ function Get-TargetResource
         [System.String[]]
         $RoleScopeTags,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -220,7 +220,7 @@ function Set-TargetResource
         [System.String[]]
         $RoleScopeTags,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 
@@ -409,7 +409,7 @@ function Test-TargetResource
         [System.String[]]
         $RoleScopeTags,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Id,
 

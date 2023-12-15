@@ -4,8 +4,8 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Identity of the account protection local administrator password solution policy. | |
-| **DisplayName** | Required | String | Display name of the account protection local administrator password solution policy. | |
+| **Identity** | Write | String | Identity of the account protection local administrator password solution policy. | |
+| **DisplayName** | Key | String | Display name of the account protection local administrator password solution policy. | |
 | **Description** | Write | String | Description of the account protection local administrator password solution policy. | |
 | **Assignments** | Write | MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments[] | Assignments of the account protection local administrator password solution policy. | |
 | **BackupDirectory** | Write | UInt32 | Configures which directory the local admin account password is backed up to. 0 - Disabled, 1 - Azure AD, 2 - AD | `0`, `1`, `2` |
@@ -93,7 +93,6 @@ Configuration Example
     {
         IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy "My Account Protection LAPS Policy"
         {
-            Identity                 = "cb0a561b-7677-46fb-a7f8-635cf64660e9";
             DisplayName              = "Account Protection LAPS Policy";
             Description              = "My revised description";
             Ensure                   = "Present";
@@ -108,6 +107,72 @@ Configuration Example
             PasswordAgeDays_AAD      = 10;
             AdministratorAccountName = "Administrator";
             PasswordAgeDays          = 20;
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy "My Account Protection LAPS Policy"
+        {
+            DisplayName              = "Account Protection LAPS Policy";
+            Description              = "My revised description";
+            Ensure                   = "Present";
+            Credential               = $Credscredential
+            Assignments              = @(
+                MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            );
+            BackupDirectory          = "1";
+            PasswordAgeDays_AAD      = 15; # Updated Property
+            AdministratorAccountName = "Administrator";
+            PasswordAgeDays          = 20;
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy "My Account Protection LAPS Policy"
+        {
+            DisplayName              = "Account Protection LAPS Policy";
+            Description              = "My revised description";
+            Ensure                   = "Absent";
+            Credential               = $Credscredential
         }
     }
 }

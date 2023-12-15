@@ -28,33 +28,33 @@ jobs:
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           Set-M365DSCTelemetryOption -Enabled $false
           Set-Item -Path WSMan:\localhost\MaxEnvelopeSizekb -Value 99999
-      - name: Generate Integration Tests from Examples
+      - name: Generate {Create} Integration Tests from Examples
         shell: pwsh
         run: |
           Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
-          New-M365DSCIntegrationTest -Workload INTUNE
-      - name: Commit Integration Tests
+          New-M365DSCIntegrationTest -Workload INTUNE -Step '1-Create'
+      - name: Commit {Create} Integration Tests
         shell: pwsh
         run: |
           git config --local user.email "nicharl@microsoft.com"
           git config --local user.name "NikCharlebois"
           git add D:/a/Microsoft365DSC/Microsoft365DSC/Tests/Integration/*
           git pull
-          git commit -m "Updated Intune Integration Tests"
+          git commit -m "Updated {Create} Intune Integration Tests"
           git push
           $SHA = git rev-parse HEAD
           echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
-      - name: Run Integration Tests
+      - name: Run {Create} Integration Tests
         shell: powershell
         env:
-          PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
-          PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
+          PUBLIC_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
+          PUBLIC_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
         run: |
-          $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
-          $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
+          $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
+          $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)
           try
           {
-            & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.INTUNE.Tests.ps1 -Credential $Credential
+            & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.INTUNE.Create.Tests.ps1 -Credential $Credential
           }
           catch
           {
