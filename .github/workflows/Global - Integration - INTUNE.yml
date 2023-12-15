@@ -22,7 +22,7 @@ jobs:
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
           Update-M365DSCDependencies
       - name: Configure Environment
-        shell: pwsh
+        shell: powershell
         run: |
           Set-ExecutionPolicy Unrestricted -Force
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
@@ -34,7 +34,7 @@ jobs:
           Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
           New-M365DSCIntegrationTest -Workload INTUNE -Step '1-Create'
       - name: Commit {Create} Integration Tests
-        shell: pwsh
+        shell: powershell
         run: |
           git config --local user.email "nicharl@microsoft.com"
           git config --local user.name "NikCharlebois"
@@ -45,7 +45,7 @@ jobs:
           $SHA = git rev-parse HEAD
           echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
       - name: Run {Create} Integration Tests
-        shell: pwsh
+        shell: powershell
         env:
           INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
           INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
