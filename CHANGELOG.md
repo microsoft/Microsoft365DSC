@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
+  * Added Assignments
+    FIXES [#2932](https://github.com/microsoft/Microsoft365DSC/issues/2932)
+
 # 1.23.1213.1
 
 * IntuneEndpointDetectionAndResponsePolicyWindows10
