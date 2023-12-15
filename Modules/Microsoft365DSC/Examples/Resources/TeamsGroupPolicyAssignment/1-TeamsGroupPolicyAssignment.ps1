@@ -8,7 +8,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -23,7 +23,7 @@ Configuration Example
             PolicyName       = 'AllowCalling'
             PolicyType       = 'TeamsCallingPolicy'
             Priority         = 1
-            Credential       = $credsGlobalAdmin
+            Credential       = $Credscredential
         }
     }
 }

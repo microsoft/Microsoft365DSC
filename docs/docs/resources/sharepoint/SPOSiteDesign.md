@@ -89,7 +89,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -104,7 +104,7 @@ Configuration Example
             Description         = "Created by DSC"
             PreviewImageAltText = "Office 365"
             Ensure              = "Present"
-            Credential          = $credsGlobalAdmin
+            Credential          = $Credscredential
         }
     }
 }

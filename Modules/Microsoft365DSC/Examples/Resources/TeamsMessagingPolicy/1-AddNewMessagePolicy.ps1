@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -33,7 +33,7 @@ Configuration Example
             AudioMessageEnabledType = "ChatsOnly"
             AllowOwnerDeleteMessage = $False
             Ensure                  = "Present"
-            Credential              = $credsGlobalAdmin
+            Credential              = $Credscredential
         }
     }
 }

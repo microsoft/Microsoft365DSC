@@ -213,7 +213,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -229,7 +229,7 @@ Configuration Example
             RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
             Enabled                                       = $True
             Ensure                                        = "Present"
-            Credential                                    = $credsGlobalAdmin
+            Credential                                    = $Credscredential
         }
     }
 }

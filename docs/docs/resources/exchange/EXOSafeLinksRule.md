@@ -56,7 +56,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -71,7 +71,7 @@ Configuration Example
             SafeLinksPolicy           = "Research Block URL"
             SentToMemberOf            = "Research Department"
             Ensure                    = "Present"
-            Credential                = $credsGlobalAdmin
+            Credential                = $Credscredential
         }
     }
 }

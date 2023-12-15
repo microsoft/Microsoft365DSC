@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -25,7 +25,7 @@ Configuration Example
             MailEnabled                   = $false
             IsAssignableToRole            = $true
             Ensure                        = "Present"
-            Credential                    = $credsGlobalAdmin
+            Credential                    = $Credscredential
         }
         AADAdministrativeUnit 'TestUnit'
         {
@@ -43,7 +43,7 @@ Configuration Example
                 }
             )
             Ensure                        = 'Present'
-            Credential                    = $credsGlobalAdmin
+            Credential                    = $Credscredential
             DependsOn                     = "[AADGroup]TestGroup"
         }
     }

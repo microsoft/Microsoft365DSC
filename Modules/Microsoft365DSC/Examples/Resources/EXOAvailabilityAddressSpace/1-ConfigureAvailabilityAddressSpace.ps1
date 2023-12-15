@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -23,7 +23,7 @@ Configuration Example
             ForestName            = 'example.contoso.com'
             TargetAutodiscoverEpr = 'https://contoso.com/autodiscover/autodiscover.xml'
             Ensure                = 'Present'
-            Credential            = $credsGlobalAdmin
+            Credential            = $Credscredential
         }
     }
 }

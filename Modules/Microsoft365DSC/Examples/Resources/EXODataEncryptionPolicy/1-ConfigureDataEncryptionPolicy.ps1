@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -21,7 +21,7 @@ Configuration Example
             Description = 'All Mailboxes of users in the US'
             Enabled     = $true
             Ensure      = "Present"
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
         }
     }
 }

@@ -50,7 +50,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -64,7 +64,7 @@ Configuration Example
             PolicyScopeGroupId   = "Engineering Staff"
             Description          = "Engineering Group Policy"
             Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
         }
     }
 }

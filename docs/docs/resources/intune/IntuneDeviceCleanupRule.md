@@ -58,7 +58,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -68,9 +68,9 @@ Configuration Example
         {
             Enabled                                = $true
             IsSingleInstance                       = 'Yes'
-            DeviceInactivityBeforeRetirementInDays = 30
+            DeviceInactivityBeforeRetirementInDays = 25 # Updated Property
             Ensure                                 = 'Present'
-            Credential                             = $credsGlobalAdmin
+            Credential                             = $Credscredential
         }
     }
 }
