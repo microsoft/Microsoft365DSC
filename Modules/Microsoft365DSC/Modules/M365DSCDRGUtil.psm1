@@ -1326,3 +1326,71 @@ function Update-DeviceConfigurationPolicyAssignment
         return $null
     }
 }
+
+function Get-OmaSettingPlainTextValue
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SecretReferenceValueId,
+
+        [Parameter()]
+        [ValidateSet('v1.0', 'beta')]
+        [System.String]
+        $APIVersion = 'beta'
+    )
+
+    try
+    {
+        <#
+            e.g. PolicyId for SecretReferenceValueId '35ea58ec-2a79-471d-8eea-7e28e6cd2722_bdf6c690-05fb-4d02-835d-5a7406c35d58_abe32712-2255-445f-a35e-0c6f143d82ca'
+            is 'bdf6c690-05fb-4d02-835d-5a7406c35d58'
+        #>
+        $SplitSecretReferenceValueId = $SecretReferenceValueId.Split("_")
+        if ($SplitSecretReferenceValueId.Count -ne 3)
+        {
+            return $null
+        }
+        else
+        {
+            $PolicyId = $SplitSecretReferenceValueId[1]
+        }
+    }
+    catch
+    {
+        return $null
+    }
+
+    $BaseUrl = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl
+    if ($BaseUrl[$BaseUrl.Length - 1] -eq '/')
+    {
+        $BaseUrl = $BaseUrl.Substring(0, $BaseUrl.Length - 1)
+    }
+    $Repository = 'deviceManagement/deviceConfigurations'
+    $Uri = "{0}/{1}/{2}/{3}/getOmaSettingPlainTextValue(secretReferenceValueId='{4}')" -f $BaseUrl, $APIVersion, $Repository, $PolicyId, $SecretReferenceValueId
+
+    try
+    {
+        $Result = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
+    }
+    catch
+    {
+        $Message = "Error decrypting OmaSetting with SecretReferenceValueId {0}:" -f $SecretReferenceValueId
+        New-M365DSCLogEntry -Message $Message `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+
+    if (![String]::IsNullOrEmpty($Result.Value))
+    {
+        return $Result.Value
+    } else {
+        return $null
+    }
+}

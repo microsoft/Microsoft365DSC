@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Add support to decrypt encrypted OmaSettings and export them in plaintext
+    FIXES [#3655](https://github.com/microsoft/Microsoft365DSC/issues/3655)
+
 # 1.23.1213.1
 
 * IntuneEndpointDetectionAndResponsePolicyWindows10
