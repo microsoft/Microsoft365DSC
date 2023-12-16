@@ -605,7 +605,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating an Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with DisplayName {$DisplayName}"
 
-        $PSBoundParameters.remove('Assignments')
+        $PSBoundParameters.remove('Assignments') | Out-Null
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
@@ -623,8 +623,8 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -BodyParameter $CreateParameters
         #endregion
 
-        $assignmentsHash=@()
-        foreach($assignment in $Assignments)
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
@@ -640,7 +640,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with Id {$($currentInstance.Id)}"
 
-        $PSBoundParameters.remove('Assignments')
+        $PSBoundParameters.remove('Assignments') | Out-Null
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
@@ -656,8 +656,8 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.MdmWindowsInformationProtectionPolicy")
-        Update-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy  `
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.MdmWindowsInformationProtectionPolicy')
+        Update-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
             -MdmWindowsInformationProtectionPolicyId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion
@@ -856,9 +856,9 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
-            if($key -eq 'Assignments')
+            if ($key -eq 'Assignments')
             {
-                $testResult = Compare-M365DSCIntunePolicyAssignment -source $source -Target $target
+                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
             }
 
             if (-Not $testResult)
