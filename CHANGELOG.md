@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCDRGUtil
+  * Fix empty BaseUrl since MSCloudLoginAssistant removed Intune workload
+    FIXES [#4057](https://github.com/microsoft/Microsoft365DSC/issues/4057)
+
 # 1.23.1213.1
 
 * IntuneEndpointDetectionAndResponsePolicyWindows10
