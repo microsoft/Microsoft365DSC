@@ -123,13 +123,13 @@ function Get-TargetResource
                 }
                 else
                 {
-                    $myomaSettings.Add('IsEncrypted', $currentomaSettings.isEncrypted)
                     $myomaSettings.Add('SecretReferenceValueId', $currentomaSettings.secretReferenceValueId)
                 }
             }
 
             $myomaSettings.Add('Description', $currentomaSettings.description)
             $myomaSettings.Add('DisplayName', $currentomaSettings.displayName)
+            $myomaSettings.Add('IsEncrypted', $currentomaSettings.isEncrypted)
             $myomaSettings.Add('OmaUri', $currentomaSettings.omaUri)
             $myomaSettings.Add('FileName', $currentomaSettings.fileName)
             $myomaSettings.Add('Value', $currentomaSettings.value)
