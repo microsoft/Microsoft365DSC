@@ -1349,13 +1349,13 @@ function Get-OmaSettingPlainTextValue
             is 'bdf6c690-05fb-4d02-835d-5a7406c35d58'
         #>
         $SplitSecretReferenceValueId = $SecretReferenceValueId.Split("_")
-        if ($SplitSecretReferenceValueId.Count -ne 3)
+        if ($SplitSecretReferenceValueId.Count -eq 3)
         {
-            return $null
+            $PolicyId = $SplitSecretReferenceValueId[1]
         }
         else
         {
-            $PolicyId = $SplitSecretReferenceValueId[1]
+            return $null
         }
     }
     catch
