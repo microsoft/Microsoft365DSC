@@ -1363,13 +1363,8 @@ function Get-OmaSettingPlainTextValue
         return $null
     }
 
-    $BaseUrl = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl
-    if ($BaseUrl[$BaseUrl.Length - 1] -eq '/')
-    {
-        $BaseUrl = $BaseUrl.Substring(0, $BaseUrl.Length - 1)
-    }
     $Repository = 'deviceManagement/deviceConfigurations'
-    $Uri = "{0}/{1}/{2}/{3}/getOmaSettingPlainTextValue(secretReferenceValueId='{4}')" -f $BaseUrl, $APIVersion, $Repository, $PolicyId, $SecretReferenceValueId
+    $Uri = "/{0}/{1}/{2}/getOmaSettingPlainTextValue(secretReferenceValueId='{3}')" -f $APIVersion, $Repository, $PolicyId, $SecretReferenceValueId
 
     try
     {
