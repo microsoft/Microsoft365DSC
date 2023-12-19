@@ -5,6 +5,10 @@
 * IntuneDeviceEnrollmentPlatformRestriction
   * Fix Set-TargetResource due to an issue were the bodyparameter not cast correctly
   FIXES [#3730](https://github.com/microsoft/Microsoft365DSC/issues/3730)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue when trying to remove policy and Identity is set to a random GUID
+    or from another tenant
+  FIXES [#4041](https://github.com/microsoft/Microsoft365DSC/issues/4041)
 
 # 1.23.1213.1
 
