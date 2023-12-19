@@ -274,14 +274,7 @@ function Set-TargetResource
     #endregion
 
     $currentCategory = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $PSBoundParameters.Remove('Identity') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
@@ -326,10 +319,10 @@ function Set-TargetResource
         }
         $PSBoundParameters.add('@odata.type', $policyType)
 
-        Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
+        #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
 
         $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-            -BodyParameter $PSBoundParameters
+            -BodyParameter ([hashtable]$PSBoundParameters)
 
         #Assignments from DefaultPolicy are not editable and will raise an alert
         if ($policy.Id -notlike '*_DefaultPlatformRestrictions')
@@ -384,9 +377,9 @@ function Set-TargetResource
             $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
         }
         $PSBoundParameters.add('@odata.type', $policyType)
-        Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
+        #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
         Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-            -BodyParameter $PSBoundParameters `
+            -BodyParameter ([hashtable]$PSBoundParameters) `
             -DeviceEnrollmentConfigurationId $Identity
 
         #Assignments from DefaultPolicy are not editable and will raise an alert
@@ -517,7 +510,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -547,11 +540,8 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+    $ValuesToCheck.Remove('Identity') | Out-Null
     $ValuesToCheck.Remove('WindowsMobileRestriction') | Out-Null
 
     #Convert any DateTime to String
