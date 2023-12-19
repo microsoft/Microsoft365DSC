@@ -60,7 +60,7 @@
                 {
                     DisplayName                                            = 'test'
                     deviceGuardLocalSystemAuthorityCredentialGuardSettings = "notConfigured"
-                    WindowsHelloForBusinessBlocked                         = $true
+                    WindowsHelloForBusinessBlocked                         = $false
                     PinMinimumLength                                       = 5
                     PinSpecialCharactersUsage                              = 'required'
                     Ensure                                                 = 'Present'
@@ -308,7 +308,7 @@
                     ManagedEmailProfileRequired                 = $True
                     Ensure                                      = 'Present'
                     Credential                                  = $Credscredential
-        
+
                 }
                 IntuneDeviceCompliancePolicyMacOS 'ConfigureDeviceCompliancePolicyMacOS'
                 {
@@ -412,7 +412,7 @@
                                         {
                                             Name = 'hosted_app'
                                         }
-        
+
                                         MSFT_IntuneGroupPolicyDefinitionValuePresentationValueKeyValuePair
                                         {
                                             Name = 'user_script'
@@ -446,7 +446,7 @@
                                     Id                          = '14c48993-35af-4b77-a4f8-12de917b1bb9'
                                     odataType                   = '#microsoft.graph.groupPolicyPresentationValueDecimal'
                                 }
-        
+
                                 MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
                                 {
                                     presentationDefinitionId    = '98998e7f-cc2a-4d96-8c47-35dd4b2ce56b'
@@ -455,7 +455,7 @@
                                     Id                          = '4d654df9-6826-470f-af4e-d37491663c76'
                                     odataType                   = '#microsoft.graph.groupPolicyPresentationValueDecimal'
                                 }
-        
+
                                 MSFT_IntuneGroupPolicyDefinitionValuePresentationValue
                                 {
                                     presentationDefinitionId    = '6900e752-4bc3-463b-9fc8-36d78c77bc3e'
