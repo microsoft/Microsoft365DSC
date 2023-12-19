@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue when trying to remove policy and Identity is set to a random GUID
+    or from another tenant
+  FIXES [#4041](https://github.com/microsoft/Microsoft365DSC/issues/4041)
 * IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
   * Added Assignments
     FIXES [#2932](https://github.com/microsoft/Microsoft365DSC/issues/2932)
