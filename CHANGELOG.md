@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Add support for remaining platforms supported by this policy
+    FIXES [#4065](https://github.com/microsoft/Microsoft365DSC/issues/4065)
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Add support to decrypt encrypted OmaSettings and export them in plaintext
     FIXES [#3655](https://github.com/microsoft/Microsoft365DSC/issues/3655)
