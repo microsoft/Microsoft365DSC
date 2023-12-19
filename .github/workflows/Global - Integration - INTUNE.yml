@@ -14,7 +14,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Install Microsoft365DSC
-        shell: pwsh
+        shell: powershell
         run: |
           winrm quickconfig -force
           $source = "./Modules/Microsoft365DSC/"
@@ -22,19 +22,19 @@ jobs:
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
           Update-M365DSCDependencies
       - name: Configure Environment
-        shell: pwsh
+        shell: powershell
         run: |
           Set-ExecutionPolicy Unrestricted -Force
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           Set-M365DSCTelemetryOption -Enabled $false
           Set-Item -Path WSMan:\localhost\MaxEnvelopeSizekb -Value 99999
       - name: Generate {Create} Integration Tests from Examples
-        shell: pwsh
+        shell: powershell
         run: |
           Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
           New-M365DSCIntegrationTest -Workload INTUNE -Step '1-Create'
       - name: Commit {Create} Integration Tests
-        shell: pwsh
+        shell: powershell
         run: |
           git config --local user.email "nicharl@microsoft.com"
           git config --local user.name "NikCharlebois"
@@ -47,8 +47,8 @@ jobs:
       - name: Run {Create} Integration Tests
         shell: powershell
         env:
-          PUBLIC_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
-          PUBLIC_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
+          INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
+          INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
         run: |
           $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
           $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)

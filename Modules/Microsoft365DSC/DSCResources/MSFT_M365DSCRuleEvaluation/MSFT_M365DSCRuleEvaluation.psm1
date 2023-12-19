@@ -203,7 +203,7 @@ function Test-TargetResource
             Write-Verbose -Message "Identified {$($instances.Length)} instances matching rule."
         }
 
-        $result = ($instances.Length -$DSCConvertedInstances.Length) -eq 0
+        $result = ($instances.Length - $DSCConvertedInstances.Length) -eq 0
 
         if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
         {
