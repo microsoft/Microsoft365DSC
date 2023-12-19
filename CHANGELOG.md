@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Add support for remaining platforms supported by this policy
+    FIXES [#4065](https://github.com/microsoft/Microsoft365DSC/issues/4065)
+
 # 1.23.1213.1
 
 * IntuneEndpointDetectionAndResponsePolicyWindows10
