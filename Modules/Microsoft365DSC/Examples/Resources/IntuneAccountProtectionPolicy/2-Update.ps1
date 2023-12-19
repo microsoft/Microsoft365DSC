@@ -18,7 +18,7 @@ Configuration Example
         {
             DisplayName                                            = 'test'
             deviceGuardLocalSystemAuthorityCredentialGuardSettings = "notConfigured"
-            WindowsHelloForBusinessBlocked                         = $true
+            WindowsHelloForBusinessBlocked                         = $false
             PinMinimumLength                                       = 10 # Updated Property
             PinSpecialCharactersUsage                              = 'required'
             Ensure                                                 = 'Present'
