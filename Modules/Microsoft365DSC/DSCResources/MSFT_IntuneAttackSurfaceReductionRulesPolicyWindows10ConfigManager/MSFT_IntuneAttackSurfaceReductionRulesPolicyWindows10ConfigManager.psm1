@@ -176,8 +176,10 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
-
+        if (-not [System.String]::IsNullOrEmpty($Identity))
+        {
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
+        }
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Policy {id: '$Identity'} was found"
@@ -957,7 +959,10 @@ function Get-IntuneSettingCatalogPolicySetting
             -SettingValueName $settingValueName `
             -SettingValueType $settingValueType `
             -SettingValueTemplateId $settingValueTemplateId
-        $settingInstance += ($settingValue)
+        if ($null -ne $settingValue)
+        {
+            $settingInstance += [Hashtable]$settingValue
+        }
 
         $settingInstances += @{
             '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'
