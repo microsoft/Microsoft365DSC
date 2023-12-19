@@ -9,8 +9,8 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
 
-[ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile")]
-class MSFT_IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfileBasic")]
+class MSFT_IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfileBasic : OMI_BaseResource
 {
     [Write, Description("Id of the Intune policy.")] String Id;
     [Key, Description("Display name of the Intune policy.")] String DisplayName;
@@ -19,7 +19,7 @@ class MSFT_IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile : OMI_BaseR
     [Write, Description("Connect when network name is hidden.")] Boolean ConnectWhenNetworkNameIsHidden;
     [Write, Description("Network name.")] String NetworkName;
     [Write, Description("SSID.")] String Ssid;
-    [Write, Description("Wi-Fi security."), ValueMap{"open","wpaEnterprise","wpa2Enterprise"}, Values{"open","wpaEnterprise","wpa2Enterprise"}] String WiFiSecurityType;
+    [Write, Description("Wi-Fi security."), ValueMap{"open"}, Values{"open"}] String WiFiSecurityType;
     [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Intune Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;

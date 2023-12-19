@@ -1,13 +1,31 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneWifiConfigurationPolicyAndroidOpenSourceProject
+  * Renamed resource to IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic
+  * Updated properties
+  * Fixed import, update and test of the resource
+  FIXES [#3976](https://github.com/microsoft/Microsoft365DSC/issues/3976)
+* IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile
+  * Renamed resource to IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile
+  * Updated properties
+  * Fixed import, update and test of the resource
+  FIXES [#3979](https://github.com/microsoft/Microsoft365DSC/issues/3979)
+* IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator
+  * Renamed resource to IntuneWiFiConfigurationPolicyAndroidDeviceAdministratorBasic
+  * Updated properties
+  * Fixed import, update and test of the resource
+  FIXES [#3975](https://github.com/microsoft/Microsoft365DSC/issues/3975)
+
 # 1.23.1213.1
 
-* IntuneEndpointDetectionAndResponsePolicyWindows10
-  * Fix issue with assignments
-    FIXES [#3904](https://github.com/microsoft/Microsoft365DSC/issues/3904)
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fix issue with Set-TargetResource when retrieving a policy from displayName
     FIXES [#4003](https://github.com/microsoft/Microsoft365DSC/issues/4003)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue with assignments
+    FIXES [#3904](https://github.com/microsoft/Microsoft365DSC/issues/3904)
 * IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
   * Fix parameter name in assignment cmdlet
     FIXES [#4007](https://github.com/microsoft/Microsoft365DSC/issues/4007)

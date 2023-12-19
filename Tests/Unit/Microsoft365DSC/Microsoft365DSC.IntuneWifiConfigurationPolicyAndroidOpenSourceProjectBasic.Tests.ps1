@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneWifiConfigurationPolicyAndroidDeviceAdministrator' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -42,19 +42,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -MockWith {
             }
-
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
-            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
-            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
         }
 
         # Test contexts
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministrator should exist but it DOES NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -63,6 +63,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                    = 'FakeStringValue'
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
 
@@ -86,7 +88,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministrator exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -95,6 +97,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                    = 'FakeStringValue'
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
 
@@ -105,12 +109,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.aospDeviceOwnerWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
+                            PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
                             Ssid                           = 'FakeStringValue'
+                            PreSharedKeyIsSet              = $True
 
                         }
                         Description          = 'FakeStringValue'
@@ -134,7 +140,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministrator Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic exists and values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -143,6 +149,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                    = 'FakeStringValue'
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
 
@@ -153,12 +161,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.aospDeviceOwnerWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
+                            PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
                             Ssid                           = 'FakeStringValue'
+                            PreSharedKeyIsSet              = $True
 
                         }
                         Description          = 'FakeStringValue'
@@ -175,7 +185,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministrator exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidOpenSourceProjectBasic exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -184,6 +194,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName                    = 'FakeStringValue'
                     Id                             = 'FakeStringValue'
                     NetworkName                    = 'FakeStringValue'
+                    PreSharedKey                   = 'FakeStringValue'
+                    PreSharedKeyIsSet              = $True
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
 
@@ -197,7 +209,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Ssid             = 'FakeStringValue'
                             NetworkName      = 'FakeStringValue'
                             WiFiSecurityType = 'open'
-                            '@odata.type'    = '#microsoft.graph.androidWifiConfiguration'
+                            PreSharedKey     = 'FakeStringValue'
+                            '@odata.type'    = '#microsoft.graph.aospDeviceOwnerWifiConfiguration'
 
                         }
                         Description          = 'FakeStringValue'
@@ -231,12 +244,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.aospDeviceOwnerWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
+                            PreSharedKey                   = 'FakeStringValue'
                             ConnectWhenNetworkNameIsHidden = $True
                             Ssid                           = 'FakeStringValue'
+                            PreSharedKeyIsSet              = $True
 
                         }
                         Description          = 'FakeStringValue'

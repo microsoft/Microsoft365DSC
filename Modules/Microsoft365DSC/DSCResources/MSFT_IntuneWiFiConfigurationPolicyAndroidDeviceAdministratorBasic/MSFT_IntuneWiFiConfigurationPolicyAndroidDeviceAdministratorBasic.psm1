@@ -34,7 +34,7 @@ function Get-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -108,6 +108,7 @@ function Get-TargetResource
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWiFiConfiguration' `
             }
+            $Id = $getValue.Id
         }
         #endregion
 
@@ -202,7 +203,7 @@ function Set-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -418,7 +419,7 @@ function Test-TargetResource
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wpaEnterprise', 'wpa2Enterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -474,7 +475,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false

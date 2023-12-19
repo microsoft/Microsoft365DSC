@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -23,7 +23,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
-
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
@@ -42,19 +41,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -MockWith {
             }
-            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
-            }
+
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return 'Credentials'
             }
-
+            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
         }
 
         # Test contexts
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile should exist but it DOES NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -65,7 +64,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     NetworkName                    = 'FakeStringValue'
                     Ssid                           = 'FakeStringValue'
                     WiFiSecurityType               = 'open'
-
                     Ensure                         = 'Present'
                     Credential                     = $Credential
                 }
@@ -86,7 +84,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile exists but it SHOULD NOT' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -105,7 +103,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWorkProfileWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.androidWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
@@ -134,7 +132,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceConfiguration -Exactly 1
             }
         }
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -153,7 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWorkProfileWifiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.androidWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True
@@ -169,13 +167,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
         }
 
-        Context -Name 'The IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile exists and values are NOT in the desired state' -Fixture {
+        Context -Name 'The IntuneWifiConfigurationPolicyAndroidDeviceAdministratorBasic exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     ConnectAutomatically           = $True
@@ -197,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Ssid             = 'FakeStringValue'
                             NetworkName      = 'FakeStringValue'
                             WiFiSecurityType = 'open'
-                            '@odata.type'    = '#microsoft.graph.androidWorkProfileWifiConfiguration'
+                            '@odata.type'    = '#microsoft.graph.androidWifiConfiguration'
 
                         }
                         Description          = 'FakeStringValue'
@@ -224,7 +221,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
-                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
@@ -232,7 +228,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type'                  = '#microsoft.graph.androidWorkProfileEnterpriseWiFiConfiguration'
+                            '@odata.type'                  = '#microsoft.graph.androidWifiConfiguration'
                             NetworkName                    = 'FakeStringValue'
                             WiFiSecurityType               = 'open'
                             ConnectAutomatically           = $True

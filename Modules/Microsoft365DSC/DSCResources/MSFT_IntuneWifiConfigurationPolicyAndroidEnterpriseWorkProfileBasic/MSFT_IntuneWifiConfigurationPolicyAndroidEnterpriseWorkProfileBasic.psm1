@@ -31,18 +31,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $PreSharedKey,
-
-        [Parameter()]
-        [System.Boolean]
-        $PreSharedKeyIsSet,
-
-        [Parameter()]
-        [System.String]
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wep', 'wpaPersonal', 'wpaEnterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -107,25 +99,26 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         #region resource generator code
         if ($null -eq $getValue)
         {
             $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.aospDeviceOwnerWiFiConfiguration' `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileWiFiConfiguration' `
             }
+            $Id = $getValue.Id
         }
         #endregion
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            Write-Verbose -Message "Nothing with id {$Id} was found"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
+        Write-Verbose -Message "Found something with id {$Id}"
         $results = @{
             #region resource generator code
             Id                             = $getValue.Id
@@ -134,8 +127,6 @@ function Get-TargetResource
             ConnectAutomatically           = $getValue.AdditionalProperties.connectAutomatically
             ConnectWhenNetworkNameIsHidden = $getValue.AdditionalProperties.connectWhenNetworkNameIsHidden
             NetworkName                    = $getValue.AdditionalProperties.networkName
-            PreSharedKey                   = $getValue.AdditionalProperties.preSharedKey
-            PreSharedKeyIsSet              = $getValue.AdditionalProperties.preSharedKeyIsSet
             Ssid                           = $getValue.AdditionalProperties.ssid
             WiFiSecurityType               = $getValue.AdditionalProperties.wiFiSecurityType
             Ensure                         = 'Present'
@@ -144,7 +135,7 @@ function Get-TargetResource
             TenantId                       = $TenantId
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
-            Managedidentity                = $ManagedIdentity.IsPresent
+            ManagedIdentity                = $ManagedIdentity.IsPresent
         }
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
@@ -208,18 +199,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $PreSharedKey,
-
-        [Parameter()]
-        [System.Boolean]
-        $PreSharedKeyIsSet,
-
-        [Parameter()]
-        [System.String]
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wep', 'wpaPersonal', 'wpaEnterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -391,6 +374,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
+
         #region resource generator code
         Remove-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $currentInstance.Id
         #endregion
@@ -430,18 +414,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $PreSharedKey,
-
-        [Parameter()]
-        [System.Boolean]
-        $PreSharedKeyIsSet,
-
-        [Parameter()]
-        [System.String]
         $Ssid,
 
         [Parameter()]
-        [ValidateSet('open', 'wep', 'wpaPersonal', 'wpaEnterprise')]
+        [ValidateSet('open')]
         [System.String]
         $WiFiSecurityType,
 
@@ -497,7 +473,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -626,7 +602,7 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.aospDeviceOwnerWiFiConfiguration'  `
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileWiFiConfiguration'  `
         }
         #endregion
 
@@ -652,7 +628,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params
@@ -716,6 +692,9 @@ function Export-TargetResource
         return ''
     }
 }
+
+
+
 function Get-M365DSCAdditionalProperties
 {
     [CmdletBinding()]
@@ -731,13 +710,11 @@ function Get-M365DSCAdditionalProperties
         'ConnectAutomatically'
         'ConnectWhenNetworkNameIsHidden'
         'NetworkName'
-        'PreSharedKey'
-        'PreSharedKeyIsSet'
         'Ssid'
         'WiFiSecurityType'
     )
 
-    $results = @{'@odata.type' = '#microsoft.graph.aospDeviceOwnerWiFiConfiguration' }
+    $results = @{'@odata.type' = '#microsoft.graph.androidWorkProfileWiFiConfiguration' }
     $cloneProperties = $Properties.clone()
     foreach ($property in $cloneProperties.Keys)
     {
@@ -768,7 +745,6 @@ function Get-M365DSCAdditionalProperties
             }
 
             $results.Add($propertyName, $propertyValue)
-
         }
     }
     if ($results.Count -eq 1)
