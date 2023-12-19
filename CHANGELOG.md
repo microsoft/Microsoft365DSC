@@ -12,6 +12,9 @@
 * IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
   * Added Assignments
     FIXES [#2932](https://github.com/microsoft/Microsoft365DSC/issues/2932)
+* M365DSCDRGUtil
+  * Fix empty BaseUrl since MSCloudLoginAssistant removed Intune workload
+    FIXES [#4057](https://github.com/microsoft/Microsoft365DSC/issues/4057)
 
 # 1.23.1213.1
 
