@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Add support to decrypt encrypted OmaSettings and export them in plaintext
+    FIXES [#3655](https://github.com/microsoft/Microsoft365DSC/issues/3655)
 * IntuneEndpointDetectionAndResponsePolicyWindows10
   * Fix issue when trying to remove policy and Identity is set to a random GUID
     or from another tenant
