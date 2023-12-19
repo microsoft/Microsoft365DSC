@@ -60,7 +60,7 @@
                 {
                     DisplayName                                            = 'test'
                     deviceGuardLocalSystemAuthorityCredentialGuardSettings = "notConfigured"
-                    WindowsHelloForBusinessBlocked                         = $true
+                    WindowsHelloForBusinessBlocked                         = $false
                     PinMinimumLength                                       = 5
                     PinSpecialCharactersUsage                              = 'required'
                     Ensure                                                 = 'Present'
