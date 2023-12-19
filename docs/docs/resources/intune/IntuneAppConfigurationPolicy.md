@@ -81,7 +81,87 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
+        {
+            DisplayName          = 'ContosoNew'
+            Description          = 'New Contoso Policy'
+            Credential           = $Credscredential;
+            CustomSettings       = @(
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'com.microsoft.intune.mam.managedbrowser.BlockListURLs'
+                    value = 'https://www.aol.com'
+                }
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'com.microsoft.intune.mam.managedbrowser.bookmarks'
+                    value = 'Outlook Web|https://outlook.office.com||Bing|https://www.bing.com'
+                }
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'Test'
+                    value = 'TestValue'
+                });
+            Ensure      = 'Present'
+        }
+    }
+}
+```
+
+### Example 2
+
+This example creates a new App Configuration Policy.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
+        {
+            DisplayName          = 'ContosoNew'
+            Description          = 'New Contoso Policy'
+            Credential           = $Credscredential;
+            CustomSettings       = @(
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'com.microsoft.intune.mam.managedbrowser.BlockListURLs'
+                    value = 'https://www.aol.com'
+                }
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'com.microsoft.intune.mam.managedbrowser.bookmarks'
+                    value = 'Outlook Web|https://outlook.office.com||Bing|https://www.bing.com'
+                }
+                MSFT_IntuneAppConfigurationPolicyCustomSetting { # Updated Property
+                    name  = 'Test2'
+                    value = 'TestValue2'
+                });
+            Ensure      = 'Present'
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new App Configuration Policy.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -91,35 +171,8 @@ Configuration Example
         {
             DisplayName = 'ContosoNew'
             Description = 'New Contoso Policy'
-            Ensure      = 'Present'
-            Credential  = $credsGlobalAdmin
-        }
-    }
-}
-```
-
-### Example 2
-
-This example removes an existing App Configuration Policy.
-
-```powershell
-Configuration Example
-{
-    param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsGlobalAdmin
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    node localhost
-    {
-        IntuneAppConfigurationPolicy 'RemoveAppConfigPolicy'
-        {
-            DisplayName = 'ContosoOld'
-            Description = 'Old Contoso Policy'
+            Credential  = $Credscredential;
             Ensure      = 'Absent'
-            Credential  = $credsGlobalAdmin
         }
     }
 }

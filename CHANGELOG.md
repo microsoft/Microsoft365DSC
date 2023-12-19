@@ -18,6 +18,35 @@
   * Fixed import, update and test of the resource
   FIXES [#3975](https://github.com/microsoft/Microsoft365DSC/issues/3975)
 
+# 1.23.1213.1
+
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fix issue with Set-TargetResource when retrieving a policy from displayName
+    FIXES [#4003](https://github.com/microsoft/Microsoft365DSC/issues/4003)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue with assignments
+    FIXES [#3904](https://github.com/microsoft/Microsoft365DSC/issues/3904)
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Fix parameter name in assignment cmdlet
+    FIXES [#4007](https://github.com/microsoft/Microsoft365DSC/issues/4007)
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.11.1.
+  * Updated MSCloudLoginAssistant to version 1.1.3.
+
+# 1.23.1206.1
+
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fix condition in Test-TargetResource to check if resource was removed or not
+    FIXES [#3958](https://github.com/microsoft/Microsoft365DSC/issues/3958)
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Fix typo in assignment cmdlet
+    FIXES [#3996](https://github.com/microsoft/Microsoft365DSC/issues/3996)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.2.
+* MISC
+  * Fix Compare-M365DSCConfigurations to exclude resources correctly
+    FIXES [#4000](https://github.com/microsoft/Microsoft365DSC/issues/4000)
+
 # 1.23.1129.1
 
 * AADRoleSetting

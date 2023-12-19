@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -19,14 +19,14 @@ Configuration Example
             IncludeFileExtensions                = @('.jpg', '.png')
             CDNType                              = "Public"
             ExcludeRestrictedSiteClassifications = @()
-            Credential                           = $credsGlobalAdmin
+            Credential                           = $Credscredential
         }
         SPOTenantCDNPolicy 'PrivateCDNPolicy'
         {
             IncludeFileExtensions                = @('.gif')
             CDNType                              = "Private"
             ExcludeRestrictedSiteClassifications = @()
-            Credential                           = $credsGlobalAdmin
+            Credential                           = $Credscredential
         }
     }
 }

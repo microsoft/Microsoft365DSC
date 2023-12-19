@@ -79,7 +79,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -102,7 +102,7 @@ Configuration Example
                 FilePlanPropertySubcategory = "DemoSub"
             }
             Ensure            = "Present"
-            Credential        = $credsGlobalAdmin
+            Credential        = $Credscredential
         }
     }
 }

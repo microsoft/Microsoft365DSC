@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -32,7 +32,7 @@ Configuration Example
             GuestUserRole                                     = 'Guest'
             PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
             Ensure                                            = 'Present'
-            Credential                                        = $credsGlobalAdmin
+            Credential                                        = $Credscredential
         }
     }
 }

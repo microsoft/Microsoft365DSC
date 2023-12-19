@@ -57,7 +57,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -68,7 +68,60 @@ Configuration Example
             DisplayName = 'Contoso'
             Description = 'Contoso Category'
             Ensure      = 'Present'
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example creates a new Device Category.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceCategory 'ConfigureDeviceCategory'
+        {
+            DisplayName = 'Contoso'
+            Description = 'Contoso Category - Updated' # Updated Property
+            Ensure      = 'Present'
+            Credential  = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Category.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceCategory 'ConfigureDeviceCategory'
+        {
+            DisplayName = 'Contoso'
+            Ensure      = 'Absent'
+            Credential  = $Credscredential
         }
     }
 }

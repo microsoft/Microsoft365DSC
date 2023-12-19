@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -17,7 +17,7 @@ Configuration Example
         {
             Usage      = 'Long Distance'
             Ensure     = 'Present'
-            Credential = $credsGlobalAdmin
+            Credential = $Credscredential
         }
     }
 }
