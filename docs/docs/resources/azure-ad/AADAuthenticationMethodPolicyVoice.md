@@ -88,31 +88,17 @@ Configuration Example
     {
         AADAuthenticationMethodPolicyVoice "AADAuthenticationMethodPolicyVoice-Voice"
         {
-            Credential            = $credsCredential;
-            Ensure                = "Present";
-            Id                    = "Voice";
-            IsOfficePhoneAllowed  = $False;
-            ExcludeTargets           = @(
-                MSFT_AADAuthenticationMethodPolicyVoiceExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyVoiceExcludeTarget{
-                    Id = 'fakegroup2'
+            Credential           = $Credscredential;
+            Ensure               = "Present";
+            Id                   = "Voice";
+            IncludeTargets       = @(
+                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
+                    Id = 'all_users'
                     TargetType = 'group'
                 }
             );
-            IncludeTargets           = @(
-                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                    Id = 'fakegroup4'
-                    TargetType = 'group'
-                }
-            );
-            State                 = "disabled";
+            IsOfficePhoneAllowed = $False;
+            State                = "disabled";
         }
     }
 }
@@ -138,31 +124,17 @@ Configuration Example
     {
         AADAuthenticationMethodPolicyVoice "AADAuthenticationMethodPolicyVoice-Voice"
         {
-            Credential            = $credsCredential;
-            Ensure                = "Present";
-            Id                    = "Voice";
-            IsOfficePhoneAllowed  = $True; # Updated Property
-            ExcludeTargets           = @(
-                MSFT_AADAuthenticationMethodPolicyVoiceExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyVoiceExcludeTarget{
-                    Id = 'fakegroup2'
+            Credential           = $Credscredential;
+            Ensure               = "Present";
+            Id                   = "Voice";
+            IncludeTargets       = @(
+                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
+                    Id = 'all_users'
                     TargetType = 'group'
                 }
             );
-            IncludeTargets           = @(
-                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                    Id = 'fakegroup4'
-                    TargetType = 'group'
-                }
-            );
-            State                 = "disabled";
+            IsOfficePhoneAllowed = $True; # Updated Property
+            State                = "disabled";
         }
     }
 }

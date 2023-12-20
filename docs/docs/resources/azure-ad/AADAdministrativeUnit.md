@@ -94,6 +94,7 @@ Configuration Example
         AADAdministrativeUnit 'TestUnit'
         {
             DisplayName                   = 'Test-Unit'
+            Description                   = 'Test Description'
             MembershipRule                = "(user.country -eq `"Canada`")"
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
