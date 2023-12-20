@@ -123,16 +123,15 @@ Configuration Example
     {
         AADGroup 'MyGroups'
         {
-            DisplayName        = "DSCGroup"
-            Description        = "Microsoft DSC Group"
-            SecurityEnabled    = $True
-            MailEnabled        = $False
-            GroupTypes         = @()
-            MailNickname       = "DSCGroup"
-            Ensure             = "Present"
-            IsAssignableToRole = $True
-            AssignedToRole     = "Identity Governance Administrator"
-            Credential         = $Credscredential
+            DisplayName     = "DSCGroup"
+            Description     = "Microsoft DSC Group Updated" # Updated Property
+            SecurityEnabled = $True
+            MailEnabled     = $True
+            GroupTypes      = @("Unified")
+            MailNickname    = "M365DSC"
+            Visibility      = "Private"
+            Ensure          = "Present"
+            Credential      = $Credscredential
         }
     }
 }
@@ -155,28 +154,11 @@ Configuration Example
 
     node localhost
     {
-        AADGroup 'MyGroups1'
+        AADGroup 'MyGroups'
         {
-            DisplayName        = "DSCGroup"
-            Description        = "Microsoft DSC Group"
-            SecurityEnabled    = $True
-            MailEnabled        = $False
-            GroupTypes         = @()
-            MailNickname       = "M365DSCG"
-            Ensure             = "Present"
-            Credential         = $Credscredential
-        }
-        AADGroup 'MyGroups2'
-        {
-            DisplayName        = "DSCMemberGroup"
-            Description        = "Microsoft DSC Editor"
-            SecurityEnabled    = $True
-            MailEnabled        = $False
-            GroupTypes         = @()
-            MailNickname       = "M365DSCMG"
-            Ensure             = "Present"
-            MemberOf           = @("DSCGroup")
-            Credential         = $Credscredential
+            DisplayName     = "DSCGroup"
+            Ensure          = "Absent"
+            Credential      = $Credscredential
         }
     }
 }
