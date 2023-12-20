@@ -21,6 +21,8 @@
 * M365DSCDRGUtil
   * Fix empty BaseUrl since MSCloudLoginAssistant removed Intune workload
     FIXES [#4057](https://github.com/microsoft/Microsoft365DSC/issues/4057)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.4.
 
 # 1.23.1213.1
 
