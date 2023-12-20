@@ -101,6 +101,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
 
         [Parameter()]
@@ -153,9 +157,15 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id  -ErrorAction SilentlyContinue
+        try
+        {
+            $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $Id -ExpandProperty assignments -ErrorAction Stop
+        }
+        catch
+        {
+            $getValue = $null
+        }
 
         if ($null -eq $getValue)
         {
@@ -166,11 +176,19 @@ function Get-TargetResource
                 $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
+                if ($getValue.count -gt 1)
+                {
+                    throw ("Error: Ensure the displayName {$displayName} is unique.")
+                }
+                if (-not [String]::IsNullOrEmpty($getValue.Id))
+                {
+                    $getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -MdmWindowsInformationProtectionPolicyId $getValue.id -ExpandProperty assignments
+                }
             }
         }
         #endregion
 
-        if ($null -eq $getValue)
+        if ([String]::IsNullOrEmpty($getValue.Id))
         {
             Write-Verbose -Message "Could not find an Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with DisplayName {$DisplayName}"
             return $nullResult
@@ -403,6 +421,10 @@ function Get-TargetResource
             Managedidentity                        = $ManagedIdentity.IsPresent
             #endregion
         }
+        if ($getValue.assignments.count -gt 0)
+        {
+            $results.Add('Assignments', (ConvertFrom-IntunePolicyAssignment -Assignments $getValue.assignments -IncludeDeviceFilter $false))
+        }
 
         return [System.Collections.Hashtable] $results
     }
@@ -520,6 +542,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
 
         [Parameter(Mandatory)]
@@ -579,6 +605,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Creating an Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with DisplayName {$DisplayName}"
 
+        $PSBoundParameters.remove('Assignments') | Out-Null
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
         $CreateParameters.Remove('Id') | Out-Null
@@ -595,11 +622,25 @@ function Set-TargetResource
         #region resource generator code
         $policy = New-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -BodyParameter $CreateParameters
         #endregion
+
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+
+        if ($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceAppManagement/mdmWindowsInformationProtectionPolicies'
+        }
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Windows Information Protection Policy for Windows10 Mdm Enrolled with Id {$($currentInstance.Id)}"
 
+        $PSBoundParameters.remove('Assignments') | Out-Null
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
@@ -615,11 +656,20 @@ function Set-TargetResource
         }
 
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.MdmWindowsInformationProtectionPolicy")
-        Update-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy  `
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.MdmWindowsInformationProtectionPolicy')
+        Update-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
             -MdmWindowsInformationProtectionPolicyId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion
+
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceAppManagement/mdmWindowsInformationProtectionPolicies'
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -733,6 +783,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
 
         [Parameter()]
@@ -801,6 +855,11 @@ function Test-TargetResource
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
+
+            if ($key -eq 'Assignments')
+            {
+                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+            }
 
             if (-Not $testResult)
             {
@@ -1105,7 +1164,18 @@ function Export-TargetResource
                     $Results.Remove('SmbAutoEncryptedFileExtensions') | Out-Null
                 }
             }
-
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolledPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
@@ -1154,6 +1224,10 @@ function Export-TargetResource
             if ($Results.SmbAutoEncryptedFileExtensions)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'SmbAutoEncryptedFileExtensions' -IsCIMArray:$True
+            }
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
             #removing trailing commas and semi colons between items of an array of cim instances added by Convert-DSCStringParamToVariable
             $currentDSCBlock = $currentDSCBlock.replace( "    ,`r`n" , "    `r`n" )

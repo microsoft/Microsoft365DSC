@@ -106,28 +106,33 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
     {
         AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
         {
-            ApplicationId                   = $ConfigurationData.NonNodeData.ApplicationId;
             AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
+
                 Rules = @(@()
                 )
-                X509CertificateAuthenticationDefaultMode = 'x509CertificateMultiFactor'
+                X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
             };
-            CertificateThumbprint           = $ConfigurationData.NonNodeData.CertificateThumbprint;
             CertificateUserBindings         = @(
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
                     Priority = 1
-                    UserProperty = 'onPremisesUserPrincipalName'
+                    UserProperty = 'userPrincipalName'
                     X509CertificateField = 'PrincipalName'
                 }
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
                     Priority = 2
-                    UserProperty = 'onPremisesUserPrincipalName'
+                    UserProperty = 'userPrincipalName'
                     X509CertificateField = 'RFC822Name'
                 }
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
@@ -136,30 +141,114 @@ Configuration Example
                     X509CertificateField = 'SubjectKeyIdentifier'
                 }
             );
+            Credential                      = $Credscredential;
             Ensure                          = "Present";
             ExcludeTargets                  = @(
                 MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'DSCGroup'
                     TargetType = 'group'
                 }
             );
             Id                              = "X509Certificate";
             IncludeTargets                  = @(
                 MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'Finance Team'
                     TargetType = 'group'
                 }
             );
             State                           = "enabled";
-            TenantId                        = $ConfigurationData.NonNodeData.TenantId;
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
+        {
+            AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
+
+                Rules = @(@()
+                )
+                X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
+            };
+            CertificateUserBindings         = @(
+                MSFT_MicrosoftGraphx509CertificateUserBinding{
+                    Priority = 1
+                    UserProperty = 'userPrincipalName'
+                    X509CertificateField = 'PrincipalName'
+                }
+                MSFT_MicrosoftGraphx509CertificateUserBinding{
+                    Priority = 2
+                    UserProperty = 'userPrincipalName'
+                    X509CertificateField = 'RFC822Name'
+                }
+                MSFT_MicrosoftGraphx509CertificateUserBinding{
+                    Priority = 3
+                    UserProperty = 'certificateUserIds'
+                    X509CertificateField = 'SubjectKeyIdentifier'
+                }
+            );
+            Credential                      = $Credscredential;
+            Ensure                          = "Present";
+            ExcludeTargets                  = @(
+                MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
+                    Id = 'DSCGroup'
+                    TargetType = 'group'
+                }
+            );
+            Id                              = "X509Certificate";
+            IncludeTargets                  = @(
+                MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
+                    Id = 'Finance Team'
+                    TargetType = 'group'
+                }
+            );
+            State                           = "disabled"; # Updated Property
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
+        {
+            Credential                      = $credsCredential;
+            Ensure                          = "Absent";
+            Id                              = "X509Certificate";
         }
     }
 }

@@ -102,7 +102,70 @@ Configuration Example
             DisplayName                                        = "MDE onboarding Legacy";
             EnableExpeditedTelemetryReporting                  = $True;
             Ensure                                             = "Present";
-            Id                                                 = "510e4742-9c7b-414d-84a1-a1128fcf57a8";
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10 'Example'
+        {
+            AdvancedThreatProtectionAutoPopulateOnboardingBlob = $True; # Updated Property
+            AdvancedThreatProtectionOnboardingFilename         = "WindowsDefenderATP.onboarding";
+            AllowSampleSharing                                 = $True;
+            Assignments                                        = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            );
+            Credential                                         = $Credscredential;
+            DisplayName                                        = "MDE onboarding Legacy";
+            EnableExpeditedTelemetryReporting                  = $True;
+            Ensure                                             = "Present";
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10 'Example'
+        {
+            Credential                                         = $Credscredential;
+            DisplayName                                        = "MDE onboarding Legacy";
+            Ensure                                             = "Absent";
         }
     }
 }

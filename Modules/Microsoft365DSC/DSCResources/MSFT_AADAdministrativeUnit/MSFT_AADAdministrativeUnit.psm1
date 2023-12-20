@@ -551,12 +551,19 @@ function Set-TargetResource
         Write-Verbose -Message "Creating an Azure AD Administrative Unit with DisplayName {$DisplayName}"
 
         #region resource generator code
-        $policy = New-MgBetaDirectoryAdministrativeUnit -BodyParameter $CreateParameters
+        Write-Verbose -Message "Creating new Administrative Unit with: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+
+        $jsonParams = ConvertTo-Json $CreateParameters
+
+        # TODO - Replace by cmdlet call which has an issue in 2.11.1
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/administrativeUnits'
+        $policy = Invoke-MgGraphRequest -Method POST -Uri $url -Body $jsonParams
 
         if ($MembershipType -ne 'Dynamic')
         {
             foreach ($member in $memberSpecification)
             {
+                Write-Verbose -Message "Adding new dynamic member {$($member.Id)}"
                 $memberBodyParam = @{
                     '@odata.id' = "https://graph.microsoft.com/v1.0/$($member.Type)/$($member.Id)"
                 }
@@ -993,8 +1000,8 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    
-    
+
+
 
     try
     {
