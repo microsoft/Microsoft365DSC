@@ -17,37 +17,33 @@ Configuration Example
     {
         AADAuthenticationMethodPolicyFido2 "AADAuthenticationMethodPolicyFido2-Fido2"
         {
+            Credential                       = $Credscredential;
             Ensure                           = "Present";
             ExcludeTargets                   = @(
                 MSFT_AADAuthenticationMethodPolicyFido2ExcludeTarget{
-                    Id = 'fakegroup1'
+                    Id = 'Paralegals'
                     TargetType = 'group'
                 }
                 MSFT_AADAuthenticationMethodPolicyFido2ExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'Executives'
                     TargetType = 'group'
                 }
             );
             Id                               = "Fido2";
             IncludeTargets                   = @(
                 MSFT_AADAuthenticationMethodPolicyFido2IncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyFido2IncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'all_users'
                     TargetType = 'group'
                 }
             );
-            IsAttestationEnforced            = $False; # Updated Property
+            IsAttestationEnforced            = $False;
             IsSelfServiceRegistrationAllowed = $True;
             KeyRestrictions                  = MSFT_MicrosoftGraphfido2KeyRestrictions{
                 IsEnforced = $False
                 EnforcementType = 'block'
                 AaGuids = @()
             };
-            State                            = "enabled";
-            Credential                       = $credsCredential;
+            State                            = "disabled"; # Updated Property
         }
     }
 }

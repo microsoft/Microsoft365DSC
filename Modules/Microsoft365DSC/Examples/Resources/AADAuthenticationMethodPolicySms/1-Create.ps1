@@ -17,30 +17,22 @@ Configuration Example
     {
         AADAuthenticationMethodPolicySms "AADAuthenticationMethodPolicySms-Sms"
         {
-            Credential            = $credsCredential;
-            Ensure                = "Present";
-            ExcludeTargets        = @(
+            Credential           = $Credscredential;
+            Ensure               = "Present";
+            ExcludeTargets       = @(
                 MSFT_AADAuthenticationMethodPolicySmsExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicySmsExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'All Employees'
                     TargetType = 'group'
                 }
             );
-            Id                    = "Sms";
-            IncludeTargets        = @(
+            Id                   = "Sms";
+            IncludeTargets       = @(
                 MSFT_AADAuthenticationMethodPolicySmsIncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicySmsIncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'all_users'
                     TargetType = 'group'
                 }
             );
-            State                 = "enabled";
+            State                = "enabled";
         }
     }
 }

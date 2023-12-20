@@ -17,31 +17,27 @@ Configuration Example
     {
         AADAuthenticationMethodPolicyEmail "AADAuthenticationMethodPolicyEmail-Email"
         {
-            AllowExternalIdToUseEmailOtp = "default";
+            AllowExternalIdToUseEmailOtp = "enabled";
+            Credential                   = $Credscredential;
             Ensure                       = "Present";
             ExcludeTargets               = @(
                 MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'Paralegals'
                     TargetType = 'group'
                 }
             );
             Id                           = "Email";
             IncludeTargets               = @(
                 MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget{
-                    Id = 'fakegroup3'
+                    Id = 'Finance Team'
                     TargetType = 'group'
                 }
                 MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'Legal Team'
                     TargetType = 'group'
                 }
             );
             State                        = "enabled";
-            Credential                   = $credsCredential;
         }
     }
 }

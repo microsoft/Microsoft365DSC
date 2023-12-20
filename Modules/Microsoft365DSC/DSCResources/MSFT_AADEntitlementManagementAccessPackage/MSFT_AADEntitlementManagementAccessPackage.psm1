@@ -141,6 +141,8 @@ function Get-TargetResource
             }
         }
 
+        $catalog = Get-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalog $getValue.CatalogId
+
         $getIncompatibleAccessPackages = @()
         [Array]$query = Get-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackage -AccessPackageId $getValue.id
         if ($query.count -gt 0)
@@ -165,7 +167,7 @@ function Get-TargetResource
 
         $results = @{
             Id                              = $getValue.Id
-            CatalogId                       = $getValue.CatalogId
+            CatalogId                       = $catalog.DisplayName
             Description                     = $getValue.Description
             DisplayName                     = $getValue.DisplayName
             IsHidden                        = $getValue.IsHidden
@@ -313,6 +315,16 @@ function Set-TargetResource
         #region basic information
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
 
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($CreateParameters.CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CreateParameters.CatalogId)'"
+            if ($catalogInstance)
+            {
+                $CreateParameters.CatalogId = $catalogInstance.Id
+            }
+        }
+
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
         $CreateParameters.Remove('AccessPackageResourceRoleScopes') | Out-Null
@@ -418,6 +430,16 @@ function Set-TargetResource
 
         #region basic information
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($CreateParameters.CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($UpdateParameters.CatalogId)'"
+            if ($catalogInstance)
+            {
+                $UpdateParameters.CatalogId = $catalogInstance.Id
+            }
+        }
 
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
@@ -755,7 +777,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$Id}"
+    Write-Verbose -Message "Testing configuration of {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()

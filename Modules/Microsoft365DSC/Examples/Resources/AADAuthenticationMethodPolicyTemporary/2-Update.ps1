@@ -17,28 +17,20 @@ Configuration Example
     {
         AADAuthenticationMethodPolicyTemporary "AADAuthenticationMethodPolicyTemporary-TemporaryAccessPass"
         {
-            Credential               = $credsCredential;
+            Credential               = $Credscredential;
             DefaultLength            = 9; # Updated Property
             DefaultLifetimeInMinutes = 60;
             Ensure                   = "Present";
             ExcludeTargets           = @(
                 MSFT_AADAuthenticationMethodPolicyTemporaryExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyTemporaryExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'All Company'
                     TargetType = 'group'
                 }
             );
             Id                       = "TemporaryAccessPass";
             IncludeTargets           = @(
                 MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'DSCGroup'
                     TargetType = 'group'
                 }
             );

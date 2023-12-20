@@ -17,30 +17,26 @@ Configuration Example
     {
         AADAuthenticationMethodPolicySoftware "AADAuthenticationMethodPolicySoftware-SoftwareOath"
         {
-            Credential            = $credsCredential;
-            Ensure                = "Present";
-            ExcludeTargets        = @(
+            Credential           = $Credscredential;
+            Ensure               = "Present";
+            ExcludeTargets       = @(
                 MSFT_AADAuthenticationMethodPolicySoftwareExcludeTarget{
-                    Id = 'fakegroup1'
+                    Id = 'Executives'
                     TargetType = 'group'
                 }
                 MSFT_AADAuthenticationMethodPolicySoftwareExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'Paralegals'
                     TargetType = 'group'
                 }
             );
-            Id                    = "SoftwareOath";
-            IncludeTargets        = @(
+            Id                   = "SoftwareOath";
+            IncludeTargets       = @(
                 MSFT_AADAuthenticationMethodPolicySoftwareIncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicySoftwareIncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'Legal Team'
                     TargetType = 'group'
                 }
             );
-            State                 = "disabled"; # Updated Property
+            State                = "disabled"; # Updated Property
         }
     }
 }
