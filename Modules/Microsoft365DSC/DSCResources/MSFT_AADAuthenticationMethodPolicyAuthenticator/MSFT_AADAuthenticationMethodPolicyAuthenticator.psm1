@@ -99,14 +99,14 @@ function Get-TargetResource
         $complexCompanionAppAllowedState = @{}
         $complexExcludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id
-                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id)
-            }
+        {
+            $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id
+            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexExcludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType.toString())
@@ -118,14 +118,14 @@ function Get-TargetResource
         $complexCompanionAppAllowedState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id
-                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id)
-            }
+        {
+            $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id
+            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexIncludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType.toString())
@@ -145,16 +145,17 @@ function Get-TargetResource
         }
         $complexFeatureSettings.Add('CompanionAppAllowedState', $complexCompanionAppAllowedState)
         $complexDisplayAppInformationRequiredState = @{}
+
         $complexExcludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id
-                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id)
-            }
+        {
+            $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id
+            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexExcludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType.toString())
@@ -166,14 +167,14 @@ function Get-TargetResource
         $complexDisplayAppInformationRequiredState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id
-                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id)
-            }
+        {
+            $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id
+            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexIncludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType.toString())
@@ -195,14 +196,14 @@ function Get-TargetResource
         $complexDisplayLocationInformationRequiredState = @{}
         $complexExcludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id
-                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id)
-            }
+        {
+            $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id
+            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexExcludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType.toString())
@@ -214,14 +215,14 @@ function Get-TargetResource
         $complexDisplayLocationInformationRequiredState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id
-                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id)
-            }
+        {
+            $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id
+            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexIncludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType.toString())
@@ -249,7 +250,7 @@ function Get-TargetResource
             {
                 $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id -ErrorAction SilentlyContinue
 
-                if ($null -ne $myIncludeTargetsDisplayName)
+                if ($null -ne $myExcludeTargetsDisplayName)
                 {
                     $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
                 }
