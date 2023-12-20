@@ -63,12 +63,14 @@ jobs:
 
           try
           {
-            $Result = Test-DSCConfiguration -Detailed -Verbose
+            $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
           }
           catch
           {
             throw $_
           }
+
+          Write-Host ""
 
           if ($Result.InDesiredState -eq $false)
           {
