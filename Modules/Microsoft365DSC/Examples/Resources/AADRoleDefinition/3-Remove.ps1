@@ -17,9 +17,9 @@ Configuration Example
         AADRoleDefinition 'AADRoleDefinition1'
         {
             IsEnabled                     = $true
-            RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
+            RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read"
             DisplayName                   = "DSCRole1"
-            Ensure                        = "Update"
+            Ensure                        = "Absent"
             Credential                    = $Credscredential
         }
     }
