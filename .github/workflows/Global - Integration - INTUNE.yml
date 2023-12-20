@@ -14,7 +14,7 @@ jobs:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
       - name: Install Microsoft365DSC
-        shell: pwsh
+        shell: powershell
         run: |
           winrm quickconfig -force
           $source = "./Modules/Microsoft365DSC/"
@@ -22,39 +22,39 @@ jobs:
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
           Update-M365DSCDependencies
       - name: Configure Environment
-        shell: pwsh
+        shell: powershell
         run: |
           Set-ExecutionPolicy Unrestricted -Force
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           Set-M365DSCTelemetryOption -Enabled $false
           Set-Item -Path WSMan:\localhost\MaxEnvelopeSizekb -Value 99999
-      - name: Generate Integration Tests from Examples
-        shell: pwsh
+      - name: Generate {Create} Integration Tests from Examples
+        shell: powershell
         run: |
           Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
-          New-M365DSCIntegrationTest -Workload INTUNE
-      - name: Commit Integration Tests
-        shell: pwsh
+          New-M365DSCIntegrationTest -Workload INTUNE -Step '1-Create'
+      - name: Commit {Create} Integration Tests
+        shell: powershell
         run: |
           git config --local user.email "nicharl@microsoft.com"
           git config --local user.name "NikCharlebois"
           git add D:/a/Microsoft365DSC/Microsoft365DSC/Tests/Integration/*
           git pull
-          git commit -m "Updated Intune Integration Tests"
+          git commit -m "Updated {Create} Intune Integration Tests"
           git push
           $SHA = git rev-parse HEAD
           echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
-      - name: Run Integration Tests
+      - name: Run {Create} Integration Tests
         shell: powershell
         env:
-          PUBLIC_USERNAME: ${{ secrets.PUBLIC_USERNAME }}
-          PUBLIC_PASSWORD: ${{ secrets.PUBLIC_PASSWORD }}
+          INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
+          INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
         run: |
-          $CredPassword = ConvertTo-SecureString $env:PUBLIC_PASSWORD -AsPlainText -Force
-          $Credential = New-Object System.Management.Automation.PSCredential ($env:PUBLIC_USERNAME, $CredPassword)
+          $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
+          $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)
           try
           {
-            & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.INTUNE.Tests.ps1 -Credential $Credential
+            & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.INTUNE.Create.Tests.ps1 -Credential $Credential
           }
           catch
           {
