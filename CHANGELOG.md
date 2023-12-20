@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
   * Retrieve catalog by name instead of id.
@@ -12,19 +12,19 @@
     FIXES [#3655](https://github.com/microsoft/Microsoft365DSC/issues/3655)
 * IntuneDeviceEnrollmentPlatformRestriction
   * Fix Set-TargetResource due to an issue were the bodyparameter not cast correctly
-  FIXES [#3730](https://github.com/microsoft/Microsoft365DSC/issues/3730)
+    FIXES [#3730](https://github.com/microsoft/Microsoft365DSC/issues/3730)
 * IntuneEndpointDetectionAndResponsePolicyWindows10
   * Fix issue when trying to remove policy and Identity is set to a random GUID
     or from another tenant
-  FIXES [#4041](https://github.com/microsoft/Microsoft365DSC/issues/4041)
+    FIXES [#4041](https://github.com/microsoft/Microsoft365DSC/issues/4041)
 * IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
   * Added Assignments
     FIXES [#2932](https://github.com/microsoft/Microsoft365DSC/issues/2932)
+* SCAutoSensitivieyLabelPolicy
+    FIXES [#4036] Don't see any limits on our docs for priority
 * M365DSCDRGUtil
   * Fix empty BaseUrl since MSCloudLoginAssistant removed Intune workload
     FIXES [#4057](https://github.com/microsoft/Microsoft365DSC/issues/4057)
-* SCAutoSensitivieyLabelPolicy
-    FIXES [#4036] Don't see any limits on our docs for priority
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.4.
 
