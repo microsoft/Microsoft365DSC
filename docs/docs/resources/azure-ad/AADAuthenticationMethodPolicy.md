@@ -143,8 +143,8 @@ Configuration Example
             DisplayName             = "Authentication Methods Policy";
             Ensure                  = "Present";
             Id                      = "authenticationMethodsPolicy";
-            PolicyMigrationState    = "preMigration";
-            PolicyVersion           = "1.4";
+            PolicyMigrationState    = "migrationInProgress";
+            PolicyVersion           = "1.5";
             RegistrationEnforcement = MSFT_MicrosoftGraphregistrationEnforcement{
                 AuthenticationMethodsRegistrationCampaign = MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign{
                     SnoozeDurationInDays = 1
@@ -184,12 +184,12 @@ Configuration Example
     {
         AADAuthenticationMethodPolicy "AADAuthenticationMethodPolicy-Authentication Methods Policy"
         {
-            Description             = "The tenant-wide policy that controls which authentication methods are allowed in the tenant, authentication method registration requirements, and self-service password reset settings";
+            Description             = "Updated"; # Updated Property
             DisplayName             = "Authentication Methods Policy";
             Ensure                  = "Present";
             Id                      = "authenticationMethodsPolicy";
-            PolicyMigrationState    = "migrationComplete"; # Updated Property
-            PolicyVersion           = "1.4";
+            PolicyMigrationState    = "migrationInProgress";
+            PolicyVersion           = "1.5";
             RegistrationEnforcement = MSFT_MicrosoftGraphregistrationEnforcement{
                 AuthenticationMethodsRegistrationCampaign = MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign{
                     SnoozeDurationInDays = 1
