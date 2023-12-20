@@ -2586,7 +2586,7 @@
     try
     {
         Master -ConfigurationData $ConfigurationData -Credscredential $Credential
-        Start-DscConfiguration Master -Wait -Force -Verbose
+        Start-DscConfiguration Master -Wait -Force -Verbose -ErrorAction Stop
     }
     catch
     {
