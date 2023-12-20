@@ -17,6 +17,7 @@ Configuration Example
         AADGroupLifecyclePolicy 'GroupLifecyclePolicy'
         {
             IsSingleInstance            = "Yes"
+            GroupLifetimeInDays         = 99
             Ensure                      = "Absent"
             Credential                  = $Credscredential
         }

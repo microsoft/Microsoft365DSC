@@ -16,6 +16,7 @@ Configuration Example
     {
         AADGroup 'MyGroups'
         {
+            MailNickname    = "M365DSC"
             DisplayName     = "DSCGroup"
             Ensure          = "Absent"
             Credential      = $Credscredential
