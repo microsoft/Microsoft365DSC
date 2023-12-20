@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementAccessPackage
+  * Retrieve catalog by name instead of id.
 * IntuneDeviceAndAppManagementAssignmentFilter
   * Add support for remaining platforms supported by this policy
     FIXES [#4065](https://github.com/microsoft/Microsoft365DSC/issues/4065)
