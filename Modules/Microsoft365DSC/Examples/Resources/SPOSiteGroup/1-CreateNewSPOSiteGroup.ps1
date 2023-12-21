@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -21,7 +21,7 @@ Configuration Example
             Owner            = "admin@contoso.onmicrosoft.com"
             PermissionLevels = @("Edit", "Read")
             Ensure           = "Present"
-            Credential       = $credsGlobalAdmin
+            Credential       = $Credscredential
         }
 
         SPOSiteGroup 'ConfigureTestSiteGroup2'
@@ -31,7 +31,7 @@ Configuration Example
             Owner            = "admin@contoso.onmicrosoft.com"
             PermissionLevels = @("Edit", "Read")
             Ensure           = "Present"
-            Credential       = $credsGlobalAdmin
+            Credential       = $Credscredential
         }
     }
 }

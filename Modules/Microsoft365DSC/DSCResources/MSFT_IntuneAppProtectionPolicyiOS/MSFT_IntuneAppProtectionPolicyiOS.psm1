@@ -725,7 +725,16 @@ function Set-TargetResource
         {
             if (-not [String]::IsNullOrEmpty($createParameters.$duration))
             {
-                $createParameters.$duration = [TimeSpan]::parse($createParameters.$duration)
+                Write-Verbose -Message "Parsing {$($createParameters.$duration)} into TimeSpan"
+                if ($createParameters.$duration.startswith('P'))
+                {
+                    $timespan = [System.Xml.XmlConvert]::ToTimeSpan($createParameters.$duration)
+                }
+                else
+                {
+                    $timespan = [TimeSpan]$createParameters.$duration
+                }
+                $createParameters.$duration = $timespan
             }
         }
         $myExemptedAppProtocols = @()

@@ -78,7 +78,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Direction  = 'Outbound'
                         } -ClientOnly)
                     )
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
@@ -133,7 +133,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Direction  = 'Outbound'
                         } -ClientOnly)
                     )
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
@@ -194,7 +194,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Direction  = 'Both'
                         } -ClientOnly)
                     )
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
@@ -263,7 +263,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Direction  = 'Both'
                         } -ClientOnly)
                     )
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
@@ -332,7 +332,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Direction  = 'Both'
                         } -ClientOnly)
                     )
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
@@ -394,7 +394,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Direction  = 'Both'
                         } -ClientOnly)
                     )
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {
@@ -471,7 +471,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Direction  = 'Both'
                         } -ClientOnly)
                     )
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Set-PowerAppTenantIsolationPolicy -MockWith {

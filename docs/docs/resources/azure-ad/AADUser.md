@@ -16,6 +16,7 @@
 | **Country** | Write | String | The Country name of the user | |
 | **Department** | Write | String | The Department name of the user | |
 | **Fax** | Write | String | The Fax Number of the user | |
+| **MemberOf** | Write | StringArray[] | The Groups that the user is a direct member of | |
 | **MobilePhone** | Write | String | The Mobile Phone Number of the user | |
 | **Office** | Write | String | The Office Name of the user | |
 | **PasswordNeverExpires** | Write | Boolean | Specifies whether the user password expires periodically. Default value is false | |
@@ -37,7 +38,9 @@
 
 ## Description
 
-This resource allows users to create Azure AD Users and assign them licenses.
+This resource allows users to create Azure AD Users and assign them licenses, roles and/or groups.
+
+If using with AADGroup, be aware that if AADUser->MemberOf is being specified and the referenced group is configured with AADGroup->Member then a conflict may arise if the two don't match. It is usually best to choose only one of them. See AADGroup
 
 ## Permissions
 
@@ -49,11 +52,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - RoleManagement.Read.Directory, User.Read.All
+    - RoleManagement.Read.Directory, User.Read.All, Group.Read.All, GroupMember.Read.All
 
 - **Update**
 
-    - Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, User.ReadWrite.All
+    - Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, Group.Read.All, GroupMember.Read.All, User.ReadWrite.All, Group.ReadWrite.All, GroupMember.ReadWrite.All
 
 #### Application permissions
 
@@ -78,15 +81,16 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
+        $Organization = $Credscredential.Username.Split('@')[1]
         AADUser 'ConfigureJohnSMith'
         {
-            UserPrincipalName  = "John.Smith@O365DSC1.onmicrosoft.com"
+            UserPrincipalName  = "John.Smith@$Organization"
             FirstName          = "John"
             LastName           = "Smith"
             DisplayName        = "John J. Smith"
@@ -96,7 +100,71 @@ Configuration Example
             LicenseAssignment  = @("O365dsc1:ENTERPRISEPREMIUM")
             UsageLocation      = "US"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        $Organization = $Credscredential.Username.Split('@')[1]
+        AADUser 'ConfigureJohnSMith'
+        {
+            UserPrincipalName  = "John.Smith@$Organization"
+            FirstName          = "John"
+            LastName           = "Smith"
+            DisplayName        = "John J. Smith"
+            City               = "Ottawa" # Updated
+            Country            = "Canada"
+            Office             = "Ottawa - Queen"
+            LicenseAssignment  = @("O365dsc1:ENTERPRISEPREMIUM")
+            UsageLocation      = "US"
+            Ensure             = "Present"
+            Credential         = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        $Organization = $Credscredential.Username.Split('@')[1]
+        AADUser 'ConfigureJohnSMith'
+        {
+            UserPrincipalName  = "John.Smith@$Organization"
+            Ensure             = "Absent"
+            Credential         = $Credscredential
         }
     }
 }

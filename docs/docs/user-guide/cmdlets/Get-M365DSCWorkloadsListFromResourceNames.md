@@ -7,13 +7,13 @@ This function returns the used workloads for the specified DSC resources
 ## Output
 
 This function outputs information as the following type:
-**System.Boolean**
+**System.Collections.Hashtable**
 
 ## Parameters
 
 | Parameter | Required | DataType | Default Value | Allowed Values | Description |
 | --- | --- | --- | --- | --- | --- |
-| ResourceNames | True | String[] |  |  | Specifies the resources for which the workloads should be determined. |
+| ResourceNames | True | Array |  |  | Specifies the resources for which the workloads should be determined. |
 
 ## Examples
 

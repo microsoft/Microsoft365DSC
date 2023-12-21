@@ -5,10 +5,10 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Description** | Write | String | Description of the PolicySet. | |
-| **DisplayName** | Required | String | DisplayName of the PolicySet. | |
+| **DisplayName** | Key | String | DisplayName of the PolicySet. | |
 | **GuidedDeploymentTags** | Write | StringArray[] | Tags of the guided deployment | |
 | **RoleScopeTags** | Write | StringArray[] | RoleScopeTags of the PolicySet | |
-| **Id** | Key | String | The unique identifier for an entity. Read-only. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Items** | Write | MSFT_DeviceManagementConfigurationPolicyItems[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
@@ -112,7 +112,6 @@ Configuration Example
             DisplayName          = "Example";
             Ensure               = "Present";
             GuidedDeploymentTags = @();
-            Id                   = "12345678-5678-5678-5678-1234567890ab";
             Items                = @(
                 MSFT_DeviceManagementConfigurationPolicyItems{
                     guidedDeploymentTags = @()
@@ -123,6 +122,86 @@ Configuration Example
                 }
             );
             RoleScopeTags        = @("0","1");
+        }
+
+   }
+
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName 'Microsoft365DSC'
+    Node localhost
+    {
+        IntunePolicySets "Example"
+        {
+            Credential           = $Credscredential;
+            Assignments          = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.groupAssignmentTarget'
+                    groupId = '12345678-1234-1234-1234-1234567890ab'
+                }
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                    groupId = '12345678-4321-4321-4321-1234567890ab'
+                }
+            );
+            Description          = "Example";
+            DisplayName          = "Example";
+            Ensure               = "Present";
+            GuidedDeploymentTags = @();
+            Items                = @(
+                MSFT_DeviceManagementConfigurationPolicyItems{
+                    guidedDeploymentTags = @()
+                    payloadId = 'T_12345678-90ab-90ab-90ab-1234567890ab'
+                    displayName = 'Example-Policy'
+                    dataType = '#microsoft.graph.managedAppProtectionPolicySetItem'
+                    itemType = '#microsoft.graph.androidManagedAppProtection'
+                }
+            );
+            RoleScopeTags        = @("0","1","2"); # Updated Property
+        }
+
+   }
+
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName 'Microsoft365DSC'
+    Node localhost
+    {
+        IntunePolicySets "Example"
+        {
+            Credential           = $Credscredential;
+            DisplayName          = "Example";
+            Ensure               = "Absent";
         }
 
    }

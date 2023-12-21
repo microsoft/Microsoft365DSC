@@ -58,7 +58,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsAdmin
+        $credsCredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -69,7 +69,7 @@ Configuration Example
         {
             AllowDeletedIdentitiesDataRemoval = $False;
             AllowExternalIdentitiesToLeave    = $True;
-            Credential                        = $CredsAdmin;
+            Credential                        = $credsCredential;
             IsSingleInstance                  = "Yes";
         }
     }

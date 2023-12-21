@@ -18,6 +18,7 @@ jobs:
         shell: pwsh
         run: |
           Install-Module ReverseDSC -Force -Scope AllUsers
+          Install-Module DSCParser -Force -Scope AllUsers
           Install-Module PSDesiredStateConfiguration -Force -Scope AllUsers
           Install-Module Pester -Force -SkipPublisherCheck -Scope AllUsers
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);

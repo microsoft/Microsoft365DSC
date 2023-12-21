@@ -16,7 +16,7 @@ Configuration Example
     {
         TeamsComplianceRecordingPolicy 'Example'
         {
-            ComplianceRecordingApplications                     = @();
+            ComplianceRecordingApplications                     = @('qwertzuio-abcd-abcd-abcd-qwertzuio');
             Credential                                          = $Credscredential;
             DisableComplianceRecordingAudioNotificationForCalls = $False;
             Enabled                                             = $False;

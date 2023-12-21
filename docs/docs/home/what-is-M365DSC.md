@@ -16,7 +16,7 @@ SPOSearchManagedProperty SearchMP
     Searchable                  = $True
     FullTextIndex               = ""
     MappedCrawledProperties     = @()
-    GlobalAdminAccount          = $credsGlobalAdmin
+    GlobalAdminAccount          = $Credscredential
     LanguageNeutralTokenization = $True
     CompanyNameExtraction       = $False
     AllowMultipleValues         = $True

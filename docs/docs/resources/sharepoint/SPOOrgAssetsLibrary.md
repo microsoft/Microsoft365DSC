@@ -84,7 +84,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -96,7 +96,7 @@ Configuration Example
             ThumbnailUrl = "https://contoso.sharepoint.com/sites/org/Branding/Logo/Owagroup.png"
             CdnType      = "Public"
             Ensure       = "Present"
-            Credential   = $credsGlobalAdmin
+            Credential   = $Credscredential
         }
     }
 }

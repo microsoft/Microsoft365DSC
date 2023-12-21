@@ -84,7 +84,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -96,7 +96,7 @@ Configuration Example
             Enabled          = $True
             SignOutAfter     = "04:00:00"
             WarnAfter        = "03:30:00"
-            Credential       = $Credsglobaladmin
+            Credential       = $Credscredential
         }
     }
 }

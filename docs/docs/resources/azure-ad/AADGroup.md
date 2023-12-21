@@ -41,6 +41,8 @@
 
 This resource configures an Azure Active Directory group. IMPORTANT: It does not support mail enabled security groups or mail enabled groups that are not unified or dynamic groups.
 
+If using with AADUser, be aware that if AADUser->MemberOf is being specified and the referenced group is configured with AADGroup->Member then a conflict may arise if the two don't match. It is usually best to choose only one of them. See AADUser
+
 ## Permissions
 
 ### Microsoft Graph
@@ -80,7 +82,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -96,7 +98,7 @@ Configuration Example
             MailNickname    = "M365DSC"
             Visibility      = "Private"
             Ensure          = "Present"
-            Credential      = $credsGlobalAdmin
+            Credential      = $Credscredential
         }
     }
 }
@@ -113,7 +115,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -121,16 +123,15 @@ Configuration Example
     {
         AADGroup 'MyGroups'
         {
-            DisplayName        = "DSCGroup"
-            Description        = "Microsoft DSC Group"
-            SecurityEnabled    = $True
-            MailEnabled        = $False
-            GroupTypes         = @()
-            MailNickname       = "DSCGroup"
-            Ensure             = "Present"
-            IsAssignableToRole = $True
-            AssignedToRole     = "Identity Governance Administrator"
-            Credential         = $credsGlobalAdmin
+            DisplayName     = "DSCGroup"
+            Description     = "Microsoft DSC Group Updated" # Updated Property
+            SecurityEnabled = $True
+            MailEnabled     = $True
+            GroupTypes      = @("Unified")
+            MailNickname    = "M365DSC"
+            Visibility      = "Private"
+            Ensure          = "Present"
+            Credential      = $Credscredential
         }
     }
 }
@@ -147,34 +148,20 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        AADGroup 'MyGroups1'
+        AADGroup 'MyGroups'
         {
-            DisplayName        = "DSCGroup"
-            Description        = "Microsoft DSC Group"
-            SecurityEnabled    = $True
-            MailEnabled        = $False
-            GroupTypes         = @()
-            MailNickname       = "M365DSCG"
-            Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
-        }
-        AADGroup 'MyGroups2'
-        {
-            DisplayName        = "DSCMemberGroup"
-            Description        = "Microsoft DSC Editor"
-            SecurityEnabled    = $True
-            MailEnabled        = $False
-            GroupTypes         = @()
-            MailNickname       = "M365DSCMG"
-            Ensure             = "Present"
-            MemberOf           = @("DSCGroup")
-            Credential         = $credsGlobalAdmin
+            MailNickname    = "M365DSC"
+            SecurityEnabled = $True
+            MailEnabled     = $True
+            DisplayName     = "DSCGroup"
+            Ensure          = "Absent"
+            Credential      = $Credscredential
         }
     }
 }
