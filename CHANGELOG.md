@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Fix issue deploying decrypted OmaSettings to another tenant
+  FIXES [#4083](https://github.com/microsoft/Microsoft365DSC/issues/4083)
+
 # 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
