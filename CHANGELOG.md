@@ -1,15 +1,127 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1220.1
 * AADConditionalAccessPolicy
   * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+* AADEntitlementManagementAccessPackage
+  * Retrieve catalog by name instead of id.
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Add support for remaining platforms supported by this policy
+    FIXES [#4065](https://github.com/microsoft/Microsoft365DSC/issues/4065)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Add support to decrypt encrypted OmaSettings and export them in plaintext
+    FIXES [#3655](https://github.com/microsoft/Microsoft365DSC/issues/3655)
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Fix Set-TargetResource due to an issue were the bodyparameter not cast correctly
+    FIXES [#3730](https://github.com/microsoft/Microsoft365DSC/issues/3730)
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue when trying to remove policy and Identity is set to a random GUID
+    or from another tenant
+    FIXES [#4041](https://github.com/microsoft/Microsoft365DSC/issues/4041)
+* IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
+  * Added Assignments
+    FIXES [#2932](https://github.com/microsoft/Microsoft365DSC/issues/2932)
+* SCAutoSensitivieyLabelPolicy
+    FIXES [#4036] Don't see any limits on our docs for priority
+* M365DSCDRGUtil
+  * Fix empty BaseUrl since MSCloudLoginAssistant removed Intune workload
+    FIXES [#4057](https://github.com/microsoft/Microsoft365DSC/issues/4057)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.4.
+
+# 1.23.1213.1
+
+* IntuneEndpointDetectionAndResponsePolicyWindows10
+  * Fix issue with assignments
+    FIXES [#3904](https://github.com/microsoft/Microsoft365DSC/issues/3904)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fix issue with Set-TargetResource when retrieving a policy from displayName
+    FIXES [#4003](https://github.com/microsoft/Microsoft365DSC/issues/4003)
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Fix parameter name in assignment cmdlet
+    FIXES [#4007](https://github.com/microsoft/Microsoft365DSC/issues/4007)
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.11.1.
+  * Updated MSCloudLoginAssistant to version 1.1.3.
+
+# 1.23.1206.1
+
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fix condition in Test-TargetResource to check if resource was removed or not
+    FIXES [#3958](https://github.com/microsoft/Microsoft365DSC/issues/3958)
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Fix typo in assignment cmdlet
+    FIXES [#3996](https://github.com/microsoft/Microsoft365DSC/issues/3996)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.2.
+* MISC
+  * Fix Compare-M365DSCConfigurations to exclude resources correctly
+    FIXES [#4000](https://github.com/microsoft/Microsoft365DSC/issues/4000)
+
+# 1.23.1129.1
+
 * AADRoleSetting
   * Export sorted by DisplayName for better comparison
   * Enable Filter property to be used on export
     FIXES [#3919](https://github.com/microsoft/Microsoft365DSC/issues/3919)
+* AADUser
+  * Added the MemberOf Property.
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Skipped settingValueTemplateReference and settingInstanceTemplateReference
+    for severethreats, highseveritythreats, moderateseveritythreats,
+    lowseveritythreats as per API requirements observed in the Intune portal.
+    FIXES [#3818](https://github.com/microsoft/Microsoft365DSC/issues/3818)
+    FIXES [#3955](https://github.com/microsoft/Microsoft365DSC/issues/3955)
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy,
+  IntuneAccountProtectionLocalUserGroupMembershipPolicy,
+  IntuneAccountProtectionPolicy,
+  * Fixes export if Assignments is set on existing policies
+    FIXES [3913](https://github.com/microsoft/Microsoft365DSC/issues/3913)
+  * Add groupDisplayName to Assignments embedded instance
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10,
+  IntuneDeviceConfigurationHealthMonitoringConfigurationPolicyWindows10,
+  IntuneDeviceConfigurationIdentityProtectionPolicyWindows10,
+  IntuneDeviceConfigurationEndpointProtectionPolicyWindows10,
+  IntuneDeviceEnrollmentStatusPageWindows10,
+  IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined,
+  IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Removed Id and all authentication parameters from PSBoundParameters in Test-TargetResource
+    FIXES [#3888](https://github.com/microsoft/Microsoft365DSC/issues/3888)
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed assignments using API call
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneWindowsAutopilotDeploymentProfileAzureADHybridJoined
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+    FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+    FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+* IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
+  * Modified assigned to use sdk instead of API call and added logic to use groupDisplayName in assignment
+* IntuneDeviceConfigurationPolicyWindows10
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed assignments using API call
+    FIXES [#3921](https://github.com/microsoft/Microsoft365DSC/issues/3921)
+* TeamsMessagingPolicy
+  * Added support for properties AllowCommunicationComplianceEndUserReporting,
+    AllowFluidCollaborate and AllowSecurityEndUserReporting.
+    FIXES [#3968](https://github.com/microsoft/Microsoft365DSC/issues/3968)
+* TeamsTeam
+  * Fixes incompatible type for ComplianceRecordingApplications, expected string[] but receive object[]
+    FIXES: [#3890](https://github.com/microsoft/Microsoft365DSC/issues/3890)
 * DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.1.
   * Updated Microsoft.Graph to version 2.10.0.
   * Updated MSCloudLoginAssistant to version 1.1.0.
+* MISC
+  * M365DSCDRGUtil
+    * Added ConvertFrom-IntunePolicyAssignment and ConvertTo-IntunePolicyAssignment
+      FIXES [#3892](https://github.com/microsoft/Microsoft365DSC/issues/3892)
+  * Support for Multi-Tenancy (Credentials + TenantId).
 
 # 1.23.1122.1
 
