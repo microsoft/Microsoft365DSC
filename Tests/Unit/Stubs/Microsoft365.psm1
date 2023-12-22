@@ -852,7 +852,7 @@ function Get-MailboxFolderStatistics
 
         [Parameter()]
         [System.String]
-        $FolderScope,
+        $FolderScope
     )
 }
 function Get-MailboxPermission
