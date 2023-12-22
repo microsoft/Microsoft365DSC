@@ -159,6 +159,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
+                Mock -CommandName Get-MailboxFolderStatistics -MockWith {
+                    return @{
+                        FolderType  = "Calendar";
+                        Name        = "Calendar";
+                    }
+                }
+
                 Mock -CommandName Get-MailboxCalendarFolder -MockWith {
                     return @{
                         DetailLevel          = "AvailabilityOnly";
@@ -172,7 +179,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Reverse Engineer resource from the Export method' {
-                $result = Export-TargetResource
+                $result = Export-TargetResource @testParams
                 $result | Should -Not -BeNullOrEmpty
             }
         }
