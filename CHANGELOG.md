@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* SPOTenantSettings
+  * Fix bug for DisabledWebPartIds type, should be an array instead of a string
+    FIXES [#4086](https://github.com/microsoft/Microsoft365DSC/issues/4086)
+
 # 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
