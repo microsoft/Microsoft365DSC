@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* TeamsMessagingPolicy
+  * Added support for property 'AllowVideoMessages'
+    FIXES [#4021](https://github.com/microsoft/Microsoft365DSC/issues/4021)
+
 # 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
