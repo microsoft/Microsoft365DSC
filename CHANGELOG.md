@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsMeetingPolicy
+  * Allow -1 for NewMeetingRecordingExpirationDays parameter (never expire)
+    FIXES [#4090](https://github.com/microsoft/Microsoft365DSC/issues/4090)
+
 # 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
