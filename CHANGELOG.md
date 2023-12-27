@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* EXOTransportRule
+  * Fix export of enabled state
+    FIXES [#3932](https://github.com/microsoft/Microsoft365DSC/issues/3932)
+
 # 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
