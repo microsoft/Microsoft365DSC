@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* EXOAntiPhishPolicy
+  * Add support for TargetedDomainProtectionAction
+    FIXES [#3910](https://github.com/microsoft/Microsoft365DSC/issues/3910)
+
 # 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
