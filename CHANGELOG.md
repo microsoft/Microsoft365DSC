@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* EXOMailboxPermission
+  * Ignore SendAs permissions during export
+    FIXES [#3942](https://github.com/microsoft/Microsoft365DSC/issues/3942)
+
 # 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
