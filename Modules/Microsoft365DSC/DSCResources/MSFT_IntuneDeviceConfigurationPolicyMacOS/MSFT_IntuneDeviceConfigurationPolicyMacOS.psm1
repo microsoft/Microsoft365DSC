@@ -405,7 +405,7 @@ function Get-TargetResource
             SoftwareUpdatesEnforcedDelayInDays              = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
             SpotlightBlockInternetResults                   = $getValue.AdditionalProperties.spotlightBlockInternetResults
             TouchIdTimeoutInHours                           = $getValue.AdditionalProperties.touchIdTimeoutInHours
-            UpdateDelayPolicy                               = $getValue.AdditionalProperties.updateDelayPolicy
+            UpdateDelayPolicy                               = $getValue.AdditionalProperties.updateDelayPolicy -split ','
             WallpaperModificationBlocked                    = $getValue.AdditionalProperties.wallpaperModificationBlocked
             Ensure                                          = 'Present'
             Credential                                      = $Credential
@@ -803,7 +803,6 @@ function Set-TargetResource
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }#>
         $CreateParameters.add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
-        $CreateParameters = $CreateParameters | ConvertTo-Json -Depth 100
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
