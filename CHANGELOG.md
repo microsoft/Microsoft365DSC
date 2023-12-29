@@ -11,6 +11,9 @@
 * SPOTenantSettings
   * Fix bug for DisabledWebPartIds type, should be an array instead of a string
     FIXES [#4086](https://github.com/microsoft/Microsoft365DSC/issues/4086)
+* TeamsMeetingPolicy
+  * Allow -1 for NewMeetingRecordingExpirationDays parameter (never expire)
+    FIXES [#4090](https://github.com/microsoft/Microsoft365DSC/issues/4090)
 * TeamsMessagingPolicy
   * Added support for property 'AllowVideoMessages'
     FIXES [#4021](https://github.com/microsoft/Microsoft365DSC/issues/4021)
