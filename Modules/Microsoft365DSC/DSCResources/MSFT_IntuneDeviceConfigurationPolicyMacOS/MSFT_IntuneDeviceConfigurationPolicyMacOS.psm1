@@ -806,6 +806,7 @@ function Set-TargetResource
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }#>
         $CreateParameters.add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+        $CreateParameters = $CreateParameters | ConvertTo-Json -Depth 100
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
