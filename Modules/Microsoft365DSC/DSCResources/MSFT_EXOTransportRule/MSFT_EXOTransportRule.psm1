@@ -780,6 +780,16 @@ function Get-TargetResource
         {
             $MessageContainsDataClassificationsValue = $TransportRule.MessageContainsDataClassifications.Replace('"', "'")
         }
+
+        if ($TransportRule.State -eq "Enabled")
+        {
+            $enabled = $true
+        }
+        else
+        {
+            $enabled = $false
+        }
+
         $result = @{
             Name                                         = $TransportRule.Name
             ADComparisonAttribute                        = $TransportRule.ADComparisonAttribute
@@ -820,7 +830,7 @@ function Get-TargetResource
             CopyTo                                       = $TransportRule.CopyTo
             DeleteMessage                                = $TransportRule.DeleteMessage
             DlpPolicy                                    = $TransportRule.DlpPolicy
-            Enabled                                      = $TransportRule.Enabled
+            Enabled                                      = $enabled
             ExceptIfADComparisonAttribute                = $TransportRule.ExceptIfADComparisonAttribute
             ExceptIfADComparisonOperator                 = $TransportRule.ExceptIfADComparisonOperator
             ExceptIfAnyOfCcHeader                        = $TransportRule.ExceptIfAnyOfCcHeader
