@@ -81,6 +81,10 @@ function Get-TargetResource
         $AllowUserDeleteChat,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowVideoMessages,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('DisabledUserOverride', 'EnabledUserOverride')]
         $ChannelsInChatListEnabledType,
@@ -188,6 +192,7 @@ function Get-TargetResource
                 AllowRemoveUser                              = $policy.AllowRemoveUser
                 AllowPriorityMessages                        = $policy.AllowPriorityMessages
                 AllowUserDeleteChat                          = $policy.AllowUserDeleteChat
+                AllowVideoMessages                           = $policy.AllowVideoMessages
                 ChannelsInChatListEnabledType                = $policy.ChannelsInChatListEnabledType
                 AudioMessageEnabledType                      = $policy.AudioMessageEnabledType
                 Description                                  = $policy.Description
@@ -292,6 +297,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowUserDeleteChat,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoMessages,
 
         [Parameter()]
         [System.String]
@@ -464,6 +473,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowUserDeleteChat,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowVideoMessages,
 
         [Parameter()]
         [System.String]

@@ -842,6 +842,19 @@ function Get-MailboxCalendarFolder
         $Identity
     )
 }
+function Get-MailboxFolderStatistics
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $FolderScope
+    )
+}
 function Get-MailboxPermission
 {
     [CmdletBinding()]

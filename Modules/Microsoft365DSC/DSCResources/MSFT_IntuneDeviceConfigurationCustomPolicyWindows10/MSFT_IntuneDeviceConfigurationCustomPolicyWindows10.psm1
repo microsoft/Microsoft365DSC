@@ -120,6 +120,7 @@ function Get-TargetResource
                 if (![String]::IsNullOrEmpty($OmaSettingPlainTextValue))
                 {
                     $currentomaSettings.value = $OmaSettingPlainTextValue
+                    $currentomaSettings.isEncrypted = $false
                 }
                 else
                 {
