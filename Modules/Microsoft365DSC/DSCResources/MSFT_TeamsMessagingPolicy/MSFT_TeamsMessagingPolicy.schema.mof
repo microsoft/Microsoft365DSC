@@ -20,6 +20,7 @@ class MSFT_TeamsMessagingPolicy : OMI_BaseResource
     [Write, Description("Determines whether a user is allowed to remove a user from a conversation. Set this to TRUE to allow. Set this FALSE to prohibit.")] boolean AllowRemoveUser;
     [Write, Description("Determines whether a user is allowed to send priorities messages. Set this to TRUE to allow. Set this FALSE to prohibit.")] boolean AllowPriorityMessages;
     [Write, Description("Turn this setting on to allow users to permanently delete their 1:1, group chat, and meeting chat as participants (this deletes the chat only for them, not other users in the chat).")] boolean AllowUserDeleteChat;
+    [Write, Description("Determines whether a user is allowed to send video messages in Chat. Set this to TRUE to allow a user to send video messages. Set this to FALSE to prohibit sending video messages.")] boolean AllowVideoMessages;
     [Write, Description("Provide a description of your policy to identify purpose of creating it.")] string Description;
     [Write, Description("Determines the Giphy content restrictions applicable to a user. Set this to STRICT, MODERATE or NORESTRICTION."),ValueMap{"STRICT","MODERATE","NORESTRICTION"}, Values{"STRICT","MODERATE","NORESTRICTION"}] string GiphyRatingType;
     [Write, Description("Use this setting to specify whether read receipts are user controlled, enabled for everyone, or disabled. Set this to UserPreference, Everyone or None."),ValueMap{"UserPreference","Everyone","None"}, Values{"UserPreference","Everyone","None"}] string ReadReceiptsEnabledType;
