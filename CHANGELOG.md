@@ -14,6 +14,10 @@
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fix issue deploying decrypted OmaSettings to another tenant
     FIXES [#4083](https://github.com/microsoft/Microsoft365DSC/issues/4083)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix resource deployment
+    FIXES [#3539](https://github.com/microsoft/Microsoft365DSC/issues/3539)
+  * Ensure resource can cope with Id being empty since it's not mandatory
 * O365OrgSettings
   * Deprecated the MicrosoftVivaBriefingEmail property
     FIXES [#4097](https://github.com/microsoft/Microsoft365DSC/issues/4097)
