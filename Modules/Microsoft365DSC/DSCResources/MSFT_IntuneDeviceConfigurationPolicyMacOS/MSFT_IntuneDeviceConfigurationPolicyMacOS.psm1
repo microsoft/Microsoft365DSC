@@ -249,7 +249,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('none', 'delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'unknownFutureValue', 'delayMajorOsUpdateVisibility')]
-        [System.String]
+        [System.String[]]
         $UpdateDelayPolicy,
 
         [Parameter()]
@@ -703,7 +703,7 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('none', 'delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'unknownFutureValue', 'delayMajorOsUpdateVisibility')]
-        [System.String]
+        [System.String[]]
         $UpdateDelayPolicy,
 
         [Parameter()]
@@ -1138,7 +1138,7 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('none', 'delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'unknownFutureValue', 'delayMajorOsUpdateVisibility')]
-        [System.String]
+        [System.String[]]
         $UpdateDelayPolicy,
 
         [Parameter()]
