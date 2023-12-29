@@ -769,6 +769,11 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
+    if ($UpdateDelayPolicy.Count -gt 0)
+    {
+        $UpdateDelayPolicy = $UpdateDelayPolicy -join ','
+    }
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating {$DisplayName}"
