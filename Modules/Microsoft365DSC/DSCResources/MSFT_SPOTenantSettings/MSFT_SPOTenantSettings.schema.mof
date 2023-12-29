@@ -21,7 +21,7 @@ class MSFT_SPOTenantSettings : OMI_BaseResource
     [Write, Description("To enable or disable Sync button on Team sites")] boolean HideSyncButtonOnTeamSite;
     [Write, Description("Allow or block external sharing until at least one Office DLP policy scans the content of the file."), ValueMap{"AllowExternalSharing","BlockExternalSharing"}, Values{"AllowExternalSharing","BlockExternalSharing"}] string MarkNewFilesSensitiveByDefault;
     [Write, Description("Allow or Block Conditional Access Policy on the SharePoint Tenant"), ValueMap{"AllowFullAccess", "AllowLimitedAccess", "BlockAccess"}, Values{"AllowFullAccess", "AllowLimitedAccess", "BlockAccess"}] string ConditionalAccessPolicy;
-    [Write, Description("Provide GUID for the Web Parts that are to be disabled on the Sharepoint Site")] string DisabledWebPartIds;
+    [Write, Description("Provide GUID for the Web Parts that are to be disabled on the Sharepoint Site")] string DisabledWebPartIds[];
     [Write, Description("Set to false to enable a comment section on all site pages, users who have access to the pages can leave comments. Set to true to disable this feature.")] boolean CommentsOnSitePagesDisabled;
     [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the account to authenticate with."), EmbeddedInstance("MSFT_Credential")] string Credential;
