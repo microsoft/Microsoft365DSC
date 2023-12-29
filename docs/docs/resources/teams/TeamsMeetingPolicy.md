@@ -52,7 +52,7 @@
 | **AllowNetworkConfigurationSettingsLookup** | Write | Boolean | Determines whether network configuration setting lookups can be made by users who are not Enterprise Voice enabled. It is used to enable Network Roaming policies. | |
 | **AllowWatermarkForCameraVideo** | Write | Boolean | N/A | |
 | **AllowWatermarkForScreenSharing** | Write | Boolean | N/A | |
-| **NewMeetingRecordingExpirationDays** | Write | UInt32 | Specifies the number of days before meeting recordings will expire and move to the recycle bin. Value can be from 1 to 99,999 days. NOTE: You may opt to set Meeting Recordings to never expire by entering the value -1. | |
+| **NewMeetingRecordingExpirationDays** | Write | SInt32 | Specifies the number of days before meeting recordings will expire and move to the recycle bin. Value can be from 1 to 99,999 days. NOTE: You may opt to set Meeting Recordings to never expire by entering the value -1. | |
 | **AllowCartCaptionsScheduling** | Write | String | Determines whether a user can add a URL for captions from a Communications Access Real-Time Translation (CART) captioner for providing real-time captions in meetings. | `EnabledUserOverride`, `DisabledUserOverride`, `Disabled` |
 | **AllowDocumentCollaboration** | Write | String | N/A | |
 | **AllowedStreamingMediaInput** | Write | String | N/A | |

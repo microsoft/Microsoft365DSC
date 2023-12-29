@@ -21,6 +21,7 @@
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
+                    Description                   = 'Test Description'
                     MembershipRule                = "(user.country -eq `"Canada`")"
                     MembershipRuleProcessingState = 'On'
                     MembershipType                = 'Dynamic'
@@ -106,123 +107,113 @@
                 }
                 AADAuthenticationMethodPolicyAuthenticator 'AADAuthenticationMethodPolicyAuthenticator-MicrosoftAuthenticator'
                 {
+                    Credential            = $Credscredential;
                     Ensure                = "Present";
                     ExcludeTargets        = @(
                         MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                            Id = 'fakegroup1'
+                            Id = 'Legal Team'
+                            TargetType = 'group'
+                        }
+                        MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
+                            Id = 'Paralegals'
                             TargetType = 'group'
                         }
                     );
                     FeatureSettings       = MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings{
                         DisplayLocationInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
                             ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = '00000000-0000-0000-0000-000000000000'
+                                Id = 'all_users'
                                 TargetType = 'group'
                             }
                             IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = 'fakegroup2'
+                                Id = 'all_users'
                                 TargetType = 'group'
                             }
-                            State = 'enabled'
+                            State = 'default'
                         }
-                                    NumberMatchingRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
+                        CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
                             ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = '00000000-0000-0000-0000-000000000000'
+                                Id = 'all_users'
                                 TargetType = 'group'
                             }
                             IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = 'fakegroup3'
+                                Id = 'all_users'
                                 TargetType = 'group'
                             }
-                            State = 'enabled'
+                            State = 'default'
                         }
-                                    CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
+                        DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
                             ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = '00000000-0000-0000-0000-000000000000'
+                                Id = 'all_users'
                                 TargetType = 'group'
                             }
                             IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = 'fakegroup4'
+                                Id = 'all_users'
                                 TargetType = 'group'
                             }
-                            State = 'enabled'
+                            State = 'default'
                         }
-                                    DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                            ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = '00000000-0000-0000-0000-000000000000'
-                                TargetType = 'group'
-                            }
-                            IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = 'fakegroup5'
-                                TargetType = 'group'
-                            }
-                            State = 'enabled'
-                        }
-                                };
+                    };
                     Id                    = "MicrosoftAuthenticator";
                     IncludeTargets        = @(
                         MSFT_AADAuthenticationMethodPolicyAuthenticatorIncludeTarget{
-                            Id = 'fakegroup6'
+                            Id = 'Finance Team'
+                            TargetType = 'group'
+                        }
+                        MSFT_AADAuthenticationMethodPolicyAuthenticatorIncludeTarget{
+                            Id = 'Northwind Traders'
                             TargetType = 'group'
                         }
                     );
                     IsSoftwareOathEnabled = $False;
                     State                 = "enabled";
-                    Credential            = $credsCredential;
                 }
                 AADAuthenticationMethodPolicyEmail 'AADAuthenticationMethodPolicyEmail-Email'
                 {
-                    AllowExternalIdToUseEmailOtp = "default";
+                    AllowExternalIdToUseEmailOtp = "enabled";
+                    Credential                   = $Credscredential;
                     Ensure                       = "Present";
                     ExcludeTargets               = @(
                         MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget{
-                            Id = 'fakegroup1'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget{
-                            Id = 'fakegroup2'
+                            Id = 'Paralegals'
                             TargetType = 'group'
                         }
                     );
                     Id                           = "Email";
                     IncludeTargets               = @(
                         MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget{
-                            Id = 'fakegroup3'
+                            Id = 'Finance Team'
                             TargetType = 'group'
                         }
                         MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget{
-                            Id = 'fakegroup4'
+                            Id = 'Legal Team'
                             TargetType = 'group'
                         }
                     );
                     State                        = "enabled";
-                    Credential                   = $credsCredential;
                 }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
+                    Credential                       = $Credscredential;
                     Ensure                           = "Present";
                     ExcludeTargets                   = @(
                         MSFT_AADAuthenticationMethodPolicyFido2ExcludeTarget{
-                            Id = 'fakegroup1'
+                            Id = 'Paralegals'
                             TargetType = 'group'
                         }
                         MSFT_AADAuthenticationMethodPolicyFido2ExcludeTarget{
-                            Id = 'fakegroup2'
+                            Id = 'Executives'
                             TargetType = 'group'
                         }
                     );
                     Id                               = "Fido2";
                     IncludeTargets                   = @(
                         MSFT_AADAuthenticationMethodPolicyFido2IncludeTarget{
-                            Id = 'fakegroup3'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicyFido2IncludeTarget{
-                            Id = 'fakegroup4'
+                            Id = 'all_users'
                             TargetType = 'group'
                         }
                     );
-                    IsAttestationEnforced            = $True;
+                    IsAttestationEnforced            = $False;
                     IsSelfServiceRegistrationAllowed = $True;
                     KeyRestrictions                  = MSFT_MicrosoftGraphfido2KeyRestrictions{
                         IsEnforced = $False
@@ -230,86 +221,65 @@
                         AaGuids = @()
                     };
                     State                            = "enabled";
-                    Credential                       = $credsCredential;
                 }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
-                    Credential            = $credsCredential;
-                    Ensure                = "Present";
-                    ExcludeTargets        = @(
+                    Credential           = $Credscredential;
+                    Ensure               = "Present";
+                    ExcludeTargets       = @(
                         MSFT_AADAuthenticationMethodPolicySmsExcludeTarget{
-                            Id = 'fakegroup1'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicySmsExcludeTarget{
-                            Id = 'fakegroup2'
+                            Id = 'All Employees'
                             TargetType = 'group'
                         }
                     );
-                    Id                    = "Sms";
-                    IncludeTargets        = @(
+                    Id                   = "Sms";
+                    IncludeTargets       = @(
                         MSFT_AADAuthenticationMethodPolicySmsIncludeTarget{
-                            Id = 'fakegroup3'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicySmsIncludeTarget{
-                            Id = 'fakegroup4'
+                            Id = 'all_users'
                             TargetType = 'group'
                         }
                     );
-                    State                 = "enabled";
+                    State                = "enabled";
                 }
                 AADAuthenticationMethodPolicySoftware 'AADAuthenticationMethodPolicySoftware-SoftwareOath'
                 {
-                    Credential            = $credsCredential;
-                    Ensure                = "Present";
-                    ExcludeTargets        = @(
+                    Credential           = $Credscredential;
+                    Ensure               = "Present";
+                    ExcludeTargets       = @(
                         MSFT_AADAuthenticationMethodPolicySoftwareExcludeTarget{
-                            Id = 'fakegroup1'
+                            Id = 'Executives'
                             TargetType = 'group'
                         }
                         MSFT_AADAuthenticationMethodPolicySoftwareExcludeTarget{
-                            Id = 'fakegroup2'
+                            Id = 'Paralegals'
                             TargetType = 'group'
                         }
                     );
-                    Id                    = "SoftwareOath";
-                    IncludeTargets        = @(
+                    Id                   = "SoftwareOath";
+                    IncludeTargets       = @(
                         MSFT_AADAuthenticationMethodPolicySoftwareIncludeTarget{
-                            Id = 'fakegroup3'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicySoftwareIncludeTarget{
-                            Id = 'fakegroup4'
+                            Id = 'Legal Team'
                             TargetType = 'group'
                         }
                     );
-                    State                 = "enabled";
+                    State                = "enabled";
                 }
                 AADAuthenticationMethodPolicyTemporary 'AADAuthenticationMethodPolicyTemporary-TemporaryAccessPass'
                 {
-                    Credential               = $credsCredential;
+                    Credential               = $Credscredential;
                     DefaultLength            = 8;
                     DefaultLifetimeInMinutes = 60;
                     Ensure                   = "Present";
                     ExcludeTargets           = @(
                         MSFT_AADAuthenticationMethodPolicyTemporaryExcludeTarget{
-                            Id = 'fakegroup1'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicyTemporaryExcludeTarget{
-                            Id = 'fakegroup2'
+                            Id = 'All Company'
                             TargetType = 'group'
                         }
                     );
                     Id                       = "TemporaryAccessPass";
                     IncludeTargets           = @(
                         MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget{
-                            Id = 'fakegroup3'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget{
-                            Id = 'fakegroup4'
+                            Id = 'DSCGroup'
                             TargetType = 'group'
                         }
                     );
@@ -320,49 +290,35 @@
                 }
                 AADAuthenticationMethodPolicyVoice 'AADAuthenticationMethodPolicyVoice-Voice'
                 {
-                    Credential            = $credsCredential;
-                    Ensure                = "Present";
-                    Id                    = "Voice";
-                    IsOfficePhoneAllowed  = $False;
-                    ExcludeTargets           = @(
-                        MSFT_AADAuthenticationMethodPolicyVoiceExcludeTarget{
-                            Id = 'fakegroup1'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicyVoiceExcludeTarget{
-                            Id = 'fakegroup2'
+                    Credential           = $Credscredential;
+                    Ensure               = "Present";
+                    Id                   = "Voice";
+                    IncludeTargets       = @(
+                        MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
+                            Id = 'all_users'
                             TargetType = 'group'
                         }
                     );
-                    IncludeTargets           = @(
-                        MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                            Id = 'fakegroup3'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                            Id = 'fakegroup4'
-                            TargetType = 'group'
-                        }
-                    );
-                    State                 = "disabled";
+                    IsOfficePhoneAllowed = $False;
+                    State                = "disabled";
                 }
                 AADAuthenticationMethodPolicyX509 'AADAuthenticationMethodPolicyX509-X509Certificate'
                 {
-                    Credential                      = $credsCredential;
                     AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
+        
                         Rules = @(@()
                         )
-                        X509CertificateAuthenticationDefaultMode = 'x509CertificateMultiFactor'
+                        X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
                     };
                     CertificateUserBindings         = @(
                         MSFT_MicrosoftGraphx509CertificateUserBinding{
                             Priority = 1
-                            UserProperty = 'onPremisesUserPrincipalName'
+                            UserProperty = 'userPrincipalName'
                             X509CertificateField = 'PrincipalName'
                         }
                         MSFT_MicrosoftGraphx509CertificateUserBinding{
                             Priority = 2
-                            UserProperty = 'onPremisesUserPrincipalName'
+                            UserProperty = 'userPrincipalName'
                             X509CertificateField = 'RFC822Name'
                         }
                         MSFT_MicrosoftGraphx509CertificateUserBinding{
@@ -371,25 +327,18 @@
                             X509CertificateField = 'SubjectKeyIdentifier'
                         }
                     );
+                    Credential                      = $Credscredential;
                     Ensure                          = "Present";
                     ExcludeTargets                  = @(
                         MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
-                            Id = 'fakegroup1'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
-                            Id = 'fakegroup2'
+                            Id = 'DSCGroup'
                             TargetType = 'group'
                         }
                     );
                     Id                              = "X509Certificate";
                     IncludeTargets                  = @(
                         MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
-                            Id = 'fakegroup3'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
-                            Id = 'fakegroup4'
+                            Id = 'Finance Team'
                             TargetType = 'group'
                         }
                     );
@@ -405,50 +354,39 @@
                 }
                 AADConditionalAccessPolicy 'Allin-example'
                 {
-                    DisplayName                          = 'Allin-example'
-                    BuiltInControls                      = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
-                    ClientAppTypes                       = @('ExchangeActiveSync', 'Browser', 'MobileAppsAndDesktopClients', 'Other')
-                    CloudAppSecurityIsEnabled            = $True
-                    CloudAppSecurityType                 = 'MonitorOnly'
-                    ExcludeApplications                  = @('803ee9ca-3f7f-4824-bd6e-0b99d720c35c', '00000012-0000-0000-c000-000000000000', '00000007-0000-0000-c000-000000000000', 'Office365')
-                    ExcludeGroups                        = @()
-                    ExcludeLocations                     = @('Blocked Countries')
-                    ExcludePlatforms                     = @('Windows', 'WindowsPhone', 'MacOS')
-                    ExcludeRoles                         = @('Company Administrator', 'Application Administrator', 'Application Developer', 'Cloud Application Administrator', 'Cloud Device Administrator')
-                    ExcludeUsers                         = @('admin@contoso.com', 'AAdmin@contoso.com', 'CAAdmin@contoso.com', 'AllanD@contoso.com', 'AlexW@contoso.com', 'GuestsOrExternalUsers')
-                    ExcludeExternalTenantsMembers        = @()
-                    ExcludeExternalTenantsMembershipKind = 'all'
-                    ExcludeGuestOrExternalUserTypes      = @('internalGuest', 'b2bCollaborationMember')
-                    GrantControlOperator                 = 'OR'
-                    IncludeApplications                  = @('All')
-                    IncludeGroups                        = @()
-                    IncludeLocations                     = @('AllTrusted')
-                    IncludePlatforms                     = @('Android', 'IOS')
-                    IncludeRoles                         = @('Compliance Administrator')
-                    IncludeUserActions                   = @()
-                    IncludeUsers                         = @('Alexw@contoso.com')
-                    IncludeExternalTenantsMembers        = @('11111111-1111-1111-1111-111111111111')
-                    IncludeExternalTenantsMembershipKind = 'enumerated'
-                    IncludeGuestOrExternalUserTypes      = @('b2bCollaborationGuest')
-                    PersistentBrowserIsEnabled           = $false
-                    PersistentBrowserMode                = ''
-                    SignInFrequencyIsEnabled             = $true
-                    SignInFrequencyType                  = 'Hours'
-                    SignInFrequencyValue                 = 5
-                    SignInRiskLevels                     = @('High', 'Medium')
-                    State                                = 'disabled'
-                    UserRiskLevels                       = @('High', 'Medium')
-                    Ensure                               = 'Present'
-                    Credential                           = $Credscredential
+                    ApplicationEnforcedRestrictionsIsEnabled = $False;
+                    BuiltInControls                          = @("mfa");
+                    ClientAppTypes                           = @("all");
+                    CloudAppSecurityIsEnabled                = $False;
+                    Credential                               = $Credscredential;
+                    DeviceFilterMode                         = "exclude";
+                    DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
+                    DisplayName                              = "Example CAP";
+                    Ensure                                   = "Present";
+                    ExcludeUsers                             = @("admin@$Domain");
+                    GrantControlOperator                     = "OR";
+                    IncludeApplications                      = @("All");
+                    IncludeRoles                             = @("Attack Payload Author");
+                    PersistentBrowserIsEnabled               = $False;
+                    SignInFrequencyInterval                  = "timeBased";
+                    SignInFrequencyIsEnabled                 = $True;
+                    SignInFrequencyType                      = "hours";
+                    SignInFrequencyValue                     = 1;
+                    State                                    = "disabled";
                 }
                 AADCrossTenantAccessPolicyConfigurationPartner 'AADCrossTenantAccessPolicyConfigurationPartner'
                 {
-                    B2BCollaborationInbound  = MSFT_AADCrossTenantAccessPolicyB2BSetting {
+                    PartnerTenantId              = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"; # O365DSC.onmicrosoft.com
+                    AutomaticUserConsentSettings = MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings {
+                        InboundAllowed           = $True
+                        OutboundAllowed          = $True
+                    };
+                    B2BCollaborationOutbound     = MSFT_AADCrossTenantAccessPolicyB2BSetting {
                         Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
                             AccessType = 'allowed'
                             Targets    = @(
                                 MSFT_AADCrossTenantAccessPolicyTarget{
-                                    Target     = 'Office365'
+                                    Target     = 'AllApplications'
                                     TargetType = 'application'
                                 }
                             )
@@ -457,57 +395,27 @@
                             AccessType = 'allowed'
                             Targets    = @(
                                 MSFT_AADCrossTenantAccessPolicyTarget{
-                                    Target     = 'AllUsers'
+                                    Target     = '68bafe64-f86b-4c4e-b33b-9d3eaa11544b' # Office 365
                                     TargetType = 'user'
                                 }
                             )
                         }
-                    }
-                    B2BCollaborationOutbound = MSFT_AADCrossTenantAccessPolicyB2BSetting {
-                        Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
-                            AccessType = 'allowed'
-                            Targets    = @(
-                                MSFT_AADCrossTenantAccessPolicyTarget{
-                                    Target     = 'AllApplications'
-                                    TargetType = 'application'
-                                }
-                            )
-                        }
-                    }
-                    B2BDirectConnectInbound  = MSFT_AADCrossTenantAccessPolicyB2BSetting {
-                        Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
-                            AccessType = 'blocked'
-                            Targets    = @(
-                                MSFT_AADCrossTenantAccessPolicyTarget{
-                                    Target     = 'AllApplications'
-                                    TargetType = 'application'
-                                }
-                            )
-                        }
-                    }
-                    Credential               = $Credscredential;
-                    Ensure                   = "Present";
-                    PartnerTenantId          = "12345-12345-12345-12345-12345";
+                    };
+                    ApplicationId                = 'c6957111-b1a6-479c-a15c-73e01ceb3b99'
+                    CertificateThumbprint        = 'ACD01315A4EBA42CD2E18EEE443AA280CC0BAB8B'
+                    TenantId                     = 'M365x35070558.onmicrosoft.com'
+                    Ensure                       = "Present";
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
-                    DisplayName                     = 'General'
-                    AccessPackageResourceRoleScopes = @(
-                        MSFT_AccessPackageResourceRoleScope {
-                            Id                                   = 'e5b0c702-b949-4310-953e-2a51790722b8'
-                            AccessPackageResourceOriginId        = '8721d9fd-c6ef-46df-b1b2-bb6f818bce5b'
-                            AccessPackageResourceRoleDisplayName = 'AccessPackageRole'
-                        }
-                    )
-                    CatalogId                       = '1b0e5aca-83e4-447b-84a8-3d8cffb4a331'
-                    Description                     = 'Entitlement Access Package Example'
-                    IsHidden                        = $false
-                    IsRoleScopesVisible             = $true
-                    IncompatibleAccessPackages      = @()
-                    AccessPackagesIncompatibleWith  = @()
-                    IncompatibleGroups              = @()
-                    Ensure                          = 'Present'
-                    Credential                      = $Credscredential
+                    AccessPackagesIncompatibleWith = @();
+                    CatalogId                      = "General";
+                    Credential                     = $Credscredential;
+                    Description                    = "Integration Tests";
+                    DisplayName                    = "Integration Package";
+                    Ensure                         = "Present";
+                    IsHidden                       = $False;
+                    IsRoleScopesVisible            = $True;
                 }
                 AADEntitlementManagementAccessPackageAssignmentPolicy 'myAssignmentPolicyWithAccessReviewsSettings'
                 {

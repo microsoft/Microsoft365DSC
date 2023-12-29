@@ -118,6 +118,11 @@ function Get-TargetResource
         $TargetedDomainActionRecipients = @(),
 
         [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedDomainProtectionAction = 'NoAction',
+
+        [Parameter()]
         [System.String[]]
         $TargetedDomainsToProtect = @(),
 
@@ -223,6 +228,12 @@ function Get-TargetResource
                 $TargetedUserProtectionActionValue = 'NoAction'
             }
 
+            $TargetedDomainProtectionActionValue = $AntiPhishPolicy.TargetedDomainProtectionAction
+            if ([System.String]::IsNullOrEmpty($TargetedDomainProtectionActionValue))
+            {
+                $TargetedDomainProtectionActionValue = 'NoAction'
+            }
+
             $result = @{
                 Identity                                      = $Identity
                 AdminDisplayName                              = $AntiPhishPolicy.AdminDisplayName
@@ -250,6 +261,7 @@ function Get-TargetResource
                 MakeDefault                                   = $AntiPhishPolicy.IsDefault
                 PhishThresholdLevel                           = $PhishThresholdLevelValue
                 TargetedDomainActionRecipients                = $AntiPhishPolicy.TargetedDomainActionRecipients
+                TargetedDomainProtectionAction                = $TargetedDomainProtectionActionValue
                 TargetedDomainsToProtect                      = $AntiPhishPolicy.TargetedDomainsToProtect
                 TargetedDomainQuarantineTag                   = $AntiPhishPolicy.TargetedDomainQuarantineTag
                 TargetedUserActionRecipients                  = $AntiPhishPolicy.TargetedUserActionRecipients
@@ -400,6 +412,11 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedDomainActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedDomainProtectionAction = 'NoAction',
 
         [Parameter()]
         [System.String[]]
@@ -623,6 +640,11 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $TargetedDomainActionRecipients = @(),
+
+        [Parameter()]
+        [ValidateSet('BccMessage', 'Delete', 'MoveToJmf', 'NoAction', 'Quarantine', 'Redirect')]
+        [System.String]
+        $TargetedDomainProtectionAction = 'NoAction',
 
         [Parameter()]
         [System.String[]]

@@ -1,5 +1,37 @@
 # Change log for Microsoft365DSC
 
+# 1.23.1227.1
+
+* EXOAntiPhishPolicy
+  * Add support for TargetedDomainProtectionAction
+    FIXES [#3910](https://github.com/microsoft/Microsoft365DSC/issues/3910)
+* EXOMailboxCalendarFolder
+  * Add support for non-English calendar folder names during export
+    FIXES [#4056](https://github.com/microsoft/Microsoft365DSC/issues/4056)
+* EXOTransportRule
+  * Fix export of enabled state
+    FIXES [#3932](https://github.com/microsoft/Microsoft365DSC/issues/3932)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Fix issue deploying decrypted OmaSettings to another tenant
+    FIXES [#4083](https://github.com/microsoft/Microsoft365DSC/issues/4083)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix resource deployment
+    FIXES [#3539](https://github.com/microsoft/Microsoft365DSC/issues/3539)
+  * Ensure resource can cope with Id being empty since it's not mandatory
+* O365OrgSettings
+  * Deprecated the MicrosoftVivaBriefingEmail property
+    FIXES [#4097](https://github.com/microsoft/Microsoft365DSC/issues/4097)
+    FIXES [#4080](https://github.com/microsoft/Microsoft365DSC/issues/4080)
+* SPOTenantSettings
+  * Fix bug for DisabledWebPartIds type, should be an array instead of a string
+    FIXES [#4086](https://github.com/microsoft/Microsoft365DSC/issues/4086)
+* TeamsMeetingPolicy
+  * Allow -1 for NewMeetingRecordingExpirationDays parameter (never expire)
+    FIXES [#4090](https://github.com/microsoft/Microsoft365DSC/issues/4090)
+* TeamsMessagingPolicy
+  * Added support for property 'AllowVideoMessages'
+    FIXES [#4021](https://github.com/microsoft/Microsoft365DSC/issues/4021)
+
 # 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
