@@ -230,7 +230,8 @@ function Get-TargetResource
             }
         }
 
-        # Microsoft Viva Briefing Email
+        # DEPRECATED - Microsoft Viva Briefing Email
+        <#
         $vivaBriefingEmailValue = $false
         try
         {
@@ -282,7 +283,7 @@ function Get-TargetResource
         }
         $results += @{
             MicrosoftVivaBriefingEmail = $vivaBriefingEmailValue
-        }
+        }#>
 
         # Viva Insights settings
         $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose:$false
@@ -609,16 +610,18 @@ function Set-TargetResource
     }
 
     # Microsoft Viva Briefing Email
-    $briefingValue = 'opt-out'
-    if ($MicrosoftVivaBriefingEmail)
+    if ($null -ne $MicrosoftVivaBriefingEmail)
     {
-        $briefingValue = 'opt-in'
+        Write-Verbose -Message "DEPRECATED - The MicrosoftVivaBriefingEmail parameter is deprecated and will be ignored."
     }
+    #$briefingValue = 'opt-out'
+
+    <# DEPRECATED
     if ($currentValues.MicrosoftVivaBriefingEmail -and $MicrosoftVivaBriefingEmail -ne $currentValues.MicrosoftVivaBriefingEmail)
     {
         Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
         Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue -Verbose:$false | Out-Null
-    }
+    }#>
 
     # Viva Insights
     if ($currentValues.VivaInsightsWebExperience -ne $VivaInsightsWebExperience)
@@ -978,6 +981,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck.Remove("MicrosoftVivaBriefingEmail") | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"

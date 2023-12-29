@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.23.1227.1
 
 * EXOAntiPhishPolicy
   * Add support for TargetedDomainProtectionAction
@@ -18,6 +18,10 @@
   * Fix resource deployment
     FIXES [#3539](https://github.com/microsoft/Microsoft365DSC/issues/3539)
   * Ensure resource can cope with Id being empty since it's not mandatory
+* O365OrgSettings
+  * Deprecated the MicrosoftVivaBriefingEmail property
+    FIXES [#4097](https://github.com/microsoft/Microsoft365DSC/issues/4097)
+    FIXES [#4080](https://github.com/microsoft/Microsoft365DSC/issues/4080)
 * SPOTenantSettings
   * Fix bug for DisabledWebPartIds type, should be an array instead of a string
     FIXES [#4086](https://github.com/microsoft/Microsoft365DSC/issues/4086)
