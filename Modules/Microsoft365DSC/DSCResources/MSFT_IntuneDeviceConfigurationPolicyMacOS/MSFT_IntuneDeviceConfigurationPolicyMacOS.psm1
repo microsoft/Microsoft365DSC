@@ -249,7 +249,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('none', 'delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'unknownFutureValue', 'delayMajorOsUpdateVisibility')]
-        [System.String[]]
+        [System.String]
         $UpdateDelayPolicy,
 
         [Parameter()]
@@ -398,7 +398,7 @@ function Get-TargetResource
             SoftwareUpdatesEnforcedDelayInDays              = $getValue.AdditionalProperties.softwareUpdatesEnforcedDelayInDays
             SpotlightBlockInternetResults                   = $getValue.AdditionalProperties.spotlightBlockInternetResults
             TouchIdTimeoutInHours                           = $getValue.AdditionalProperties.touchIdTimeoutInHours
-            UpdateDelayPolicy                               = $getValue.AdditionalProperties.updateDelayPolicy -split ','
+            UpdateDelayPolicy                               = $getValue.AdditionalProperties.updateDelayPolicy
             WallpaperModificationBlocked                    = $getValue.AdditionalProperties.wallpaperModificationBlocked
             Ensure                                          = 'Present'
             Credential                                      = $Credential
@@ -696,7 +696,7 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('none', 'delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'unknownFutureValue', 'delayMajorOsUpdateVisibility')]
-        [System.String[]]
+        [System.String]
         $UpdateDelayPolicy,
 
         [Parameter()]
@@ -1139,7 +1139,7 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('none', 'delayOSUpdateVisibility', 'delayAppUpdateVisibility', 'unknownFutureValue', 'delayMajorOsUpdateVisibility')]
-        [System.String[]]
+        [System.String]
         $UpdateDelayPolicy,
 
         [Parameter()]
