@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOAntiPhishPolicy
+  * Add support for TargetedDomainProtectionAction
+    FIXES [#3910](https://github.com/microsoft/Microsoft365DSC/issues/3910)
 * EXOMailboxCalendarFolder
   * Add support for non-English calendar folder names during export
     FIXES [#4056](https://github.com/microsoft/Microsoft365DSC/issues/4056)
