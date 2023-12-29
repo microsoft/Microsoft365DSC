@@ -14,6 +14,10 @@
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fix issue deploying decrypted OmaSettings to another tenant
     FIXES [#4083](https://github.com/microsoft/Microsoft365DSC/issues/4083)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix resource deployment
+    FIXES [#3539](https://github.com/microsoft/Microsoft365DSC/issues/3539)
+  * Ensure resource can cope with Id being empty since it's not mandatory
 * SPOTenantSettings
   * Fix bug for DisabledWebPartIds type, should be an array instead of a string
     FIXES [#4086](https://github.com/microsoft/Microsoft365DSC/issues/4086)
