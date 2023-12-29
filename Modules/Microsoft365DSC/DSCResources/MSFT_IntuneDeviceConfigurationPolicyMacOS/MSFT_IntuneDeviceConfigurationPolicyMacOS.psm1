@@ -343,7 +343,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
+        Write-Verbose -Message "Found something with id {$($getValue.id)}"
         $results = @{
 
             #region resource generator code
