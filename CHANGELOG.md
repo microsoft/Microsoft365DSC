@@ -1,6 +1,16 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
+* EXOMailboxCalendarFolder
+  * Add support for non-English calendar folder names during export
+    FIXES [#4056](https://github.com/microsoft/Microsoft365DSC/issues/4056)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Fix issue deploying decrypted OmaSettings to another tenant
+    FIXES [#4083](https://github.com/microsoft/Microsoft365DSC/issues/4083)
+* SPOTenantSettings
+  * Fix bug for DisabledWebPartIds type, should be an array instead of a string
+    FIXES [#4086](https://github.com/microsoft/Microsoft365DSC/issues/4086)
 * TeamsMessagingPolicy
   * Added support for property 'AllowVideoMessages'
     FIXES [#4021](https://github.com/microsoft/Microsoft365DSC/issues/4021)

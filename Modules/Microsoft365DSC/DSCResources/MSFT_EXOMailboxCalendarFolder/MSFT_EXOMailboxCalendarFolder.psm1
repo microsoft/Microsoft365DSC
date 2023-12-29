@@ -419,7 +419,9 @@ function Export-TargetResource
         $i = 1
         foreach ($mailbox in $mailboxes)
         {
-            $folderPath = $mailbox.UserPrincipalName + ':\Calendar'
+            # Name of calendar folder depends on the language of the mailbox
+            $calendarFolderName = (Get-MailboxFolderStatistics -Identity $($mailbox.UserPrincipalName) -FolderScope Calendar | Where-Object {$_.FolderType -eq 'Calendar'}).Name
+            $folderPath = $mailbox.UserPrincipalName + ':\' + $calendarFolderName
             Write-Host "    |---[$i/$($mailboxes.Count)] $($folderPath)" -NoNewline
             $Params = @{
                 Identity              = $folderPath
@@ -451,7 +453,6 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-
 
         return $dscContent
     }
