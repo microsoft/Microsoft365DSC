@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix resource deployment
+    FIXES [#3539](https://github.com/microsoft/Microsoft365DSC/issues/3539)
+  * Ensure resource can cope with Id being empty since it's not mandatory
+
 # 1.23.1220.1
 
 * AADEntitlementManagementAccessPackage
