@@ -789,7 +789,6 @@ function Set-TargetResource
         }#>
 
         $CreateParameters.Remove('Id') | Out-Null
-        $CreateParameters.Remove('Verbose') | Out-Null
 
         foreach ($key in ($CreateParameters.clone()).Keys)
         {
@@ -841,7 +840,6 @@ function Set-TargetResource
         }#>
 
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Verbose') | Out-Null
 
         foreach ($key in ($UpdateParameters.clone()).Keys)
         {
