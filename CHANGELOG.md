@@ -14,6 +14,10 @@
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fix issue deploying decrypted OmaSettings to another tenant
     FIXES [#4083](https://github.com/microsoft/Microsoft365DSC/issues/4083)
+* O365OrgSettings
+  * Deprecated the MicrosoftVivaBriefingEmail property
+    FIXES [#4097](https://github.com/microsoft/Microsoft365DSC/issues/4097)
+    FIXES [#4080](https://github.com/microsoft/Microsoft365DSC/issues/4080)
 * SPOTenantSettings
   * Fix bug for DisabledWebPartIds type, should be an array instead of a string
     FIXES [#4086](https://github.com/microsoft/Microsoft365DSC/issues/4086)
