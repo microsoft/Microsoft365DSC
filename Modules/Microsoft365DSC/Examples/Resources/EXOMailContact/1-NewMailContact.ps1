@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $Credential
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -17,7 +17,7 @@ Configuration Example
         EXOMailContact 'TestMailContact'
         {
             Alias                       = 'TestMailContact'
-            Credential                  = $Credential
+            Credential                  = $Credscredential
             DisplayName                 = 'My Test Contact'
             Ensure                      = 'Present'
             ExternalEmailAddress        = 'SMTP:test@tailspintoys.com'
