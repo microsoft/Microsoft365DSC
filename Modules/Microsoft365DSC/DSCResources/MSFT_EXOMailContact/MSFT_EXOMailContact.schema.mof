@@ -31,7 +31,6 @@ class MSFT_EXOMailContact : OMI_BaseResource
     [Write, Description("The CustomAttribute13 parameter specifies the value of the CustomAttribute13")] String CustomAttribute13;
     [Write, Description("The CustomAttribute14 parameter specifies the value of the CustomAttribute14")] String CustomAttribute14;
     [Write, Description("The CustomAttribute15 parameter specifies the value of the CustomAttribute15")] String CustomAttribute15;
-    [Write, Description("The CustomAttribute15 parameter specifies the value of the CustomAttribute15")] String CustomAttribute15;
     [Write, Description("The ExtensionCustomAttribute1 parameter specifies the value of the ExtensionCustomAttribute1")] String ExtensionCustomAttribute1[];
     [Write, Description("The ExtensionCustomAttribute2 parameter specifies the value of the ExtensionCustomAttribute2")] String ExtensionCustomAttribute2[];
     [Write, Description("The ExtensionCustomAttribute3 parameter specifies the value of the ExtensionCustomAttribute3")] String ExtensionCustomAttribute3[];
