@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix workaround added on PR #4099 in order to be able to use this resource
+    for deployments
+    FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
+
 # 1.23.1227.1
 
 * EXOAntiPhishPolicy
