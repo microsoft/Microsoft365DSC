@@ -75,38 +75,111 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
     {
         AADAuthenticationMethodPolicySoftware "AADAuthenticationMethodPolicySoftware-SoftwareOath"
         {
-            ApplicationId         = $ConfigurationData.NonNodeData.ApplicationId;
-            CertificateThumbprint = $ConfigurationData.NonNodeData.CertificateThumbprint;
-            Ensure                = "Present";
-            ExcludeTargets        = @(
+            Credential           = $Credscredential;
+            Ensure               = "Present";
+            ExcludeTargets       = @(
                 MSFT_AADAuthenticationMethodPolicySoftwareExcludeTarget{
-                    Id = 'fakegroup1'
+                    Id = 'Executives'
                     TargetType = 'group'
                 }
                 MSFT_AADAuthenticationMethodPolicySoftwareExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'Paralegals'
                     TargetType = 'group'
                 }
             );
+            Id                   = "SoftwareOath";
+            IncludeTargets       = @(
+                MSFT_AADAuthenticationMethodPolicySoftwareIncludeTarget{
+                    Id = 'Legal Team'
+                    TargetType = 'group'
+                }
+            );
+            State                = "enabled";
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationMethodPolicySoftware "AADAuthenticationMethodPolicySoftware-SoftwareOath"
+        {
+            Credential           = $Credscredential;
+            Ensure               = "Present";
+            ExcludeTargets       = @(
+                MSFT_AADAuthenticationMethodPolicySoftwareExcludeTarget{
+                    Id = 'Executives'
+                    TargetType = 'group'
+                }
+                MSFT_AADAuthenticationMethodPolicySoftwareExcludeTarget{
+                    Id = 'Paralegals'
+                    TargetType = 'group'
+                }
+            );
+            Id                   = "SoftwareOath";
+            IncludeTargets       = @(
+                MSFT_AADAuthenticationMethodPolicySoftwareIncludeTarget{
+                    Id = 'Legal Team'
+                    TargetType = 'group'
+                }
+            );
+            State                = "disabled"; # Updated Property
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationMethodPolicySoftware "AADAuthenticationMethodPolicySoftware-SoftwareOath"
+        {
+            Credential            = $credsCredential;
+            Ensure                = "Absent";
             Id                    = "SoftwareOath";
-            IncludeTargets        = @(
-                MSFT_AADAuthenticationMethodPolicySoftwareIncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicySoftwareIncludeTarget{
-                    Id = 'fakegroup4'
-                    TargetType = 'group'
-                }
-            );
-            State                 = "enabled";
-            TenantId              = $ConfigurationData.NonNodeData.TenantId;
         }
     }
 }

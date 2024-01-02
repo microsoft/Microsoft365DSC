@@ -166,7 +166,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                          = 'Present'
                     Credential                      = $Credential
                 }
-
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageCatalog -MockWith {
+                    return @{
+                        DisplayName                     = 'FakeStringValue'
+                        Id                              = 'FakeStringValue'
+                    }
+                }
                 Mock -CommandName Get-MgBetaEntitlementManagementAccessPackage -MockWith {
                     return @{
                         CatalogId                       = 'FakeStringValue'

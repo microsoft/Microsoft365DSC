@@ -357,6 +357,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.AuthenticationMethodsPolicy")
+        Write-Verbose -Message "Updating AuthenticationMethodPolicy with: `r`n$(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
         Update-MgBetaPolicyAuthenticationMethodPolicy -BodyParameter $UpdateParameters
         #endregion
     }

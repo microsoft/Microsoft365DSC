@@ -76,39 +76,93 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
     {
         AADAuthenticationMethodPolicyVoice "AADAuthenticationMethodPolicyVoice-Voice"
         {
-            ApplicationId         = $ConfigurationData.NonNodeData.ApplicationId;
-            CertificateThumbprint = $ConfigurationData.NonNodeData.CertificateThumbprint;
-            Ensure                = "Present";
+            Credential           = $Credscredential;
+            Ensure               = "Present";
+            Id                   = "Voice";
+            IncludeTargets       = @(
+                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
+                    Id = 'all_users'
+                    TargetType = 'group'
+                }
+            );
+            IsOfficePhoneAllowed = $False;
+            State                = "disabled";
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationMethodPolicyVoice "AADAuthenticationMethodPolicyVoice-Voice"
+        {
+            Credential           = $Credscredential;
+            Ensure               = "Present";
+            Id                   = "Voice";
+            IncludeTargets       = @(
+                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
+                    Id = 'all_users'
+                    TargetType = 'group'
+                }
+            );
+            IsOfficePhoneAllowed = $True; # Updated Property
+            State                = "disabled";
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationMethodPolicyVoice "AADAuthenticationMethodPolicyVoice-Voice"
+        {
+            Credential            = $credsCredential;
+            Ensure                = "Absent";
             Id                    = "Voice";
-            IsOfficePhoneAllowed  = $False;
-            ExcludeTargets           = @(
-                MSFT_AADAuthenticationMethodPolicyVoiceExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyVoiceExcludeTarget{
-                    Id = 'fakegroup2'
-                    TargetType = 'group'
-                }
-            );
-            IncludeTargets           = @(
-                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                    Id = 'fakegroup4'
-                    TargetType = 'group'
-                }
-            );
-            State                 = "disabled";
-            TenantId              = $ConfigurationData.NonNodeData.TenantId;
         }
     }
 }

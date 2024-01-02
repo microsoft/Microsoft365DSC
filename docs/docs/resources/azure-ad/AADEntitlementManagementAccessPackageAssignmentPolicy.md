@@ -208,7 +208,6 @@ Configuration Example
             Description             = "";
             DisplayName             = "External tenant";
             DurationInDays          = 365;
-            Id                      = "0ae0bc7c-bae7-4e3b-9ed3-216b767efbb3";
             RequestApprovalSettings = MSFT_MicrosoftGraphapprovalsettings{
                 ApprovalMode = 'NoApproval'
                 IsRequestorJustificationRequired = $False
@@ -250,83 +249,24 @@ Configuration Example
 
     node localhost
     {
-        AADEntitlementManagementAccessPackageAssignmentPolicy "MyAssignmentPolicyWithQuestionsAndCulture"
+        AADEntitlementManagementAccessPackageAssignmentPolicy "myAssignmentPolicyWithAccessReviewsSettings"
         {
             AccessPackageId         = "5d05114c-b4d9-4ae7-bda6-4bade48e60f2";
+            AccessReviewSettings    = MSFT_MicrosoftGraphassignmentreviewsettings{
+                IsEnabled = $True
+                StartDateTime = '12/17/2022 23:59:59'
+                IsAccessRecommendationEnabled = $True
+                AccessReviewTimeoutBehavior = 'keepAccess'
+                IsApprovalJustificationRequired = $True
+                ReviewerType = 'Self'
+                RecurrenceType = 'quarterly'
+                Reviewers = @()
+                DurationInDays = 25
+            };
             CanExtend               = $False;
-            Credential              = $Credscredential
-            Description             = "Initial Policy";
-            DisplayName             = "Initial Policy";
-            DurationInDays          = 365;
-            Ensure                  = "Present";
-            Id                      = "d46bda47-ec8e-4b62-8d94-3cd13e267a61";
-            Questions               = @(
-                MSFT_MicrosoftGraphaccesspackagequestion{
-                    AllowsMultipleSelection = $False
-                    Id = '8475d987-535d-43a1-a7d7-96b7fd0edda9'
-                    QuestionText = MSFT_MicrosoftGraphaccesspackagelocalizedcontent{
-                        LocalizedTexts = @(
-                            MSFT_MicrosoftGraphaccessPackageLocalizedText{
-                                Text = 'My Question'
-                                LanguageCode = 'en-GB'
-                            }
-
-                            MSFT_MicrosoftGraphaccessPackageLocalizedText{
-                                Text = 'Ma question'
-                                LanguageCode = 'fr-FR'
-                            }
-                        )
-                        DefaultText = 'My question'
-                    }
-                    IsRequired = $True
-                    Choices = @(
-                        MSFT_MicrosoftGraphaccessPackageAnswerChoice{
-                            displayValue = MSFT_MicrosoftGraphaccessPackageLocalizedContent{
-                                localizedTexts = @(
-                                    MSFT_MicrosoftGraphaccessPackageLocalizedText{
-                                        text = 'Yes'
-                                        languageCode = 'en-GB'
-                                    }
-
-                                    MSFT_MicrosoftGraphaccessPackageLocalizedText{
-                                        text = 'Oui'
-                                        languageCode = 'fr-FR'
-                                    }
-									MSFT_MicrosoftGraphaccessPackageLocalizedText{
-                                        text = 'Ya'
-                                        languageCode = 'de'
-                                    }
-                                )
-                                defaultText = 'Yes'
-                            }
-                            actualValue = 'Yes'
-                        }
-
-                        MSFT_MicrosoftGraphaccessPackageAnswerChoice{
-                            displayValue = MSFT_MicrosoftGraphaccessPackageLocalizedContent{
-                                localizedTexts = @(
-                                    MSFT_MicrosoftGraphaccessPackageLocalizedText{
-                                        text = 'No'
-                                        languageCode = 'en-GB'
-                                    }
-                                    MSFT_MicrosoftGraphaccessPackageLocalizedText{
-                                        text = 'Non'
-                                        languageCode = 'fr-FR'
-                                    }
-									MSFT_MicrosoftGraphaccessPackageLocalizedText{
-                                        text = 'Nein'
-                                        languageCode = 'de'
-                                    }
-                                )
-                                defaultText = 'No'
-                            }
-                            actualValue = 'No'
-                        }
-                    )
-                    Sequence = 0
-                    odataType = '#microsoft.graph.accessPackageMultipleChoiceQuestion'
-                }
-            );
+            Description             = "";
+            DisplayName             = "External tenant";
+            DurationInDays          = 180; # Updated Property
             RequestApprovalSettings = MSFT_MicrosoftGraphapprovalsettings{
                 ApprovalMode = 'NoApproval'
                 IsRequestorJustificationRequired = $False
@@ -334,9 +274,45 @@ Configuration Example
                 IsApprovalRequiredForExtension = $False
             };
             RequestorSettings       = MSFT_MicrosoftGraphrequestorsettings{
-                AcceptRequests = $False
-                ScopeType = 'NoSubjects'
+                AllowedRequestors = @(
+                    MSFT_MicrosoftGraphuserset{
+                        IsBackup = $False
+                        Id = 'e27eb9b9-27c3-462d-8d65-3bcd763b0ed0'
+                        odataType = '#microsoft.graph.connectedOrganizationMembers'
+                    }
+                )
+                AcceptRequests = $True
+                ScopeType = 'SpecificConnectedOrganizationSubjects'
             };
+            Ensure                     = "Present"
+            Credential                 = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADEntitlementManagementAccessPackageAssignmentPolicy "myAssignmentPolicyWithAccessReviewsSettings"
+        {
+            DisplayName                = "External tenant";
+            Ensure                     = "Absent"
+            Credential                 = $Credscredential
         }
     }
 }

@@ -75,7 +75,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateRange(0, 2)]
         $Priority,
 
         [Parameter()]
@@ -304,7 +303,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateRange(0, 2)]
         $Priority,
 
         [Parameter()]
@@ -572,7 +570,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Int32]
-        [ValidateRange(0, 2)]
         $Priority,
 
         [Parameter()]

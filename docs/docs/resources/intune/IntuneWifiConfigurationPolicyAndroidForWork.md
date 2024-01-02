@@ -86,7 +86,6 @@ Configuration Example
     {
         IntuneWifiConfigurationPolicyAndroidForWork 'Example'
         {
-            Id                             = '41b6b491-9938-42d1-861a-c41762040ddb'
             DisplayName                    = 'AndroindForWork'
             Description                    = 'DSC'
             Assignments                    = @(
@@ -104,6 +103,75 @@ Configuration Example
             Ssid                           = 'WiFi'
             WiFiSecurityType               = 'wpa2Enterprise'
             Ensure                         = 'Present'
+            Credential                     = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWifiConfigurationPolicyAndroidForWork 'Example'
+        {
+            DisplayName                    = 'AndroindForWork'
+            Description                    = 'DSC'
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                    deviceAndAppManagementAssignmentFilterType = 'include'
+                    deviceAndAppManagementAssignmentFilterId   = '17cb2318-cd4f-4a66-b742-6b79d4966ac7'
+                    groupId                                    = 'b9b732df-9f18-4c5f-99d1-682e151ec62b'
+                    collectionId                               = '2a8ea71f-039a-4ec8-8e41-5fba3ef9efba'
+                }
+            )
+            ConnectAutomatically           = $true # Updated Property
+            ConnectWhenNetworkNameIsHidden = $true
+            NetworkName                    = 'CorpNet'
+            Ssid                           = 'WiFi'
+            WiFiSecurityType               = 'wpa2Enterprise'
+            Ensure                         = 'Present'
+            Credential                     = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWifiConfigurationPolicyAndroidForWork 'Example'
+        {
+            DisplayName                    = 'AndroindForWork'
+            Ensure                         = 'Absent'
             Credential                     = $Credscredential
         }
     }
