@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("TeamsNetworkRoamingPolicy")]
 class MSFT_TeamsNetworkRoamingPolicy : OMI_BaseResource
 {
-    [Key, Description("")] String Identity;
+    [Key, Description("Specify the name of the Teams Network Roaming Policy.")] String Identity;
     [Write, Description("Determines whether video is enabled in a user's meetings or calls. Set this to TRUE to allow the user to share their video. Set this to FALSE to prohibit the user from sharing their video.")] Boolean AllowIPVideo;
     [Write, Description("Description of the new policy to be created.")] String Description;
     [Write, Description("Determines the media bit rate for audio/video/app sharing transmissions in meetings.")] UInt64 MediaBitRateKb;

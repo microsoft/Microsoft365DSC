@@ -1,5 +1,24 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* EXOInboundConnector
+  * Corrected parameter descriptions, so the documentation on microsoft365dsc.com is generated correctly.
+* EXOMailTips
+  * Added parameter descriptions for better documentation
+* EXOOutboundConnector
+  * Corrected parameter descriptions, so the documentation on microsoft365dsc.com is generated correctly.
+* IntuneDeviceConfigurationPolicyMacOS
+  * Added parameter descriptions for better documentation
+* SPOTenantSettings
+  * Added parameter descriptions for better documentation
+* TeamsFeedbackPolicy
+  * Added parameter descriptions for better documentation
+* TeamsMobilityPolicy
+  * Added parameter descriptions for better documentation
+* TeamsNetworkRoamingPolicy
+  * Added parameter descriptions for better documentation
+
 # 1.23.1227.1
 
 * EXOAntiPhishPolicy
