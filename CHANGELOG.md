@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsChannel
+  * Add error handling if GroupId of a team is null
+    FIXES [#3943](https://github.com/microsoft/Microsoft365DSC/issues/3943)
+
 # 1.23.1227.1
 
 * EXOAntiPhishPolicy
