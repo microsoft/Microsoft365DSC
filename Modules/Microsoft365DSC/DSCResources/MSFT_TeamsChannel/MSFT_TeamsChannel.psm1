@@ -385,34 +385,41 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($team in $Teams)
         {
-            $channels = Get-TeamChannel -GroupId $team.GroupId
-            $i = 1
-            Write-Host "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
-            foreach ($channel in $channels)
+            if($null -ne $team.GroupId)
             {
-                Write-Host "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -NoNewline
-                $params = @{
-                    TeamName              = $team.DisplayName
-                    GroupId               = $team.GroupId
-                    DisplayName           = $channel.DisplayName
-                    ApplicationId         = $ApplicationId
-                    TenantId              = $TenantId
-                    CertificateThumbprint = $CertificateThumbprint
-                    Credential            = $Credential
+                $channels = Get-TeamChannel -GroupId $team.GroupId
+                $i = 1
+                Write-Host "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
+                foreach ($channel in $channels)
+                {
+                    Write-Host "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -NoNewline
+                    $params = @{
+                        TeamName              = $team.DisplayName
+                        GroupId               = $team.GroupId
+                        DisplayName           = $channel.DisplayName
+                        ApplicationId         = $ApplicationId
+                        TenantId              = $TenantId
+                        CertificateThumbprint = $CertificateThumbprint
+                        Credential            = $Credential
+                    }
+                    $Results = Get-TargetResource @Params
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -Credential $Credential
+                    $dscContent += $currentDSCBlock
+                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                        -FileName $Global:PartialExportFileName
+                    $i++
+                    Write-Host $Global:M365DSCEmojiGreenCheckMark
                 }
-                $Results = Get-TargetResource @Params
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
-                $dscContent += $currentDSCBlock
-                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
-                $i++
-                Write-Host $Global:M365DSCEmojiGreenCheckMark
+            }
+            else
+            {
+                Write-Host "    |---[$j/$($Teams.Length)] Team has no GroupId and will be skipped"
             }
             $j++
         }
