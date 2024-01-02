@@ -688,6 +688,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                IsSingleInstance      = 'Yes'
             }
 
             $Results = Get-TargetResource @Params
