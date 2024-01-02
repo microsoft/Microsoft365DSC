@@ -1745,10 +1745,10 @@ function Set-TargetResource
     $NewTransportRuleParams.Remove('ManagedIdentity') | Out-Null
 
     # check for deprecated DLP parameters and remove them
-    if ($NewTransportRuleParams.ContainsKey('MessageContainsDataClassifications')
-        -or $NewTransportRuleParams.ContainsKey('ExceptIfMessageContainsDataClassifications')
-        -or $NewTransportRuleParams.ContainsKey('HasSenderOverride')
-        -or $NewTransportRuleParams.ContainsKey('ExceptIfHasSenderOverride')
+    if ($NewTransportRuleParams.ContainsKey('MessageContainsDataClassifications') `
+        -or $NewTransportRuleParams.ContainsKey('ExceptIfMessageContainsDataClassifications') `
+        -or $NewTransportRuleParams.ContainsKey('HasSenderOverride') `
+        -or $NewTransportRuleParams.ContainsKey('ExceptIfHasSenderOverride') `
         -or $NewTransportRuleParams.ContainsKey('NotifySender'))
     {
         $NewTransportRuleParams.Remove('MessageContainsDataClassifications') | Out-Null
