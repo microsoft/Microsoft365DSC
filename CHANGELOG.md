@@ -8,6 +8,9 @@
 * TeamsChannel
   * Add error handling if GroupId of a team is null
     FIXES [#3943](https://github.com/microsoft/Microsoft365DSC/issues/3943)
+* EXOReportSubmissionPolicy
+  * Initial release
+    FIXES [#3690](https://github.com/microsoft/Microsoft365DSC/issues/3690)
 
 # 1.23.1227.1
 
