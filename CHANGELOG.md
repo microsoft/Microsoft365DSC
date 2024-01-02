@@ -2,10 +2,16 @@
 
 # UNRELEASED
 
+* EXOTransportRule
+  * Stop supporting DLP-related rules, conditions, and actions (https://techcommunity.microsoft.com/t5/exchange-team-blog/exchange-online-mail-flow-rules-to-stop-supporting-dlp-related/ba-p/3959870)
+    FIXES [#3929](https://github.com/microsoft/Microsoft365DSC/issues/3929)
 * IntuneDeviceConfigurationPolicyMacOS
   * Fix workaround added on PR #4099 in order to be able to use this resource
     for deployments
     FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
+* TeamsChannel
+  * Add error handling if GroupId of a team is null
+    FIXES [#3943](https://github.com/microsoft/Microsoft365DSC/issues/3943)
 
 # 1.23.1227.1
 
