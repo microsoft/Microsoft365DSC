@@ -1,0 +1,45 @@
+{
+    "resourceName": "AADGroupConsentSettings",
+    "description": "This resource configures an Azure AD Group Consent Settings.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+                                                 {
+                                                     "name":  "Directory.Read.All"
+                                                 },
+                                                 {
+                                                     "name":  "Group.Read.All"
+                                                 }
+                                             ],
+                                    "update":  [
+                                                   {
+                                                       "name":  "Directory.ReadWrite.All"
+                                                   },
+                                                   {
+                                                       "name":  "Policy.ReadWrite.Authorization"
+                                                   }
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+                                                   {
+                                                       "name":  "Directory.Read.All"
+                                                   },
+                                                   {
+                                                       "name":  "Group.Read.All"
+                                                   }
+                                               ],
+                                      "update":  [
+                                                     {
+                                                         "name":  "Directory.ReadWrite.All"
+                                                     },
+                                                     {
+                                                         "name":  "Policy.ReadWrite.Authorization"
+                                                     }
+                                                 ]
+                                  }
+              }
+}
+
+}
