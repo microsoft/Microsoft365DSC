@@ -12,6 +12,9 @@
   * Added parameter descriptions for better documentation
 * SPOTenantSettings
   * Added parameter descriptions for better documentation
+* TeamsChannel
+  * Add error handling if GroupId of a team is null
+    FIXES [#3943](https://github.com/microsoft/Microsoft365DSC/issues/3943)
 * TeamsFeedbackPolicy
   * Added parameter descriptions for better documentation
 * TeamsMobilityPolicy
