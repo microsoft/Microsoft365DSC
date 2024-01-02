@@ -18,18 +18,15 @@
 * TeamsChannel
   * Add error handling if GroupId of a team is null
     FIXES [#3943](https://github.com/microsoft/Microsoft365DSC/issues/3943)
-<<<<<<< HEAD
 * EXOReportSubmissionPolicy
   * Initial release
     FIXES [#3690](https://github.com/microsoft/Microsoft365DSC/issues/3690)
-=======
 * TeamsFeedbackPolicy
   * Added parameter descriptions for better documentation
 * TeamsMobilityPolicy
   * Added parameter descriptions for better documentation
 * TeamsNetworkRoamingPolicy
   * Added parameter descriptions for better documentation
->>>>>>> Dev
 
 # 1.23.1227.1
 
