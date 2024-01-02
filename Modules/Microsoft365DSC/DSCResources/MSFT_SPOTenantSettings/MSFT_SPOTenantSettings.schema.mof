@@ -12,11 +12,11 @@ class MSFT_SPOTenantSettings : OMI_BaseResource
     [Write, Description("Allow feedback via UserVoice.")] boolean UserVoiceForFeedbackEnabled;
     [Write, Description("Configure PublicCDN")] boolean PublicCdnEnabled;
     [Write, Description("Configure filetypes allowed for PublicCDN")] String PublicCdnAllowedFileTypes;
-    [Write, Description("When set to $true, users aren't able to share with security groups or SharePoint groups")] boolean UseFindPeopleInPeoplePicker;
-    [Write, Description("When set to $true, users aren't able to share with security groups or SharePoint groups")] boolean NotificationsInSharePointEnabled;
-    [Write, Description("")] boolean OwnerAnonymousNotification;
-    [Write, Description("")] boolean ApplyAppEnforcedRestrictionsToAdHocRecipients;
-    [Write, Description("")] boolean FilePickerExternalImageSearchEnabled;
+    [Write, Description("When set to $true, users aren't able to share with security groups or SharePoint groups.")] boolean UseFindPeopleInPeoplePicker;
+    [Write, Description("When set to $true, users aren't able to share with security groups or SharePoint groups.")] boolean NotificationsInSharePointEnabled;
+    [Write, Description("Specifies whether an email notification should be sent to the OneDrive for Business owners when an anonymous links are created or changed.")] boolean OwnerAnonymousNotification;
+    [Write, Description("When the feature is enabled, all guest users are subject to conditional access policy. By default guest users who are accessing SharePoint Online files with pass code are exempt from the conditional access policy.")] boolean ApplyAppEnforcedRestrictionsToAdHocRecipients;
+    [Write, Description("Sets whether webparts that support inserting images, like for example Image or Hero webpart, the Web search (Powered by Bing) should allow choosing external images.")] boolean FilePickerExternalImageSearchEnabled;
     [Write, Description("Defines if the default themes are visible or hidden")] boolean HideDefaultThemes;
     [Write, Description("To enable or disable Sync button on Team sites")] boolean HideSyncButtonOnTeamSite;
     [Write, Description("Allow or block external sharing until at least one Office DLP policy scans the content of the file."), ValueMap{"AllowExternalSharing","BlockExternalSharing"}, Values{"AllowExternalSharing","BlockExternalSharing"}] string MarkNewFilesSensitiveByDefault;
