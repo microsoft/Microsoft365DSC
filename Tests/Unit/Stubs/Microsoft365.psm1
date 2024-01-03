@@ -4374,7 +4374,7 @@ function New-ReportSubmissionRule
 
         [Parameter()]
         [System.String]
-        $ReportSubmissionRule
+        $ReportSubmissionPolicy
     )
 }
 function New-RoleAssignmentPolicy
