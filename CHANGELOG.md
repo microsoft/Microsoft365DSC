@@ -2,6 +2,9 @@
 
 # Unreleased
 
+* AADConditionalAccessPolicy
+  * Fix Get-TargetResource when the parameter Id is not present
+    FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
 * EXOInboundConnector
   * Corrected parameter descriptions, so the documentation on microsoft365dsc.com is generated correctly.
 * EXOMailTips
@@ -16,6 +19,9 @@
   * Fix workaround added on PR #4099 in order to be able to use this resource
     for deployments
     FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
+* IntuneSettingCatalogCustomPolicyWindows10
+  * Fix Get-TargetResource when the parameter Id is not present
+    FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
 * SPOTenantSettings
   * Added parameter descriptions for better documentation
 
