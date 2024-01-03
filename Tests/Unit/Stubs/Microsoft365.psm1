@@ -6091,7 +6091,11 @@ function Remove-ReportSubmissionRule
     param(
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
     )
 }
 function Remove-RoleAssignmentPolicy
@@ -11529,7 +11533,11 @@ function Set-ReportSubmissionRule
 
         [Parameter()]
         [System.String]
-        $SentTo
+        $SentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
     )
 }
 function Set-ResourceConfig

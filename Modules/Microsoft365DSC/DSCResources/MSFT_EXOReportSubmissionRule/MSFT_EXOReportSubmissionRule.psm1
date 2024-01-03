@@ -18,8 +18,8 @@ function Get-TargetResource
         $Comments,
 
         [Parameter()]
-        [System.String]
-        $SentTo,
+        [System.String[]]
+        $SentTo = @(),
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -147,8 +147,8 @@ function Set-TargetResource
         $Comments,
 
         [Parameter()]
-        [System.String]
-        $SentTo,
+        [System.String[]]
+        $SentTo = @(),
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -211,8 +211,6 @@ function Set-TargetResource
     $ReportSubmissionRuleParams.Remove('CertificatePath') | Out-Null
     $ReportSubmissionRuleParams.Remove('CertificatePassword') | Out-Null
     $ReportSubmissionRuleParams.Remove('ManagedIdentity') | Out-Null
-    # There is only one ReportSubmissionPolicy, so we can hardcode the identity.
-    $ReportSubmissionRuleParams.Add('ReportSubmissionPolicy', 'DefaultReportSubmissionPolicy') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentReportSubmissionRule.Ensure -eq 'Absent')
     {
@@ -220,6 +218,8 @@ function Set-TargetResource
 
         $ReportSubmissionRuleParams.Add('Name', $Identity) | Out-Null
         $ReportSubmissionRuleParams.Remove('Identity') | Out-Null
+        # There is only one ReportSubmissionPolicy, so we can hardcode the identity.
+        $ReportSubmissionRuleParams.Add('ReportSubmissionPolicy', 'DefaultReportSubmissionPolicy') | Out-Null
 
         New-ReportSubmissionRule @ReportSubmissionRuleParams
     }
@@ -255,8 +255,8 @@ function Test-TargetResource
         $Comments,
 
         [Parameter()]
-        [System.String]
-        $SentTo,
+        [System.String[]]
+        $SentTo = @(),
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
