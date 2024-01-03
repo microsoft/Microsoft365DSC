@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance    = 'Yes'
                     Identity            = "DefaultReportSubmissionRule"
                     Comments            = "This is my default rule"
-                    SentTo              = "submission@contoso.com"
+                    SentTo              = @("submission@contoso.com")
                 }
 
 
@@ -95,7 +95,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance    = 'Yes'
                     Identity            = "DefaultReportSubmissionRule"
                     Comments            = "This is my default rule"
-                    SentTo              = "submission@contoso.com"
+                    SentTo              = @("submission@contoso.com")
                 }
 
                 Mock -CommandName Get-ReportSubmissionRule -MockWith {
@@ -105,7 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsSingleInstance    = 'Yes'
                         Identity            = "DefaultReportSubmissionRule"
                         Comments            = "This is my default rule"
-                        SentTo              = "submission@contoso.com"
+                        SentTo              = @("submission@contoso.com")
                     }
                 }
             }
@@ -123,7 +123,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance    = 'Yes'
                     Identity            = "DefaultReportSubmissionRule"
                     Comments            = "This is my default rule"
-                    SentTo              = "submission@contoso.com"
+                    SentTo              = @("submission@contoso.com")
                 }
 
                 Mock -CommandName Get-ReportSubmissionRule -MockWith {
@@ -133,7 +133,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IsSingleInstance    = 'Yes'
                         Identity            = "DefaultReportSubmissionRule"
                         Comments            = "This is my default rule"
-                        SentTo              = "different@contoso.com"
+                        SentTo              = @("different@contoso.com")
                     }
                 }
 
@@ -162,7 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsSingleInstance    = 'Yes'
                     Identity            = "DefaultReportSubmissionRule"
                     Comments            = "This is my default rule"
-                    SentTo              = "submission@contoso.com"
+                    SentTo              = @("submission@contoso.com")
                 }
 
                 Mock -CommandName Get-ReportSubmissionRule -MockWith {
@@ -200,7 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         Identity            = "DefaultReportSubmissionRule"
                         Comments            = "This is my default rule"
-                        SentTo              = "submission@contoso.com"
+                        SentTo              = @("submission@contoso.com")
                     }
                 }
             }

@@ -4360,7 +4360,21 @@ function New-ReportSubmissionRule
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $Name,
 
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $ReportSubmissionRule
     )
 }
 function New-RoleAssignmentPolicy
@@ -11532,7 +11546,7 @@ function Set-ReportSubmissionRule
         $Comments,
 
         [Parameter()]
-        [System.String]
+        [System.String[]]
         $SentTo,
 
         [Parameter()]
