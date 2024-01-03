@@ -4351,7 +4351,10 @@ function Sync-Parameter
     param (
         [Parameter(Mandatory = $true)]
         [ValidateScript( {
-                    $_ -is [System.Management.Automation.FunctionInfo] -or $_ -is [System.Management.Automation.CmdletInfo] -or $_ -is [System.Management.Automation.ExternalScriptInfo]
+                    $_ -is [System.Management.Automation.FunctionInfo] -or
+                    $_ -is [System.Management.Automation.CmdletInfo] -or
+                    $_ -is [System.Management.Automation.ExternalScriptInfo] -or
+                    $_ -is [System.Management.Automation.AliasInfo]
             })]
         [object]$Command,
 
@@ -4367,6 +4370,15 @@ function Sync-Parameter
     else
     {
         $Parameters = ([hashtable]$Parameters).Clone()
+    }
+
+    if ($Command -is [System.Management.Automation.AliasInfo])
+    {
+        $command = & (Get-Module -Name $Command.Source) {
+            param([string]$Name)
+
+            Get-Command -Name $Name
+        } $Command.Definition
     }
 
     $commonParameters = [System.Management.Automation.Internal.CommonParameters].GetProperties().Name
