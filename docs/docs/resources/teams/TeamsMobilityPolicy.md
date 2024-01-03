@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | Specify the name of the policy that you are creating. | |
+| **Identity** | Key | String | Specify the name of the Teams Mobility Policy. | |
 | **Description** | Write | String | Enables administrators to provide explanatory text about the policy. For example, the Description might indicate the users the policy should be assigned to. | |
 | **IPAudioMobileMode** | Write | String | When set to WifiOnly, prohibits the user from making and receiving calls or joining meetings using VoIP calls on the mobile device while on a cellular data connection. Possible values are: WifiOnly, AllNetworks. | `WifiOnly`, `AllNetworks` |
 | **IPVideoMobileMode** | Write | String | When set to WifiOnly, prohibits the user from making and receiving video calls or enabling video in meetings using VoIP calls on the mobile device while on a cellular data connection. Possible values are: WifiOnly, AllNetworks. | `WifiOnly`, `AllNetworks` |

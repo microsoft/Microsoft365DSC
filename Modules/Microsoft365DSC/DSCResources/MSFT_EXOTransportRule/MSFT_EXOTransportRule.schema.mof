@@ -71,7 +71,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The ExceptIfFromScope parameter specifies an exception that looks for the location of message senders."), ValueMap{"InOrganization","NotInOrganization"}, Values{"InOrganization","NotInOrganization"}] String ExceptIfFromScope;
     [Write, Description("The ExceptIfHasClassification parameter specifies an exception that looks for messages with the specified message classification.")] String ExceptIfHasClassification;
     [Write, Description("The ExceptIfHasNoClassification parameter specifies an exception that looks for messages with or without any message classifications.")] Boolean ExceptIfHasNoClassification;
-    [Write, Description("The ExceptIfHasSenderOverride parameter specifies an exception that looks for messages where the sender chose to override a DLP policy.")] Boolean ExceptIfHasSenderOverride;
+    [Write, Description("DEPRECATED")] Boolean ExceptIfHasSenderOverride;
     [Write, Description("The ExceptIfHeaderContainsMessageHeader parameter specifies the name of header field in the message header when searching for the words specified by the ExceptIfHeaderContainsWords parameter.")] String ExceptIfHeaderContainsMessageHeader;
     [Write, Description("The ExceptIfHeaderContainsWords parameter specifies an exception that looks for words in a header field.")] String ExceptIfHeaderContainsWords[];
     [Write, Description("The ExceptIfHeaderMatchesMessageHeader parameter specifies the name of header field in the message header when searching for the text patterns specified by the ExceptIfHeaderMatchesPatterns parameter.")] String ExceptIfHeaderMatchesMessageHeader;
@@ -79,7 +79,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The ExceptIfManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter.")] String ExceptIfManagerAddresses[];
     [Write, Description("The ExceptIfManagerForEvaluatedUser parameter specifies an exception that looks for users in the Manager attribute of senders or recipients.")] String ExceptIfManagerForEvaluatedUser;
     [Write, Description("The ExceptIfMessageTypeMatches parameter specifies an exception that looks for messages of the specified type."), ValueMap{"OOF","AutoForward","Encrypted","Calendaring","PermissionControlled","Voicemail","Signed","ApprovalRequest","ReadReceipt"}, Values{"OOF","AutoForward","Encrypted","Calendaring","PermissionControlled","Voicemail","Signed","ApprovalRequest","ReadReceipt"}] String ExceptIfMessageTypeMatches;
-    [Write, Description("The ExceptIfMessageContainsDataClassifications parameter specifies an exception that looks for sensitive information types in the body of messages, and in any attachments.")] String ExceptIfMessageContainsDataClassifications[];
+    [Write, Description("DEPRECATED")] String ExceptIfMessageContainsDataClassifications[];
     [Write, Description("The ExceptIfMessageSizeOver parameter specifies an exception that looks for messages larger than the specified size. ")] String ExceptIfMessageSizeOver;
     [Write, Description("The ExceptIfRecipientADAttributeContainsWords parameter specifies an exception that looks for words in the Active Directory attributes of recipients.")] String ExceptIfRecipientADAttributeContainsWords[];
     [Write, Description("The ExceptIfRecipientADAttributeMatchesPatterns parameter specifies an exception that looks for text patterns in the Active Directory attributes of recipients by using regular expressions.")] String ExceptIfRecipientADAttributeMatchesPatterns[];
@@ -112,7 +112,7 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The GenerateNotification parameter specifies an action that sends a notification message to recipients.")] String GenerateNotification;
     [Write, Description("The HasClassification parameter specifies a condition that looks for messages with the specified message classification.")] String HasClassification;
     [Write, Description("The HasNoClassification parameter specifies a condition that looks for messages with or without any message classifications.")] Boolean HasNoClassification;
-    [Write, Description("The HasSenderOverride parameter specifies a condition that looks for messages where the sender chose to override a DLP policy.")] Boolean HasSenderOverride;
+    [Write, Description("DEPRECATED")] Boolean HasSenderOverride;
     [Write, Description("The HeaderContainsMessageHeader parameter specifies the name of header field in the message header when searching for the words specified by the HeaderContainsWords parameter.")] String HeaderContainsMessageHeader;
     [Write, Description("The HeaderContainsWords parameter specifies a condition that looks for words in a header field.")] String HeaderContainsWords[];
     [Write, Description("The HeaderMatchesMessageHeader parameter specifies the name of header field in the message header when searching for the text patterns specified by the HeaderMatchesPatterns parameter.")] String HeaderMatchesMessageHeader;
@@ -120,13 +120,13 @@ class MSFT_EXOTransportRule : OMI_BaseResource
     [Write, Description("The IncidentReportContent parameter specifies the message properties that are included in the incident report that's generated when a message violates a DLP policy. ")] String IncidentReportContent[];
     [Write, Description("The ManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter.")] String ManagerAddresses[];
     [Write, Description("The ManagerForEvaluatedUser parameter specifies a condition that looks for users in the Manager attribute of senders or recipients."), ValueMap{"Recipient","Sender"}, Values{"Recipient","Sender"}] String ManagerForEvaluatedUser;
-    [Write, Description("The MessageContainsDataClassifications parameter specifies a condition that looks for sensitive information types in the body of messages, and in any attachments.")] String MessageContainsDataClassifications[];
+    [Write, Description("DEPRECATED")] String MessageContainsDataClassifications[];
     [Write, Description("The MessageSizeOver parameter specifies a condition that looks for messages larger than the specified size. The size includes the message and all attachments.")] String MessageSizeOver;
     [Write, Description("The MessageTypeMatches parameter specifies a condition that looks for messages of the specified type."), ValueMap{"OOF","AutoForward","Encrypted","Calendaring","PermissionControlled","Voicemail","Signed","ApprovalRequest","ReadReceipt"}, Values{"OOF","AutoForward","Encrypted","Calendaring","PermissionControlled","Voicemail","Signed","ApprovalRequest","ReadReceipt"}] String MessageTypeMatches;
     [Write, Description("The Mode parameter specifies how the rule operates."), ValueMap{"Audit","AuditAndNotify","Enforce"}, Values{"Audit","AuditAndNotify","Enforce"}] String Mode;
     [Write, Description("The ModerateMessageByManager parameter specifies an action that forwards messages for approval to the user that's specified in the sender's Manager attribute.")] Boolean ModerateMessageByManager;
     [Write, Description("The ModerateMessageByUser parameter specifies an action that forwards messages for approval to the specified users.")] String ModerateMessageByUser[];
-    [Write, Description("The NotifySender parameter specifies an action that notifies the sender when messages violate DLP policies."), ValueMap{"NotifyOnly","RejectMessage","RejectUnlessFalsePositiveOverride","RejectUnlessSilentOverride","RejectUnlessExplicitOverride"}, Values{"NotifyOnly","RejectMessage","RejectUnlessFalsePositiveOverride","RejectUnlessSilentOverride","RejectUnlessExplicitOverride"}] String NotifySender;
+    [Write, Description("DEPRECATED"), ValueMap{"NotifyOnly","RejectMessage","RejectUnlessFalsePositiveOverride","RejectUnlessSilentOverride","RejectUnlessExplicitOverride"}, Values{"NotifyOnly","RejectMessage","RejectUnlessFalsePositiveOverride","RejectUnlessSilentOverride","RejectUnlessExplicitOverride"}] String NotifySender;
     [Write, Description("The PrependSubject parameter specifies an action that adds text to add to the beginning of the Subject field of messages.")] String PrependSubject;
     [Write, Description("The Priority parameter specifies a priority value for the rule that determines the order of rule processing.")] String Priority;
     [Write, Description("The Quarantine parameter specifies an action that quarantines messages.")] Boolean Quarantine;

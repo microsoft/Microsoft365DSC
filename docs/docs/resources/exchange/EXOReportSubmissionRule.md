@@ -1,13 +1,15 @@
-﻿# O365AdminAuditLogConfig
+﻿# EXOReportSubmissionRule
 
 ## Parameters
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
-| **Ensure** | Write | String | 'Present' is the only value accepted. | `Present` |
-| **UnifiedAuditLogIngestionEnabled** | Required | String | Determins if Unified Audit Log Ingestion is enabled | `Enabled`, `Disabled` |
-| **Credential** | Write | PSCredential | Credentials of the Global Admin | |
+| **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes'. | `Yes` |
+| **Identity** | Write | String | The Identity parameter specifies the report submission rule that you want to modify. | |
+| **Comments** | Write | String | The Comments parameter specifies informative comments for the rule, such as what the rule is used for or how it has changed over time. | |
+| **SentTo** | Write | StringArray[] | The SentTo parameter specifies the email address of the reporting mailbox in Exchange Online where user reported messages are sent. | |
+| **Ensure** | Write | String | Specifies if this report submission rule should exist. | `Present`, `Absent` |
+| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
@@ -17,7 +19,7 @@
 
 ## Description
 
-This resource configures Security and Compliance Center Admin Audit Log.
+Create or modify an EXOReportSubmissionRule in your cloud-based organization.
 
 ## Permissions
 
@@ -27,11 +29,11 @@ To authenticate with Microsoft Exchange, this resource required the following pe
 
 #### Roles
 
-- Audit Logs
+- Transport Hygiene, Security Admin, View-Only Configuration, Security Reader
 
 #### Role Groups
 
-- None
+- Organization Management
 
 ## Examples
 
@@ -52,12 +54,14 @@ Configuration Example
 
     node localhost
     {
-        O365AdminAuditLogConfig 'AuditLogConfig'
+        EXOReportSubmissionRule 'ConfigureReportSubmissionRule'
         {
-            IsSingleInstance                = "Yes"
-            UnifiedAuditLogIngestionEnabled = "Enabled"
-            Ensure                          = "Present"
-            Credential                      = $Credscredential
+            IsSingleInstance    = 'Yes'
+            Identity            = "DefaultReportSubmissionRule"
+            Comments            = "This is my default rule"
+            SentTo              = "submission@contoso.com"
+            Ensure              = "Present"
+            Credential          = $Credscredential
         }
     }
 }

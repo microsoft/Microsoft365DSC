@@ -1353,6 +1353,24 @@ function Get-RemoteDomain
         $ResultSize
     )
 }
+function Get-ReportSubmissionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Get-ReportSubmissionRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
 function Get-ResourceConfig
 {
     [CmdletBinding()]
@@ -4331,6 +4349,34 @@ function New-RemoteDomain
         $DomainName
     )
 }
+function New-ReportSubmissionPolicy
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
+function New-ReportSubmissionRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String]
+        $ReportSubmissionPolicy
+    )
+}
 function New-RoleAssignmentPolicy
 {
     [CmdletBinding()]
@@ -6042,6 +6088,28 @@ function Remove-RemoteDomain
         [Parameter()]
         [System.Object]
         $Identity
+    )
+}
+function Remove-ReportSubmissionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-ReportSubmissionRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
     )
 }
 function Remove-RoleAssignmentPolicy
@@ -11354,6 +11422,136 @@ function Set-RemoteDomain
         [Parameter()]
         [System.Boolean]
         $UseSimpleDisplayName
+    )
+}
+function Set-ReportSubmissionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableQuarantineReportingOption,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableCustomNotificationSender,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableReportToMicrosoft,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableThirdPartyAddress,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUserEmailNotification,
+
+        [Parameter()]
+        [System.String]
+        $JunkReviewResultMessage,
+
+        [Parameter()]
+        [System.String]
+        $NotJunkReviewResultMessage,
+
+        [Parameter()]
+        [System.String]
+        $NotificationFooterMessage,
+
+        [Parameter()]
+        [System.String]
+        $NotificationSenderAddress,
+
+        [Parameter()]
+        [System.String]
+        $PhishingReviewResultMessage,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostSubmitMessageEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageTitle,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreSubmitMessageEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageTitle,
+
+        [Parameter()]
+        [System.String[]]
+        $ReportJunkAddresses = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportJunkToCustomizedAddress,
+
+        [Parameter()]
+        [System.String[]]
+        $ReportNotJunkAddresses = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportNotJunkToCustomizedAddress,
+
+        [Parameter()]
+        [System.String[]]
+        $ReportPhishAddresses = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportPhishToCustomizedAddress,
+
+        [Parameter()]
+        [System.String[]]
+        $ThirdPartyReportAddresses = @(),
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
+    )
+}
+function Set-ReportSubmissionRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm
     )
 }
 function Set-ResourceConfig
