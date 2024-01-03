@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* AADConditionalAccessPolicy
+  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+
 # 1.24.103.1
 
 * AADConditionalAccessPolicy
@@ -70,8 +74,6 @@
     FIXES [#4021](https://github.com/microsoft/Microsoft365DSC/issues/4021)
 
 # 1.23.1220.1
-* AADConditionalAccessPolicy
-  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
 * AADEntitlementManagementAccessPackage
   * Retrieve catalog by name instead of id.
 * IntuneDeviceAndAppManagementAssignmentFilter
