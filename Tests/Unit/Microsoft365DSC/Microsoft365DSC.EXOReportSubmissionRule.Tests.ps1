@@ -81,8 +81,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-ReportSubmissionRule' -Exactly 1
+                Set-TargetResource @testParams | Should -Invoke -CommandName 'New-ReportSubmissionRule' -Exactly 1
             }
 
         }
@@ -149,8 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Successfully call the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-ReportSubmissionRule' -Exactly 1
+                Set-TargetResource @testParams | Should -Invoke -CommandName 'Set-ReportSubmissionRule' -Exactly 1
             }
         }
 
@@ -183,8 +181,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should Remove the Policy in the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-ReportSubmissionRule' -Exactly 1
+                Set-TargetResource @testParams | Should -Invoke -CommandName 'Remove-ReportSubmissionRule' -Exactly 1
             }
         }
 
