@@ -2,6 +2,9 @@
 
 # Unreleased
 
+* AADConditionalAccessPolicy
+  * Fix Get-TargetResource when the parameter Id is not present
+    FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
 * EXOInboundConnector
   * Corrected parameter descriptions, so the documentation on microsoft365dsc.com is generated correctly.
 * EXOMailTips
@@ -13,6 +16,9 @@
     FIXES [#3929](https://github.com/microsoft/Microsoft365DSC/issues/3929)
 * IntuneDeviceConfigurationPolicyMacOS
   * Added parameter descriptions for better documentation
+* IntuneSettingCatalogCustomPolicyWindows10
+  * Fix Get-TargetResource when the parameter Id is not present
+    FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
 * SPOTenantSettings
   * Added parameter descriptions for better documentation
 * TeamsChannel
