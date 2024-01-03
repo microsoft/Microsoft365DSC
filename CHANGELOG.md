@@ -11,6 +11,12 @@
   * Added parameter descriptions for better documentation
 * EXOOutboundConnector
   * Corrected parameter descriptions, so the documentation on microsoft365dsc.com is generated correctly.
+* EXOReportSubmissionPolicy
+  * Initial release
+    FIXES [#3690](https://github.com/microsoft/Microsoft365DSC/issues/3690)
+* EXOReportSubmissionRule
+  * Initial release
+    FIXES [#3690](https://github.com/microsoft/Microsoft365DSC/issues/3690)
 * EXOTransportRule
   * Stop supporting DLP-related rules, conditions, and actions (https://techcommunity.microsoft.com/t5/exchange-team-blog/exchange-online-mail-flow-rules-to-stop-supporting-dlp-related/ba-p/3959870)
     FIXES [#3929](https://github.com/microsoft/Microsoft365DSC/issues/3929)
