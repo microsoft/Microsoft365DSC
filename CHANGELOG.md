@@ -1,16 +1,35 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# Unreleased
 
 * AADConditionalAccessPolicy
   * Fix Get-TargetResource when the parameter Id is not present
     FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
+* EXOInboundConnector
+  * Corrected parameter descriptions, so the documentation on microsoft365dsc.com is generated correctly.
+* EXOMailTips
+  * Added parameter descriptions for better documentation
+* EXOOutboundConnector
+  * Corrected parameter descriptions, so the documentation on microsoft365dsc.com is generated correctly.
+* EXOTransportRule
+  * Stop supporting DLP-related rules, conditions, and actions (https://techcommunity.microsoft.com/t5/exchange-team-blog/exchange-online-mail-flow-rules-to-stop-supporting-dlp-related/ba-p/3959870)
+    FIXES [#3929](https://github.com/microsoft/Microsoft365DSC/issues/3929)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Added parameter descriptions for better documentation
 * IntuneSettingCatalogCustomPolicyWindows10
   * Fix Get-TargetResource when the parameter Id is not present
     FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
+* SPOTenantSettings
+  * Added parameter descriptions for better documentation
 * TeamsChannel
   * Add error handling if GroupId of a team is null
     FIXES [#3943](https://github.com/microsoft/Microsoft365DSC/issues/3943)
+* TeamsFeedbackPolicy
+  * Added parameter descriptions for better documentation
+* TeamsMobilityPolicy
+  * Added parameter descriptions for better documentation
+* TeamsNetworkRoamingPolicy
+  * Added parameter descriptions for better documentation
 
 # 1.23.1227.1
 

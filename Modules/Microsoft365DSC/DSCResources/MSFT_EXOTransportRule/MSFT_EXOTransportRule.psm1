@@ -294,7 +294,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ExceptIfHasSenderOverride,
+        $ExceptIfHasSenderOverride, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -327,7 +327,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExceptIfMessageContainsDataClassifications = @(),
+        $ExceptIfMessageContainsDataClassifications = @(), #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -463,7 +463,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $HasSenderOverride,
+        $HasSenderOverride, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -496,7 +496,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $MessageContainsDataClassifications,
+        $MessageContainsDataClassifications, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -523,7 +523,7 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('NotifyOnly', 'RejectMessage', 'RejectUnlessFalsePositiveOverride', 'RejectUnlessSilentOverride', 'RejectUnlessExplicitOverride')]
         [System.String]
-        $NotifySender,
+        $NotifySender, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -861,7 +861,6 @@ function Get-TargetResource
             ExceptIfFromScope                            = $TransportRule.ExceptIfFromScope
             ExceptIfHasClassification                    = $TransportRule.ExceptIfHasClassification
             ExceptIfHasNoClassification                  = $TransportRule.ExceptIfHasNoClassification
-            ExceptIfHasSenderOverride                    = $TransportRule.ExceptIfHasSenderOverride
             ExceptIfHeaderContainsMessageHeader          = $TransportRule.ExceptIfHeaderContainsMessageHeader
             ExceptIfHeaderContainsWords                  = $TransportRule.ExceptIfHeaderContainsWords
             ExceptIfHeaderMatchesMessageHeader           = $TransportRule.ExceptIfHeaderMatchesMessageHeader
@@ -869,7 +868,6 @@ function Get-TargetResource
             ExceptIfManagerAddresses                     = $TransportRule.ExceptIfManagerAddresses
             ExceptIfManagerForEvaluatedUser              = $TransportRule.ExceptIfManagerForEvaluatedUser
             ExceptIfMessageTypeMatches                   = $TransportRule.ExceptIfMessageTypeMatches
-            ExceptIfMessageContainsDataClassifications   = $TransportRule.ExceptIfMessageContainsDataClassifications
             ExceptIfMessageSizeOver                      = $TransportRule.ExceptIfMessageSizeOver
             ExceptIfRecipientADAttributeContainsWords    = $TransportRule.ExceptIfRecipientADAttributeContainsWords
             ExceptIfRecipientADAttributeMatchesPatterns  = $TransportRule.ExceptIfRecipientADAttributeMatchesPatterns
@@ -902,7 +900,6 @@ function Get-TargetResource
             GenerateNotification                         = $TransportRule.GenerateNotification
             HasClassification                            = $TransportRule.HasClassification
             HasNoClassification                          = $TransportRule.HasNoClassification
-            HasSenderOverride                            = $TransportRule.HasSenderOverride
             HeaderContainsMessageHeader                  = $TransportRule.HeaderContainsMessageHeader
             HeaderContainsWords                          = $TransportRule.HeaderContainsWords
             HeaderMatchesMessageHeader                   = $TransportRule.HeaderMatchesMessageHeader
@@ -910,13 +907,11 @@ function Get-TargetResource
             IncidentReportContent                        = $TransportRule.IncidentReportContent
             ManagerAddresses                             = $TransportRule.ManagerAddresses
             ManagerForEvaluatedUser                      = $TransportRule.ManagerForEvaluatedUser
-            MessageContainsDataClassifications           = $MessageContainsDataClassificationsValue
             MessageSizeOver                              = $TransportRule.MessageSizeOver
             MessageTypeMatches                           = $TransportRule.MessageTypeMatches
             Mode                                         = $TransportRule.Mode
             ModerateMessageByManager                     = $TransportRule.ModerateMessageByManager
             ModerateMessageByUser                        = $TransportRule.ModerateMessageByUser
-            NotifySender                                 = $TransportRule.NotifySender
             PrependSubject                               = $TransportRule.PrependSubject
             Priority                                     = $TransportRule.Priority
             Quarantine                                   = $TransportRule.Quarantine
@@ -1279,7 +1274,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ExceptIfHasSenderOverride,
+        $ExceptIfHasSenderOverride, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -1312,7 +1307,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExceptIfMessageContainsDataClassifications = @(),
+        $ExceptIfMessageContainsDataClassifications = @(), #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -1448,7 +1443,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $HasSenderOverride,
+        $HasSenderOverride, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -1481,7 +1476,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $MessageContainsDataClassifications,
+        $MessageContainsDataClassifications, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -1508,7 +1503,7 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('NotifyOnly', 'RejectMessage', 'RejectUnlessFalsePositiveOverride', 'RejectUnlessSilentOverride', 'RejectUnlessExplicitOverride')]
         [System.String]
-        $NotifySender,
+        $NotifySender, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -1748,6 +1743,22 @@ function Set-TargetResource
     $NewTransportRuleParams.Remove('CertificatePath') | Out-Null
     $NewTransportRuleParams.Remove('CertificatePassword') | Out-Null
     $NewTransportRuleParams.Remove('ManagedIdentity') | Out-Null
+
+    # check for deprecated DLP parameters and remove them
+    if ($NewTransportRuleParams.ContainsKey('MessageContainsDataClassifications') `
+        -or $NewTransportRuleParams.ContainsKey('ExceptIfMessageContainsDataClassifications') `
+        -or $NewTransportRuleParams.ContainsKey('HasSenderOverride') `
+        -or $NewTransportRuleParams.ContainsKey('ExceptIfHasSenderOverride') `
+        -or $NewTransportRuleParams.ContainsKey('NotifySender'))
+    {
+        $NewTransportRuleParams.Remove('MessageContainsDataClassifications') | Out-Null
+        $NewTransportRuleParams.Remove('ExceptIfMessageContainsDataClassifications') | Out-Null
+        $NewTransportRuleParams.Remove('HasSenderOverride') | Out-Null
+        $NewTransportRuleParams.Remove('ExceptIfHasSenderOverride') | Out-Null
+        $NewTransportRuleParams.Remove('NotifySender') | Out-Null
+
+        Write-Verbose -Message "DEPRECATED - The DLP parameters (MessageContainsDataClassifications, ExceptIfMessageContainsDataClassifications, ExceptIfHasSenderOverride, HasSenderOverride and NotifySender) are deprecated and will be ignored."
+    }
 
     $SetTransportRuleParams = $NewTransportRuleParams.Clone()
     $SetTransportRuleParams.Add('Identity', $Name)
@@ -2072,7 +2083,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $ExceptIfHasSenderOverride,
+        $ExceptIfHasSenderOverride, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -2105,7 +2116,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $ExceptIfMessageContainsDataClassifications = @(),
+        $ExceptIfMessageContainsDataClassifications = @(), #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -2241,7 +2252,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $HasSenderOverride,
+        $HasSenderOverride, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -2274,7 +2285,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $MessageContainsDataClassifications,
+        $MessageContainsDataClassifications, #DEPRECATED
 
         [Parameter()]
         [System.String]
@@ -2301,7 +2312,7 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('NotifyOnly', 'RejectMessage', 'RejectUnlessFalsePositiveOverride', 'RejectUnlessSilentOverride', 'RejectUnlessExplicitOverride')]
         [System.String]
-        $NotifySender,
+        $NotifySender, #DEPRECATED
 
         [Parameter()]
         [System.String]
