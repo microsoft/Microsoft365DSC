@@ -76,9 +76,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
 
                 Mock -CommandName Get-ReportSubmissionPolicy -MockWith {
-                    return @{
-
-                    }
+                    return $null
                 }
             }
 
@@ -199,15 +197,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'ReportSubmissionPolicy removal.' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure              = 'Absent'
-                    Credential          = $Credential
-                    Identity            = 'DefaultReportSubmissionPolicy'
-                    IsSingleInstance    = 'Yes'
+                    Ensure                  = 'Absent'
+                    Credential              = $Credential
+                    IsSingleInstance        = 'Yes'
+                    EnableReportToMicrosoft = $True
                 }
 
                 Mock -CommandName Get-ReportSubmissionPolicy -MockWith {
                     return @{
-                        Identity = 'DefaultReportSubmissionPolicy'
+                        EnableReportToMicrosoft = $True
                     }
                 }
 
