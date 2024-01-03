@@ -1362,6 +1362,15 @@ function Get-ReportSubmissionPolicy
         $Identity
     )
 }
+function Get-ReportSubmissionRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
 function Get-ResourceConfig
 {
     [CmdletBinding()]
@@ -4347,6 +4356,13 @@ function New-ReportSubmissionPolicy
 
     )
 }
+function New-ReportSubmissionRule
+{
+    [CmdletBinding()]
+    param(
+
+    )
+}
 function New-RoleAssignmentPolicy
 {
     [CmdletBinding()]
@@ -6061,6 +6077,15 @@ function Remove-RemoteDomain
     )
 }
 function Remove-ReportSubmissionPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $Identity
+    )
+}
+function Remove-ReportSubmissionRule
 {
     [CmdletBinding()]
     param(
@@ -11488,6 +11513,23 @@ function Set-ReportSubmissionPolicy
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Confirm
+    )
+}
+function Set-ReportSubmissionRule
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String]
+        $SentTo
     )
 }
 function Set-ResourceConfig

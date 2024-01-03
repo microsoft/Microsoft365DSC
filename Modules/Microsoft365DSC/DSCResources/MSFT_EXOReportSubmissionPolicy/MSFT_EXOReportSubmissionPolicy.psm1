@@ -139,7 +139,7 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of ReportSubmissionPolicy for $($Identity)"
+    Write-Verbose -Message "Getting configuration of ReportSubmissionPolicy"
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -383,7 +383,7 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Setting configuration of ReportSubmissionPolicy for $($Identity)"
+    Write-Verbose -Message "Setting configuration of ReportSubmissionPolicy"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
@@ -404,19 +404,19 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentReportSubmissionPolicy.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating ReportSubmissionPolicy $($Identity)."
+        Write-Verbose -Message "Creating ReportSubmissionPolicy"
 
         New-ReportSubmissionPolicy
         Set-ReportSubmissionPolicy @ReportSubmissionPolicyParams -Confirm:$false
     }
     elseif ($Ensure -eq 'Present' -and $currentReportSubmissionPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Setting ReportSubmissionPolicy $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $ReportSubmissionPolicyParams)"
+        Write-Verbose -Message "Setting ReportSubmissionPolicy with values: $(Convert-M365DscHashtableToString -Hashtable $ReportSubmissionPolicyParams)"
         Set-ReportSubmissionPolicy @ReportSubmissionPolicyParams -Confirm:$false
     }
     elseif ($Ensure -eq 'Absent' -and $currentReportSubmissionPolicy.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing ReportSubmissionPolicy $($Identity)"
+        Write-Verbose -Message "Removing ReportSubmissionPolicy"
         Remove-ReportSubmissionPolicy -Identity "DefaultReportSubmissionPolicy"
     }
 }
@@ -573,7 +573,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of ReportSubmissionPolicy for $($Identity)"
+    Write-Verbose -Message "Testing configuration of ReportSubmissionPolicy"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
