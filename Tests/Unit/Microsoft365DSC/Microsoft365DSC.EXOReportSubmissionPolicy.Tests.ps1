@@ -60,19 +60,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Ensure                                 = 'Present'
                     Credential                             = $Credential
-                    IsSingleInstance                       = 'Yes';
-                    Identity                               = "DefaultReportSubmissionPolicy"
-                    DisableQuarantineReportingOption       = $False;
-                    EnableCustomNotificationSender         = $False;
-                    EnableOrganizationBranding             = $False;
-                    EnableReportToMicrosoft                = $True;
-                    EnableThirdPartyAddress                = $False;
-                    EnableUserEmailNotification            = $False;
-                    PostSubmitMessageEnabled               = $True;
-                    PreSubmitMessageEnabled                = $True;
-                    ReportJunkToCustomizedAddress          = $False;
-                    ReportNotJunkToCustomizedAddress       = $False;
-                    ReportPhishToCustomizedAddress         = $False;
+                    IsSingleInstance                       = 'Yes'
+                    DisableQuarantineReportingOption       = $False
+                    EnableCustomNotificationSender         = $False
+                    EnableOrganizationBranding             = $False
+                    EnableReportToMicrosoft                = $True
+                    EnableThirdPartyAddress                = $False
+                    EnableUserEmailNotification            = $False
+                    PostSubmitMessageEnabled               = $True
+                    PreSubmitMessageEnabled                = $True
+                    ReportJunkToCustomizedAddress          = $False
+                    ReportNotJunkToCustomizedAddress       = $False
+                    ReportPhishToCustomizedAddress         = $False
                 }
 
 
@@ -93,6 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName 'New-ReportSubmissionPolicy' -Exactly 1
             }
 
         }
@@ -102,38 +102,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Ensure                                 = 'Present'
                     Credential                             = $Credential
-                    IsSingleInstance                       = 'Yes';
-                    Identity                               = "DefaultReportSubmissionPolicy"
-                    DisableQuarantineReportingOption       = $False;
-                    EnableCustomNotificationSender         = $False;
-                    EnableOrganizationBranding             = $False;
-                    EnableReportToMicrosoft                = $True;
-                    EnableThirdPartyAddress                = $False;
-                    EnableUserEmailNotification            = $False;
-                    PostSubmitMessageEnabled               = $True;
-                    PreSubmitMessageEnabled                = $True;
-                    ReportJunkToCustomizedAddress          = $False;
-                    ReportNotJunkToCustomizedAddress       = $False;
-                    ReportPhishToCustomizedAddress         = $False;
+                    IsSingleInstance                       = 'Yes'
+                    DisableQuarantineReportingOption       = $False
+                    EnableCustomNotificationSender         = $False
+                    EnableOrganizationBranding             = $False
+                    EnableReportToMicrosoft                = $True
+                    EnableThirdPartyAddress                = $False
+                    EnableUserEmailNotification            = $False
+                    PostSubmitMessageEnabled               = $True
+                    PreSubmitMessageEnabled                = $True
+                    ReportJunkToCustomizedAddress          = $False
+                    ReportNotJunkToCustomizedAddress       = $False
+                    ReportPhishToCustomizedAddress         = $False
                 }
 
                 Mock -CommandName Get-ReportSubmissionPolicy -MockWith {
                     return @{
                         Ensure                                 = 'Present'
                         Credential                             = $Credential
-                        IsSingleInstance                       = 'Yes';
-                        Identity                               = "DefaultReportSubmissionPolicy"
-                        DisableQuarantineReportingOption       = $False;
-                        EnableCustomNotificationSender         = $False;
-                        EnableOrganizationBranding             = $False;
-                        EnableReportToMicrosoft                = $True;
-                        EnableThirdPartyAddress                = $False;
-                        EnableUserEmailNotification            = $False;
-                        PostSubmitMessageEnabled               = $True;
-                        PreSubmitMessageEnabled                = $True;
-                        ReportJunkToCustomizedAddress          = $False;
-                        ReportNotJunkToCustomizedAddress       = $False;
-                        ReportPhishToCustomizedAddress         = $False;
+                        IsSingleInstance                       = 'Yes'
+                        DisableQuarantineReportingOption       = $False
+                        EnableCustomNotificationSender         = $False
+                        EnableOrganizationBranding             = $False
+                        EnableReportToMicrosoft                = $True
+                        EnableThirdPartyAddress                = $False
+                        EnableUserEmailNotification            = $False
+                        PostSubmitMessageEnabled               = $True
+                        PreSubmitMessageEnabled                = $True
+                        ReportJunkToCustomizedAddress          = $False
+                        ReportNotJunkToCustomizedAddress       = $False
+                        ReportPhishToCustomizedAddress         = $False
                     }
                 }
             }
@@ -148,38 +146,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Ensure                                 = 'Present'
                     Credential                             = $Credential
-                    IsSingleInstance                       = 'Yes';
-                    Identity                               = "DefaultReportSubmissionPolicy"
-                    DisableQuarantineReportingOption       = $False;
-                    EnableCustomNotificationSender         = $False;
-                    EnableOrganizationBranding             = $False;
-                    EnableReportToMicrosoft                = $True;
-                    EnableThirdPartyAddress                = $False;
-                    EnableUserEmailNotification            = $False;
-                    PostSubmitMessageEnabled               = $True;
-                    PreSubmitMessageEnabled                = $True;
-                    ReportJunkToCustomizedAddress          = $False;
-                    ReportNotJunkToCustomizedAddress       = $False;
-                    ReportPhishToCustomizedAddress         = $False;
+                    IsSingleInstance                       = 'Yes'
+                    DisableQuarantineReportingOption       = $False
+                    EnableCustomNotificationSender         = $False
+                    EnableOrganizationBranding             = $False
+                    EnableReportToMicrosoft                = $True
+                    EnableThirdPartyAddress                = $False
+                    EnableUserEmailNotification            = $False
+                    PostSubmitMessageEnabled               = $True
+                    PreSubmitMessageEnabled                = $True
+                    ReportJunkToCustomizedAddress          = $False
+                    ReportNotJunkToCustomizedAddress       = $False
+                    ReportPhishToCustomizedAddress         = $False
                 }
 
                 Mock -CommandName Get-ReportSubmissionPolicy -MockWith {
                     return @{
                         Ensure                                 = 'Present'
                         Credential                             = $Credential
-                        IsSingleInstance                       = 'Yes';
-                        Identity                               = "DefaultReportSubmissionPolicy"
-                        DisableQuarantineReportingOption       = $False;
-                        EnableCustomNotificationSender         = $False;
-                        EnableOrganizationBranding             = $False;
-                        EnableReportToMicrosoft                = $False;
-                        EnableThirdPartyAddress                = $False;
-                        EnableUserEmailNotification            = $False;
-                        PostSubmitMessageEnabled               = $False;
-                        PreSubmitMessageEnabled                = $False;
-                        ReportJunkToCustomizedAddress          = $False;
-                        ReportNotJunkToCustomizedAddress       = $False;
-                        ReportPhishToCustomizedAddress         = $False;
+                        IsSingleInstance                       = 'Yes'
+                        DisableQuarantineReportingOption       = $False
+                        EnableCustomNotificationSender         = $False
+                        EnableOrganizationBranding             = $False
+                        EnableReportToMicrosoft                = $False
+                        EnableThirdPartyAddress                = $False
+                        EnableUserEmailNotification            = $False
+                        PostSubmitMessageEnabled               = $False
+                        PreSubmitMessageEnabled                = $False
+                        ReportJunkToCustomizedAddress          = $False
+                        ReportNotJunkToCustomizedAddress       = $False
+                        ReportPhishToCustomizedAddress         = $False
                     }
                 }
 
@@ -196,6 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Successfully call the Set method' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName 'Set-ReportSubmissionPolicy' -Exactly 1
             }
         }
 
@@ -205,7 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure              = 'Absent'
                     Credential          = $Credential
                     Identity            = 'DefaultReportSubmissionPolicy'
-                    IsSingleInstance    = 'Yes';
+                    IsSingleInstance    = 'Yes'
                 }
 
                 Mock -CommandName Get-ReportSubmissionPolicy -MockWith {
@@ -227,6 +224,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the Policy in the Set method' {
                 Set-TargetResource @testParams
+                Should -Invoke -CommandName 'Remove-ReportSubmissionPolicy' -Exactly 1
             }
         }
 
@@ -240,18 +238,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-ReportSubmissionPolicy -MockWith {
                     return @{
-                        Identity                               = "DefaultReportSubmissionPolicy"
-                        DisableQuarantineReportingOption       = $False;
-                        EnableCustomNotificationSender         = $False;
-                        EnableOrganizationBranding             = $False;
-                        EnableReportToMicrosoft                = $True;
-                        EnableThirdPartyAddress                = $False;
-                        EnableUserEmailNotification            = $False;
-                        PostSubmitMessageEnabled               = $True;
-                        PreSubmitMessageEnabled                = $True;
-                        ReportJunkToCustomizedAddress          = $False;
-                        ReportNotJunkToCustomizedAddress       = $False;
-                        ReportPhishToCustomizedAddress         = $False;
+                        DisableQuarantineReportingOption       = $False
+                        EnableCustomNotificationSender         = $False
+                        EnableOrganizationBranding             = $False
+                        EnableReportToMicrosoft                = $True
+                        EnableThirdPartyAddress                = $False
+                        EnableUserEmailNotification            = $False
+                        PostSubmitMessageEnabled               = $True
+                        PreSubmitMessageEnabled                = $True
+                        ReportJunkToCustomizedAddress          = $False
+                        ReportNotJunkToCustomizedAddress       = $False
+                        ReportPhishToCustomizedAddress         = $False
                     }
                 }
             }

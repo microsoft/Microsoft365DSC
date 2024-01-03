@@ -9,10 +9,6 @@ function Get-TargetResource
         [System.String]
         $IsSingleInstance,
 
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
-
         [Parameter()]
         [System.Boolean]
         $DisableQuarantineReportingOption,
@@ -174,19 +170,17 @@ function Get-TargetResource
 
     try
     {
-        $ReportSubmissionPolicies = Get-ReportSubmissionPolicy -ErrorAction Stop
+        $ReportSubmissionPolicy = Get-ReportSubmissionPolicy -ErrorAction Stop
 
-        $ReportSubmissionPolicy = $ReportSubmissionPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $ReportSubmissionPolicy)
         {
-            Write-Verbose -Message "ReportSubmissionPolicy $($Identity) does not exist."
+            Write-Verbose -Message "ReportSubmissionPolicy does not exist."
             return $nullReturn
         }
         else
         {
             $result = @{
                 IsSingleInstance                       = 'Yes'
-                Identity                               = $Identity
                 DisableQuarantineReportingOption       = $ReportSubmissionPolicy.DisableQuarantineReportingOption
                 EnableCustomNotificationSender         = $ReportSubmissionPolicy.EnableCustomNotificationSender
                 EnableOrganizationBranding             = $ReportSubmissionPolicy.EnableOrganizationBranding
@@ -221,7 +215,7 @@ function Get-TargetResource
                 TenantId                               = $TenantId
             }
 
-            Write-Verbose -Message "Found ReportSubmissionPolicy $($Identity)"
+            Write-Verbose -Message "Found ReportSubmissionPolicy"
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
         }
@@ -248,10 +242,6 @@ function Set-TargetResource
         [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
 
         [Parameter()]
         [System.Boolean]
@@ -410,6 +400,7 @@ function Set-TargetResource
     $ReportSubmissionPolicyParams.Remove('CertificatePath') | Out-Null
     $ReportSubmissionPolicyParams.Remove('CertificatePassword') | Out-Null
     $ReportSubmissionPolicyParams.Remove('ManagedIdentity') | Out-Null
+    $ReportSubmissionPolicyParams.Add('Identity', 'DefaultReportSubmissionPolicy') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentReportSubmissionPolicy.Ensure -eq 'Absent')
     {
@@ -426,7 +417,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentReportSubmissionPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing ReportSubmissionPolicy $($Identity)"
-        Remove-ReportSubmissionPolicy -Identity $Identity
+        Remove-ReportSubmissionPolicy -Identity "DefaultReportSubmissionPolicy"
     }
 }
 
@@ -440,10 +431,6 @@ function Test-TargetResource
         [ValidateSet('Yes')]
         [System.String]
         $IsSingleInstance,
-
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $Identity,
 
         [Parameter()]
         [System.Boolean]
@@ -664,8 +651,8 @@ function Export-TargetResource
 
     try
     {
-        [array]$ReportSubmissionPolicies = Get-ReportSubmissionPolicy -ErrorAction Stop
-        if ($ReportSubmissionPolicies.Length -eq 0)
+        $ReportSubmissionPolicy = Get-ReportSubmissionPolicy -ErrorAction Stop
+        if ($ReportSubmissionPolicy.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -674,50 +661,46 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $dscContent = ''
-        $i = 1
-        foreach ($ReportSubmissionPolicy in $ReportSubmissionPolicies)
-        {
-            Write-Host "    |---[$i/$($ReportSubmissionPolicies.length)] $($ReportSubmissionPolicy.Identity)" -NoNewline
 
-            $Params = @{
-                Identity              = $ReportSubmissionPolicy.Identity
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-                CertificatePath       = $CertificatePath
-                IsSingleInstance      = 'Yes'
-            }
+        Write-Host "    |---Export Default ReportSubmissionPolicy" -NoNewline
 
-            $Results = Get-TargetResource @Params
-
-            $keysToRemove = @()
-            foreach ($key in $Results.Keys)
-            {
-                if ([System.String]::IsNullOrEmpty($Results.$key))
-                {
-                    $keysToRemove += $key
-                }
-            }
-            foreach ($key in $keysToRemove)
-            {
-                $Results.Remove($key) | Out-Null
-            }
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
+        $Params = @{
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+            CertificatePath       = $CertificatePath
+            IsSingleInstance      = 'Yes'
         }
+
+        $Results = Get-TargetResource @Params
+
+        $keysToRemove = @()
+        foreach ($key in $Results.Keys)
+        {
+            if ([System.String]::IsNullOrEmpty($Results.$key))
+            {
+                $keysToRemove += $key
+            }
+        }
+        foreach ($key in $keysToRemove)
+        {
+            $Results.Remove($key) | Out-Null
+        }
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -Credential $Credential
+        $dscContent += $currentDSCBlock
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
+
         return $dscContent
     }
     catch

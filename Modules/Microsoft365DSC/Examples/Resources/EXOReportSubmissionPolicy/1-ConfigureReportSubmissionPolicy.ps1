@@ -16,19 +16,18 @@ Configuration Example
     {
         EXOReportSubmissionPolicy 'ConfigureReportSubmissionPolicy'
         {
-            IsSingleInstance                       = 'Yes';
-            Identity                               = "DefaultReportSubmissionPolicy"
-            DisableQuarantineReportingOption       = $False;
-            EnableCustomNotificationSender         = $False;
-            EnableOrganizationBranding             = $False;
-            EnableReportToMicrosoft                = $True;
-            EnableThirdPartyAddress                = $False;
-            EnableUserEmailNotification            = $False;
-            PostSubmitMessageEnabled               = $True;
-            PreSubmitMessageEnabled                = $True;
-            ReportJunkToCustomizedAddress          = $False;
-            ReportNotJunkToCustomizedAddress       = $False;
-            ReportPhishToCustomizedAddress         = $False;
+            IsSingleInstance                       = 'Yes'
+            DisableQuarantineReportingOption       = $False
+            EnableCustomNotificationSender         = $False
+            EnableOrganizationBranding             = $False
+            EnableReportToMicrosoft                = $True
+            EnableThirdPartyAddress                = $False
+            EnableUserEmailNotification            = $False
+            PostSubmitMessageEnabled               = $True
+            PreSubmitMessageEnabled                = $True
+            ReportJunkToCustomizedAddress          = $False
+            ReportNotJunkToCustomizedAddress       = $False
+            ReportPhishToCustomizedAddress         = $False
             Ensure                                 = "Present"
             Credential                             = $Credscredential
         }

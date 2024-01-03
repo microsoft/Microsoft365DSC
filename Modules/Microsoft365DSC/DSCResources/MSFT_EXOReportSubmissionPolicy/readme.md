@@ -2,4 +2,4 @@
 
 ## Description
 
-Create or modify a EXOReportSubmissionPolicy in your cloud-based organization.
+Create or modify an EXOReportSubmissionPolicy in your cloud-based organization.

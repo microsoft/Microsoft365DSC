@@ -3,7 +3,6 @@
 class MSFT_EXOReportSubmissionPolicy : OMI_BaseResource
 {
     [Key, Description("Specifies the resource is a single instance, the value must be 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
-    [Write, Description("The Identity parameter specifies the report submission policy you want to modify. There can be only one policy.")] String Identity;
     [Write, Description("The DisableQuarantineReportingOption parameter allows or prevents users from reporting messages in quarantine.")] Boolean DisableQuarantineReportingOption;
     [Write, Description("The EnableCustomNotificationSender parameter specifies whether a custom sender email address is used for result messages after an admin reviews and marks the reported messages as junk, not junk, or phishing.")] Boolean EnableCustomNotificationSender;
     [Write, Description("The EnableOrganizationBranding parameter specifies whether to show the company logo in the footer of result messages that users receive after an admin reviews and marks the reported messages as junk, not junk, or phishing.")] Boolean EnableOrganizationBranding;
