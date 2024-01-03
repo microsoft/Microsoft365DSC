@@ -224,7 +224,7 @@ function Get-TargetResource
         $MeetingInviteLanguages,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Int32]
         [ValidateRange(-1, 99999)]
         $NewMeetingRecordingExpirationDays,
 
@@ -635,7 +635,7 @@ function Set-TargetResource
         $MeetingInviteLanguages,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Int32]
         [ValidateRange(-1, 99999)]
         $NewMeetingRecordingExpirationDays,
 
@@ -1003,7 +1003,7 @@ function Test-TargetResource
         $MeetingInviteLanguages,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Int32]
         [ValidateRange(-1, 99999)]
         $NewMeetingRecordingExpirationDays,
 

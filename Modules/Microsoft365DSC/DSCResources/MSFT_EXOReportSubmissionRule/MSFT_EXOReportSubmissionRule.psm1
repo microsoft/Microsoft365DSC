@@ -5,35 +5,21 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
+
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [ValidateSet("AvailabilityOnly", "LimitedDetails", "FullDetails")]
         [System.String]
-        $DetailLevel = "AvailabilityOnly",
+        $Comments,
 
         [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
-        [System.String]
-        $PublishDateRangeFrom = "ThreeMonths",
-
-        [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
-        [System.String]
-        $PublishDateRangeTo,
-
-        [Parameter()]
-        [System.Boolean]
-        $PublishEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SearchableUrlEnabled,
-
-        [Parameter()]
-        [System.String]
-        $SharedCalendarSyncStartDate,
+        [System.String[]]
+        $SentTo = @(),
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -69,6 +55,7 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
+    Write-Verbose -Message "Getting configuration of ReportSubmissionRule"
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -92,40 +79,41 @@ function Get-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Getting configuration of Calendar Folder for {$Identity}"
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
+    $nullReturn.IsSingleInstance = 'Yes'
 
     try
     {
-        $folder = Get-MailboxCalendarFolder -Identity $Identity -ErrorAction SilentlyContinue
+        $ReportSubmissionRule = Get-ReportSubmissionRule -ErrorAction Stop
 
-        if ($null -eq $folder)
+        if ($null -eq $ReportSubmissionRule)
         {
+            Write-Verbose -Message "ReportSubmissionRule does not exist."
             return $nullReturn
         }
+        else
+        {
+            $result = @{
+                IsSingleInstance            = 'Yes'
+                Identity                    = $ReportSubmissionRule.Identity
+                Comments                    = $ReportSubmissionRule.Comments
+                SentTo                      = $ReportSubmissionRule.SentTo
+                Credential                  = $Credential
+                Ensure                      = 'Present'
+                ApplicationId               = $ApplicationId
+                CertificateThumbprint       = $CertificateThumbprint
+                CertificatePath             = $CertificatePath
+                CertificatePassword         = $CertificatePassword
+                Managedidentity             = $ManagedIdentity.IsPresent
+                TenantId                    = $TenantId
+            }
 
-        $result = @{
-            Identity                    = $folder.Identity
-            DetailLevel                 = $folder.DetailLevel
-            PublishDateRangeFrom        = $folder.PublishDateRangeFrom
-            PublishDateRangeTo          = $folder.PublishDateRangeTo
-            PublishEnabled              = [Boolean]$folder.PublishEnabled
-            SearchableUrlEnabled        = [Boolean]$folder.SearchableUrlEnabled
-            SharedCalendarSyncStartDate = $folder.SharedCalendarSyncStartDate
-            Ensure                      = 'Present'
-            Credential                  = $Credential
-            ApplicationId               = $ApplicationId
-            CertificateThumbprint       = $CertificateThumbprint
-            CertificatePath             = $CertificatePath
-            CertificatePassword         = $CertificatePassword
-            Managedidentity             = $ManagedIdentity.IsPresent
-            TenantId                    = $TenantId
+            Write-Verbose -Message "Found ReportSubmissionRule"
+            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+            return $result
         }
-
-        Write-Verbose -Message "Found Calendar Folder for {$Identity}"
-        return $result
     }
     catch
     {
@@ -142,38 +130,25 @@ function Get-TargetResource
 function Set-TargetResource
 {
     [CmdletBinding()]
+
     param
     (
+        [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [ValidateSet("AvailabilityOnly", "LimitedDetails", "FullDetails")]
         [System.String]
-        $DetailLevel = "AvailabilityOnly",
+        $Comments,
 
         [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
-        [System.String]
-        $PublishDateRangeFrom = "ThreeMonths",
-
-        [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
-        [System.String]
-        $PublishDateRangeTo,
-
-        [Parameter()]
-        [System.Boolean]
-        $PublishEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SearchableUrlEnabled,
-
-        [Parameter()]
-        [System.String]
-        $SharedCalendarSyncStartDate,
+        [System.String[]]
+        $SentTo = @(),
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -208,7 +183,6 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -220,34 +194,45 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    $currentValues = Get-TargetResource @PSBoundParameters
-
-    Write-Verbose -Message "Setting configuration of Calendar Folder for {$Identity}"
+    Write-Verbose -Message "Setting configuration of ReportSubmissionRule"
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $UpdateParameters = ([Hashtable]$PSBoundParameters).Clone()
-    $UpdateParameters.Remove("Ensure") | Out-Null
-    $UpdateParameters.Remove("Credential") | Out-Null
-    $UpdateParameters.Remove("ApplicationId") | Out-Null
-    $UpdateParameters.Remove("TenantId") | Out-Null
-    $UpdateParameters.Remove("CertificateThumbprint") | Out-Null
-    $UpdateParameters.Remove("ApplicationSecret") | Out-Null
-    $UpdateParameters.Remove("CertificatePath") | Out-Null
-    $UpdateParameters.Remove("CertificatePassword") | Out-Null
-    $UpdateParameters.Remove("ManagedIdentity") | Out-Null
+    $currentReportSubmissionRule = Get-TargetResource @PSBoundParameters
 
-    # The SharedCalendarSyncStartDate needs to be used by itself in a subsequent call.
-    if ($PSBoundParameters.ContainsKey('SharedCalendarSyncStartDate'))
+    $ReportSubmissionRuleParams = [System.Collections.Hashtable]($PSBoundParameters)
+    $ReportSubmissionRuleParams.Remove('Ensure') | Out-Null
+    $ReportSubmissionRuleParams.Remove('IsSingleInstance') | Out-Null
+    $ReportSubmissionRuleParams.Remove('Credential') | Out-Null
+    $ReportSubmissionRuleParams.Remove('ApplicationId') | Out-Null
+    $ReportSubmissionRuleParams.Remove('TenantId') | Out-Null
+    $ReportSubmissionRuleParams.Remove('CertificateThumbprint') | Out-Null
+    $ReportSubmissionRuleParams.Remove('CertificatePath') | Out-Null
+    $ReportSubmissionRuleParams.Remove('CertificatePassword') | Out-Null
+    $ReportSubmissionRuleParams.Remove('ManagedIdentity') | Out-Null
+
+    if ($Ensure -eq 'Present' -and $currentReportSubmissionRule.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Updating the Mailbox Calendar Folder SharedCalendarSyncStartDate property for {$Identity}"
-        Set-MailboxCalendarFolder -Identity $Identity -SharedCalendarSyncStartDate $SharedCalendarSyncStartDate
-        $UpdateParameters.Remove("SharedCalendarSyncStartDate") | Out-Null
+        Write-Verbose -Message "Creating ReportSubmissionRule"
+
+        $ReportSubmissionRuleParams.Add('Name', $Identity) | Out-Null
+        $ReportSubmissionRuleParams.Remove('Identity') | Out-Null
+        # There is only one ReportSubmissionPolicy, so we can hardcode the identity.
+        $ReportSubmissionRuleParams.Add('ReportSubmissionPolicy', 'DefaultReportSubmissionPolicy') | Out-Null
+
+        New-ReportSubmissionRule @ReportSubmissionRuleParams
     }
-    Write-Verbose -Message "Updating the Mailbox Calendar Folder for {$Identity}"
-    Set-MailboxCalendarFolder @UpdateParameters
+    elseif ($Ensure -eq 'Present' -and $currentReportSubmissionRule.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Setting ReportSubmissionRule with values: $(Convert-M365DscHashtableToString -Hashtable $ReportSubmissionRuleParams)"
+        Set-ReportSubmissionRule @ReportSubmissionRuleParams -Confirm:$false
+    }
+    elseif ($Ensure -eq 'Absent' -and $currentReportSubmissionRule.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Removing ReportSubmissionRule"
+        Remove-ReportSubmissionRule -Identity $Identity -Confirm:$false
+    }
 }
 
 function Test-TargetResource
@@ -257,35 +242,21 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
+        [System.String]
+        $IsSingleInstance,
+
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
         [Parameter()]
-        [ValidateSet("AvailabilityOnly", "LimitedDetails", "FullDetails")]
         [System.String]
-        $DetailLevel = "AvailabilityOnly",
+        $Comments,
 
         [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
-        [System.String]
-        $PublishDateRangeFrom = "ThreeMonths",
-
-        [Parameter()]
-        [ValidateSet("OneDay", "ThreeDays", "OneWeek", "OneMonth", "ThreeMonths", "SixMonths", "OneYear")]
-        [System.String]
-        $PublishDateRangeTo,
-
-        [Parameter()]
-        [System.Boolean]
-        $PublishEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SearchableUrlEnabled,
-
-        [Parameter()]
-        [System.String]
-        $SharedCalendarSyncStartDate,
+        [System.String[]]
+        $SentTo = @(),
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -332,7 +303,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Calendar Folder for {$Identity}"
+    Write-Verbose -Message "Testing configuration of ReportSubmissionRule"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -340,14 +311,20 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $DesiredValues = $PSBoundParameters
+    $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
+    $ValuesToCheck.Remove('CertificatePath') | Out-Null
+    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
+    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $DesiredValues `
+        -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $($TestResult)"
 
     return $TestResult
 }
@@ -404,55 +381,56 @@ function Export-TargetResource
 
     try
     {
-        $mailboxes = Get-Mailbox -ResultSize 'Unlimited' -ErrorAction Stop
-
-        if ($null -eq $mailboxes)
+        $ReportSubmissionRule = Get-ReportSubmissionRule -ErrorAction Stop
+        if ($ReportSubmissionRule.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
-            return ''
         }
         else
         {
             Write-Host "`r`n" -NoNewline
         }
+        $dscContent = ''
 
-        $i = 1
-        foreach ($mailbox in $mailboxes)
-        {
-            # Name of calendar folder depends on the language of the mailbox
-            $calendarFolderName = (Get-MailboxFolderStatistics -Identity $($mailbox.UserPrincipalName) -FolderScope Calendar | Where-Object {$_.FolderType -eq 'Calendar'}).Name
-            $folderPath = $mailbox.UserPrincipalName + ':\' + $calendarFolderName
-            Write-Host "    |---[$i/$($mailboxes.Count)] $($folderPath)" -NoNewline
-            $Params = @{
-                Identity              = $folderPath
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-                CertificatePath       = $CertificatePath
-            }
-            $Results = Get-TargetResource @Params
-            if ($Results.SharedCalendarSyncStartDate -eq '01/02/0001 00:00:00')
-            {
-                $Results.Remove('SharedCalendarSyncStartDate') | Out-Null
-            }
+        Write-Host "    |---Export ReportSubmissionRule" -NoNewline
 
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-            $i++
+        $Params = @{
+            Identity              = $ReportSubmissionRule.Identity
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+            CertificatePath       = $CertificatePath
+            IsSingleInstance      = 'Yes'
         }
+
+        $Results = Get-TargetResource @Params
+
+        $keysToRemove = @()
+        foreach ($key in $Results.Keys)
+        {
+            if ([System.String]::IsNullOrEmpty($Results.$key))
+            {
+                $keysToRemove += $key
+            }
+        }
+        foreach ($key in $keysToRemove)
+        {
+            $Results.Remove($key) | Out-Null
+        }
+        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $Results
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $Results `
+            -Credential $Credential
+        $dscContent += $currentDSCBlock
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
 
         return $dscContent
     }
@@ -469,5 +447,4 @@ function Export-TargetResource
         return ''
     }
 }
-
 Export-ModuleMember -Function *-TargetResource

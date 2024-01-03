@@ -1,3 +1,9 @@
+# More information on the properties can be found here:
+# - https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-macosgeneraldeviceconfiguration-create?view=graph-rest-beta
+# - https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta
+# - https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosprivacyaccesscontrolitem?view=graph-rest-beta
+# - https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosappleeventreceiver?view=graph-rest-beta
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -317,7 +323,14 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
+        try
+        {
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction Stop
+        }
+        catch
+        {
+            $getValue = $null
+        }
 
         #region resource generator code
         if ($null -eq $getValue)
@@ -336,7 +349,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
+        Write-Verbose -Message "Found something with id {$($getValue.id)}"
         $results = @{
 
             #region resource generator code
@@ -417,7 +430,7 @@ function Get-TargetResource
             $results.Add('PrivacyAccessControls', $getValue.additionalProperties.privacyAccessControls)
         }
 
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -762,14 +775,10 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-
+    if ($UpdateDelayPolicy.Count -gt 0)
+    {
+        $UpdateDelayPolicy = $UpdateDelayPolicy -join ','
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -791,7 +800,6 @@ function Set-TargetResource
         }#>
 
         $CreateParameters.Remove('Id') | Out-Null
-        $CreateParameters.Remove('Verbose') | Out-Null
 
         foreach ($key in ($CreateParameters.clone()).Keys)
         {
@@ -842,7 +850,6 @@ function Set-TargetResource
         }#>
 
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Verbose') | Out-Null
 
         foreach ($key in ($UpdateParameters.clone()).Keys)
         {

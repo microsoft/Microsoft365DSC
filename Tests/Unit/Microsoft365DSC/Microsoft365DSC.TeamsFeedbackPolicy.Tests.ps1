@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     EnableFeatureSuggestions  = $True
-                    ReceiveSurveysMode        = 'FakeStringValue'
+                    ReceiveSurveysMode        = 'Enabled'
                     AllowEmailCollection      = $True
                     UserInitiatedMode         = 'FakeStringValue'
                     Identity                  = 'FakeStringValue'
@@ -93,7 +93,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     EnableFeatureSuggestions  = $True
-                    ReceiveSurveysMode        = 'FakeStringValue'
+                    ReceiveSurveysMode        = 'Enabled'
                     AllowEmailCollection      = $True
                     UserInitiatedMode         = 'FakeStringValue'
                     Identity                  = 'FakeStringValue'
@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsFeedbackPolicy -MockWith {
                     return @{
                         EnableFeatureSuggestions  = $True
-                        ReceiveSurveysMode        = 'FakeStringValue'
+                        ReceiveSurveysMode        = 'Enabled'
                         AllowEmailCollection      = $True
                         UserInitiatedMode         = 'FakeStringValue'
                         Identity                  = 'FakeStringValue'
@@ -135,7 +135,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     EnableFeatureSuggestions  = $True
-                    ReceiveSurveysMode        = 'FakeStringValue'
+                    ReceiveSurveysMode        = 'Enabled'
                     AllowEmailCollection      = $True
                     UserInitiatedMode         = 'FakeStringValue'
                     Identity                  = 'FakeStringValue'
@@ -148,7 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsFeedbackPolicy -MockWith {
                     return @{
                         EnableFeatureSuggestions  = $True
-                        ReceiveSurveysMode        = 'FakeStringValue'
+                        ReceiveSurveysMode        = 'Enabled'
                         AllowEmailCollection      = $True
                         UserInitiatedMode         = 'FakeStringValue'
                         Identity                  = 'FakeStringValue'
@@ -167,7 +167,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     EnableFeatureSuggestions  = $True
-                    ReceiveSurveysMode        = 'FakeStringValue'
+                    ReceiveSurveysMode        = 'Enabled'
                     AllowEmailCollection      = $True
                     UserInitiatedMode         = 'FakeStringValue'
                     Identity                  = 'FakeStringValue'
@@ -180,7 +180,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsFeedbackPolicy -MockWith {
                     return @{
                         EnableFeatureSuggestions  = $False
-                        ReceiveSurveysMode        = 'FakeStringValueDrift #Drift'
+                        ReceiveSurveysMode        = 'Disabled'
                         AllowEmailCollection      = $False
                         UserInitiatedMode         = 'FakeStringValueDrift #Drift'
                         Identity                  = 'FakeStringValue'
@@ -215,7 +215,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsFeedbackPolicy -MockWith {
                     return @{
                         EnableFeatureSuggestions  = $True
-                        ReceiveSurveysMode        = 'FakeStringValue'
+                        ReceiveSurveysMode        = 'Enabled'
                         AllowEmailCollection      = $True
                         UserInitiatedMode         = 'FakeStringValue'
                         Identity                  = 'FakeStringValue'
