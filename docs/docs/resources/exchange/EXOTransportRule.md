@@ -74,7 +74,7 @@
 | **ExceptIfFromScope** | Write | String | The ExceptIfFromScope parameter specifies an exception that looks for the location of message senders. | `InOrganization`, `NotInOrganization` |
 | **ExceptIfHasClassification** | Write | String | The ExceptIfHasClassification parameter specifies an exception that looks for messages with the specified message classification. | |
 | **ExceptIfHasNoClassification** | Write | Boolean | The ExceptIfHasNoClassification parameter specifies an exception that looks for messages with or without any message classifications. | |
-| **ExceptIfHasSenderOverride** | Write | Boolean | The ExceptIfHasSenderOverride parameter specifies an exception that looks for messages where the sender chose to override a DLP policy. | |
+| **ExceptIfHasSenderOverride** | Write | Boolean | DEPRECATED | |
 | **ExceptIfHeaderContainsMessageHeader** | Write | String | The ExceptIfHeaderContainsMessageHeader parameter specifies the name of header field in the message header when searching for the words specified by the ExceptIfHeaderContainsWords parameter. | |
 | **ExceptIfHeaderContainsWords** | Write | StringArray[] | The ExceptIfHeaderContainsWords parameter specifies an exception that looks for words in a header field. | |
 | **ExceptIfHeaderMatchesMessageHeader** | Write | String | The ExceptIfHeaderMatchesMessageHeader parameter specifies the name of header field in the message header when searching for the text patterns specified by the ExceptIfHeaderMatchesPatterns parameter. | |
@@ -82,7 +82,7 @@
 | **ExceptIfManagerAddresses** | Write | StringArray[] | The ExceptIfManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter. | |
 | **ExceptIfManagerForEvaluatedUser** | Write | String | The ExceptIfManagerForEvaluatedUser parameter specifies an exception that looks for users in the Manager attribute of senders or recipients. | |
 | **ExceptIfMessageTypeMatches** | Write | String | The ExceptIfMessageTypeMatches parameter specifies an exception that looks for messages of the specified type. | `OOF`, `AutoForward`, `Encrypted`, `Calendaring`, `PermissionControlled`, `Voicemail`, `Signed`, `ApprovalRequest`, `ReadReceipt` |
-| **ExceptIfMessageContainsDataClassifications** | Write | StringArray[] | The ExceptIfMessageContainsDataClassifications parameter specifies an exception that looks for sensitive information types in the body of messages, and in any attachments. | |
+| **ExceptIfMessageContainsDataClassifications** | Write | StringArray[] | DEPRECATED | |
 | **ExceptIfMessageSizeOver** | Write | String | The ExceptIfMessageSizeOver parameter specifies an exception that looks for messages larger than the specified size.  | |
 | **ExceptIfRecipientADAttributeContainsWords** | Write | StringArray[] | The ExceptIfRecipientADAttributeContainsWords parameter specifies an exception that looks for words in the Active Directory attributes of recipients. | |
 | **ExceptIfRecipientADAttributeMatchesPatterns** | Write | StringArray[] | The ExceptIfRecipientADAttributeMatchesPatterns parameter specifies an exception that looks for text patterns in the Active Directory attributes of recipients by using regular expressions. | |
@@ -115,7 +115,7 @@
 | **GenerateNotification** | Write | String | The GenerateNotification parameter specifies an action that sends a notification message to recipients. | |
 | **HasClassification** | Write | String | The HasClassification parameter specifies a condition that looks for messages with the specified message classification. | |
 | **HasNoClassification** | Write | Boolean | The HasNoClassification parameter specifies a condition that looks for messages with or without any message classifications. | |
-| **HasSenderOverride** | Write | Boolean | The HasSenderOverride parameter specifies a condition that looks for messages where the sender chose to override a DLP policy. | |
+| **HasSenderOverride** | Write | Boolean | DEPRECATED | |
 | **HeaderContainsMessageHeader** | Write | String | The HeaderContainsMessageHeader parameter specifies the name of header field in the message header when searching for the words specified by the HeaderContainsWords parameter. | |
 | **HeaderContainsWords** | Write | StringArray[] | The HeaderContainsWords parameter specifies a condition that looks for words in a header field. | |
 | **HeaderMatchesMessageHeader** | Write | String | The HeaderMatchesMessageHeader parameter specifies the name of header field in the message header when searching for the text patterns specified by the HeaderMatchesPatterns parameter. | |
@@ -123,13 +123,13 @@
 | **IncidentReportContent** | Write | StringArray[] | The IncidentReportContent parameter specifies the message properties that are included in the incident report that's generated when a message violates a DLP policy.  | |
 | **ManagerAddresses** | Write | StringArray[] | The ManagerAddresses parameter specifies the users (managers) for the ExceptIfManagerForEvaluatedUser parameter. | |
 | **ManagerForEvaluatedUser** | Write | String | The ManagerForEvaluatedUser parameter specifies a condition that looks for users in the Manager attribute of senders or recipients. | `Recipient`, `Sender` |
-| **MessageContainsDataClassifications** | Write | StringArray[] | The MessageContainsDataClassifications parameter specifies a condition that looks for sensitive information types in the body of messages, and in any attachments. | |
+| **MessageContainsDataClassifications** | Write | StringArray[] | DEPRECATED | |
 | **MessageSizeOver** | Write | String | The MessageSizeOver parameter specifies a condition that looks for messages larger than the specified size. The size includes the message and all attachments. | |
 | **MessageTypeMatches** | Write | String | The MessageTypeMatches parameter specifies a condition that looks for messages of the specified type. | `OOF`, `AutoForward`, `Encrypted`, `Calendaring`, `PermissionControlled`, `Voicemail`, `Signed`, `ApprovalRequest`, `ReadReceipt` |
 | **Mode** | Write | String | The Mode parameter specifies how the rule operates. | `Audit`, `AuditAndNotify`, `Enforce` |
 | **ModerateMessageByManager** | Write | Boolean | The ModerateMessageByManager parameter specifies an action that forwards messages for approval to the user that's specified in the sender's Manager attribute. | |
 | **ModerateMessageByUser** | Write | StringArray[] | The ModerateMessageByUser parameter specifies an action that forwards messages for approval to the specified users. | |
-| **NotifySender** | Write | String | The NotifySender parameter specifies an action that notifies the sender when messages violate DLP policies. | `NotifyOnly`, `RejectMessage`, `RejectUnlessFalsePositiveOverride`, `RejectUnlessSilentOverride`, `RejectUnlessExplicitOverride` |
+| **NotifySender** | Write | String | DEPRECATED | `NotifyOnly`, `RejectMessage`, `RejectUnlessFalsePositiveOverride`, `RejectUnlessSilentOverride`, `RejectUnlessExplicitOverride` |
 | **PrependSubject** | Write | String | The PrependSubject parameter specifies an action that adds text to add to the beginning of the Subject field of messages. | |
 | **Priority** | Write | String | The Priority parameter specifies a priority value for the rule that determines the order of rule processing. | |
 | **Quarantine** | Write | Boolean | The Quarantine parameter specifies an action that quarantines messages. | |

@@ -4,13 +4,13 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **UserInitiatedMode** | Write | String | | |
-| **ReceiveSurveysMode** | Write | String | | |
-| **AllowScreenshotCollection** | Write | Boolean | | |
-| **AllowEmailCollection** | Write | Boolean | | |
-| **AllowLogCollection** | Write | Boolean | | |
-| **EnableFeatureSuggestions** | Write | Boolean | | |
-| **Identity** | Key | String | | |
+| **Identity** | Key | String | Specify the name of the Teams Feedback Policy. | |
+| **UserInitiatedMode** | Write | String | Specifies if users are allowed to give feedback. | |
+| **ReceiveSurveysMode** | Write | String | Specifies if users are allowed to receive the survey. | `Enabled`, `Disabled`, `EnabledUserOverride` |
+| **AllowScreenshotCollection** | Write | Boolean | Specifies if Screenshot Collection is enabled or not. | |
+| **AllowEmailCollection** | Write | Boolean | Specifies if Email Collection is enabled or not. | |
+| **AllowLogCollection** | Write | Boolean | Specifies if Log Collection is enabled or not. | |
+| **EnableFeatureSuggestions** | Write | Boolean | Specifies if users are allowed to provide feature suggestions | |
 | **Ensure** | Write | String | Present ensures the instance exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the workload's Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
