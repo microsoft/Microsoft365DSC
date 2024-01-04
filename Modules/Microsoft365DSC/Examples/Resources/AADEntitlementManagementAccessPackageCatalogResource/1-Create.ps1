@@ -12,20 +12,21 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
-            DisplayName         = 'Communication site'
+            DisplayName         = 'Test Resource'
             AddedBy             = 'admin@contoso.onmicrosoft.com'
             AddedOn             = '05/11/2022 16:21:15'
-            CatalogId           = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
-            Description         = 'https://contoso.sharepoint.com/'
+            CatalogId           = 'My Catalog'
+            Description         = 'My Resource'
             IsPendingOnboarding = $False
-            OriginId            = 'https://contoso.sharepoint.com/'
+            OriginId            = "https://$Domain.sharepoint.com/"
             OriginSystem        = 'SharePointOnline'
             ResourceType        = 'SharePoint Online Site'
-            Url                 = 'https://contoso.sharepoint.com/'
+            Url                 = "https://$Domain.sharepoint.com/"
             Ensure              = 'Present'
             Credential          = $Credscredential
         }

@@ -310,9 +310,18 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Assigning resource {$DisplayName} to catalog {$CatalogId}"
-
         $resource = ([Hashtable]$PSBoundParameters).clone()
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            Write-Verbose -Message "Retrieving Catalog by Display Name"
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId)'"
+            if ($catalogInstance)
+            {
+                $CatalogId = $catalogInstance.Id
+            }
+        }
+        Write-Verbose -Message "Assigning resource {$DisplayName} to catalog {$CatalogId}"
 
         $resource.Remove('Id') | Out-Null
         $resource.Remove('CatalogId') | Out-Null
@@ -346,6 +355,7 @@ function Set-TargetResource
             AccessPackageresource = $resource
         }
         #region resource generator code
+        Write-Verbose -Message "Creating with Values: $(Convert-M365DscHashtableToString -Hashtable $resourceRequest)"
         New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
 
         #endregion
