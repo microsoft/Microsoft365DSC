@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SCDLPComplianceRule
+  * Fix type of AccessScope
+    FIXES [#3463](https://github.com/microsoft/Microsoft365DSC/issues/3463)
+
 # 1.24.103.1
 
 * AADConditionalAccessPolicy

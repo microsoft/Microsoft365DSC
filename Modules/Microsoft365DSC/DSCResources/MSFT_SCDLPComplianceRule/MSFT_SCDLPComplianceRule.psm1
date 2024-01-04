@@ -14,7 +14,7 @@ function Get-TargetResource
 
         [Parameter()]
         [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
-        [System.String[]]
+        [System.String]
         $AccessScope,
 
         [Parameter()]
@@ -334,7 +334,7 @@ function Set-TargetResource
 
         [Parameter()]
         [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
-        [System.String[]]
+        [System.String]
         $AccessScope,
 
         [Parameter()]
@@ -644,7 +644,7 @@ function Test-TargetResource
 
         [Parameter()]
         [ValidateSet('InOrganization', 'NotInOrganization', 'None')]
-        [System.String[]]
+        [System.String]
         $AccessScope,
 
         [Parameter()]
