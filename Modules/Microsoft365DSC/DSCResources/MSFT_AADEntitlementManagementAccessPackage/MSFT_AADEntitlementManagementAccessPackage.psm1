@@ -104,10 +104,12 @@ function Get-TargetResource
     {
         $getValue = $null
 
-        #region resource generator code
-        $getValue = Get-MgBetaEntitlementManagementAccessPackage -AccessPackageId $id `
-            -ExpandProperty "accessPackageResourceRoleScopes(`$expand=accessPackageResourceRole,accessPackageResourceScope)" `
-            -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($id))
+        {
+            $getValue = Get-MgBetaEntitlementManagementAccessPackage -AccessPackageId $id `
+                -ExpandProperty "accessPackageResourceRoleScopes(`$expand=accessPackageResourceRole,accessPackageResourceScope)" `
+                -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -121,7 +123,6 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue
             }
         }
-        #endregion
 
         if ($null -eq $getValue)
         {
