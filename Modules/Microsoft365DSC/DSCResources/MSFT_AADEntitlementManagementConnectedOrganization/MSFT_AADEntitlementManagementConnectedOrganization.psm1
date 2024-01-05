@@ -480,6 +480,19 @@ function Set-TargetResource
             -ConnectedOrganizationId $currentInstance.Id
 
         #region External Sponsors
+        if ($currentInstance.ExternalSponsors)
+        {
+            $currentExternalSponsors = @()
+            foreach ($sponsor in $CurrentInstance.ExternalSponsors)
+            {
+                $user = Get-MgUser -UserId $sponsor -ErrorAction SilentlyContinue
+                if ($user)
+                {
+                    $currentExternalSponsors += $user.Id
+                }
+            }
+            $currentInstance.ExternalSponsors = $currentExternalSponsors
+        }
         $sponsorsDifferences = compare-object -ReferenceObject @($ExternalSponsors|select-object) -DifferenceObject @($currentInstance.ExternalSponsors|select-object)
         $sponsorsToAdd=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '<='}).InputObject
         $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
@@ -505,6 +518,19 @@ function Set-TargetResource
         #endregion
 
         #region Internal Sponsors
+        if ($currentInstance.InternalSponsors)
+        {
+            $currentInternalSponsors = @()
+            foreach ($sponsor in $CurrentInstance.InternalSponsors)
+            {
+                $user = Get-MgUser -UserId $sponsor -ErrorAction SilentlyContinue
+                if ($user)
+                {
+                    $currentInternalSponsors += $user.Id
+                }
+            }
+            $currentInstance.InternalSponsors = $currentInternalSponsors
+        }
         $sponsorsDifferences = compare-object -ReferenceObject @($InternalSponsors|select-object) -DifferenceObject @($currentInstance.InternalSponsors|select-object)
         $sponsorsToAdd=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '<='}).InputObject
         $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
