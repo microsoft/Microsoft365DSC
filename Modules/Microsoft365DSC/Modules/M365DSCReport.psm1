@@ -1155,6 +1155,10 @@ function Get-M365DSCResourceKey
         {
             return @('Id')
         }
+        if ($Resource.ResourceName -eq 'IntuneDeviceEnrollmentPlatformRestriction' -and $Resource.Keys.Where({ $_ -like "*Restriction"}))
+        {
+            return @('ResourceInstanceName')
+        }
         if ($Resource.ResourceName -eq 'TeamsChannel' -and -not [System.String]::IsNullOrEmpty($Resource.TeamName))
         {
             # Teams Channel displaynames are not tenant-unique (e.g. "General" is almost in every team), but should be unique per team

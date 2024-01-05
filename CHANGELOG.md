@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCReport
+  * Fix nested change detection for CIMInstances
+  * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
+
 # 1.24.110.1
 
 * AADAdministrativeUnit
