@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
+
+* AADAdministrativeUnit
+  * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
 
 # 1.24.103.1
 
