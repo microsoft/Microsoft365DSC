@@ -103,10 +103,13 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         $getValue = $null
-        $getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
-            -AccessPackageAssignmentPolicyId $id `
-            -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
-            -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($id))
+        {
+            $getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
+                -AccessPackageAssignmentPolicyId $id `
+                -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
+                -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -528,6 +531,30 @@ function Set-TargetResource
             }
             $CreateParameters.CustomExtensionHandlers = $formattedCustomExtensionHandlers
         }
+
+        # Check to see if the AccessPackageId is in GUID form. If not, resolve it by name.
+        if (-not [System.String]::IsNullOrEmpty($AccessPackageId))
+        {
+            $ObjectGuid = [System.Guid]::empty
+            $isGUID = [System.Guid]::TryParse($AccessPackageId, [System.Management.Automation.PSReference]$ObjectGuid)
+            if (-not $isGUID)
+            {
+                # Retrieve by name
+                Write-Verbose -Message "Retrieving Entitlement Management Access Package by Name {$AccessPackageId}"
+                $package = Get-MgBetaEntitlementManagementAccessPackage -Filter "displayName eq '$AccessPackageId'"
+                if ($null -ne $package)
+                {
+                    $AccessPackageId = $package.Id
+                }
+                else
+                {
+                    throw "Could not retrieve the Access Package using identifier {$AccessPackageId}"
+                }
+            }
+            $CreateParameters.AccessPackageId = $AccessPackageId
+        }
+
+        Write-Verbose -Message "Creating with Values: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
         New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -BodyParameter $CreateParameters
     }
