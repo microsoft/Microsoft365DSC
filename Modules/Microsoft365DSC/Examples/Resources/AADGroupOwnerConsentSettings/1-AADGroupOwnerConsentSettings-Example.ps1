@@ -20,7 +20,7 @@ Configuration Example
             EnableGroupSpecificConsent                        = $false
             BlockUserConsentForRiskyApps                      = $true
             EnableAdminConsentRequests                        = $false
-            ConstrainGroupSpecificConsentToMembersOfGroupName = ''      # value is only relevant if EnableGroupSpecificConsent is true. See example 2
+            #ConstrainGroupSpecificConsentToMembersOfGroupName = ''  # value is only relevant if EnableGroupSpecificConsent is true. See example 2
             Ensure                                            = 'Present'
             Credential                                        = $Credscredential
         }
