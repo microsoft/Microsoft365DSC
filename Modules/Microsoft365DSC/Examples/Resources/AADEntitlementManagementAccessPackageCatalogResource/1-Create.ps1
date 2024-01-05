@@ -17,16 +17,14 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
-            DisplayName         = 'Test Resource'
-            AddedBy             = 'admin@contoso.onmicrosoft.com'
-            AddedOn             = '05/11/2022 16:21:15'
+            DisplayName         = 'Human Resources'
             CatalogId           = 'My Catalog'
             Description         = 'My Resource'
-            IsPendingOnboarding = $False
-            OriginId            = "https://$Domain.sharepoint.com/"
+            IsPendingOnboarding = $true
+            OriginId            = "https://$Domain.sharepoint.com/sites/HumanResources"
             OriginSystem        = 'SharePointOnline'
             ResourceType        = 'SharePoint Online Site'
-            Url                 = "https://$Domain.sharepoint.com/"
+            Url                 = "https://$Domain.sharepoint.com/sites/HumanResources"
             Ensure              = 'Present'
             Credential          = $Credscredential
         }
