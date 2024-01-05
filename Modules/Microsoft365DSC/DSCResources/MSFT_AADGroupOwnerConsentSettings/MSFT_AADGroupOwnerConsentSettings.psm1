@@ -6,19 +6,24 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [validateset('Yes')]
-        [System.String]$IsSingleInstance,
+        [System.String]
+        $IsSingleInstance,
 
         [Parameter()]
-        [System.Boolean]$EnableGroupSpecificConsent,
+        [System.Boolean]
+        $EnableGroupSpecificConsent,
 
         [Parameter()]
-        [System.Boolean]$BlockUserConsentForRiskyApps,
+        [System.Boolean]
+        $BlockUserConsentForRiskyApps,
 
         [Parameter()]
-        [System.Boolean]$EnableAdminConsentRequests,
+        [System.Boolean]
+        $EnableAdminConsentRequests,
 
         [Parameter()]
-        [system.string]$ConstrainGroupSpecificConsentToMembersOfGroupName,
+        [system.string]
+        $ConstrainGroupSpecificConsentToMembersOfGroupName,
 
         [Parameter()]
         [System.String]
@@ -153,19 +158,24 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [validateset('Yes')]
-        [system.string]$IsSingleInstance,
+        [system.string]
+        $IsSingleInstance,
 
         [Parameter()]
-        [System.Boolean]$EnableGroupSpecificConsent,
+        [System.Boolean]
+        $EnableGroupSpecificConsent,
 
         [Parameter()]
-        [System.Boolean]$BlockUserConsentForRiskyApps,
+        [System.Boolean]
+        $BlockUserConsentForRiskyApps,
 
         [Parameter()]
-        [System.Boolean]$EnableAdminConsentRequests,
+        [System.Boolean]
+        $EnableAdminConsentRequests,
 
         [Parameter()]
-        [system.string]$ConstrainGroupSpecificConsentToMembersOfGroupName,
+        [system.string]
+        $ConstrainGroupSpecificConsentToMembersOfGroupName,
 
         [Parameter()]
         [System.String]
@@ -281,7 +291,6 @@ function Set-TargetResource
 
         if ($currentInstance.Ensure -eq 'Absent')
         {
-            Write-Verbose -Message "UNEXPECTED: *Creating* the Azure AD Group Consent Setting"
             $BodyParam.Add('TemplateId', $templateSettings.Id)
             $policy = New-MgGroupSetting @BodyParam
         }
@@ -310,19 +319,24 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [validateset('Yes')]
-        [system.string]$IsSingleInstance,
+        [system.string]
+        $IsSingleInstance,
 
         [Parameter()]
-        [System.Boolean]$EnableGroupSpecificConsent,
+        [System.Boolean]
+        $EnableGroupSpecificConsent,
 
         [Parameter()]
-        [System.Boolean]$BlockUserConsentForRiskyApps,
+        [System.Boolean]
+        $BlockUserConsentForRiskyApps,
 
         [Parameter()]
-        [System.Boolean]$EnableAdminConsentRequests,
+        [System.Boolean]
+        $EnableAdminConsentRequests,
 
         [Parameter()]
-        [system.string]$ConstrainGroupSpecificConsentToMembersOfGroupName,
+        [system.string]
+        $ConstrainGroupSpecificConsentToMembersOfGroupName,
 
         [Parameter()]
         [System.String]
