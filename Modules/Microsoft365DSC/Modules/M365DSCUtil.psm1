@@ -4345,7 +4345,7 @@ function Get-M365DSCConfigurationConflict
         .Functionality
         Private
 #>
-function Sync-Parameter
+function Sync-M365DSCParameter
 {
     [Cmdletbinding()]
     param (
@@ -4504,5 +4504,5 @@ Export-ModuleMember -Function @(
     'Update-M365DSCExportAuthenticationResults',
     'Update-M365DSCModule',
     'Write-M365DSCLogEvent',
-    'Sync-Parameter'
+    'Sync-M365DSCParameter'
 )
