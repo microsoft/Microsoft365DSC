@@ -498,14 +498,14 @@ function Set-TargetResource
     # Mail Contact doesn't exist but it should
     if ($Ensure -eq 'Present' -and $currentContact.Ensure -eq 'Absent')
     {
-        $parameters = Sync-Parameter -Command (Get-Command -Name New-MailContact) -Parameters $PSBoundParameters
+        $parameters = Sync-M365DSCParameter -Command (Get-Command -Name New-MailContact) -Parameters $PSBoundParameters
         Write-Verbose -Message "The Mail Contact '$($Name)' does not exist but it should. Creating Mail Contact."
 
         try
         {
             New-MailContact @parameters -ErrorAction Stop
 
-            $parameters = Sync-Parameter -Command (Get-Command -Name Set-MailContact) -Parameters $PSBoundParameters
+            $parameters = Sync-M365DSCParameter -Command (Get-Command -Name Set-MailContact) -Parameters $PSBoundParameters
             $parameters.Identity = $Name
             Set-MailContact @parameters -ErrorAction Stop
         }
@@ -523,7 +523,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentContact.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Mail Contact '$($Name)' already exists. Updating settings"
-        $parameters = Sync-Parameter -Command (Get-Command -Name Set-MailContact) -Parameters $PSBoundParameters
+        $parameters = Sync-M365DSCParameter -Command (Get-Command -Name Set-MailContact) -Parameters $PSBoundParameters
         Write-Verbose -Message "Updating Mail Contact '$($Name)' with values: $(Convert-M365DscHashtableToString -Hashtable $parameters)"
         $parameters.Identity = $Name
         Set-MailContact @parameters

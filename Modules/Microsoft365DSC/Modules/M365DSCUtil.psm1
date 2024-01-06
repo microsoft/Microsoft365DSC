@@ -4340,7 +4340,7 @@ function Get-M365DSCConfigurationConflict
             Path = 'C:\Test'
             DoesNotExist = '123'
         }
-        Sync-Parameter -Command (Get-Command -Name Get-ChildItem) -Parameters $param
+        Sync-M365DSCParameter -Command (Get-Command -Name Get-ChildItem) -Parameters $param
 
         .Functionality
         Private
