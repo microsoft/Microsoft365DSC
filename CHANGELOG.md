@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
+
+* AADConditionalAccessPolicy
+  * Added support for application filters in the conditions.
 
 # 1.24.103.1
 
