@@ -4,6 +4,10 @@
 
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix workaround added on PR #4099 in order to be able to use this resource
+    for deployments
+    FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
 
 # 1.24.103.1
 
@@ -27,15 +31,11 @@
     FIXES [#3929](https://github.com/microsoft/Microsoft365DSC/issues/3929)
 * IntuneDeviceConfigurationPolicyMacOS
   * Added parameter descriptions for better documentation
-  * Fix workaround added on PR #4099 in order to be able to use this resource
-    for deployments
-    FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
 * IntuneSettingCatalogCustomPolicyWindows10
   * Fix Get-TargetResource when the parameter Id is not present
     FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
 * SPOTenantSettings
   * Added parameter descriptions for better documentation
-
 * TeamsChannel
   * Add error handling if GroupId of a team is null
     FIXES [#3943](https://github.com/microsoft/Microsoft365DSC/issues/3943)
