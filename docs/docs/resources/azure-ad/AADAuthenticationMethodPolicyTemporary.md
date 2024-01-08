@@ -105,7 +105,7 @@ Configuration Example
             Id                       = "TemporaryAccessPass";
             IncludeTargets           = @(
                 MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget{
-                    Id = 'DSCGroup'
+                    Id = 'Executives'
                     TargetType = 'group'
                 }
             );
@@ -151,7 +151,7 @@ Configuration Example
             Id                       = "TemporaryAccessPass";
             IncludeTargets           = @(
                 MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget{
-                    Id = 'DSCGroup'
+                    Id = 'Executives'
                     TargetType = 'group'
                 }
             );
