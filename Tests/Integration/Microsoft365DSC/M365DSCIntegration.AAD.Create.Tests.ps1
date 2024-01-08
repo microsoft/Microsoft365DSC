@@ -417,9 +417,9 @@
                     IsHidden                       = $False;
                     IsRoleScopesVisible            = $True;
                 }
-                AADEntitlementManagementAccessPackageAssignmentPolicy 'myAssignmentPolicyWithAccessReviewsSettings'
+                AADEntitlementManagementAccessPackageAssignmentPolicy 'myAssignments'
                 {
-                    AccessPackageId         = "5d05114c-b4d9-4ae7-bda6-4bade48e60f2";
+                    AccessPackageId         = "Integration Package";
                     AccessReviewSettings    = MSFT_MicrosoftGraphassignmentreviewsettings{
                         IsEnabled = $True
                         StartDateTime = '12/17/2022 23:59:59'
@@ -441,25 +441,14 @@
                         IsApprovalRequired = $False
                         IsApprovalRequiredForExtension = $False
                     };
-                    RequestorSettings       = MSFT_MicrosoftGraphrequestorsettings{
-                        AllowedRequestors = @(
-                            MSFT_MicrosoftGraphuserset{
-                                IsBackup = $False
-                                Id = 'e27eb9b9-27c3-462d-8d65-3bcd763b0ed0'
-                                odataType = '#microsoft.graph.connectedOrganizationMembers'
-                            }
-                        )
-                        AcceptRequests = $True
-                        ScopeType = 'SpecificConnectedOrganizationSubjects'
-                    };
                     Ensure                     = "Present"
                     Credential                 = $Credscredential
                 }
                 AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
                 {
-                    DisplayName         = 'General'
+                    DisplayName         = 'My Catalog'
                     CatalogStatus       = 'Published'
-                    CatalogType         = 'ServiceDefault'
+                    CatalogType         = 'UserManaged'
                     Description         = 'Built-in catalog.'
                     IsExternallyVisible = $True
                     Managedidentity     = $False
@@ -468,16 +457,14 @@
                 }
                 AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
                 {
-                    DisplayName         = 'Communication site'
-                    AddedBy             = 'admin@contoso.onmicrosoft.com'
-                    AddedOn             = '05/11/2022 16:21:15'
-                    CatalogId           = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
-                    Description         = 'https://contoso.sharepoint.com/'
-                    IsPendingOnboarding = $False
-                    OriginId            = 'https://contoso.sharepoint.com/'
+                    DisplayName         = 'Human Resources'
+                    CatalogId           = 'My Catalog'
+                    Description         = 'My Resource'
+                    IsPendingOnboarding = $true
+                    OriginId            = "https://$Domain.sharepoint.com/sites/HumanResources"
                     OriginSystem        = 'SharePointOnline'
                     ResourceType        = 'SharePoint Online Site'
-                    Url                 = 'https://contoso.sharepoint.com/'
+                    Url                 = "https://$Domain.sharepoint.com/sites/HumanResources"
                     Ensure              = 'Present'
                     Credential          = $Credscredential
                 }
@@ -485,15 +472,15 @@
                 {
                     Description           = "this is the tenant partner";
                     DisplayName           = "Test Tenant - DSC";
-                    ExternalSponsors      = @("12345678-1234-1234-1234-123456789012");
+                    ExternalSponsors      = @("AdeleV@$Domain");
                     IdentitySources       = @(
                         MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
-                            ExternalTenantId = "12345678-1234-1234-1234-123456789012"
+                            ExternalTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"
                             DisplayName = 'Contoso'
                             odataType = '#microsoft.graph.azureActiveDirectoryTenant'
                         }
                     );
-                    InternalSponsors      = @("12345678-1234-1234-1234-123456789012");
+                    InternalSponsors      = @("AdeleV@$Domain");
                     State                 = "configured";
                     Ensure                = "Present"
                     Credential            = $Credscredential
@@ -514,7 +501,7 @@
                 {
                     DisplayName = "Company Network"
                     IpRanges    = @("2.1.1.1/32", "1.2.2.2/32")
-                    IsTrusted   = $True
+                    IsTrusted   = $False
                     OdataType   = "#microsoft.graph.ipNamedLocation"
                     Ensure      = "Present"
                     Credential  = $Credscredential
@@ -537,7 +524,7 @@
                     DirectoryScopeId     = "/";
                     Ensure               = "Present";
                     IsValidationOnly     = $False;
-                    Principal            = "John.Smith@$OrganizationName";
+                    Principal            = "AdeleV@$Domain";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
                         startDateTime             = '2023-09-01T02:40:44Z'
@@ -548,64 +535,16 @@
                             }
                     };
                 }
-                AADRoleSetting '28b253d8-cde5-471f-a331-fe7320023cdd'
-                {
-                    ActivateApprover                                          = @();
-                    ActivationMaxDuration                                     = "PT8H";
-                    ActivationReqJustification                                = $True;
-                    ActivationReqMFA                                          = $False;
-                    ActivationReqTicket                                       = $False;
-                    ActiveAlertNotificationAdditionalRecipient                = @();
-                    ActiveAlertNotificationDefaultRecipient                   = $True;
-                    ActiveAlertNotificationOnlyCritical                       = $False;
-                    ActiveApproveNotificationAdditionalRecipient              = @();
-                    ActiveApproveNotificationDefaultRecipient                 = $True;
-                    ActiveApproveNotificationOnlyCritical                     = $False;
-                    ActiveAssigneeNotificationAdditionalRecipient             = @();
-                    ActiveAssigneeNotificationDefaultRecipient                = $True;
-                    ActiveAssigneeNotificationOnlyCritical                    = $False;
-                    ApprovaltoActivate                                        = $False;
-                    AssignmentReqJustification                                = $True;
-                    AssignmentReqMFA                                          = $False;
-                    Displayname                                               = "Application Administrator";
-                    ElegibilityAssignmentReqJustification                     = $False;
-                    ElegibilityAssignmentReqMFA                               = $False;
-                    EligibleAlertNotificationAdditionalRecipient              = @();
-                    EligibleAlertNotificationDefaultRecipient                 = $True;
-                    EligibleAlertNotificationOnlyCritical                     = $False;
-                    EligibleApproveNotificationAdditionalRecipient            = @();
-                    EligibleApproveNotificationDefaultRecipient               = $True;
-                    EligibleApproveNotificationOnlyCritical                   = $False;
-                    EligibleAssigneeNotificationAdditionalRecipient           = @();
-                    EligibleAssigneeNotificationDefaultRecipient              = $True;
-                    EligibleAssigneeNotificationOnlyCritical                  = $False;
-                    EligibleAssignmentAlertNotificationAdditionalRecipient    = @();
-                    EligibleAssignmentAlertNotificationDefaultRecipient       = $True;
-                    EligibleAssignmentAlertNotificationOnlyCritical           = $False;
-                    EligibleAssignmentAssigneeNotificationAdditionalRecipient = @();
-                    EligibleAssignmentAssigneeNotificationDefaultRecipient    = $True;
-                    EligibleAssignmentAssigneeNotificationOnlyCritical        = $False;
-                    ExpireActiveAssignment                                    = "P180D";
-                    ExpireEligibleAssignment                                  = "P365D";
-                    PermanentActiveAssignmentisExpirationRequired             = $False;
-                    PermanentEligibleAssignmentisExpirationRequired           = $False;
-                    Credential                                                = $Credscredential
-                    Ensure                                                    = 'Present'
-                }
                 AADServicePrincipal 'AADServicePrincipal'
                 {
-                    AppId                         = "<AppID GUID>"
-                    DisplayName                   = "AADAppName"
+                    AppId                         = 'AppDisplayName'
+                    DisplayName                   = "AppDisplayName"
                     AlternativeNames              = "AlternativeName1","AlternativeName2"
                     AccountEnabled                = $true
                     AppRoleAssignmentRequired     = $false
-                    ErrorUrl                      = ""
-                    Homepage                      = "https://AADAppName.contoso.com"
-                    LogoutUrl                     = "https://AADAppName.contoso.com/logout"
-                    PublisherName                 = "Contoso"
-                    ReplyURLs                     = "https://AADAppName.contoso.com"
-                    SamlMetadataURL               = ""
-                    ServicePrincipalNames         = "<AppID GUID>", "https://AADAppName.contoso.com"
+                    Homepage                      = "https://$Domain/site/Home"
+                    LogoutUrl                     = "https://$Domain/logout"
+                    ReplyURLs                     = "https://$Domain/Reply"
                     ServicePrincipalType          = "Application"
                     Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
                     Ensure                        = "Present"
@@ -622,14 +561,13 @@
                 }
                 AADUser 'ConfigureJohnSMith'
                 {
-                    UserPrincipalName  = "John.Smith@$Organization"
+                    UserPrincipalName  = "John.Smith@$Domain"
                     FirstName          = "John"
                     LastName           = "Smith"
                     DisplayName        = "John J. Smith"
                     City               = "Gatineau"
                     Country            = "Canada"
                     Office             = "Ottawa - Queen"
-                    LicenseAssignment  = @("O365dsc1:ENTERPRISEPREMIUM")
                     UsageLocation      = "US"
                     Ensure             = "Present"
                     Credential         = $Credscredential

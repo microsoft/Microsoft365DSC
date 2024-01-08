@@ -14,15 +14,13 @@ Configuration Example
 
     node localhost
     {
-        AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
+        EXOReportSubmissionRule 'ConfigureReportSubmissionRule'
         {
-            DisplayName         = 'My Catalog'
-            CatalogStatus       = 'Published'
-            CatalogType         = 'UserManaged'
-            Description         = 'Built-in catalog.'
-            IsExternallyVisible = $True
-            Managedidentity     = $False
-            Ensure              = 'Present'
+            IsSingleInstance    = 'Yes'
+            Identity            = "DefaultReportSubmissionRule"
+            Comments            = "This is my default rule"
+            SentTo              = "submission@contoso.com"
+            Ensure              = "Present"
             Credential          = $Credscredential
         }
     }
