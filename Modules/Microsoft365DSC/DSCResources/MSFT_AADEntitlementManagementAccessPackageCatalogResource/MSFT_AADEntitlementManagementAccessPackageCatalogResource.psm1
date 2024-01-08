@@ -111,7 +111,7 @@ function Get-TargetResource
     try
     {
         $getValue = $null
-
+        $CatalogIdValue = $catalogId
         if (-not [System.String]::IsNullOrEmpty($CatalogId))
         {
             $resource = ([Hashtable]$PSBoundParameters).clone()
@@ -120,6 +120,7 @@ function Get-TargetResource
             {
                 $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$catalogId'"
                 $CatalogId = $catalogInstance.Id
+                $CatalogIdValue = $catalogInstance.DisplayName
             }
 
             $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
@@ -171,7 +172,7 @@ function Get-TargetResource
 
         $results = [ordered]@{
             Id                    = $Id
-            CatalogId             = $CatalogId
+            CatalogId             = $CatalogIdValue
             Attributes            = $hashAttributes
             AddedBy               = $getValue.addedBy #Read-Only
             AddedOn               = $getValue.addedOn #Read-Only

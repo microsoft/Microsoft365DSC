@@ -170,17 +170,17 @@ function Get-TargetResource
             #endregion
         }
 
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipType))
+        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipType))
         {
-            $results.Add('MembershipType', $getValue.AdditionalProperties.MembershipType)
+            $results.Add('MembershipType', $getValue.AdditionalProperties.membershipType)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipRule))
+        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRule))
         {
-            $results.Add('MembershipRule', $getValue.AdditionalProperties.MembershipRule)
+            $results.Add('MembershipRule', $getValue.AdditionalProperties.membershipRule)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipRuleProcessingState))
+        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRuleProcessingState))
         {
-            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.MembershipRuleProcessingState)
+            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.membershipRuleProcessingState)
         }
 
         Write-Verbose -Message "AU {$DisplayName} MembershipType {$($results.MembershipType)}"
