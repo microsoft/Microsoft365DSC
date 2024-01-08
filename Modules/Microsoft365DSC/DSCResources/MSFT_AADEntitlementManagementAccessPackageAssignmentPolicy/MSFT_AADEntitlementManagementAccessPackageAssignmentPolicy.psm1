@@ -291,9 +291,18 @@ function Get-TargetResource
         }
         #endregion
 
+        $AccessPackageIdValue = $getValue.AccessPackageId
+        $ObjectGuid = [System.Guid]::empty
+        $isGUID = [System.Guid]::TryParse($AccessPackageIdValue, [System.Management.Automation.PSReference]$ObjectGuid)
+        if ($isGUID)
+        {
+            $accesspackage = Get-MgBetaEntitlementManagementAccessPackage -AccessPackageId $AccessPackageIdValue
+            $AccessPackageIdValue = $accesspackage.DisplayName
+        }
+
         $results = @{
             Id                      = $getValue.Id
-            AccessPackageId         = $getValue.AccessPackageId
+            AccessPackageId         = $AccessPackageIdValue
             AccessReviewSettings    = $formattedAccessReviewSettings
             CanExtend               = $getValue.CanExtend
             CustomExtensionHandlers = $formattedCustomExtensionHandlers
