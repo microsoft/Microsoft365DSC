@@ -18,9 +18,6 @@ Configuration Example
         AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
         {
             AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
-
-                Rules = @(@()
-                )
                 X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
             };
             CertificateUserBindings         = @(
