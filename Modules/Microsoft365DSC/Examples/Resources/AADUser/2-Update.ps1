@@ -12,19 +12,18 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        $Organization = $Credscredential.Username.Split('@')[1]
         AADUser 'ConfigureJohnSMith'
         {
-            UserPrincipalName  = "John.Smith@$Organization"
+            UserPrincipalName  = "John.Smith@$Domain"
             FirstName          = "John"
             LastName           = "Smith"
             DisplayName        = "John J. Smith"
             City               = "Ottawa" # Updated
             Country            = "Canada"
             Office             = "Ottawa - Queen"
-            LicenseAssignment  = @("O365dsc1:ENTERPRISEPREMIUM")
             UsageLocation      = "US"
             Ensure             = "Present"
             Credential         = $Credscredential

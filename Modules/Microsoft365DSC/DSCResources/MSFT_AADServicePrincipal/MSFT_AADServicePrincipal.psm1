@@ -147,8 +147,18 @@ function Get-TargetResource
             }
             else
             {
-                $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'" `
-                                                              -Expand 'AppRoleAssignedTo'
+                $ObjectGuid = [System.Guid]::empty
+                if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+                    $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'" `
+                                                                -Expand 'AppRoleAssignedTo'
+                }
+                else
+                {
+                    $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'" `
+                                                                -Expand 'AppRoleAssignedTo'
+                }
             }
         }
         if ($null -eq $AADServicePrincipal)
@@ -347,7 +357,6 @@ function Set-TargetResource
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('ObjectID') | Out-Null
     $currentParameters.Remove('ApplicationSecret') | Out-Null
-    $currentParameters.Remove('AppId') | Out-Null
 
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
@@ -356,13 +365,27 @@ function Set-TargetResource
         {
             $currentParameters.AppRoleAssignedTo = $AppRoleAssignedToValue
         }
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+            $currentParameters.AppId = $appInstance.AppId
+        }
+
         Write-Verbose -Message 'Creating new Service Principal'
+        Write-Verbose -Message "With Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
         New-MgServicePrincipal @currentParameters
     }
     # ServicePrincipal should exist and will be configured to desired state
-    if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message 'Updating existing Service Principal'
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+            $currentParameters.AppId = $appInstance.AppId
+        }
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
         $currentParameters.Remove('AppRoleAssignedTo') | Out-Null

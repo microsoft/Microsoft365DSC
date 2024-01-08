@@ -16,9 +16,9 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
         {
-            DisplayName         = 'General'
+            DisplayName         = 'My Catalog'
             CatalogStatus       = 'Published'
-            CatalogType         = 'ServiceDefault'
+            CatalogType         = 'UserManaged'
             Description         = 'Built-in catalog.'
             IsExternallyVisible = $True
             Managedidentity     = $False
