@@ -958,7 +958,7 @@ function Set-TargetResource
         {
             $conditions.Applications.Add('IncludeApplications', $IncludeApplications)
         }
-        if ($ExcludeApplications)
+        if ($currentParameters.ContainsKey("ExcludeApplications"))
         {
             $conditions.Applications.Add('ExcludeApplications', $ExcludeApplications)
         }
