@@ -9,6 +9,10 @@
     for deployments
     FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
 
+# UNRELEASED
+* AADConditionalAccessPolicy
+  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+
 # 1.24.103.1
 
 * AADConditionalAccessPolicy
