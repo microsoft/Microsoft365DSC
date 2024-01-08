@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
 

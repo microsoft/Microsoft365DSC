@@ -101,16 +101,17 @@ function Get-TargetResource
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Temporary with DisplayName {$DisplayName}"
+            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Temporary"
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Azure AD Authentication Method Policy Temporary with Id {$Id} and DisplayName {$DisplayName} was found."
+        Write-Verbose -Message "An Azure AD Authentication Method Policy Temporary with Id {$($currentExcludeTargets.id))} was found."
 
         #region resource generator code
         $complexExcludeTargets = @()
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
+            Write-Verbose -Message "Retrieving ExcludeTarget {$currentExcludeTargets}"
             $myExcludeTargets = @{}
             if ($currentExcludeTargets.id -ne 'all_users'){
                 $myExcludeTargetsDisplayName = get-MgGroup -GroupId $currentExcludeTargets.id
@@ -133,6 +134,7 @@ function Get-TargetResource
         $complexincludeTargets = @()
         foreach ($currentincludeTargets in $getValue.AdditionalProperties.includeTargets)
         {
+            Write-Verbose -Message "Retrieving IncludeTarget {$($currentincludeTargets.id)}"
             $myincludeTargets = @{}
             if ($currentIncludeTargets.id -ne 'all_users'){
                 $myIncludeTargetsDisplayName = get-MgGroup -GroupId $currentIncludeTargets.id
@@ -158,6 +160,7 @@ function Get-TargetResource
         }
         #endregion
 
+        Write-Verbose -Message "Get-TargetResource returned values"
         $results = @{
             #region resource generator code
             DefaultLength            = $getValue.AdditionalProperties.defaultLength
@@ -486,6 +489,7 @@ function Test-TargetResource
     $testResult = $true
 
     #Compare Cim instances
+    Write-Verbose -Message "Evaluating keys"
     foreach ($key in $PSBoundParameters.Keys)
     {
         $source = $PSBoundParameters.$key
