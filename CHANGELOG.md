@@ -4,14 +4,11 @@
 
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
+  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
 * IntuneDeviceConfigurationPolicyMacOS
   * Fix workaround added on PR #4099 in order to be able to use this resource
     for deployments
     FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
-
-# UNRELEASED
-* AADConditionalAccessPolicy
-  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
 
 # 1.24.103.1
 
