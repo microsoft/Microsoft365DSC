@@ -19,7 +19,7 @@ Configuration Example
         {
             DisplayName         = 'Human Resources'
             CatalogId           = 'My Catalog'
-            Description         = 'My Resource'
+            Description         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
             IsPendingOnboarding = $false # Updated Property
             OriginId            = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
             OriginSystem        = 'SharePointOnline'
