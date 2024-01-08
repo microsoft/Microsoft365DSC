@@ -2,6 +2,10 @@
 
 # Unreleased
 
+* EXOHostedContentFilterPolicy
+  * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders, BlockSenderDomains if desired state is empty but current state is not empty
+    FIXES[#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
+
 # 1.24.103.1
 
 * AADConditionalAccessPolicy
