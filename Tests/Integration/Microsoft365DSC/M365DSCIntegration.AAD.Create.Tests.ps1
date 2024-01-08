@@ -33,12 +33,12 @@
                     DisplayName               = "AppDisplayName"
                     AvailableToOtherTenants   = $false
                     GroupMembershipClaims     = "0"
-                    Homepage                  = "https://app.contoso.com"
-                    IdentifierUris            = "https://app.contoso.com"
+                    Homepage                  = "https://$Domain"
+                    IdentifierUris            = "https://$Domain"
                     KnownClientApplications   = ""
-                    LogoutURL                 = "https://app.contoso.com/logout"
+                    LogoutURL                 = "https://$Domain/logout"
                     PublicClient              = $false
-                    ReplyURLs                 = "https://app.contoso.com"
+                    ReplyURLs                 = "https://$Domain"
                     Permissions               = @(
                         MSFT_AADApplicationPermission
                         {
@@ -279,7 +279,7 @@
                     Id                       = "TemporaryAccessPass";
                     IncludeTargets           = @(
                         MSFT_AADAuthenticationMethodPolicyTemporaryIncludeTarget{
-                            Id = 'DSCGroup'
+                            Id = 'Executives'
                             TargetType = 'group'
                         }
                     );
@@ -542,9 +542,9 @@
                     AlternativeNames              = "AlternativeName1","AlternativeName2"
                     AccountEnabled                = $true
                     AppRoleAssignmentRequired     = $false
-                    Homepage                      = "https://$Domain/site/Home"
+                    Homepage                      = "https://$Domain"
                     LogoutUrl                     = "https://$Domain/logout"
-                    ReplyURLs                     = "https://$Domain/Reply"
+                    ReplyURLs                     = "https://$Domain"
                     ServicePrincipalType          = "Application"
                     Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
                     Ensure                        = "Present"
