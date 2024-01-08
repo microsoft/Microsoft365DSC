@@ -7,6 +7,10 @@
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
 
+# UNRELEASED
+* AADConditionalAccessPolicy
+  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+
 # 1.24.103.1
 
 * AADConditionalAccessPolicy
