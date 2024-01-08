@@ -305,9 +305,6 @@
                 AADAuthenticationMethodPolicyX509 'AADAuthenticationMethodPolicyX509-X509Certificate'
                 {
                     AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
-        
-                        Rules = @(@()
-                        )
                         X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
                     };
                     CertificateUserBindings         = @(
@@ -474,7 +471,7 @@
                     IdentitySources       = @(
                         MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
                             ExternalTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"
-                            DisplayName = 'Contoso'
+                            DisplayName = 'o365dsc'
                             odataType = '#microsoft.graph.azureActiveDirectoryTenant'
                         }
                     );
