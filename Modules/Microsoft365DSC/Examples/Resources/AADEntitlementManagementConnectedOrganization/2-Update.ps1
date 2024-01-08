@@ -23,7 +23,7 @@ Configuration Example
             IdentitySources       = @(
                 MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
                     ExternalTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"
-                    DisplayName = 'Contoso'
+                    DisplayName = 'o365dsc'
                     odataType = '#microsoft.graph.azureActiveDirectoryTenant'
                 }
             );
