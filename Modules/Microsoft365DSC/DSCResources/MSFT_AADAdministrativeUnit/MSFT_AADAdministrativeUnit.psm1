@@ -543,7 +543,6 @@ function Set-TargetResource
             # ScopedRoleMember-info is added after the AU is created
         }
         $CreateParameters.Remove('ScopedRoleMembers') | Out-Null
-
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -604,8 +603,11 @@ function Set-TargetResource
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
 
         #region resource generator code
-        Update-MgBetaDirectoryAdministrativeUnit @UpdateParameters `
-            -AdministrativeUnitId $currentInstance.Id
+        $jsonParams = ConvertTo-Json $UpdateParameters
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/administrativeUnits/$($currentInstance.Id)"
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $jsonParams
+        <#Update-MgBetaDirectoryAdministrativeUnit @UpdateParameters `
+            -AdministrativeUnitId $currentInstance.Id #>
 
         #endregion
 
@@ -689,7 +691,7 @@ function Set-TargetResource
                 $desiredScopedRoleMembersValue = @()
             }
 
-            # flatten hashtabls for compare
+            # flatten hashtables for compare
             $compareCurrentScopedRoleMembersValue = @()
             foreach ($roleMember in $currentScopedRoleMembersValue)
             {

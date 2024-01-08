@@ -22,9 +22,9 @@ Configuration Example
             AlternativeNames              = "AlternativeName1","AlternativeName2"
             AccountEnabled                = $true
             AppRoleAssignmentRequired     = $false
-            Homepage                      = "https://$Domain/site/Home"
+            Homepage                      = "https://$Domain"
             LogoutUrl                     = "https://$Domain/logout"
-            ReplyURLs                     = "https://$Domain/Reply"
+            ReplyURLs                     = "https://$Domain"
             ServicePrincipalType          = "Application"
             Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
             Ensure                        = "Present"

@@ -2,6 +2,11 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
+* AADConditionalAccessPolicy
+  * Added support for application filters in the conditions.
+  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
 * SCDLPComplianceRule
   * Fix type of AccessScope
     FIXES [#3463](https://github.com/microsoft/Microsoft365DSC/issues/3463)
@@ -51,6 +56,9 @@
 * EXOMailboxCalendarFolder
   * Add support for non-English calendar folder names during export
     FIXES [#4056](https://github.com/microsoft/Microsoft365DSC/issues/4056)
+* EXOMailboxPermission
+  * Ignore SendAs permissions during export
+    FIXES [#3942](https://github.com/microsoft/Microsoft365DSC/issues/3942)
 * EXOTransportRule
   * Fix export of enabled state
     FIXES [#3932](https://github.com/microsoft/Microsoft365DSC/issues/3932)

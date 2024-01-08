@@ -653,6 +653,27 @@ function Set-TargetResource
             $UpdateParameters.CustomExtensionHandlers = $formattedCustomExtensionHandlers
         }
 
+        if (-not [System.String]::IsNullOrEmpty($AccessPackageId))
+        {
+            $ObjectGuid = [System.Guid]::empty
+            $isGUID = [System.Guid]::TryParse($AccessPackageId, [System.Management.Automation.PSReference]$ObjectGuid)
+            if (-not $isGUID)
+            {
+                # Retrieve by name
+                Write-Verbose -Message "Retrieving Entitlement Management Access Package by Name {$AccessPackageId}"
+                $package = Get-MgBetaEntitlementManagementAccessPackage -Filter "displayName eq '$AccessPackageId'"
+                if ($null -ne $package)
+                {
+                    $AccessPackageId = $package.Id
+                }
+                else
+                {
+                    throw "Could not retrieve the Access Package using identifier {$AccessPackageId}"
+                }
+            }
+            $UpdateParameters.AccessPackageId = $AccessPackageId
+        }
+
         #write-verbose ($UpdateParameters|convertto-json -Depth 100)
         Set-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -BodyParameter $UpdateParameters `

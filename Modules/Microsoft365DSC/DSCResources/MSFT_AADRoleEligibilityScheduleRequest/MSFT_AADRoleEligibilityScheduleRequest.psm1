@@ -125,13 +125,16 @@
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
                     Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
+                    $PrincipalTypeValue = $null
                     if ($PrincipalType -eq 'User')
                     {
+                        Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
                         $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
                         $PrincipalTypeValue = 'User'
                     }
                     if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
                     {
+                        Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
                         $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
                         $PrincipalTypeValue = 'Group'
                     }
@@ -146,7 +149,7 @@
                     }
                     Write-Verbose -Message "Found Principal {$PrincipalId}"
                     $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
-                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalId -and $_.RoleDefinitionId -eq $RoleDefinition}
+                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalId -and $_.RoleDefinitionId -eq $RoleDefinition} | Sort-Object -Property CompletedDateTime -Descending
             }
             else
             {
@@ -178,7 +181,8 @@
                 Write-Verbose -Message "Found Role {$RoleDefinitionId}"
 
                 $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
-                $request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
+                [Array]$request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'" | Sort-Object -Property CompletedDateTime -Descending
+`               $request = $request[0]
             }
         }
         else
@@ -202,11 +206,13 @@
         Write-Verbose -Message "Found existing AADRolelLigibilityScheduleRequest"
         if ($PrincipalType -eq 'User')
         {
+            Write-Verbose -Message "Retrieving Principal by UserId {$($request.PrincipalId)}"
             $PrincipalInstance = Get-MgUser -UserId $request.PrincipalId -ErrorAction SilentlyContinue
             $PrincipalTypeValue = 'User'
         }
         if ($null -eq $PrincipalInstance -or $PrincipalType -eq 'Group')
         {
+            Write-Verbose -Message "Retrieving Principal by GroupId {$($request.PrincipalId)}"
             $requestArray = [Array]$request
             if ($requestArray.Count -gt 1)
             {
@@ -307,7 +313,7 @@
     }
     catch
     {
-        Write-Verbose "Error: $($_.ErrorDetails.Message)"
+        Write-Verbose "Error: $_"
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `

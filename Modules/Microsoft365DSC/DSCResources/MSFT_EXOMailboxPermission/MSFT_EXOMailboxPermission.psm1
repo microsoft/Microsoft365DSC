@@ -425,7 +425,7 @@ function Export-TargetResource
                 Write-Host "        |---[$j/$($permissions.Count)] $($permission.Identity)" -NoNewline
                 $Params = @{
                     Identity              = $mailbox.UserPrincipalName
-                    AccessRights          = [Array]$permission.AccessRights.Replace(' ','').Split(',')
+                    AccessRights          = [Array]$permission.AccessRights.Replace(' ','').Replace('SendAs,','').Split(',') # ignore SendAs permissions since they are not supported by *-MailboxPermission cmdlets
                     InheritanceType       = $permission.InheritanceType
                     User                  = $permission.User
                     Credential            = $Credential
