@@ -1,5 +1,7 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
 # UNRELEASED
 * AADConditionalAccessPolicy
   * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]

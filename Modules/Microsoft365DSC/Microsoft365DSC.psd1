@@ -26,7 +26,7 @@
   CompanyName       = 'Microsoft Corporation'
 
   # Copyright statement for this module
-  Copyright         = '(c) 2023 Microsoft Corporation. All rights reserved.'
+  Copyright         = '(c) 2024 Microsoft Corporation. All rights reserved.'
 
   # Description of the functionality provided by this module
   Description       = 'This DSC module is used to configure and monitor Microsoft tenants, including SharePoint Online, Exchange, Teams, etc.'
