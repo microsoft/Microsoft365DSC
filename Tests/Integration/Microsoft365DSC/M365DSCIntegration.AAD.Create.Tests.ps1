@@ -32,7 +32,7 @@
                 {
                     DisplayName               = "AppDisplayName"
                     AvailableToOtherTenants   = $false
-                    GroupMembershipClaims     = "0"
+                    GroupMembershipClaims     = "None"
                     Homepage                  = "https://$Domain"
                     IdentifierUris            = "https://$Domain"
                     KnownClientApplications   = ""
@@ -459,10 +459,10 @@
                     CatalogId           = 'My Catalog'
                     Description         = 'My Resource'
                     IsPendingOnboarding = $true
-                    OriginId            = "https://$Domain.sharepoint.com/sites/HumanResources"
+                    OriginId            = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
                     OriginSystem        = 'SharePointOnline'
                     ResourceType        = 'SharePoint Online Site'
-                    Url                 = "https://$Domain.sharepoint.com/sites/HumanResources"
+                    Url                 = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
                     Ensure              = 'Present'
                     Credential          = $Credscredential
                 }
