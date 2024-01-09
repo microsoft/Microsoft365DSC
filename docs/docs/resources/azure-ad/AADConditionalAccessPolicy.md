@@ -8,6 +8,8 @@
 | **Id** | Write | String | Specifies the GUID for the Policy. | |
 | **State** | Write | String | Specifies the State of the Policy. | `disabled`, `enabled`, `enabledForReportingButNotEnforced` |
 | **IncludeApplications** | Write | StringArray[] | Cloud Apps in scope of the Policy. | |
+| **ApplicationsFilter** | Write | String | Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. | |
+| **ApplicationsFilterMode** | Write | String | Mode to use for the filter. Possible values are include or exclude. | `include`, `exclude` |
 | **ExcludeApplications** | Write | StringArray[] | Cloud Apps out of scope of the Policy. | |
 | **IncludeUserActions** | Write | StringArray[] | User Actions in scope of the Policy. | |
 | **IncludeUsers** | Write | StringArray[] | Users in scope of the Policy. | |

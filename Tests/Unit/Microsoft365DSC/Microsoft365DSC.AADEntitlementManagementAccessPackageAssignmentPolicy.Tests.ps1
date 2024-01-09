@@ -95,7 +95,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                  = 'Present'
                     Credential              = $Credential
                 }
-
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackage -MockWith {
+                    return @{
+                        Id = 'FakeStringValue'
+                    }
+                }
                 Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {
                     return $null
                 }
@@ -381,6 +385,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                     Ensure                  = 'Present'
                     Credential              = $Credential
+                }
+                
+                Mock -CommandName Get-MgBetaEntitlementManagementAccessPackage -MockWith {
+                    return @{
+                        Id = 'FakeStringValue'
+                    }
                 }
 
                 Mock -CommandName Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy -MockWith {

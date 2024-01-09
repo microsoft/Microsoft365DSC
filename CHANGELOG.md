@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADAdministrativeUnit
+  * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
+* AADConditionalAccessPolicy
+  * Added support for application filters in the conditions.
+
+# UNRELEASED
+* AADConditionalAccessPolicy
+  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+
 # 1.24.103.1
 
 * AADConditionalAccessPolicy
@@ -45,6 +56,9 @@
 * EXOMailboxCalendarFolder
   * Add support for non-English calendar folder names during export
     FIXES [#4056](https://github.com/microsoft/Microsoft365DSC/issues/4056)
+* EXOMailboxPermission
+  * Ignore SendAs permissions during export
+    FIXES [#3942](https://github.com/microsoft/Microsoft365DSC/issues/3942)
 * EXOTransportRule
   * Fix export of enabled state
     FIXES [#3932](https://github.com/microsoft/Microsoft365DSC/issues/3932)

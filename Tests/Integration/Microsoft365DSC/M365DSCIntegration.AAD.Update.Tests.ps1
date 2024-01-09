@@ -21,8 +21,7 @@
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
-                    Description                   = 'Test Description'
-                    MembershipRule                = "(user.country -eq `"Canada`")"
+                    MembershipRule                = "(user.country -eq `"US`")" # Updated Property
                     MembershipRuleProcessingState = 'On'
                     MembershipType                = 'Dynamic'
                     Ensure                        = 'Present'
@@ -31,7 +30,7 @@
                 AADApplication 'AADApp1'
                 {
                     DisplayName               = "AppDisplayName"
-                    AvailableToOtherTenants   = $false
+                    AvailableToOtherTenants   = $true # Updated Property
                     GroupMembershipClaims     = "None"
                     Homepage                  = "https://$Domain"
                     IdentifierUris            = "https://$Domain"
@@ -71,12 +70,12 @@
                     Description          = "Attribute set with 420 attributes";
                     Ensure               = "Present";
                     Id                   = "TestAttributeSet";
-                    MaxAttributesPerSet  = 420;
+                    MaxAttributesPerSet  = 300; # Updated Property
                 }
                 AADAuthenticationContextClassReference 'AADAuthenticationContextClassReference-Test'
                 {
                     Credential           = $credsCredential;
-                    Description          = "Context test";
+                    Description          = "Context test Updated"; # Updated Property
                     DisplayName          = "My Context";
                     Ensure               = "Present";
                     Id                   = "c3";
@@ -84,7 +83,7 @@
                 }
                 AADAuthenticationMethodPolicy 'AADAuthenticationMethodPolicy-Authentication Methods Policy'
                 {
-                    Description             = "The tenant-wide policy that controls which authentication methods are allowed in the tenant, authentication method registration requirements, and self-service password reset settings";
+                    Description             = "Updated"; # Updated Property
                     DisplayName             = "Authentication Methods Policy";
                     Ensure                  = "Present";
                     Id                      = "authenticationMethodsPolicy";
@@ -165,7 +164,7 @@
                             TargetType = 'group'
                         }
                     );
-                    IsSoftwareOathEnabled = $False;
+                    IsSoftwareOathEnabled = $True; # Updated Property
                     State                 = "enabled";
                 }
                 AADAuthenticationMethodPolicyEmail 'AADAuthenticationMethodPolicyEmail-Email'
@@ -190,7 +189,7 @@
                             TargetType = 'group'
                         }
                     );
-                    State                        = "enabled";
+                    State                        = "disabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
@@ -220,7 +219,7 @@
                         EnforcementType = 'block'
                         AaGuids = @()
                     };
-                    State                            = "enabled";
+                    State                            = "disabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
@@ -239,7 +238,7 @@
                             TargetType = 'group'
                         }
                     );
-                    State                = "enabled";
+                    State                = "disabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicySoftware 'AADAuthenticationMethodPolicySoftware-SoftwareOath'
                 {
@@ -262,12 +261,12 @@
                             TargetType = 'group'
                         }
                     );
-                    State                = "enabled";
+                    State                = "disabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicyTemporary 'AADAuthenticationMethodPolicyTemporary-TemporaryAccessPass'
                 {
                     Credential               = $Credscredential;
-                    DefaultLength            = 8;
+                    DefaultLength            = 9; # Updated Property
                     DefaultLifetimeInMinutes = 60;
                     Ensure                   = "Present";
                     ExcludeTargets           = @(
@@ -299,7 +298,7 @@
                             TargetType = 'group'
                         }
                     );
-                    IsOfficePhoneAllowed = $False;
+                    IsOfficePhoneAllowed = $True; # Updated Property
                     State                = "disabled";
                 }
                 AADAuthenticationMethodPolicyX509 'AADAuthenticationMethodPolicyX509-X509Certificate'
@@ -339,22 +338,40 @@
                             TargetType = 'group'
                         }
                     );
-                    State                           = "enabled";
+                    State                           = "disabled"; # Updated Property
                 }
                 AADAuthenticationStrengthPolicy 'AADAuthenticationStrengthPolicy-Example'
                 {
-                    AllowedCombinations  = @("windowsHelloForBusiness","fido2","x509CertificateMultiFactor","deviceBasedPush");
+                    AllowedCombinations  = @("windowsHelloForBusiness","fido2","deviceBasedPush"); # Updated Property
                     Description          = "This is an example";
                     DisplayName          = "Example";
                     Ensure               = "Present";
                     Credential           = $Credscredential;
+                }
+                AADAuthorizationPolicy 'AADAuthPol'
+                {
+                    IsSingleInstance                                  = 'Yes'
+                    DisplayName                                       = 'Authorization Policy'
+                    Description                                       = 'Used to manage authorization related settings across the company.'
+                    AllowEmailVerifiedUsersToJoinOrganization         = $true
+                    AllowInvitesFrom                                  = 'everyone'
+                    AllowedToSignUpEmailBasedSubscriptions            = $true
+                    AllowedToUseSspr                                  = $true
+                    BlockMsolPowerShell                               = $false
+                    DefaultUserRoleAllowedToCreateApps                = $true
+                    DefaultUserRoleAllowedToCreateSecurityGroups      = $true
+                    DefaultUserRoleAllowedToReadOtherUsers            = $true
+                    GuestUserRole                                     = 'Guest'
+                    PermissionGrantPolicyIdsAssignedToDefaultUserRole = @()
+                    Ensure                                            = 'Present'
+                    Credential                                        = $Credscredential
                 }
                 AADConditionalAccessPolicy 'Allin-example'
                 {
                     ApplicationEnforcedRestrictionsIsEnabled = $False;
                     BuiltInControls                          = @("mfa");
                     ClientAppTypes                           = @("all");
-                    CloudAppSecurityIsEnabled                = $False;
+                    CloudAppSecurityIsEnabled                = $True; # Updated Porperty
                     Credential                               = $Credscredential;
                     DeviceFilterMode                         = "exclude";
                     DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
@@ -371,11 +388,110 @@
                     SignInFrequencyValue                     = 1;
                     State                                    = "disabled";
                 }
+                AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
+                {
+                    AllowedCloudEndpoints = @("microsoftonline.us");
+                    Credential            = $Credscredential;
+                    DisplayName           = "MyXTAPPolicy";
+                    Ensure                = "Present";
+                    IsSingleInstance      = "Yes";
+                }
+                AADCrossTenantAccessPolicyConfigurationDefault 'AADCrossTenantAccessPolicyConfigurationDefault'
+                {
+                    B2BCollaborationInbound  = MSFT_AADCrossTenantAccessPolicyB2BSetting {
+                        Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                            AccessType = 'allowed'
+                            Targets    = @(
+                                MSFT_AADCrossTenantAccessPolicyTarget{
+                                    Target     = 'AllApplications'
+                                    TargetType = 'application'
+                                }
+                            )
+                        }
+                        UsersAndGroups = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                            AccessType = 'allowed'
+                            Targets    = @(
+                                MSFT_AADCrossTenantAccessPolicyTarget{
+                                    Target     = 'AllUsers'
+                                    TargetType = 'user'
+                                }
+                            )
+                        }
+                    }
+                    B2BCollaborationOutbound = MSFT_AADCrossTenantAccessPolicyB2BSetting {
+                        Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                            AccessType = 'allowed'
+                            Targets    = @(
+                                MSFT_AADCrossTenantAccessPolicyTarget{
+                                    Target     = 'AllApplications'
+                                    TargetType = 'application'
+                                }
+                            )
+                        }
+                        UsersAndGroups = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                            AccessType = 'allowed'
+                            Targets    = @(
+                                MSFT_AADCrossTenantAccessPolicyTarget{
+                                    Target     = 'AllUsers'
+                                    TargetType = 'user'
+                                }
+                            )
+                        }
+                    }
+                    B2BDirectConnectInbound  = MSFT_AADCrossTenantAccessPolicyB2BSetting {
+                        Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                            AccessType = 'blocked'
+                            Targets    = @(
+                                MSFT_AADCrossTenantAccessPolicyTarget{
+                                    Target     = 'AllApplications'
+                                    TargetType = 'application'
+                                }
+                            )
+                        }
+                        UsersAndGroups = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                            AccessType = 'blocked'
+                            Targets    = @(
+                                MSFT_AADCrossTenantAccessPolicyTarget{
+                                    Target     = 'AllUsers'
+                                    TargetType = 'user'
+                                }
+                            )
+                        }
+                    }
+                    B2BDirectConnectOutbound = MSFT_AADCrossTenantAccessPolicyB2BSetting {
+                        Applications = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                            AccessType = 'blocked'
+                            Targets    = @(
+                                MSFT_AADCrossTenantAccessPolicyTarget{
+                                    Target     = 'AllApplications'
+                                    TargetType = 'application'
+                                }
+                            )
+                        }
+                        UsersAndGroups = MSFT_AADCrossTenantAccessPolicyTargetConfiguration{
+                            AccessType = 'blocked'
+                            Targets    = @(
+                                MSFT_AADCrossTenantAccessPolicyTarget{
+                                    Target     = 'AllUsers'
+                                    TargetType = 'user'
+                                }
+                            )
+                        }
+                    }
+                    Credential               = $Credscredential;
+                    Ensure                   = "Present";
+                    InboundTrust             = MSFT_AADCrossTenantAccessPolicyInboundTrust {
+                        IsCompliantDeviceAccepted           = $False
+                        IsHybridAzureADJoinedDeviceAccepted = $False
+                        IsMfaAccepted                       = $False
+                    }
+                    IsSingleInstance                        = "Yes";
+                }
                 AADCrossTenantAccessPolicyConfigurationPartner 'AADCrossTenantAccessPolicyConfigurationPartner'
                 {
                     PartnerTenantId              = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"; # O365DSC.onmicrosoft.com
                     AutomaticUserConsentSettings = MSFT_AADCrossTenantAccessPolicyAutomaticUserConsentSettings {
-                        InboundAllowed           = $True
+                        InboundAllowed           = $False # Updated Property
                         OutboundAllowed          = $True
                     };
                     B2BCollaborationOutbound     = MSFT_AADCrossTenantAccessPolicyB2BSetting {
@@ -409,7 +525,7 @@
                     Description                    = "Integration Tests";
                     DisplayName                    = "Integration Package";
                     Ensure                         = "Present";
-                    IsHidden                       = $False;
+                    IsHidden                       = $True; # Updated Property
                     IsRoleScopesVisible            = $True;
                 }
                 AADEntitlementManagementAccessPackageAssignmentPolicy 'myAssignments'
@@ -429,7 +545,7 @@
                     CanExtend               = $False;
                     Description             = "";
                     DisplayName             = "External tenant";
-                    DurationInDays          = 365;
+                    DurationInDays          = 180; # Updated Property
                     RequestApprovalSettings = MSFT_MicrosoftGraphapprovalsettings{
                         ApprovalMode = 'NoApproval'
                         IsRequestorJustificationRequired = $False
@@ -445,7 +561,7 @@
                     CatalogStatus       = 'Published'
                     CatalogType         = 'UserManaged'
                     Description         = 'Built-in catalog.'
-                    IsExternallyVisible = $True
+                    IsExternallyVisible = $False # Updated Property
                     Managedidentity     = $False
                     Ensure              = 'Present'
                     Credential          = $Credscredential
@@ -455,17 +571,18 @@
                     DisplayName         = 'Human Resources'
                     CatalogId           = 'My Catalog'
                     Description         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
-                    IsPendingOnboarding = $true
+                    IsPendingOnboarding = $false # Updated Property
                     OriginId            = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
                     OriginSystem        = 'SharePointOnline'
                     ResourceType        = 'SharePoint Online Site'
                     Url                 = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+                    Url                 = "https://$Domain.sharepoint.com/sites/HumanResources"
                     Ensure              = 'Present'
                     Credential          = $Credscredential
                 }
                 AADEntitlementManagementConnectedOrganization 'MyConnectedOrganization'
                 {
-                    Description           = "this is the tenant partner";
+                    Description           = "This is the tenant partner - Updated"; # Updated Property
                     DisplayName           = "Test Tenant - DSC";
                     ExternalSponsors      = @("AdeleV@$Domain");
                     IdentitySources       = @(
@@ -480,10 +597,17 @@
                     Ensure                = "Present"
                     Credential            = $Credscredential
                 }
+                AADExternalIdentityPolicy 'AADExternalIdentityPolicy'
+                {
+                    AllowDeletedIdentitiesDataRemoval = $False;
+                    AllowExternalIdentitiesToLeave    = $True;
+                    Credential                        = $credsCredential;
+                    IsSingleInstance                  = "Yes";
+                }
                 AADGroup 'MyGroups'
                 {
                     DisplayName     = "DSCGroup"
-                    Description     = "Microsoft DSC Group"
+                    Description     = "Microsoft DSC Group Updated" # Updated Property
                     SecurityEnabled = $True
                     MailEnabled     = $True
                     GroupTypes      = @("Unified")
@@ -492,10 +616,40 @@
                     Ensure          = "Present"
                     Credential      = $Credscredential
                 }
+                AADGroupLifecyclePolicy 'GroupLifecyclePolicy'
+                {
+                    IsSingleInstance            = "Yes"
+                    AlternateNotificationEmails = @("john.smith@contoso.com")
+                    GroupLifetimeInDays         = 99
+                    ManagedGroupTypes           = "Selected"
+                    Ensure                      = "Present"
+                    Credential                  = $Credscredential
+                }
+                AADGroupsNamingPolicy 'GroupsNamingPolicy'
+                {
+                    IsSingleInstance              = "Yes"
+                    CustomBlockedWordsList        = @("CEO", "President")
+                    PrefixSuffixNamingRequirement = "[Title]Test[Company][GroupName][Office]Redmond"
+                    Ensure                        = "Present"
+                    Credential                    = $Credscredential
+                }
+                AADGroupsSettings 'GeneralGroupsSettings'
+                {
+                    IsSingleInstance              = "Yes"
+                    AllowGuestsToAccessGroups     = $True
+                    AllowGuestsToBeGroupOwner     = $True
+                    AllowToAddGuests              = $True
+                    EnableGroupCreation           = $True
+                    GroupCreationAllowedGroupName = "All Company"
+                    GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage"
+                    UsageGuidelinesUrl            = "https://contoso.com/usage"
+                    Ensure                        = "Present"
+                    Credential                    = $Credscredential
+                }
                 AADNamedLocationPolicy 'CompanyNetwork'
                 {
                     DisplayName = "Company Network"
-                    IpRanges    = @("2.1.1.1/32", "1.2.2.2/32")
+                    IpRanges    = @("2.1.1.1/32") # Updated Property
                     IsTrusted   = $False
                     OdataType   = "#microsoft.graph.ipNamedLocation"
                     Ensure      = "Present"
@@ -506,7 +660,7 @@
                     DisplayName                   = "DSCRole1"
                     Description                   = "DSC created role definition"
                     ResourceScopes                = "/"
-                    IsEnabled                     = $true
+                    IsEnabled                     = $false # Updated Property
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read","microsoft.directory/applicationPolicies/allProperties/update","microsoft.directory/applicationPolicies/basic/update"
                     Version                       = "1.0"
                     Ensure                        = "Present"
@@ -518,7 +672,7 @@
                     Credential           = $Credscredential;
                     DirectoryScopeId     = "/";
                     Ensure               = "Present";
-                    IsValidationOnly     = $False;
+                    IsValidationOnly     = $True; # Updated Property
                     Principal            = "AdeleV@$Domain";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
@@ -530,11 +684,55 @@
                             }
                     };
                 }
+                AADRoleSetting '28b253d8-cde5-471f-a331-fe7320023cdd'
+                {
+                    ActivateApprover                                          = @();
+                    ActivationMaxDuration                                     = "PT8H";
+                    ActivationReqJustification                                = $False; # Updated Property
+                    ActivationReqMFA                                          = $False;
+                    ActivationReqTicket                                       = $False;
+                    ActiveAlertNotificationAdditionalRecipient                = @();
+                    ActiveAlertNotificationDefaultRecipient                   = $True;
+                    ActiveAlertNotificationOnlyCritical                       = $False;
+                    ActiveApproveNotificationAdditionalRecipient              = @();
+                    ActiveApproveNotificationDefaultRecipient                 = $True;
+                    ActiveApproveNotificationOnlyCritical                     = $False;
+                    ActiveAssigneeNotificationAdditionalRecipient             = @();
+                    ActiveAssigneeNotificationDefaultRecipient                = $True;
+                    ActiveAssigneeNotificationOnlyCritical                    = $False;
+                    ApprovaltoActivate                                        = $False;
+                    AssignmentReqJustification                                = $True;
+                    AssignmentReqMFA                                          = $False;
+                    Displayname                                               = "Application Administrator";
+                    ElegibilityAssignmentReqJustification                     = $False;
+                    ElegibilityAssignmentReqMFA                               = $False;
+                    EligibleAlertNotificationAdditionalRecipient              = @();
+                    EligibleAlertNotificationDefaultRecipient                 = $True;
+                    EligibleAlertNotificationOnlyCritical                     = $False;
+                    EligibleApproveNotificationAdditionalRecipient            = @();
+                    EligibleApproveNotificationDefaultRecipient               = $True;
+                    EligibleApproveNotificationOnlyCritical                   = $False;
+                    EligibleAssigneeNotificationAdditionalRecipient           = @();
+                    EligibleAssigneeNotificationDefaultRecipient              = $True;
+                    EligibleAssigneeNotificationOnlyCritical                  = $False;
+                    EligibleAssignmentAlertNotificationAdditionalRecipient    = @();
+                    EligibleAssignmentAlertNotificationDefaultRecipient       = $True;
+                    EligibleAssignmentAlertNotificationOnlyCritical           = $False;
+                    EligibleAssignmentAssigneeNotificationAdditionalRecipient = @();
+                    EligibleAssignmentAssigneeNotificationDefaultRecipient    = $True;
+                    EligibleAssignmentAssigneeNotificationOnlyCritical        = $False;
+                    ExpireActiveAssignment                                    = "P180D";
+                    ExpireEligibleAssignment                                  = "P365D";
+                    PermanentActiveAssignmentisExpirationRequired             = $False;
+                    PermanentEligibleAssignmentisExpirationRequired           = $False;
+                    Credential                                                = $Credscredential
+                    Ensure                                                    = 'Present'
+                }
                 AADServicePrincipal 'AADServicePrincipal'
                 {
                     AppId                         = 'AppDisplayName'
                     DisplayName                   = "AppDisplayName"
-                    AlternativeNames              = "AlternativeName1","AlternativeName2"
+                    AlternativeNames              = "AlternativeName1","AlternativeName3" # Updated Property
                     AccountEnabled                = $true
                     AppRoleAssignmentRequired     = $false
                     Homepage                      = "https://$Domain"
@@ -548,11 +746,28 @@
                 AADSocialIdentityProvider 'AADSocialIdentityProvider-Google'
                 {
                     ClientId             = "Google-OAUTH";
-                    ClientSecret         = "FakeSecret";
+                    ClientSecret         = "FakeSecret-Updated"; # Updated Property
                     Credential           = $credsCredential;
                     DisplayName          = "My Google Provider";
                     Ensure               = "Present";
                     IdentityProviderType = "Google";
+                }
+                AADTenantDetails 'ÇonfigureTenantDetails'
+                {
+                    IsSingleInstance                     = 'Yes'
+                    TechnicalNotificationMails           = "example@contoso.com"
+                    SecurityComplianceNotificationPhones = "+1123456789"
+                    SecurityComplianceNotificationMails  = "example@contoso.com"
+                    MarketingNotificationEmails          = "example@contoso.com"
+                    Credential                           = $credsCredential
+                }
+                AADTokenLifetimePolicy 'CreateTokenLifetimePolicy'
+                {
+                    DisplayName           = "PolicyDisplayName"
+                    Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
+                    IsOrganizationDefault = $false
+                    Ensure                = "Present"
+                    Credential            = $Credscredential
                 }
                 AADUser 'ConfigureJohnSMith'
                 {
@@ -560,7 +775,7 @@
                     FirstName          = "John"
                     LastName           = "Smith"
                     DisplayName        = "John J. Smith"
-                    City               = "Gatineau"
+                    City               = "Ottawa" # Updated
                     Country            = "Canada"
                     Office             = "Ottawa - Queen"
                     UsageLocation      = "US"

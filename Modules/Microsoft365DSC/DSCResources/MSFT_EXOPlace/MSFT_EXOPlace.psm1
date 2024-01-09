@@ -157,7 +157,7 @@ function Get-TargetResource
 
     try
     {
-        $place = Get-Place -Identity $Identity -ErrorAction Stop
+        $place = Get-Place -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $place)
         {
