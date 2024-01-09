@@ -2,12 +2,13 @@
 
 # UNRELEASED
 
+* AADGroupOwnerConsentSettings
+  * Initial release
+    Implements [#4112](https://github.com/microsoft/Microsoft365DSC/issues/4112)
 * AADAdministrativeUnit
   * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
-
-# UNRELEASED
 * AADConditionalAccessPolicy
   * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
 
