@@ -1,6 +1,6 @@
 {
-    "resourceName": "AADGroupConsentSettings",
-    "description": "This resource configures an Azure AD Group Consent Settings.",
+    "resourceName": "AADGroupOwnerConsentSettings",
+    "description": "This resource configures an Azure AD Group Owner Consent Settings.",
     "permissions":    {
     "graph":  {
                   "delegated":  {

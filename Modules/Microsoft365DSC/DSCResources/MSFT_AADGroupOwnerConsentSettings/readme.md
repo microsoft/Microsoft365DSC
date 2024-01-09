@@ -1,6 +1,6 @@
 
-# AADGroupConsentPolicySettings
+# AADGroupOwnerConsentPolicySettings
 
 ## Description
 
-Azure AD Group Consent Settings
+Azure AD Group Owner Consent Settings

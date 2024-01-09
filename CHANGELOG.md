@@ -1,10 +1,5 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
-  * AADGroupOwnerConsentSettings
-    * Initial release
-      Implements [#4112](https://github.com/microsoft/Microsoft365DSC/issues/4112)
-
 # 1.24.103.1
 
 * AADConditionalAccessPolicy
