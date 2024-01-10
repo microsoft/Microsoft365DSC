@@ -19,6 +19,26 @@
 | **OrganizationalUnit** | Write | String | The OrganizationalUnit parameter specifies the location in Active Directory where the new contact is created. | |
 | **SendModerationNotifications** | Write | String | The SendModerationNotifications parameter specifies when moderation notification messages are sent. Valid values are: ALways, Internal, Never | `Always`, `Internal`, `Never` |
 | **UsePreferMessageFormat** | Write | Boolean | The UsePreferMessageFormat specifies whether the message format settings configured for the mail user or mail contact override the global settings configured for the remote domain or configured by the message sender | |
+| **CustomAttribute1** | Write | String | The CustomAttribute1 parameter specifies the value of the CustomAttribute1 | |
+| **CustomAttribute2** | Write | String | The CustomAttribute2 parameter specifies the value of the CustomAttribute2 | |
+| **CustomAttribute3** | Write | String | The CustomAttribute3 parameter specifies the value of the CustomAttribute3 | |
+| **CustomAttribute4** | Write | String | The CustomAttribute4 parameter specifies the value of the CustomAttribute4 | |
+| **CustomAttribute5** | Write | String | The CustomAttribute5 parameter specifies the value of the CustomAttribute5 | |
+| **CustomAttribute6** | Write | String | The CustomAttribute6 parameter specifies the value of the CustomAttribute6 | |
+| **CustomAttribute7** | Write | String | The CustomAttribute7 parameter specifies the value of the CustomAttribute7 | |
+| **CustomAttribute8** | Write | String | The CustomAttribute8 parameter specifies the value of the CustomAttribute8 | |
+| **CustomAttribute9** | Write | String | The CustomAttribute9 parameter specifies the value of the CustomAttribute9 | |
+| **CustomAttribute10** | Write | String | The CustomAttribute10 parameter specifies the value of the CustomAttribute10 | |
+| **CustomAttribute11** | Write | String | The CustomAttribute11 parameter specifies the value of the CustomAttribute11 | |
+| **CustomAttribute12** | Write | String | The CustomAttribute12 parameter specifies the value of the CustomAttribute12 | |
+| **CustomAttribute13** | Write | String | The CustomAttribute13 parameter specifies the value of the CustomAttribute13 | |
+| **CustomAttribute14** | Write | String | The CustomAttribute14 parameter specifies the value of the CustomAttribute14 | |
+| **CustomAttribute15** | Write | String | The CustomAttribute15 parameter specifies the value of the CustomAttribute15 | |
+| **ExtensionCustomAttribute1** | Write | StringArray[] | The ExtensionCustomAttribute1 parameter specifies the value of the ExtensionCustomAttribute1 | |
+| **ExtensionCustomAttribute2** | Write | StringArray[] | The ExtensionCustomAttribute2 parameter specifies the value of the ExtensionCustomAttribute2 | |
+| **ExtensionCustomAttribute3** | Write | StringArray[] | The ExtensionCustomAttribute3 parameter specifies the value of the ExtensionCustomAttribute3 | |
+| **ExtensionCustomAttribute4** | Write | StringArray[] | The ExtensionCustomAttribute4 parameter specifies the value of the ExtensionCustomAttribute4 | |
+| **ExtensionCustomAttribute5** | Write | StringArray[] | The ExtensionCustomAttribute5 parameter specifies the value of the ExtensionCustomAttribute5 | |
 | **Ensure** | Write | String | Specifies if this Contact should exist. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -61,7 +81,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsCredential
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -69,20 +89,22 @@ Configuration Example
     {
         EXOMailContact 'TestMailContact'
         {
-            Alias                       = "TestMailContact";
-            Credential                  = $Credscredential;
-            DisplayName                 = "My Test Contact";
-            Ensure                      = "Present";
-            ExternalEmailAddress        = "SMTP:test@tailspintoys.com";
-            MacAttachmentFormat         = "BinHex";
-            MessageBodyFormat           = "TextAndHtml";
-            MessageFormat               = "Mime";
-            ModeratedBy                 = @();
-            ModerationEnabled           = $False;
-            Name                        = "My Test Contact";
-            OrganizationalUnit          = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$OrganizationName";
-            SendModerationNotifications = "Always";
-            UsePreferMessageFormat      = $True;
+            Alias                       = 'TestMailContact'
+            Credential                  = $Credscredential
+            DisplayName                 = 'My Test Contact'
+            Ensure                      = 'Present'
+            ExternalEmailAddress        = 'SMTP:test@tailspintoys.com'
+            MacAttachmentFormat         = 'BinHex'
+            MessageBodyFormat           = 'TextAndHtml'
+            MessageFormat               = 'Mime'
+            ModeratedBy                 = @()
+            ModerationEnabled           = $false
+            Name                        = 'My Test Contact'
+            OrganizationalUnit          = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$OrganizationName"
+            SendModerationNotifications = 'Always'
+            UsePreferMessageFormat      = $true
+            CustomAttribute1            = 'Custom Value 1'
+            ExtensionCustomAttribute5   = 'Extension Custom Value 1', 'Extension Custom Value 2'
         }
     }
 }

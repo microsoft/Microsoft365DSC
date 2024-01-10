@@ -5,6 +5,8 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Specifies the GUID for the Policy.")] String Id;
     [Write, Description("Specifies the State of the Policy."), ValueMap{"disabled","enabled","enabledForReportingButNotEnforced"}, Values{"disabled","enabled","enabledForReportingButNotEnforced"}] String State;
     [Write, Description("Cloud Apps in scope of the Policy.")] String IncludeApplications[];
+    [Write, Description("Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID.")] String ApplicationsFilter;
+    [Write, Description("Mode to use for the filter. Possible values are include or exclude."), ValueMap{"include","exclude"}, Values{"include","exclude"}] String ApplicationsFilterMode;
     [Write, Description("Cloud Apps out of scope of the Policy.")] String ExcludeApplications[];
     [Write, Description("User Actions in scope of the Policy.")] String IncludeUserActions[];
     [Write, Description("Users in scope of the Policy.")] String IncludeUsers[];

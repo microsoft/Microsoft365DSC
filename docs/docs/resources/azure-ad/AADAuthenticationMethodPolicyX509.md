@@ -63,6 +63,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Id** | Write | String | The object identifier of an Azure AD group. | |
+| **isRegistrationRequired** | Write | Boolean | Determines if the user is enforced to register the authentication method. | |
 | **TargetType** | Write | String | The type of the authentication method target. Possible values are: group and unknownFutureValue. | `group`, `unknownFutureValue` |
 
 
@@ -119,9 +120,6 @@ Configuration Example
         AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
         {
             AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
-
-                Rules = @(@()
-                )
                 X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
             };
             CertificateUserBindings         = @(
@@ -183,9 +181,6 @@ Configuration Example
         AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
         {
             AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
-
-                Rules = @(@()
-                )
                 X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
             };
             CertificateUserBindings         = @(
@@ -220,7 +215,7 @@ Configuration Example
                     TargetType = 'group'
                 }
             );
-            State                           = "disabled"; # Updated Property
+            State                           = "enabled";
         }
     }
 }

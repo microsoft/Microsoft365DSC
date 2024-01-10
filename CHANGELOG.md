@@ -1,5 +1,31 @@
 # Change log for Microsoft365DSC
 
+# 1.24.110.1
+
+* AADAdministrativeUnit
+  * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
+* AADAuthenticationMethodPolicyX509
+  * Added support for the  property for include targets
+* AADConditionalAccessPolicy
+  * Added support for application filters in the conditions.
+  * Implement Fix #3885. Manage Exclude Application.
+    FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+* EXOHostedContentFilterPolicy
+  * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders,
+    BlockSenderDomains if desired state is empty but current state is not empty.
+    FIXES[#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
+* EXOMailContact
+  * Added support for Custom Attributes and Extension Custom Attributes.
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix workaround added on PR #4099 in order to be able to use this resource
+    for deployments
+    FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
+* SCDLPComplianceRule
+  * Fix type of AccessScope
+    FIXES [#3463](https://github.com/microsoft/Microsoft365DSC/issues/3463)
+* TeamsTenantDialPlan
+  * FIXES [#3767](https://github.com/microsoft/Microsoft365DSC/issues/3767)
+
 # 1.24.103.1
 
 * AADConditionalAccessPolicy
@@ -45,6 +71,9 @@
 * EXOMailboxCalendarFolder
   * Add support for non-English calendar folder names during export
     FIXES [#4056](https://github.com/microsoft/Microsoft365DSC/issues/4056)
+* EXOMailboxPermission
+  * Ignore SendAs permissions during export
+    FIXES [#3942](https://github.com/microsoft/Microsoft365DSC/issues/3942)
 * EXOTransportRule
   * Fix export of enabled state
     FIXES [#3932](https://github.com/microsoft/Microsoft365DSC/issues/3932)

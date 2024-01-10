@@ -126,17 +126,9 @@ Configuration Example
                     Id = 'Legal Team'
                     TargetType = 'group'
                 }
-                MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                    Id = 'Paralegals'
-                    TargetType = 'group'
-                }
             );
             FeatureSettings       = MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings{
                 DisplayLocationInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'all_users'
-                        TargetType = 'group'
-                    }
                     IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'all_users'
                         TargetType = 'group'
@@ -144,10 +136,6 @@ Configuration Example
                     State = 'default'
                 }
                 CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'all_users'
-                        TargetType = 'group'
-                    }
                     IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'all_users'
                         TargetType = 'group'
@@ -155,10 +143,6 @@ Configuration Example
                     State = 'default'
                 }
                 DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'all_users'
-                        TargetType = 'group'
-                    }
                     IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'all_users'
                         TargetType = 'group'
@@ -208,20 +192,12 @@ Configuration Example
             Ensure                = "Present";
             ExcludeTargets        = @(
                 MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                    Id = 'Legal Team'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                    Id = 'Paralegals'
+                    Id = 'Finance Team' # Updated Property
                     TargetType = 'group'
                 }
             );
             FeatureSettings       = MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings{
                 DisplayLocationInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'all_users'
-                        TargetType = 'group'
-                    }
                     IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'all_users'
                         TargetType = 'group'
@@ -229,10 +205,6 @@ Configuration Example
                     State = 'default'
                 }
                 CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'all_users'
-                        TargetType = 'group'
-                    }
                     IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'all_users'
                         TargetType = 'group'
@@ -240,10 +212,6 @@ Configuration Example
                     State = 'default'
                 }
                 DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'all_users'
-                        TargetType = 'group'
-                    }
                     IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                         Id = 'all_users'
                         TargetType = 'group'
@@ -262,7 +230,7 @@ Configuration Example
                     TargetType = 'group'
                 }
             );
-            IsSoftwareOathEnabled = $True; # Updated Property
+            IsSoftwareOathEnabled = $False;
             State                 = "enabled";
         }
     }

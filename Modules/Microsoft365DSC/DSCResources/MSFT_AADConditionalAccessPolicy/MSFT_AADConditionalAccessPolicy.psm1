@@ -27,6 +27,15 @@ function Get-TargetResource
         $ExcludeApplications,
 
         [Parameter()]
+        [System.String]
+        $ApplicationsFilter,
+
+        [Parameter()]
+        [ValidateSet("include", "exclude")]
+        [System.String]
+        $ApplicationsFilterMode,
+
+        [Parameter()]
         [System.String[]]
         $IncludeUserActions,
 
@@ -397,7 +406,6 @@ function Get-TargetResource
         }
     }
 
-
     $IncludeRoles = @()
     $ExcludeRoles = @()
     #translate role template guids to role name
@@ -450,7 +458,6 @@ function Get-TargetResource
                 }
             }
         }
-
     }
 
     $IncludeLocations = @()
@@ -600,6 +607,8 @@ function Get-TargetResource
         IncludeApplications                      = [System.String[]](@() + $Policy.Conditions.Applications.IncludeApplications)
         #no translation of Application GUIDs, return empty string array if undefined
         ExcludeApplications                      = [System.String[]](@() + $Policy.Conditions.Applications.ExcludeApplications)
+        ApplicationsFilter                       = $Policy.Conditions.Applications.ApplicationFilter.Rule
+        ApplicationsFilterMode                   = $Policy.Conditions.Applications.ApplicationFilter.Mode
         #no translation of GUIDs, return empty string array if undefined
         IncludeUserActions                       = [System.String[]](@() + $Policy.Conditions.Applications.IncludeUserActions)
         #no translation needed, return empty string array if undefined
@@ -700,6 +709,15 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludeApplications,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationsFilter,
+
+        [Parameter()]
+        [ValidateSet("include", "exclude")]
+        [System.String]
+        $ApplicationsFilterMode,
 
         [Parameter()]
         [System.String[]]
@@ -940,10 +958,19 @@ function Set-TargetResource
         {
             $conditions.Applications.Add('IncludeApplications', $IncludeApplications)
         }
-        if ($ExcludeApplications)
+        if ($currentParameters.ContainsKey("ExcludeApplications"))
         {
             $conditions.Applications.Add('ExcludeApplications', $ExcludeApplications)
         }
+        if ($ApplicationsFilter -and $ApplicationsFilterMode)
+        {
+            $appFilterValue = @{
+                rule = $ApplicationsFilter
+                mode = $ApplicationsFilterMode
+            }
+            $conditions.Applications.Add("ApplicationFilter", $appFilterValue)
+        }
+
         if ($IncludeUserActions)
         {
             $conditions.Applications.Add('IncludeUserActions', $IncludeUserActions)
@@ -1603,6 +1630,15 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludeApplications,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationsFilter,
+
+        [Parameter()]
+        [ValidateSet("include", "exclude")]
+        [System.String]
+        $ApplicationsFilterMode,
 
         [Parameter()]
         [System.String[]]

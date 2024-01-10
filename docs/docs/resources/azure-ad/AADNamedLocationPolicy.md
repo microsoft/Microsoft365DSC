@@ -73,7 +73,7 @@ Configuration Example
         {
             DisplayName = "Company Network"
             IpRanges    = @("2.1.1.1/32", "1.2.2.2/32")
-            IsTrusted   = $True
+            IsTrusted   = $False
             OdataType   = "#microsoft.graph.ipNamedLocation"
             Ensure      = "Present"
             Credential  = $Credscredential
@@ -102,8 +102,8 @@ Configuration Example
         AADNamedLocationPolicy 'CompanyNetwork'
         {
             DisplayName = "Company Network"
-            IpRanges    = @("2.1.1.1/32", "1.2.2.2/32")
-            IsTrusted   = $False # Updated Property
+            IpRanges    = @("2.1.1.1/32") # Updated Property
+            IsTrusted   = $False
             OdataType   = "#microsoft.graph.ipNamedLocation"
             Ensure      = "Present"
             Credential  = $Credscredential

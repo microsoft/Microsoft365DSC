@@ -88,8 +88,10 @@ function Get-TargetResource
     {
         $getValue = $null
 
-        #region resource generator code
-        $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $id -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($id))
+        {
+            $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $id -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -104,7 +106,6 @@ function Get-TargetResource
                 }
             }
         }
-        #endregion
 
         if ($null -eq $getValue)
         {
