@@ -110,20 +110,12 @@
                     Ensure                = "Present";
                     ExcludeTargets        = @(
                         MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                            Id = 'Legal Team'
-                            TargetType = 'group'
-                        }
-                        MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                            Id = 'Paralegals'
+                            Id = 'Finance Team' # Updated Property
                             TargetType = 'group'
                         }
                     );
                     FeatureSettings       = MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings{
                         DisplayLocationInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                            ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = 'all_users'
-                                TargetType = 'group'
-                            }
                             IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                                 Id = 'all_users'
                                 TargetType = 'group'
@@ -131,10 +123,6 @@
                             State = 'default'
                         }
                         CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                            ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = 'all_users'
-                                TargetType = 'group'
-                            }
                             IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                                 Id = 'all_users'
                                 TargetType = 'group'
@@ -142,10 +130,6 @@
                             State = 'default'
                         }
                         DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                            ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                                Id = 'all_users'
-                                TargetType = 'group'
-                            }
                             IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
                                 Id = 'all_users'
                                 TargetType = 'group'
@@ -164,7 +148,7 @@
                             TargetType = 'group'
                         }
                     );
-                    IsSoftwareOathEnabled = $True; # Updated Property
+                    IsSoftwareOathEnabled = $False;
                     State                 = "enabled";
                 }
                 AADAuthenticationMethodPolicyEmail 'AADAuthenticationMethodPolicyEmail-Email'
@@ -338,7 +322,7 @@
                             TargetType = 'group'
                         }
                     );
-                    State                           = "disabled"; # Updated Property
+                    State                           = "enabled";
                 }
                 AADAuthenticationStrengthPolicy 'AADAuthenticationStrengthPolicy-Example'
                 {
@@ -576,7 +560,6 @@
                     OriginSystem        = 'SharePointOnline'
                     ResourceType        = 'SharePoint Online Site'
                     Url                 = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
-                    Url                 = "https://$Domain.sharepoint.com/sites/HumanResources"
                     Ensure              = 'Present'
                     Credential          = $Credscredential
                 }
