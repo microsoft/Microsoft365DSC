@@ -6,10 +6,12 @@
   * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
-
-# UNRELEASED
-* AADConditionalAccessPolicy
-  * FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+  * Implement Fix #3885. Manage Exclude Application.
+    FIXES [#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix workaround added on PR #4099 in order to be able to use this resource
+    for deployments
+    FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
 
 * EXOHostedContentFilterPolicy
   * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders, BlockSenderDomains if desired state is empty but current state is not empty
