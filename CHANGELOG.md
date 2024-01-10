@@ -4,6 +4,8 @@
 
 * AADAdministrativeUnit
   * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
+* AADAuthenticationMethodPolicyX509
+  * Added support for the  property for include targets
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
 

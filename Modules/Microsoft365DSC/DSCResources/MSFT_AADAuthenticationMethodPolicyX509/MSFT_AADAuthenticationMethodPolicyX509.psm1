@@ -181,6 +181,10 @@ function Get-TargetResource
             {
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
             }
+            if ($null -ne $currentIncludeTargets.isRegistrationRequired)
+            {
+                $myIncludeTargets.Add('isRegistrationRequired', [Boolean]$currentIncludeTargets.isRegistrationRequired)
+            }
             if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
                 $complexIncludeTargets += $myIncludeTargets
@@ -365,26 +369,21 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
-            if ($key -eq 'IncludeTargets')
+            if ($key -eq 'ExcludeTargets' -or $key -eq 'IncludeTargets')
             {
                 $i = 0
-                foreach ($entry in $UpdateParameters.$key){
+                foreach ($entry in $UpdateParameters.$key)
+                {
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                        $Filter = "Displayname eq '$($entry.id)'"
+                        Write-Verbose -Message "Retrieving {$key} Group with DisplayName {$($entry.id)}"
+                        $GroupInstance = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
+                        if ($null -ne $GroupInstance)
+                        {
+                            Write-Verbose -Message "Found {$key} Group {$($GroupInstance.id.ToString())}"
+                            $UpdateParameters.$key[$i].id = $GroupInstance.id.ToString()
+                        }
                     }
                     $i++
                 }
@@ -392,6 +391,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.x509CertificateAuthenticationMethodConfiguration')
+        Write-Verbose -Message "Updating with Values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
         Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
             -AuthenticationMethodConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
