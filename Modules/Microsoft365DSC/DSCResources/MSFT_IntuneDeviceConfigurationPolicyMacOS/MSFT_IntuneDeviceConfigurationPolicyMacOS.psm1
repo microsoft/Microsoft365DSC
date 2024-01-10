@@ -777,7 +777,7 @@ function Set-TargetResource
 
     if ($UpdateDelayPolicy.Count -gt 0)
     {
-        $UpdateDelayPolicy = $UpdateDelayPolicy -join ','
+        $PSBoundParameters.UpdateDelayPolicy = $UpdateDelayPolicy -join ','
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')

@@ -312,16 +312,33 @@ function Get-TargetResource
         }
         else
         {
-            $AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
-            $BlockedSendersValues = $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
+            [System.String[]]$AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
+            [System.String[]]$BlockedSendersValues = $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
+            # Check if the values are null and assign them an empty string array if they are
+            if ($null -eq $AllowedSendersValues) {
+                $AllowedSendersValues = @()
+            }
+            if ($null -eq $BlockedSendersValues) {
+                $BlockedSendersValues = @()
+            }
+
+            [System.String[]]$AllowedSenderDomains = $HostedContentFilterPolicy.AllowedSenderDomains.Domain
+            [System.String[]]$BlockedSenderDomains = $HostedContentFilterPolicy.BlockedSenderDomains.Domain
+            # Check if the values are null and assign them an empty string array if they are
+            if ($null -eq $AllowedSenderDomains) {
+                $AllowedSenderDomains = @()
+            }
+            if ($null -eq $BlockedSenderDomains) {
+                $BlockedSenderDomains = @()
+            }
             $result = @{
                 Ensure                               = 'Present'
                 Identity                             = $Identity
                 AddXHeaderValue                      = $HostedContentFilterPolicy.AddXHeaderValue
                 AdminDisplayName                     = $HostedContentFilterPolicy.AdminDisplayName
-                AllowedSenderDomains                 = $HostedContentFilterPolicy.AllowedSenderDomains.Domain
+                AllowedSenderDomains                 = $AllowedSenderDomains
                 AllowedSenders                       = $AllowedSendersValues
-                BlockedSenderDomains                 = $HostedContentFilterPolicy.BlockedSenderDomains.Domain
+                BlockedSenderDomains                 = $BlockedSenderDomains
                 BlockedSenders                       = $BlockedSendersValues
                 BulkQuarantineTag                    = $HostedContentFilterPolicy.BulkQuarantineTag
                 BulkSpamAction                       = $HostedContentFilterPolicy.BulkSpamAction
@@ -1038,26 +1055,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-
-    if ($null -ne $ValuesToCheck.AllowedSenders -and $ValuesToCheck.AllowedSenders.Length -eq 0)
-    {
-        $ValuesToCheck.AllowedSenders = $null
-    }
-
-    if ($null -ne $ValuesToCheck.AllowedSenderDomains -and $ValuesToCheck.AllowedSenderDomains.Length -eq 0)
-    {
-        $ValuesToCheck.AllowedSenderDomains = $null
-    }
-
-    if ($null -ne $ValuesToCheck.BlockedSenders -and $ValuesToCheck.BlockedSenders.Length -eq 0)
-    {
-        $ValuesToCheck.BlockedSenders = $null
-    }
-
-    if ($null -ne $ValuesToCheck.BlockedSenderDomains -and $ValuesToCheck.BlockedSenderDomains.Length -eq 0)
-    {
-        $ValuesToCheck.BlockedSenderDomains = $null
-    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

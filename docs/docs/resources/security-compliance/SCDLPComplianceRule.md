@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **Name** | Key | String | Name of the Rule. | |
 | **Policy** | Required | String | Name of the associated DLP Compliance Policy. | |
-| **AccessScope** | Write | StringArray[] | The AccessScope parameter specifies a condition for the DLP rule that's based on the access scope of the content. The rule is applied to content that matches the specified access scope. | `InOrganization`, `NotInOrganization`, `None` |
+| **AccessScope** | Write | String | The AccessScope parameter specifies a condition for the DLP rule that's based on the access scope of the content. The rule is applied to content that matches the specified access scope. | `InOrganization`, `NotInOrganization`, `None` |
 | **BlockAccess** | Write | Boolean | The BlockAccess parameter specifies an action for the DLP rule that blocks access to the source item when the conditions of the rule are met. $true: Blocks further access to the source item that matched the rule. The owner, author, and site owner can still access the item. $false: Allows access to the source item that matched the rule. This is the default value. | |
 | **BlockAccessScope** | Write | String | The BlockAccessScope parameter specifies the scope of the block access action. | `All`, `PerUser` |
 | **Comment** | Write | String | The Comment parameter specifies an optional comment. If you specify a value that contains spaces, enclose the value in quotation marks. | |
