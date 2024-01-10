@@ -514,7 +514,7 @@ function Get-M365DSCVoiceNormalizationRulesDifference
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Object[]]
         $CurrentRules,
 
