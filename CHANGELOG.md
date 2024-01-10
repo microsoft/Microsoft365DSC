@@ -7,15 +7,18 @@
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
   * Implement Fix #3885. Manage Exclude Application.
-    FIXES [#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)
+    FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+* EXOHostedContentFilterPolicy
+  * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders, 
+    BlockSenderDomains if desired state is empty but current state is not empty.
+    FIXES[#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
 * IntuneDeviceConfigurationPolicyMacOS
   * Fix workaround added on PR #4099 in order to be able to use this resource
     for deployments
     FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
-
-* EXOHostedContentFilterPolicy
-  * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders, BlockSenderDomains if desired state is empty but current state is not empty
-    FIXES[#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
+* SCDLPComplianceRule
+  * Fix type of AccessScope
+    FIXES [#3463](https://github.com/microsoft/Microsoft365DSC/issues/3463)
 
 # 1.24.103.1
 
