@@ -10,9 +10,6 @@
   * Added support for application filters in the conditions.
   * Implement Fix #3885. Manage Exclude Application.
     FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
-* AADGroupOwnerConsentSettings
-  * Initial release
-    Implements [#4112](https://github.com/microsoft/Microsoft365DSC/issues/4112)
 * EXOHostedContentFilterPolicy
   * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders,
     BlockSenderDomains if desired state is empty but current state is not empty.
