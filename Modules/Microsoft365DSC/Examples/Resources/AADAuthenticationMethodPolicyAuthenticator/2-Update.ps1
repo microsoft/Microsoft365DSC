@@ -19,9 +19,9 @@ Configuration Example
         {
             Credential            = $Credscredential;
             Ensure                = "Present";
-            ExcludeTargets        = @( # Updated Property
+            ExcludeTargets        = @(
                 MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                    Id = 'Legal Team'
+                    Id = 'Finance Team' # Updated Property
                     TargetType = 'group'
                 }
             );

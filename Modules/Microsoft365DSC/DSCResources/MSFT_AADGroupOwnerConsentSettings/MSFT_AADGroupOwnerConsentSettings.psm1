@@ -77,7 +77,7 @@ function Get-TargetResource
 
         $getValue = $null
         $consentPolicySettingsTemplateId = Get-MSConsentPolicySettingsTemplateId
-        write-verbose "Get GroupSettings template with TemplateId $consentPolicySettingsTemplateId"
+        Write-Verbose -Message "Get GroupSettings template with TemplateId $consentPolicySettingsTemplateId"
         $templateSettings = Get-MgGroupSettingTemplateGroupSettingTemplate -GroupSettingTemplateId $consentPolicySettingsTemplateId
 
         $getValue = Get-MgGroupSetting -GroupSettingId $consentPolicySettingsTemplateId  -ErrorAction SilentlyContinue
@@ -97,9 +97,9 @@ function Get-TargetResource
             Write-Verbose -Message "UNEXPECTED: Could not find an Azure AD Group Consent Settings with DisplayName {$($templateSettings.DisplayName)}"
 
             # insert default values from template
-            $nullresult.EnableGroupSpecificConsent                        = $templateSettings.Values.Where({$_.Name -eq 'EnableGroupSpecificConsent'  }).DefaultValue
-            $nullresult.BlockUserConsentForRiskyApps                      = $templateSettings.Values.Where({$_.Name -eq 'BlockUserConsentForRiskyApps'}).DefaultValue
-            $nullresult.EnableAdminConsentRequests                        = $templateSettings.Values.Where({$_.Name -eq 'EnableAdminConsentRequests'  }).DefaultValue
+            $nullresult.EnableGroupSpecificConsent                        = [Boolean]($templateSettings.Values.Where({$_.Name -eq 'EnableGroupSpecificConsent'  }).DefaultValue)
+            $nullresult.BlockUserConsentForRiskyApps                      = [Boolean]($templateSettings.Values.Where({$_.Name -eq 'BlockUserConsentForRiskyApps'}).DefaultValue)
+            $nullresult.EnableAdminConsentRequests                        = [Boolean]($templateSettings.Values.Where({$_.Name -eq 'EnableAdminConsentRequests'  }).DefaultValue)
             $nullresult.ConstrainGroupSpecificConsentToMembersOfGroupName = $null
             return $nullResult
         }
@@ -124,9 +124,9 @@ function Get-TargetResource
 
         $results = @{
             IsSingleInstance                                  = 'Yes'
-            EnableGroupSpecificConsent                        = $groupSettingsValues.EnableGroupSpecificConsent
-            BlockUserConsentForRiskyApps                      = $groupSettingsValues.BlockUserConsentForRiskyApps
-            EnableAdminConsentRequests                        = $groupSettingsValues.EnableAdminConsentRequests
+            EnableGroupSpecificConsent                        = [Boolean]$groupSettingsValues.EnableGroupSpecificConsent
+            BlockUserConsentForRiskyApps                      = [Boolean]$groupSettingsValues.BlockUserConsentForRiskyApps
+            EnableAdminConsentRequests                        = [Boolean]$groupSettingsValues.EnableAdminConsentRequests
             ConstrainGroupSpecificConsentToMembersOfGroupName = $constrainConsentToGroupName
             Ensure                                            = 'Present'
             Credential                                        = $Credential
@@ -380,40 +380,10 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Group Consent Settings with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Azure AD Group Consent Settings"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
-    $testResult = $true
-
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
-    {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
-        {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-Not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-            $ValuesToCheck.Remove($key) | Out-Null
-        }
-    }
 
     $ValuesToCheck.remove('Id') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
@@ -424,13 +394,10 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    if ($testResult)
-    {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
+    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
@@ -503,29 +470,20 @@ function Export-TargetResource
         }
         $results = Get-TargetResource @params
 
-        if ($results -is [System.Collections.Hashtable] -and $results.Count -gt 1)
-        {
-            Write-Host "`r`n" -NoNewline
-            Write-Host "    |---[1/1] $($groupConsentSettingsTemplate.DisplayName)" -NoNewline
-            $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $results `
-                -Credential $Credential
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
+        Write-Host "`r`n" -NoNewline
+        Write-Host "    |---[1/1] $($groupConsentSettingsTemplate.DisplayName)" -NoNewline
+        $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+            -Results $results
+        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+            -ConnectionMode $ConnectionMode `
+            -ModulePath $PSScriptRoot `
+            -Results $results `
+            -Credential $Credential
+        Save-M365DSCPartialExport -Content $currentDSCBlock `
+            -FileName $Global:PartialExportFileName
 
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
-        }
-        else
-        {
-            Write-Host $Global:M365DSCEmojiRedX
-        }
-
+        Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $currentDSCBlock
-
     }
     catch
     {
