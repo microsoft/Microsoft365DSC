@@ -19,7 +19,7 @@ Configuration Example
         {
             DisplayName               = "AppDisplayName"
             AvailableToOtherTenants   = $true # Updated Property
-            GroupMembershipClaims     = "0"
+            GroupMembershipClaims     = "None"
             Homepage                  = "https://$Domain"
             IdentifierUris            = "https://$Domain"
             KnownClientApplications   = ""

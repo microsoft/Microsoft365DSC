@@ -14,7 +14,7 @@ class MSFT_AADApplication : OMI_BaseResource
     [Write, Description("ObjectID of the app.")] String ObjectId;
     [Write, Description("AppId for the app.")] String AppId;
     [Write, Description("Indicates whether this application is available in other tenants.")] Boolean AvailableToOtherTenants;
-    [Write, Description("A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects. The bitmask values are: 0: None, 1: Security groups and Azure AD roles, 2: Reserved, and 4: Reserved. Setting the bitmask to 7 will get all of the security groups, distribution groups, and Azure AD directory roles that the signed-in user is a member of.")] String GroupMembershipClaims;
+    [Write, Description("A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects.")] String GroupMembershipClaims;
     [Write, Description("The URL to the application's homepage.")] String Homepage;
     [Write, Description("User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain.")] string IdentifierUris[];
     [Write, Description("Specifies the fallback application type as public client, such as an installed application running on a mobile device. The default value is false, which means the fallback application type is confidential client such as web app. There are certain scenarios where Microsoft Entra ID cannot determine the client application type (for example, ROPC flow where it is configured without specifying a redirect URI). In those cases, Microsoft Entra ID will interpret the application type based on the value of this property.")] Boolean IsFallbackPublicClient;

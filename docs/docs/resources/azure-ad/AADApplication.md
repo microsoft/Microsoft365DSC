@@ -8,7 +8,7 @@
 | **ObjectId** | Write | String | ObjectID of the app. | |
 | **AppId** | Write | String | AppId for the app. | |
 | **AvailableToOtherTenants** | Write | Boolean | Indicates whether this application is available in other tenants. | |
-| **GroupMembershipClaims** | Write | String | A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects. The bitmask values are: 0: None, 1: Security groups and Azure AD roles, 2: Reserved, and 4: Reserved. Setting the bitmask to 7 will get all of the security groups, distribution groups, and Azure AD directory roles that the signed-in user is a member of. | |
+| **GroupMembershipClaims** | Write | String | A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects. | |
 | **Homepage** | Write | String | The URL to the application's homepage. | |
 | **IdentifierUris** | Write | StringArray[] | User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain. | |
 | **IsFallbackPublicClient** | Write | Boolean | Specifies the fallback application type as public client, such as an installed application running on a mobile device. The default value is false, which means the fallback application type is confidential client such as web app. There are certain scenarios where Microsoft Entra ID cannot determine the client application type (for example, ROPC flow where it is configured without specifying a redirect URI). In those cases, Microsoft Entra ID will interpret the application type based on the value of this property. | |
@@ -91,7 +91,7 @@ Configuration Example
         {
             DisplayName               = "AppDisplayName"
             AvailableToOtherTenants   = $false
-            GroupMembershipClaims     = "0"
+            GroupMembershipClaims     = "None"
             Homepage                  = "https://$Domain"
             IdentifierUris            = "https://$Domain"
             KnownClientApplications   = ""
@@ -150,7 +150,7 @@ Configuration Example
         {
             DisplayName               = "AppDisplayName"
             AvailableToOtherTenants   = $true # Updated Property
-            GroupMembershipClaims     = "0"
+            GroupMembershipClaims     = "None"
             Homepage                  = "https://$Domain"
             IdentifierUris            = "https://$Domain"
             KnownClientApplications   = ""

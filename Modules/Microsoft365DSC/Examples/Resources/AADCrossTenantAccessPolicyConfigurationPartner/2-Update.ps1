@@ -41,9 +41,7 @@ Configuration Example
                     )
                 }
             };
-            ApplicationId                = 'c6957111-b1a6-479c-a15c-73e01ceb3b99'
-            CertificateThumbprint        = 'ACD01315A4EBA42CD2E18EEE443AA280CC0BAB8B'
-            TenantId                     = 'M365x35070558.onmicrosoft.com'
+            Credential                   = $credsCredential
             Ensure                       = "Present";
         }
     }
