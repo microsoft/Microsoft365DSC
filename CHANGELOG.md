@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.110.1
 
 * AADAdministrativeUnit
   * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
@@ -9,9 +9,11 @@
   * Implement Fix #3885. Manage Exclude Application.
     FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
 * EXOHostedContentFilterPolicy
-  * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders, 
+  * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders,
     BlockSenderDomains if desired state is empty but current state is not empty.
     FIXES[#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
+* EXOMailContact
+  * Added support for Custom Attributes and Extension Custom Attributes.
 * IntuneDeviceConfigurationPolicyMacOS
   * Fix workaround added on PR #4099 in order to be able to use this resource
     for deployments
