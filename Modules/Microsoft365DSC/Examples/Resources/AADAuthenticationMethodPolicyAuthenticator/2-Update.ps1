@@ -19,13 +19,9 @@ Configuration Example
         {
             Credential            = $Credscredential;
             Ensure                = "Present";
-            ExcludeTargets        = @(
+            ExcludeTargets        = @( # Updated Property
                 MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
                     Id = 'Legal Team'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                    Id = 'Paralegals'
                     TargetType = 'group'
                 }
             );
@@ -63,7 +59,7 @@ Configuration Example
                     TargetType = 'group'
                 }
             );
-            IsSoftwareOathEnabled = $True; # Updated Property
+            IsSoftwareOathEnabled = $False;
             State                 = "enabled";
         }
     }

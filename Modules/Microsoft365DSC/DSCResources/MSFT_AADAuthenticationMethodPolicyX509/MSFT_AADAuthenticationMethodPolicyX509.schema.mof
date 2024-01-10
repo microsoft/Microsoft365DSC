@@ -28,6 +28,7 @@ class MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget
 class MSFT_AADAuthenticationMethodPolicyX509IncludeTarget
 {
     [Write, Description("The object identifier of an Azure AD group.")] String Id;
+    [Write, Description("Determines if the user is enforced to register the authentication method.")] Boolean isRegistrationRequired;
     [Write, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"group","unknownFutureValue"}, Values{"group","unknownFutureValue"}] String TargetType;
 };
 

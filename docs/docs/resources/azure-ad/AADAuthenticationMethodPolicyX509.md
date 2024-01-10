@@ -63,6 +63,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Id** | Write | String | The object identifier of an Azure AD group. | |
+| **isRegistrationRequired** | Write | Boolean | Determines if the user is enforced to register the authentication method. | |
 | **TargetType** | Write | String | The type of the authentication method target. Possible values are: group and unknownFutureValue. | `group`, `unknownFutureValue` |
 
 
@@ -214,7 +215,7 @@ Configuration Example
                     TargetType = 'group'
                 }
             );
-            State                           = "disabled"; # Updated Property
+            State                           = "enabled";
         }
     }
 }

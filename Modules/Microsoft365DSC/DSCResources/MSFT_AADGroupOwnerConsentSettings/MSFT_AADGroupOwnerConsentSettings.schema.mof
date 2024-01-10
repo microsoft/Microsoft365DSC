@@ -1,0 +1,16 @@
+[ClassVersion("1.0.0.0"), FriendlyName("AADGroupOwnerConsentSettings")]
+class MSFT_AADGroupOwnerConsentSettings : OMI_BaseResource
+{
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Flag indicating if groups owners are allowed to grant group specific permissions.")] Boolean EnableGroupSpecificConsent;
+    [Write, Description("Flag indicating if user consent will be blocked when a risky request is detected. Administrators will still be able to consent to apps considered risky.")] Boolean BlockUserConsentForRiskyApps;
+    [Write, Description("Flag indicating if users will be able to request admin consent when they are unable to grant consent to an app themselves.")] Boolean EnableAdminConsentRequests;
+    [Write, Description("If EnableGroupSpecificConsent is set to “True” and this is set to a security group name, members (both direct and transitive) of the group identified will be authorized to grant group-specific permissions to the groups they own.")] String ConstrainGroupSpecificConsentToMembersOfGroupName;
+    [Write, Description("Specify if the Azure AD Group Consent Settings should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
+    [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
+    [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
+    [Write, Description("Secret of the Azure Active Directory tenant used for authentication."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
+    [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+};

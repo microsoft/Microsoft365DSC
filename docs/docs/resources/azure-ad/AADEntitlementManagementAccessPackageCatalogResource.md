@@ -193,7 +193,6 @@ Configuration Example
             OriginSystem        = 'SharePointOnline'
             ResourceType        = 'SharePoint Online Site'
             Url                 = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
-            Url                 = "https://$Domain.sharepoint.com/sites/HumanResources"
             Ensure              = 'Present'
             Credential          = $Credscredential
         }

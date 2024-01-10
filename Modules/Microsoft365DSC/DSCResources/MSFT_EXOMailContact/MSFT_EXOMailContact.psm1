@@ -71,6 +71,86 @@ function Get-TargetResource
         $UsePreferMessageFormat,
 
         [Parameter()]
+        [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute1,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute2,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute3,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute4,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute5,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -135,7 +215,7 @@ function Get-TargetResource
 
     try
     {
-        $contact = Get-MailContact -Identity $Name -ErrorAction Continue
+        $contact = Get-MailContact -Identity $Name -ErrorAction SilentlyContinue
 
         if ($null -eq $contact)
         {
@@ -168,6 +248,21 @@ function Get-TargetResource
                 CertificatePassword         = $CertificatePassword
                 Managedidentity             = $ManagedIdentity.IsPresent
                 TenantId                    = $TenantId
+            }
+
+            foreach ($i in (1..15))
+            {
+                if ($contact."CustomAttribute$i")
+                {
+                    $result."CustomAttribute$i" = $contact."CustomAttribute$i"
+                }
+            }
+            foreach ($i in (1..5))
+            {
+                if ($contact."ExtensionCustomAttribute$i")
+                {
+                    $result."ExtensionCustomAttribute$i" = $contact."ExtensionCustomAttribute$i"
+                }
             }
 
             Write-Verbose -Message "Found Mail Contact $($Name)"
@@ -259,6 +354,86 @@ function Set-TargetResource
         $UsePreferMessageFormat,
 
         [Parameter()]
+        [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute1,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute2,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute3,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute4,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute5,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -320,21 +495,24 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $setParameters = $PSBoundParameters
-    $setParameters.Remove('Credential') | Out-Null
-    $setParameters.Remove('ApplicationId') | Out-Null
-    $setParameters.Remove('TenantId') | Out-Null
-    $setParameters.Remove('CertificateThumbprint') | Out-Null
-    $setParameters.Remove('CertificatePath') | Out-Null
-    $setParameters.Remove('CertificatePassword') | Out-Null
-    $setParameters.Remove('ManagedIdentity') | Out-Null
-    $setParameters.Remove('Ensure') | Out-Null
-
     # Mail Contact doesn't exist but it should
     if ($Ensure -eq 'Present' -and $currentContact.Ensure -eq 'Absent')
     {
+        $parameters = Sync-M365DSCParameter -Command (Get-Command -Name New-MailContact) -Parameters $PSBoundParameters
         Write-Verbose -Message "The Mail Contact '$($Name)' does not exist but it should. Creating Mail Contact."
-        New-MailContact @setParameters
+
+        try
+        {
+            New-MailContact @parameters -ErrorAction Stop
+
+            $parameters = Sync-M365DSCParameter -Command (Get-Command -Name Set-MailContact) -Parameters $PSBoundParameters
+            $parameters.Identity = $Name
+            Set-MailContact @parameters -ErrorAction Stop
+        }
+        catch
+        {
+            Write-Error -ErrorRecord $_
+        }
     }
     # Mail Contact exists but shouldn't
     elseif ($Ensure -eq 'Absent' -and $currentContact.Ensure -eq 'Present')
@@ -345,10 +523,10 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentContact.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Mail Contact '$($Name)' already exists. Updating settings"
-        Write-Verbose -Message "Updating Mail Contact '$($Name)' with values: $(Convert-M365DscHashtableToString -Hashtable $setParameters)"
-        $setParameters.Add('Identity', $Name)
-        $setParameters.Remove('OrganizationalUnit') | Out-Null
-        Set-MailContact @setParameters
+        $parameters = Sync-M365DSCParameter -Command (Get-Command -Name Set-MailContact) -Parameters $PSBoundParameters
+        Write-Verbose -Message "Updating Mail Contact '$($Name)' with values: $(Convert-M365DscHashtableToString -Hashtable $parameters)"
+        $parameters.Identity = $Name
+        Set-MailContact @parameters
     }
 }
 
@@ -425,6 +603,86 @@ function Test-TargetResource
         $UsePreferMessageFormat,
 
         [Parameter()]
+        [System.String]
+        $CustomAttribute1,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute2,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute3,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute4,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute5,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute6,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute7,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute8,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute9,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute10,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute11,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute12,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute13,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute14,
+
+        [Parameter()]
+        [System.String]
+        $CustomAttribute15,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute1,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute2,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute3,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute4,
+
+        [Parameter()]
+        [System.String[]]
+        $ExtensionCustomAttribute5,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -477,15 +735,14 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-
-    $ValuesToCheck.Remove('OrganizationalUnit') | Out-Null
+    [void]$ValuesToCheck.Remove('Credential')
+    [void]$ValuesToCheck.Remove('ApplicationId')
+    [void]$ValuesToCheck.Remove('TenantId')
+    [void]$ValuesToCheck.Remove('CertificateThumbprint')
+    [void]$ValuesToCheck.Remove('CertificatePath')
+    [void]$ValuesToCheck.Remove('CertificatePassword')
+    [void]$ValuesToCheck.Remove('ManagedIdentity')
+    [void]$ValuesToCheck.Remove('OrganizationalUnit')
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -581,7 +838,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            $dscContent.Append($currentDSCBlock) | Out-Null
+            [void]$dscContent.Append($currentDSCBlock)
 
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
