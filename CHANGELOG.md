@@ -16,11 +16,11 @@
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
   * Implement Fix #3885. Manage Exclude Application.
-    FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+    FIXES [#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)
 * EXOHostedContentFilterPolicy
   * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders,
     BlockSenderDomains if desired state is empty but current state is not empty.
-    FIXES[#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
+    FIXES [#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
 * EXOMailContact
   * Added support for Custom Attributes and Extension Custom Attributes.
 * IntuneDeviceConfigurationPolicyMacOS
