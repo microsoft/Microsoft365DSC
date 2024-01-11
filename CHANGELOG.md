@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix CIM instances comparison in Test-TargetResource and export
+    CompliantAppsList with the correct type
+    FIXES [#4144](https://github.com/microsoft/Microsoft365DSC/issues/4144)
+
 # 1.24.110.1
 
 * AADAdministrativeUnit
