@@ -740,8 +740,6 @@
                 {
                     IsSingleInstance                     = 'Yes'
                     TechnicalNotificationMails           = "example@contoso.com"
-                    SecurityComplianceNotificationPhones = "+1123456789"
-                    SecurityComplianceNotificationMails  = "example@contoso.com"
                     MarketingNotificationEmails          = "example@contoso.com"
                     Credential                           = $credsCredential
                 }
