@@ -473,6 +473,7 @@
                     GroupTypes      = @("Unified")
                     MailNickname    = "M365DSC"
                     Visibility      = "Private"
+                    Owners          = @("AdeleV@$Domain")
                     Ensure          = "Present"
                     Credential      = $Credscredential
                 }
