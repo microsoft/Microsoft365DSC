@@ -539,6 +539,14 @@
                     Ensure               = "Present";
                     IdentityProviderType = "Google";
                 }
+                AADTokenLifetimePolicy 'CreateTokenLifetimePolicy'
+                {
+                    DisplayName           = "PolicyDisplayName"
+                    Definition            = @("{`"TokenLifetimePolicy`":{`"Version`":1,`"AccessTokenLifetime`":`"02:00:00`"}}");
+                    IsOrganizationDefault = $false
+                    Ensure                = "Present"
+                    Credential            = $Credscredential
+                }
                 AADUser 'ConfigureJohnSMith'
                 {
                     UserPrincipalName  = "John.Smith@$Domain"
