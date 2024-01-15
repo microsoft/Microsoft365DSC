@@ -82,29 +82,6 @@
                     Id                   = "c3";
                     IsAvailable          = $True;
                 }
-                AADAuthenticationMethodPolicy 'AADAuthenticationMethodPolicy-Authentication Methods Policy'
-                {
-                    Description             = "The tenant-wide policy that controls which authentication methods are allowed in the tenant, authentication method registration requirements, and self-service password reset settings";
-                    DisplayName             = "Authentication Methods Policy";
-                    Ensure                  = "Present";
-                    Id                      = "authenticationMethodsPolicy";
-                    PolicyMigrationState    = "migrationInProgress";
-                    PolicyVersion           = "1.5";
-                    RegistrationEnforcement = MSFT_MicrosoftGraphregistrationEnforcement{
-                        AuthenticationMethodsRegistrationCampaign = MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign{
-                            SnoozeDurationInDays = 1
-                            IncludeTargets = @(
-                                MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget{
-                                    TargetedAuthenticationMethod = 'microsoftAuthenticator'
-                                    TargetType = 'group'
-                                    Id = 'all_users'
-                                }
-                            )
-                            State = 'default'
-                        }
-                    };
-                    Credential           = $credsCredential;
-                }
                 AADAuthenticationMethodPolicyAuthenticator 'AADAuthenticationMethodPolicyAuthenticator-MicrosoftAuthenticator'
                 {
                     Credential            = $Credscredential;
@@ -473,6 +450,7 @@
                     GroupTypes      = @("Unified")
                     MailNickname    = "M365DSC"
                     Visibility      = "Private"
+                    Owners          = @("AdeleV@$Domain")
                     Ensure          = "Present"
                     Credential      = $Credscredential
                 }
@@ -537,6 +515,14 @@
                     DisplayName          = "My Google Provider";
                     Ensure               = "Present";
                     IdentityProviderType = "Google";
+                }
+                AADTokenLifetimePolicy 'CreateTokenLifetimePolicy'
+                {
+                    DisplayName           = "PolicyDisplayName"
+                    Definition            = @("{`"TokenLifetimePolicy`":{`"Version`":1,`"AccessTokenLifetime`":`"02:00:00`"}}");
+                    IsOrganizationDefault = $false
+                    Ensure                = "Present"
+                    Credential            = $Credscredential
                 }
                 AADUser 'ConfigureJohnSMith'
                 {

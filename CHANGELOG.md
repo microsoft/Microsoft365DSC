@@ -6,6 +6,9 @@
   * Fix CIM instances comparison in Test-TargetResource and export
     CompliantAppsList with the correct type
     FIXES [#4144](https://github.com/microsoft/Microsoft365DSC/issues/4144)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
+  * Updated MSCloudLoginAssistant to version 1.1.5.
 
 # 1.24.110.1
 
