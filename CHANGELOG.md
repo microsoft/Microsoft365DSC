@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAntiPhishPolicy
+  * Add support for HonorDmarcPolicy parameter
+    FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
+
 # 1.24.110.1
 
 * AADAdministrativeUnit
