@@ -83,7 +83,6 @@
                 }
                 AADAuthenticationMethodPolicy 'AADAuthenticationMethodPolicy-Authentication Methods Policy'
                 {
-                    Description             = "Updated"; # Updated Property
                     DisplayName             = "Authentication Methods Policy";
                     Ensure                  = "Present";
                     Id                      = "authenticationMethodsPolicy";
@@ -91,7 +90,7 @@
                     PolicyVersion           = "1.5";
                     RegistrationEnforcement = MSFT_MicrosoftGraphregistrationEnforcement{
                         AuthenticationMethodsRegistrationCampaign = MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign{
-                            SnoozeDurationInDays = 1
+                            SnoozeDurationInDays = (Get-Random -Minimum 1 -Maximum 14)
                             IncludeTargets = @(
                                 MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget{
                                     TargetedAuthenticationMethod = 'microsoftAuthenticator'
