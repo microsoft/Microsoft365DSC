@@ -85,6 +85,7 @@ Configuration Example
         $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
+    $Domain = $Credscredential.Username.Split('@')[1]
 
     node localhost
     {
@@ -97,6 +98,7 @@ Configuration Example
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
             Visibility      = "Private"
+            Owners          = @("AdeleV@$Domain")
             Ensure          = "Present"
             Credential      = $Credscredential
         }
