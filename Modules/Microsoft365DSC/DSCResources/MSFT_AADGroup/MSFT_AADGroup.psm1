@@ -1047,7 +1047,7 @@ function Export-TargetResource
             All         = [switch]$true
             ErrorAction = 'Stop'
         }
-        if ($Filter -like "*endsWith*") {
+        if ($Filter -like "*endsWith*" -or $Filter -like "*onPremisesSyncEnabled eq null*" -or $Filter -like "*onPremisesSyncEnabled ne true*") {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
         }
