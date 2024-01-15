@@ -110,7 +110,7 @@
                     Ensure                = "Present";
                     ExcludeTargets        = @(
                         MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                            Id = 'Finance Team' # Updated Property
+                            Id = 'Executives' # Updated Property
                             TargetType = 'group'
                         }
                     );
@@ -355,7 +355,7 @@
                     ApplicationEnforcedRestrictionsIsEnabled = $False;
                     BuiltInControls                          = @("mfa");
                     ClientAppTypes                           = @("all");
-                    CloudAppSecurityIsEnabled                = $True; # Updated Porperty
+                    CloudAppSecurityIsEnabled                = $False;
                     Credential                               = $Credscredential;
                     DeviceFilterMode                         = "exclude";
                     DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
@@ -369,7 +369,7 @@
                     SignInFrequencyInterval                  = "timeBased";
                     SignInFrequencyIsEnabled                 = $True;
                     SignInFrequencyType                      = "hours";
-                    SignInFrequencyValue                     = 1;
+                    SignInFrequencyValue                     = 2; # Updated Porperty
                     State                                    = "disabled";
                 }
                 AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
@@ -735,7 +735,7 @@
                     Ensure               = "Present";
                     IdentityProviderType = "Google";
                 }
-                AADTenantDetails 'ÇonfigureTenantDetails'
+                AADTenantDetails 'ConfigureTenantDetails'
                 {
                     IsSingleInstance                     = 'Yes'
                     TechnicalNotificationMails           = "example@contoso.com"
