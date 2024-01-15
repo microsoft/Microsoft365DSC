@@ -507,7 +507,10 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
+
         $UpdateParameters.Remove('Id') | Out-Null
+
+        Write-Verbose -Message "Flag1"
         # replace group Displayname with group id
         if ($UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -and `
             $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
@@ -518,6 +521,8 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.foreach('id',$groupid)
         }
+
+        Write-Verbose -Message "Flag2"
         if ($UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -and `
             $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('companionAppAllowedState'))
@@ -527,6 +532,7 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.foreach('id',$groupid)
         }
+        Write-Verbose -Message "Flag3"
         if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -and `
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayAppInformationRequiredState'))
@@ -536,6 +542,7 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.foreach('id',$groupid)
         }
+        Write-Verbose -Message "Flag4"
         if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -and `
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayAppInformationRequiredState'))
@@ -545,6 +552,7 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.foreach('id',$groupid)
         }
+        Write-Verbose -Message "Flag5"
         if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -and `
             $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayLocationInformationRequiredState'))
@@ -554,6 +562,7 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.foreach('id',$groupid)
         }
+        Write-Verbose -Message "Flag6"
         if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -and `
             $UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayLocationInformationRequiredState'))
@@ -565,20 +574,24 @@ function Set-TargetResource
         }
 
         # DEPRECATED
+        Write-Verbose -Message "Flag7"
         if ($UpdateParameters.featureSettings.ContainsKey('NumberMatchingRequiredState'))
         {
             Write-Verbose -Message "The NumberMatchingRequiredState feature is deprecated and will be ignored. Please remove it from your configuration."
             $UpdateParameters.featureSettings.Remove('NumberMatchingRequiredState')
         }
 
+        Write-Verbose -Message "Flag8"
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
         {
             if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
             {
+                Write-Verbose -Message "Flag9a"
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+                Write-Verbose -Message "Flag9b"
             }
-            if ($key -eq 'IncludeTargets')
+            if ($key -eq 'IncludeTargets' -or $key -eq 'ExcludeTargets')
             {
                 $i = 0
                 foreach ($entry in $UpdateParameters.$key)
@@ -586,20 +599,15 @@ function Set-TargetResource
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
                         $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key)
-                {
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
+                        $group = Get-MgGroup -Filter $Filter
+                        if ($null -ne $group)
+                        {
+                            $UpdateParameters.$key[$i].foreach('id', $group.id.ToString())
+                        }
+                        else
+                        {
+                            Write-Verbose -Message "Couldn't find group with DisplayName {$($entry.id)}"
+                        }
                     }
                     $i++
                 }

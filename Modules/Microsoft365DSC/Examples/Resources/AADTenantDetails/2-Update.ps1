@@ -13,7 +13,7 @@ Configuration Example {
 
     Node Localhost
     {
-        AADTenantDetails 'ÇonfigureTenantDetails'
+        AADTenantDetails 'ConfigureTenantDetails'
         {
             IsSingleInstance                     = 'Yes'
             TechnicalNotificationMails           = "example@contoso.com"
