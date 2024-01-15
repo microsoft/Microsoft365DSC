@@ -530,7 +530,7 @@ function Get-TargetResource
         $PrependSubject,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $Priority,
 
         [Parameter()]
@@ -1510,7 +1510,7 @@ function Set-TargetResource
         $PrependSubject,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $Priority,
 
         [Parameter()]
@@ -2319,7 +2319,7 @@ function Test-TargetResource
         $PrependSubject,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $Priority,
 
         [Parameter()]

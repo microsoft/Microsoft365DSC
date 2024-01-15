@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* EXOTransportRule
+  * Change data type of Priority from String to Int (breaking change)
+    FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
+
 # 1.24.110.1
 
 * AADAdministrativeUnit
