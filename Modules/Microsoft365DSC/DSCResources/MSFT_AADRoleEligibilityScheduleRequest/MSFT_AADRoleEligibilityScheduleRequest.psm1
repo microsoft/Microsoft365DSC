@@ -684,7 +684,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
+    $ValuesToCheck.Remove("Action") | Out-Null
     if($null -ne $CurrentValues.ScheduleInfo -and $null -ne $ValuesToCheck.ScheduleInfo)
     {
         # Compare ScheduleInfo.Expiration
