@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
+  * Updated MSCloudLoginAssistant to version 1.1.5.
+
 # 1.24.110.1
 
 * AADAdministrativeUnit
