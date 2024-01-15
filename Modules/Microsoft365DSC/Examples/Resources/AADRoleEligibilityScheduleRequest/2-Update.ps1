@@ -19,7 +19,7 @@ Configuration Example
     {
         AADRoleEligibilityScheduleRequest "MyRequest"
         {
-            Action               = "AdminAssign";
+            Action               = "AdminUpdate";
             Credential           = $Credscredential;
             DirectoryScopeId     = "/";
             Ensure               = "Present";
@@ -27,7 +27,7 @@ Configuration Example
             Principal            = "AdeleV@$Domain";
             RoleDefinition       = "Teams Communications Administrator";
             ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
-                startDateTime             = '2023-09-01T02:40:44Z'
+                startDateTime             = '2023-09-01T02:45:44Z'
                 expiration                = MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration
                     {
                         endDateTime = '2025-10-31T02:40:09Z'
