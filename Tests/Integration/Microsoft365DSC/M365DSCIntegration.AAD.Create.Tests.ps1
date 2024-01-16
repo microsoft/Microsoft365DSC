@@ -289,7 +289,7 @@
                     Ensure                          = "Present";
                     ExcludeTargets                  = @(
                         MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
-                            Id = 'DSCGroup'
+                            Id = 'Sales Team'
                             TargetType = 'group'
                         }
                     );
