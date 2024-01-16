@@ -16,8 +16,8 @@ Configuration Example
     {
         AADServicePrincipal 'AADServicePrincipal'
         {
-            AppId                         = "<AppID GUID>"
-            DisplayName                   = "AADAppName"
+            AppId                         = "AppDisplayName"
+            DisplayName                   = "AppDisplayName"
             Ensure                        = "Absent"
             Credential                    = $Credscredential
         }

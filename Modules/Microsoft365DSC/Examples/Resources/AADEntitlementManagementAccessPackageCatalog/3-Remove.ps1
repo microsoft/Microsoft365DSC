@@ -16,7 +16,7 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
         {
-            DisplayName         = 'General'
+            DisplayName         = 'My Catalog'
             Ensure              = 'Absent'
             Credential          = $Credscredential
         }
