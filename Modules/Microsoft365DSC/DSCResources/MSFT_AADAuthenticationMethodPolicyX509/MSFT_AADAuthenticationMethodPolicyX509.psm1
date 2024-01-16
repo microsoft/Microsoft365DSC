@@ -4,7 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region resource generator code
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AuthenticationModeConfiguration,
@@ -29,8 +28,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
-
-        #endregion
 
         [Parameter()]
         [System.String]
@@ -118,7 +115,8 @@ function Get-TargetResource
                 $complexAuthenticationModeConfiguration.Add('Rules', $complexRules)
             }
         }
-        else {
+        else
+        {
             $complexAuthenticationModeConfiguration.Add('Rules', @(''))
         }
 
@@ -392,7 +390,7 @@ function Set-TargetResource
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.x509CertificateAuthenticationMethodConfiguration')
         Write-Verbose -Message "Updating with Values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
-        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
+        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion
