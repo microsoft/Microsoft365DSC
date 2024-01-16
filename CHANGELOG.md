@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Used generic Graph API URL from MSCloudLoginConnectionProfile.
+* AADApplication
+  * Ignore Permissions in tests if not passed. Preventing null comparison errors.
+* AADAttributeSet
+  * Removed the ability to specify a value of Absent for the Ensure property.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
   * Updated MSCloudLoginAssistant to version 1.1.5.
