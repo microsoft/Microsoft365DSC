@@ -1,11 +1,5 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
-
-* AADGroupOwnerConsentSettings
-  * Fixed initial release
-    Implements [#4112](https://github.com/microsoft/Microsoft365DSC/issues/4112)
-
 # 1.24.110.1
 
 * AADAdministrativeUnit
