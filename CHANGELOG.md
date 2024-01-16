@@ -1,9 +1,13 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
+
 * AADGroupOwnerConsentSettings
   * Fixed initial release
     Implements [#4112](https://github.com/microsoft/Microsoft365DSC/issues/4112)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
+  * Updated MSCloudLoginAssistant to version 1.1.5.
 
 # 1.24.110.1
 

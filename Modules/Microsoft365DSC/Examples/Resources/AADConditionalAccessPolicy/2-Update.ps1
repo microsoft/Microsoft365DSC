@@ -20,7 +20,7 @@ Configuration Example
             ApplicationEnforcedRestrictionsIsEnabled = $False;
             BuiltInControls                          = @("mfa");
             ClientAppTypes                           = @("all");
-            CloudAppSecurityIsEnabled                = $True; # Updated Porperty
+            CloudAppSecurityIsEnabled                = $False;
             Credential                               = $Credscredential;
             DeviceFilterMode                         = "exclude";
             DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
@@ -34,7 +34,7 @@ Configuration Example
             SignInFrequencyInterval                  = "timeBased";
             SignInFrequencyIsEnabled                 = $True;
             SignInFrequencyType                      = "hours";
-            SignInFrequencyValue                     = 1;
+            SignInFrequencyValue                     = 2; # Updated Porperty
             State                                    = "disabled";
         }
     }

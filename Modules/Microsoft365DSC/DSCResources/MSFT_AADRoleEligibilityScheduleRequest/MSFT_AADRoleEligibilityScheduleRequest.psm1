@@ -187,6 +187,44 @@
         }
         else
         {
+            $ObjectGuid = [System.Guid]::empty
+            if ($PrincipalType -eq 'User')
+            {            
+                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
+                
+                if ([System.Guid]::TryParse($Principal,[System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $PrincipalIdValue = Get-MgUser -UserId $Principal -ErrorAction SilentlyContinue
+                }
+                else
+                {
+                    $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
+                }
+                $PrincipalTypeValue = 'User'
+            }
+
+            if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
+            {
+                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
+                if ([System.Guid]::TryParse($Principal,[System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $PrincipalIdValue = Get-MgGroup -GroupId $Principal -ErrorAction SilentlyContinue
+                }
+                else
+                {
+                    $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
+                }
+                $PrincipalTypeValue = 'Group'
+            }
+
+            if ($null -ne $PrincipalIdValue)
+            {
+                $PrincipalId = $PrincipalIdValue.Id
+            }
+            else
+            {
+                return $nullResult
+            }
             $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
             $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)' and RoleDefinitionId eq '$RoleDefinitionId'"
         }
@@ -646,7 +684,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
+    $ValuesToCheck.Remove("Action") | Out-Null
     if($null -ne $CurrentValues.ScheduleInfo -and $null -ne $ValuesToCheck.ScheduleInfo)
     {
         # Compare ScheduleInfo.Expiration
@@ -797,8 +835,17 @@ function Export-TargetResource
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
-
+            try
+            {
+                if ($null -ne $results.ScheduleInfo)
+                {
+                    $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
+                }
+            }
+            catch
+            {
+                Write-Verbose -Message "Error converting Schedule: $_"
+            }
             if ($Results.TicketInfo)
             {
                 $Results.TicketInfo = Get-M365DSCAzureADEligibilityRequestTicketInfoAsString -TicketInfo $Results.TicketInfo
