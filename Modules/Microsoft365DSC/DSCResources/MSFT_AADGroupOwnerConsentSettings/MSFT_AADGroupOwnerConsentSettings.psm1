@@ -283,7 +283,7 @@ function Set-TargetResource
             $valuesParam += [Microsoft.Graph.PowerShell.Models.MicrosoftGraphSettingValue]::DeserializeFromPSObject([pscustomobject]@{Name='EnableAdminConsentRequests';   Value=$currentInstance.EnableAdminConsentRequests})
         }
 
-        if ($EnableGroupSpecificConsent -and -not [string]::IsNullOrEmpty($ConstrainGroupSpecificConsentToMembersOfGroupName))
+        if ($EnableGroupSpecificConsent -eq $true -and -not [string]::IsNullOrEmpty($ConstrainGroupSpecificConsentToMembersOfGroupName))
         {
             $constrainConsentGroupObj = Get-MgGroup -Filter "DisplayName eq '$ConstrainGroupSpecificConsentToMembersOfGroupName'"
             if ($null -eq $constrainConsentGroupObj -or $constrainConsentGroupObj.securityEnabled -ne $true)
@@ -302,6 +302,10 @@ function Set-TargetResource
         }
         else
         {
+            if (-not [string]::IsNullOrEmpty($ConstrainGroupSpecificConsentToMembersOfGroupName))
+            {
+                throw "Specified ConstrainGroupSpecificConsentToMembersOfGroupName but EnableGroupSpecificConsent is false"
+            }
             $valuesParam += [Microsoft.Graph.PowerShell.Models.MicrosoftGraphSettingValue]::DeserializeFromPSObject([pscustomobject]@{Name='ConstrainGroupSpecificConsentToMembersOfGroupId'; Value=$null})
         }
 

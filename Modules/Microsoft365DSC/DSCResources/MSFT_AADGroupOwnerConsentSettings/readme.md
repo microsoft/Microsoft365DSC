@@ -1,5 +1,5 @@
 
-# AADGroupOwnerConsentPolicySettings
+# AADGroupOwnerConsentSettings
 
 ## Description
 
