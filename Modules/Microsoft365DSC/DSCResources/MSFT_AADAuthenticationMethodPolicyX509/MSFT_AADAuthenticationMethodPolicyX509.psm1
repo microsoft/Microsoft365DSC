@@ -108,16 +108,20 @@ function Get-TargetResource
                 {
                     $myRules.Add('X509CertificateRuleType', $currentRules.x509CertificateRuleType.toString())
                 }
-                if ($myRules.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($myRules.values.Where({ $null -ne $_ }).count -gt 0 -and $myRules.Keys.Length -gt 0)
                 {
                     $complexRules += $myRules
+                }
+                if ($complexRules.Length -le 0)
+                {
+                    $complexRules = $null
                 }
                 $complexAuthenticationModeConfiguration.Add('Rules', $complexRules)
             }
         }
         else
         {
-            $complexAuthenticationModeConfiguration.Add('Rules', @(''))
+            $complexAuthenticationModeConfiguration.Add('Rules', @())
         }
 
         if ($null -ne $getValue.AdditionalProperties.authenticationModeConfiguration.x509CertificateAuthenticationDefaultMode)
