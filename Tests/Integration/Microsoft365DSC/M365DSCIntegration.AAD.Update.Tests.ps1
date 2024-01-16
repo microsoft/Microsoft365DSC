@@ -79,7 +79,7 @@
                     DisplayName          = "My Context";
                     Ensure               = "Present";
                     Id                   = "c3";
-                    IsAvailable          = $True;
+                    IsAvailable          = $False; # Updated Property
                 }
                 AADAuthenticationMethodPolicy 'AADAuthenticationMethodPolicy-Authentication Methods Policy'
                 {
