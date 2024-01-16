@@ -183,6 +183,7 @@ Configuration Example
         {
             AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
                 X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
+                Rules = @()
             };
             CertificateUserBindings         = @(
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
