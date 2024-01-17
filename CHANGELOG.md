@@ -8,11 +8,13 @@
   * Ignore Permissions in tests if not passed. Preventing null comparison errors.
 * AADAttributeSet
   * Removed the ability to specify a value of Absent for the Ensure property.
-* AADAUthenticationMethodPolicy
+* AADAuthenticationMethodPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
-* AADAUthenticationMethodPolicyX509
+* AADAuthenticationMethodPolicyX509
   * Fix the way we returned an empty rule set from the Get method. This caused
     the Test-TargetResource method to return true even when instances matched.
+* AADRoleSetting
+  * Removed the ability to specify a value of Absent for the Ensure property.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
   * Updated MSCloudLoginAssistant to version 1.1.5.
