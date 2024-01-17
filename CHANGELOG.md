@@ -18,9 +18,14 @@
 * EXOAntiPhishPolicy
   * Add support for HonorDmarcPolicy parameter
     FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix CIM instances comparison in Test-TargetResource and export
+    CompliantAppsList with the correct type
+    FIXES [#4144](https://github.com/microsoft/Microsoft365DSC/issues/4144)
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
   * Updated MSCloudLoginAssistant to version 1.1.5.
+
 # 1.24.110.1
 
 * AADAdministrativeUnit
@@ -30,11 +35,11 @@
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
   * Implement Fix #3885. Manage Exclude Application.
-    FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+    FIXES [#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)
 * EXOHostedContentFilterPolicy
   * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders,
     BlockSenderDomains if desired state is empty but current state is not empty.
-    FIXES[#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
+    FIXES [#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
 * EXOMailContact
   * Added support for Custom Attributes and Extension Custom Attributes.
 * IntuneDeviceConfigurationPolicyMacOS
