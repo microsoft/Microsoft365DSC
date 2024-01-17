@@ -54,16 +54,21 @@ function Rename-M365DSCCimInstanceParameter
     )
 
     $result = $Properties
-
     $type = $Properties.getType().FullName
-
     #region Array
     if ($type -like '*[[\]]')
     {
         $values = @()
         foreach ($item in $Properties)
         {
-            $values += Rename-M365DSCCimInstanceParameter $item -KeyMapping $KeyMapping
+            try
+            {
+                $values += Rename-M365DSCCimInstanceParameter $item -KeyMapping $KeyMapping
+            }
+            catch
+            {
+                Write-Verbose -Message "Error getting values for item {$item}"
+            }
         }
         $result = $values
 
@@ -81,6 +86,7 @@ function Rename-M365DSCCimInstanceParameter
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
         $keys = ($hashProperties.clone()).keys
+
         foreach ($key in $keys)
         {
             $keyName = $key.substring(0, 1).tolower() + $key.substring(1, $key.length - 1)
@@ -90,10 +96,22 @@ function Rename-M365DSCCimInstanceParameter
             }
 
             $property = $hashProperties.$key
+
             if ($null -ne $property)
             {
                 $hashProperties.Remove($key)
-                $hashProperties.add($keyName, (Rename-M365DSCCimInstanceParameter $property -KeyMapping $KeyMapping))
+                try
+                {
+                    $subValue = Rename-M365DSCCimInstanceParameter $property -KeyMapping $KeyMapping
+                    if ($null -ne $subValue)
+                    {
+                        $hashProperties.add($keyName, $subValue)
+                    }
+                }
+                catch
+                {
+                    Write-Verbose -Message "Error adding $property"
+                }
             }
         }
         $result = $hashProperties

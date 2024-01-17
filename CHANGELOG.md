@@ -2,10 +2,25 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Used generic Graph API URL from MSCloudLoginConnectionProfile.
+* AADApplication
+  * Ignore Permissions in tests if not passed. Preventing null comparison errors.
+* AADAttributeSet
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADAuthenticationMethodPolicy
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADAuthenticationMethodPolicyX509
+  * Fix the way we returned an empty rule set from the Get method. This caused
+    the Test-TargetResource method to return true even when instances matched.
+* AADRoleSetting
+  * Removed the ability to specify a value of Absent for the Ensure property.
 * EXOAntiPhishPolicy
   * Add support for HonorDmarcPolicy parameter
     FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
-
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
+  * Updated MSCloudLoginAssistant to version 1.1.5.
 # 1.24.110.1
 
 * AADAdministrativeUnit

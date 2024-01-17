@@ -14,11 +14,13 @@ Configuration Example
 
     node localhost
     {
-        AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
+        AADTokenLifetimePolicy 'CreateTokenLifetimePolicy'
         {
-            DisplayName         = 'My Catalog'
-            Ensure              = 'Absent'
-            Credential          = $Credscredential
+            DisplayName           = "PolicyDisplayName"
+            Definition            = @("{`"TokenLifetimePolicy`":{`"Version`":1,`"AccessTokenLifetime`":`"02:00:00`"}}");
+            IsOrganizationDefault = $false
+            Ensure                = "Present"
+            Credential            = $Credscredential
         }
     }
 }
