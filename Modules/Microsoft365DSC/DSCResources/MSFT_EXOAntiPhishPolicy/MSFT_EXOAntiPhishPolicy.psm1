@@ -83,6 +83,10 @@ function Get-TargetResource
         $ExcludedSenders = @(),
 
         [Parameter()]
+        [System.Boolean]
+        $HonorDmarcPolicy,
+
+        [Parameter()]
         [ValidateSet('Automatic', 'Manual', 'Off')]
         [System.String]
         $ImpersonationProtectionState = 'Automatic',
@@ -253,6 +257,7 @@ function Get-TargetResource
                 EnableViaTag                                  = $AntiPhishPolicy.EnableViaTag
                 ExcludedDomains                               = $AntiPhishPolicy.ExcludedDomains
                 ExcludedSenders                               = $AntiPhishPolicy.ExcludedSenders
+                HonorDmarcPolicy                              = $AntiPhishPolicy.HonorDmarcPolicy
                 ImpersonationProtectionState                  = $AntiPhishPolicy.ImpersonationProtectionState
                 MailboxIntelligenceProtectionAction           = $AntiPhishPolicy.MailboxIntelligenceProtectionAction
                 MailboxIntelligenceProtectionActionRecipients = $AntiPhishPolicy.MailboxIntelligenceProtectionActionRecipients
@@ -377,6 +382,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludedSenders = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $HonorDmarcPolicy,
 
         [Parameter()]
         [ValidateSet('Automatic', 'Manual', 'Off')]
@@ -605,6 +614,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $ExcludedSenders = @(),
+
+        [Parameter()]
+        [System.Boolean]
+        $HonorDmarcPolicy,
 
         [Parameter()]
         [ValidateSet('Automatic', 'Manual', 'Off')]

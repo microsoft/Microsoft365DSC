@@ -26,6 +26,7 @@
 | **MakeDefault** | Write | Boolean | Make this the default antiphishing policy | |
 | **ExcludedDomains** | Write | StringArray[] | Theâ¯ExcludedDomainsâ¯parameter specifies trusted domains that are excluded from scanning by antiphishing protection. You can specify multiple domains separated by commas. | |
 | **ExcludedSenders** | Write | StringArray[] | Theâ¯ExcludedSendersâ¯parameter specifies a list of trusted sender email addresses that are excluded from scanning by antiphishing protection. You can specify multiple email addresses separated by commas. | |
+| **HonorDmarcPolicy** | Write | Boolean | The HonorDmarcPolicy enables or disables using the sender's DMARC policy to determine what to do to messages that fail DMARC checks. | |
 | **ImpersonationProtectionState** | Write | String | The ImpersonationProtectionState parameter specifies the configuration of impersonation protection. | |
 | **MailboxIntelligenceProtectionAction** | Write | String | The MailboxIntelligenceProtectionAction parameter specifies what to do with messages that fail mailbox intelligence protection. | |
 | **MailboxIntelligenceProtectionActionRecipients** | Write | StringArray[] | Theâ¯MailboxIntelligenceProtectionActionRecipients parameter specifies the recipients to add to detected messages when the MailboxIntelligenceProtectionAction parameter is set to the valueâ¯Redirect or BccMessage. | |
