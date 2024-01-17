@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.117.1
 
 * AADAdministrativeUnit
   * Used generic Graph API URL from MSCloudLoginConnectionProfile.
@@ -8,6 +8,9 @@
   * Ignore Permissions in tests if not passed. Preventing null comparison errors.
 * AADAttributeSet
   * Removed the ability to specify a value of Absent for the Ensure property.
+* AADConditionalAccessPolicy
+  * Fixes an error where the ApplicationEnforcedRestrictionsIsEnabled parameter
+    was always set to false in scenarios where it should have been null.
 * AADAuthenticationMethodPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADAuthenticationMethodPolicyX509
@@ -24,7 +27,7 @@
     FIXES [#4144](https://github.com/microsoft/Microsoft365DSC/issues/4144)
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
-  * Updated MSCloudLoginAssistant to version 1.1.5.
+  * Updated MSCloudLoginAssistant to version 1.1.7.
 
 # 1.24.110.1
 
