@@ -839,6 +839,11 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    if ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Absent')
+    {
+        return $true
+    }
+
     $ValuesToCheck = $PSBoundParameters
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
