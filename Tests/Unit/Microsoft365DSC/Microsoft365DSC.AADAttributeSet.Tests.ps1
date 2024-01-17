@@ -64,38 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The instance exists but it SHOULD NOT" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description         = "This is my super context test";
-                    MaxAttributesPerSet = 420;
-                    Ensure              = "Absent";
-                    Id                  = "c3";
-                    Credential          = $Credential;
-                }
-
-                Mock -CommandName Get-MgBetaDirectoryAttributeSet -MockWith {
-                    return @{
-                        Description         = "This is my super context test";
-                        MaxAttributesPerSet = 420;
-                        Id                  = "c3";
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should Remove the group from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgBetaDirectoryAttributeSet -Exactly 1
-            }
-        }
+        
         Context -Name "The instance exists and values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{

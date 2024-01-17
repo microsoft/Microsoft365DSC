@@ -14,11 +14,11 @@ Configuration Example
 
     node localhost
     {
-        AADTokenLifetimePolicy 'CreateTokenLifetimePolicy'
+        AADTokenLifetimePolicy 'SetTokenLifetimePolicy'
         {
             DisplayName           = "PolicyDisplayName"
-            Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
-            IsOrganizationDefault = $false
+            Definition            = @("{`"TokenLifetimePolicy`":{`"Version`":1,`"AccessTokenLifetime`":`"02:00:00`"}}");
+            IsOrganizationDefault = $true # Updated
             Ensure                = "Present"
             Credential            = $Credscredential
         }
