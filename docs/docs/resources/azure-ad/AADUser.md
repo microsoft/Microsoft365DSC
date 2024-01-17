@@ -161,6 +161,7 @@ Configuration Example
         AADUser 'ConfigureJohnSMith'
         {
             UserPrincipalName  = "John.Smith@$Domain"
+            DisplayName        = "John J. Smith"
             Ensure             = "Absent"
             Credential         = $Credscredential
         }

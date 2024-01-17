@@ -23,6 +23,7 @@ class MSFT_EXOAntiPhishPolicy : OMI_BaseResource
     [Write, Description("Make this the default antiphishing policy")] Boolean MakeDefault;
     [Write, Description("The ExcludedDomains parameter specifies trusted domains that are excluded from scanning by antiphishing protection. You can specify multiple domains separated by commas.")] String ExcludedDomains[];
     [Write, Description("The ExcludedSenders parameter specifies a list of trusted sender email addresses that are excluded from scanning by antiphishing protection. You can specify multiple email addresses separated by commas.")] String ExcludedSenders[];
+    [Write, Description("The HonorDmarcPolicy enables or disables using the sender's DMARC policy to determine what to do to messages that fail DMARC checks.")] Boolean HonorDmarcPolicy;
     [Write, Description("The ImpersonationProtectionState parameter specifies the configuration of impersonation protection.")] String ImpersonationProtectionState;
     [Write, Description("The MailboxIntelligenceProtectionAction parameter specifies what to do with messages that fail mailbox intelligence protection.")] String MailboxIntelligenceProtectionAction;
     [Write, Description("The MailboxIntelligenceProtectionActionRecipients parameter specifies the recipients to add to detected messages when the MailboxIntelligenceProtectionAction parameter is set to the value Redirect or BccMessage.")] String MailboxIntelligenceProtectionActionRecipients[];

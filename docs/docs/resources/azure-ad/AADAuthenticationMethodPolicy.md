@@ -12,7 +12,7 @@
 | **RegistrationEnforcement** | Write | MSFT_MicrosoftGraphregistrationEnforcement | Enforce registration at sign-in time. This property can be used to remind users to set up targeted authentication methods. | |
 | **SystemCredentialPreferences** | Write | MSFT_MicrosoftGraphsystemCredentialPreferences | Prompt users with their most-preferred credential for multifactor authentication. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -139,7 +139,6 @@ Configuration Example
     {
         AADAuthenticationMethodPolicy "AADAuthenticationMethodPolicy-Authentication Methods Policy"
         {
-            Description             = "The tenant-wide policy that controls which authentication methods are allowed in the tenant, authentication method registration requirements, and self-service password reset settings";
             DisplayName             = "Authentication Methods Policy";
             Ensure                  = "Present";
             Id                      = "authenticationMethodsPolicy";
@@ -147,7 +146,7 @@ Configuration Example
             PolicyVersion           = "1.5";
             RegistrationEnforcement = MSFT_MicrosoftGraphregistrationEnforcement{
                 AuthenticationMethodsRegistrationCampaign = MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign{
-                    SnoozeDurationInDays = 1
+                    SnoozeDurationInDays = (Get-Random -Minimum 1 -Maximum 14)
                     IncludeTargets = @(
                         MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget{
                             TargetedAuthenticationMethod = 'microsoftAuthenticator'
@@ -159,81 +158,6 @@ Configuration Example
                 }
             };
             Credential           = $credsCredential;
-        }
-    }
-}
-```
-
-### Example 2
-
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
-
-```powershell
-Configuration Example
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    Node localhost
-    {
-        AADAuthenticationMethodPolicy "AADAuthenticationMethodPolicy-Authentication Methods Policy"
-        {
-            Description             = "Updated"; # Updated Property
-            DisplayName             = "Authentication Methods Policy";
-            Ensure                  = "Present";
-            Id                      = "authenticationMethodsPolicy";
-            PolicyMigrationState    = "migrationInProgress";
-            PolicyVersion           = "1.5";
-            RegistrationEnforcement = MSFT_MicrosoftGraphregistrationEnforcement{
-                AuthenticationMethodsRegistrationCampaign = MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign{
-                    SnoozeDurationInDays = 1
-                    IncludeTargets = @(
-                        MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget{
-                            TargetedAuthenticationMethod = 'microsoftAuthenticator'
-                            TargetType = 'group'
-                            Id = 'all_users'
-                        }
-                    )
-                    State = 'default'
-                }
-            };
-            Credential           = $credsCredential;
-        }
-    }
-}
-```
-
-### Example 3
-
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
-
-```powershell
-Configuration Example
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    Node localhost
-    {
-        AADAuthenticationMethodPolicy "AADAuthenticationMethodPolicy-Authentication Methods Policy"
-        {
-            Description             = "The tenant-wide policy that controls which authentication methods are allowed in the tenant, authentication method registration requirements, and self-service password reset settings";
-            DisplayName             = "Authentication Methods Policy";
-            Ensure                  = "Absent";
-            Id                      = "authenticationMethodsPolicy";
-            Credential              = $credsCredential;
         }
     }
 }

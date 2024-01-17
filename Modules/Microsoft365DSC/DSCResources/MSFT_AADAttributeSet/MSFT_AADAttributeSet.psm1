@@ -19,7 +19,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
+        [ValidateSet('Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -127,7 +127,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
+        [ValidateSet('Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -182,11 +182,6 @@ function Set-TargetResource
         $BoundParameters.Remove('Id') | Out-Null
         Update-MgBetaDirectoryAttributeSet @BoundParameters | Out-Null
     }
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Removing the Attribute Set with Id {$($currentInstance.Id)}"
-        Remove-MgBetaDirectoryAttributeSet -AttributeSetId $Id | Out-Null
-    }
 }
 
 function Test-TargetResource
@@ -210,7 +205,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
+        [ValidateSet('Present')]
         $Ensure = 'Present',
 
         [Parameter()]
