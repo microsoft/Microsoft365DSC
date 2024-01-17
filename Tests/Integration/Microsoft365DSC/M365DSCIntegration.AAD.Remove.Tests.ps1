@@ -30,14 +30,6 @@
                     Ensure                    = "Absent"
                     Credential                = $Credscredential
                 }
-                AADAttributeSet 'AADAttributeSetTest'
-                {
-                    Credential           = $credsCredential;
-                    Description          = "Attribute set with 420 attributes";
-                    Ensure               = "Absent";
-                    Id                   = "TestAttributeSet";
-                    MaxAttributesPerSet  = 300; # Updated Property
-                }
                 AADAuthenticationContextClassReference 'AADAuthenticationContextClassReference-Test'
                 {
                     Credential           = $credsCredential;
@@ -150,7 +142,7 @@
                 }
                 AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
                 {
-                    DisplayName         = 'General'
+                    DisplayName         = 'My Catalog'
                     Ensure              = 'Absent'
                     Credential          = $Credscredential
                 }
@@ -282,8 +274,8 @@
                 }
                 AADServicePrincipal 'AADServicePrincipal'
                 {
-                    AppId                         = "<AppID GUID>"
-                    DisplayName                   = "AADAppName"
+                    AppId                         = "AppDisplayName"
+                    DisplayName                   = "AppDisplayName"
                     Ensure                        = "Absent"
                     Credential                    = $Credscredential
                 }
@@ -305,6 +297,7 @@
                 AADUser 'ConfigureJohnSMith'
                 {
                     UserPrincipalName  = "John.Smith@$Domain"
+                    DisplayName        = "John J. Smith"
                     Ensure             = "Absent"
                     Credential         = $Credscredential
                 }

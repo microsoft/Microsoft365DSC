@@ -151,8 +151,11 @@ function Get-TargetResource
                 if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
                 {
                     $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
-                    $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'" `
-                                                                -Expand 'AppRoleAssignedTo'
+                    if ($appInstance)
+                    {
+                        $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'" `
+                                                                    -Expand 'AppRoleAssignedTo'
+                    }
                 }
                 else
                 {

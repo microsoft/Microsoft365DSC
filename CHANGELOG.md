@@ -2,6 +2,22 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Used generic Graph API URL from MSCloudLoginConnectionProfile.
+* AADApplication
+  * Ignore Permissions in tests if not passed. Preventing null comparison errors.
+* AADAttributeSet
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADAuthenticationMethodPolicy
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADAuthenticationMethodPolicyX509
+  * Fix the way we returned an empty rule set from the Get method. This caused
+    the Test-TargetResource method to return true even when instances matched.
+* AADRoleSetting
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* EXOAntiPhishPolicy
+  * Add support for HonorDmarcPolicy parameter
+    FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
 * IntuneDeviceConfigurationPolicyMacOS
   * Fix CIM instances comparison in Test-TargetResource and export
     CompliantAppsList with the correct type

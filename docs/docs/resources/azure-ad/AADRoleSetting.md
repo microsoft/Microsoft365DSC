@@ -44,7 +44,7 @@
 | **EligibleAssignmentAssigneeNotificationDefaultRecipient** | Write | Boolean | Send notifications when eligible members activate this role: Notification to activated user (requestor), default recipient (True/False) | |
 | **EligibleAssignmentAssigneeNotificationAdditionalRecipient** | Write | StringArray[] | Send notifications when eligible members activate this role: Notification to activated user (requestor), additional recipient (UPN) | |
 | **EligibleAssignmentAssigneeNotificationOnlyCritical** | Write | Boolean | Send notifications when eligible members activate this role: Notification to activated user (requestor), only critical Email (True/False) | |
-| **Ensure** | Write | String | Specify if the Azure AD role setting should exist or not. | `Present`, `Absent` |
+| **Ensure** | Write | String | Specify if the Azure AD role setting should exist or not. | `Present` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -146,71 +146,6 @@ Configuration Example
             PermanentEligibleAssignmentisExpirationRequired           = $False;
             Credential                                                = $Credscredential
             Ensure                                                    = 'Present'
-        }
-    }
-}
-```
-
-### Example 2
-
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
-
-```powershell
-Configuration Example
-{
-    param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    Node localhost
-    {
-        AADRoleSetting 28b253d8-cde5-471f-a331-fe7320023cdd
-        {
-            ActivateApprover                                          = @();
-            ActivationMaxDuration                                     = "PT8H";
-            ActivationReqJustification                                = $False; # Updated Property
-            ActivationReqMFA                                          = $False;
-            ActivationReqTicket                                       = $False;
-            ActiveAlertNotificationAdditionalRecipient                = @();
-            ActiveAlertNotificationDefaultRecipient                   = $True;
-            ActiveAlertNotificationOnlyCritical                       = $False;
-            ActiveApproveNotificationAdditionalRecipient              = @();
-            ActiveApproveNotificationDefaultRecipient                 = $True;
-            ActiveApproveNotificationOnlyCritical                     = $False;
-            ActiveAssigneeNotificationAdditionalRecipient             = @();
-            ActiveAssigneeNotificationDefaultRecipient                = $True;
-            ActiveAssigneeNotificationOnlyCritical                    = $False;
-            ApprovaltoActivate                                        = $False;
-            AssignmentReqJustification                                = $True;
-            AssignmentReqMFA                                          = $False;
-            Displayname                                               = "Application Administrator";
-            ElegibilityAssignmentReqJustification                     = $False;
-            ElegibilityAssignmentReqMFA                               = $False;
-            EligibleAlertNotificationAdditionalRecipient              = @();
-            EligibleAlertNotificationDefaultRecipient                 = $True;
-            EligibleAlertNotificationOnlyCritical                     = $False;
-            EligibleApproveNotificationAdditionalRecipient            = @();
-            EligibleApproveNotificationDefaultRecipient               = $True;
-            EligibleApproveNotificationOnlyCritical                   = $False;
-            EligibleAssigneeNotificationAdditionalRecipient           = @();
-            EligibleAssigneeNotificationDefaultRecipient              = $True;
-            EligibleAssigneeNotificationOnlyCritical                  = $False;
-            EligibleAssignmentAlertNotificationAdditionalRecipient    = @();
-            EligibleAssignmentAlertNotificationDefaultRecipient       = $True;
-            EligibleAssignmentAlertNotificationOnlyCritical           = $False;
-            EligibleAssignmentAssigneeNotificationAdditionalRecipient = @();
-            EligibleAssignmentAssigneeNotificationDefaultRecipient    = $True;
-            EligibleAssignmentAssigneeNotificationOnlyCritical        = $False;
-            ExpireActiveAssignment                                    = "P180D";
-            ExpireEligibleAssignment                                  = "P365D";
-            PermanentActiveAssignmentisExpirationRequired             = $False;
-            PermanentEligibleAssignmentisExpirationRequired           = $False;
-            Credential                                                = $Credscredential
-            Ensure                                                    = 'Absent'
         }
     }
 }

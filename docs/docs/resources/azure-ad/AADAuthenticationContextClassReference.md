@@ -107,7 +107,7 @@ Configuration Example
             DisplayName          = "My Context";
             Ensure               = "Present";
             Id                   = "c3";
-            IsAvailable          = $True;
+            IsAvailable          = $False; # Updated Property
         }
     }
 }

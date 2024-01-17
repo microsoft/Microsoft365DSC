@@ -1094,20 +1094,29 @@ function Get-M365DSCO365OrgSettingsPlannerConfig
     try
     {
         $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + "/taskAPI/tenantAdminSettings/Settings";
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $results = Invoke-RestMethod -ContentType "application/json;odata.metadata=full" `
             -Headers @{"Accept"="application/json"; "Authorization"=$Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; "Accept-Charset"="UTF-8"; "OData-Version"="4.0;NetFx"; "OData-MaxVersion"="4.0;NetFx"} `
             -Method GET `
-            $Uri
+            $Uri -ErrorAction Stop
         return $results
     }
     catch
     {
-        Write-Verbose -Message "Not able to retrieve Office 365 Planner Settings. Please ensure correct permissions have been granted."
-        New-M365DSCLogEntry -Message 'Error updating Office 365 Planner Settings' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+        if ($_.Exception.Message -eq 'The request was aborted: Could not create SSL/TLS secure channel.')
+        {
+            Write-Warning -Message "Could not create SSL/TLS secure channel. Skipping the Planner settings."
+        }
+        else
+        {
+            Write-Verbose -Message "Not able to retrieve Office 365 Planner Settings. Please ensure correct permissions have been granted."
+            New-M365DSCLogEntry -Message 'Error updating Office 365 Planner Settings' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
+
         return $null
     }
 }
