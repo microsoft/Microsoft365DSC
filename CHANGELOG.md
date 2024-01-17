@@ -13,7 +13,7 @@
 * AADAuthenticationMethodPolicyX509
   * Fix the way we returned an empty rule set from the Get method. This caused
     the Test-TargetResource method to return true even when instances matched.
-* AADROleSetting
+* AADRoleSetting
   * Removed the ability to specify a value of Absent for the Ensure property.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
