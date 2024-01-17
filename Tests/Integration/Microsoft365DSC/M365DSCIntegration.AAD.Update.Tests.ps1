@@ -79,11 +79,10 @@
                     DisplayName          = "My Context";
                     Ensure               = "Present";
                     Id                   = "c3";
-                    IsAvailable          = $True;
+                    IsAvailable          = $False; # Updated Property
                 }
                 AADAuthenticationMethodPolicy 'AADAuthenticationMethodPolicy-Authentication Methods Policy'
                 {
-                    Description             = "Updated"; # Updated Property
                     DisplayName             = "Authentication Methods Policy";
                     Ensure                  = "Present";
                     Id                      = "authenticationMethodsPolicy";
@@ -91,7 +90,7 @@
                     PolicyVersion           = "1.5";
                     RegistrationEnforcement = MSFT_MicrosoftGraphregistrationEnforcement{
                         AuthenticationMethodsRegistrationCampaign = MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign{
-                            SnoozeDurationInDays = 1
+                            SnoozeDurationInDays = (Get-Random -Minimum 1 -Maximum 14)
                             IncludeTargets = @(
                                 MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget{
                                     TargetedAuthenticationMethod = 'microsoftAuthenticator'
@@ -110,7 +109,7 @@
                     Ensure                = "Present";
                     ExcludeTargets        = @(
                         MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                            Id = 'Finance Team' # Updated Property
+                            Id = 'Executives' # Updated Property
                             TargetType = 'group'
                         }
                     );
@@ -289,6 +288,7 @@
                 {
                     AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
                         X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
+                        Rules = @()
                     };
                     CertificateUserBindings         = @(
                         MSFT_MicrosoftGraphx509CertificateUserBinding{
@@ -355,7 +355,7 @@
                     ApplicationEnforcedRestrictionsIsEnabled = $False;
                     BuiltInControls                          = @("mfa");
                     ClientAppTypes                           = @("all");
-                    CloudAppSecurityIsEnabled                = $True; # Updated Porperty
+                    CloudAppSecurityIsEnabled                = $False;
                     Credential                               = $Credscredential;
                     DeviceFilterMode                         = "exclude";
                     DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
@@ -369,7 +369,7 @@
                     SignInFrequencyInterval                  = "timeBased";
                     SignInFrequencyIsEnabled                 = $True;
                     SignInFrequencyType                      = "hours";
-                    SignInFrequencyValue                     = 1;
+                    SignInFrequencyValue                     = 2; # Updated Porperty
                     State                                    = "disabled";
                 }
                 AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
@@ -596,6 +596,7 @@
                     GroupTypes      = @("Unified")
                     MailNickname    = "M365DSC"
                     Visibility      = "Private"
+                    Owners          = @("AdeleV@$Domain")
                     Ensure          = "Present"
                     Credential      = $Credscredential
                 }
@@ -651,15 +652,15 @@
                 }
                 AADRoleEligibilityScheduleRequest 'MyRequest'
                 {
-                    Action               = "AdminAssign";
+                    Action               = "AdminUpdate";
                     Credential           = $Credscredential;
                     DirectoryScopeId     = "/";
                     Ensure               = "Present";
-                    IsValidationOnly     = $True; # Updated Property
+                    IsValidationOnly     = $False;
                     Principal            = "AdeleV@$Domain";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
-                        startDateTime             = '2023-09-01T02:40:44Z'
+                        startDateTime             = '2023-09-01T02:45:44Z' # Updated Property
                         expiration                = MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration
                             {
                                 endDateTime = '2025-10-31T02:40:09Z'
@@ -735,20 +736,18 @@
                     Ensure               = "Present";
                     IdentityProviderType = "Google";
                 }
-                AADTenantDetails 'ÇonfigureTenantDetails'
+                AADTenantDetails 'ConfigureTenantDetails'
                 {
                     IsSingleInstance                     = 'Yes'
                     TechnicalNotificationMails           = "example@contoso.com"
-                    SecurityComplianceNotificationPhones = "+1123456789"
-                    SecurityComplianceNotificationMails  = "example@contoso.com"
                     MarketingNotificationEmails          = "example@contoso.com"
                     Credential                           = $credsCredential
                 }
-                AADTokenLifetimePolicy 'CreateTokenLifetimePolicy'
+                AADTokenLifetimePolicy 'SetTokenLifetimePolicy'
                 {
                     DisplayName           = "PolicyDisplayName"
-                    Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
-                    IsOrganizationDefault = $false
+                    Definition            = @("{`"TokenLifetimePolicy`":{`"Version`":1,`"AccessTokenLifetime`":`"02:00:00`"}}");
+                    IsOrganizationDefault = $true # Updated
                     Ensure                = "Present"
                     Credential            = $Credscredential
                 }

@@ -385,6 +385,7 @@ function Export-TargetResource
         if ($ReportSubmissionRule.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
+            return
         }
         else
         {

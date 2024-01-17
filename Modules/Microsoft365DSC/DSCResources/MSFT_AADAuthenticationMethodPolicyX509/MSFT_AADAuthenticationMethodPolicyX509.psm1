@@ -4,7 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region resource generator code
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AuthenticationModeConfiguration,
@@ -29,8 +28,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
-
-        #endregion
 
         [Parameter()]
         [System.String]
@@ -111,15 +108,20 @@ function Get-TargetResource
                 {
                     $myRules.Add('X509CertificateRuleType', $currentRules.x509CertificateRuleType.toString())
                 }
-                if ($myRules.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($myRules.values.Where({ $null -ne $_ }).count -gt 0 -and $myRules.Keys.Length -gt 0)
                 {
                     $complexRules += $myRules
+                }
+                if ($complexRules.Length -le 0)
+                {
+                    $complexRules = $null
                 }
                 $complexAuthenticationModeConfiguration.Add('Rules', $complexRules)
             }
         }
-        else {
-            $complexAuthenticationModeConfiguration.Add('Rules', @(''))
+        else
+        {
+            $complexAuthenticationModeConfiguration.Add('Rules', @())
         }
 
         if ($null -ne $getValue.AdditionalProperties.authenticationModeConfiguration.x509CertificateAuthenticationDefaultMode)
@@ -392,7 +394,7 @@ function Set-TargetResource
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.x509CertificateAuthenticationMethodConfiguration')
         Write-Verbose -Message "Updating with Values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
-        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
+        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion

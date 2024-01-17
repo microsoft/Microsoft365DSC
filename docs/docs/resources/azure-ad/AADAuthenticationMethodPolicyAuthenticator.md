@@ -192,7 +192,7 @@ Configuration Example
             Ensure                = "Present";
             ExcludeTargets        = @(
                 MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                    Id = 'Finance Team' # Updated Property
+                    Id = 'Executives' # Updated Property
                     TargetType = 'group'
                 }
             );
