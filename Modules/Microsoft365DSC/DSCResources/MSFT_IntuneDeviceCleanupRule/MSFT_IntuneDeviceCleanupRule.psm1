@@ -377,7 +377,9 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like "*401*" -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or
-            $_.Exception -like "* Unauthorized*")
+            $_.Exception -like "* Unauthorized*" -or `
+            $_.Exception -like "*Request not applicable to target tenant*" -or `
+            $_.Exception -like "*BadRequest*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

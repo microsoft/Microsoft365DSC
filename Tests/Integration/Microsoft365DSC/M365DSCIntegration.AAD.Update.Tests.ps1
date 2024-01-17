@@ -79,7 +79,7 @@
                     DisplayName          = "My Context";
                     Ensure               = "Present";
                     Id                   = "c3";
-                    IsAvailable          = $True;
+                    IsAvailable          = $False; # Updated Property
                 }
                 AADAuthenticationMethodPolicy 'AADAuthenticationMethodPolicy-Authentication Methods Policy'
                 {
@@ -288,6 +288,7 @@
                 {
                     AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
                         X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
+                        Rules = @()
                     };
                     CertificateUserBindings         = @(
                         MSFT_MicrosoftGraphx509CertificateUserBinding{

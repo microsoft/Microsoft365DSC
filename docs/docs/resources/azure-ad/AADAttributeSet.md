@@ -7,7 +7,7 @@
 | **Id** | Key | String | Identifier for the attribute set that is unique within a tenant. Can be up to 32 characters long and include Unicode characters. Cannot contain spaces or special characters. Cannot be changed later. Case insensitive | |
 | **Description** | Write | String | Identifier for the attribute set that is unique within a tenant. Can be up to 32 characters long and include Unicode characters. Cannot contain spaces or special characters. Cannot be changed later. Case insensitive | |
 | **MaxAttributesPerSet** | Write | UInt32 | Maximum number of custom security attributes that can be defined in this attribute set. Default value is null. If not specified, the administrator can add up to the maximum of 500 active attributes per tenant. Can be changed later. | |
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -103,37 +103,6 @@ Configuration Example
             Credential           = $credsCredential;
             Description          = "Attribute set with 420 attributes";
             Ensure               = "Present";
-            Id                   = "TestAttributeSet";
-            MaxAttributesPerSet  = 300; # Updated Property
-        }
-    }
-}
-```
-
-### Example 3
-
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
-
-```powershell
-Configuration Example
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
-    )
-
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    node localhost
-    {
-        AADAttributeSet "AADAttributeSetTest"
-        {
-            Credential           = $credsCredential;
-            Description          = "Attribute set with 420 attributes";
-            Ensure               = "Absent";
             Id                   = "TestAttributeSet";
             MaxAttributesPerSet  = 300; # Updated Property
         }
