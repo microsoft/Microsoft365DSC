@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADCrossTenantAccessPolicy
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADCrossTenantAccessPolicyCOnfigurationDefault
+  * Removed the ability to specify a value of Absent for the Ensure property.
+
 # 1.24.117.1
 
 * AADAdministrativeUnit
