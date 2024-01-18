@@ -111,9 +111,12 @@ function Get-TargetResource
                 -ErrorAction SilentlyContinue
         }
 
-        if ($null -eq $getValue -and -not [System.String]::IsNullOrEmpty($id))
+        if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            if(-not [System.String]::IsNullOrEmpty($id))
+            {
+                Write-Verbose -Message "Nothing with id {$id} was found"
+            }
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
