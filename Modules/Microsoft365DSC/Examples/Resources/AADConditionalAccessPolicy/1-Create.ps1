@@ -15,7 +15,7 @@ Configuration Example
 
     node localhost
     {
-        AADConditionalAccessPolicy 'Allin-example'
+        AADConditionalAccessPolicy 'ConditionalAccessPolicy'
         {
             ApplicationEnforcedRestrictionsIsEnabled = $False;
             BuiltInControls                          = @("mfa");
