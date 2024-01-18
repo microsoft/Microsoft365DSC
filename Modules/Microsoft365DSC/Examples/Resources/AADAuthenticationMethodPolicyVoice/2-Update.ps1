@@ -27,7 +27,7 @@ Configuration Example
                 }
             );
             IsOfficePhoneAllowed = $True; # Updated Property
-            State                = "disabled";
+            State                = "enabled";
         }
     }
 }
