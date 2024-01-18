@@ -91,13 +91,6 @@ Configuration Example
             Credential           = $Credscredential;
             Ensure               = "Present";
             Id                   = "Voice";
-            IncludeTargets       = @(
-                MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                    Id = 'all_users'
-                    TargetType = 'group'
-                }
-            );
-            IsOfficePhoneAllowed = $True; # Updated Property
             State                = "disabled";
         }
     }
