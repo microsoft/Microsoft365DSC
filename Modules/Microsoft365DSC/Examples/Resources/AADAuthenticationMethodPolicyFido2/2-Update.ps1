@@ -43,7 +43,7 @@ Configuration Example
                 EnforcementType = 'block'
                 AaGuids = @()
             };
-            State                            = "disabled"; # Updated Property
+            State                            = "enabled"; # Updated Property
         }
     }
 }
