@@ -99,14 +99,14 @@ function Get-TargetResource
         $complexCompanionAppAllowedState = @{}
         $complexExcludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id
-                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id)
-            }
+        {
+            $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id
+            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexExcludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType.toString())
@@ -118,14 +118,14 @@ function Get-TargetResource
         $complexCompanionAppAllowedState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id
-                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id)
-            }
+        {
+            $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id
+            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexIncludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType.toString())
@@ -145,16 +145,17 @@ function Get-TargetResource
         }
         $complexFeatureSettings.Add('CompanionAppAllowedState', $complexCompanionAppAllowedState)
         $complexDisplayAppInformationRequiredState = @{}
+
         $complexExcludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id
-                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id)
-            }
+        {
+            $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id
+            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexExcludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType.toString())
@@ -166,14 +167,14 @@ function Get-TargetResource
         $complexDisplayAppInformationRequiredState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id
-                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id)
-            }
+        {
+            $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id
+            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexIncludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType.toString())
@@ -195,14 +196,14 @@ function Get-TargetResource
         $complexDisplayLocationInformationRequiredState = @{}
         $complexExcludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id
-                $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexExcludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id)
-            }
+        {
+            $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id
+            $complexExcludeTarget.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexExcludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType)
         {
             $complexExcludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType.toString())
@@ -214,14 +215,14 @@ function Get-TargetResource
         $complexDisplayLocationInformationRequiredState.Add('ExcludeTarget', $complexExcludeTarget)
         $complexIncludeTarget = @{}
         if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch 'all_users|00000000-0000-0000-0000-000000000000')
-            {
-                $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id
-                $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
-            }
-            else
-            {
-                $complexIncludeTarget.Add('Id', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id)
-            }
+        {
+            $myIncludeTargetsDisplayName = Get-MgGroup -GroupId $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id
+            $complexIncludeTarget.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
+        }
+        else
+        {
+            $complexIncludeTarget.Add('Id', 'all_users')
+        }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType)
         {
             $complexIncludeTarget.Add('TargetType', $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType.toString())
@@ -249,7 +250,7 @@ function Get-TargetResource
             {
                 $myExcludeTargetsDisplayName = Get-MgGroup -GroupId $currentExcludeTargets.id -ErrorAction SilentlyContinue
 
-                if ($null -ne $myIncludeTargetsDisplayName)
+                if ($null -ne $myExcludeTargetsDisplayName)
                 {
                     $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
                 }
@@ -506,66 +507,91 @@ function Set-TargetResource
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
+
         $UpdateParameters.Remove('Id') | Out-Null
+
+        Write-Verbose -Message "Flag1"
         # replace group Displayname with group id
-        if ($UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
+        if ($UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -and `
+            $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('companionAppAllowedState'))
         {
+            Write-Verbose -Message 'Retrieving companionAppAllowedState include target'
             $Filter = "Displayname eq '$($UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id)'" | Out-String
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.foreach('id',$groupid)
         }
-        if ($UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
+
+        Write-Verbose -Message "Flag2"
+        if ($UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -and `
+            $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('companionAppAllowedState'))
         {
+            Write-Verbose -Message 'Retrieving companionAppAllowedState include target'
             $Filter = "Displayname eq '$($UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id)'" | Out-String
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.foreach('id',$groupid)
         }
-        if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
+        Write-Verbose -Message "Flag3"
+        if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -and `
+            $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayAppInformationRequiredState'))
         {
+            Write-Verbose -Message 'Retrieving displayAppInformationRequiredState include target'
             $Filter = "Displayname eq '$($UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id)'" | Out-String
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.foreach('id',$groupid)
         }
-        if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
+        Write-Verbose -Message "Flag4"
+        if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -and `
+            $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayAppInformationRequiredState'))
         {
+            Write-Verbose -Message 'Retrieving displayAppInformationRequiredState exclude target'
             $Filter = "Displayname eq '$($UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id)'" | Out-String
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.foreach('id',$groupid)
         }
-        if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
-        $UpdateParameters.featureSettings.ContainsKey('displayLocationInformationRequiredState'))
+        Write-Verbose -Message "Flag5"
+        if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -and `
+            $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
+            $UpdateParameters.featureSettings.ContainsKey('displayLocationInformationRequiredState'))
         {
+            Write-Verbose -Message 'Retrieving displayLocationInformationRequiredState include target'
             $Filter = "Displayname eq '$($UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id)'" | Out-String
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.foreach('id',$groupid)
         }
-        if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
+        Write-Verbose -Message "Flag6"
+        if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -and `
+            $UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayLocationInformationRequiredState'))
         {
+            Write-Verbose -Message 'Retrieving displayLocationInformationRequiredState exclude target'
             $Filter = "Displayname eq '$($UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id)'" | Out-String
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.foreach('id',$groupid)
         }
 
         # DEPRECATED
+        Write-Verbose -Message "Flag7"
         if ($UpdateParameters.featureSettings.ContainsKey('NumberMatchingRequiredState'))
         {
             Write-Verbose -Message "The NumberMatchingRequiredState feature is deprecated and will be ignored. Please remove it from your configuration."
             $UpdateParameters.featureSettings.Remove('NumberMatchingRequiredState')
         }
 
+        Write-Verbose -Message "Flag8"
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
         {
             if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
             {
+                Write-Verbose -Message "Flag9a"
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+                Write-Verbose -Message "Flag9b"
             }
-            if ($key -eq 'IncludeTargets')
+            if ($key -eq 'IncludeTargets' -or $key -eq 'ExcludeTargets')
             {
                 $i = 0
                 foreach ($entry in $UpdateParameters.$key)
@@ -573,20 +599,15 @@ function Set-TargetResource
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
                         $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key)
-                {
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
+                        $group = Get-MgGroup -Filter $Filter
+                        if ($null -ne $group)
+                        {
+                            $UpdateParameters.$key[$i].foreach('id', $group.id.ToString())
+                        }
+                        else
+                        {
+                            Write-Verbose -Message "Couldn't find group with DisplayName {$($entry.id)}"
+                        }
                     }
                     $i++
                 }

@@ -12,21 +12,22 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADEntitlementManagementConnectedOrganization 'MyConnectedOrganization'
         {
-            Description           = "this is the tenant partner - Updated"; # Updated Property
+            Description           = "This is the tenant partner - Updated"; # Updated Property
             DisplayName           = "Test Tenant - DSC";
-            ExternalSponsors      = @("12345678-1234-1234-1234-123456789012");
+            ExternalSponsors      = @("AdeleV@$Domain");
             IdentitySources       = @(
                 MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
-                    ExternalTenantId = "12345678-1234-1234-1234-123456789012"
-                    DisplayName = 'Contoso'
+                    ExternalTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"
+                    DisplayName = 'o365dsc'
                     odataType = '#microsoft.graph.azureActiveDirectoryTenant'
                 }
             );
-            InternalSponsors      = @("12345678-1234-1234-1234-123456789012");
+            InternalSponsors      = @("AdeleV@$Domain");
             State                 = "configured";
             Ensure                = "Present"
             Credential            = $Credscredential

@@ -14,9 +14,9 @@ Configuration Example
 
     node localhost
     {
-        AADEntitlementManagementAccessPackageAssignmentPolicy "myAssignmentPolicyWithAccessReviewsSettings"
+        AADEntitlementManagementAccessPackageAssignmentPolicy "myAssignments"
         {
-            AccessPackageId         = "5d05114c-b4d9-4ae7-bda6-4bade48e60f2";
+            AccessPackageId         = "Integration Package";
             AccessReviewSettings    = MSFT_MicrosoftGraphassignmentreviewsettings{
                 IsEnabled = $True
                 StartDateTime = '12/17/2022 23:59:59'
@@ -37,17 +37,6 @@ Configuration Example
                 IsRequestorJustificationRequired = $False
                 IsApprovalRequired = $False
                 IsApprovalRequiredForExtension = $False
-            };
-            RequestorSettings       = MSFT_MicrosoftGraphrequestorsettings{
-                AllowedRequestors = @(
-                    MSFT_MicrosoftGraphuserset{
-                        IsBackup = $False
-                        Id = 'e27eb9b9-27c3-462d-8d65-3bcd763b0ed0'
-                        odataType = '#microsoft.graph.connectedOrganizationMembers'
-                    }
-                )
-                AcceptRequests = $True
-                ScopeType = 'SpecificConnectedOrganizationSubjects'
             };
             Ensure                     = "Present"
             Credential                 = $Credscredential

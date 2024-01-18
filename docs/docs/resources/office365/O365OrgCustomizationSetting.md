@@ -6,7 +6,7 @@
 | --- | --- | --- | --- | --- |
 | **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
 | **Ensure** | Write | String | Since there is only one setting availble, this must be set to 'Present' | `Present` |
-| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |

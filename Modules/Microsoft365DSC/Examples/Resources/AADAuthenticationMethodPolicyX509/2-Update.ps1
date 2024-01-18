@@ -17,21 +17,19 @@ Configuration Example
     {
         AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
         {
-            Credential                      = $credsCredential;
             AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
-                Rules = @(@()
-                )
-                X509CertificateAuthenticationDefaultMode = 'x509CertificateMultiFactor'
+                X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
+                Rules = @()
             };
             CertificateUserBindings         = @(
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
                     Priority = 1
-                    UserProperty = 'onPremisesUserPrincipalName'
+                    UserProperty = 'userPrincipalName'
                     X509CertificateField = 'PrincipalName'
                 }
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
                     Priority = 2
-                    UserProperty = 'onPremisesUserPrincipalName'
+                    UserProperty = 'userPrincipalName'
                     X509CertificateField = 'RFC822Name'
                 }
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
@@ -40,29 +38,22 @@ Configuration Example
                     X509CertificateField = 'SubjectKeyIdentifier'
                 }
             );
+            Credential                      = $Credscredential;
             Ensure                          = "Present";
             ExcludeTargets                  = @(
                 MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'DSCGroup'
                     TargetType = 'group'
                 }
             );
             Id                              = "X509Certificate";
             IncludeTargets                  = @(
                 MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'Finance Team'
                     TargetType = 'group'
                 }
             );
-            State                           = "disabled"; # Updated Property
+            State                           = "enabled";
         }
     }
 }

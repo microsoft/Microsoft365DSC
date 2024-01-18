@@ -9,6 +9,7 @@ function Get-TargetResource
         $UserInitiatedMode,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled', 'EnabledUserOverride')]
         [System.String]
         $ReceiveSurveysMode,
 
@@ -118,6 +119,7 @@ function Set-TargetResource
         $UserInitiatedMode,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled', 'EnabledUserOverride')]
         [System.String]
         $ReceiveSurveysMode,
 
@@ -245,6 +247,7 @@ function Test-TargetResource
         $UserInitiatedMode,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled', 'EnabledUserOverride')]
         [System.String]
         $ReceiveSurveysMode,
 

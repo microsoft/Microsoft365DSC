@@ -7,7 +7,7 @@
 | **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
 | **Ensure** | Write | String | 'Present' is the only value accepted. | `Present` |
 | **UnifiedAuditLogIngestionEnabled** | Required | String | Determins if Unified Audit Log Ingestion is enabled | `Enabled`, `Disabled` |
-| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |

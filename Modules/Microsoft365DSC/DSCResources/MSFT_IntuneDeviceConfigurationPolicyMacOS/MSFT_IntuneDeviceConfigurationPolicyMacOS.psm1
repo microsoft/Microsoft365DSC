@@ -1,3 +1,9 @@
+# More information on the properties can be found here:
+# - https://learn.microsoft.com/en-us/graph/api/intune-deviceconfig-macosgeneraldeviceconfiguration-create?view=graph-rest-beta
+# - https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-applistitem?view=graph-rest-beta
+# - https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosprivacyaccesscontrolitem?view=graph-rest-beta
+# - https://learn.microsoft.com/en-us/graph/api/resources/intune-deviceconfig-macosappleeventreceiver?view=graph-rest-beta
+
 function Get-TargetResource
 {
     [CmdletBinding()]
@@ -317,7 +323,14 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
+        try
+        {
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction Stop
+        }
+        catch
+        {
+            $getValue = $null
+        }
 
         #region resource generator code
         if ($null -eq $getValue)
@@ -336,7 +349,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
+        Write-Verbose -Message "Found something with id {$($getValue.id)}"
         $results = @{
 
             #region resource generator code
@@ -417,7 +430,7 @@ function Get-TargetResource
             $results.Add('PrivacyAccessControls', $getValue.additionalProperties.privacyAccessControls)
         }
 
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -762,14 +775,10 @@ function Set-TargetResource
 
     $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-
+    if ($UpdateDelayPolicy.Count -gt 0)
+    {
+        $PSBoundParameters.UpdateDelayPolicy = $UpdateDelayPolicy -join ','
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -791,7 +800,6 @@ function Set-TargetResource
         }#>
 
         $CreateParameters.Remove('Id') | Out-Null
-        $CreateParameters.Remove('Verbose') | Out-Null
 
         foreach ($key in ($CreateParameters.clone()).Keys)
         {
@@ -842,7 +850,6 @@ function Set-TargetResource
         }#>
 
         $UpdateParameters.Remove('Id') | Out-Null
-        $UpdateParameters.Remove('Verbose') | Out-Null
 
         foreach ($key in ($UpdateParameters.clone()).Keys)
         {
@@ -1197,6 +1204,8 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
@@ -1205,34 +1214,19 @@ function Test-TargetResource
     }
     $testResult = $true
 
+    #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
     {
-        if ($PSBoundParameters[$key].getType().Name -like '*CimInstance*')
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($source.getType().Name -like '*CimInstance*')
         {
-            $CIMArraySource = @()
-            $CIMArrayTarget = @()
-            $CIMArraySource += $PSBoundParameters[$key]
-            $CIMArrayTarget += $CurrentValues.$key
-            if ($CIMArraySource.count -ne $CIMArrayTarget.count)
-            {
-                Write-Verbose -Message "Configuration drift:Number of items does not match: Source=$($CIMArraySource.count) Target=$($CIMArrayTarget.count)"
-                $testResult = $false
-                break
-            }
-            $i = 0
-            foreach ($item in $CIMArraySource )
-            {
-                $testResult = Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $CIMArraySource[$i]) `
-                    -Target ($CIMArrayTarget[$i])
+            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-                $i++
-                if (-Not $testResult)
-                {
-                    $testResult = $false
-                    break
-                }
-            }
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
             if (-Not $testResult)
             {
                 $testResult = $false
@@ -1242,12 +1236,6 @@ function Test-TargetResource
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
-
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -1362,7 +1350,7 @@ function Export-TargetResource
 
             if ($Results.CompliantAppsList)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.CompliantAppsList -CIMInstanceName MicrosoftGraphapplistitem
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.CompliantAppsList -CIMInstanceName MicrosoftGraphapplistitemMacOS
                 if ($complexTypeStringResult)
                 {
                     $Results.CompliantAppsList = $complexTypeStringResult
@@ -1443,7 +1431,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

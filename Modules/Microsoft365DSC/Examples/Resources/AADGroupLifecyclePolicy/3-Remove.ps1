@@ -17,6 +17,9 @@ Configuration Example
         AADGroupLifecyclePolicy 'GroupLifecyclePolicy'
         {
             IsSingleInstance            = "Yes"
+            AlternateNotificationEmails = @("john.smith@contoso.com")
+            GroupLifetimeInDays         = 99
+            ManagedGroupTypes           = "Selected"
             Ensure                      = "Absent"
             Credential                  = $Credscredential
         }

@@ -90,10 +90,15 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
-
+        try
+        {
+            $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Id -ExpandProperty 'settings' -ErrorAction Stop
+        }
+        catch
+        {
+            $getValue = $null
+        }
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an Intune Setting Catalog Custom Policy for Windows10 with Id {$Id}"
@@ -104,14 +109,18 @@ function Get-TargetResource
                     -Filter "Name eq '$Name' and Platforms eq 'windows10'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript {[String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId)}
-                if ($null -ne $getValue)
+                if ($getValue.count -gt 1)
+                {
+                    throw "Error: The displayName {$Name} is not unique in the tenant`r`nEnsure the display Name is unique for this type of resource."
+                }
+                if (-not [string]::IsNullOrEmpty($getValue.id))
                 {
                     $getValue = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $getValue.id -ExpandProperty 'settings' -ErrorAction SilentlyContinue
                 }
             }
         }
         #endregion
-        if ($null -eq $getValue)
+        if ([string]::IsNullOrEmpty($getValue.id))
         {
             Write-Verbose -Message "Could not find an Intune Setting Catalog Custom Policy for Windows10 with Name {$Name}"
             return $nullResult
@@ -703,7 +712,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

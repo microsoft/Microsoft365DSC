@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Key | String | | |
+| **Identity** | Key | String | Specify the name of the Teams Network Roaming Policy. | |
 | **AllowIPVideo** | Write | Boolean | Determines whether video is enabled in a user's meetings or calls. Set this to TRUE to allow the user to share their video. Set this to FALSE to prohibit the user from sharing their video. | |
 | **Description** | Write | String | Description of the new policy to be created. | |
 | **MediaBitRateKb** | Write | UInt64 | Determines the media bit rate for audio/video/app sharing transmissions in meetings. | |

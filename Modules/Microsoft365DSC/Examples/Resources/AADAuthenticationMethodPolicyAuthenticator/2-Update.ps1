@@ -17,69 +17,50 @@ Configuration Example
     {
         AADAuthenticationMethodPolicyAuthenticator "AADAuthenticationMethodPolicyAuthenticator-MicrosoftAuthenticator"
         {
+            Credential            = $Credscredential;
             Ensure                = "Present";
             ExcludeTargets        = @(
                 MSFT_AADAuthenticationMethodPolicyAuthenticatorExcludeTarget{
-                    Id = 'fakegroup1'
+                    Id = 'Executives' # Updated Property
                     TargetType = 'group'
                 }
             );
             FeatureSettings       = MSFT_MicrosoftGraphmicrosoftAuthenticatorFeatureSettings{
                 DisplayLocationInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = '00000000-0000-0000-0000-000000000000'
-                        TargetType = 'group'
-                    }
                     IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'fakegroup2'
+                        Id = 'all_users'
                         TargetType = 'group'
                     }
-                    State = 'enabled'
+                    State = 'default'
                 }
-                            NumberMatchingRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = '00000000-0000-0000-0000-000000000000'
-                        TargetType = 'group'
-                    }
+                CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
                     IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'fakegroup3'
+                        Id = 'all_users'
                         TargetType = 'group'
                     }
-                    State = 'enabled'
+                    State = 'default'
                 }
-                            CompanionAppAllowedState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = '00000000-0000-0000-0000-000000000000'
-                        TargetType = 'group'
-                    }
+                DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
                     IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'fakegroup4'
+                        Id = 'all_users'
                         TargetType = 'group'
                     }
-                    State = 'enabled'
+                    State = 'default'
                 }
-                            DisplayAppInformationRequiredState = MSFT_MicrosoftGraphAuthenticationMethodFeatureConfiguration{
-                    ExcludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = '00000000-0000-0000-0000-000000000000'
-                        TargetType = 'group'
-                    }
-                    IncludeTarget = MSFT_AADAuthenticationMethodPolicyAuthenticatorFeatureTarget{
-                        Id = 'fakegroup5'
-                        TargetType = 'group'
-                    }
-                    State = 'enabled'
-                }
-                        };
+            };
             Id                    = "MicrosoftAuthenticator";
             IncludeTargets        = @(
                 MSFT_AADAuthenticationMethodPolicyAuthenticatorIncludeTarget{
-                    Id = 'fakegroup6'
+                    Id = 'Finance Team'
+                    TargetType = 'group'
+                }
+                MSFT_AADAuthenticationMethodPolicyAuthenticatorIncludeTarget{
+                    Id = 'Northwind Traders'
                     TargetType = 'group'
                 }
             );
-            IsSoftwareOathEnabled = $True; # Updated Property
+            IsSoftwareOathEnabled = $False;
             State                 = "enabled";
-            Credential            = $credsCredential;
         }
     }
 }

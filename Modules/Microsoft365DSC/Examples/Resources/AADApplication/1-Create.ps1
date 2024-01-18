@@ -12,19 +12,20 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADApplication 'AADApp1'
         {
             DisplayName               = "AppDisplayName"
             AvailableToOtherTenants   = $false
-            GroupMembershipClaims     = "0"
-            Homepage                  = "https://app.contoso.com"
-            IdentifierUris            = "https://app.contoso.com"
+            GroupMembershipClaims     = "None"
+            Homepage                  = "https://$Domain"
+            IdentifierUris            = "https://$Domain"
             KnownClientApplications   = ""
-            LogoutURL                 = "https://app.contoso.com/logout"
+            LogoutURL                 = "https://$Domain/logout"
             PublicClient              = $false
-            ReplyURLs                 = "https://app.contoso.com"
+            ReplyURLs                 = "https://$Domain"
             Permissions               = @(
                 MSFT_AADApplicationPermission
                 {
