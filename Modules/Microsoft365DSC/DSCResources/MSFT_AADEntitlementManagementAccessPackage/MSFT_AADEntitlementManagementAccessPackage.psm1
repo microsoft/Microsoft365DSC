@@ -802,6 +802,11 @@ function Test-TargetResource
             {
                 $s.remove('Id')
             }
+
+            if ($target.getType().Name -like '*CimInstance*')
+            {
+                $target = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $target
+            }
             foreach ($t in [Array]$target)
             {
                 $t.remove('Id')
