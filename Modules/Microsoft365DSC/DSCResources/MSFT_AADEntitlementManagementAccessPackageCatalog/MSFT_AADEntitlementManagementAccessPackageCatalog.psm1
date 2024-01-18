@@ -93,9 +93,12 @@ function Get-TargetResource
             $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $id -ErrorAction SilentlyContinue
         }
 
-        if ($null -eq $getValue -and -not [System.String]::IsNullOrEmpty($Id))
+        if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                Write-Verbose -Message "Nothing with id {$id} was found"
+            }
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
