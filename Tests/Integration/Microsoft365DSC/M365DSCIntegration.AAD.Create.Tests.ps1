@@ -311,7 +311,7 @@
                     Ensure               = "Present";
                     Credential           = $Credscredential;
                 }
-                AADConditionalAccessPolicy 'Allin-example'
+                AADConditionalAccessPolicy 'ConditionalAccessPolicy'
                 {
                     ApplicationEnforcedRestrictionsIsEnabled = $False;
                     BuiltInControls                          = @("mfa");
