@@ -108,10 +108,8 @@ Configuration Example
     {
         AADConditionalAccessPolicy 'ConditionalAccessPolicy'
         {
-            ApplicationEnforcedRestrictionsIsEnabled = $False;
             BuiltInControls                          = @("mfa");
             ClientAppTypes                           = @("all");
-            CloudAppSecurityIsEnabled                = $False;
             Credential                               = $Credscredential;
             DeviceFilterMode                         = "exclude";
             DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
@@ -121,7 +119,6 @@ Configuration Example
             GrantControlOperator                     = "OR";
             IncludeApplications                      = @("All");
             IncludeRoles                             = @("Attack Payload Author");
-            PersistentBrowserIsEnabled               = $False;
             SignInFrequencyInterval                  = "timeBased";
             SignInFrequencyIsEnabled                 = $True;
             SignInFrequencyType                      = "hours";
@@ -152,10 +149,8 @@ Configuration Example
     {
         AADConditionalAccessPolicy 'ConditionalAccessPolicy'
         {
-            ApplicationEnforcedRestrictionsIsEnabled = $False;
             BuiltInControls                          = @("mfa");
             ClientAppTypes                           = @("all");
-            CloudAppSecurityIsEnabled                = $False;
             Credential                               = $Credscredential;
             DeviceFilterMode                         = "exclude";
             DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
@@ -165,7 +160,6 @@ Configuration Example
             GrantControlOperator                     = "OR";
             IncludeApplications                      = @("All");
             IncludeRoles                             = @("Attack Payload Author");
-            PersistentBrowserIsEnabled               = $False;
             SignInFrequencyInterval                  = "timeBased";
             SignInFrequencyIsEnabled                 = $True;
             SignInFrequencyType                      = "hours";
