@@ -4,13 +4,13 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Organization** | Key | String | | |
+| **Organization** | Key | String | Specify the name of your organization. | |
 | **MailTipsAllTipsEnabled** | Write | Boolean | Specifies whether MailTips are enabled. | |
 | **MailTipsGroupMetricsEnabled** | Write | Boolean | Specifies whether MailTips that rely on group metrics data are enabled. | |
 | **MailTipsLargeAudienceThreshold** | Write | UInt32 | Specifies what a large audience is. | |
 | **MailTipsMailboxSourcedTipsEnabled** | Write | Boolean | Specifies whether MailTips that rely on mailbox data (out-of-office or full mailbox) are enabled. | |
 | **MailTipsExternalRecipientsTipsEnabled** | Write | Boolean | Specifies whether MailTips for external recipients are enabled. | |
-| **Ensure** | Write | String | | `Present`, `Absent` |
+| **Ensure** | Write | String | Specifies if this MailTip should exist. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |

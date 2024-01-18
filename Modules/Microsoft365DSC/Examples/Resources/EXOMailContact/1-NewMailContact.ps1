@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsCredential
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -16,20 +16,22 @@ Configuration Example
     {
         EXOMailContact 'TestMailContact'
         {
-            Alias                       = "TestMailContact";
-            Credential                  = $Credscredential;
-            DisplayName                 = "My Test Contact";
-            Ensure                      = "Present";
-            ExternalEmailAddress        = "SMTP:test@tailspintoys.com";
-            MacAttachmentFormat         = "BinHex";
-            MessageBodyFormat           = "TextAndHtml";
-            MessageFormat               = "Mime";
-            ModeratedBy                 = @();
-            ModerationEnabled           = $False;
-            Name                        = "My Test Contact";
-            OrganizationalUnit          = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$OrganizationName";
-            SendModerationNotifications = "Always";
-            UsePreferMessageFormat      = $True;
+            Alias                       = 'TestMailContact'
+            Credential                  = $Credscredential
+            DisplayName                 = 'My Test Contact'
+            Ensure                      = 'Present'
+            ExternalEmailAddress        = 'SMTP:test@tailspintoys.com'
+            MacAttachmentFormat         = 'BinHex'
+            MessageBodyFormat           = 'TextAndHtml'
+            MessageFormat               = 'Mime'
+            ModeratedBy                 = @()
+            ModerationEnabled           = $false
+            Name                        = 'My Test Contact'
+            OrganizationalUnit          = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$OrganizationName"
+            SendModerationNotifications = 'Always'
+            UsePreferMessageFormat      = $true
+            CustomAttribute1            = 'Custom Value 1'
+            ExtensionCustomAttribute5   = 'Extension Custom Value 1', 'Extension Custom Value 2'
         }
     }
 }

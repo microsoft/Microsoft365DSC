@@ -10,7 +10,7 @@
 | **Description** | Write | String | The group's description. | |
 | **Members** | Write | StringArray[] | Members of the group. | |
 | **Ensure** | Write | String | Present ensures the group exists, absent ensures it is removed. | `Present`, `Absent` |
-| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application used for authentication. | |

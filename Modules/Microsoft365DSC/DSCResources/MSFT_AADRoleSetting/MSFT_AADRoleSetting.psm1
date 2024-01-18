@@ -10,7 +10,7 @@ function Get-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Displayname,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -165,7 +165,7 @@ function Get-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -213,7 +213,29 @@ function Get-TargetResource
     #endregion
 
     $nullReturn = $PSBoundParameters
-    $nullReturn.Ensure = 'Absent'
+
+    $RoleDefintion = $null
+    if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+    {
+        $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+    }
+    elseif (-not [System.String]::IsNullOrEmpty($Id))
+    {
+        $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id `
+            -ErrorAction SilentlyContinue
+    }
+
+    if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($Displayname))
+    {
+        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+        {
+            $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+        }
+        else
+        {
+            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
+        }
+    }
 
     try
     {
@@ -222,7 +244,8 @@ function Get-TargetResource
             $allFilter = "scopeId eq '/' and scopeType eq 'DirectoryRole'"
             $Script:PolicyAssignments = Get-MgBetaPolicyRoleManagementPolicyAssignment -Filter $allFilter -All
         }
-        $Policy = $Script:PolicyAssignments | Where-Object -FilterScript {$_.RoleDefinitionId -eq $Id}
+
+        $Policy = $Script:PolicyAssignments | Where-Object -FilterScript {$_.RoleDefinitionId -eq $RoleDefinition.Id}
     }
     catch
     {
@@ -236,26 +259,6 @@ function Get-TargetResource
     if ($null -eq $Policy)
     {
         return $nullReturn
-    }
-    if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-    {
-        $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
-    }
-    else
-    {
-        $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $Id
-    }
-
-    if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($Displayname))
-    {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-        {
-            $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $Displayname}
-        }
-        else
-        {
-            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
-        }
     }
 
     #get Policyrule
@@ -400,7 +403,7 @@ function Set-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Displayname,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -555,7 +558,7 @@ function Set-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 
@@ -599,11 +602,23 @@ function Set-TargetResource
     #endregion
 
     #get role
-    [string]$Filter = $null
-    $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '" + $Id + "'"
-    $Policy = Get-MgBetaPolicyRoleManagementPolicyAssignment -Filter $Filter
+    $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
+
+    $Policy = $null
+    if (-not [System.String]::IsNullOrEmpty($Id))
+    {
+        $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '" + $Id + "'"
+        $Policy = Get-MgBetaPolicyRoleManagementPolicyAssignment -Filter $Filter
+    }
+    else
+    {
+        Write-Verbose -Message "Finding Policy Assignment by Role Definition Id {$($RoleDefinition.Id)}"
+        $Filter = "scopeId eq '/' and scopeType eq 'DirectoryRole' and RoleDefinitionId eq '$($RoleDefinition.Id)'"
+        $Policy = Get-MgBetaPolicyRoleManagementPolicyAssignment -Filter $Filter
+    }
     #get Policyrule
-    $roles = Get-MgBetaPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.Policyid
+    $roles = Get-MgBetaPolicyRoleManagementPolicyRule -UnifiedRoleManagementPolicyId $Policy.PolicyId `
+        -ErrorAction SilentlyContinue
 
     foreach ($role in $roles)
     {
@@ -1100,7 +1115,7 @@ function Test-TargetResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Displayname,
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -1255,7 +1270,7 @@ function Test-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
-        [ValidateSet('Present', 'Absent')]
+        [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
 

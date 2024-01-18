@@ -307,7 +307,7 @@ function Set-TargetResource
     # Named Location exist but should not
     elseif ($Ensure -eq 'Absent' -and $CurrentAADNamedLocation.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing AAD Named Location {$Displayname)}"
+        Write-Verbose -Message "Removing AAD Named Location {$Displayname} with id {$($currentAADNamedLocation.ID)}"
         Remove-MgBetaIdentityConditionalAccessNamedLocation -NamedLocationId $currentAADNamedLocation.ID
     }
 }

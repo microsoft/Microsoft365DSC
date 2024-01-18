@@ -125,13 +125,16 @@
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
                     Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
+                    $PrincipalTypeValue = $null
                     if ($PrincipalType -eq 'User')
                     {
+                        Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
                         $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
                         $PrincipalTypeValue = 'User'
                     }
                     if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
                     {
+                        Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
                         $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
                         $PrincipalTypeValue = 'Group'
                     }
@@ -146,7 +149,7 @@
                     }
                     Write-Verbose -Message "Found Principal {$PrincipalId}"
                     $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
-                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalId -and $_.RoleDefinitionId -eq $RoleDefinition}
+                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalId -and $_.RoleDefinitionId -eq $RoleDefinition} | Sort-Object -Property CompletedDateTime -Descending
             }
             else
             {
@@ -178,11 +181,50 @@
                 Write-Verbose -Message "Found Role {$RoleDefinitionId}"
 
                 $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
-                $request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
+                [Array]$request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'" | Sort-Object -Property CompletedDateTime -Descending
+`               $request = $request[0]
             }
         }
         else
         {
+            $ObjectGuid = [System.Guid]::empty
+            if ($PrincipalType -eq 'User')
+            {            
+                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
+                
+                if ([System.Guid]::TryParse($Principal,[System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $PrincipalIdValue = Get-MgUser -UserId $Principal -ErrorAction SilentlyContinue
+                }
+                else
+                {
+                    $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
+                }
+                $PrincipalTypeValue = 'User'
+            }
+
+            if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
+            {
+                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
+                if ([System.Guid]::TryParse($Principal,[System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $PrincipalIdValue = Get-MgGroup -GroupId $Principal -ErrorAction SilentlyContinue
+                }
+                else
+                {
+                    $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
+                }
+                $PrincipalTypeValue = 'Group'
+            }
+
+            if ($null -ne $PrincipalIdValue)
+            {
+                $PrincipalId = $PrincipalIdValue.Id
+            }
+            else
+            {
+                return $nullResult
+            }
             $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
             $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)' and RoleDefinitionId eq '$RoleDefinitionId'"
         }
@@ -202,11 +244,13 @@
         Write-Verbose -Message "Found existing AADRolelLigibilityScheduleRequest"
         if ($PrincipalType -eq 'User')
         {
+            Write-Verbose -Message "Retrieving Principal by UserId {$($request.PrincipalId)}"
             $PrincipalInstance = Get-MgUser -UserId $request.PrincipalId -ErrorAction SilentlyContinue
             $PrincipalTypeValue = 'User'
         }
         if ($null -eq $PrincipalInstance -or $PrincipalType -eq 'Group')
         {
+            Write-Verbose -Message "Retrieving Principal by GroupId {$($request.PrincipalId)}"
             $requestArray = [Array]$request
             if ($requestArray.Count -gt 1)
             {
@@ -307,7 +351,7 @@
     }
     catch
     {
-        Write-Verbose "Error: $($_.ErrorDetails.Message)"
+        Write-Verbose "Error: $_"
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -640,7 +684,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
+    $ValuesToCheck.Remove("Action") | Out-Null
     if($null -ne $CurrentValues.ScheduleInfo -and $null -ne $ValuesToCheck.ScheduleInfo)
     {
         # Compare ScheduleInfo.Expiration
@@ -791,8 +835,17 @@ function Export-TargetResource
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
-
+            try
+            {
+                if ($null -ne $results.ScheduleInfo)
+                {
+                    $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
+                }
+            }
+            catch
+            {
+                Write-Verbose -Message "Error converting Schedule: $_"
+            }
             if ($Results.TicketInfo)
             {
                 $Results.TicketInfo = Get-M365DSCAzureADEligibilityRequestTicketInfoAsString -TicketInfo $Results.TicketInfo

@@ -70,9 +70,9 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
         {
-            DisplayName         = 'General'
+            DisplayName         = 'My Catalog'
             CatalogStatus       = 'Published'
-            CatalogType         = 'ServiceDefault'
+            CatalogType         = 'UserManaged'
             Description         = 'Built-in catalog.'
             IsExternallyVisible = $True
             Managedidentity     = $False
@@ -102,9 +102,9 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
         {
-            DisplayName         = 'General'
+            DisplayName         = 'My Catalog'
             CatalogStatus       = 'Published'
-            CatalogType         = 'ServiceDefault'
+            CatalogType         = 'UserManaged'
             Description         = 'Built-in catalog.'
             IsExternallyVisible = $False # Updated Property
             Managedidentity     = $False
@@ -134,7 +134,7 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
         {
-            DisplayName         = 'General'
+            DisplayName         = 'My Catalog'
             Ensure              = 'Absent'
             Credential          = $Credscredential
         }

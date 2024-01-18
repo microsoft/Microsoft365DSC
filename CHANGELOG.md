@@ -1,7 +1,136 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.117.1
 
+* AADAdministrativeUnit
+  * Used generic Graph API URL from MSCloudLoginConnectionProfile.
+* AADApplication
+  * Ignore Permissions in tests if not passed. Preventing null comparison errors.
+* AADAttributeSet
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADConditionalAccessPolicy
+  * Fixes an error where the ApplicationEnforcedRestrictionsIsEnabled parameter
+    was always set to false in scenarios where it should have been null.
+* AADAuthenticationMethodPolicy
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADAuthenticationMethodPolicyX509
+  * Fix the way we returned an empty rule set from the Get method. This caused
+    the Test-TargetResource method to return true even when instances matched.
+* AADRoleSetting
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* EXOAntiPhishPolicy
+  * Add support for HonorDmarcPolicy parameter
+    FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix CIM instances comparison in Test-TargetResource and export
+    CompliantAppsList with the correct type
+    FIXES [#4144](https://github.com/microsoft/Microsoft365DSC/issues/4144)
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
+  * Updated MSCloudLoginAssistant to version 1.1.7.
+
+# 1.24.110.1
+
+* AADAdministrativeUnit
+  * Fix the Update logic flow to get around a bug in Microsoft.Graph 2.11.1.
+* AADAuthenticationMethodPolicyX509
+  * Added support for the  property for include targets
+* AADConditionalAccessPolicy
+  * Added support for application filters in the conditions.
+  * Implement Fix #3885. Manage Exclude Application.
+    FIXES [#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)
+* EXOHostedContentFilterPolicy
+  * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders,
+    BlockSenderDomains if desired state is empty but current state is not empty.
+    FIXES [#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
+* EXOMailContact
+  * Added support for Custom Attributes and Extension Custom Attributes.
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix workaround added on PR #4099 in order to be able to use this resource
+    for deployments
+    FIXES [#4105](https://github.com/microsoft/Microsoft365DSC/issues/4105)
+* SCDLPComplianceRule
+  * Fix type of AccessScope
+    FIXES [#3463](https://github.com/microsoft/Microsoft365DSC/issues/3463)
+* TeamsTenantDialPlan
+  * FIXES [#3767](https://github.com/microsoft/Microsoft365DSC/issues/3767)
+
+# 1.24.103.1
+
+* AADConditionalAccessPolicy
+  * Fix Get-TargetResource when the parameter Id is not present
+    FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
+* EXOInboundConnector
+  * Corrected parameter descriptions, so the documentation on microsoft365dsc.com is generated correctly.
+* EXOMailTips
+  * Added parameter descriptions for better documentation
+* EXOOutboundConnector
+  * Corrected parameter descriptions, so the documentation on microsoft365dsc.com is generated correctly.
+* EXOReportSubmissionPolicy
+  * Initial release
+    FIXES [#3690](https://github.com/microsoft/Microsoft365DSC/issues/3690)
+* EXOReportSubmissionRule
+  * Initial release
+    FIXES [#3690](https://github.com/microsoft/Microsoft365DSC/issues/3690)
+* EXOTransportRule
+  * Stop supporting DLP-related rules, conditions, and actions (https://techcommunity.microsoft.com/t5/exchange-team-blog/exchange-online-mail-flow-rules-to-stop-supporting-dlp-related/ba-p/3959870)
+    FIXES [#3929](https://github.com/microsoft/Microsoft365DSC/issues/3929)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Added parameter descriptions for better documentation
+* IntuneSettingCatalogCustomPolicyWindows10
+  * Fix Get-TargetResource when the parameter Id is not present
+    FIXES [#4029](https://github.com/microsoft/Microsoft365DSC/issues/4003)
+* SPOTenantSettings
+  * Added parameter descriptions for better documentation
+* TeamsChannel
+  * Add error handling if GroupId of a team is null
+    FIXES [#3943](https://github.com/microsoft/Microsoft365DSC/issues/3943)
+* TeamsFeedbackPolicy
+  * Added parameter descriptions for better documentation
+* TeamsMobilityPolicy
+  * Added parameter descriptions for better documentation
+* TeamsNetworkRoamingPolicy
+  * Added parameter descriptions for better documentation
+
+# 1.23.1227.1
+
+* EXOAntiPhishPolicy
+  * Add support for TargetedDomainProtectionAction
+    FIXES [#3910](https://github.com/microsoft/Microsoft365DSC/issues/3910)
+* EXOMailboxCalendarFolder
+  * Add support for non-English calendar folder names during export
+    FIXES [#4056](https://github.com/microsoft/Microsoft365DSC/issues/4056)
+* EXOMailboxPermission
+  * Ignore SendAs permissions during export
+    FIXES [#3942](https://github.com/microsoft/Microsoft365DSC/issues/3942)
+* EXOTransportRule
+  * Fix export of enabled state
+    FIXES [#3932](https://github.com/microsoft/Microsoft365DSC/issues/3932)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Fix issue deploying decrypted OmaSettings to another tenant
+    FIXES [#4083](https://github.com/microsoft/Microsoft365DSC/issues/4083)
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix resource deployment
+    FIXES [#3539](https://github.com/microsoft/Microsoft365DSC/issues/3539)
+  * Ensure resource can cope with Id being empty since it's not mandatory
+* O365OrgSettings
+  * Deprecated the MicrosoftVivaBriefingEmail property
+    FIXES [#4097](https://github.com/microsoft/Microsoft365DSC/issues/4097)
+    FIXES [#4080](https://github.com/microsoft/Microsoft365DSC/issues/4080)
+* SPOTenantSettings
+  * Fix bug for DisabledWebPartIds type, should be an array instead of a string
+    FIXES [#4086](https://github.com/microsoft/Microsoft365DSC/issues/4086)
+* TeamsMeetingPolicy
+  * Allow -1 for NewMeetingRecordingExpirationDays parameter (never expire)
+    FIXES [#4090](https://github.com/microsoft/Microsoft365DSC/issues/4090)
+* TeamsMessagingPolicy
+  * Added support for property 'AllowVideoMessages'
+    FIXES [#4021](https://github.com/microsoft/Microsoft365DSC/issues/4021)
+
+# 1.23.1220.1
+
+* AADEntitlementManagementAccessPackage
+  * Retrieve catalog by name instead of id.
 * IntuneDeviceAndAppManagementAssignmentFilter
   * Add support for remaining platforms supported by this policy
     FIXES [#4065](https://github.com/microsoft/Microsoft365DSC/issues/4065)
@@ -10,17 +139,21 @@
     FIXES [#3655](https://github.com/microsoft/Microsoft365DSC/issues/3655)
 * IntuneDeviceEnrollmentPlatformRestriction
   * Fix Set-TargetResource due to an issue were the bodyparameter not cast correctly
-  FIXES [#3730](https://github.com/microsoft/Microsoft365DSC/issues/3730)
+    FIXES [#3730](https://github.com/microsoft/Microsoft365DSC/issues/3730)
 * IntuneEndpointDetectionAndResponsePolicyWindows10
   * Fix issue when trying to remove policy and Identity is set to a random GUID
     or from another tenant
-  FIXES [#4041](https://github.com/microsoft/Microsoft365DSC/issues/4041)
+    FIXES [#4041](https://github.com/microsoft/Microsoft365DSC/issues/4041)
 * IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled
   * Added Assignments
     FIXES [#2932](https://github.com/microsoft/Microsoft365DSC/issues/2932)
+* SCAutoSensitivieyLabelPolicy
+    FIXES [#4036] Don't see any limits on our docs for priority
 * M365DSCDRGUtil
   * Fix empty BaseUrl since MSCloudLoginAssistant removed Intune workload
     FIXES [#4057](https://github.com/microsoft/Microsoft365DSC/issues/4057)
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.4.
 
 # 1.23.1213.1
 

@@ -12,22 +12,19 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADServicePrincipal 'AADServicePrincipal'
         {
-            AppId                         = "<AppID GUID>"
-            DisplayName                   = "AADAppName"
+            AppId                         = 'AppDisplayName'
+            DisplayName                   = "AppDisplayName"
             AlternativeNames              = "AlternativeName1","AlternativeName2"
             AccountEnabled                = $true
             AppRoleAssignmentRequired     = $false
-            ErrorUrl                      = ""
-            Homepage                      = "https://AADAppName.contoso.com"
-            LogoutUrl                     = "https://AADAppName.contoso.com/logout"
-            PublisherName                 = "Contoso"
-            ReplyURLs                     = "https://AADAppName.contoso.com"
-            SamlMetadataURL               = ""
-            ServicePrincipalNames         = "<AppID GUID>", "https://AADAppName.contoso.com"
+            Homepage                      = "https://$Domain"
+            LogoutUrl                     = "https://$Domain/logout"
+            ReplyURLs                     = "https://$Domain"
             ServicePrincipalType          = "Application"
             Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
             Ensure                        = "Present"

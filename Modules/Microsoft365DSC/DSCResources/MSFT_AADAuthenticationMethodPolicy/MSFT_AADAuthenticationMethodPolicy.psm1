@@ -41,7 +41,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
+        [ValidateSet('Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -91,7 +91,10 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($Id))
+        {
+            $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -290,7 +293,7 @@ function Set-TargetResource
         #endregion
         [Parameter()]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
+        [ValidateSet('Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -357,14 +360,8 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.AuthenticationMethodsPolicy")
+        Write-Verbose -Message "Updating AuthenticationMethodPolicy with: `r`n$(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
         Update-MgBetaPolicyAuthenticationMethodPolicy -BodyParameter $UpdateParameters
-        #endregion
-    }
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Removing the Azure AD Authentication Method Policy with Id {$($currentInstance.Id)}"
-        #region resource generator code
-        Remove-MgBetaPolicyAuthenticationMethodPolicy
         #endregion
     }
 }
@@ -411,7 +408,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
+        [ValidateSet('Present')]
         $Ensure = 'Present',
 
         [Parameter()]
