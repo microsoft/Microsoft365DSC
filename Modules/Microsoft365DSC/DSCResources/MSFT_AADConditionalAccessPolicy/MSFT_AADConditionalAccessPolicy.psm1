@@ -649,20 +649,20 @@ function Get-TargetResource
         BuiltInControls                          = [System.String[]](@() + $Policy.GrantControls.BuiltInControls)
         CustomAuthenticationFactors              = [System.String[]](@() + $Policy.GrantControls.CustomAuthenticationFactors)
         #no translation needed, return empty string array if undefined
-        ApplicationEnforcedRestrictionsIsEnabled = $false -or $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
+        ApplicationEnforcedRestrictionsIsEnabled = $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
         #make false if undefined, true if true
-        CloudAppSecurityIsEnabled                = $false -or $Policy.SessionControls.CloudAppSecurity.IsEnabled
+        CloudAppSecurityIsEnabled                = $Policy.SessionControls.CloudAppSecurity.IsEnabled
         #make false if undefined, true if true
         CloudAppSecurityType                     = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
         #no translation needed, return empty string array if undefined
-        SignInFrequencyIsEnabled                 = $false -or $Policy.SessionControls.SignInFrequency.IsEnabled
+        SignInFrequencyIsEnabled                 = $Policy.SessionControls.SignInFrequency.IsEnabled
         #make false if undefined, true if true
         SignInFrequencyValue                     = $Policy.SessionControls.SignInFrequency.Value
         #no translation or conversion needed, $null returned if undefined
         SignInFrequencyType                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
         SignInFrequencyInterval                  = $SignInFrequencyIntervalValue
         #no translation needed
-        PersistentBrowserIsEnabled               = $false -or $Policy.SessionControls.PersistentBrowser.IsEnabled
+        PersistentBrowserIsEnabled               = $Policy.SessionControls.PersistentBrowser.IsEnabled
         #make false if undefined, true if true
         PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
         #no translation needed
@@ -1474,15 +1474,13 @@ function Set-TargetResource
         {
             Write-Verbose -Message 'Set-Targetresource: create provision Session Control object'
             $sessioncontrols = @{
-                ApplicationEnforcedRestrictions = @{
-                    IsEnabled = $false
-                }
+                ApplicationEnforcedRestrictions = @{}
             }
 
-            if ($ApplicationEnforcedRestrictionsIsEnabled)
+            if ($ApplicationEnforcedRestrictionsIsEnabled -eq $true)
             {
                 #create and provision ApplicationEnforcedRestrictions object if used
-                $sessioncontrols.ApplicationEnforcedRestrictions.IsEnabled = $true
+                $sessioncontrols.ApplicationEnforcedRestrictions.Add('IsEnabled', $true)
             }
             if ($CloudAppSecurityIsEnabled)
             {
