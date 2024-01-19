@@ -227,7 +227,7 @@
                     GroupTypes      = @("Unified")
                     MailNickname    = "M365DSC"
                     Visibility      = "Private"
-                    Owners          = @("admin@$Domain", "AdeleV@$Domain")
+                    Owners          = @("admin@$Domain", "AdeleV@$Domain", "GitHubIntegration@$Domain")
                     Ensure          = "Present"
                     Credential      = $Credscredential
                 }
