@@ -22,6 +22,9 @@
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADCrossTenantAccessPolicyCOnfigurationDefault
   * Removed the ability to specify a value of Absent for the Ensure property.
+* TeamsCallQueue
+  * Optimize performances by doing 1 request instead of n+1
+  FIXES [[#4192](https://github.com/microsoft/Microsoft365DSC/issues/4192)]
 
 # 1.24.117.1
 
