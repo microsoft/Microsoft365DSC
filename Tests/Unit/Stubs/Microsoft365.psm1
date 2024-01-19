@@ -1,4 +1,4 @@
-#region ExchangeOnlineManagement
+# region ExchangeOnlineManagement
 function Get-DefaultTenantBriefingConfig
 {
     [CmdletBinding()]
@@ -51825,6 +51825,20 @@ function Remove-MgBetaDirectoryAdministrativeUnitMemberByRef
         $Break
     )
 }
+function Restore-MgBetaDirectoryDeletedItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [String]
+        $DirectoryObjectId
+    )
+}
+function Get-MgBetaDirectoryDeletedItem
+{
+    [CmdletBinding()]
+}
+
 function Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]

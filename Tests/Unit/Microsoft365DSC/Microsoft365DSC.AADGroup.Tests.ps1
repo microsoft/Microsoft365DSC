@@ -37,6 +37,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgGroupMember -MockWith {
             }
 
+            Mock -CommandName Restore-MgBetaDirectoryDeletedItem -MockWith {
+            }
+
+            Mock -CommandName Get-MgBetaDirectoryDeletedItem -MockWith {
+            }
+
             Mock -CommandName Get-MgGroupMemberOf -MockWith {
             }
 
@@ -395,7 +401,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MailNickname    = 'M365DSC'
                         GroupTypes      = @()
                     }
-                    
+
                     # Set-TargetResource expects object-type of answer to contain 'group'
                     $returnData.psobject.TypeNames.insert(0, 'Group')
                     return $returnData
