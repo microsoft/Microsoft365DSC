@@ -51837,6 +51837,7 @@ function Restore-MgBetaDirectoryDeletedItem
 function Get-MgBetaDirectoryDeletedItem
 {
     [CmdletBinding()]
+    param()
 }
 
 function Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
