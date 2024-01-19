@@ -194,6 +194,10 @@ function Get-TargetResource
             $DefaultLinkPermission = $SPOSharingSettings.DefaultLinkPermission
         }
 
+        if ([System.String]::IsNullOrEmpty($MySiteSharingCapability))
+        {
+            $MySiteSharingCapability = $null
+        }
         return @{
             IsSingleInstance                           = 'Yes'
             SharingCapability                          = $SPOSharingSettings.SharingCapability
