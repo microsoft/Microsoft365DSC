@@ -53,13 +53,6 @@
                     State                 = "enabled";
                     Credential            = $credsCredential;
                 }
-                AADAuthenticationMethodPolicyEmail 'AADAuthenticationMethodPolicyEmail-Email'
-                {
-                    Ensure                       = "Absent";
-                    Id                           = "Email";
-                    State                        = "disabled"; # Updated Property
-                    Credential                   = $credsCredential;
-                }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
                     Ensure                           = "Absent";
