@@ -1,5 +1,28 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADAuthenticationMethodPolicyAuthenticator
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyEmail
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyFido2
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicySms
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicySoftware
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyTemporary
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyVoice
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyX509
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADCrossTenantAccessPolicy
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADCrossTenantAccessPolicyCOnfigurationDefault
+  * Removed the ability to specify a value of Absent for the Ensure property.
+
 # 1.24.117.1
 
 * AADAdministrativeUnit

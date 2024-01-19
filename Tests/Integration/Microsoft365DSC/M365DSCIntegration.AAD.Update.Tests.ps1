@@ -172,7 +172,7 @@
                             TargetType = 'group'
                         }
                     );
-                    State                        = "disabled"; # Updated Property
+                    State                        = "enabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
@@ -202,7 +202,7 @@
                         EnforcementType = 'block'
                         AaGuids = @()
                     };
-                    State                            = "disabled"; # Updated Property
+                    State                            = "enabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
@@ -221,7 +221,7 @@
                             TargetType = 'group'
                         }
                     );
-                    State                = "disabled"; # Updated Property
+                    State                = "enabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicySoftware 'AADAuthenticationMethodPolicySoftware-SoftwareOath'
                 {
@@ -244,7 +244,7 @@
                             TargetType = 'group'
                         }
                     );
-                    State                = "disabled"; # Updated Property
+                    State                = "enabled"; # Updated Property
                 }
                 AADAuthenticationMethodPolicyTemporary 'AADAuthenticationMethodPolicyTemporary-TemporaryAccessPass'
                 {
@@ -275,13 +275,6 @@
                     Credential           = $Credscredential;
                     Ensure               = "Present";
                     Id                   = "Voice";
-                    IncludeTargets       = @(
-                        MSFT_AADAuthenticationMethodPolicyVoiceIncludeTarget{
-                            Id = 'all_users'
-                            TargetType = 'group'
-                        }
-                    );
-                    IsOfficePhoneAllowed = $True; # Updated Property
                     State                = "disabled";
                 }
                 AADAuthenticationMethodPolicyX509 'AADAuthenticationMethodPolicyX509-X509Certificate'
@@ -350,12 +343,10 @@
                     Ensure                                            = 'Present'
                     Credential                                        = $Credscredential
                 }
-                AADConditionalAccessPolicy 'Allin-example'
+                AADConditionalAccessPolicy 'ConditionalAccessPolicy'
                 {
-                    ApplicationEnforcedRestrictionsIsEnabled = $False;
                     BuiltInControls                          = @("mfa");
                     ClientAppTypes                           = @("all");
-                    CloudAppSecurityIsEnabled                = $False;
                     Credential                               = $Credscredential;
                     DeviceFilterMode                         = "exclude";
                     DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
@@ -365,7 +356,6 @@
                     GrantControlOperator                     = "OR";
                     IncludeApplications                      = @("All");
                     IncludeRoles                             = @("Attack Payload Author");
-                    PersistentBrowserIsEnabled               = $False;
                     SignInFrequencyInterval                  = "timeBased";
                     SignInFrequencyIsEnabled                 = $True;
                     SignInFrequencyType                      = "hours";
