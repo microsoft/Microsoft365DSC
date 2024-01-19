@@ -559,26 +559,44 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new group {$DisplayName}"
-        $currentParameters.Remove('Id') | Out-Null
-
-        try
+        Write-Verbose -Message "Checking to see if an existing deleted group exists with DisplayName {$DisplayName}"
+        $restorinExisting = $false
+        [Array]$groups = Get-MgBetaDirectoryDeletedItemAsGroup -Filter "DisplayName eq '$DisplayName'"
+        if ($groups.Length -gt 1)
         {
-            Write-Verbose -Message "Creating Group with Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
-            $currentGroup = New-MgGroup @currentParameters
+            throw "Multiple deleted groups with the name {$DisplayName} were found. Cannot restore the existig group. Please ensure that you either have no instance of the group in the deleted list or that you have a single one."
+        }
 
-            Write-Verbose -Message "Created Group $($currentGroup.id)"
-            if ($assignedLicensesGUIDs.Length -gt 0)
+        if ($groups.Length -eq 1)
+        {
+            Write-Verbose -Message "Found an instance of a deleted group {$DisplayName}. Restoring it."
+            Restore-MgBetaDirectoryDeletedItem -DirectoryObjectId $groups[0].Id
+            $restoringExisting = $true
+            $currentGroup = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+        }
+
+        if (-not $restoringExisting)
+        {
+            Write-Verbose -Message "Creating new group {$DisplayName}"
+            $currentParameters.Remove('Id') | Out-Null
+
+            try
             {
-                Set-MgGroupLicense -GroupId $currentGroup.Id -AddLicenses $licensesToAdd -RemoveLicenses @()
+                Write-Verbose -Message "Creating Group with Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
+                $currentGroup = New-MgGroup @currentParameters
+                Write-Verbose -Message "Created Group $($currentGroup.id)"
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+                New-M365DSCLogEntry -Message "Couldn't create group $DisplayName" `
+                    -Exception $_ `
+                    -Source $MyInvocation.MyCommand.ModuleName
             }
         }
-        catch
+        if ($assignedLicensesGUIDs.Length -gt 0)
         {
-            Write-Verbose -Message $_
-            New-M365DSCLogEntry -Message "Couldn't create group $DisplayName" `
-                -Exception $_ `
-                -Source $MyInvocation.MyCommand.ModuleName
+            Set-MgGroupLicense -GroupId $currentGroup.Id -AddLicenses $licensesToAdd -RemoveLicenses @()
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentGroup.Ensure -eq 'Present')
@@ -623,7 +641,17 @@ function Set-TargetResource
                 $ownerObject = @{
                     '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
                 }
-                New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject | Out-Null
+                try
+                {
+                    New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject -ErrorAction Stop| Out-Null
+                }
+                catch
+                {
+                    if ($_.Exception.Message -notlike "*One or more added object references already exist for the following modified properties*")
+                    {
+                        throw $_
+                    }
+                }
             }
             elseif ($diff.SideIndicator -eq '<=')
             {
