@@ -24,7 +24,7 @@ Configuration Example
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
             Visibility      = "Private"
-            Owners          = @("AdeleV@$Domain")
+            Owners          = @("admin@$Domain", "AdeleV@$Domain")
             Ensure          = "Present"
             Credential      = $Credscredential
         }
