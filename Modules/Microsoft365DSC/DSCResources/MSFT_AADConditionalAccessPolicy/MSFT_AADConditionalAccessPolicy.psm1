@@ -958,9 +958,17 @@ function Set-TargetResource
         {
             $conditions.Applications.Add('IncludeApplications', $IncludeApplications)
         }
+        else
+        {
+            $conditions.Applications.Add('IncludeApplications', $currentPolicy.IncludeApplications)
+        }
         if ($currentParameters.ContainsKey("ExcludeApplications"))
         {
             $conditions.Applications.Add('ExcludeApplications', $ExcludeApplications)
+        }
+        else
+        {
+            $conditions.Applications.Add('ExcludeApplications', $currentPolicy.ExcludeApplications)
         }
         if ($ApplicationsFilter -and $ApplicationsFilterMode)
         {
@@ -970,10 +978,18 @@ function Set-TargetResource
             }
             $conditions.Applications.Add("ApplicationFilter", $appFilterValue)
         }
+        else
+        {
+            $conditions.Applications.Add("ApplicationFilter", $currentPolicy.ApplicationsFilter)
+        }
 
         if ($IncludeUserActions)
         {
             $conditions.Applications.Add('IncludeUserActions', $IncludeUserActions)
+        }
+        else
+        {
+            $conditions.Applications.Add('IncludeUserActions', $currentPolicy.IncludeUserActions)
         }
         if ($AuthenticationContexts)
         {
@@ -993,6 +1009,9 @@ function Set-TargetResource
 
         #create and provision User Condition object
         Write-Verbose -Message 'Set-Targetresource: process includeusers'
+        if (!$currentParameters.ContainsKey('IncludeUsers') -and $null -ne $currentPolicy.IncludeUsers) {
+            $IncludeUsers = $currentPolicy.IncludeUsers
+        }
         $conditions.Users.Add('IncludeUsers', @())
         foreach ($includeuser in $IncludeUsers)
         {
@@ -1033,8 +1052,11 @@ function Set-TargetResource
                 }
             }
         }
-        Write-Verbose -Message 'Set-Targetresource: process excludeusers'
 
+        Write-Verbose -Message 'Set-Targetresource: process excludeusers'
+        if (!$currentParameters.ContainsKey('ExcludeUsers') -and $null -ne $currentPolicy.ExcludeUsers) {
+            $ExcludeUsers = $currentPolicy.ExcludeUsers
+        }
         $conditions.Users.Add('ExcludeUsers', @())
         foreach ($excludeuser in $ExcludeUsers)
         {
@@ -1076,6 +1098,9 @@ function Set-TargetResource
             }
         }
         Write-Verbose -Message 'Set-Targetresource: process includegroups'
+        if (!$currentParameters.ContainsKey('IncludeGroups') -and $null -ne $currentPolicy.IncludeGroups) {
+            $IncludeGroups = $currentPolicy.IncludeGroups
+        }
         $conditions.Users.Add('IncludeGroups', @())
         foreach ($includegroup in $IncludeGroups)
         {
@@ -1119,8 +1144,11 @@ function Set-TargetResource
             }
         }
 
-        $conditions.Users.Add('ExcludeGroups', @())
         Write-Verbose -Message 'Set-Targetresource: process excludegroups'
+        if (!$currentParameters.ContainsKey('ExcludeGroups') -and $null -ne $currentPolicy.ExcludeGroups) {
+            $ExcludeGroups = $currentPolicy.ExcludeGroups
+        }
+        $conditions.Users.Add('ExcludeGroups', @())
         foreach ($ExcludeGroup in $ExcludeGroups)
         {
             #translate user Group names to GUID
@@ -1162,7 +1190,11 @@ function Set-TargetResource
                 }
             }
         }
+
         Write-Verbose -Message 'Set-Targetresource: process includeroles'
+        if (!$currentParameters.ContainsKey('IncludeRoles') -and $null -ne $currentPolicy.IncludeRoles) {
+            $IncludeRoles = $currentPolicy.IncludeRoles
+        }
         $conditions.Users.Add('IncludeRoles', @())
         if ($IncludeRoles)
         {
@@ -1191,7 +1223,11 @@ function Set-TargetResource
                 }
             }
         }
+
         Write-Verbose -Message 'Set-Targetresource: process excluderoles'
+        if (!$currentParameters.ContainsKey('ExcludeRoles') -and $null -ne $currentPolicy.ExcludeRoles) {
+            $ExcludeRoles = $currentPolicy.ExcludeRoles
+        }
         $conditions.Users.Add('ExcludeRoles', @())
         if ($ExcludeRoles)
         {
@@ -1221,7 +1257,10 @@ function Set-TargetResource
                 }
             }
         }
-        Write-Verbose -Message 'Set-Targetresource: process includeGuestsOrExternalUsers'
+        Write-Verbose -Message 'Set-Targetresource: process includeGuestOrExternalUser'
+        If (!$currentParameters.ContainsKey('IncludeGuestOrExternalUserTypes') -and $null -ne $currentPolicy.IncludeGuestOrExternalUserTypes) {
+            $IncludeGuestOrExternalUserTypes = $currentPolicy.IncludeGuestOrExternalUserTypes
+        }
         if ($IncludeGuestOrExternalUserTypes.Count -ne 0)
         {
             $includeGuestsOrExternalUsers = @{}
@@ -1245,6 +1284,9 @@ function Set-TargetResource
             $conditions.Users.Add('includeGuestsOrExternalUsers', $includeGuestsOrExternalUsers)
         }
         Write-Verbose -Message 'Set-Targetresource: process excludeGuestsOrExternalUsers'
+        If (!$currentParameters.ContainsKey('ExcludeGuestOrExternalUserTypes') -and $null -ne $currentPolicy.ExcludeGuestOrExternalUserTypes) {
+            $ExcludeGuestOrExternalUserTypes = $currentPolicy.ExcludeGuestOrExternalUserTypes
+        }
         if ($ExcludeGuestOrExternalUserTypes.Count -ne 0)
         {
             $excludeGuestsOrExternalUsers = @{}
@@ -1268,6 +1310,14 @@ function Set-TargetResource
             $conditions.Users.Add('excludeGuestsOrExternalUsers', $excludeGuestsOrExternalUsers)
         }
         Write-Verbose -Message 'Set-Targetresource: process platform condition'
+        if (!$currentParameters.ContainsKey('IncludePlatforms') -and $null -ne $currentPolicy.IncludePlatforms)
+        {
+            $IncludePlatforms = $currentPolicy.IncludePlatforms
+        }
+        if (!$currentParameters.ContainsKey('ExcludePlatforms') -and $null -ne $currentPolicy.ExcludePlatforms)
+        {
+            $ExcludePlatforms = $currentPolicy.ExcludePlatforms
+        }
         if ($IncludePlatforms -or $ExcludePlatforms)
         {
             #create and provision Platform condition object if used
@@ -1303,6 +1353,12 @@ function Set-TargetResource
             $conditions.Platforms = $null
         }
         Write-Verbose -Message 'Set-Targetresource: process include and exclude locations'
+        if (!$currentParameters.ContainsKey('IncludeLocations') -and $null -ne $currentPolicy.IncludeLocations) {
+            $IncludeLocations = $currentPolicy.IncludeLocations
+        }
+        if (!$currentParameters.ContainsKey('ExcludeLocations') -and $null -ne $currentPolicy.ExcludeLocations) {
+            $ExcludeLocations = $currentPolicy.ExcludeLocations
+        }
         if ($IncludeLocations -or $ExcludeLocations)
         {
             $conditions.Add('Locations', @{
@@ -1373,6 +1429,12 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message 'Set-Targetresource: process device filter'
+        if (!$currentParameters.ContainsKey('DeviceFilterMode') -and $null -ne $currentPolicy.DeviceFilterMode) {
+            $DeviceFilterMode = $currentPolicy.DeviceFilterMode
+        }
+        if (!$currentParameters.ContainsKey('DeviceFilterRule') -and $null -ne $currentPolicy.DeviceFilterRule) {
+            $DeviceFilterRule = $currentPolicy.DeviceFilterRule
+        }
         if ($DeviceFilterMode -and $DeviceFilterRule)
         {
             if (-not $conditions.Contains('Devices'))
@@ -1414,12 +1476,21 @@ function Set-TargetResource
 
         Write-Verbose -Message 'Set-Targetresource: process risk levels and app types'
         Write-Verbose -Message "Set-Targetresource: UserRiskLevels: $UserRiskLevels"
+        If (!$currentParameters.ContainsKey('UserRiskLevels') -and $null -ne $currentPolicy.UserRiskLevels) {
+            $UserRiskLevels = $currentPolicy.UserRiskLevels
+        }
         $Conditions.Add('UserRiskLevels', $UserRiskLevels)
         #no translation or conversion needed
         Write-Verbose -Message "Set-Targetresource: SignInRiskLevels: $SignInRiskLevels"
+        If (!$currentParameters.ContainsKey('SignInRiskLevels') -and $null -ne $currentPolicy.SignInRiskLevels) {
+            $SignInRiskLevels = $currentPolicy.SignInRiskLevels
+        }
         $Conditions.Add('SignInRiskLevels', $SignInRiskLevels)
         #no translation or conversion needed
         Write-Verbose -Message "Set-Targetresource: ClientAppTypes: $ClientAppTypes"
+        If (!$currentParameters.ContainsKey('ClientAppTypes') -and $null -ne $currentPolicy.ClientAppTypes) {
+            $ClientAppTypes = $currentPolicy.ClientAppTypes
+        }
         $Conditions.Add('ClientAppTypes', $ClientAppTypes)
         #no translation or conversion needed
         Write-Verbose -Message 'Set-Targetresource: Adding processed conditions'
