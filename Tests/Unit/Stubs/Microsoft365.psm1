@@ -51840,6 +51840,16 @@ function Get-MgBetaDirectoryDeletedItem
     param()
 }
 
+function Get-MgBetaDirectoryDeletedItem
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [String]
+        $Filter
+    )
+}
+
 function Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
 {
     [CmdletBinding()]

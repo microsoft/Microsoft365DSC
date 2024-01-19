@@ -39,6 +39,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Restore-MgBetaDirectoryDeletedItem -MockWith {
             }
+            Mock -CommandName Get-MgBetaDirectoryDeletedItemAsGroup -MockWith {
+            }
 
             Mock -CommandName Get-MgBetaDirectoryDeletedItem -MockWith {
             }
