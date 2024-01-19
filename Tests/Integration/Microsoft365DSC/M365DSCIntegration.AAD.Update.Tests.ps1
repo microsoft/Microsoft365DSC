@@ -270,13 +270,6 @@
                     MinimumLifetimeInMinutes = 60;
                     State                    = "enabled";
                 }
-                AADAuthenticationMethodPolicyVoice 'AADAuthenticationMethodPolicyVoice-Voice'
-                {
-                    Credential           = $Credscredential;
-                    Ensure               = "Present";
-                    Id                   = "Voice";
-                    State                = "disabled";
-                }
                 AADAuthenticationMethodPolicyX509 'AADAuthenticationMethodPolicyX509-X509Certificate'
                 {
                     AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
