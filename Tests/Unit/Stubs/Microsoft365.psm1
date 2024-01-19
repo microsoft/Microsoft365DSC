@@ -51834,13 +51834,8 @@ function Restore-MgBetaDirectoryDeletedItem
         $DirectoryObjectId
     )
 }
-function Get-MgBetaDirectoryDeletedItem
-{
-    [CmdletBinding()]
-    param()
-}
 
-function Get-MgBetaDirectoryDeletedItem
+function Get-MgBetaDirectoryDeletedItemAsGroup
 {
     [CmdletBinding()]
     param(

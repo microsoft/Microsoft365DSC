@@ -42,9 +42,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDirectoryDeletedItemAsGroup -MockWith {
             }
 
-            Mock -CommandName Get-MgBetaDirectoryDeletedItem -MockWith {
-            }
-
             Mock -CommandName Get-MgGroupMemberOf -MockWith {
             }
 
