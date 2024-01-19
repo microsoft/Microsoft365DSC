@@ -2,24 +2,59 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicyAuthenticator
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyEmail
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyFido2
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicySms
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicySoftware
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyTemporary
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyVoice
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyX509
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADCrossTenantAccessPolicy
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADCrossTenantAccessPolicyCOnfigurationDefault
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* MISC
+  * M365DSCReport
+    * Fix nested change detection for CIMInstances
+    * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
+
+# 1.24.117.1
+
 * AADAdministrativeUnit
   * Used generic Graph API URL from MSCloudLoginConnectionProfile.
 * AADApplication
   * Ignore Permissions in tests if not passed. Preventing null comparison errors.
 * AADAttributeSet
   * Removed the ability to specify a value of Absent for the Ensure property.
-* AADAUthenticationMethodPolicy
+* AADConditionalAccessPolicy
+  * Fixes an error where the ApplicationEnforcedRestrictionsIsEnabled parameter
+    was always set to false in scenarios where it should have been null.
+* AADAuthenticationMethodPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
-* AADAUthenticationMethodPolicyX509
+* AADAuthenticationMethodPolicyX509
   * Fix the way we returned an empty rule set from the Get method. This caused
     the Test-TargetResource method to return true even when instances matched.
+* AADRoleSetting
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* EXOAntiPhishPolicy
+  * Add support for HonorDmarcPolicy parameter
+    FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
+* IntuneDeviceConfigurationPolicyMacOS
+  * Fix CIM instances comparison in Test-TargetResource and export
+    CompliantAppsList with the correct type
+    FIXES [#4144](https://github.com/microsoft/Microsoft365DSC/issues/4144)
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
-  * Updated MSCloudLoginAssistant to version 1.1.5.
-* MISC
-  * M365DSCReport
-    * Fix nested change detection for CIMInstances
-    * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
+  * Updated MSCloudLoginAssistant to version 1.1.7.
 
 # 1.24.110.1
 
@@ -30,11 +65,11 @@
 * AADConditionalAccessPolicy
   * Added support for application filters in the conditions.
   * Implement Fix #3885. Manage Exclude Application.
-    FIXES [[#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)]
+    FIXES [#3885](https://github.com/microsoft/Microsoft365DSC/issues/3885)
 * EXOHostedContentFilterPolicy
   * Fix issue on parameters AllowedSenders, AllowedSenderDomains, BlockedSenders,
     BlockSenderDomains if desired state is empty but current state is not empty.
-    FIXES[#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
+    FIXES [#4124](https://github.com/microsoft/Microsoft365DSC/issues/4124)
 * EXOMailContact
   * Added support for Custom Attributes and Extension Custom Attributes.
 * IntuneDeviceConfigurationPolicyMacOS

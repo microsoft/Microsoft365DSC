@@ -64,12 +64,23 @@ function Get-TargetResource
             $itemInsightsDisabledForGroupValue = $group.DisplayName
         }
 
-        $PersonInsights = Get-MgBetaOrganizationSettingPersonInsight -OrganizationId $TenantId
-        $PersonInsightsDisabledForGroupValue = $null
-        if (-not [System.String]::IsNullOrEmpty($PersonInsights.DisabledForGroup))
+        try
         {
-            $group = Get-MgGroup -GroupId ($PersonInsights.DisabledForGroup)
-            $PersonInsightsDisabledForGroupValue = $group.DisplayName
+            $PersonInsights = Get-MgBetaOrganizationSettingPersonInsight -OrganizationId $TenantId `
+                -ErrorAction Stop
+            $PersonInsightsDisabledForGroupValue = $null
+            if (-not [System.String]::IsNullOrEmpty($PersonInsights.DisabledForGroup))
+            {
+                $group = Get-MgGroup -GroupId ($PersonInsights.DisabledForGroup)
+                $PersonInsightsDisabledForGroupValue = $group.DisplayName
+            }
+        }
+        catch
+        {
+            if ($_.Exception.Message -eq "[BadRequest] : Resource not found for the segment 'peopleInsights'.")
+            {
+                Write-Warning -Message "The peopleInsights segment is not available in the selected environment."
+            }
         }
 
         return @{
