@@ -75,6 +75,9 @@
     FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.12.0.
+* TeamsCallQueue
+  * Reduce the number of Calls for Export using new cache pattern
+  FIXES [[#4191](https://github.com/microsoft/Microsoft365DSC/issues/4192)]
 
 # 1.24.117.1
 
