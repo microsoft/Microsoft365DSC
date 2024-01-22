@@ -97,7 +97,7 @@ Configuration Example
             ActiveSyncSuppressReadReceipt           = $False
             EwsEnabled                              = $True
             Identity                                = 'AdeleV'
-            ImapEnabled                             = $False
+            ImapEnabled                             = $True # Updated Property
             ImapForceICalForCalendarRetrievalOption = $False
             ImapMessagesRetrievalMimeFormat         = 'BestBodyFormat'
             ImapSuppressReadReceipt                 = $False

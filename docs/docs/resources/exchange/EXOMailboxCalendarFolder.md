@@ -64,10 +64,10 @@ Configuration Example
             Credential           = $credsCredential;
             DetailLevel          = "AvailabilityOnly";
             Ensure               = "Present";
-            Identity             = "john.smith:\Calendar";
+            Identity             = "AdeleV:\Calendar";
             PublishDateRangeFrom = "ThreeMonths";
             PublishDateRangeTo   = "ThreeMonths";
-            PublishEnabled       = $False;
+            PublishEnabled       = $True; # Updated Property
             SearchableUrlEnabled = $False;
         }
     }
