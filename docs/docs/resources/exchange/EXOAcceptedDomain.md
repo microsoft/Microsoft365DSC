@@ -52,11 +52,12 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOAcceptedDomain 'O365DSCDomain'
         {
-            Identity     = 'contoso.com'
+            Identity     = $Domain
             DomainType   = "Authoritative"
             OutboundOnly = $false
             Ensure       = "Present"
@@ -85,9 +86,10 @@ Configuration Example
     {
         EXOAcceptedDomain 'O365DSCDomain'
         {
-            Identity     = 'contoso.com'
+            Identity     = $Domain
             DomainType   = "Authoritative"
-            Ensure       = "Absent"
+            OutboundOnly = $true # Updated Property
+            Ensure       = "Present"
             Credential   = $Credscredential
         }
     }
@@ -113,10 +115,9 @@ Configuration Example
     {
         EXOAcceptedDomain 'O365DSCDomain'
         {
-            Identity     = 'contoso.com'
+            Identity     = $Domain
             DomainType   = "Authoritative"
-            OutboundOnly = $true # Updated Property
-            Ensure       = "Present"
+            Ensure       = "Absent"
             Credential   = $Credscredential
         }
     }

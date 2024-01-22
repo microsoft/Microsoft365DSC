@@ -53,9 +53,9 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        $Domain = $Credscredential.Username.Split('@')[1]
         EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
         {
             Name                              = "Integration Policy"
@@ -85,9 +85,9 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        $Domain = $Credscredential.Username.Split('@')[1]
         EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
         {
             Name                              = "Integration Policy"
