@@ -56,7 +56,7 @@ Configuration Example
     {
         EXOAcceptedDomain 'O365DSCDomain'
         {
-            Identity     = 'contoso.com'
+            Identity     = 'o365dsc.onmicrosoft.com'
             DomainType   = "Authoritative"
             OutboundOnly = $false
             Ensure       = "Present"
@@ -85,9 +85,10 @@ Configuration Example
     {
         EXOAcceptedDomain 'O365DSCDomain'
         {
-            Identity     = 'contoso.com'
+            Identity     = 'o365dsc.onmicrosoft.com'
             DomainType   = "Authoritative"
-            Ensure       = "Absent"
+            OutboundOnly = $true # Updated Property
+            Ensure       = "Present"
             Credential   = $Credscredential
         }
     }
@@ -113,10 +114,9 @@ Configuration Example
     {
         EXOAcceptedDomain 'O365DSCDomain'
         {
-            Identity     = 'contoso.com'
+            Identity     = 'o365dsc.onmicrosoft.com'
             DomainType   = "Authoritative"
-            OutboundOnly = $true # Updated Property
-            Ensure       = "Present"
+            Ensure       = "Absent"
             Credential   = $Credscredential
         }
     }
