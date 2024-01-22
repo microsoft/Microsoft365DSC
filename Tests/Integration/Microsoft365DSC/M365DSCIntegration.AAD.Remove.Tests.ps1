@@ -53,13 +53,6 @@
                     State                 = "enabled";
                     Credential            = $credsCredential;
                 }
-                AADAuthenticationMethodPolicyEmail 'AADAuthenticationMethodPolicyEmail-Email'
-                {
-                    Ensure                       = "Absent";
-                    Id                           = "Email";
-                    State                        = "disabled"; # Updated Property
-                    Credential                   = $credsCredential;
-                }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
                     Ensure                           = "Absent";
@@ -108,20 +101,6 @@
                     Ensure                               = 'Absent'
                     Credential                           = $Credscredential
                 }
-                AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
-                {
-                    AllowedCloudEndpoints = @("microsoftonline.us");
-                    Credential            = $Credscredential;
-                    DisplayName           = "MyXTAPPolicy";
-                    Ensure                = "Absent";
-                    IsSingleInstance      = "Yes";
-                }
-                AADCrossTenantAccessPolicyConfigurationDefault 'AADCrossTenantAccessPolicyConfigurationDefault'
-                {
-                    Credential               = $Credscredential;
-                    Ensure                   = "Absent";
-                    IsSingleInstance                        = "Yes";
-                }
                 AADCrossTenantAccessPolicyConfigurationPartner 'AADCrossTenantAccessPolicyConfigurationPartner'
                 {
                     Credential               = $Credscredential;
@@ -130,7 +109,7 @@
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
-                    DisplayName                     = 'General'
+                    DisplayName                     = 'Integration Package'
                     Ensure                          = 'Absent'
                     Credential                      = $Credscredential
                 }
