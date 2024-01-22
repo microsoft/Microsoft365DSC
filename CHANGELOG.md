@@ -20,7 +20,7 @@
   * Remove the logic path to create a new instance in favor of the update flow.
 * AADConditionalAccessPolicy
   * Fix issue when not all parameters are specified
-  FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
+    FIXES [#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)
 * AADCrossTenantAccessPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADCrossTenantAccessPolicyCOnfigurationDefault
@@ -31,6 +31,9 @@
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
+* TeamsCortanaPolicy
+  * Fix condition in Test-TargetResource when resouce is absent
+    FIXES [#4208](https://github.com/microsoft/Microsoft365DSC/issues/4208)
 
 # 1.24.117.1
 
@@ -52,7 +55,7 @@
   * Removed the ability to specify a value of Absent for the Ensure property.
 * EXOAntiPhishPolicy
   * Add support for HonorDmarcPolicy parameter
-    FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
+    FIXES [#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)
 * IntuneDeviceConfigurationPolicyMacOS
   * Fix CIM instances comparison in Test-TargetResource and export
     CompliantAppsList with the correct type
