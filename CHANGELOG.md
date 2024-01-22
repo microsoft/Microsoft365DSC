@@ -22,6 +22,12 @@
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADCrossTenantAccessPolicyCOnfigurationDefault
   * Removed the ability to specify a value of Absent for the Ensure property.
+* AADGroup
+  * Changed Set logic to restore groups from the deleted list if a match by
+    DisplayName is found.
+* SPOSharingSettings
+  * Fixed an Issue where the MySiteSharingCapability could be returned as an
+    empty string instead of a null value from the Get method.
 
 # 1.24.117.1
 
