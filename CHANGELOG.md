@@ -32,7 +32,7 @@
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
 * TeamsCortanaPolicy
-  * Fix condition in Test-TargetResource when resouce is absent
+  * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4208](https://github.com/microsoft/Microsoft365DSC/issues/4208)
 
 # 1.24.117.1
