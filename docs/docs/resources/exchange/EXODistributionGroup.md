@@ -88,10 +88,11 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXODistributionGroup 'DemoDG'
@@ -102,18 +103,93 @@ Configuration Example
             DisplayName                        = "My Demo DG";
             Ensure                             = "Present";
             HiddenGroupMembershipEnabled       = $True;
-            ManagedBy                          = @("john.smith@contoso.com");
+            ManagedBy                          = @("adeleV@$Domain");
             MemberDepartRestriction            = "Open";
             MemberJoinRestriction              = "Closed";
-            ModeratedBy                        = @("admin@contoso.com");
+            ModeratedBy                        = @("alexW@$Domain");
             ModerationEnabled                  = $False;
             Identity                           = "DemoDG";
             Name                               = "DemoDG";
-            OrganizationalUnit                 = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/contoso.com";
-            PrimarySmtpAddress                 = "demodg@contoso.com";
+            OrganizationalUnit                 = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$Domain";
+            PrimarySmtpAddress                 = "demodg@$Domain";
             RequireSenderAuthenticationEnabled = $True;
             SendModerationNotifications        = "Always";
-            Credential                         = $credsAdmin
+            Credential                         = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXODistributionGroup 'DemoDG'
+        {
+            Alias                              = "demodg";
+            BccBlocked                         = $True; # Updated Property
+            BypassNestedModerationEnabled      = $False;
+            DisplayName                        = "My Demo DG";
+            Ensure                             = "Present";
+            HiddenGroupMembershipEnabled       = $True;
+            ManagedBy                          = @("adeleV@$Domain");
+            MemberDepartRestriction            = "Open";
+            MemberJoinRestriction              = "Closed";
+            ModeratedBy                        = @("alexW@$Domain");
+            ModerationEnabled                  = $False;
+            Identity                           = "DemoDG";
+            Name                               = "DemoDG";
+            OrganizationalUnit                 = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$Domain";
+            PrimarySmtpAddress                 = "demodg@$Domain";
+            RequireSenderAuthenticationEnabled = $True;
+            SendModerationNotifications        = "Always";
+            Credential                         = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        $Domain = $Credscredential.Username.Split('@')[1]
+        EXODistributionGroup 'DemoDG'
+        {
+            DisplayName                        = "My Demo DG";
+            Ensure                             = "Absent";
+            Identity                           = "DemoDG";
+            Name                               = "DemoDG";
+            Credential                         = $Credscredential
         }
     }
 }

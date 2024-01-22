@@ -34,6 +34,8 @@
 * TeamsCortanaPolicy
   * Fix condition in Test-TargetResource when resouce is absent
     FIXES [#4208](https://github.com/microsoft/Microsoft365DSC/issues/4208)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.12.0.
 
 # 1.24.117.1
 

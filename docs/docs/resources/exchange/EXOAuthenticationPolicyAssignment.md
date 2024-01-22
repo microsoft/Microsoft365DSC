@@ -52,9 +52,61 @@ Configuration Example
     {
         EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
         {
-            UserName                 = "John.Smith"
+            UserName                 = "AdeleV"
+            AuthenticationPolicyName = "Block Basic Auth"
+            Ensure                   = "Present"
+            Credential               = $EXOAdmin
+        }
+    }
+}
+```
+
+### Example 2
+
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $EXOAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
+        {
+            UserName                 = "AdeleV"
             AuthenticationPolicyName = "Test Policy"
             Ensure                   = "Present"
+            Credential               = $EXOAdmin
+        }
+    }
+}
+```
+
+### Example 3
+
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $EXOAdmin
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
+        {
+            UserName                 = "AdeleV"
+            AuthenticationPolicyName = "Test Policy"
+            Ensure                   = "Absent"
             Credential               = $EXOAdmin
         }
     }

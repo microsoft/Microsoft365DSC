@@ -62,7 +62,7 @@ Configuration Example
         {
             DisplayName = 'Ottawa Employees'
             TimeZone    = 'Eastern Standard Time'
-            Locale      = 'fr-CA'
+            Locale      = 'en-US' # Updated Property
             Ensure      = 'Present'
             Credential  = $Credscredential
         }

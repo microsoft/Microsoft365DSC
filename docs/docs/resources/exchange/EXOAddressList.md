@@ -86,3 +86,61 @@ Configuration Example
 }
 ```
 
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAddressList 'HRUsersAddressList'
+        {
+            Name                       = "HR Users"
+            ConditionalCompany         = "Contoso"
+            ConditionalDepartment      = "HR2" # Updated Property
+            ConditionalStateOrProvince = "US"
+            IncludedRecipients         = "AllRecipients"
+            Ensure                     = "Present"
+            Credential                 = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAddressList 'HRUsersAddressList'
+        {
+            Name                       = "HR Users"
+            Ensure                     = "Absent"
+            Credential                 = $Credscredential
+        }
+    }
+}
+```
+
