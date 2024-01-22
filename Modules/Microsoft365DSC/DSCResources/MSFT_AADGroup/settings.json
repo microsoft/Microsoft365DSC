@@ -18,16 +18,10 @@
                 ],
                 "update": [
                     {
-                        "name": "Group.Read.All"
-                    },
-                    {
                         "name": "Group.ReadWrite.All"
                     },
                     {
                         "name": "Organization.Read.All"
-                    },
-                    {
-                        "name": "RoleManagement.Read.Directory"
                     },
                     {
                         "name": "RoleManagement.ReadWrite.Directory"

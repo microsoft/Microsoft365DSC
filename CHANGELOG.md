@@ -31,6 +31,8 @@
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.12.0.
 
 # 1.24.117.1
 
