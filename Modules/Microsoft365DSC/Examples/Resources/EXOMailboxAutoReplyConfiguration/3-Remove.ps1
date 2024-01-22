@@ -15,11 +15,11 @@ Configuration Example
     $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
+        EXOMailboxAutoReplyConfiguration "EXOMailboxAutoReplyConfiguration"
         {
-            Name                              = "Integration Policy"
-            Ensure                            = "Absent"
-            Credential                        = $Credscredential
+            Credential                       = $Credscredential;
+            Ensure                           = "Absent";
+            Identity                         = "AdeleV@$Domain";
         }
     }
 }
