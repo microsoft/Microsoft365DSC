@@ -362,16 +362,6 @@
                     Ensure               = "Present"
                     Credential           = $Credscredential
                 }
-                EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
-                {
-                    Name                              = "Integration Policy"
-                    EnabledEmailAddressTemplates      = @("SMTP:@$Domain")
-                    EnabledPrimarySMTPAddressTemplate = "@$Domain"
-                    ManagedByFilter                   = ""
-                    Priority                          = 1
-                    Ensure                            = "Present"
-                    Credential                        = $Credscredential
-                }
                 EXOMailContact 'TestMailContact'
                 {
                     Alias                       = 'TestMailContact'
