@@ -20,7 +20,7 @@
         {
                 EXOAcceptedDomain 'O365DSCDomain'
                 {
-                    Identity     = 'o365dsc.onmicrosoft.com'
+                    Identity     = $Domain
                     DomainType   = "Authoritative"
                     OutboundOnly = $false
                     Ensure       = "Present"
