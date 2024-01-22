@@ -16,7 +16,7 @@ Configuration Example
     {
         EXOAcceptedDomain 'O365DSCDomain'
         {
-            Identity     = 'o365dsc.onmicrosoft.com'
+            Identity     = $Domain
             DomainType   = "Authoritative"
             OutboundOnly = $true # Updated Property
             Ensure       = "Present"
