@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -22,7 +22,7 @@ Configuration Example
             Ensure                             = "Absent";
             Identity                           = "DemoDG";
             Name                               = "DemoDG";
-            Credential                         = $credsAdmin
+            Credential                         = $Credscredential
         }
     }
 }

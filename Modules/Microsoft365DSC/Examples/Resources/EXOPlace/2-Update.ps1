@@ -9,7 +9,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credential
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC

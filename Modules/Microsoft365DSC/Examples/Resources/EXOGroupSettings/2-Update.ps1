@@ -9,14 +9,14 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credential
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        $Domain = $Credscredential.Username.Split('@')[1]
         EXOGroupSettings 'TestGroup'
         {
             DisplayName                            = "Test Group";
@@ -26,7 +26,7 @@ Configuration Example
             AutoSubscribeNewMembers                = $False;
             CalendarMemberReadOnly                 = $False;
             ConnectorsEnabled                      = $False; # Updated Property
-            Credential                             = $credential;
+            Credential                             = $Credscredential;
             HiddenFromAddressListsEnabled          = $True;
             HiddenFromExchangeClientsEnabled       = $True;
             InformationBarrierMode                 = "Open";

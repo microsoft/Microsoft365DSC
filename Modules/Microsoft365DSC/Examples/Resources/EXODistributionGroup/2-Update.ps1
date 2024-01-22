@@ -9,13 +9,13 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        $Domain = $Credscredential.Username.Split('@')[1]
         EXODistributionGroup 'DemoDG'
         {
             Alias                              = "demodg";
@@ -35,7 +35,7 @@ Configuration Example
             PrimarySmtpAddress                 = "demodg@$Domain";
             RequireSenderAuthenticationEnabled = $True;
             SendModerationNotifications        = "Always";
-            Credential                         = $credsAdmin
+            Credential                         = $Credscredential
         }
     }
 }
