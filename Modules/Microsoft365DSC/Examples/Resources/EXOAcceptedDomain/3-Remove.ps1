@@ -16,7 +16,7 @@ Configuration Example
     {
         EXOAcceptedDomain 'O365DSCDomain'
         {
-            Identity     = 'contoso.com'
+            Identity     = 'o365dsc.onmicrosoft.com'
             DomainType   = "Authoritative"
             Ensure       = "Absent"
             Credential   = $Credscredential
