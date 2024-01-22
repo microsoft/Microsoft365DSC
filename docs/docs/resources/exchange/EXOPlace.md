@@ -67,11 +67,12 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credential
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOPlace 'TestPlace'
@@ -79,16 +80,88 @@ Configuration Example
             AudioDeviceName        = "MyAudioDevice";
             Capacity               = 15; #Drift
             City                   = "";
-            Credential             = $credential
+            Credential             = $Credscredential
             DisplayDeviceName      = "DisplayDeviceName";
             Ensure                 = 'Present'
-            Identity               = "MyRoom@$contoso.com";
+            Identity               = "MyRoom@$Domain";
             IsWheelChairAccessible = $True;
             MTREnabled             = $False;
             ParentType             = "None";
             Phone                  = "555-555-5555";
             Tags                   = @("Tag1", "Tag2");
             VideoDeviceName        = "VideoDevice";
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOPlace 'TestPlace'
+        {
+            AudioDeviceName        = "MyAudioDevice";
+            Capacity               = 16; # Updated Property
+            City                   = "";
+            Credential             = $Credscredential
+            DisplayDeviceName      = "DisplayDeviceName";
+            Ensure                 = 'Present'
+            Identity               = "MyRoom@$Domain";
+            IsWheelChairAccessible = $True;
+            MTREnabled             = $False;
+            ParentType             = "None";
+            Phone                  = "555-555-5555";
+            Tags                   = @("Tag1", "Tag2");
+            VideoDeviceName        = "VideoDevice";
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOPlace 'TestPlace'
+        {
+            AudioDeviceName        = "MyAudioDevice";
+            Credential             = $Credscredential
+            DisplayDeviceName      = "DisplayDeviceName";
+            Ensure                 = 'Absent'
+            Identity               = "MyRoom@$Domain";
         }
     }
 }

@@ -60,9 +60,9 @@ Configuration Example
         {
             AccessRights         = @("FullAccess","ReadPermission");
             Credential           = $credsCredential;
-            Deny                 = $False;
+            Deny                 = $True; # Updated Property
             Ensure               = "Present";
-            Identity             = "John.Smith";
+            Identity             = "AdeleV";
             InheritanceType      = "All";
             User                 = "NT AUTHORITY\SELF";
         }

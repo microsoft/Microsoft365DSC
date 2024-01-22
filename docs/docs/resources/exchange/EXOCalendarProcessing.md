@@ -90,11 +90,12 @@ Configuration Example
 
     node localhost
     {
+        $Domain = $Credscredential.Username.Split('@')[1]
         EXOCalendarProcessing "CalendarProcessing"
         {
             AddAdditionalResponse                = $False;
             AddNewRequestsTentatively            = $True;
-            AddOrganizerToSubject                = $True;
+            AddOrganizerToSubject                = $False; # Updated Property
             AllBookInPolicy                      = $True;
             AllowConflicts                       = $False;
             AllowRecurringMeetings               = $True;
@@ -116,7 +117,7 @@ Configuration Example
             EnforceSchedulingHorizon             = $True;
             Ensure                               = "Present";
             ForwardRequestsToDelegates           = $True;
-            Identity                             = "John.Smith";
+            Identity                             = "AdeleV";
             MaximumConflictInstances             = 0;
             MaximumDurationInMinutes             = 1440;
             MinimumDurationInMinutes             = 0;
@@ -127,7 +128,7 @@ Configuration Example
             RemoveForwardedMeetingNotifications  = $False;
             RemoveOldMeetingMessages             = $False;
             RemovePrivateProperty                = $True;
-            RequestInPolicy                      = @("Bob.Houle@$OrganizationName");
+            RequestInPolicy                      = @("AlexW@$Domain");
             ResourceDelegates                    = @();
             ScheduleOnlyDuringWorkHours          = $False;
             TentativePendingApproval             = $True;
