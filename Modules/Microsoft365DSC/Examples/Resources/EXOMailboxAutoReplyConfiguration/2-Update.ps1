@@ -15,15 +15,23 @@ Configuration Example
     $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
+        EXOMailboxAutoReplyConfiguration "EXOMailboxAutoReplyConfiguration"
         {
-            Name                              = "Integration Policy"
-            EnabledEmailAddressTemplates      = @("SMTP:@$Domain")
-            EnabledPrimarySMTPAddressTemplate = "@$Domain"
-            ManagedByFilter                   = ""
-            Priority                          = 2 # Updated Property
-            Ensure                            = "Present"
-            Credential                        = $Credscredential
+            AutoDeclineFutureRequestsWhenOOF = $False;
+            AutoReplyState                   = "Disabled";
+            CreateOOFEvent                   = $False;
+            Credential                       = $Credscredential;
+            DeclineAllEventsForScheduledOOF  = $False;
+            DeclineEventsForScheduledOOF     = $True; # Updated Property
+            DeclineMeetingMessage            = "";
+            EndTime                          = "1/23/2024 3:00:00 PM";
+            Ensure                           = "Present";
+            ExternalAudience                 = "All";
+            ExternalMessage                  = "";
+            Identity                         = "AdeleV@$Domain";
+            InternalMessage                  = "";
+            OOFEventSubject                  = "";
+            StartTime                        = "1/22/2024 3:00:00 PM";
         }
     }
 }
