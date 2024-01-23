@@ -91,7 +91,7 @@
                     AntiPhishPolicy           = "Our Rule"
                     RecipientDomainIs         = $null
                     Enabled                   = $True
-                    SentToMemberOf            = @("msteams_bb15d4@contoso.onmicrosoft.com")
+                    SentToMemberOf            = @("executives@c$Domain")
                     Priority                  = 1
                     Ensure                    = "Present"
                     Credential                = $Credscredential
