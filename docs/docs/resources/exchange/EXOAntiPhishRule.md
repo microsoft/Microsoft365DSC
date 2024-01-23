@@ -74,7 +74,7 @@ Configuration Example
             AntiPhishPolicy           = "Our Rule"
             RecipientDomainIs         = $null
             Enabled                   = $True
-            SentToMemberOf            = @("executives@c$Domain")
+            SentToMemberOf            = @("executives@$Domain")
             Priority                  = 1
             Ensure                    = "Present"
             Credential                = $Credscredential
@@ -112,7 +112,7 @@ Configuration Example
             AntiPhishPolicy           = "Our Rule"
             RecipientDomainIs         = $null
             Enabled                   = $True
-            SentToMemberOf            = @("executives@c$Domain")
+            SentToMemberOf            = @("executives@$Domain")
             Priority                  = 2 # Updated Property
             Ensure                    = "Present"
             Credential                = $Credscredential
