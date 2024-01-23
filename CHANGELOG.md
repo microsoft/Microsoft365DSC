@@ -18,6 +18,9 @@
   * Remove the logic path to create a new instance in favor of the update flow.
 * AADAuthenticationMethodPolicyX509
   * Remove the logic path to create a new instance in favor of the update flow.
+* AADConditionalAccessPolicy
+  * Fix issue when not all parameters are specified
+  FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
 * AADCrossTenantAccessPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADCrossTenantAccessPolicyCOnfigurationDefault
@@ -28,6 +31,8 @@
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.12.0.
 
 # 1.24.117.1
 
