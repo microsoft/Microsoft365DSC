@@ -27,7 +27,6 @@ Configuration Example
             RecipientDomainIs         = $null
             Enabled                   = $True
             SentToMemberOf            = @("executives@$Domain")
-            Priority                  = 1
             Ensure                    = "Present"
             Credential                = $Credscredential
         }
