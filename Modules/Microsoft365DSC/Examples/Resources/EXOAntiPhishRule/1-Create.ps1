@@ -12,6 +12,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOAntiPhishRule 'ConfigureAntiPhishRule'
@@ -25,8 +26,7 @@ Configuration Example
             AntiPhishPolicy           = "Our Rule"
             RecipientDomainIs         = $null
             Enabled                   = $True
-            SentToMemberOf            = @("msteams_bb15d4@contoso.onmicrosoft.com")
-            Priority                  = 1
+            SentToMemberOf            = @("executives@$Domain")
             Ensure                    = "Present"
             Credential                = $Credscredential
         }
