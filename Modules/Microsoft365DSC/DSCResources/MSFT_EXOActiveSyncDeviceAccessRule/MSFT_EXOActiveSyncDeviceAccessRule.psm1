@@ -88,7 +88,7 @@ function Get-TargetResource
     {
         $AllActiveSyncDeviceAccessRules = Get-ActiveSyncDeviceAccessRule -ErrorAction Stop
 
-        $ActiveSyncDeviceAccessRule = $AllActiveSyncDeviceAccessRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        $ActiveSyncDeviceAccessRule = $AllActiveSyncDeviceAccessRules | Where-Object -FilterScript { $_.Identity -eq "$QueryString ($Characteristic)" }
 
         if ($null -eq $ActiveSyncDeviceAccessRule)
         {
@@ -212,7 +212,7 @@ function Set-TargetResource
     }
 
     $SetActiveSyncDeviceAccessRuleParams = @{
-        Identity    = $Identity
+        Identity    = "$QueryString ($Characteristic)"
         AccessLevel = $AccessLevel
         Confirm     = $false
     }
@@ -229,7 +229,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentActiveSyncDeviceAccessRuleConfig.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Active Sync Device Access Rule '$($Identity)' exists but it shouldn't. Remove it."
-        Remove-ActiveSyncDeviceAccessRule -Identity $Identity -Confirm:$false
+        Remove-ActiveSyncDeviceAccessRule -Identity "$QueryString ($Characteristic)" -Confirm:$false
     }
     # CASE: Active Sync Device Access Rule exists and it should, but has different values than the desired ones
     elseif ($Ensure -eq 'Present' -and $currentActiveSyncDeviceAccessRuleConfig.Ensure -eq 'Present')
@@ -324,6 +324,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
