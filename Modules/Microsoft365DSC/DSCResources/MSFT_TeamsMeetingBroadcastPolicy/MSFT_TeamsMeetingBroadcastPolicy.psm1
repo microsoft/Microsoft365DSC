@@ -200,7 +200,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentValues.Ensure -eq 'Present')
     {
-        Remove-CsTeamsMeetingBroadcastPolicy -Identity $Identity -Confirm:$false
+        Remove-CsTeamsMeetingBroadcastPolicy -Identity $Identity
     }
 }
 

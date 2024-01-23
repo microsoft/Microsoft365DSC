@@ -34,6 +34,9 @@
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
+* TeamsMeetingBroadcastPolicy
+  * Fix deletion of resource
+    FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.12.0.
 
