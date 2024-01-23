@@ -31,6 +31,8 @@
 * EXOActiveSyncDeviceAccessRule
   * Changed the way Identity is determined by using a combination of the
     QueryString and Characteristic parameters.
+* EXOAddressList
+  * Fixed an issue trying to create a new instance when DisplayName is empty.
 * SCAutoSensitivityLabelRule
   * Correct export indentation, which caused an issue with report conversion to JSON.
   FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
