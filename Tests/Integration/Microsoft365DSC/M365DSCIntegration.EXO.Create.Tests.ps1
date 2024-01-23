@@ -91,7 +91,7 @@
                     AntiPhishPolicy           = "Our Rule"
                     RecipientDomainIs         = $null
                     Enabled                   = $True
-                    SentToMemberOf            = @("executives@c$Domain")
+                    SentToMemberOf            = @("executives@$Domain")
                     Priority                  = 1
                     Ensure                    = "Present"
                     Credential                = $Credscredential
