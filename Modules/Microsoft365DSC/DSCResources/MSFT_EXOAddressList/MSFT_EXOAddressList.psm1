@@ -430,9 +430,13 @@ function Set-TargetResource
                 ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
                 ConditionalDepartment        = $ConditionalDepartment
                 ConditionalStateOrProvince   = $ConditionalStateOrProvince
-                DisplayName                  = $DisplayName
                 IncludedRecipients           = $IncludedRecipients
                 Confirm                      = $false
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                $NewAddressListParams.Add('DisplayName', $DisplayName)
             }
         }
         New-AddressList @NewAddressListParams
