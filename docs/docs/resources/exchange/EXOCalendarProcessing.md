@@ -88,9 +88,9 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        $Domain = $Credscredential.Username.Split('@')[1]
         EXOCalendarProcessing "CalendarProcessing"
         {
             AddAdditionalResponse                = $False;

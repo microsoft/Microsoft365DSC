@@ -40,8 +40,8 @@
                     Name                 = "All Fabrikam ABP"
                     AddressLists         = "\All Distribution Lists"
                     RoomList             = "\All Rooms"
-                    OfflineAddressBook   = "\Offline Global Address List"
-                    GlobalAddressList    = "\All Groups"
+                    OfflineAddressBook   = "\Default Offline Address Book"
+                    GlobalAddressList    = "\Default Global Address List"
                     Ensure               = "Present"
                     Credential           = $Credscredential
                 }
@@ -91,8 +91,7 @@
                     AntiPhishPolicy           = "Our Rule"
                     RecipientDomainIs         = $null
                     Enabled                   = $True
-                    SentToMemberOf            = @("msteams_bb15d4@contoso.onmicrosoft.com")
-                    Priority                  = 1
+                    SentToMemberOf            = @("executives@$Domain")
                     Ensure                    = "Present"
                     Credential                = $Credscredential
                 }

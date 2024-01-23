@@ -20,8 +20,8 @@ Configuration Example
             Name                 = "All Fabrikam ABP"
             AddressLists         = "\All Distribution Lists"
             RoomList             = "\All Rooms"
-            OfflineAddressBook   = "\Offline Global Address List"
-            GlobalAddressList    = "\All Groups"
+            OfflineAddressBook   = "\Default Offline Address Book"
+            GlobalAddressList    = "\Default Global Address List"
             Ensure               = "Present"
             Credential           = $Credscredential
         }

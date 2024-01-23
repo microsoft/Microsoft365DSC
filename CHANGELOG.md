@@ -31,6 +31,8 @@
 * EXOActiveSyncDeviceAccessRule
   * Changed the way Identity is determined by using a combination of the
     QueryString and Characteristic parameters.
+* EXOAddressList
+  * Fixed an issue trying to create a new instance when DisplayName is empty.
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
