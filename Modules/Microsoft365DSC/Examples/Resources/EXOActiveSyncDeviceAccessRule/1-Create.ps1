@@ -19,7 +19,7 @@ Configuration Example
         {
             Identity             = "ContosoPhone(DeviceOS)"
             Characteristic       = "DeviceOS"
-            QueryString          = "iOS 6.1 10B145"
+            QueryString          = "iOS 6.1 10B146"
             AccessLevel          = "Allow"
             Ensure               = "Present"
             Credential           = $Credscredential
