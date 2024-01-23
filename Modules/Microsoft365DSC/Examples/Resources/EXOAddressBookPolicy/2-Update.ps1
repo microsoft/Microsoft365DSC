@@ -18,10 +18,10 @@ Configuration Example
         EXOAddressBookPolicy 'ConfigureAddressBookPolicy'
         {
             Name                 = "All Fabrikam ABP"
-            AddressLists         = "\All Fabrikam","\All Fabrikam Mailboxes","\All Fabrikam Contacts" # Updated Property
-            RoomList             = "\All Fabrikam-Rooms"
-            OfflineAddressBook   = "\Fabrikam-All-OAB"
-            GlobalAddressList    = "\All Fabrikam"
+            AddressLists         = "\All Users" # Updated Property
+            RoomList             = "\All Rooms"
+            OfflineAddressBook   = "\Offline Global Address List"
+            GlobalAddressList    = "\All Groups"
             Ensure               = "Present"
             Credential           = $Credscredential
         }
