@@ -22,12 +22,11 @@ Configuration Example
             ExceptIfSentTo            = $null
             SentTo                    = $null
             ExceptIfRecipientDomainIs = $null
-            Comments                  = $null
+            Comments                  = "This is an updated comment." # Updated Property
             AntiPhishPolicy           = "Our Rule"
             RecipientDomainIs         = $null
             Enabled                   = $True
             SentToMemberOf            = @("executives@$Domain")
-            Priority                  = 2 # Updated Property
             Ensure                    = "Present"
             Credential                = $Credscredential
         }
