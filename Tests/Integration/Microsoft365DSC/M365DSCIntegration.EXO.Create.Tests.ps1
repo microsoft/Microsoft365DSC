@@ -38,10 +38,10 @@
                 EXOAddressBookPolicy 'ConfigureAddressBookPolicy'
                 {
                     Name                 = "All Fabrikam ABP"
-                    AddressLists         = "\All Fabrikam","\All Fabrikam Mailboxes","\All Fabrikam DLs","\All Fabrikam Contacts"
-                    RoomList             = "\All Fabrikam-Rooms"
-                    OfflineAddressBook   = "\Fabrikam-All-OAB"
-                    GlobalAddressList    = "\All Fabrikam"
+                    AddressLists         = "\All Distribution Lists"
+                    RoomList             = "\All Rooms"
+                    OfflineAddressBook   = "\Default Offline Address Book"
+                    GlobalAddressList    = "\Default Global Address List"
                     Ensure               = "Present"
                     Credential           = $Credscredential
                 }
@@ -91,8 +91,7 @@
                     AntiPhishPolicy           = "Our Rule"
                     RecipientDomainIs         = $null
                     Enabled                   = $True
-                    SentToMemberOf            = @("msteams_bb15d4@contoso.onmicrosoft.com")
-                    Priority                  = 1
+                    SentToMemberOf            = @("executives@$Domain")
                     Ensure                    = "Present"
                     Credential                = $Credscredential
                 }
