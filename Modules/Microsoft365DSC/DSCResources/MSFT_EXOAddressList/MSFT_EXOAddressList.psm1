@@ -434,9 +434,10 @@ function Set-TargetResource
                 Confirm                      = $false
             }
 
-        if (-not [System.String]::IsNullOrEmpty($DisplayName))
-        {
-            $NewAddressListParams.Add('DisplayName', $DisplayName)
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                $NewAddressListParams.Add('DisplayName', $DisplayName)
+            }
         }
         New-AddressList @NewAddressListParams
     }
