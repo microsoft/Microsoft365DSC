@@ -55,6 +55,9 @@
 * TeamsComplianceRecordingPolicy
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4212](https://github.com/microsoft/Microsoft365DSC/issues/4212)
+* TeamsCortanaPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4208](https://github.com/microsoft/Microsoft365DSC/issues/4208)
 * TeamsEnhancedEncryptionPolicy
   * Fix condition when resource is absent
     FIXES [#4221](https://github.com/microsoft/Microsoft365DSC/issues/4221)
@@ -93,7 +96,7 @@
   * Removed the ability to specify a value of Absent for the Ensure property.
 * EXOAntiPhishPolicy
   * Add support for HonorDmarcPolicy parameter
-    FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
+    FIXES [#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)
 * IntuneDeviceConfigurationPolicyMacOS
   * Fix CIM instances comparison in Test-TargetResource and export
     CompliantAppsList with the correct type
