@@ -3,9 +3,17 @@ class MSFT_TeamsEventsPolicy : OMI_BaseResource
 {
     [Key, Description("Identity of the Teams Events Policy.")] String Identity;
     [Write, Description("Description of the Teams Events Policy.")] String Description;
+    [Write, Description("This setting governs if a user is allowed to edit the communication emails in Teams Town Hall or Teams Webinar events."), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String AllowEmailEditing;
+    [Write, Description("This setting governs access to the integrations tab in the event creation workflow.")] Boolean AllowEventIntegrations;
     [Write, Description("Determines if webinars are allowed by the policy or not."), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String AllowWebinars;
+    [Write, Description("This setting governs if a user can create town halls using Teams Events."), ValueMap{"Disabled","Enabled"}, Values{"Disabled","Enabled"}] String AllowTownhalls;
+    [Write, Description("This setting governs which users in a tenant can add which registration form questions to an event registration page for attendees to answer when registering for the event."), ValueMap{"DefaultOnly","DefaultAndPredefinedOnly","AllQuestions"}, Values{"DefaultOnly","DefaultAndPredefinedOnly","AllQuestions"}] String AllowedQuestionTypesInRegistrationForm;
+    [Write, Description("This setting describes how IT admins can control which types of Town Hall attendees can have their recordings published."), ValueMap{"None","InviteOnly","EveryoneInCompanyIncludingGuests","Everyone"}, Values{"None","InviteOnly","EveryoneInCompanyIncludingGuests","Everyone"}] String AllowedTownhallTypesForRecordingPublish;
+    [Write, Description("This setting describes how IT admins can control which types of webinar attendees can have their recordings published."), ValueMap{"None","InviteOnly","EveryoneInCompanyIncludingGuests","Everyone"}, Values{"None","InviteOnly","EveryoneInCompanyIncludingGuests","Everyone"}] String AllowedWebinarTypesForRecordingPublish;
     [Write, Description("Defines who is allowed to join the event."), ValueMap{"Everyone", "EveryoneInCompanyExcludingGuests"}, Values{"Everyone", "EveryoneInCompanyExcludingGuests"}] String EventAccessType;
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("This setting governs whether the user can enable the Comment Stream chat experience for Town Halls."), ValueMap{"Optimized","None"}, Values{"Optimized","None"}] String TownhallChatExperience;
+    [Write, Description("This setting governs whether the global admin disables this property and prevents the organizers from creating town halls that use Microsoft eCDN even though they have been assigned a Teams Premium license.")] Boolean UseMicrosoftECDN;
     [Write, Description("Credentials of the Teams Global Admin."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
