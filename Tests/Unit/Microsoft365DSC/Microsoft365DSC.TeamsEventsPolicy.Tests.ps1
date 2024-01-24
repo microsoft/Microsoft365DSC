@@ -66,7 +66,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowEventIntegrations                  = $False;
                     AllowTownhalls                          = "Enabled";
                     TownhallChatExperience                  = "Optimized";
-                    UseMicrosoftECDN                        = $True;
                 }
 
                 Mock -CommandName Get-CsTeamsEventsPolicy -MockWith {
@@ -104,7 +103,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowEventIntegrations                  = $False;
                     AllowTownhalls                          = "Enabled";
                     TownhallChatExperience                  = "Optimized";
-                    UseMicrosoftECDN                        = $True;
                 }
 
                 Mock -CommandName Get-CsTeamsEventsPolicy -MockWith {
@@ -120,7 +118,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowEventIntegrations                  = $False;
                         AllowTownhalls                          = "Enabled";
                         TownhallChatExperience                  = "Optimized";
-                        UseMicrosoftECDN                        = $True;
                     }
                 }
             }
@@ -156,7 +153,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowEventIntegrations                  = $False;
                     AllowTownhalls                          = "Enabled";
                     TownhallChatExperience                  = "Optimized";
-                    UseMicrosoftECDN                        = $True;
                 }
 
                 Mock -CommandName Get-CsTeamsEventsPolicy -MockWith {
@@ -172,7 +168,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowEventIntegrations                  = $False;
                         AllowTownhalls                          = "Enabled";
                         TownhallChatExperience                  = "Optimized";
-                        UseMicrosoftECDN                        = $True;
                     }
                 }
             }
@@ -202,7 +197,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     AllowEventIntegrations                  = $False;
                     AllowTownhalls                          = "Enabled";
                     TownhallChatExperience                  = "Optimized";
-                    UseMicrosoftECDN                        = $True;
                 }
 
                 Mock -CommandName Get-CsTeamsEventsPolicy -MockWith {
@@ -218,7 +212,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowEventIntegrations                  = $False;
                         AllowTownhalls                          = "Enabled";
                         TownhallChatExperience                  = "Optimized";
-                        UseMicrosoftECDN                        = $True;
                     }
                 }
             }
@@ -258,7 +251,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AllowEventIntegrations                  = $False;
                         AllowTownhalls                          = "Enabled";
                         TownhallChatExperience                  = "Optimized";
-                        UseMicrosoftECDN                        = $True;
                     }
                 }
             }
