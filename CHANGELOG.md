@@ -39,6 +39,13 @@
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
+* TeamsAppPermissionPolicy, TeamsAppSetupPolicy, TeamsCallHoldPolicy,
+  TeamsIPPhonePolicy, TeamsMobilityPolicy, TeamsNetworkRoamingPolicy,
+  TeamsShiftsPolicy, TeamsTenantNetworkRegion, TeamsTenantNetworkSite,
+  TeamsTenantNetworkSubnet, TeamsTenantTrustedIPAddress, TeamsTranslationRule,
+  TeamsUnassignedNumberTreatment, TeamsVdiPolicy, TeamsWorkloadPolicy
+  * Fix condition when resource is absent
+    FIXES [#4227](https://github.com/microsoft/Microsoft365DSC/issues/4227)
 * TeamsEventsPolicy
   * Add missing attributes
     FIXES [#4242](https://github.com/microsoft/Microsoft365DSC/issues/4242)
