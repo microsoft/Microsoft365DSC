@@ -36,7 +36,8 @@
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
-* TeamsIPPhonePolicy, TeamsMobilityPolicy, TeamsNetworkRoamingPolicy,
+* TeamsAppPermissionPolicy, TeamsAppSetupPolicy, TeamsCallHoldPolicy,
+  TeamsIPPhonePolicy, TeamsMobilityPolicy, TeamsNetworkRoamingPolicy,
   TeamsShiftsPolicy, TeamsTenantNetworkRegion, TeamsTenantNetworkSite,
   TeamsTenantNetworkSubnet, TeamsTenantTrustedIPAddress, TeamsTranslationRule,
   TeamsUnassignedNumberTreatment, TeamsVdiPolicy, TeamsWorkloadPolicy
