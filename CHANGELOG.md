@@ -46,6 +46,9 @@
   TeamsUnassignedNumberTreatment, TeamsVdiPolicy, TeamsWorkloadPolicy
   * Fix condition when resource is absent
     FIXES [#4227](https://github.com/microsoft/Microsoft365DSC/issues/4227)
+* TeamsAudioConferencingPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4215](https://github.com/microsoft/Microsoft365DSC/issues/4215)
 * TeamsEnhancedEncryptionPolicy
   * Fix condition when resource is absent
     FIXES [#4221](https://github.com/microsoft/Microsoft365DSC/issues/4221)
