@@ -73,6 +73,8 @@
 * TeamsMeetingBroadcastPolicy
   * Fix deletion of resource
     FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)
+* TeamsMobilityPolicy
+  * Validate string set on parameter MobileDialerPreference
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.12.0.
 
