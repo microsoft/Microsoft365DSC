@@ -237,7 +237,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing Teams Emergency Calling Policy {$Identity}"
-        Remove-CsTeamsEmergencyCallingPolicy -Identity $Identity -Confirm:$false
+        Remove-CsTeamsEmergencyCallingPolicy -Identity $Identity
     }
 }
 

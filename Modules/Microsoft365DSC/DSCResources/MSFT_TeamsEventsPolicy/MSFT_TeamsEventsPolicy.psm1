@@ -23,6 +23,44 @@ function Get-TargetResource
         $EventAccessType,
 
         [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $AllowEmailEditing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEventIntegrations,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $AllowTownhalls,
+
+        [Parameter()]
+        [ValidateSet('DefaultOnly', 'DefaultAndPredefinedOnly', 'AllQuestions')]
+        [System.String]
+        $AllowedQuestionTypesInRegistrationForm,
+
+        [Parameter()]
+        [ValidateSet('None', 'InviteOnly', 'EveryoneInCompanyIncludingGuests', 'Everyone')]
+        [System.String]
+        $AllowedWebinarTypesForRecordingPublish,
+
+        [Parameter()]
+        [ValidateSet('None', 'InviteOnly', 'EveryoneInCompanyIncludingGuests', 'Everyone')]
+        [System.String]
+        $AllowedTownhallTypesForRecordingPublish,
+
+        [Parameter()]
+        [ValidateSet('Optimized', 'None')]
+        [System.String]
+        $TownhallChatExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseMicrosoftECDN,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -75,15 +113,23 @@ function Get-TargetResource
         }
         Write-Verbose -Message "Found Teams Events Policy {$Identity}"
         $result = @{
-            Identity              = $Identity
-            Description           = $policy.Description
-            AllowWebinars         = $policy.AllowWebinars
-            EventAccessType       = $policy.EventAccessType
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            CertificateThumbprint = $CertificateThumbprint
+            Identity                                = $Identity
+            Description                             = $policy.Description
+            AllowWebinars                           = $policy.AllowWebinars
+            EventAccessType                         = $policy.EventAccessType
+            AllowEmailEditing                       = $policy.AllowEmailEditing
+            AllowEventIntegrations                  = $policy.AllowEventIntegrations
+            AllowTownhalls                          = $policy.AllowTownhalls
+            AllowedQuestionTypesInRegistrationForm  = $policy.AllowedQuestionTypesInRegistrationForm
+            AllowedWebinarTypesForRecordingPublish  = $policy.AllowedWebinarTypesForRecordingPublish
+            AllowedTownhallTypesForRecordingPublish = $policy.AllowedTownhallTypesForRecordingPublish
+            TownhallChatExperience                  = $policy.TownhallChatExperience
+            UseMicrosoftECDN                        = $policy.UseMicrosoftECDN
+            Ensure                                  = 'Present'
+            Credential                              = $Credential
+            ApplicationId                           = $ApplicationId
+            TenantId                                = $TenantId
+            CertificateThumbprint                   = $CertificateThumbprint
         }
 
         return $result
@@ -122,6 +168,44 @@ function Set-TargetResource
         [System.String]
         [ValidateSet('Everyone', 'EveryoneInCompanyExcludingGuests')]
         $EventAccessType,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $AllowEmailEditing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEventIntegrations,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $AllowTownhalls,
+
+        [Parameter()]
+        [ValidateSet('DefaultOnly', 'DefaultAndPredefinedOnly', 'AllQuestions')]
+        [System.String]
+        $AllowedQuestionTypesInRegistrationForm,
+
+        [Parameter()]
+        [ValidateSet('None', 'InviteOnly', 'EveryoneInCompanyIncludingGuests', 'Everyone')]
+        [System.String]
+        $AllowedWebinarTypesForRecordingPublish,
+
+        [Parameter()]
+        [ValidateSet('None', 'InviteOnly', 'EveryoneInCompanyIncludingGuests', 'Everyone')]
+        [System.String]
+        $AllowedTownhallTypesForRecordingPublish,
+
+        [Parameter()]
+        [ValidateSet('Optimized', 'None')]
+        [System.String]
+        $TownhallChatExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseMicrosoftECDN,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -211,6 +295,44 @@ function Test-TargetResource
         [System.String]
         [ValidateSet('Everyone', 'EveryoneInCompanyExcludingGuests')]
         $EventAccessType,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $AllowEmailEditing,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowEventIntegrations,
+
+        [Parameter()]
+        [ValidateSet('Enabled', 'Disabled')]
+        [System.String]
+        $AllowTownhalls,
+
+        [Parameter()]
+        [ValidateSet('DefaultOnly', 'DefaultAndPredefinedOnly', 'AllQuestions')]
+        [System.String]
+        $AllowedQuestionTypesInRegistrationForm,
+
+        [Parameter()]
+        [ValidateSet('None', 'InviteOnly', 'EveryoneInCompanyIncludingGuests', 'Everyone')]
+        [System.String]
+        $AllowedWebinarTypesForRecordingPublish,
+
+        [Parameter()]
+        [ValidateSet('None', 'InviteOnly', 'EveryoneInCompanyIncludingGuests', 'Everyone')]
+        [System.String]
+        $AllowedTownhallTypesForRecordingPublish,
+
+        [Parameter()]
+        [ValidateSet('Optimized', 'None')]
+        [System.String]
+        $TownhallChatExperience,
+
+        [Parameter()]
+        [System.Boolean]
+        $UseMicrosoftECDN,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
