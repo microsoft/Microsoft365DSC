@@ -49,6 +49,9 @@
 * TeamsEventsPolicy
   * Add missing attributes
     FIXES [#4242](https://github.com/microsoft/Microsoft365DSC/issues/4242)
+* TeamsFilesPolicy
+  * Fix condition when resource is absent
+    FIXES [#4225](https://github.com/microsoft/Microsoft365DSC/issues/4225)
 * TeamsMeetingBroadcastPolicy
   * Fix deletion of resource
     FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)

@@ -262,7 +262,7 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $ValuesToCheck.Remove('Identity') | Out-Null
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
