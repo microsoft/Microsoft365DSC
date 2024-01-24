@@ -33,6 +33,8 @@
     QueryString and Characteristic parameters.
 * EXOAddressList
   * Fixed an issue trying to create a new instance when DisplayName is empty.
+* EXOApplicationAccessPolicy
+  * [BREAKING] Changed the AppId parameter to be a single string instead of an array.
 * SCAutoSensitivityLabelRule
   * Correct export indentation, which caused an issue with report conversion to JSON.
     FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
