@@ -46,6 +46,9 @@
   TeamsUnassignedNumberTreatment, TeamsVdiPolicy, TeamsWorkloadPolicy
   * Fix condition when resource is absent
     FIXES [#4227](https://github.com/microsoft/Microsoft365DSC/issues/4227)
+* TeamsEnhancedEncryptionPolicy
+  * Fix condition when resource is absent
+    FIXES [#4221](https://github.com/microsoft/Microsoft365DSC/issues/4221)
 * TeamsEventsPolicy
   * Add missing attributes
     FIXES [#4242](https://github.com/microsoft/Microsoft365DSC/issues/4242)
