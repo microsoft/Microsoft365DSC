@@ -33,6 +33,9 @@
     QueryString and Characteristic parameters.
 * EXOAddressList
   * Fixed an issue trying to create a new instance when DisplayName is empty.
+* SCAutoSensitivityLabelRule
+  * Correct export indentation, which caused an issue with report conversion to JSON.
+  FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
