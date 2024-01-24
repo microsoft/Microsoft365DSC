@@ -14,7 +14,7 @@ function Get-TargetResource
         $AccessRight,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $AppID,
 
         [Parameter()]
@@ -89,20 +89,45 @@ function Get-TargetResource
 
     try
     {
+        $ApplicationAccessPolicy = $null
         try
         {
-            $AllApplicationAccessPolicies = Get-ApplicationAccessPolicy -ErrorAction Stop
+            $ApplicationAccessPolicy = Get-ApplicationAccessPolicy -Identity $Identity -ErrorAction Stop
+            Write-Verbose -Message "Found policy by Identity {$Identity}"
         }
         catch
         {
-            if ($_.Exception -like "The operation couldn't be performed because object*")
-            {
-                Write-Verbose 'Could not obtain Application Access Policies for Tenant'
-                return $nullReturn
-            }
+            Write-Verbose -Message "Could not find policy by Identity {$Identity}"
         }
 
-        $ApplicationAccessPolicy = $AllApplicationAccessPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        $ScopeIdentityValue = $null
+        if ($null -eq $ApplicationAccessPolicy)
+        {
+            $scopeIdentityGroup = $null
+            try
+            {
+                $scopeIdentityGroup = Get-Group -Identity $PolicyScopeGroupId -ErrorAction Stop
+            }
+            catch
+            {
+                Write-Verbose -Message "Could not find Group with Identity {$PolicyScopeGroupId}"
+            }
+
+            if ($null -ne $scopeIdentityGroup)
+            {
+                $ScopeIdentityValue = $scopeIdentityGroup.WindowsEmailAddress
+                $ApplicationAccessPolicy = Get-ApplicationAccessPolicy | Where-Object -FilterScript { $AppID -eq $_.AppId -and $_.ScopeIdentity -eq $scopeIdentityGroup }
+            }
+
+            if ($null -ne $ApplicationAccessPolicy)
+            {
+                Write-Verbose -Message "Found Application Access Policy by Scope {$PolicyScopeGroupId}"
+            }
+        }
+        else
+        {
+            $ScopeIdentityValue = $ApplicationAccessPolicy.ScopeIdentity
+        }
 
         if ($null -eq $ApplicationAccessPolicy)
         {
@@ -111,11 +136,12 @@ function Get-TargetResource
         }
         else
         {
+            $ApplicationAccessPolicy = $ApplicationAccessPolicy[0]
             $result = @{
                 Identity              = $ApplicationAccessPolicy.Identity
                 AccessRight           = $ApplicationAccessPolicy.AccessRight
                 AppID                 = $ApplicationAccessPolicy.AppID
-                PolicyScopeGroupId    = $ApplicationAccessPolicy.ScopeIdentity
+                PolicyScopeGroupId    = $ScopeIdentityValue
                 Description           = $ApplicationAccessPolicy.Description
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -127,7 +153,7 @@ function Get-TargetResource
                 TenantId              = $TenantId
             }
 
-            Write-Verbose -Message "Found Application Access Policy $($Identity)"
+            Write-Verbose -Message "Found Application Access Policy {$($Identity)}"
             return $result
         }
     }
@@ -158,7 +184,7 @@ function Set-TargetResource
         $AccessRight,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $AppID,
 
         [Parameter()]
@@ -283,7 +309,7 @@ function Test-TargetResource
         $AccessRight,
 
         [Parameter()]
-        [System.String[]]
+        [System.String]
         $AppID,
 
         [Parameter()]
@@ -354,6 +380,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
