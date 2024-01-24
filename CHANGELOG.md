@@ -38,6 +38,7 @@
     empty string instead of a null value from the Get method.
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.12.0.
+  * Updated MicrosoftTeams dependencies to version 5.9.0.
 
 # 1.24.117.1
 
