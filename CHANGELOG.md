@@ -20,7 +20,7 @@
   * Remove the logic path to create a new instance in favor of the update flow.
 * AADConditionalAccessPolicy
   * Fix issue when not all parameters are specified
-  FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
+    FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
 * AADCrossTenantAccessPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADCrossTenantAccessPolicyCOnfigurationDefault
@@ -35,13 +35,16 @@
   * Fixed an issue trying to create a new instance when DisplayName is empty.
 * SCAutoSensitivityLabelRule
   * Correct export indentation, which caused an issue with report conversion to JSON.
-  FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
+    FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
 * TeamsEventsPolicy
   * Add missing attributes
     FIXES [#4242](https://github.com/microsoft/Microsoft365DSC/issues/4242)
+* TeamsMeetingBroadcastPolicy
+  * Fix deletion of resource
+    FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.12.0.
 
