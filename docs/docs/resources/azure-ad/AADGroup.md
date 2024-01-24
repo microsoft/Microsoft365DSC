@@ -57,7 +57,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Update**
 
-    - Group.Read.All, Group.ReadWrite.All, Organization.Read.All, RoleManagement.Read.Directory, RoleManagement.ReadWrite.Directory, User.Read.All, ReportSettings.ReadWrite.All
+    - Group.ReadWrite.All, Organization.Read.All, RoleManagement.ReadWrite.Directory, User.Read.All, ReportSettings.ReadWrite.All
 
 #### Application permissions
 
@@ -98,7 +98,7 @@ Configuration Example
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
             Visibility      = "Private"
-            Owners          = @("AdeleV@$Domain")
+            Owners          = @("admin@$Domain", "AdeleV@$Domain")
             Ensure          = "Present"
             Credential      = $Credscredential
         }
@@ -132,7 +132,7 @@ Configuration Example
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
             Visibility      = "Private"
-            Owners          = @("AdeleV@$Domain")
+            Owners          = @("admin@$Domain", "AdeleV@$Domain")
             Ensure          = "Present"
             Credential      = $Credscredential
         }
