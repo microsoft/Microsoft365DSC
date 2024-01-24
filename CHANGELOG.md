@@ -49,6 +49,9 @@
 * TeamsAudioConferencingPolicy
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4215](https://github.com/microsoft/Microsoft365DSC/issues/4215)
+* TeamsCallParkPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4210](https://github.com/microsoft/Microsoft365DSC/issues/4210)
 * TeamsComplianceRecordingPolicy
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4212](https://github.com/microsoft/Microsoft365DSC/issues/4212)
