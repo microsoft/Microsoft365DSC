@@ -96,7 +96,7 @@ function Get-TargetResource
         $GroupPolicyAssignment = Get-CsGroupPolicyAssignment -GroupId $Group.Id -PolicyType $PolicyType -ErrorAction SilentlyContinue
         if ($null -eq $GroupPolicyAssignment)
         {
-            Write-Verbose -Message "GroupPolicyAssignment not found for Group $GroupDisplayName"
+            Write-Verbose -Message "GroupPolicyAssignment not found for Group {$GroupDisplayName}"
             $nullReturn.GroupId = $Group.Id
             return $nullReturn
         }
