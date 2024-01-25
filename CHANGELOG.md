@@ -20,7 +20,7 @@
   * Remove the logic path to create a new instance in favor of the update flow.
 * AADConditionalAccessPolicy
   * Fix issue when not all parameters are specified
-  FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
+    FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
 * AADCrossTenantAccessPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADCrossTenantAccessPolicyCOnfigurationDefault
@@ -33,9 +33,46 @@
     QueryString and Characteristic parameters.
 * EXOAddressList
   * Fixed an issue trying to create a new instance when DisplayName is empty.
+* SCAutoSensitivityLabelRule
+  * Correct export indentation, which caused an issue with report conversion to JSON.
+    FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
+* TeamsAppPermissionPolicy, TeamsAppSetupPolicy, TeamsCallHoldPolicy,
+  TeamsIPPhonePolicy, TeamsMobilityPolicy, TeamsNetworkRoamingPolicy,
+  TeamsShiftsPolicy, TeamsTenantNetworkRegion, TeamsTenantNetworkSite,
+  TeamsTenantNetworkSubnet, TeamsTenantTrustedIPAddress, TeamsTranslationRule,
+  TeamsUnassignedNumberTreatment, TeamsVdiPolicy, TeamsWorkloadPolicy
+  * Fix condition when resource is absent
+    FIXES [#4227](https://github.com/microsoft/Microsoft365DSC/issues/4227)
+* TeamsAudioConferencingPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4215](https://github.com/microsoft/Microsoft365DSC/issues/4215)
+* TeamsCallParkPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4210](https://github.com/microsoft/Microsoft365DSC/issues/4210)
+* TeamsComplianceRecordingPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4212](https://github.com/microsoft/Microsoft365DSC/issues/4212)
+* TeamsCortanaPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4208](https://github.com/microsoft/Microsoft365DSC/issues/4208)
+* TeamsEnhancedEncryptionPolicy
+  * Fix condition when resource is absent
+    FIXES [#4221](https://github.com/microsoft/Microsoft365DSC/issues/4221)
+* TeamsEventsPolicy
+  * Add missing attributes
+    FIXES [#4242](https://github.com/microsoft/Microsoft365DSC/issues/4242)
+* TeamsFeedbackPolicy
+  * Fix condition when resource is absent
+    FIXES [#4223](https://github.com/microsoft/Microsoft365DSC/issues/4223)
+* TeamsFilesPolicy
+  * Fix condition when resource is absent
+    FIXES [#4225](https://github.com/microsoft/Microsoft365DSC/issues/4225)
+* TeamsMeetingBroadcastPolicy
+  * Fix deletion of resource
+    FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.12.0.
 
@@ -62,11 +99,14 @@
   * Removed the ability to specify a value of Absent for the Ensure property.
 * EXOAntiPhishPolicy
   * Add support for HonorDmarcPolicy parameter
-    FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
+    FIXES [#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)
 * IntuneDeviceConfigurationPolicyMacOS
   * Fix CIM instances comparison in Test-TargetResource and export
     CompliantAppsList with the correct type
     FIXES [#4144](https://github.com/microsoft/Microsoft365DSC/issues/4144)
+* TeamsEmergencyCallRoutingPolicy
+  * Fix deletion of resource
+    FIXES [#4219](https://github.com/microsoft/Microsoft365DSC/issues/4219)
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
   * Updated MSCloudLoginAssistant to version 1.1.7.
