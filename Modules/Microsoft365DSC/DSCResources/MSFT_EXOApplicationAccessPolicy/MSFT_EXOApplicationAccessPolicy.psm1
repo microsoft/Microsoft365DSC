@@ -92,7 +92,7 @@ function Get-TargetResource
         $ApplicationAccessPolicy = $null
         try
         {
-            $ApplicationAccessPolicy = Get-ApplicationAccessPolicy -Identity $Identity -ErrorAction Stop
+            [Array]$ApplicationAccessPolicy = Get-ApplicationAccessPolicy -Identity $Identity -ErrorAction Stop
             Write-Verbose -Message "Found policy by Identity {$Identity}"
         }
         catch
