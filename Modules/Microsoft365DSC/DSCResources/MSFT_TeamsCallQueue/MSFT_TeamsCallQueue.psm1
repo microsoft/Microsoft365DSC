@@ -241,13 +241,85 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    $nullReturn = $PSBoundParameters
+    $nullReturn.Ensure = 'Absent'
     try
     {
-        $queue = Get-CsCallQueue -NameFilter $Name `
-            -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.Name -eq $Name}
+        if (-not $Script:ExportMode)
+        {
+            Write-Host -Message "Getting Office 365 queue $Name"
+            $queue = Get-CsCallQueue -NameFilter $Name `
+                -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.Name -eq $Name}
+        }
+        else
+        {
+            Write-Host -Message "Retrieving queue $Name from the exported instances"
+            $queue = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+        }
 
-        return Convert-Resource -queue $queue -OriginBoundParameters $PSBoundParameters
 
+        if ($null -eq $queue)
+        {
+            return $nullReturn
+        }
+        else
+        {
+            return @{
+                Name                                          = $queue.Name
+                AgentAlertTime                                = $queue.AgentAlertTime
+                AllowOptOut                                   = $queue.AllowOptOut
+                DistributionLists                             = [String[]]$queue.DistributionLists
+                UseDefaultMusicOnHold                         = $queue.UseDefaultMusicOnHold
+                WelcomeMusicAudioFileId                       = $queue.WelcomeMusicAudioFileId
+                MusicOnHoldAudioFileId                        = $queue.MusicOnHoldAudioFileId
+                OverflowAction                                = $queue.OverflowAction
+                OverflowActionTarget                          = $queue.OverflowActionTarget.Id
+                OverflowThreshold                             = $queue.OverflowThreshold
+                TimeoutAction                                 = $queue.TimeoutAction
+                TimeoutActionTarget                           = $queue.TimeoutActionTarget.Id
+                TimeoutThreshold                              = $queue.TimeoutThreshold
+                RoutingMethod                                 = $queue.RoutingMethod
+                PresenceBasedRouting                          = $queue.PresenceBasedRouting
+                ConferenceMode                                = $queue.ConferenceMode
+                Users                                         = [String[]]$queue.Users
+                LanguageId                                    = $queue.LanguageId
+                OboResourceAccountIds                         = [String[]]$queue.OboResourceAccountIds
+                OverflowDisconnectTextToSpeechPrompt          = $queue.OverflowDisconnectTextToSpeechPrompt
+                OverflowDisconnectAudioFilePrompt             = $queue.OverflowDisconnectAudioFilePrompt
+                OverflowRedirectPersonTextToSpeechPrompt      = $queue.OverflowRedirectPersonTextToSpeechPrompt
+                OverflowRedirectPersonAudioFilePrompt         = $queue.OverflowRedirectPersonAudioFilePrompt
+                OverflowRedirectVoiceAppTextToSpeechPrompt    = $queue.OverflowRedirectVoiceAppTextToSpeechPrompt
+                OverflowRedirectVoiceAppAudioFilePrompt       = $queue.OverflowRedirectVoiceAppAudioFilePrompt
+                OverflowRedirectPhoneNumberTextToSpeechPrompt = $queue.OverflowRedirectPhoneNumberTextToSpeechPrompt
+                OverflowRedirectPhoneNumberAudioFilePrompt    = $queue.OverflowRedirectPhoneNumberAudioFilePrompt
+                OverflowRedirectVoicemailTextToSpeechPrompt   = $queue.OverflowRedirectVoicemailTextToSpeechPrompt
+                OverflowRedirectVoicemailAudioFilePrompt      = $queue.OverflowRedirectVoicemailAudioFilePrompt
+                OverflowSharedVoicemailTextToSpeechPrompt     = $queue.OverflowSharedVoicemailTextToSpeechPrompt
+                OverflowSharedVoicemailAudioFilePrompt        = $queue.OverflowSharedVoicemailAudioFilePrompt
+                EnableOverflowSharedVoicemailTranscription    = $queue.EnableOverflowSharedVoicemailTranscription
+                TimeoutDisconnectTextToSpeechPrompt           = $queue.TimeoutDisconnectTextToSpeechPrompt
+                TimeoutDisconnectAudioFilePrompt              = $queue.TimeoutDisconnectAudioFilePrompt
+                TimeoutRedirectPersonTextToSpeechPrompt       = $queue.TimeoutRedirectPersonTextToSpeechPrompt
+                TimeoutRedirectPersonAudioFilePrompt          = $queue.TimeoutRedirectPersonAudioFilePrompt
+                TimeoutRedirectVoiceAppTextToSpeechPrompt     = $queue.TimeoutRedirectVoiceAppTextToSpeechPrompt
+                TimeoutRedirectVoiceAppAudioFilePrompt        = $queue.TimeoutRedirectVoiceAppAudioFilePrompt
+                TimeoutRedirectPhoneNumberTextToSpeechPrompt  = $queue.TimeoutRedirectPhoneNumberTextToSpeechPrompt
+                TimeoutRedirectPhoneNumberAudioFilePrompt     = $queue.TimeoutRedirectPhoneNumberAudioFilePrompt
+                TimeoutRedirectVoicemailTextToSpeechPrompt    = $queue.TimeoutRedirectVoicemailTextToSpeechPrompt
+                TimeoutRedirectVoicemailAudioFilePrompt       = $queue.TimeoutRedirectVoicemailAudioFilePrompt
+                TimeoutSharedVoicemailTextToSpeechPrompt      = $queue.TimeoutSharedVoicemailTextToSpeechPrompt
+                TimeoutSharedVoicemailAudioFilePrompt         = $queue.TimeoutSharedVoicemailAudioFilePrompt
+                EnableTimeoutSharedVoicemailTranscription     = $queue.EnableTimeoutSharedVoicemailTranscription
+                ChannelId                                     = $queue.ChannelId
+                ChannelUserObjectId                           = $queue.ChannelUserObjectId
+                AuthorizedUsers                               = [String[]]$queue.AuthorizedUsers
+                Ensure                                        = 'Present'
+                Credential                                    = $Credential
+                ApplicationId                                 = $ApplicationId
+                TenantId                                      = $TenantId
+                CertificateThumbprint                         = $CertificateThumbprint
+            }
+        }
     }
     catch
     {
@@ -258,101 +330,6 @@ function Get-TargetResource
             -Credential $Credential
 
         return $nullReturn
-    }
-}
-
-function Convert-Resource
-{
-    [CmdletBinding()]
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [System.Object]
-        $queue,
-
-        # [Parameter()]
-        # [System.Management.Automation.PSCredential]
-        # $Credential,
-
-        # [Parameter()]
-        # [System.String]
-        # $ApplicationId,
-
-        # [Parameter()]
-        # [System.String]
-        # $TenantId,
-
-        # [Parameter()]
-        # [System.String]
-        # $CertificateThumbprint
-        [Parameter()]
-        [System.Collections.Hashtable]
-        $OriginBoundParameters
-    )
-
-    $nullReturn = $OriginBoundParameters
-    $nullReturn.Ensure = 'Absent'
-    if ($null -eq $queue)
-    {
-        return $nullReturn
-    }
-    else
-    {
-        return @{
-            Name                                          = $queue.Name
-            AgentAlertTime                                = $queue.AgentAlertTime
-            AllowOptOut                                   = $queue.AllowOptOut
-            DistributionLists                             = [String[]]$queue.DistributionLists
-            UseDefaultMusicOnHold                         = $queue.UseDefaultMusicOnHold
-            WelcomeMusicAudioFileId                       = $queue.WelcomeMusicAudioFileId
-            MusicOnHoldAudioFileId                        = $queue.MusicOnHoldAudioFileId
-            OverflowAction                                = $queue.OverflowAction
-            OverflowActionTarget                          = $queue.OverflowActionTarget.Id
-            OverflowThreshold                             = $queue.OverflowThreshold
-            TimeoutAction                                 = $queue.TimeoutAction
-            TimeoutActionTarget                           = $queue.TimeoutActionTarget.Id
-            TimeoutThreshold                              = $queue.TimeoutThreshold
-            RoutingMethod                                 = $queue.RoutingMethod
-            PresenceBasedRouting                          = $queue.PresenceBasedRouting
-            ConferenceMode                                = $queue.ConferenceMode
-            Users                                         = [String[]]$queue.Users
-            LanguageId                                    = $queue.LanguageId
-            OboResourceAccountIds                         = [String[]]$queue.OboResourceAccountIds
-            OverflowDisconnectTextToSpeechPrompt          = $queue.OverflowDisconnectTextToSpeechPrompt
-            OverflowDisconnectAudioFilePrompt             = $queue.OverflowDisconnectAudioFilePrompt
-            OverflowRedirectPersonTextToSpeechPrompt      = $queue.OverflowRedirectPersonTextToSpeechPrompt
-            OverflowRedirectPersonAudioFilePrompt         = $queue.OverflowRedirectPersonAudioFilePrompt
-            OverflowRedirectVoiceAppTextToSpeechPrompt    = $queue.OverflowRedirectVoiceAppTextToSpeechPrompt
-            OverflowRedirectVoiceAppAudioFilePrompt       = $queue.OverflowRedirectVoiceAppAudioFilePrompt
-            OverflowRedirectPhoneNumberTextToSpeechPrompt = $queue.OverflowRedirectPhoneNumberTextToSpeechPrompt
-            OverflowRedirectPhoneNumberAudioFilePrompt    = $queue.OverflowRedirectPhoneNumberAudioFilePrompt
-            OverflowRedirectVoicemailTextToSpeechPrompt   = $queue.OverflowRedirectVoicemailTextToSpeechPrompt
-            OverflowRedirectVoicemailAudioFilePrompt      = $queue.OverflowRedirectVoicemailAudioFilePrompt
-            OverflowSharedVoicemailTextToSpeechPrompt     = $queue.OverflowSharedVoicemailTextToSpeechPrompt
-            OverflowSharedVoicemailAudioFilePrompt        = $queue.OverflowSharedVoicemailAudioFilePrompt
-            EnableOverflowSharedVoicemailTranscription    = $queue.EnableOverflowSharedVoicemailTranscription
-            TimeoutDisconnectTextToSpeechPrompt           = $queue.TimeoutDisconnectTextToSpeechPrompt
-            TimeoutDisconnectAudioFilePrompt              = $queue.TimeoutDisconnectAudioFilePrompt
-            TimeoutRedirectPersonTextToSpeechPrompt       = $queue.TimeoutRedirectPersonTextToSpeechPrompt
-            TimeoutRedirectPersonAudioFilePrompt          = $queue.TimeoutRedirectPersonAudioFilePrompt
-            TimeoutRedirectVoiceAppTextToSpeechPrompt     = $queue.TimeoutRedirectVoiceAppTextToSpeechPrompt
-            TimeoutRedirectVoiceAppAudioFilePrompt        = $queue.TimeoutRedirectVoiceAppAudioFilePrompt
-            TimeoutRedirectPhoneNumberTextToSpeechPrompt  = $queue.TimeoutRedirectPhoneNumberTextToSpeechPrompt
-            TimeoutRedirectPhoneNumberAudioFilePrompt     = $queue.TimeoutRedirectPhoneNumberAudioFilePrompt
-            TimeoutRedirectVoicemailTextToSpeechPrompt    = $queue.TimeoutRedirectVoicemailTextToSpeechPrompt
-            TimeoutRedirectVoicemailAudioFilePrompt       = $queue.TimeoutRedirectVoicemailAudioFilePrompt
-            TimeoutSharedVoicemailTextToSpeechPrompt      = $queue.TimeoutSharedVoicemailTextToSpeechPrompt
-            TimeoutSharedVoicemailAudioFilePrompt         = $queue.TimeoutSharedVoicemailAudioFilePrompt
-            EnableTimeoutSharedVoicemailTranscription     = $queue.EnableTimeoutSharedVoicemailTranscription
-            ChannelId                                     = $queue.ChannelId
-            ChannelUserObjectId                           = $queue.ChannelUserObjectId
-            AuthorizedUsers                               = [String[]]$queue.AuthorizedUsers
-            Ensure                                        = 'Present'
-            Credential                                    = $OriginBoundParameters.Credential
-            ApplicationId                                 = $OriginBoundParameters.ApplicationId
-            TenantId                                      = $OriginBoundParameters.TenantId
-            CertificateThumbprint                         = $OriginBoundParameters.CertificateThumbprint
-        }
     }
 }
 
@@ -940,8 +917,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
             }
-            # $Results = Get-TargetResource @Params
-            $Results = Convert-Resource -queue $instance -OriginBoundParameters $params
+            $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
