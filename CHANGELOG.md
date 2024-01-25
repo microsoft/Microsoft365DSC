@@ -33,6 +33,10 @@
     QueryString and Characteristic parameters.
 * EXOAddressList
   * Fixed an issue trying to create a new instance when DisplayName is empty.
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Update the Intune enrollment platform restriction logic to the single platform approach.
+  * Fixed an issue where the assignment would not be updated.
+  * Introduce additional validation for selected properties.
 * SCAutoSensitivityLabelRule
   * Correct export indentation, which caused an issue with report conversion to JSON.
     FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]

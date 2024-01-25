@@ -16,8 +16,21 @@ Configuration Example
         IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
         {
             Credential                        = $Credscredential
-            DisplayName                       = "All users and all devices";
+            DisplayName                       = "Removed Policy";
             Ensure                            = "Absent";
+            Assignments                       = @();
+            Description                       = "Enrollment restriction for POC users. Markus Köchli";
+            DeviceEnrollmentConfigurationType = "singlePlatformRestriction";
+            Identity                          = "d59e4c28-b6b2-48ad-a6f0-a2132300b99d_SinglePlatformRestriction";
+            PlatformRestriction               = MSFT_DeviceEnrollmentPlatformRestriction{
+                PlatformBlocked = $True
+                BlockedSkus = @()
+                BlockedManufacturers = @()
+                PersonalDeviceEnrollmentBlocked = $False
+            };
+            PlatformType                      = "android";
+            Priority                          = 1;
+            TenantId                          = $OrganizationName;
         }
     }
 }
