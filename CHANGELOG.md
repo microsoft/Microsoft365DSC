@@ -75,6 +75,9 @@
     FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.12.0.
+* MISC
+  * M365DSCDRGUtil
+    * Add new parameter for customizable assignment identifier
 
 # 1.24.117.1
 
