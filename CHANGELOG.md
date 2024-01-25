@@ -70,6 +70,10 @@
 * TeamsFilesPolicy
   * Fix condition when resource is absent
     FIXES [#4225](https://github.com/microsoft/Microsoft365DSC/issues/4225)
+* TeamsGroupPolicyAssignment
+  * Ensure assignment can still be created if GroupId is not found by trying to
+    search by DisplayName afterwards
+    FIXES [#4248](https://github.com/microsoft/Microsoft365DSC/issues/4248)
 * TeamsMeetingBroadcastPolicy
   * Fix deletion of resource
     FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)
