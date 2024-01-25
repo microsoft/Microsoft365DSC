@@ -33,6 +33,10 @@
     QueryString and Characteristic parameters.
 * EXOAddressList
   * Fixed an issue trying to create a new instance when DisplayName is empty.
+* EXOApplicationAccessPolicy
+  * Changed the logic to retrieve existing instances based on Scope.
+* EXODataClassification
+  * DEPRECATED Resource.
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.

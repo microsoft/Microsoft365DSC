@@ -17,7 +17,8 @@ Configuration Example
     {
         EXOApplicationAccessPolicy 'ConfigureApplicationAccessPolicy'
         {
-            Identity             = "Global"
+            Identity             = "Integration Policy"
+            AppID                = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
             Ensure               = "Absent"
             Credential           = $Credscredential
         }
