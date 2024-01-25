@@ -242,19 +242,9 @@ function Set-TargetResource
     $DataClassificationParams.Remove('CertificatePassword') | Out-Null
     $DataClassificationParams.Remove('ManagedIdentity') | Out-Null
 
-
     if (('Present' -eq $Ensure ) -and ($null -eq $DataClassification))
     {
-        Write-Verbose -Message "Creating Data classification policy $($Identity)."
-        $DataClassificationParams.Remove('Identity') | Out-Null
-        $DataClassificationParams.Remove('IsDefault') | Out-Null
-        if (-Not [String]::IsNullOrEmpty($DataClassificationParams.Locale))
-        {
-            $DataClassificationParams.Locale = New-Object system.globalization.cultureinfo($DataClassificationParams.Locale)
-        }
-
-        New-DataClassification @DataClassificationParams
-        Write-Verbose -Message 'Data classification policy created successfully.'
+        Write-Verbose -Message "Data Classification in Exchange Online are now deprecated in favor of Sensitive Information Types in Security and Compliance."
     }
     elseif (('Present' -eq $Ensure ) -and ($Null -ne $DataClassification))
     {
