@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.124.1
 
 * AADAuthenticationMethodPolicyAuthenticator
   * Remove the logic path to create a new instance in favor of the update flow.
