@@ -60,8 +60,8 @@ Configuration Example
         {
             ActiveSyncEnabled = $True
             OwaMailboxPolicy  = "OwaMailboxPolicy-Default"
-            PopEnabled        = $True
-            Identity          = $CASIdentity
+            PopEnabled        = $False # Updated Property
+            Identity          = 'ExchangeOnlineEnterprise'
             ImapEnabled       = $True
             Ensure            = "Present"
             Credential        = $Credscredential

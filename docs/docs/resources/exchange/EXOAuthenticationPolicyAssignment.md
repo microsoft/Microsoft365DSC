@@ -44,7 +44,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $EXOAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -52,10 +52,63 @@ Configuration Example
     {
         EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
         {
-            UserName                 = "John.Smith"
-            AuthenticationPolicyName = "Test Policy"
+            UserName                 = "AdeleV"
+            AuthenticationPolicyName = "Block Basic Auth"
             Ensure                   = "Present"
-            Credential               = $EXOAdmin
+            Credential               = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
+        {
+            UserName                 = "AdeleV"
+            AuthenticationPolicyName = "Test Policy" # Updaqted Property
+            Ensure                   = "Present"
+            Credential               = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
+        {
+            UserName                 = "AdeleV"
+            AuthenticationPolicyName = "Test Policy"
+            Ensure                   = "Absent"
+            Credential               = $Credscredential
         }
     }
 }

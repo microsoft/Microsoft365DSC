@@ -37,7 +37,7 @@ Configuration Example
                     TargetType = 'group'
                 }
             );
-            State                        = "disabled"; # Updated Property
+            State                        = "enabled"; # Updated Property
         }
     }
 }

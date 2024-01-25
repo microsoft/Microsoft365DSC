@@ -53,13 +53,6 @@
                     State                 = "enabled";
                     Credential            = $credsCredential;
                 }
-                AADAuthenticationMethodPolicyEmail 'AADAuthenticationMethodPolicyEmail-Email'
-                {
-                    Ensure                       = "Absent";
-                    Id                           = "Email";
-                    State                        = "disabled"; # Updated Property
-                    Credential                   = $credsCredential;
-                }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
                     Ensure                           = "Absent";
@@ -102,25 +95,11 @@
                     Ensure               = "Absent";
                     Credential           = $Credscredential;
                 }
-                AADConditionalAccessPolicy 'Allin-example'
+                AADConditionalAccessPolicy 'ConditionalAccessPolicy'
                 {
-                    DisplayName                          = 'Allin-example'
+                    DisplayName                          = 'Example CAP'
                     Ensure                               = 'Absent'
                     Credential                           = $Credscredential
-                }
-                AADCrossTenantAccessPolicy 'AADCrossTenantAccessPolicy'
-                {
-                    AllowedCloudEndpoints = @("microsoftonline.us");
-                    Credential            = $Credscredential;
-                    DisplayName           = "MyXTAPPolicy";
-                    Ensure                = "Absent";
-                    IsSingleInstance      = "Yes";
-                }
-                AADCrossTenantAccessPolicyConfigurationDefault 'AADCrossTenantAccessPolicyConfigurationDefault'
-                {
-                    Credential               = $Credscredential;
-                    Ensure                   = "Absent";
-                    IsSingleInstance                        = "Yes";
                 }
                 AADCrossTenantAccessPolicyConfigurationPartner 'AADCrossTenantAccessPolicyConfigurationPartner'
                 {
@@ -130,7 +109,7 @@
                 }
                 AADEntitlementManagementAccessPackage 'myAccessPackage'
                 {
-                    DisplayName                     = 'General'
+                    DisplayName                     = 'Integration Package'
                     Ensure                          = 'Absent'
                     Credential                      = $Credscredential
                 }
@@ -219,50 +198,6 @@
                                 type        = 'afterDateTime'
                             }
                     };
-                }
-                AADRoleSetting '28b253d8-cde5-471f-a331-fe7320023cdd'
-                {
-                    ActivateApprover                                          = @();
-                    ActivationMaxDuration                                     = "PT8H";
-                    ActivationReqJustification                                = $False; # Updated Property
-                    ActivationReqMFA                                          = $False;
-                    ActivationReqTicket                                       = $False;
-                    ActiveAlertNotificationAdditionalRecipient                = @();
-                    ActiveAlertNotificationDefaultRecipient                   = $True;
-                    ActiveAlertNotificationOnlyCritical                       = $False;
-                    ActiveApproveNotificationAdditionalRecipient              = @();
-                    ActiveApproveNotificationDefaultRecipient                 = $True;
-                    ActiveApproveNotificationOnlyCritical                     = $False;
-                    ActiveAssigneeNotificationAdditionalRecipient             = @();
-                    ActiveAssigneeNotificationDefaultRecipient                = $True;
-                    ActiveAssigneeNotificationOnlyCritical                    = $False;
-                    ApprovaltoActivate                                        = $False;
-                    AssignmentReqJustification                                = $True;
-                    AssignmentReqMFA                                          = $False;
-                    Displayname                                               = "Application Administrator";
-                    ElegibilityAssignmentReqJustification                     = $False;
-                    ElegibilityAssignmentReqMFA                               = $False;
-                    EligibleAlertNotificationAdditionalRecipient              = @();
-                    EligibleAlertNotificationDefaultRecipient                 = $True;
-                    EligibleAlertNotificationOnlyCritical                     = $False;
-                    EligibleApproveNotificationAdditionalRecipient            = @();
-                    EligibleApproveNotificationDefaultRecipient               = $True;
-                    EligibleApproveNotificationOnlyCritical                   = $False;
-                    EligibleAssigneeNotificationAdditionalRecipient           = @();
-                    EligibleAssigneeNotificationDefaultRecipient              = $True;
-                    EligibleAssigneeNotificationOnlyCritical                  = $False;
-                    EligibleAssignmentAlertNotificationAdditionalRecipient    = @();
-                    EligibleAssignmentAlertNotificationDefaultRecipient       = $True;
-                    EligibleAssignmentAlertNotificationOnlyCritical           = $False;
-                    EligibleAssignmentAssigneeNotificationAdditionalRecipient = @();
-                    EligibleAssignmentAssigneeNotificationDefaultRecipient    = $True;
-                    EligibleAssignmentAssigneeNotificationOnlyCritical        = $False;
-                    ExpireActiveAssignment                                    = "P180D";
-                    ExpireEligibleAssignment                                  = "P365D";
-                    PermanentActiveAssignmentisExpirationRequired             = $False;
-                    PermanentEligibleAssignmentisExpirationRequired           = $False;
-                    Credential                                                = $Credscredential
-                    Ensure                                                    = 'Absent'
                 }
                 AADSecurityDefaults 'Defaults'
                 {

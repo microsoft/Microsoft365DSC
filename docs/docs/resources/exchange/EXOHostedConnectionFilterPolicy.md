@@ -59,13 +59,72 @@ Configuration Example
     {
         EXOHostedConnectionFilterPolicy 'ConfigureHostedConnectionFilterPolicy'
         {
-            Identity         = "Default"
+            Identity         = "Integration Policy"
             AdminDisplayName = ""
             EnableSafeList   = $False
             IPAllowList      = @()
             IPBlockList      = @()
             MakeDefault      = $False
             Ensure           = "Present"
+            Credential       = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOHostedConnectionFilterPolicy 'ConfigureHostedConnectionFilterPolicy'
+        {
+            Identity         = "Integration Policy"
+            AdminDisplayName = ""
+            EnableSafeList   = $True # Updated Property
+            IPAllowList      = @()
+            IPBlockList      = @()
+            MakeDefault      = $False
+            Ensure           = "Present"
+            Credential       = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOHostedConnectionFilterPolicy 'ConfigureHostedConnectionFilterPolicy'
+        {
+            Identity         = "Integration Policy"
+            Ensure           = "Absent"
             Credential       = $Credscredential
         }
     }

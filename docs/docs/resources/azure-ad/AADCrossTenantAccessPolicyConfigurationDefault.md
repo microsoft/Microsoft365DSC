@@ -10,7 +10,7 @@
 | **B2BDirectConnectInbound** | Write | MSFT_AADCrossTenantAccessPolicyB2BSetting | Defines your partner-specific configuration for users from other organizations accessing your resources via Azure AD B2B direct connect. | |
 | **B2BDirectConnectOutbound** | Write | MSFT_AADCrossTenantAccessPolicyB2BSetting | Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B direct connect. | |
 | **InboundTrust** | Write | MSFT_AADCrossTenantAccessPolicyInboundTrust | Determines the partner-specific configuration for trusting other Conditional Access claims from external Azure AD organizations. | |
-| **Ensure** | Write | String | Specify if the instance should exist or not. | `Present`, `Absent` |
+| **Ensure** | Write | String | Specify if the instance should exist or not. | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -194,33 +194,6 @@ Configuration Example
                 IsHybridAzureADJoinedDeviceAccepted = $False
                 IsMfaAccepted                       = $False
             }
-            IsSingleInstance                        = "Yes";
-        }
-    }
-}
-```
-
-### Example 2
-
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
-
-```powershell
-Configuration Example
-{
-    param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    Node localhost
-    {
-        AADCrossTenantAccessPolicyConfigurationDefault "AADCrossTenantAccessPolicyConfigurationDefault"
-        {
-            Credential               = $Credscredential;
-            Ensure                   = "Absent";
             IsSingleInstance                        = "Yes";
         }
     }
