@@ -15,6 +15,8 @@
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#3897](https://github.com/microsoft/Microsoft365DSC/issues/3897)
     FIXES [#4256](https://github.com/microsoft/Microsoft365DSC/issues/4256)
+* TeamsFilesPolicy
+  * Add default value ('Present') to parameter Ensure
 
 # 1.24.124.1
 
