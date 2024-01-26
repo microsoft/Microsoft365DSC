@@ -87,7 +87,7 @@ Configuration Example
             ExceptAnyOfClientIPAddressesOrRanges = @()
             AnyOfClientIPAddressesOrRanges       = @()
             Ensure                               = "Present"
-            Credential                           = $GlobalAdmin
+            Credential                           = $Credscredential
         }
     }
 }
@@ -126,7 +126,7 @@ Configuration Example
             ExceptAnyOfClientIPAddressesOrRanges = @()
             AnyOfClientIPAddressesOrRanges       = @()
             Ensure                               = "Present"
-            Credential                           = $GlobalAdmin
+            Credential                           = $Credscredential
         }
     }
 }
@@ -154,7 +154,7 @@ Configuration Example
             Action                               = "AllowAccess"
             Identity                             = "Always Allow Remote PowerShell"
             Ensure                               = "Absent"
-            Credential                           = $GlobalAdmin
+            Credential                           = $Credscredential
         }
     }
 }

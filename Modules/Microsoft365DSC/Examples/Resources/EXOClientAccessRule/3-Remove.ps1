@@ -19,7 +19,7 @@ Configuration Example
             Action                               = "AllowAccess"
             Identity                             = "Always Allow Remote PowerShell"
             Ensure                               = "Absent"
-            Credential                           = $GlobalAdmin
+            Credential                           = $Credscredential
         }
     }
 }

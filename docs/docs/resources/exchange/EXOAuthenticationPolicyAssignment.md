@@ -44,7 +44,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $EXOAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -55,7 +55,7 @@ Configuration Example
             UserName                 = "AdeleV"
             AuthenticationPolicyName = "Block Basic Auth"
             Ensure                   = "Present"
-            Credential               = $EXOAdmin
+            Credential               = $Credscredential
         }
     }
 }
@@ -70,18 +70,19 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $EXOAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
         {
             UserName                 = "AdeleV"
-            AuthenticationPolicyName = "Test Policy"
+            AuthenticationPolicyName = "Test Policy" # Updaqted Property
             Ensure                   = "Present"
-            Credential               = $EXOAdmin
+            Credential               = $Credscredential
         }
     }
 }
@@ -96,7 +97,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $EXOAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -107,7 +108,7 @@ Configuration Example
             UserName                 = "AdeleV"
             AuthenticationPolicyName = "Test Policy"
             Ensure                   = "Absent"
-            Credential               = $EXOAdmin
+            Credential               = $Credscredential
         }
     }
 }
