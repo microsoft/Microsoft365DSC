@@ -15,4 +15,5 @@ class MSFT_TeamsUserCallingSettings : OMI_BaseResource
     [Write, Description("The forwarding target. Supported types of values are ObjectId's, SIP addresses and phone numbers. For phone numbers we support the following types of formats: E.164 (+12065551234 or +1206555000;ext=1234) or non-E.164 like 1234.")] String ForwardingTarget;
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Required, Description("Credentials of the Teams Global Admin."), EmbeddedInstance("MSFT_Credential")] String Credential;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

@@ -66,7 +66,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of Tab $DisplayName"
 
@@ -184,6 +188,7 @@ function Get-TargetResource
             TenantId              = $TenantID
             CertificateThumbprint = $CertificateThumbprint
             Ensure                = 'Present'
+            ManagedIdentity       = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -265,7 +270,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Team $DisplayName"
@@ -293,6 +302,7 @@ function Set-TargetResource
     $CurrentParameters.Remove('TenantId') | Out-Null
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('Credential') | Out-Null
+    $CurrentParameters.Remove('ManagedIdentity') | Out-Null
 
     Write-Verbose -Message "Retrieving Team Channel {$ChannelName} from Team {$($tab.TeamId)}"
     $ChannelInstance = Get-MgBetaTeamChannel -TeamId $tab.TeamId `
@@ -438,7 +448,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -461,9 +475,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -495,7 +506,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -570,6 +585,7 @@ function Export-TargetResource
                         ApplicationId         = $ApplicationId
                         TenantId              = $TenantId
                         CertificateThumbprint = $CertificateThumbprint
+                        ManagedIdentity       = $ManagedIdentity.IsPresent
                     }
                     $Results = Get-TargetResource @params
 

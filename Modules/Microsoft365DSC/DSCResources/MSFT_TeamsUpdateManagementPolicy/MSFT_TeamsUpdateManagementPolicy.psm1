@@ -62,7 +62,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -109,6 +113,7 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
         }
         if (-not [System.String]::IsNullOrEmpty($policy.UpdateTimeOfDay))
         {
@@ -222,6 +227,7 @@ function Set-TargetResource
         $newParams.Remove('ApplicationId') | Out-Null
         $newParams.Remove('TenantId') | Out-Null
         $newParams.Remove('CertificateThumbprint') | Out-Null
+        $newParams.Remove('ManagedIdentity') | Out-Null
 
         New-CsTeamsUpdateManagementPolicy @newParams | Out-Null
     }
@@ -234,6 +240,7 @@ function Set-TargetResource
         $setParams.Remove('ApplicationId') | Out-Null
         $setParams.Remove('TenantId') | Out-Null
         $setParams.Remove('CertificateThumbprint') | Out-Null
+        $setParams.Remove('ManagedIdentity') | Out-Null
 
         Set-CsTeamsUpdateManagementPolicy @setParams | Out-Null
     }
@@ -309,7 +316,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -361,7 +372,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -399,6 +414,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             $result = Get-TargetResource @params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
