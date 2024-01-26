@@ -1,5 +1,21 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationPolicyAndroidOpenSourceProject,
+  IntuneExploitProtectionPolicyWindows10SettingCatalog, IntuneRoleAssignment,
+  IntuneRoleDefinition, IntuneSettingCatalogASRRulesPolicyWindows10,
+  IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator,
+  IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner,
+  IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile,
+  IntuneWifiConfigurationPolicyAndroidForWork,
+  IntuneWifiConfigurationPolicyAndroidOpenSourceProject,
+  IntuneWifiConfigurationPolicyIOS, IntuneWifiConfigurationPolicyMacOS,
+  IntuneWifiConfigurationPolicyWindows10, TeamsCallParkPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#3897](https://github.com/microsoft/Microsoft365DSC/issues/3897)
+    FIXES [#4256](https://github.com/microsoft/Microsoft365DSC/issues/4256)
+
 # 1.24.124.1
 
 * AADAuthenticationMethodPolicyAuthenticator
@@ -20,7 +36,7 @@
   * Remove the logic path to create a new instance in favor of the update flow.
 * AADConditionalAccessPolicy
   * Fix issue when not all parameters are specified
-    FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
+    FIXES [#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)
 * AADCrossTenantAccessPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADCrossTenantAccessPolicyCOnfigurationDefault
@@ -39,7 +55,7 @@
   * DEPRECATED Resource.
 * SCAutoSensitivityLabelRule
   * Correct export indentation, which caused an issue with report conversion to JSON.
-    FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
+    FIXES [#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
