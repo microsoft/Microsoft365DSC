@@ -54,14 +54,15 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOApplicationAccessPolicy 'ConfigureApplicationAccessPolicy'
         {
-            Identity             = "Global"
+            Identity             = "Integration Policy"
             AccessRight          = "DenyAccess"
-            AppID                = @("3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5", "6ac794ca-2697-4137-8754-d2a78ae47d93")
-            PolicyScopeGroupId   = "Engineering Staff"
+            AppID                = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
+            PolicyScopeGroupId   = "IntegrationMailEnabled@$Domain"
             Description          = "Engineering Group Policy"
             Ensure               = "Present"
             Credential           = $Credscredential
@@ -86,14 +87,15 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOApplicationAccessPolicy 'ConfigureApplicationAccessPolicy'
         {
-            Identity             = "Global"
+            Identity             = "Integration Policy"
             AccessRight          = "DenyAccess"
-            AppID                = @("3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5", "6ac794ca-2697-4137-8754-d2a78ae47d93")
-            PolicyScopeGroupId   = "Engineering Staff"
+            AppID                = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
+            PolicyScopeGroupId   = "IntegrationMailEnabled@$Domain"
             Description          = "Engineering Group Policy Updated" # Updated Property
             Ensure               = "Present"
             Credential           = $Credscredential
@@ -122,7 +124,8 @@ Configuration Example
     {
         EXOApplicationAccessPolicy 'ConfigureApplicationAccessPolicy'
         {
-            Identity             = "Global"
+            Identity             = "Integration Policy"
+            AppID                = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
             Ensure               = "Absent"
             Credential           = $Credscredential
         }

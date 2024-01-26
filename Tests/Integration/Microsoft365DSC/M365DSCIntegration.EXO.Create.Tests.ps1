@@ -97,10 +97,10 @@
                 }
                 EXOApplicationAccessPolicy 'ConfigureApplicationAccessPolicy'
                 {
-                    Identity             = "Global"
+                    Identity             = "Integration Policy"
                     AccessRight          = "DenyAccess"
-                    AppID                = @("3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5", "6ac794ca-2697-4137-8754-d2a78ae47d93")
-                    PolicyScopeGroupId   = "Engineering Staff"
+                    AppID                = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
+                    PolicyScopeGroupId   = "IntegrationMailEnabled@$Domain"
                     Description          = "Engineering Group Policy"
                     Ensure               = "Present"
                     Credential           = $Credscredential
@@ -128,7 +128,7 @@
                     UserName                 = "AdeleV"
                     AuthenticationPolicyName = "Block Basic Auth"
                     Ensure                   = "Present"
-                    Credential               = $EXOAdmin
+                    Credential               = $Credscredential
                 }
                 EXOAvailabilityAddressSpace 'ConfigureAvailabilityAddressSpace'
                 {
@@ -161,17 +161,7 @@
                     ExceptAnyOfClientIPAddressesOrRanges = @()
                     AnyOfClientIPAddressesOrRanges       = @()
                     Ensure                               = "Present"
-                    Credential                           = $GlobalAdmin
-                }
-                EXODataClassification 'ConfigureDataClassification'
-                {
-                    Identity    = 'Contoso Confidential'
-                    Name        = 'Contoso Confidentiel'
-                    Description = 'Ce message contient des informations confidentielles.'
-                    Locale      = 'fr'
-                    IsDefault   = $true
-                    Ensure      = "Present"
-                    Credential  = $Credscredential
+                    Credential                           = $Credscredential
                 }
                 EXODataEncryptionPolicy 'ConfigureDataEncryptionPolicy'
                 {

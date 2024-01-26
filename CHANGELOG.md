@@ -2,6 +2,13 @@
 
 # UNRELEASED
 
+* MISC
+  * M365DSCReport
+    * Fix nested change detection for CIMInstances
+    * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
+
+# 1.24.124.1
+
 * AADAuthenticationMethodPolicyAuthenticator
   * Remove the logic path to create a new instance in favor of the update flow.
 * AADAuthenticationMethodPolicyEmail
@@ -33,6 +40,10 @@
     QueryString and Characteristic parameters.
 * EXOAddressList
   * Fixed an issue trying to create a new instance when DisplayName is empty.
+* EXOApplicationAccessPolicy
+  * Changed the logic to retrieve existing instances based on Scope.
+* EXODataClassification
+  * DEPRECATED Resource.
 * SCAutoSensitivityLabelRule
   * Correct export indentation, which caused an issue with report conversion to JSON.
     FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
@@ -70,15 +81,18 @@
 * TeamsFilesPolicy
   * Fix condition when resource is absent
     FIXES [#4225](https://github.com/microsoft/Microsoft365DSC/issues/4225)
+* TeamsGroupPolicyAssignment
+  * Ensure assignment can still be created if GroupId is not found by trying to
+    search by DisplayName afterwards
+    FIXES [#4248](https://github.com/microsoft/Microsoft365DSC/issues/4248)
 * TeamsMeetingBroadcastPolicy
   * Fix deletion of resource
     FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)
+* TeamsMobilityPolicy
+  * Validate string set on parameter MobileDialerPreference
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.12.0.
-* MISC
-  * M365DSCReport
-    * Fix nested change detection for CIMInstances
-    * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
+  * Updated MicrosoftTeams dependencies to version 5.9.0.
 
 # 1.24.117.1
 
