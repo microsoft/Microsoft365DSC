@@ -30,7 +30,7 @@ Configuration Example
             ExceptAnyOfClientIPAddressesOrRanges = @()
             AnyOfClientIPAddressesOrRanges       = @()
             Ensure                               = "Present"
-            Credential                           = $GlobalAdmin
+            Credential                           = $Credscredential
         }
     }
 }

@@ -3,7 +3,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $EXOAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -14,7 +14,7 @@ Configuration Example
             UserName                 = "AdeleV"
             AuthenticationPolicyName = "Test Policy"
             Ensure                   = "Absent"
-            Credential               = $EXOAdmin
+            Credential               = $Credscredential
         }
     }
 }
