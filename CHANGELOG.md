@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsEmergencyCallRoutingPolicy
+  * Fix deletion of resource
+    FIXES [#4261](https://github.com/microsoft/Microsoft365DSC/issues/4261)
+
 # 1.24.124.1
 
 * AADAuthenticationMethodPolicyAuthenticator
