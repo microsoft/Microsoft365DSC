@@ -45,7 +45,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of Teams Meeting Broadcast Policy {$Identity}"
@@ -84,6 +88,7 @@ function Get-TargetResource
                 ApplicationId                   = $ApplicationId
                 TenantId                        = $TenantId
                 CertificateThumbprint           = $CertificateThumbprint
+                ManagedIdentity                 = $ManagedIdentity.IsPresent
             }
         }
         return $nullReturn
@@ -146,7 +151,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast Policy {$Identity}"
 
@@ -189,6 +198,7 @@ function Set-TargetResource
     $SetParams.Remove('TenantId') | Out-Null
     $SetParams.Remove('CertificateThumbprint') | Out-Null
     $SetParams.Remove('Ensure') | Out-Null
+    $SetParams.Remove('ManagedIdentity') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
@@ -251,7 +261,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -304,7 +318,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -336,6 +354,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             Write-Host "    |---[$i/$($policies.Length)] $($policy.Identity)" -NoNewline
             $Results = Get-TargetResource @Params

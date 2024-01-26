@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TEAMS
+  * Added support for ManagedIdentity Authentication across Teams resources.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant dependencies to version 1.1.9.
+
 # 1.24.124.1
 
 * AADAuthenticationMethodPolicyAuthenticator
