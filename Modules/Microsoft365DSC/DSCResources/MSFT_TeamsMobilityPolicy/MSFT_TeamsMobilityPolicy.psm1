@@ -24,6 +24,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet('Teams', 'Native', 'UserOverride')]
         $MobileDialerPreference,
 
         [Parameter()]
@@ -125,6 +126,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet('Teams', 'Native', 'UserOverride')]
         $MobileDialerPreference,
 
         [Parameter()]
@@ -246,6 +248,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        [ValidateSet('Teams', 'Native', 'UserOverride')]
         $MobileDialerPreference,
 
         [Parameter()]
