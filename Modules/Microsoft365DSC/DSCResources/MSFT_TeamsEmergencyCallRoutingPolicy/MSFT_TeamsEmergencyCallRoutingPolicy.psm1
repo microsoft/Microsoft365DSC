@@ -240,7 +240,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing Teams Meeting Policy {$Identity}"
-        Remove-CsTeamsEmergencyCallRoutingPolicy -Identity $Identity -Confirm:$false
+        Remove-CsTeamsEmergencyCallRoutingPolicy -Identity $Identity
     }
 }
 
