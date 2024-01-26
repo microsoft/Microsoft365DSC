@@ -391,10 +391,6 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity,
-
-        [Parameter()]
-        [Switch]
         $ManagedIdentity
     )
 
