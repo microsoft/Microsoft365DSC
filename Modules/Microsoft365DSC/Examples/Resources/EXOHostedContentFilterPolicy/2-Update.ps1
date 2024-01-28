@@ -36,7 +36,7 @@ Configuration Example
             IncreaseScoreWithRedirectToOtherPort = "Off"
             InlineSafetyTipsEnabled              = $True
             LanguageBlockList                    = @()
-            MakeDefault                          = $True
+            MakeDefault                          = $False
             MarkAsSpamBulkMail                   = "On"
             MarkAsSpamEmbedTagsInHtml            = "Off"
             MarkAsSpamEmptyMessages              = "Off"

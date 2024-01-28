@@ -12,7 +12,7 @@ Configuration Example
     {
         EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
         {
-            UserName                 = "AdeleV"
+            UserName                 = "AdeleV@$Domain"
             AuthenticationPolicyName = "Test Policy" # Updaqted Property
             Ensure                   = "Present"
             Credential               = $Credscredential
