@@ -27,7 +27,7 @@ Configuration Example
             DisplaySenderName                    = $True
             DomainName                           = "*"
             IsInternal                           = $False
-            LineWrapSize                         = "Unlimited"
+            LineWrapSize                         = "Integration"
             MeetingForwardNotificationEnabled    = $False
             Name                                 = "Default"
             NonMimeCharacterSet                  = "iso-8859-1"

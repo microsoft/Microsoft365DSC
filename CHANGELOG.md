@@ -8,7 +8,7 @@
 * TEAMS
   * Added support for ManagedIdentity Authentication across Teams resources.
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant dependencies to version 1.1.9.
+  * Updated MSCloudLoginAssistant dependencies to version 1.1.10.
 
 # 1.24.124.1
 

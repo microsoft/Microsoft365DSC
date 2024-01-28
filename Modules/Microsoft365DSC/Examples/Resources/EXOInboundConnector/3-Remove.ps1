@@ -17,7 +17,7 @@ Configuration Example
     {
         EXOInboundConnector 'ConfigureInboundConnector'
         {
-            Identity                     = "Contoso Inbound Connector"
+            Identity                     = "Integration Inbound Connector"
             Ensure                       = "Absent"
             Credential                   = $Credscredential
         }
