@@ -61,6 +61,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOHostedOutboundSpamFilterRule 'ConfigureHostedOutboundSpamFilterRule'
@@ -68,7 +69,8 @@ Configuration Example
             Identity                       = "Contoso Executives"
             Comments                       = "Does not apply to Executives"
             Enabled                        = $True
-            ExceptIfFrom                   = "John Smith"
+            ExceptIfFrom                   = "AdeleV@$Domain"
+            FromMemberOf                   = 'Executives'
             HostedOutboundSpamFilterPolicy = "Integration SFP"
             Ensure                         = "Present"
             Credential                     = $Credscredential
@@ -93,6 +95,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOHostedOutboundSpamFilterRule 'ConfigureHostedOutboundSpamFilterRule'
@@ -100,7 +103,8 @@ Configuration Example
             Identity                       = "Contoso Executives"
             Comments                       = "Does not apply to Executives"
             Enabled                        = $False # Updated Property
-            ExceptIfFrom                   = "John Smith"
+            ExceptIfFrom                   = "AdeleV@$Domain"
+            FromMemberOf                   = 'Executives'
             HostedOutboundSpamFilterPolicy = "Integration SFP"
             Ensure                         = "Present"
             Credential                     = $Credscredential
@@ -125,6 +129,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOHostedOutboundSpamFilterRule 'ConfigureHostedOutboundSpamFilterRule'

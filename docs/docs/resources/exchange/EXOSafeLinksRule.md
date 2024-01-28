@@ -67,9 +67,9 @@ Configuration Example
             Identity                  = "Research Department URL Rule"
             Comments                  = "Applies to Research Department, except managers"
             Enabled                   = $True
-            ExceptIfSentToMemberOf    = "Research Department Managers"
+            ExceptIfSentToMemberOf    = "Executives"
             SafeLinksPolicy           = "Marketing Block URL"
-            SentToMemberOf            = "Research Department"
+            SentToMemberOf            = "Legal Team"
             Ensure                    = "Present"
             Credential                = $Credscredential
         }
@@ -100,9 +100,9 @@ Configuration Example
             Identity                  = "Research Department URL Rule"
             Comments                  = "Applies to Research Department, except managers"
             Enabled                   = $False # Updated Property
-            ExceptIfSentToMemberOf    = "Research Department Managers"
+            ExceptIfSentToMemberOf    = "Executives"
             SafeLinksPolicy           = "Marketing Block URL"
-            SentToMemberOf            = "Research Department"
+            SentToMemberOf            = "Legal Team"
             Ensure                    = "Present"
             Credential                = $Credscredential
         }
