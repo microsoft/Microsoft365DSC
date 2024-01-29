@@ -71,15 +71,15 @@ Configuration Example
         EXOOutboundConnector 'ConfigureOutboundConnector'
         {
             Identity                      = "Contoso Outbound Connector"
-            AllAcceptedDomains            = $True
-            CloudServicesMailEnabled      = $True
+            AllAcceptedDomains            = $False
+            CloudServicesMailEnabled      = $False
             Comment                       = "Outbound connector to Contoso"
             ConnectorSource               = "Default"
-            ConnectorType                 = "OnPremises"
+            ConnectorType                 = "Partner"
             Enabled                       = $True
-            IsTransportRuleScoped         = $True
-            RecipientDomains              = "*.contoso.com"
-            RouteAllMessagesViaOnPremises = $True
+            IsTransportRuleScoped         = $False
+            RecipientDomains              = "contoso.com"
+            RouteAllMessagesViaOnPremises = $False
             TlsDomain                     = "*.contoso.com"
             TlsSettings                   = "DomainValidation"
             UseMxRecord                   = $True
@@ -111,15 +111,15 @@ Configuration Example
         EXOOutboundConnector 'ConfigureOutboundConnector'
         {
             Identity                      = "Contoso Outbound Connector"
-            AllAcceptedDomains            = $True
-            CloudServicesMailEnabled      = $True
+            AllAcceptedDomains            = $False
+            CloudServicesMailEnabled      = $False
             Comment                       = "Outbound connector to Contoso"
             ConnectorSource               = "Default"
-            ConnectorType                 = "OnPremises"
-            Enabled                       = $False  # Updated Property
-            IsTransportRuleScoped         = $True
-            RecipientDomains              = "*.contoso.com"
-            RouteAllMessagesViaOnPremises = $True
+            ConnectorType                 = "Partner"
+            Enabled                       = $False # Updated Property
+            IsTransportRuleScoped         = $False
+            RecipientDomains              = "contoso.com"
+            RouteAllMessagesViaOnPremises = $False
             TlsDomain                     = "*.contoso.com"
             TlsSettings                   = "DomainValidation"
             UseMxRecord                   = $True

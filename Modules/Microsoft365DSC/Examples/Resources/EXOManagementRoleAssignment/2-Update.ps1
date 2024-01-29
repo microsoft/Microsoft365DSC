@@ -12,6 +12,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOManagementRoleAssignment 'AssignManagementRole'
@@ -20,7 +21,7 @@ Configuration Example
             Ensure               = "Present";
             Name                 = "MyManagementRoleAssignment";
             Role                 = "UserApplication";
-            User                 = "AlexW"; # Updated Property
+            User                 = "AlexW@$Domain"; # Updated Property
         }
     }
 }

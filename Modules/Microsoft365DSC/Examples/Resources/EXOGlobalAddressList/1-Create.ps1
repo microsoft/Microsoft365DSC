@@ -21,6 +21,7 @@ Configuration Example
             ConditionalCompany           = "Contoso"
             ConditionalDepartment        = "Human Resources"
             ConditionalStateOrProvince   = "Washington"
+            IncludedRecipients           = 'AllRecipients'
             Ensure                       = "Present"
             Credential                   = $Credscredential
         }

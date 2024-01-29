@@ -17,13 +17,13 @@ Configuration Example
     {
         EXOTransportRule 'ConfigureTransportRule'
         {
-            Name                                          = "Ethical Wall - Sales and Brokerage Departments"
-            BetweenMemberOf1                              = "Sales Department"
-            BetweenMemberOf2                              = "Brokerage Department"
-            ExceptIfFrom                                  = "Tony Smith","Pilar Ackerman"
+            Name                                          = "Ethical Wall - Sales and Executives Departments"
+            BetweenMemberOf1                              = "Sales Team"
+            BetweenMemberOf2                              = "Executives"
+            ExceptIfFrom                                  = "AdeleV@$Domain"
             ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
-            RejectMessageReasonText                       = "Updated" # Updated Property
-            Enabled                                       = $True
+            RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
+            Enabled                                       = $False # Updated Property
             Ensure                                        = "Present"
             Credential                                    = $Credscredential
         }

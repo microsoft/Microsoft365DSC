@@ -88,7 +88,7 @@ Configuration Example
             IsInternal                           = $False
             LineWrapSize                         = "Unlimited"
             MeetingForwardNotificationEnabled    = $False
-            Name                                 = "Default"
+            Name                                 = "Integration"
             NonMimeCharacterSet                  = "iso-8859-1"
             PreferredInternetCodePageForShiftJis = "Undefined"
             TargetDeliveryDomain                 = $False
@@ -132,7 +132,7 @@ Configuration Example
             DisplaySenderName                    = $True
             DomainName                           = "*"
             IsInternal                           = $False
-            LineWrapSize                         = "Unlimited"
+            LineWrapSize                         = "Integration"
             MeetingForwardNotificationEnabled    = $False
             Name                                 = "Default"
             NonMimeCharacterSet                  = "iso-8859-1"

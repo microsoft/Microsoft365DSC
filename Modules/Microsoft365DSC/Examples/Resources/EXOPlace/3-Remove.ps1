@@ -23,7 +23,7 @@ Configuration Example
             Credential             = $Credscredential
             DisplayDeviceName      = "DisplayDeviceName";
             Ensure                 = 'Absent'
-            Identity               = "MyRoom@$Domain";
+            Identity               = "Hood@$Domain";
         }
     }
 }
