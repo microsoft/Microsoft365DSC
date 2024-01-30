@@ -62,15 +62,16 @@ Configuration Example
     {
         EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
         {
-            Identity          = 'Contoso'
+            Identity          = 'Integration'
             Comment           = 'Mail for Contoso'
-            HybridDomains     = 'contoso.com', 'sales.contoso.com'
-            InboundConnector  = 'Inbound to Contoso'
-            OrganizationGuid  = 'a1bc23cb-3456-bcde-abcd-feb363cacc88'
-            OrganizationName  = 'Contoso'
-            OutboundConnector = 'Outbound to Contoso'
+            HybridDomains     = 'o365dsc.onmicrosoft.com'
+            InboundConnector  = 'Integration Inbound Connector'
+            OrganizationGuid  = 'e7a80bcf-696e-40ca-8775-a7f85fbb3ebc'
+            OrganizationName  = 'O365DSC'
+            OutboundConnector = 'Contoso Outbound Connector'
             Ensure            = 'Present'
             Credential        = $Credscredential
+            DependsOn         = "[EXOOutboundConnector]ConfigureOutboundConnector"
         }
     }
 }

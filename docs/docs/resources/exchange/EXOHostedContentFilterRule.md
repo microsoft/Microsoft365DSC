@@ -65,10 +65,11 @@ Configuration Example
     {
         EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
         {
-            Identity                  = "Contoso Recipients"
+            Identity                  = "Integration CFR"
             Comments                  = "Applies to all users, except when member of HR group"
             Enabled                   = $True
-            ExceptIfSentToMemberOf    = "Contoso Human Resources"
+            ExceptIfSentToMemberOf    = "Legal Team"
+            RecipientDomainIs         = @('contoso.com')
             HostedContentFilterPolicy = "Integration CFP"
             Ensure                    = "Present"
             Credential                = $Credscredential
@@ -97,10 +98,11 @@ Configuration Example
     {
         EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
         {
-            Identity                  = "Contoso Recipients"
+            Identity                  = "Integration CFR"
             Comments                  = "Applies to all users, except when member of HR group"
             Enabled                   = $False # Updated Property
-            ExceptIfSentToMemberOf    = "Contoso Human Resources"
+            ExceptIfSentToMemberOf    = "Legal Team"
+            RecipientDomainIs         = @('contoso.com')
             HostedContentFilterPolicy = "Integration CFP"
             Ensure                    = "Present"
             Credential                = $Credscredential
@@ -129,7 +131,7 @@ Configuration Example
     {
         EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
         {
-            Identity                  = "Contoso Recipients"
+            Identity                  = "Integration CFR"
             HostedContentFilterPolicy = "Integration CFP"
             Ensure                    = "Absent"
             Credential                = $Credscredential
