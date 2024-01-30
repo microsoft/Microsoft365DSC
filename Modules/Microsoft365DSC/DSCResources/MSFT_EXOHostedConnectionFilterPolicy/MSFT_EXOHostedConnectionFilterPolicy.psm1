@@ -284,7 +284,7 @@ function Set-TargetResource
             Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
         }
     }
-    elseif (('Absent' -eq $Ensure ) -and $CurrentInstance.Ensure -'Present')
+    elseif (('Absent' -eq $Ensure ) -and $CurrentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing HostedConnectionFilterPolicy $($Identity)"
         Remove-HostedConnectionFilterPolicy -Identity $Identity -Confirm:$false
