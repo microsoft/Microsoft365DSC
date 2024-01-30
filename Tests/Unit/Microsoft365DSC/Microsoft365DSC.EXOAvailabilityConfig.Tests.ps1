@@ -52,9 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-AvailabilityConfig -MockWith {
-                    return @{
-                        OrgWideAccount = 'meganb'
-                    }
+                    return $null
                 }
 
                 Mock -CommandName Set-AvailabilityConfig -MockWith {
@@ -86,11 +84,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure         = 'Absent'
                     Credential     = $Credential
                 }
+                
+                Mock -CommandName Get-MgUser -MockWith {
+                    return @{
+                        UserPrincipalName = 'johndoe'
+                    }
+                }
 
                 Mock -CommandName Get-AvailabilityConfig -MockWith {
-                    return @{
-                        OrgWideAccount = 'meganb'
-                    }
+                    return $null
                 }
             }
 
