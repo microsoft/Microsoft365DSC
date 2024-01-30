@@ -303,7 +303,7 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity-ErrorAction Stop
+        $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity -ErrorAction Stop
         if ($null -eq $HostedContentFilterPolicy)
         {
             Write-Verbose -Message "HostedContentFilterPolicy $($Identity) does not exist."
@@ -407,6 +407,7 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `

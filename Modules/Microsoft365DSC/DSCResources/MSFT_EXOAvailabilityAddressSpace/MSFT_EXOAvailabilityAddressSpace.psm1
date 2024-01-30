@@ -10,7 +10,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBToken', 'OrgWideFBBasic', 'InternalProxy')]
         [System.String]
         $AccessMethod,
 
@@ -169,7 +169,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBToken', 'OrgWideFBBasic', 'InternalProxy')]
         [System.String]
         $AccessMethod,
 
@@ -337,7 +337,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBToken', 'OrgWideFBBasic', 'InternalProxy')]
         [System.String]
         $AccessMethod,
 

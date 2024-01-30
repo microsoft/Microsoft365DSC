@@ -63,7 +63,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RedirectToRecipients                 = @()
                     TestModeBccToRecipients              = @()
                     QuarantineRetentionPeriod            = 15
-                    EndUserSpamNotificationFrequency     = 1
                     TestModeAction                       = 'AddXHeader'
                     IncreaseScoreWithImageLinks          = 'Off'
                     IncreaseScoreWithNumericIps          = 'On'
@@ -177,16 +176,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-HostedContentFilterPolicy -MockWith {
                     return @{
-                        Ensure                               = 'Present'
                         Identity                             = 'TestPolicy'
-                        Credential                           = $Credential
                         AdminDisplayName                     = 'This ContentFilter policiy is a test'
                         AddXHeaderValue                      = 'MyCustomSpamHeader'
                         ModifySubjectValue                   = 'SPAM!'
                         RedirectToRecipients                 = @()
                         TestModeBccToRecipients              = @()
                         QuarantineRetentionPeriod            = 15
-                        EndUserSpamNotificationFrequency     = 1
                         TestModeAction                       = 'AddXHeader'
                         IncreaseScoreWithImageLinks          = 'Off'
                         IncreaseScoreWithNumericIps          = 'On'
@@ -209,12 +205,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         HighConfidencePhishAction            = 'Quarantine'
                         HighConfidenceSpamAction             = 'Quarantine'
                         SpamAction                           = 'MoveToJmf'
-                        EnableEndUserSpamNotifications       = $true
                         DownloadLink                         = $false
                         EnableRegionBlockList                = $true
                         EnableLanguageBlockList              = $true
-                        EndUserSpamNotificationCustomSubject = 'This is SPAM'
-                        EndUserSpamNotificationLanguage      = 'Default'
                         BulkThreshold                        = 5
                         AllowedSenders                       = @{
                             Sender = @(
