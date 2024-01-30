@@ -83,13 +83,7 @@
                 EXOAntiPhishRule 'ConfigureAntiPhishRule'
                 {
                     Identity                  = "Test Rule"
-                    ExceptIfSentToMemberOf    = $null
-                    ExceptIfSentTo            = $null
-                    SentTo                    = $null
-                    ExceptIfRecipientDomainIs = $null
-                    Comments                  = $null
                     AntiPhishPolicy           = "Our Rule"
-                    RecipientDomainIs         = $null
                     Enabled                   = $True
                     SentToMemberOf            = @("executives@$Domain")
                     Ensure                    = "Present"
@@ -223,12 +217,8 @@
                     BulkSpamAction                       = "MoveToJmf"
                     BulkThreshold                        = 7
                     DownloadLink                         = $False
-                    EnableEndUserSpamNotifications       = $False
                     EnableLanguageBlockList              = $False
                     EnableRegionBlockList                = $False
-                    EndUserSpamNotificationCustomSubject = ""
-                    EndUserSpamNotificationFrequency     = 3
-                    EndUserSpamNotificationLanguage      = "Default"
                     HighConfidencePhishAction            = "Quarantine"
                     HighConfidenceSpamAction             = "MoveToJmf"
                     IncreaseScoreWithBizOrInfoUrls       = "Off"
@@ -268,7 +258,7 @@
                     Identity                  = "Integration CFR"
                     Comments                  = "Applies to all users, except when member of HR group"
                     Enabled                   = $True
-                    ExceptIfSentToMemberOf    = "Legal Team"
+                    ExceptIfSentToMemberOf    = "LegalTeam@$Domain"
                     RecipientDomainIs         = @('contoso.com')
                     HostedContentFilterPolicy = "Integration CFP"
                     Ensure                    = "Present"
@@ -296,7 +286,7 @@
                     Comments                       = "Does not apply to Executives"
                     Enabled                        = $True
                     ExceptIfFrom                   = "AdeleV@$Domain"
-                    FromMemberOf                   = 'Executives'
+                    FromMemberOf                   = "Executives@$Domain"
                     HostedOutboundSpamFilterPolicy = "Integration SFP"
                     Ensure                         = "Present"
                     Credential                     = $Credscredential
@@ -391,7 +381,7 @@
                 {
                     Name                 = "MyDisplayName"
                     Description          = ""
-                    Parent               = "contoso.onmicrosoft.com\MyProfileInformation"
+                    Parent               = "$Domain\MyProfileInformation"
                     Ensure               = "Present"
                     Credential           = $Credscredential
                 }
@@ -479,7 +469,7 @@
                 {
                     Name                 = "Integration Address Book"
                     AddressLists         = @('\Offline Global Address List')
-                    ConfiguredAttributes = @('OfficeLocation, ANR', 'ProxyAddresses, ANR', 'PhoneticGivenName, ANR', 'GivenName, ANR', 'PhoneticSurname, ANR', 'Surname, ANR', 'Account, ANR', 'PhoneticDisplayName, ANR', 'UserInformationDisplayName, ANR', 'ExternalMemberCount, Value', 'TotalMemberCount, Value', 'ModerationEnabled, Value', 'DelivContLength, Value', 'MailTipTranslations, Value', 'ObjectGuid, Value', 'IsOrganizational, Value', 'HabSeniorityIndex, Value', 'DisplayTypeEx, Value', 'SimpleDisplayNameAnsi, Value', 'HomeMdbA, Value', 'Certificate, Value', 'UserSMimeCertificate, Value', 'UserCertificate, Value', 'Comment, Value', 'PagerTelephoneNumber, Value', 'AssistantTelephoneNumber, Value', 'MobileTelephoneNumber, Value', 'PrimaryFaxNumber, Value', 'Home2TelephoneNumberMv, Value', 'Business2TelephoneNumberMv, Value', 'HomeTelephoneNumber, Value', 'TargetAddress, Value', 'PhoneticDepartmentName, Value', 'DepartmentName, Value', 'Assistant, Value', 'PhoneticCompanyName, Value', 'CompanyName, Value', 'Title, Value', 'Country, Value', 'PostalCode, Value', 'StateOrProvince, Value', 'Locality, Value', 'StreetAddress, Value', 'Initials, Value', 'BusinessTelephoneNumber, Value', 'SendRichInfo, Value', 'ObjectType, Value', 'DisplayType, Value', 'RejectMessagesFromDLMembers, Indicator', 'AcceptMessagesOnlyFromDLMembers, Indicator', 'RejectMessagesFrom, Indicator', 'AcceptMessagesOnlyFrom, Indicator', 'UmSpokenName, Indicator', 'ThumbnailPhoto, Indicator')
+                    ConfiguredAttributes = @('OfficeLocation, ANR','ProxyAddresses, ANR','PhoneticGivenName, ANR','GivenName, ANR','PhoneticSurname, ANR','Surname, ANR','Account, ANR','PhoneticDisplayName, ANR','DisplayName, ANR','ExternalDirectoryObjectId, Value','ExternalMemberCount, Value','TotalMemberCount, Value','ModerationEnabled, Value','MailboxGuid, Value','DelivContLength, Value','MailTipTranslations, Value','ObjectGuid, Value','DisplayTypeEx, Value','DisplayNamePrintableAnsi, Value','HomeMdbA, Value','Certificate, Value','UserSMimeCertificate, Value','UserCertificate, Value','Comment, Value','PagerTelephoneNumber, Value','AssistantTelephoneNumber, Value','MobileTelephoneNumber, Value','PrimaryFaxNumber, Value','Home2TelephoneNumberMv, Value','Business2TelephoneNumberMv, Value','HomeTelephoneNumber, Value','TargetAddress, Value','PhoneticDepartmentName, Value','DepartmentName, Value','Assistant, Value','PhoneticCompanyName, Value','CompanyName, Value','Title, Value','Country, Value','PostalCode, Value','StateOrProvince, Value','Locality, Value','StreetAddress, Value','Initials, Value','BusinessTelephoneNumber, Value','SendRichInfo, Value','ObjectType, Value','DisplayType, Value','RejectMessagesFromDLMembers, Indicator','AcceptMessagesOnlyFromDLMembers, Indicator','RejectMessagesFrom, Indicator','AcceptMessagesOnlyFrom, Indicator','UmSpokenName, Indicator','ThumbnailPhoto, Indicator')
                     DiffRetentionPeriod  = "30"
                     IsDefault            = $true
                     Ensure               = "Present"
@@ -676,7 +666,7 @@
                     ContentType                          = "MimeHtmlText"
                     DeliveryReportEnabled                = $True
                     DisplaySenderName                    = $True
-                    DomainName                           = "*"
+                    DomainName                           = "contoso.com"
                     IsInternal                           = $False
                     LineWrapSize                         = "Unlimited"
                     MeetingForwardNotificationEnabled    = $False
@@ -722,9 +712,9 @@
                     Identity                  = "Research Department Attachment Rule"
                     Comments                  = "Applies to Research Department, except managers"
                     Enabled                   = $True
-                    ExceptIfSentToMemberOf    = "Executives"
+                    ExceptIfSentToMemberOf    = "Executives@$Domain"
                     SafeAttachmentPolicy      = "Marketing Block Attachments"
-                    SentToMemberOf            = "Legal Team"
+                    SentToMemberOf            = "LegalTeam@$Domain"
                     Ensure                    = "Present"
                     Credential                = $Credscredential
                 }
@@ -737,7 +727,6 @@
                     EnableOrganizationBranding    = $True
                     EnableSafeLinksForTeams       = $True
                     ScanUrls                      = $True
-                    UseTranslatedNotificationText = $True
                     Ensure                        = 'Present'
                     Credential                    = $Credscredential
                 }
@@ -746,9 +735,9 @@
                     Identity                  = "Research Department URL Rule"
                     Comments                  = "Applies to Research Department, except managers"
                     Enabled                   = $True
-                    ExceptIfSentToMemberOf    = "Executives"
+                    ExceptIfSentToMemberOf    = "Executives@$Domain"
                     SafeLinksPolicy           = "Marketing Block URL"
-                    SentToMemberOf            = "Legal Team"
+                    SentToMemberOf            = "LegalTeam@$Domain"
                     Ensure                    = "Present"
                     Credential                = $Credscredential
                 }
@@ -773,8 +762,8 @@
                 EXOTransportRule 'ConfigureTransportRule'
                 {
                     Name                                          = "Ethical Wall - Sales and Executives Departments"
-                    BetweenMemberOf1                              = "Sales Team"
-                    BetweenMemberOf2                              = "Executives"
+                    BetweenMemberOf1                              = "SalesTeam@$Domain"
+                    BetweenMemberOf2                              = "Executives@$Domain"
                     ExceptIfFrom                                  = "AdeleV@$Domain"
                     ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
                     RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
