@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOHostedContentFilterRule
+  * Changed logic to retrieve the Rules by name. Using the Policy's name instead.
 * TeamsEmergencyCallRoutingPolicy
   * Fix deletion of resource
     FIXES [#4261](https://github.com/microsoft/Microsoft365DSC/issues/4261)
