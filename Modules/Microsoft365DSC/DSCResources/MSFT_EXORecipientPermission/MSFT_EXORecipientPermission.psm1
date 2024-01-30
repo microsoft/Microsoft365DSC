@@ -12,10 +12,10 @@ function Get-TargetResource
         [System.String]
         $Trustee,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [ValidateSet('SendAs')]
         [System.String[]]
-        $AccessRights,
+        $AccessRights = 'SendAs',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -138,18 +138,18 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Trustee,
 
         [Parameter()]
         [ValidateSet('SendAs')]
-        [System.String]
-        $AccessRights,
+        [System.String[]]
+        $AccessRights = 'SendAs',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -248,18 +248,18 @@ function Test-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Trustee,
 
         [Parameter()]
         [ValidateSet('SendAs')]
-        [System.String]
-        $AccessRights,
+        [System.String[]]
+        $AccessRights = 'SendAs',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -331,18 +331,18 @@ function Export-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Trustee,
 
         [Parameter()]
         [ValidateSet('SendAs')]
-        [System.String]
-        $AccessRights,
+        [System.String[]]
+        $AccessRights = 'SendAs',
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
