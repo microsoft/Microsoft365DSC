@@ -96,6 +96,11 @@ function Get-TargetResource
         }
         else
         {
+            $DiscoveryEndpointValue = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
+            if (-not $DiscoveryEndpointValue.EndsWith('/'))
+            {
+                $DiscoveryEndpointValue += '/'
+            }
             $result = @{
                 Identity              = $Identity
                 DiscoveryEndpoint     = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()

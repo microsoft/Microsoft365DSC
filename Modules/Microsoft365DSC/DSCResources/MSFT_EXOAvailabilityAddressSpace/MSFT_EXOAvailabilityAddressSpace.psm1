@@ -27,6 +27,14 @@ function Get-TargetResource
         $TargetAutodiscoverEpr,
 
         [Parameter()]
+        [System.String]
+        $TargetServiceEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetTenantId,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -91,7 +99,7 @@ function Get-TargetResource
     {
         try
         {
-            $AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ErrorAction Stop
+            $AvailabilityAddressSpace = Get-AvailabilityAddressSpace -Identity $ForestName -ErrorAction Stop
         }
         catch
         {
@@ -99,17 +107,13 @@ function Get-TargetResource
                 -Exception $_ `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
-
-        $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $AvailabilityAddressSpace)
         {
-            Write-Verbose -Message "AvailabilityAddressSpace $($Identity) does not exist."
+            Write-Verbose -Message "AvailabilityAddressSpace $($ForestName) does not exist."
             return $nullReturn
         }
         else
         {
-
-
             if ($Null -eq $AvailabilityAddressSpace.TargetAutodiscoverEpr -or $AvailabilityAddressSpace.TargetAutodiscoverEpr -eq '' )
             {
                 $TargetAutodiscoverEpr = ''
@@ -123,6 +127,8 @@ function Get-TargetResource
                 Identity              = $Identity
                 AccessMethod          = $AvailabilityAddressSpace.AccessMethod
                 Credentials           = $AvailabilityAddressSpace.Credentials
+                TargetServiceEpr      = $AvailabilityAddressSpace.TargetServiceEpd
+                TargetTenantId        = $AvailabilityAddressSpace.TargetTenantId
                 ForestName            = $AvailabilityAddressSpace.ForestName
                 TargetAutodiscoverEpr = $TargetAutodiscoverEpr
                 Credential            = $Credential
@@ -178,6 +184,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TargetAutodiscoverEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetServiceEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetTenantId,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -340,6 +354,14 @@ function Test-TargetResource
         $TargetAutodiscoverEpr,
 
         [Parameter()]
+        [System.String]
+        $TargetServiceEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetTenantId,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -399,6 +421,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
