@@ -76,46 +76,6 @@ Configuration Example
             Comment                       = "Outbound connector to Contoso"
             ConnectorSource               = "Default"
             ConnectorType                 = "Partner"
-            Enabled                       = $True
-            IsTransportRuleScoped         = $False
-            RecipientDomains              = "contoso.com"
-            RouteAllMessagesViaOnPremises = $False
-            TlsDomain                     = "*.contoso.com"
-            TlsSettings                   = "DomainValidation"
-            UseMxRecord                   = $True
-            Ensure                        = "Present"
-            Credential                    = $Credscredential
-        }
-    }
-}
-```
-
-### Example 2
-
-This example is used to test new resources and showcase the usage of new resources being worked on.
-It is not meant to use as a production baseline.
-
-```powershell
-Configuration Example
-{
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    node localhost
-    {
-        EXOOutboundConnector 'ConfigureOutboundConnector'
-        {
-            Identity                      = "Contoso Outbound Connector"
-            AllAcceptedDomains            = $False
-            CloudServicesMailEnabled      = $False
-            Comment                       = "Outbound connector to Contoso"
-            ConnectorSource               = "Default"
-            ConnectorType                 = "Partner"
             Enabled                       = $False # Updated Property
             IsTransportRuleScoped         = $False
             RecipientDomains              = "contoso.com"
@@ -130,7 +90,7 @@ Configuration Example
 }
 ```
 
-### Example 3
+### Example 2
 
 This example is used to test new resources and showcase the usage of new resources being worked on.
 It is not meant to use as a production baseline.
