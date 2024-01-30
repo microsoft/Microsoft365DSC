@@ -27,9 +27,9 @@ Configuration Example
             OutboundConnector = 'Contoso Outbound Connector'
             Ensure            = 'Present'
             Credential        = $Credscredential
-            DependsOn         = "[EXOOutboundConnector]ConfigureOutboundConnector"
+            DependsOn         = "[EXOOutboundConnector]OutboundDependency"
         }
-        EXOOutboundConnector 'ConfigureOutboundConnector'
+        EXOOutboundConnector 'OutboundDependency'
         {
             Identity                      = "Contoso Outbound Connector"
             AllAcceptedDomains            = $False
