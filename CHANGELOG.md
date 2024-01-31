@@ -2,6 +2,24 @@
 
 # UNRELEASED
 
+* EXOAvailabilityAddressSpace
+  * Added support for the TargetServiceEpr and TargetTenantId parameters.
+  * Fixed the logic to retrieve existing instance by Forest Name.
+* EXODistributionGroup
+  * The Get function now retrieves the ModeratedBy and ManagedBy properties
+    by the users' UPN instead of their GUID.
+* EXOHostedContentFilterRule
+  * Changed logic to retrieve the Rules by name. Using the Policy's name instead.
+* EXOIntraOrganizationConnector
+  * Fixes the DiscoveryEndpoint value from the Get method to include trailing
+    forward slash.
+* EXOMalwareFilterRule
+  * Fixed an issue retrieving the right value for the Enabled property
+* EXOOMEConfiguration
+  * Fixes an error in the Get method where the ExternalMailExpiryInDays property
+    wasn't properly returned.
+* EXOSafeLinksPolicy
+  * Deprecated the UseTranslatedNotificationText property
 * TeamsEmergencyCallRoutingPolicy
   * Fix deletion of resource
     FIXES [#4261](https://github.com/microsoft/Microsoft365DSC/issues/4261)

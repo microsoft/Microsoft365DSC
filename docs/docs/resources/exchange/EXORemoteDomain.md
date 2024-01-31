@@ -84,7 +84,7 @@ Configuration Example
             ContentType                          = "MimeHtmlText"
             DeliveryReportEnabled                = $True
             DisplaySenderName                    = $True
-            DomainName                           = "*"
+            DomainName                           = "contoso.com"
             IsInternal                           = $False
             LineWrapSize                         = "Unlimited"
             MeetingForwardNotificationEnabled    = $False
@@ -130,7 +130,7 @@ Configuration Example
             ContentType                          = "MimeHtmlText"
             DeliveryReportEnabled                = $True
             DisplaySenderName                    = $True
-            DomainName                           = "*"
+            DomainName                           = "contoso.com"
             IsInternal                           = $False
             LineWrapSize                         = "Integration"
             MeetingForwardNotificationEnabled    = $False

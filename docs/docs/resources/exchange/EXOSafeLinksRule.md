@@ -60,6 +60,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSafeLinksRule 'ConfigureSafeLinksRule'
@@ -67,9 +68,9 @@ Configuration Example
             Identity                  = "Research Department URL Rule"
             Comments                  = "Applies to Research Department, except managers"
             Enabled                   = $True
-            ExceptIfSentToMemberOf    = "Executives"
+            ExceptIfSentToMemberOf    = "Executives@$Domain"
             SafeLinksPolicy           = "Marketing Block URL"
-            SentToMemberOf            = "Legal Team"
+            SentToMemberOf            = "LegalTeam@$Domain"
             Ensure                    = "Present"
             Credential                = $Credscredential
         }
@@ -93,6 +94,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSafeLinksRule 'ConfigureSafeLinksRule'
@@ -100,9 +102,9 @@ Configuration Example
             Identity                  = "Research Department URL Rule"
             Comments                  = "Applies to Research Department, except managers"
             Enabled                   = $False # Updated Property
-            ExceptIfSentToMemberOf    = "Executives"
+            ExceptIfSentToMemberOf    = "Executives@$Domain"
             SafeLinksPolicy           = "Marketing Block URL"
-            SentToMemberOf            = "Legal Team"
+            SentToMemberOf            = "LegalTeam@$Domain"
             Ensure                    = "Present"
             Credential                = $Credscredential
         }

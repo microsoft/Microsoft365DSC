@@ -71,7 +71,25 @@ Configuration Example
             OutboundConnector = 'Contoso Outbound Connector'
             Ensure            = 'Present'
             Credential        = $Credscredential
-            DependsOn         = "[EXOOutboundConnector]ConfigureOutboundConnector"
+            DependsOn         = "[EXOOutboundConnector]OutboundDependency"
+        }
+        EXOOutboundConnector 'OutboundDependency'
+        {
+            Identity                      = "Contoso Outbound Connector"
+            AllAcceptedDomains            = $False
+            CloudServicesMailEnabled      = $False
+            Comment                       = "Outbound connector to Contoso"
+            ConnectorSource               = "Default"
+            ConnectorType                 = "Partner"
+            Enabled                       = $True
+            IsTransportRuleScoped         = $False
+            RecipientDomains              = "contoso.com"
+            RouteAllMessagesViaOnPremises = $False
+            TlsDomain                     = "*.contoso.com"
+            TlsSettings                   = "DomainValidation"
+            UseMxRecord                   = $True
+            Ensure                        = "Present"
+            Credential                    = $Credscredential
         }
     }
 }

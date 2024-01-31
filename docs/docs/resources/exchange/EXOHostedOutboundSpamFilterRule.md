@@ -70,7 +70,7 @@ Configuration Example
             Comments                       = "Does not apply to Executives"
             Enabled                        = $True
             ExceptIfFrom                   = "AdeleV@$Domain"
-            FromMemberOf                   = 'Executives'
+            FromMemberOf                   = "Executives@$Domain"
             HostedOutboundSpamFilterPolicy = "Integration SFP"
             Ensure                         = "Present"
             Credential                     = $Credscredential
@@ -104,7 +104,7 @@ Configuration Example
             Comments                       = "Does not apply to Executives"
             Enabled                        = $False # Updated Property
             ExceptIfFrom                   = "AdeleV@$Domain"
-            FromMemberOf                   = 'Executives'
+            FromMemberOf                   = "Executives@$Domain"
             HostedOutboundSpamFilterPolicy = "Integration SFP"
             Ensure                         = "Present"
             Credential                     = $Credscredential
