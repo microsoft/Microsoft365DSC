@@ -13,6 +13,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
@@ -20,7 +21,7 @@ Configuration Example
             Identity                  = "Integration CFR"
             Comments                  = "Applies to all users, except when member of HR group"
             Enabled                   = $False # Updated Property
-            ExceptIfSentToMemberOf    = "Legal Team"
+            ExceptIfSentToMemberOf    = "LegalTeam@$Domain"
             RecipientDomainIs         = @('contoso.com')
             HostedContentFilterPolicy = "Integration CFP"
             Ensure                    = "Present"

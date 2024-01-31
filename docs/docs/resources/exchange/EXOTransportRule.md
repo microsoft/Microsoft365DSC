@@ -217,13 +217,14 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOTransportRule 'ConfigureTransportRule'
         {
             Name                                          = "Ethical Wall - Sales and Executives Departments"
-            BetweenMemberOf1                              = "Sales Team"
-            BetweenMemberOf2                              = "Executives"
+            BetweenMemberOf1                              = "SalesTeam@$Domain"
+            BetweenMemberOf2                              = "Executives@$Domain"
             ExceptIfFrom                                  = "AdeleV@$Domain"
             ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
             RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
@@ -251,13 +252,14 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOTransportRule 'ConfigureTransportRule'
         {
             Name                                          = "Ethical Wall - Sales and Executives Departments"
-            BetweenMemberOf1                              = "Sales Team"
-            BetweenMemberOf2                              = "Executives"
+            BetweenMemberOf1                              = "SalesTeam@$Domain"
+            BetweenMemberOf2                              = "Executives@$Domain"
             ExceptIfFrom                                  = "AdeleV@$Domain"
             ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
             RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."

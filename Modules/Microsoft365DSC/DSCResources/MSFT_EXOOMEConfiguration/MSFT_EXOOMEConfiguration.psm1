@@ -132,7 +132,7 @@ function Get-TargetResource
                 BackgroundColor          = $OMEConfiguration.BackgroundColor
                 DisclaimerText           = $OMEConfiguration.DisclaimerText
                 EmailText                = $OMEConfiguration.EmailText
-                ExternalMailExpiryInDays = $OMEConfiguration.ExternalMailExpiryInDays
+                ExternalMailExpiryInDays = $OMEConfiguration.ExternalMailExpiryInterval.Days
                 #                Image                        = $OMEConfiguration.Image
                 IntroductionText         = $OMEConfiguration.IntroductionText
                 OTPEnabled               = $OMEConfiguration.OTPEnabled

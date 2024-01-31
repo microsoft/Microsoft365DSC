@@ -12,13 +12,14 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOManagementRole 'ConfigureManagementRole'
         {
             Name                 = "MyDisplayName"
             Description          = "Updated Description" # Updated Property
-            Parent               = "contoso.onmicrosoft.com\MyProfileInformation"
+            Parent               = "$Domain\MyProfileInformation"
             Ensure               = "Present"
             Credential           = $Credscredential
         }
