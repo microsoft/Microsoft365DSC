@@ -84,7 +84,7 @@ function Get-TargetResource
         }
         if ($null -eq $AvailabilityConfig)
         {
-            Write-Verbose -Message "Availability config for $($OrgWideAccount) does not exist."
+            Write-Verbose -Message "Availability config for [$($OrgWideAccount)] does not exist."
             return $nullReturn
         }
         $result = @{
@@ -267,10 +267,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $DesiredValues = $PSBoundParameters
-    if ($OrgWideAccount.Contains('@'))
-    {
-        $DesiredValues.OrgWideAccount = $OrgWideAccount.Split('@')[0]
-    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

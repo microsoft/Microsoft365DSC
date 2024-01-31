@@ -19,9 +19,10 @@ Configuration Example
         EXOAvailabilityAddressSpace 'ConfigureAvailabilityAddressSpace'
         {
             Identity              = 'Contoso.com'
-            AccessMethod          = 'OrgWideFBBasic' # Updated Property
+            AccessMethod          = 'OrgWideFBToken'
             ForestName            = 'example.contoso.com'
-            TargetAutodiscoverEpr = 'https://contoso.com/autodiscover/autodiscover.xml'
+            TargetServiceEpr      = 'https://contoso.com/autodiscover/autodiscover.xml'
+            TargetTenantId        = 'contoso.onmicrosoft.com' # Updated Property
             Ensure                = 'Present'
             Credential            = $Credscredential
         }

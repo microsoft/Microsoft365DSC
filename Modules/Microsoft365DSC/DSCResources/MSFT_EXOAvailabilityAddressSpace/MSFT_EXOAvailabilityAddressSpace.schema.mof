@@ -7,6 +7,8 @@ class MSFT_EXOAvailabilityAddressSpace : OMI_BaseResource
     [Write, Description("The Credentials parameter specifies the username and password that's used to access the Availability services in the target forest.")] String Credentials;
     [Write, Description("The ForestName parameter specifies the SMTP domain name of the target forest for users whose free/busy data must be retrieved. If your users are distributed among multiple SMTP domains in the target forest, run the Add-AvailabilityAddressSpace command once for each SMTP domain.")] String ForestName;
     [Write, Description("The TargetAutodiscoverEpr parameter specifies the Autodiscover URL of Exchange Web Services for the external organization. Exchange uses Autodiscover to automatically detect the correct server endpoint for external requests.")] String TargetAutodiscoverEpr;
+    [Write, Description("The TargetServiceEpr parameter specifies the Exchange Online Calendar Service URL of the external Microsoft 365 organization that you're trying to read free/busy information from.")] String TargetServiceEpr;
+    [Write, Description("The TargetTenantID parameter specifies the tenant ID of the external Microsoft 365 organization that you're trying to read free/busy information from.")] String TargetTenantId;
     [Write, Description("Specifies if this AvailabilityAddressSpace should exist."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

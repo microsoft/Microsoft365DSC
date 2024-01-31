@@ -31,7 +31,6 @@ Configuration Example
             ModerationEnabled                  = $False;
             Identity                           = "DemoDG";
             Name                               = "DemoDG";
-            OrganizationalUnit                 = "$Domain";
             PrimarySmtpAddress                 = "demodg@$Domain";
             RequireSenderAuthenticationEnabled = $True;
             SendModerationNotifications        = "Always";
