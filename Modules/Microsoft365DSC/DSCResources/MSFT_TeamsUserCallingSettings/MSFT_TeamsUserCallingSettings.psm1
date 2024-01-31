@@ -61,9 +61,25 @@ function Get-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting the Teams Calling Policy $($Identity)"
@@ -111,6 +127,10 @@ function Get-TargetResource
             ForwardingTarget          = $instance.ForwardingTarget
             Ensure                    = 'Present'
             Credential                = $Credential
+            ApplicationId             = $ApplicationId
+            TenantId                  = $TenantId
+            CertificateThumbprint     = $CertificateThumbprint
+            ManagedIdentity           = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -187,9 +207,25 @@ function Set-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Setting Teams User Calling Settings'
@@ -297,9 +333,25 @@ function Test-TargetResource
         [System.String]
         $Ensure = 'Present',
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -339,9 +391,25 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -371,9 +439,13 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($allUsers.Length)] $($user.UserPrincipalName)" -NoNewline
             $params = @{
-                Identity   = $user.UserPrincipalName
-                Ensure     = 'Present'
-                Credential = $Credential
+                Identity              = $user.UserPrincipalName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
 

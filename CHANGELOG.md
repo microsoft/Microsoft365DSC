@@ -23,6 +23,9 @@
 * TeamsEmergencyCallRoutingPolicy
   * Fix deletion of resource
     FIXES [#4261](https://github.com/microsoft/Microsoft365DSC/issues/4261)
+* TeamsUserCallingSettings
+  * Add support for Certificate Authentication
+    FIXES [#3180](https://github.com/microsoft/Microsoft365DSC/issues/3180)
 * TEAMS
   * Added support for ManagedIdentity Authentication across Teams resources.
 * DEPENDENCIES
