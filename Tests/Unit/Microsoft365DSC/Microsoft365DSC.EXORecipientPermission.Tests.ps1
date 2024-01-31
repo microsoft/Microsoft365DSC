@@ -52,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Trustee    = 'john.doe'
                 }
 
-                Mock -CommandName Get-EXORecipientPermission -MockWith {
+                Mock -CommandName Get-RecipientPermission -MockWith {
                     return $null
                 }
             }
