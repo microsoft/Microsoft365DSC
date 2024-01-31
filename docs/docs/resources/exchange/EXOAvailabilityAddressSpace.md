@@ -9,6 +9,8 @@
 | **Credentials** | Write | String | The Credentials parameter specifies the username and password that's used to access the Availability services in the target forest. | |
 | **ForestName** | Write | String | The ForestName parameter specifies the SMTP domain name of the target forest for users whose free/busy data must be retrieved. If your users are distributed among multiple SMTP domains in the target forest, run the Add-AvailabilityAddressSpace command once for each SMTP domain. | |
 | **TargetAutodiscoverEpr** | Write | String | The TargetAutodiscoverEpr parameter specifies the Autodiscover URL of Exchange Web Services for the external organization. Exchange uses Autodiscover to automatically detect the correct server endpoint for external requests. | |
+| **TargetServiceEpr** | Write | String | The TargetServiceEpr parameter specifies the Exchange Online Calendar Service URL of the external Microsoft 365 organization that you're trying to read free/busy information from. | |
+| **TargetTenantId** | Write | String | The TargetTenantID parameter specifies the tenant ID of the external Microsoft 365 organization that you're trying to read free/busy information from. | |
 | **Ensure** | Write | String | Specifies if this AvailabilityAddressSpace should exist. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -60,9 +62,10 @@ Configuration Example
         EXOAvailabilityAddressSpace 'ConfigureAvailabilityAddressSpace'
         {
             Identity              = 'Contoso.com'
-            AccessMethod          = 'OrgWideFB'
+            AccessMethod          = 'OrgWideFBToken'
             ForestName            = 'example.contoso.com'
-            TargetAutodiscoverEpr = 'https://contoso.com/autodiscover/autodiscover.xml'
+            TargetServiceEpr      = 'https://contoso.com/autodiscover/autodiscover.xml'
+            TargetTenantId        = 'o365dsc.onmicrosoft.com'
             Ensure                = 'Present'
             Credential            = $Credscredential
         }
@@ -92,9 +95,10 @@ Configuration Example
         EXOAvailabilityAddressSpace 'ConfigureAvailabilityAddressSpace'
         {
             Identity              = 'Contoso.com'
-            AccessMethod          = 'OrgWideFBBasic' # Updated Property
+            AccessMethod          = 'OrgWideFBToken'
             ForestName            = 'example.contoso.com'
-            TargetAutodiscoverEpr = 'https://contoso.com/autodiscover/autodiscover.xml'
+            TargetServiceEpr      = 'https://contoso.com/autodiscover/autodiscover.xml'
+            TargetTenantId        = 'contoso.onmicrosoft.com' # Updated Property
             Ensure                = 'Present'
             Credential            = $Credscredential
         }
