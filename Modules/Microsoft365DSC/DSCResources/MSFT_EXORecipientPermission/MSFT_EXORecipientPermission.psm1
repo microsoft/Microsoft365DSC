@@ -90,14 +90,12 @@ function Get-TargetResource
         }
         else
         {
-            #Could include a switch for the different propertySets to retrieve https://learn.microsoft.com/en-us/powershell/exchange/cmdlet-property-sets?view=exchange-ps#get-exomailbox-property-sets
-            #Could include a switch for the different recipientTypeDetails to retrieve
-            $recipientPermission = Get-EXORecipientPermission -Identity $Identity -Trustee $Trustee -AccessRights $AccessRights -ErrorAction Stop
+            $recipientPermission = Get-RecipientPermission -Identity $Identity -Trustee $Trustee -AccessRights $AccessRights -ErrorAction Stop
         }
 
         if ($null -eq $recipientPermission)
         {
-            Write-Verbose -Message "The specified Recipient Permission doesn't already exist."
+            Write-Verbose -Message "The specified Recipient Permission doesn't exist."
             return $nullReturn
         }
 
@@ -222,6 +220,7 @@ function Set-TargetResource
     $parameters.Remove('CertificatePassword') | Out-Null
     $parameters.Remove('ManagedIdentity') | Out-Null
     $parameters.Remove('Ensure') | Out-Null
+    $parameters.AccessRights = $AccessRights #Parameters with default values are not part PSBoundParameters
 
     # Receipient Permission doesn't exist but it should
     if ($Ensure -eq 'Present' -and $currentState.Ensure -eq 'Absent')
@@ -298,26 +297,28 @@ function Test-TargetResource
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
+    $param = $PSBoundParameters
+
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
-        -Parameters $PSBoundParameters
+        -Parameters $param
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
     Write-Verbose -Message "Testing configuration of Office 365 Recipient permissions $DisplayName"
 
-    $currentValues = Get-TargetResource @PSBoundParameters
+    $currentValues = Get-TargetResource @param
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $currentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $param)"
 
     $testResult = Test-M365DSCParameterState -CurrentValues $currentValues `
         -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck @('Ensure', 'Identity')
+        -DesiredValues $param `
+        -ValuesToCheck Ensure, Identity, Trustee, AccessRights
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
 
@@ -331,11 +332,11 @@ function Export-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Identity,
 
-        [Parameter(Mandatory = $true)]
+        [Parameter()]
         [System.String]
         $Trustee,
 
@@ -398,7 +399,7 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
 
-        [array]$Script:recipientPermissions = Get-EXORecipientPermission -ResultSize Unlimited
+        [array]$Script:recipientPermissions = Get-RecipientPermission -ResultSize Unlimited
 
         $dscContent = ''
         $i = 1
