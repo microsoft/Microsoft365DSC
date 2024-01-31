@@ -127,7 +127,7 @@ function Get-TargetResource
                 Identity              = $Identity
                 AccessMethod          = $AvailabilityAddressSpace.AccessMethod
                 Credentials           = $AvailabilityAddressSpace.Credentials
-                TargetServiceEpr      = $AvailabilityAddressSpace.TargetServiceEpd
+                TargetServiceEpr      = $AvailabilityAddressSpace.TargetServiceEpr
                 TargetTenantId        = $AvailabilityAddressSpace.TargetTenantId
                 ForestName            = $AvailabilityAddressSpace.ForestName
                 TargetAutodiscoverEpr = $TargetAutodiscoverEpr
