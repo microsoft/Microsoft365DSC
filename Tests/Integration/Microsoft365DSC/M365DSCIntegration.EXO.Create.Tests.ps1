@@ -127,9 +127,10 @@
                 EXOAvailabilityAddressSpace 'ConfigureAvailabilityAddressSpace'
                 {
                     Identity              = 'Contoso.com'
-                    AccessMethod          = 'OrgWideFB'
+                    AccessMethod          = 'OrgWideFBToken'
                     ForestName            = 'example.contoso.com'
-                    TargetAutodiscoverEpr = 'https://contoso.com/autodiscover/autodiscover.xml'
+                    TargetServiceEpr      = 'https://contoso.com/autodiscover/autodiscover.xml'
+                    TargetTenantId        = 'o365dsc.onmicrosoft.com'
                     Ensure                = 'Present'
                     Credential            = $Credscredential
                 }
@@ -172,7 +173,6 @@
                     ModerationEnabled                  = $False;
                     Identity                           = "DemoDG";
                     Name                               = "DemoDG";
-                    OrganizationalUnit                 = "$Domain";
                     PrimarySmtpAddress                 = "demodg@$Domain";
                     RequireSenderAuthenticationEnabled = $True;
                     SendModerationNotifications        = "Always";
@@ -308,7 +308,7 @@
                 EXOIntraOrganizationConnector 'ConfigureIntraOrganizationConnector'
                 {
                     Identity             = "MainCloudConnector"
-                    DiscoveryEndpoint    = "https://ExternalDiscovery.Contoso.com"
+                    DiscoveryEndpoint    = "https://ExternalDiscovery.Contoso.com/"
                     TargetAddressDomains = "Cloud1.contoso.com","Cloud2.contoso.com"
                     Enabled              = $True
                     Ensure               = "Present"
