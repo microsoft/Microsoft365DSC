@@ -62,17 +62,26 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
+        EXOMailboxAutoReplyConfiguration "EXOMailboxAutoReplyConfiguration"
         {
-            Name                              = "Default Policy"
-            EnabledEmailAddressTemplates      = @("SMTP:@contoso.onmicrosoft.com")
-            EnabledPrimarySMTPAddressTemplate = "@contoso.onmicrosoft.com"
-            ManagedByFilter                   = ""
-            Priority                          = "Lowest"
-            Ensure                            = "Present"
-            Credential                        = $Credscredential
+            AutoDeclineFutureRequestsWhenOOF = $False;
+            AutoReplyState                   = "Disabled";
+            CreateOOFEvent                   = $False;
+            Credential                       = $Credscredential;
+            DeclineAllEventsForScheduledOOF  = $False;
+            DeclineEventsForScheduledOOF     = $True; # Updated Property
+            DeclineMeetingMessage            = "";
+            EndTime                          = "1/23/2024 3:00:00 PM";
+            Ensure                           = "Present";
+            ExternalAudience                 = "All";
+            ExternalMessage                  = "";
+            Identity                         = "AdeleV@$Domain";
+            InternalMessage                  = "";
+            OOFEventSubject                  = "";
+            StartTime                        = "1/22/2024 3:00:00 PM";
         }
     }
 }

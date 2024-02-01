@@ -193,11 +193,9 @@ function Get-TargetResource
         {
             $DefaultLinkPermission = $SPOSharingSettings.DefaultLinkPermission
         }
-
-        return @{
+        $results = @{
             IsSingleInstance                           = 'Yes'
             SharingCapability                          = $SPOSharingSettings.SharingCapability
-            MySiteSharingCapability                    = $MySiteSharingCapability
             ShowEveryoneClaim                          = $SPOSharingSettings.ShowEveryoneClaim
             ShowAllUsersClaim                          = $SPOSharingSettings.ShowAllUsersClaim
             ShowEveryoneExceptExternalUsersClaim       = $SPOSharingSettings.ShowEveryoneExceptExternalUsersClaim
@@ -229,6 +227,12 @@ function Get-TargetResource
             Managedidentity                            = $ManagedIdentity.IsPresent
             Ensure                                     = 'Present'
         }
+
+        if (-not [System.String]::IsNullOrEmpty($MySiteSharingCapability))
+        {
+            $results.Add('MySiteSharingCapability', $MySiteSharingCapability)
+        }
+        return $results
     }
     catch
     {

@@ -46,7 +46,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting configuration of Teams channel $DisplayName"
@@ -117,6 +121,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             Credential            = $Credential
+            ManagedIdentity       = $ManagedIdentity.IsPresent
         }
 
         if ($NewDisplayName)
@@ -184,7 +189,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Teams channel $DisplayName"
@@ -219,6 +228,7 @@ function Set-TargetResource
     $CurrentParameters.Remove('TenantId') | Out-Null
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('Ensure') | Out-Null
+    $CurrentParameters.Remove('ManagedIdentity') | Out-Null
     if ($CurrentParameters.ContainsKey('GroupId'))
     {
         $CurrentParameters.GroupId = $team.GroupId
@@ -309,7 +319,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -360,7 +374,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -401,6 +419,7 @@ function Export-TargetResource
                         TenantId              = $TenantId
                         CertificateThumbprint = $CertificateThumbprint
                         Credential            = $Credential
+                        ManagedIdentity       = $ManagedIdentity.IsPresent
                     }
                     $Results = Get-TargetResource @Params
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

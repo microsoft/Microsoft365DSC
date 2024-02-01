@@ -1,5 +1,120 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAvailabilityAddressSpace
+  * Added support for the TargetServiceEpr and TargetTenantId parameters.
+  * Fixed the logic to retrieve existing instance by Forest Name.
+* EXODistributionGroup
+  * The Get function now retrieves the ModeratedBy and ManagedBy properties
+    by the users' UPN instead of their GUID.
+* EXOHostedContentFilterRule
+  * Changed logic to retrieve the Rules by name. Using the Policy's name instead.
+* EXOIntraOrganizationConnector
+  * Fixes the DiscoveryEndpoint value from the Get method to include trailing
+    forward slash.
+* EXOMalwareFilterRule
+  * Fixed an issue retrieving the right value for the Enabled property
+* EXOOMEConfiguration
+  * Fixes an error in the Get method where the ExternalMailExpiryInDays property
+    wasn't properly returned.
+* EXOSafeLinksPolicy
+  * Deprecated the UseTranslatedNotificationText property
+* TeamsEmergencyCallRoutingPolicy
+  * Fix deletion of resource
+    FIXES [#4261](https://github.com/microsoft/Microsoft365DSC/issues/4261)
+* TEAMS
+  * Added support for ManagedIdentity Authentication across Teams resources.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant dependencies to version 1.1.10.
+
+# 1.24.124.1
+
+* AADAuthenticationMethodPolicyAuthenticator
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyEmail
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyFido2
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicySms
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicySoftware
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyTemporary
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyVoice
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADAuthenticationMethodPolicyX509
+  * Remove the logic path to create a new instance in favor of the update flow.
+* AADConditionalAccessPolicy
+  * Fix issue when not all parameters are specified
+    FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
+* AADCrossTenantAccessPolicy
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADCrossTenantAccessPolicyCOnfigurationDefault
+  * Removed the ability to specify a value of Absent for the Ensure property.
+* AADGroup
+  * Changed Set logic to restore groups from the deleted list if a match by
+    DisplayName is found.
+* EXOActiveSyncDeviceAccessRule
+  * Changed the way Identity is determined by using a combination of the
+    QueryString and Characteristic parameters.
+* EXOAddressList
+  * Fixed an issue trying to create a new instance when DisplayName is empty.
+* EXOApplicationAccessPolicy
+  * Changed the logic to retrieve existing instances based on Scope.
+* EXODataClassification
+  * DEPRECATED Resource.
+* SCAutoSensitivityLabelRule
+  * Correct export indentation, which caused an issue with report conversion to JSON.
+    FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
+* SPOSharingSettings
+  * Fixed an Issue where the MySiteSharingCapability could be returned as an
+    empty string instead of a null value from the Get method.
+* TeamsAppPermissionPolicy, TeamsAppSetupPolicy, TeamsCallHoldPolicy,
+  TeamsIPPhonePolicy, TeamsMobilityPolicy, TeamsNetworkRoamingPolicy,
+  TeamsShiftsPolicy, TeamsTenantNetworkRegion, TeamsTenantNetworkSite,
+  TeamsTenantNetworkSubnet, TeamsTenantTrustedIPAddress, TeamsTranslationRule,
+  TeamsUnassignedNumberTreatment, TeamsVdiPolicy, TeamsWorkloadPolicy
+  * Fix condition when resource is absent
+    FIXES [#4227](https://github.com/microsoft/Microsoft365DSC/issues/4227)
+* TeamsAudioConferencingPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4215](https://github.com/microsoft/Microsoft365DSC/issues/4215)
+* TeamsCallParkPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4210](https://github.com/microsoft/Microsoft365DSC/issues/4210)
+* TeamsComplianceRecordingPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4212](https://github.com/microsoft/Microsoft365DSC/issues/4212)
+* TeamsCortanaPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#4208](https://github.com/microsoft/Microsoft365DSC/issues/4208)
+* TeamsEnhancedEncryptionPolicy
+  * Fix condition when resource is absent
+    FIXES [#4221](https://github.com/microsoft/Microsoft365DSC/issues/4221)
+* TeamsEventsPolicy
+  * Add missing attributes
+    FIXES [#4242](https://github.com/microsoft/Microsoft365DSC/issues/4242)
+* TeamsFeedbackPolicy
+  * Fix condition when resource is absent
+    FIXES [#4223](https://github.com/microsoft/Microsoft365DSC/issues/4223)
+* TeamsFilesPolicy
+  * Fix condition when resource is absent
+    FIXES [#4225](https://github.com/microsoft/Microsoft365DSC/issues/4225)
+* TeamsGroupPolicyAssignment
+  * Ensure assignment can still be created if GroupId is not found by trying to
+    search by DisplayName afterwards
+    FIXES [#4248](https://github.com/microsoft/Microsoft365DSC/issues/4248)
+* TeamsMeetingBroadcastPolicy
+  * Fix deletion of resource
+    FIXES [#4231](https://github.com/microsoft/Microsoft365DSC/issues/4231)
+* TeamsMobilityPolicy
+  * Validate string set on parameter MobileDialerPreference
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.12.0.
+  * Updated MicrosoftTeams dependencies to version 5.9.0.
+
 # 1.24.117.1
 
 * AADAdministrativeUnit
@@ -20,11 +135,14 @@
   * Removed the ability to specify a value of Absent for the Ensure property.
 * EXOAntiPhishPolicy
   * Add support for HonorDmarcPolicy parameter
-    FIXES [[#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)]
+    FIXES [#4138](https://github.com/microsoft/Microsoft365DSC/issues/4138)
 * IntuneDeviceConfigurationPolicyMacOS
   * Fix CIM instances comparison in Test-TargetResource and export
     CompliantAppsList with the correct type
     FIXES [#4144](https://github.com/microsoft/Microsoft365DSC/issues/4144)
+* TeamsEmergencyCallRoutingPolicy
+  * Fix deletion of resource
+    FIXES [#4219](https://github.com/microsoft/Microsoft365DSC/issues/4219)
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.178.
   * Updated MSCloudLoginAssistant to version 1.1.7.

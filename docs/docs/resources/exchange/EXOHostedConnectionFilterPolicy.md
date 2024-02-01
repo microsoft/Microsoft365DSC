@@ -61,10 +61,10 @@ Configuration Example
         {
             Identity         = "Default"
             AdminDisplayName = ""
-            EnableSafeList   = $False
+            EnableSafeList   = $True # Updated Property
             IPAllowList      = @()
             IPBlockList      = @()
-            MakeDefault      = $False
+            MakeDefault      = $True
             Ensure           = "Present"
             Credential       = $Credscredential
         }

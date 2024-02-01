@@ -93,7 +93,10 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Entitlement Management Connected Organization with id {$id} was not found."
+            if (-not [System.String]::IsNullOrEmpty($id))
+            {
+                Write-Verbose -Message "Entitlement Management Connected Organization with id {$id} was not found."
+            }
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
