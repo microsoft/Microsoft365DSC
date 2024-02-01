@@ -300,6 +300,39 @@ function Get-TargetResource
                 $groupTypeValue = 'Security'
             }
 
+            $ManagedByValue = @()
+            if ($null -ne $distributionGroup.ManagedBy)
+            {
+                foreach ($user in $distributionGroup.ManagedBy)
+                {
+                    try
+                    {
+                        $user = Get-MgUser -UserId $user -ErrorAction Stop
+                        $ManagedByValue += $user.UserPrincipalName
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message "Couldn't retrieve user {$user}"
+                    }
+                }
+            }
+
+            $ModeratedByValue = @()
+            if ($null -ne $distributionGroup.ModeratedBy)
+            {
+                foreach ($user in $distributionGroup.ModeratedBy)
+                {
+                    try
+                    {
+                        $user = Get-MgUser -UserId $user -ErrorAction Stop
+                        $ModeratedByValue += $user.UserPrincipalName
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message "Couldn't retrieve moderating user {$user}"
+                    }
+                }
+            }
             $result = @{
                 Identity                                = $distributionGroup.Identity
                 Alias                                   = $distributionGroup.Alias
@@ -308,11 +341,11 @@ function Get-TargetResource
                 Description                             = $descriptionValue
                 DisplayName                             = $distributionGroup.DisplayName
                 HiddenGroupMembershipEnabled            = $distributionGroup.HiddenGroupMembershipEnabled
-                ManagedBy                               = $distributionGroup.ManagedBy
+                ManagedBy                               = $ManagedByValue
                 MemberDepartRestriction                 = $distributionGroup.MemberDepartRestriction
                 MemberJoinRestriction                   = $distributionGroup.MemberJoinRestriction
                 Members                                 = $distributionGroupMembers.Name
-                ModeratedBy                             = $distributionGroup.ModeratedBy
+                ModeratedBy                             = $ModeratedByValue
                 ModerationEnabled                       = $distributionGroup.ModerationEnabled
                 Name                                    = $distributionGroup.Name
                 Notes                                   = $distributionGroup.Notes

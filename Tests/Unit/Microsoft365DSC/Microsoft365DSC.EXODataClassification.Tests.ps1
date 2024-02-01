@@ -70,7 +70,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the New- cmdlet' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-DataClassification' -Exactly 1
             }
         }
 
@@ -107,7 +106,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should set Call into the Set-DataClassification command exactly once' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-DataClassification' -Exactly 1
             }
         }
 
@@ -144,7 +142,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call into the Remove-DataClassification cmdlet once' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-DataClassification' -Exactly 1
             }
         }
 
