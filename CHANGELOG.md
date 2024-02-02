@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.131.1
 
 * EXOAvailabilityAddressSpace
   * Added support for the TargetServiceEpr and TargetTenantId parameters.
@@ -27,6 +27,9 @@
   * Added support for ManagedIdentity Authentication across Teams resources.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant dependencies to version 1.1.10.
+* MISC
+  * Change the way to Export encoding is done so that it no longer relies
+    on the Get-DSCResource function.
 
 # 1.24.124.1
 

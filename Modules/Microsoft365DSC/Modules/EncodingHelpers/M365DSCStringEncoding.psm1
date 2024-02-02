@@ -42,9 +42,12 @@ function Format-M365DSCString
 
     # Cache the DSC resource to a script-scope variable.
     # This avoids fetching the definition multiple times for the same resource, increasing overall speed.
-    if (-not ($DSCResource.Name -eq $ResourceName)) {
-        $Script:DSCResource = Get-DscResource -Module 'Microsoft365DSC' -Name $ResourceName
-    }
+    $ResourcePath = Join-Path -Path $PSScriptRoot `
+            -ChildPath "../../DSCResources/MSFT_$ResourceName/MSFT_$ResourceName.psm1" `
+            -Resolve
+
+    Import-Module $ResourcePath
+    $commandInfo = Get-Command -Module "MSFT_$ResourceName" | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
 
     # For each invalid character, look for an instance in the string,
     # if an instance is found,
@@ -56,14 +59,13 @@ function Format-M365DSCString
                 $newProperties.$key.GetType().ToString() -eq 'System.String')
         {
             # Obtain the type for this property from the module;
-            $foundProperty = $DSCResource.Properties | Where-Object -FilterScript { $_.Name -eq $key }
             foreach ($entry in $InvalidCharacters)
             {
-                if ($foundProperty.PropertyType -eq '[string]')
+                if ($commandInfo.$key.ParameterType -eq 'String')
                 {
                     $newProperties.$key = $newProperties.$key.Replace($entry.InvalidCharacter.ToString(), $entry.MainReplaceBy.ToString())
                 }
-                elseif ($foundProperty.PropertyType -like '`[MSFT_*`]')
+                elseif ($foundProperty.PropertyType -like "CIMInstance*")
                 {
                     # Case property is a CIMInstance
                     $newProperties.$key = $newProperties.$key.Replace($entry.InvalidCharacter.ToString(), $entry.CimReplaceBy.ToString())

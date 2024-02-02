@@ -12,7 +12,7 @@ function Get-ApplicationInsightsTelemetryClient
 
     if ($null -eq $Global:M365DSCTelemetryEngine)
     {
-        $AI = "$PSScriptRoot\..\Dependencies\Microsoft.ApplicationInsights.dll"
+        $AI = "$PSScriptRoot/../Dependencies/Microsoft.ApplicationInsights.dll"
         [Reflection.Assembly]::LoadFile($AI) | Out-Null
 
         $InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
@@ -192,7 +192,7 @@ function Add-M365DSCTelemetryEvent
             # Get Dependencies loaded versions
             try
             {
-                $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+                $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '../' -Resolve
                 $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
                 $dependencies = $manifest.RequiredModules
 
