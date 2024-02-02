@@ -87,14 +87,11 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message 'Getting all Accepted Domain'
-        $AllAcceptedDomains = Get-AcceptedDomain -ErrorAction Stop
-
-        Write-Verbose -Message 'Filtering Accepted Domain list by Identity'
-        $AcceptedDomain = $AllAcceptedDomains | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        $AcceptedDomain = Get-AcceptedDomain -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $AcceptedDomain)
         {
-            Write-Verbose -Message "AcceptedDomain configuration for $($Identity) does not exist."
+            Write-Verbose -Message "AcceptedDomain configuration for {$($Identity)} does not exist."
             return $nullReturn
         }
         else
@@ -151,12 +148,10 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -223,7 +218,7 @@ function Set-TargetResource
         OutboundOnly    = $OutboundOnly
     }
 
-    Write-Verbose -Message "Setting AcceptedDomain for $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $AcceptedDomainParams)"
+    Write-Verbose -Message "Setting AcceptedDomain for {$($Identity)} with values: $(Convert-M365DscHashtableToString -Hashtable $AcceptedDomainParams)"
     Set-AcceptedDomain @AcceptedDomainParams
 }
 
