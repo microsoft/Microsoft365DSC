@@ -87,7 +87,7 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message 'Getting all Accepted Domain'
-        $AllAcceptedDomain = Get-AcceptedDomain -Identity $Identity -ErrorAction SilentlyContinue
+        $AcceptedDomain = Get-AcceptedDomain -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $AcceptedDomain)
         {
