@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# 1.24.131.2
+
+* TeamsMeetingPolicy
+  * Fixed issue with missing ManagedIdentity parameter in Test signature.
+* TeamsUpdateManagementPolicy
+  * Fixed issue with missing ManagedIdentity parameter in Set signature.
+
 # 1.24.131.1
 
 * EXOAvailabilityAddressSpace
