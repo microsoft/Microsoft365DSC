@@ -145,9 +145,9 @@
       * Fixed the logic to retrieve existing instance by Forest Name.
     * EXODistributionGroup
       * The Get function now retrieves the ModeratedBy and ManagedBy properties
-        by the users' UPN instead of their GUID.
+        by the users UPN instead of their GUID.
     * EXOHostedContentFilterRule
-      * Changed logic to retrieve the Rules by name. Using the Policy's name instead.
+      * Changed logic to retrieve the Rules by name. Using the Policys name instead.
     * EXOIntraOrganizationConnector
       * Fixes the DiscoveryEndpoint value from the Get method to include trailing
         forward slash.
