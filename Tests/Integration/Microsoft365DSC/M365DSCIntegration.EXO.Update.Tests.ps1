@@ -22,15 +22,15 @@
                 {
                     Identity     = $Domain
                     DomainType   = "Authoritative"
-                    OutboundOnly = $false
+                    OutboundOnly = $true # Updated Property
                     Ensure       = "Present"
                     Credential   = $Credscredential
                 }
                 EXOActiveSyncDeviceAccessRule 'ConfigureActiveSyncDeviceAccessRule'
                 {
                     Identity             = "ContosoPhone(DeviceOS)"
-                    Characteristic       = "DeviceOS"
-                    QueryString          = "iOS 6.1 10B146"
+                    Characteristic       = "DeviceModel" # Updated Property
+                    QueryString          = "iOS 6.1 10B145"
                     AccessLevel          = "Allow"
                     Ensure               = "Present"
                     Credential           = $Credscredential
@@ -38,7 +38,7 @@
                 EXOAddressBookPolicy 'ConfigureAddressBookPolicy'
                 {
                     Name                 = "All Fabrikam ABP"
-                    AddressLists         = "\All Distribution Lists"
+                    AddressLists         = "\All Users"
                     RoomList             = "\All Rooms"
                     OfflineAddressBook   = "\Default Offline Address Book"
                     GlobalAddressList    = "\Default Global Address List"
@@ -49,7 +49,7 @@
                 {
                     Name                       = "HR Users"
                     ConditionalCompany         = "Contoso"
-                    ConditionalDepartment      = "HR"
+                    ConditionalDepartment      = "HR2" # Updated Property
                     ConditionalStateOrProvince = "US"
                     IncludedRecipients         = "AllRecipients"
                     Ensure                     = "Present"
@@ -59,7 +59,7 @@
                 {
                     Identity                              = "Our Rule"
                     MakeDefault                           = $null
-                    PhishThresholdLevel                   = 1
+                    PhishThresholdLevel                   = 2 # Updated Property
                     EnableTargetedDomainsProtection       = $null
                     Enabled                               = $null
                     TargetedDomainsToProtect              = $null
@@ -83,6 +83,7 @@
                 EXOAntiPhishRule 'ConfigureAntiPhishRule'
                 {
                     Identity                  = "Test Rule"
+                    Comments                  = "This is an updated comment." # Updated Property
                     AntiPhishPolicy           = "Our Rule"
                     Enabled                   = $True
                     SentToMemberOf            = @("executives@$Domain")
@@ -95,9 +96,16 @@
                     AccessRight          = "DenyAccess"
                     AppID                = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
                     PolicyScopeGroupId   = "IntegrationMailEnabled@$Domain"
-                    Description          = "Engineering Group Policy"
+                    Description          = "Engineering Group Policy Updated" # Updated Property
                     Ensure               = "Present"
                     Credential           = $Credscredential
+                }
+                EXOAtpPolicyForO365 'ConfigureAntiPhishPolicy'
+                {
+                    IsSingleInstance        = "Yes"
+                    EnableATPForSPOTeamsODB = $true
+                    Ensure                  = "Present"
+                    Credential              = $Credscredential
                 }
                 EXOAuthenticationPolicy 'ConfigureAuthenticationPolicy'
                 {
@@ -105,7 +113,7 @@
                     AllowBasicAuthActiveSync            = $False
                     AllowBasicAuthAutodiscover          = $False
                     AllowBasicAuthImap                  = $False
-                    AllowBasicAuthMapi                  = $False
+                    AllowBasicAuthMapi                  = $True # Updated Property
                     AllowBasicAuthOfflineAddressBook    = $False
                     AllowBasicAuthOutlookService        = $False
                     AllowBasicAuthPop                   = $False
@@ -120,7 +128,7 @@
                 EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
                 {
                     UserName                 = "AdeleV@$Domain"
-                    AuthenticationPolicyName = "Block Basic Auth"
+                    AuthenticationPolicyName = "Test Policy" # Updaqted Property
                     Ensure                   = "Present"
                     Credential               = $Credscredential
                 }
@@ -130,15 +138,99 @@
                     AccessMethod          = 'OrgWideFBToken'
                     ForestName            = 'example.contoso.com'
                     TargetServiceEpr      = 'https://contoso.com/autodiscover/autodiscover.xml'
-                    TargetTenantId        = 'o365dsc.onmicrosoft.com'
+                    TargetTenantId        = 'contoso.onmicrosoft.com' # Updated Property
                     Ensure                = 'Present'
                     Credential            = $Credscredential
                 }
                 EXOAvailabilityConfig 'ConfigureAvailabilityConfig'
                 {
-                    OrgWideAccount       = "adelev@$Domain"
+                    OrgWideAccount       = "alexW@$Domain" # Updated Property
                     Ensure               = "Present"
                     Credential           = $Credscredential
+                }
+                EXOCalendarProcessing 'CalendarProcessing'
+                {
+                    AddAdditionalResponse                = $False;
+                    AddNewRequestsTentatively            = $True;
+                    AddOrganizerToSubject                = $False; # Updated Property
+                    AllBookInPolicy                      = $True;
+                    AllowConflicts                       = $False;
+                    AllowRecurringMeetings               = $True;
+                    AllRequestInPolicy                   = $False;
+                    AllRequestOutOfPolicy                = $False;
+                    AutomateProcessing                   = "AutoUpdate";
+                    BookingType                          = "Standard";
+                    BookingWindowInDays                  = 180;
+                    BookInPolicy                         = @();
+                    ConflictPercentageAllowed            = 0;
+                    Credential                           = $credsCredential;
+                    DeleteAttachments                    = $True;
+                    DeleteComments                       = $True;
+                    DeleteNonCalendarItems               = $True;
+                    DeleteSubject                        = $True;
+                    EnableAutoRelease                    = $False;
+                    EnableResponseDetails                = $True;
+                    EnforceCapacity                      = $False;
+                    EnforceSchedulingHorizon             = $True;
+                    Ensure                               = "Present";
+                    ForwardRequestsToDelegates           = $True;
+                    Identity                             = "AdeleV";
+                    MaximumConflictInstances             = 0;
+                    MaximumDurationInMinutes             = 1440;
+                    MinimumDurationInMinutes             = 0;
+                    OrganizerInfo                        = $True;
+                    PostReservationMaxClaimTimeInMinutes = 10;
+                    ProcessExternalMeetingMessages       = $False;
+                    RemoveCanceledMeetings               = $False;
+                    RemoveForwardedMeetingNotifications  = $False;
+                    RemoveOldMeetingMessages             = $False;
+                    RemovePrivateProperty                = $True;
+                    RequestInPolicy                      = @("AlexW@$Domain");
+                    ResourceDelegates                    = @();
+                    ScheduleOnlyDuringWorkHours          = $False;
+                    TentativePendingApproval             = $True;
+                }
+                EXOCASMailboxPlan 'ConfigureCASMailboxPlan'
+                {
+                    ActiveSyncEnabled = $True
+                    OwaMailboxPolicy  = "OwaMailboxPolicy-Default"
+                    PopEnabled        = $False # Updated Property
+                    Identity          = 'ExchangeOnlineEnterprise'
+                    ImapEnabled       = $True
+                    Ensure            = "Present"
+                    Credential        = $Credscredential
+                }
+                EXOCASMailboxSettings 'AdeleVCasMailboxSettings'
+                {
+                    ActiveSyncAllowedDeviceIDs              = @()
+                    ActiveSyncBlockedDeviceIDs              = @()
+                    ActiveSyncDebugLogging                  = $False
+                    ActiveSyncEnabled                       = $True
+                    ActiveSyncMailboxPolicy                 = 'Demo EXO Mobile Device Policy Default'
+                    ActiveSyncSuppressReadReceipt           = $False
+                    EwsEnabled                              = $True
+                    Identity                                = 'AdeleV'
+                    ImapEnabled                             = $True # Updated Property
+                    ImapForceICalForCalendarRetrievalOption = $False
+                    ImapMessagesRetrievalMimeFormat         = 'BestBodyFormat'
+                    ImapSuppressReadReceipt                 = $False
+                    ImapUseProtocolDefaults                 = $True
+                    MacOutlookEnabled                       = $True
+                    MAPIEnabled                             = $True
+                    OutlookMobileEnabled                    = $True
+                    OWAEnabled                              = $True
+                    OWAforDevicesEnabled                    = $True
+                    OwaMailboxPolicy                        = 'OwaMailboxPolicy-Default'
+                    PopEnabled                              = $False
+                    PopForceICalForCalendarRetrievalOption  = $True
+                    PopMessagesRetrievalMimeFormat          = 'BestBodyFormat'
+                    PopSuppressReadReceipt                  = $False
+                    PopUseProtocolDefaults                  = $True
+                    PublicFolderClientAccess                = $False
+                    ShowGalAsDefaultView                    = $True
+                    UniversalOutlookEnabled                 = $True
+                    Ensure                                  = 'Present'
+                    Credential                              = $Credscredential
                 }
                 EXOClientAccessRule 'ConfigureClientAccessRule'
                 {
@@ -151,17 +243,27 @@
                     Identity                             = "Always Allow Remote PowerShell"
                     Priority                             = 1
                     AnyOfProtocols                       = @("RemotePowerShell")
-                    Enabled                              = $True
+                    Enabled                              = $False # Updated Property
                     ExceptAnyOfProtocols                 = @()
                     ExceptAnyOfClientIPAddressesOrRanges = @()
                     AnyOfClientIPAddressesOrRanges       = @()
                     Ensure                               = "Present"
                     Credential                           = $Credscredential
                 }
+                EXODataClassification 'ConfigureDataClassification'
+                {
+                    Description          = "Detects formatted and unformatted Canadian social insurance number.";
+                    Ensure               = "Present";
+                    Identity             = "a2f29c85-ecb8-4514-a610-364790c0773e";
+                    IsDefault            = $True;
+                    Locale               = "en-US";
+                    Name                 = "Canada Social Insurance Number";
+                    Credential           = $Credscredential
+                }
                 EXODistributionGroup 'DemoDG'
                 {
                     Alias                              = "demodg";
-                    BccBlocked                         = $False;
+                    BccBlocked                         = $True; # Updated Property
                     BypassNestedModerationEnabled      = $False;
                     DisplayName                        = "My Demo DG";
                     Ensure                             = "Present";
@@ -183,7 +285,7 @@
                     KeySize                = 1024
                     Identity               = $Domain
                     HeaderCanonicalization = "Relaxed"
-                    Enabled                = $True
+                    Enabled                = $False # Updated Property
                     BodyCanonicalization   = "Relaxed"
                     AdminDisplayName       = ""
                     Ensure                 = "Present"
@@ -195,7 +297,7 @@
                     EnabledEmailAddressTemplates      = @("SMTP:@$Domain")
                     EnabledPrimarySMTPAddressTemplate = "@$Domain"
                     ManagedByFilter                   = ""
-                    Priority                          = 1
+                    Priority                          = 2 # Updated Property
                     Ensure                            = "Present"
                     Credential                        = $Credscredential
                 }
@@ -203,11 +305,43 @@
                 {
                     Name                         = "Contoso Human Resources in Washington"
                     ConditionalCompany           = "Contoso"
-                    ConditionalDepartment        = "Human Resources"
+                    ConditionalDepartment        = "Finances" # Updated Property
                     ConditionalStateOrProvince   = "Washington"
-                    IncludedRecipients           = 'AllRecipients'
                     Ensure                       = "Present"
                     Credential                   = $Credscredential
+                }
+                EXOGroupSettings 'TestGroup'
+                {
+                    DisplayName                            = "Test Group";
+                    AccessType                             = "Public";
+                    AlwaysSubscribeMembersToCalendarEvents = $False;
+                    AuditLogAgeLimit                       = "90.00:00:00";
+                    AutoSubscribeNewMembers                = $False;
+                    CalendarMemberReadOnly                 = $False;
+                    ConnectorsEnabled                      = $False; # Updated Property
+                    Credential                             = $Credscredential;
+                    HiddenFromAddressListsEnabled          = $True;
+                    HiddenFromExchangeClientsEnabled       = $True;
+                    InformationBarrierMode                 = "Open";
+                    Language                               = "en-US";
+                    MaxReceiveSize                         = "36 MB (37,748,736 bytes)";
+                    MaxSendSize                            = "35 MB (36,700,160 bytes)";
+                    ModerationEnabled                      = $False;
+                    Notes                                  = "My Notes";
+                    PrimarySmtpAddress                     = "TestGroup@$Domain";
+                    RequireSenderAuthenticationEnabled     = $True;
+                    SubscriptionEnabled                    = $False;
+                }
+                EXOHostedConnectionFilterPolicy 'ConfigureHostedConnectionFilterPolicy'
+                {
+                    Identity         = "Default"
+                    AdminDisplayName = ""
+                    EnableSafeList   = $True # Updated Property
+                    IPAllowList      = @()
+                    IPBlockList      = @()
+                    MakeDefault      = $True
+                    Ensure           = "Present"
+                    Credential       = $Credscredential
                 }
                 EXOHostedContentFilterPolicy 'ConfigureHostedContentFilterPolicy'
                 {
@@ -216,7 +350,7 @@
                     AdminDisplayName                     = ""
                     BulkSpamAction                       = "MoveToJmf"
                     BulkThreshold                        = 7
-                    DownloadLink                         = $False
+                    DownloadLink                         = $True # Updated Property
                     EnableLanguageBlockList              = $False
                     EnableRegionBlockList                = $False
                     HighConfidencePhishAction            = "Quarantine"
@@ -257,7 +391,7 @@
                 {
                     Identity                  = "Integration CFR"
                     Comments                  = "Applies to all users, except when member of HR group"
-                    Enabled                   = $True
+                    Enabled                   = $False # Updated Property
                     ExceptIfSentToMemberOf    = "LegalTeam@$Domain"
                     RecipientDomainIs         = @('contoso.com')
                     HostedContentFilterPolicy = "Integration CFP"
@@ -275,7 +409,7 @@
                     NotifyOutboundSpam                        = $False
                     NotifyOutboundSpamRecipients              = @()
                     RecipientLimitExternalPerHour             = 0
-                    RecipientLimitInternalPerHour             = 0
+                    RecipientLimitInternalPerHour             = 1 # Updated Property
                     RecipientLimitPerDay                      = 0
                     Ensure                                    = "Present"
                     Credential                                = $Credscredential
@@ -284,7 +418,7 @@
                 {
                     Identity                       = "Contoso Executives"
                     Comments                       = "Does not apply to Executives"
-                    Enabled                        = $True
+                    Enabled                        = $False # Updated Property
                     ExceptIfFrom                   = "AdeleV@$Domain"
                     FromMemberOf                   = "Executives@$Domain"
                     HostedOutboundSpamFilterPolicy = "Integration SFP"
@@ -298,7 +432,7 @@
                     Comment                      = "Inbound connector for Integration"
                     ConnectorSource              = "Default"
                     ConnectorType                = "Partner"
-                    Enabled                      = $True
+                    Enabled                      = $False # Updated Property
                     RequireTls                   = $True
                     SenderDomains                = "*.contoso.com"
                     TlsSenderCertificateName     = "contoso.com"
@@ -310,18 +444,97 @@
                     Identity             = "MainCloudConnector"
                     DiscoveryEndpoint    = "https://ExternalDiscovery.Contoso.com/"
                     TargetAddressDomains = "Cloud1.contoso.com","Cloud2.contoso.com"
-                    Enabled              = $True
+                    Enabled              = $False # Updated Property
                     Ensure               = "Present"
                     Credential           = $Credscredential
                 }
+                EXOIRMConfiguration 'ConfigureIRMConfiguration'
+                {
+                    IsSingleInstance                           = 'Yes'
+                    AutomaticServiceUpdateEnabled              = $True
+                    AzureRMSLicensingEnabled                   = $True
+                    DecryptAttachmentForEncryptOnly            = $True
+                    EDiscoverySuperUserEnabled                 = $True
+                    EnablePdfEncryption                        = $True
+                    InternalLicensingEnabled                   = $True
+                    JournalReportDecryptionEnabled             = $True
+                    RejectIfRecipientHasNoRights               = $True
+                    SearchEnabled                              = $True
+                    SimplifiedClientAccessDoNotForwardDisabled = $True
+                    SimplifiedClientAccessEnabled              = $True
+                    SimplifiedClientAccessEncryptOnlyDisabled  = $True
+                    TransportDecryptionSetting                 = 'Mandatory'
+                    Ensure                                     = 'Present'
+                    Credential                                 = $Credscredential
+                }
                 EXOJournalRule 'CreateJournalRule'
                 {
-                    Enabled              = $True
+                    Enabled              = $False # Updated Property
                     JournalEmailAddress  = "AdeleV@$Domain"
                     Name                 = "Send to Adele"
                     RuleScope            = "Global"
                     Ensure               = "Present"
                     Credential           = $Credscredential
+                }
+                EXOMailboxAutoReplyConfiguration 'EXOMailboxAutoReplyConfiguration'
+                {
+                    AutoDeclineFutureRequestsWhenOOF = $False;
+                    AutoReplyState                   = "Disabled";
+                    CreateOOFEvent                   = $False;
+                    Credential                       = $Credscredential;
+                    DeclineAllEventsForScheduledOOF  = $False;
+                    DeclineEventsForScheduledOOF     = $True; # Updated Property
+                    DeclineMeetingMessage            = "";
+                    EndTime                          = "1/23/2024 3:00:00 PM";
+                    Ensure                           = "Present";
+                    ExternalAudience                 = "All";
+                    ExternalMessage                  = "";
+                    Identity                         = "AdeleV@$Domain";
+                    InternalMessage                  = "";
+                    OOFEventSubject                  = "";
+                    StartTime                        = "1/22/2024 3:00:00 PM";
+                }
+                EXOMailboxCalendarFolder 'JohnCalendarFolder'
+                {
+                    Credential           = $credsCredential;
+                    DetailLevel          = "AvailabilityOnly";
+                    Ensure               = "Present";
+                    Identity             = "AdeleV:\Calendar";
+                    PublishDateRangeFrom = "ThreeMonths";
+                    PublishDateRangeTo   = "ThreeMonths";
+                    PublishEnabled       = $True; # Updated Property
+                    SearchableUrlEnabled = $False;
+                }
+                EXOMailboxPermission 'TestPermission'
+                {
+                    AccessRights         = @("FullAccess","ReadPermission");
+                    Credential           = $credsCredential;
+                    Deny                 = $True; # Updated Property
+                    Ensure               = "Present";
+                    Identity             = "AdeleV";
+                    InheritanceType      = "All";
+                    User                 = "NT AUTHORITY\SELF";
+                }
+                EXOMailboxPlan 'ConfigureMailboxPlan'
+                {
+                    Ensure                   = "Present";
+                    Identity                 = "Integration Plan";
+                    IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
+                    MaxReceiveSize           = "25 MB (26,214,400 bytes)";
+                    MaxSendSize              = "25 MB (26,214,400 bytes)";
+                    ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
+                    ProhibitSendReceiveQuota = "15 GB (16,106,127,360 bytes)"; # Updated Property
+                    RetainDeletedItemsFor    = "14.00:00:00";
+                    RoleAssignmentPolicy     = "Default Role Assignment Policy";
+                    Credential               = $Credscredential
+                }
+                EXOMailboxSettings 'OttawaTeamMailboxSettings'
+                {
+                    DisplayName = 'Ottawa Employees'
+                    TimeZone    = 'Eastern Standard Time'
+                    Locale      = 'en-US' # Updated Property
+                    Ensure      = 'Present'
+                    Credential  = $Credscredential
                 }
                 EXOMailContact 'TestMailContact'
                 {
@@ -338,7 +551,7 @@
                     Name                        = 'My Test Contact'
                     OrganizationalUnit          = $Domain
                     SendModerationNotifications = 'Always'
-                    UsePreferMessageFormat      = $true
+                    UsePreferMessageFormat      = $false # Updated Property
                     CustomAttribute1            = 'Custom Value 1'
                     ExtensionCustomAttribute5   = 'Extension Custom Value 1', 'Extension Custom Value 2'
                 }
@@ -346,7 +559,7 @@
                 {
                     Organization                          = $Domain
                     MailTipsAllTipsEnabled                = $True
-                    MailTipsGroupMetricsEnabled           = $True
+                    MailTipsGroupMetricsEnabled           = $False # Updated Property
                     MailTipsLargeAudienceThreshold        = 100
                     MailTipsMailboxSourcedTipsEnabled     = $True
                     MailTipsExternalRecipientsTipsEnabled = $True
@@ -363,7 +576,7 @@
                     FileTypeAction                         = "Quarantine"
                     FileTypes                              = @("ace", "ani", "app", "cab", "docm", "exe", "iso", "jar", "jnlp", "reg", "scr", "vbe", "vbs")
                     QuarantineTag                          = "AdminOnlyAccessPolicy"
-                    ZapEnabled                             = $True
+                    ZapEnabled                             = $False # Updated Property
                     Ensure                                 = "Present"
                     Credential                             = $Credscredential
                 }
@@ -372,7 +585,7 @@
                     Identity                  = "Contoso Recipients"
                     MalwareFilterPolicy       = "IntegrationMFP"
                     Comments                  = "Apply the filter to all Contoso users"
-                    Enabled                   = $True
+                    Enabled                   = $False # Updated Property
                     RecipientDomainIs         = "contoso.com"
                     Ensure                    = "Present"
                     Credential                = $Credscredential
@@ -380,7 +593,7 @@
                 EXOManagementRole 'ConfigureManagementRole'
                 {
                     Name                 = "MyDisplayName"
-                    Description          = ""
+                    Description          = "Updated Description" # Updated Property
                     Parent               = "$Domain\MyProfileInformation"
                     Ensure               = "Present"
                     Credential           = $Credscredential
@@ -391,7 +604,7 @@
                     Ensure               = "Present";
                     Name                 = "MyManagementRoleAssignment";
                     Role                 = "UserApplication";
-                    User                 = "AdeleV@$Domain";
+                    User                 = "AlexW@$Domain"; # Updated Property
                 }
                 EXOMessageClassification 'ConfigureMessageClassification'
                 {
@@ -402,7 +615,7 @@
                     PermissionMenuVisible       = $True
                     RecipientDescription        = "Shown to receipients"
                     SenderDescription           = "Shown to senders"
-                    RetainClassificationEnabled = $True
+                    RetainClassificationEnabled = $False # Updated Property
                     Ensure                      = "Present"
                     Credential                  = $Credscredential
                 }
@@ -411,7 +624,7 @@
                     Name                                     = "Default"
                     AllowApplePushNotifications              = $True
                     AllowBluetooth                           = "Allow"
-                    AllowBrowser                             = $True
+                    AllowBrowser                             = $False # Updated Property
                     AllowCamera                              = $True
                     AllowConsumerEmail                       = $True
                     AllowDesktopSync                         = $True
@@ -470,7 +683,7 @@
                     Name                 = "Integration Address Book"
                     AddressLists         = @('\Offline Global Address List')
                     DiffRetentionPeriod  = "30"
-                    IsDefault            = $true
+                    IsDefault            = $false # Updated Property
                     Ensure               = "Present"
                     Credential           = $Credscredential
                 }
@@ -480,7 +693,7 @@
                     BackgroundColor          = "0x00FFFF00"
                     DisclaimerText           = "Encryption security disclaimer."
                     EmailText                = "Encrypted message enclosed."
-                    ExternalMailExpiryInDays = 0
+                    ExternalMailExpiryInDays = 1 # Updated Property
                     IntroductionText         = "You have received an encypted message"
                     OTPEnabled               = $True
                     PortalText               = "This portal is encrypted."
@@ -490,39 +703,85 @@
                 }
                 EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
                 {
-                    Identity          = 'Integration'
-                    Comment           = 'Mail for Contoso'
-                    HybridDomains     = 'o365dsc.onmicrosoft.com'
-                    InboundConnector  = 'Integration Inbound Connector'
-                    OrganizationGuid  = 'e7a80bcf-696e-40ca-8775-a7f85fbb3ebc'
-                    OrganizationName  = 'O365DSC'
-                    OutboundConnector = 'Contoso Outbound Connector'
+                    Identity          = 'Contoso'
+                    Comment           = 'Mail for Contoso. Updated' # Updated Property
+                    HybridDomains     = 'contoso.com', 'sales.contoso.com'
+                    InboundConnector  = 'Inbound to Contoso'
+                    OrganizationGuid  = 'a1bc23cb-3456-bcde-abcd-feb363cacc88'
+                    OrganizationName  = 'Contoso'
+                    OutboundConnector = 'Outbound to Contoso'
                     Ensure            = 'Present'
                     Credential        = $Credscredential
-                    DependsOn         = "[EXOOutboundConnector]OutboundDependency"
                 }
-                EXOOutboundConnector 'OutboundDependency'
+                EXOOrganizationConfig 'EXOOrganizationConfig'
                 {
-                    Identity                      = "Contoso Outbound Connector"
-                    AllAcceptedDomains            = $False
-                    CloudServicesMailEnabled      = $False
-                    Comment                       = "Outbound connector to Contoso"
-                    ConnectorSource               = "Default"
-                    ConnectorType                 = "Partner"
-                    Enabled                       = $True
-                    IsTransportRuleScoped         = $False
-                    RecipientDomains              = "contoso.com"
-                    RouteAllMessagesViaOnPremises = $False
-                    TlsDomain                     = "*.contoso.com"
-                    TlsSettings                   = "DomainValidation"
-                    UseMxRecord                   = $True
-                    Ensure                        = "Present"
-                    Credential                    = $Credscredential
+                    IsSingleInstance                                          = "Yes"
+                    ElcProcessingDisabled                                     = $False
+                    DefaultPublicFolderProhibitPostQuota                      = "13 KB (13,312 bytes)"
+                    VisibleMeetingUpdateProperties                            = "Location,AllProperties:15"
+                    BookingsEnabled                                           = $True
+                    ExchangeNotificationRecipients                            = @()
+                    EwsEnabled                                                = $null
+                    LinkPreviewEnabled                                        = $True
+                    FocusedInboxOn                                            = $null
+                    AsyncSendEnabled                                          = $True
+                    EwsAllowEntourage                                         = $null
+                    RemotePublicFolderMailboxes                               = @()
+                    AuditDisabled                                             = $False
+                    EwsAllowMacOutlook                                        = $null
+                    ConnectorsEnabledForTeams                                 = $True
+                    DefaultPublicFolderIssueWarningQuota                      = "13 KB (13,312 bytes)"
+                    MailTipsMailboxSourcedTipsEnabled                         = $True
+                    EndUserDLUpgradeFlowsDisabled                             = $False
+                    DistributionGroupDefaultOU                                = $null
+                    OutlookPayEnabled                                         = $True
+                    EwsAllowOutlook                                           = $null
+                    DefaultAuthenticationPolicy                               = $null
+                    DistributionGroupNameBlockedWordsList                     = @()
+                    ConnectorsEnabled                                         = $True
+                    DefaultPublicFolderAgeLimit                               = $null
+                    OutlookMobileGCCRestrictionsEnabled                       = $False
+                    ActivityBasedAuthenticationTimeoutEnabled                 = $True
+                    ConnectorsEnabledForYammer                                = $True
+                    HierarchicalAddressBookRoot                               = $null
+                    DefaultPublicFolderMaxItemSize                            = "13 KB (13,312 bytes)"
+                    MailTipsLargeAudienceThreshold                            = 25
+                    ConnectorsActionableMessagesEnabled                       = $True
+                    ExchangeNotificationEnabled                               = $True
+                    ActivityBasedAuthenticationTimeoutWithSingleSignOnEnabled = $True
+                    DirectReportsGroupAutoCreationEnabled                     = $False
+                    OAuth2ClientProfileEnabled                                = $True
+                    AppsForOfficeEnabled                                      = $True
+                    PublicFoldersEnabled                                      = "Local"
+                    WebPushNotificationsDisabled                              = $False
+                    MailTipsGroupMetricsEnabled                               = $True
+                    DefaultPublicFolderMovedItemRetention                     = "07.00:00:00"
+                    DistributionGroupNamingPolicy                             = ""
+                    DefaultPublicFolderDeletedItemRetention                   = "30.00:00:00"
+                    MailTipsAllTipsEnabled                                    = $True
+                    LeanPopoutEnabled                                         = $False
+                    PublicComputersDetectionEnabled                           = $False
+                    ByteEncoderTypeFor7BitCharsets                            = 0
+                    ConnectorsEnabledForOutlook                               = $True
+                    WebSuggestedRepliesDisabled                               = $False
+                    PublicFolderShowClientControl                             = $False
+                    ActivityBasedAuthenticationTimeoutInterval                = "06:00:00"
+                    BookingsSocialSharingRestricted                           = $False
+                    DefaultGroupAccessType                                    = "Private"
+                    IPListBlocked                                             = @()
+                    SmtpActionableMessagesEnabled                             = $True
+                    SiteMailboxCreationURL                                    = $null
+                    BookingsPaymentsEnabled                                   = $False
+                    MailTipsExternalRecipientsTipsEnabled                     = $False
+                    AutoExpandingArchive                                      = $null
+                    ConnectorsEnabledForSharepoint                            = $True
+                    ReadTrackingEnabled                                       = $False
+                    Credential                                                = $Credscredential
                 }
                 EXOOrganizationRelationship 'ConfigureOrganizationRelationship'
                 {
                     Name                  = "Contoso"
-                    ArchiveAccessEnabled  = $True
+                    ArchiveAccessEnabled  = $False # Updated Property
                     DeliveryReportEnabled = $True
                     DomainNames           = "mail.contoso.com"
                     Enabled               = $True
@@ -536,6 +795,24 @@
                     TargetAutodiscoverEpr = "https://mail.contoso.com/autodiscover/autodiscover.svc/wssecurity"
                     Ensure                = "Present"
                     Credential            = $Credscredential
+                }
+                EXOOutboundConnector 'ConfigureOutboundConnector'
+                {
+                    Identity                      = "Contoso Outbound Connector"
+                    AllAcceptedDomains            = $False
+                    CloudServicesMailEnabled      = $False
+                    Comment                       = "Outbound connector to Contoso"
+                    ConnectorSource               = "Default"
+                    ConnectorType                 = "Partner"
+                    Enabled                       = $False # Updated Property
+                    IsTransportRuleScoped         = $False
+                    RecipientDomains              = "contoso.com"
+                    RouteAllMessagesViaOnPremises = $False
+                    TlsDomain                     = "*.contoso.com"
+                    TlsSettings                   = "DomainValidation"
+                    UseMxRecord                   = $True
+                    Ensure                        = "Present"
+                    Credential                    = $Credscredential
                 }
                 EXOOwaMailboxPolicy 'ConfigureOwaMailboxPolicy'
                 {
@@ -553,7 +830,7 @@
                     ConditionalAccessPolicy                              = "Off"
                     DefaultTheme                                         = ""
                     DirectFileAccessOnPrivateComputersEnabled            = $True
-                    DirectFileAccessOnPublicComputersEnabled             = $True
+                    DirectFileAccessOnPublicComputersEnabled             = $False # Updated Property
                     DisplayPhotosEnabled                                 = $True
                     ExplicitLogonEnabled                                 = $True
                     ExternalImageProxyEnabled                            = $True
@@ -619,14 +896,21 @@
                 {
                     Name                                = "HRApp"
                     ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
-                    Enabled                             = $True
+                    Enabled                             = $False # Updated Property
                     Ensure                              = "Present"
                     Credential                          = $Credscredential
+                }
+                EXOPerimeterConfiguration 'ConfigurePerimeterConfiguration'
+                {
+                    IsSingleInstance   = 'Yes'
+                    GatewayIPAddresses = '123.0.0.1'
+                    Ensure             = 'Present'
+                    Credential         = $Credscredential
                 }
                 EXOPlace 'TestPlace'
                 {
                     AudioDeviceName        = "MyAudioDevice";
-                    Capacity               = 15;
+                    Capacity               = 16; # Updated Property
                     City                   = "";
                     Credential             = $Credscredential
                     DisplayDeviceName      = "DisplayDeviceName";
@@ -642,14 +926,14 @@
                 EXOPolicyTipConfig 'ConfigurePolicyTipConfig'
                 {
                     Name                 = "en\NotifyOnly"
-                    Value                = "This message contains content that is restricted by Contoso company policy."
+                    Value                = "This message contains content that is restricted by Contoso company policy. Updated" # Updated Property
                     Ensure               = "Present"
                     Credential           = $Credscredential
                 }
                 EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
                 {
                     EndUserQuarantinePermissionsValue = 87;
-                    ESNEnabled                        = $False;
+                    ESNEnabled                        = $True; # Updated Property
                     Identity                          = "$Domain\DefaultFullAccessPolicy";
                     Ensure                            = "Present"
                     Credential                        = $Credscredential
@@ -659,7 +943,7 @@
                     Identity                             = "Integration"
                     AllowedOOFType                       = "External"
                     AutoForwardEnabled                   = $True
-                    AutoReplyEnabled                     = $True
+                    AutoReplyEnabled                     = $False # Updated Property
                     ByteEncoderTypeFor7BitCharsets       = "Undefined"
                     CharacterSet                         = "iso-8859-1"
                     ContentType                          = "MimeHtmlText"
@@ -667,9 +951,9 @@
                     DisplaySenderName                    = $True
                     DomainName                           = "contoso.com"
                     IsInternal                           = $False
-                    LineWrapSize                         = "Unlimited"
+                    LineWrapSize                         = "Integration"
                     MeetingForwardNotificationEnabled    = $False
-                    Name                                 = "Integration"
+                    Name                                 = "Default"
                     NonMimeCharacterSet                  = "iso-8859-1"
                     PreferredInternetCodePageForShiftJis = "Undefined"
                     TargetDeliveryDomain                 = $False
@@ -679,11 +963,44 @@
                     Ensure                               = "Present"
                     Credential                           = $Credscredential
                 }
+                EXOReportSubmissionPolicy 'ConfigureReportSubmissionPolicy'
+                {
+                    IsSingleInstance                       = 'Yes'
+                    DisableQuarantineReportingOption       = $False
+                    EnableCustomNotificationSender         = $False
+                    EnableOrganizationBranding             = $False
+                    EnableReportToMicrosoft                = $True
+                    EnableThirdPartyAddress                = $False
+                    EnableUserEmailNotification            = $False
+                    PostSubmitMessageEnabled               = $True
+                    PreSubmitMessageEnabled                = $True
+                    ReportJunkToCustomizedAddress          = $False
+                    ReportNotJunkToCustomizedAddress       = $False
+                    ReportPhishToCustomizedAddress         = $False
+                    Ensure                                 = "Present"
+                    Credential                             = $Credscredential
+                }
+                EXOReportSubmissionRule 'ConfigureReportSubmissionRule'
+                {
+                    IsSingleInstance    = 'Yes'
+                    Identity            = "DefaultReportSubmissionRule"
+                    Comments            = "This is my default rule"
+                    SentTo              = "submission@contoso.com"
+                    Ensure              = "Present"
+                    Credential          = $Credscredential
+                }
+                EXOResourceConfiguration 'ConfigureResourceConfiguration'
+                {
+                    IsSingleInstance       = 'Yes'
+                    ResourcePropertySchema = @('Room/TV', 'Equipment/Laptop')
+                    Ensure                 = 'Present'
+                    Credential             = $Credscredential
+                }
                 EXORoleAssignmentPolicy 'ConfigureRoleAssignmentPolicy'
                 {
                     Name                 = "Integration Policy"
                     Description          = "This policy grants end users the permission to set their options in Outlook on the web and perform other self-administration tasks."
-                    IsDefault            = $True
+                    IsDefault            = $False # Updated Property
                     Roles                = @("My Marketplace Apps","MyVoiceMail","MyDistributionGroups","MyRetentionPolicies","MyContactInformation","MyBaseOptions","MyTextMessaging","MyDistributionGroupMembership","MyProfileInformation","My Custom Apps","My ReadWriteMailbox Apps")
                     Ensure               = "Present"
                     Credential           = $Credscredential
@@ -691,7 +1008,7 @@
                 EXORoleGroup 'ConfigureRoleGroup'
                 {
                     Name                      = "Contoso Role Group"
-                    Description               = "Address Lists Role for Exchange Administrators"
+                    Description               = "Address Lists Role for Exchange Administrators. Updated" # Updated Property
                     Members                   = @("Exchange Administrator")
                     Roles                     = @("Address Lists")
                     Ensure                    = "Present"
@@ -700,7 +1017,7 @@
                 EXOSafeAttachmentPolicy 'ConfigureSafeAttachmentPolicy'
                 {
                     Identity             = "Marketing Block Attachments"
-                    Enable               = $True
+                    Enable               = $False # Updated Property
                     Redirect             = $True
                     RedirectAddress      = "admin@$Domain"
                     Ensure               = "Present"
@@ -710,7 +1027,7 @@
                 {
                     Identity                  = "Research Department Attachment Rule"
                     Comments                  = "Applies to Research Department, except managers"
-                    Enabled                   = $True
+                    Enabled                   = $False # Updated Property
                     ExceptIfSentToMemberOf    = "Executives@$Domain"
                     SafeAttachmentPolicy      = "Marketing Block Attachments"
                     SentToMemberOf            = "LegalTeam@$Domain"
@@ -723,7 +1040,7 @@
                     AdminDisplayName              = 'Marketing Block URL'
                     CustomNotificationText        = 'Blocked URLs for Marketing'
                     DeliverMessageAfterScan       = $True
-                    EnableOrganizationBranding    = $True
+                    EnableOrganizationBranding    = $False # Updated Property
                     EnableSafeLinksForTeams       = $True
                     ScanUrls                      = $True
                     Ensure                        = 'Present'
@@ -733,7 +1050,7 @@
                 {
                     Identity                  = "Research Department URL Rule"
                     Comments                  = "Applies to Research Department, except managers"
-                    Enabled                   = $True
+                    Enabled                   = $False # Updated Property
                     ExceptIfSentToMemberOf    = "Executives@$Domain"
                     SafeLinksPolicy           = "Marketing Block URL"
                     SentToMemberOf            = "LegalTeam@$Domain"
@@ -744,7 +1061,7 @@
                 {
                     DisplayName        = "Integration"
                     PrimarySMTPAddress = "Integration@$Domain"
-                    EmailAddresses     = @("IntegrationSM@$Domain")
+                    EmailAddresses     = @("IntegrationSM@$Domain", "IntegrationSM2@$Domain")
                     Alias              = "IntegrationSM"
                     Ensure             = "Present"
                     Credential         = $Credscredential
@@ -752,11 +1069,37 @@
                 EXOSharingPolicy 'ConfigureSharingPolicy'
                 {
                     Name       = "Integration Sharing Policy"
-                    Default    = $True
+                    Default    = $False # Updated Property
                     Domains    = @("Anonymous:CalendarSharingFreeBusyReviewer", "*:CalendarSharingFreeBusySimple")
                     Enabled    = $True
                     Ensure     = "Present"
                     Credential = $Credscredential
+                }
+                EXOTransportConfig 'EXOTransportConfig '
+                {
+                    IsSingleInstance                        = "Yes";
+                    AddressBookPolicyRoutingEnabled         = $True;
+                    ClearCategories                         = $True;
+                    ConvertDisclaimerWrapperToEml           = $False;
+                    DSNConversionMode                       = "PreserveDSNBody";
+                    ExternalDelayDsnEnabled                 = $True;
+                    ExternalDsnLanguageDetectionEnabled     = $True;
+                    ExternalDsnSendHtml                     = $True;
+                    ExternalPostmasterAddress               = "postmaster@contoso.com";
+                    HeaderPromotionModeSetting              = "NoCreate";
+                    InternalDelayDsnEnabled                 = $True;
+                    InternalDsnLanguageDetectionEnabled     = $True;
+                    InternalDsnSendHtml                     = $True;
+                    JournalingReportNdrTo                   = "<>";
+                    JournalMessageExpirationDays            = 0;
+                    MaxRecipientEnvelopeLimit               = "Unlimited";
+                    ReplyAllStormBlockDurationHours         = 6;
+                    ReplyAllStormDetectionMinimumRecipients = 2500;
+                    ReplyAllStormDetectionMinimumReplies    = 10;
+                    ReplyAllStormProtectionEnabled          = $True;
+                    Rfc2231EncodingEnabled                  = $False;
+                    SmtpClientAuthenticationDisabled        = $True;
+                    Credential                              = $Credscredential
                 }
                 EXOTransportRule 'ConfigureTransportRule'
                 {
@@ -766,7 +1109,7 @@
                     ExceptIfFrom                                  = "AdeleV@$Domain"
                     ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
                     RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
-                    Enabled                                       = $True
+                    Enabled                                       = $False # Updated Property
                     Ensure                                        = "Present"
                     Credential                                    = $Credscredential
                 }

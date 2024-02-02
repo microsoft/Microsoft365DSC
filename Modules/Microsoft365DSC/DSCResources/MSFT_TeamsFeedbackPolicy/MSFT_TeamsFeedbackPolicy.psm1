@@ -52,7 +52,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -94,6 +98,7 @@ function Get-TargetResource
             ApplicationId             = $ApplicationId
             TenantId                  = $TenantId
             CertificateThumbprint     = $CertificateThumbprint
+            ManagedIdentity           = $ManagedIdentity.IsPresent
         }
         return [System.Collections.Hashtable] $results
     }
@@ -162,7 +167,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -290,7 +299,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -415,7 +428,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
-
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
 
             $Results = Get-TargetResource @Params

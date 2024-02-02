@@ -2748,7 +2748,7 @@ function Update-M365DSCDependencies
         $Global:MaximumFunctionCount = 32767
 
         $InformationPreference = 'Continue'
-        $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
+        $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '../' -Resolve
         $manifest = Import-PowerShellDataFile "$currentPath/Dependencies/Manifest.psd1"
         $dependencies = $manifest.Dependencies
         $i = 1
@@ -2767,11 +2767,20 @@ function Update-M365DSCDependencies
 
                 if ((-not $found -or $Force) -and -not $ValidateOnly)
                 {
-                    if ((-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq "AllUsers"))
+                    $errorFound = $false
+                    try
                     {
-                        Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+                        if ((-not(([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))) -and ($Scope -eq "AllUsers"))
+                        {
+                            Write-Error 'Cannot update the dependencies for Microsoft365DSC. You need to run this command as a local administrator.'
+                            $errorFound = $true
+                        }
                     }
-                    else
+                    catch
+                    {
+                        Write-Verbose -Message "Couldn't retrieve Windows Principal. One possible cause is that the current environment is not Windows OS."
+                    }
+                    if (-not $errorFound)
                     {
                         Write-Information -MessageData "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
                         Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue

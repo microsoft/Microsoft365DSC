@@ -695,6 +695,14 @@
                     Credential                                                = $Credscredential
                     Ensure                                                    = 'Present'
                 }
+                AADSecurityDefaults 'Defaults'
+                {
+                    Credential           = $Credscredential;
+                    Description          = "Security defaults is a set of basic identity security mechanisms recommended by Microsoft. When enabled, these recommendations will be automatically enforced in your organization. Administrators and users will be better protected from common identity related attacks.";
+                    DisplayName          = "Security Defaults";
+                    IsEnabled            = $False;
+                    IsSingleInstance     = "Yes";
+                }
                 AADServicePrincipal 'AADServicePrincipal'
                 {
                     AppId                         = 'AppDisplayName'

@@ -55,12 +55,13 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXODkimSigningConfig 'ConfigureDKIMSigning'
         {
             KeySize                = 1024
-            Identity               = 'contoso.onmicrosoft.com'
+            Identity               = $Domain
             HeaderCanonicalization = "Relaxed"
             Enabled                = $True
             BodyCanonicalization   = "Relaxed"
@@ -87,12 +88,13 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXODkimSigningConfig 'ConfigureDKIMSigning'
         {
             KeySize                = 1024
-            Identity               = 'contoso.onmicrosoft.com'
+            Identity               = $Domain
             HeaderCanonicalization = "Relaxed"
             Enabled                = $False # Updated Property
             BodyCanonicalization   = "Relaxed"
@@ -119,11 +121,12 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXODkimSigningConfig 'ConfigureDKIMSigning'
         {
-            Identity               = 'contoso.onmicrosoft.com'
+            Identity               = $Domain
             Ensure                 = "Absent"
             Credential             = $Credscredential
         }

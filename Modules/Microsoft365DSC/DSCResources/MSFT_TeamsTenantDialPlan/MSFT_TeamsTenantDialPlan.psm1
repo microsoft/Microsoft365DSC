@@ -50,7 +50,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Getting configuration of Teams Tenant Dial Plan'
@@ -101,6 +105,7 @@ function Get-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
         }
         return $result
@@ -168,7 +173,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message 'Setting configuration of Teams Guest Calling'
@@ -207,11 +216,12 @@ function Set-TargetResource
         }
 
         $NewParameters = $PSBoundParameters
-        $NewParameters.Remove('Credential')
-        $NewParameters.Remove('ApplicationId')
-        $NewParameters.Remove('TenantId')
-        $NewParameters.Remove('CertificateThumbprint')
-        $NewParameters.Remove('Ensure')
+        $NewParameters.Remove('Credential') | Out-Null
+        $NewParameters.Remove('ApplicationId') | Out-Null
+        $NewParameters.Remove('TenantId') | Out-Null
+        $NewParameters.Remove('CertificateThumbprint') | Out-Null
+        $NewParameters.Remove('Ensure') | Out-Null
+        $NewParameters.Remove('ManagedIdentity') | Out-Null
         $NewParameters.NormalizationRules = @{Add = $AllRules }
 
         New-CsTenantDialPlan @NewParameters
@@ -220,9 +230,10 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Tenant Dial Plan {$Identity} already exists. Updating it."
         $SetParameters = $PSBoundParameters
-        $SetParameters.Remove('Credential')
-        $SetParameters.Remove('Ensure')
-        $SetParameters.Remove('SimpleName')
+        $SetParameters.Remove('Credential') | Out-Null
+        $SetParameters.Remove('Ensure') | Out-Null
+        $SetParameters.Remove('SimpleName') | Out-Null
+        $SetParameters.Remove('ManagedIdentity') | Out-Null
 
         $desiredRules = @()
         foreach ($rule in $NormalizationRules)
@@ -352,7 +363,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -435,7 +450,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -468,6 +487,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             $results = Get-TargetResource @params
             $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

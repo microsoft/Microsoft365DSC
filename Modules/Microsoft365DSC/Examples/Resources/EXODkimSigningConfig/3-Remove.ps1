@@ -12,11 +12,12 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXODkimSigningConfig 'ConfigureDKIMSigning'
         {
-            Identity               = 'contoso.onmicrosoft.com'
+            Identity               = $Domain
             Ensure                 = "Absent"
             Credential             = $Credscredential
         }

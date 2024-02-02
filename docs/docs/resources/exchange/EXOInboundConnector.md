@@ -70,16 +70,15 @@ Configuration Example
     {
         EXOInboundConnector 'ConfigureInboundConnector'
         {
-            Identity                     = "Contoso Inbound Connector"
-            CloudServicesMailEnabled     = $True
-            Comment                      = "Inbound connector for Contoso"
+            Identity                     = "Integration Inbound Connector"
+            CloudServicesMailEnabled     = $False
+            Comment                      = "Inbound connector for Integration"
             ConnectorSource              = "Default"
-            ConnectorType                = "OnPremises"
+            ConnectorType                = "Partner"
             Enabled                      = $True
             RequireTls                   = $True
             SenderDomains                = "*.contoso.com"
             TlsSenderCertificateName     = "contoso.com"
-            TreatMessagesAsInternal      = $True
             Ensure                       = "Present"
             Credential                   = $Credscredential
         }
@@ -107,16 +106,15 @@ Configuration Example
     {
         EXOInboundConnector 'ConfigureInboundConnector'
         {
-            Identity                     = "Contoso Inbound Connector"
-            CloudServicesMailEnabled     = $True
-            Comment                      = "Inbound connector for Contoso"
+            Identity                     = "Integration Inbound Connector"
+            CloudServicesMailEnabled     = $False
+            Comment                      = "Inbound connector for Integration"
             ConnectorSource              = "Default"
-            ConnectorType                = "OnPremises"
+            ConnectorType                = "Partner"
             Enabled                      = $False # Updated Property
             RequireTls                   = $True
             SenderDomains                = "*.contoso.com"
             TlsSenderCertificateName     = "contoso.com"
-            TreatMessagesAsInternal      = $True
             Ensure                       = "Present"
             Credential                   = $Credscredential
         }
@@ -144,7 +142,7 @@ Configuration Example
     {
         EXOInboundConnector 'ConfigureInboundConnector'
         {
-            Identity                     = "Contoso Inbound Connector"
+            Identity                     = "Integration Inbound Connector"
             Ensure                       = "Absent"
             Credential                   = $Credscredential
         }

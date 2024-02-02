@@ -18,7 +18,7 @@ Configuration Example
         EXOIntraOrganizationConnector 'ConfigureIntraOrganizationConnector'
         {
             Identity             = "MainCloudConnector"
-            DiscoveryEndpoint    = "https://ExternalDiscovery.Contoso.com"
+            DiscoveryEndpoint    = "https://ExternalDiscovery.Contoso.com/"
             TargetAddressDomains = "Cloud1.contoso.com","Cloud2.contoso.com"
             Enabled              = $False # Updated Property
             Ensure               = "Present"

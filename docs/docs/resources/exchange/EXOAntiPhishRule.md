@@ -66,13 +66,7 @@ Configuration Example
         EXOAntiPhishRule 'ConfigureAntiPhishRule'
         {
             Identity                  = "Test Rule"
-            ExceptIfSentToMemberOf    = $null
-            ExceptIfSentTo            = $null
-            SentTo                    = $null
-            ExceptIfRecipientDomainIs = $null
-            Comments                  = $null
             AntiPhishPolicy           = "Our Rule"
-            RecipientDomainIs         = $null
             Enabled                   = $True
             SentToMemberOf            = @("executives@$Domain")
             Ensure                    = "Present"
@@ -103,13 +97,8 @@ Configuration Example
         EXOAntiPhishRule 'ConfigureAntiPhishRule'
         {
             Identity                  = "Test Rule"
-            ExceptIfSentToMemberOf    = $null
-            ExceptIfSentTo            = $null
-            SentTo                    = $null
-            ExceptIfRecipientDomainIs = $null
             Comments                  = "This is an updated comment." # Updated Property
             AntiPhishPolicy           = "Our Rule"
-            RecipientDomainIs         = $null
             Enabled                   = $True
             SentToMemberOf            = @("executives@$Domain")
             Ensure                    = "Present"
