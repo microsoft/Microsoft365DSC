@@ -21,7 +21,7 @@ Configuration Example
             Credential           = $credsCredential;
             DetailLevel          = "AvailabilityOnly";
             Ensure               = "Present";
-            Identity             = "AdeleV@$Domain:\Calendar";
+            Identity             = "AdeleV@$Domain" + ":\Calendar";
             PublishDateRangeFrom = "ThreeMonths";
             PublishDateRangeTo   = "ThreeMonths";
             PublishEnabled       = $True; # Updated Property
