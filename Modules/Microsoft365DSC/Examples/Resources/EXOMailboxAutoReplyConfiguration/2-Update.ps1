@@ -27,7 +27,7 @@ Configuration Example
             EndTime                          = "1/23/2024 3:00:00 PM";
             Ensure                           = "Present";
             ExternalAudience                 = "All";
-            ExternalMessage                  = "";
+            ExternalMessage                  = (New-Guid).ToString(); # Updated Property
             Identity                         = "AdeleV@$Domain";
             InternalMessage                  = "";
             OOFEventSubject                  = "";
