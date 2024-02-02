@@ -5,7 +5,7 @@
 * TeamsMeetingPolicy
   * Fixed issue with missing ManagedIdentity parameter in Test signature.
 * TeamsUpdateManagementPolicy
-        * Fixed issue with missing ManagedIdentity parameter in Test signature.
+  * Fixed issue with missing ManagedIdentity parameter in Set signature.
 
 # 1.24.131.1
 

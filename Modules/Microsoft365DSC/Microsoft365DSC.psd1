@@ -164,7 +164,7 @@
     * TeamsMeetingPolicy
         * Fixed issue with missing ManagedIdentity parameter in Test signature.
     * TeamsUpdateManagementPolicy
-      * Fixed issue with missing ManagedIdentity parameter in Test signature.
+      * Fixed issue with missing ManagedIdentity parameter in Set signature.
     * TEAMS
       * Added support for ManagedIdentity Authentication across Teams resources.
     * DEPENDENCIES
