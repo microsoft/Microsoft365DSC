@@ -1309,6 +1309,10 @@ function Update-DeviceConfigurationPolicyAssignment
         foreach ($target in $targets)
         {
             $formattedTarget = @{"@odata.type" = $target.dataType}
+            if(-not $formattedTarget."@odata.type" -and $target."@odata.type")
+            {
+                $formattedTarget."@odata.type" = $target."@odata.type"
+            }
             if ($target.groupId)
             {
                 $formattedTarget.Add('groupId',$target.groupId)

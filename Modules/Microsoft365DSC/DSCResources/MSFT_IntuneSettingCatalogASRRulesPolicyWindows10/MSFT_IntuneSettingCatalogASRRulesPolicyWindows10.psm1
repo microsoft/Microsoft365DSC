@@ -188,7 +188,12 @@ function Get-TargetResource
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$Identity} was found"
-            $policy = Get-MgBetaDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" }  -ErrorAction silentlyContinue
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" }
+
+            if ($policy.Count -gt 1)
+            {
+                throw "Multiple Endpoint Protection Attack Surface Protection rules Policies with DisplayName '{$DisplayName}' were found!"
+            }
         }
 
         if ($null -eq $policy)
@@ -239,18 +244,14 @@ function Get-TargetResource
             }
         }
 
-        $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $returnAssignments)
+        $returnAssignments = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
+        if ($returnAssignments.Count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult = ConvertFrom-IntunePolicyAssignment -Assignments $returnAssignments
+        }
+        else
+        {
+            $assignmentResult = @()
         }
         $returnHashtable.Add('Assignments', $assignmentResult)
 
@@ -490,8 +491,9 @@ function Set-TargetResource
         }
         if ($policy.id)
         {
+            $intuneAssignments = [Hashtable[]] (ConvertTo-IntunePolicyAssignment -Assignments $assignmentsHash)
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
-                -Targets $assignmentsHash
+                -Targets ([Array]($intuneAssignments.target))
         }
         #endregion
     }
@@ -509,7 +511,7 @@ function Set-TargetResource
         #write-verbose -message ($settings|convertto-json -Depth 20)
 
         Update-IntuneDeviceConfigurationPolicy `
-            -DeviceConfigurationPolicyId $Identity `
+            -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Name $DisplayName `
             -Description $Description `
             -TemplateReferenceId $templateReferenceId `
@@ -523,8 +525,9 @@ function Set-TargetResource
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $Identity `
-            -Targets $assignmentsHash
+        $intuneAssignments = [Hashtable[]] (ConvertTo-IntunePolicyAssignment -Assignments $assignmentsHash)
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentPolicy.Identity `
+            -Targets ([Array]($intuneAssignments.target))
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
@@ -746,6 +749,19 @@ function Test-TargetResource
                 if (-not $source)
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
+                    $testResult = $false
+                    break
+                }
+                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+            }
+            #GroupDisplayName Assignment
+            if (-not [String]::IsNullOrEmpty($assignment.groupDisplayName))
+            {
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupDisplayName -eq $assignment.groupDisplayName }
+                if (-not $source)
+                {
+                    Write-Verbose -Message "Configuration drift: groupDisplayName {$($assignment.groupDisplayName)} not found"
                     $testResult = $false
                     break
                 }

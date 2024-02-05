@@ -13,17 +13,18 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOTransportRule 'ConfigureTransportRule'
         {
-            Name                                          = "Ethical Wall - Sales and Brokerage Departments"
-            BetweenMemberOf1                              = "Sales Department"
-            BetweenMemberOf2                              = "Brokerage Department"
-            ExceptIfFrom                                  = "Tony Smith","Pilar Ackerman"
+            Name                                          = "Ethical Wall - Sales and Executives Departments"
+            BetweenMemberOf1                              = "SalesTeam@$Domain"
+            BetweenMemberOf2                              = "Executives@$Domain"
+            ExceptIfFrom                                  = "AdeleV@$Domain"
             ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
-            RejectMessageReasonText                       = "Updated" # Updated Property
-            Enabled                                       = $True
+            RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
+            Enabled                                       = $False # Updated Property
             Ensure                                        = "Present"
             Credential                                    = $Credscredential
         }

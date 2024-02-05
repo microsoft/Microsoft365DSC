@@ -48,11 +48,12 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
         {
-            UserName                 = "AdeleV"
+            UserName                 = "AdeleV@$Domain"
             AuthenticationPolicyName = "Block Basic Auth"
             Ensure                   = "Present"
             Credential               = $Credscredential
@@ -79,7 +80,7 @@ Configuration Example
     {
         EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
         {
-            UserName                 = "AdeleV"
+            UserName                 = "AdeleV@$Domain"
             AuthenticationPolicyName = "Test Policy" # Updaqted Property
             Ensure                   = "Present"
             Credential               = $Credscredential
@@ -101,11 +102,12 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
         {
-            UserName                 = "AdeleV"
+            UserName                 = "AdeleV@$Domain"
             AuthenticationPolicyName = "Test Policy"
             Ensure                   = "Absent"
             Credential               = $Credscredential

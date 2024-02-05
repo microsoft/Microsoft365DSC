@@ -7,6 +7,44 @@
     * Fix nested change detection for CIMInstances
     * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
 
+# 1.24.131.2
+
+* TeamsMeetingPolicy
+  * Fixed issue with missing ManagedIdentity parameter in Test signature.
+* TeamsUpdateManagementPolicy
+  * Fixed issue with missing ManagedIdentity parameter in Set signature.
+
+# 1.24.131.1
+
+* EXOAvailabilityAddressSpace
+  * Added support for the TargetServiceEpr and TargetTenantId parameters.
+  * Fixed the logic to retrieve existing instance by Forest Name.
+* EXODistributionGroup
+  * The Get function now retrieves the ModeratedBy and ManagedBy properties
+    by the users' UPN instead of their GUID.
+* EXOHostedContentFilterRule
+  * Changed logic to retrieve the Rules by name. Using the Policy's name instead.
+* EXOIntraOrganizationConnector
+  * Fixes the DiscoveryEndpoint value from the Get method to include trailing
+    forward slash.
+* EXOMalwareFilterRule
+  * Fixed an issue retrieving the right value for the Enabled property
+* EXOOMEConfiguration
+  * Fixes an error in the Get method where the ExternalMailExpiryInDays property
+    wasn't properly returned.
+* EXOSafeLinksPolicy
+  * Deprecated the UseTranslatedNotificationText property
+* TeamsEmergencyCallRoutingPolicy
+  * Fix deletion of resource
+    FIXES [#4261](https://github.com/microsoft/Microsoft365DSC/issues/4261)
+* TEAMS
+  * Added support for ManagedIdentity Authentication across Teams resources.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant dependencies to version 1.1.10.
+* MISC
+  * Change the way to Export encoding is done so that it no longer relies
+    on the Get-DSCResource function.
+
 # 1.24.124.1
 
 * AADAuthenticationMethodPolicyAuthenticator
@@ -272,6 +310,10 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fix condition in Test-TargetResource to check if resource was removed or not
     FIXES [#3958](https://github.com/microsoft/Microsoft365DSC/issues/3958)
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Fixed Schema Validation
+  * Fixed Import with unknown ID of Policy and Assignments by using DisplayName
+  FIXES [#3961](https://github.com/microsoft/Microsoft365DSC/issues/3961)
 * IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
   * Fix typo in assignment cmdlet
     FIXES [#3996](https://github.com/microsoft/Microsoft365DSC/issues/3996)

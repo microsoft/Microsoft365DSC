@@ -17,9 +17,10 @@ Configuration Example
     {
         EXOSharedMailbox 'SharedMailbox'
         {
-            DisplayName        = "Test"
-            PrimarySMTPAddress = "Test@$Domain"
-            EmailAddresses     = @("AdeleV@$Domain", "AlexW@$Domain") # Updated Property
+            DisplayName        = "Integration"
+            PrimarySMTPAddress = "Integration@$Domain"
+            EmailAddresses     = @("IntegrationSM@$Domain", "IntegrationSM2@$Domain")
+            Alias              = "IntegrationSM"
             Ensure             = "Absent"
             Credential         = $Credscredential
         }
