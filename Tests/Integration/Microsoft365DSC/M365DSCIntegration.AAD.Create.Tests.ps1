@@ -32,6 +32,7 @@
                 {
                     DisplayName               = "AppDisplayName"
                     AvailableToOtherTenants   = $false
+                    Description                   = 'Test Description'
                     GroupMembershipClaims     = "None"
                     Homepage                  = "https://$Domain"
                     IdentifierUris            = "https://$Domain"
