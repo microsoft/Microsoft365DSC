@@ -20,12 +20,12 @@ Configuration Example
         EXOPlace 'TestPlace'
         {
             AudioDeviceName        = "MyAudioDevice";
-            Capacity               = 15; #Drift
+            Capacity               = 15;
             City                   = "";
             Credential             = $Credscredential
             DisplayDeviceName      = "DisplayDeviceName";
             Ensure                 = 'Present'
-            Identity               = "MyRoom@$Domain";
+            Identity               = "Hood@$Domain";
             IsWheelChairAccessible = $True;
             MTREnabled             = $False;
             ParentType             = "None";

@@ -105,9 +105,8 @@ function Get-TargetResource
 
     try
     {
-        $MessageClassifications = Get-MessageClassification -ErrorAction Stop
+        $MessageClassification = Get-MessageClassification -Identity $Identity -ErrorAction Stop
 
-        $MessageClassification = $MessageClassifications | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $MessageClassification)
         {
             Write-Verbose -Message "Message Classification policy $($Identity) does not exist."

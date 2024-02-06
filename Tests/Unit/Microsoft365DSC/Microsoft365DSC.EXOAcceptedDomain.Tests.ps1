@@ -51,12 +51,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity   = 'contoso.com'
                 }
                 Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return @{
-                        DomainType      = 'Authoritative'
-                        Identity        = 'different.contoso.com'
-                        MatchSubDomains = $false
-                        OutboundOnly    = $false
-                    }
+                    return $null
                 }
                 Mock -CommandName Set-AcceptedDomain -MockWith {
                     return @{
@@ -93,12 +88,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-AcceptedDomain -MockWith {
-                    return @{
-                        DomainType      = 'Authoritative'
-                        Identity        = 'different.tailspin.com'
-                        MatchSubDomains = $false
-                        OutboundOnly    = $false
-                    }
+                    return $null
                 }
             }
 

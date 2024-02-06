@@ -13,6 +13,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSafeAttachmentRule 'ConfigureSafeAttachmentRule'
@@ -20,9 +21,9 @@ Configuration Example
             Identity                  = "Research Department Attachment Rule"
             Comments                  = "Applies to Research Department, except managers"
             Enabled                   = $True
-            ExceptIfSentToMemberOf    = "Research Department Managers"
+            ExceptIfSentToMemberOf    = "Executives@$Domain"
             SafeAttachmentPolicy      = "Marketing Block Attachments"
-            SentToMemberOf            = "Research Department"
+            SentToMemberOf            = "LegalTeam@$Domain"
             Ensure                    = "Present"
             Credential                = $Credscredential
         }

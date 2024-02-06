@@ -13,6 +13,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSafeLinksRule 'ConfigureSafeLinksRule'
@@ -20,9 +21,9 @@ Configuration Example
             Identity                  = "Research Department URL Rule"
             Comments                  = "Applies to Research Department, except managers"
             Enabled                   = $False # Updated Property
-            ExceptIfSentToMemberOf    = "Research Department Managers"
+            ExceptIfSentToMemberOf    = "Executives@$Domain"
             SafeLinksPolicy           = "Marketing Block URL"
-            SentToMemberOf            = "Research Department"
+            SentToMemberOf            = "LegalTeam@$Domain"
             Ensure                    = "Present"
             Credential                = $Credscredential
         }

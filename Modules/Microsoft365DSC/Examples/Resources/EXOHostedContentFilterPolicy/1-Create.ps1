@@ -22,12 +22,8 @@ Configuration Example
             BulkSpamAction                       = "MoveToJmf"
             BulkThreshold                        = 7
             DownloadLink                         = $False
-            EnableEndUserSpamNotifications       = $False
             EnableLanguageBlockList              = $False
             EnableRegionBlockList                = $False
-            EndUserSpamNotificationCustomSubject = ""
-            EndUserSpamNotificationFrequency     = 3
-            EndUserSpamNotificationLanguage      = "Default"
             HighConfidencePhishAction            = "Quarantine"
             HighConfidenceSpamAction             = "MoveToJmf"
             IncreaseScoreWithBizOrInfoUrls       = "Off"
@@ -36,7 +32,7 @@ Configuration Example
             IncreaseScoreWithRedirectToOtherPort = "Off"
             InlineSafetyTipsEnabled              = $True
             LanguageBlockList                    = @()
-            MakeDefault                          = $True
+            MakeDefault                          = $False
             MarkAsSpamBulkMail                   = "On"
             MarkAsSpamEmbedTagsInHtml            = "Off"
             MarkAsSpamEmptyMessages              = "Off"
