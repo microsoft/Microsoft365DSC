@@ -432,8 +432,6 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Enrollment Platform Restriction {$DisplayName}"
-        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
-        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
 
         Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $currentCategory.Identity
     }
