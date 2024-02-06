@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Added Priority parameter
+    FIXES [#4081](https://github.com/microsoft/Microsoft365DSC/issues/4081)
+
 # 1.24.131.2
 
 * TeamsMeetingPolicy
