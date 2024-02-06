@@ -6,6 +6,7 @@
   * M365DSCReport
     * Fix nested change detection for CIMInstances
     * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
+      FIXES [#4291](https://github.com/microsoft/Microsoft365DSC/issues/4291)
 
 # 1.24.131.2
 

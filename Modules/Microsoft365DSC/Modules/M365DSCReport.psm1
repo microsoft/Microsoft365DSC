@@ -726,10 +726,11 @@ function Compare-M365DSCConfigurations
 
                                 if ($null -ne $destinationResourceInstances)
                                 {
-                                    # There is a chance we found 2 instances of a CIMInstance based on its key property.
+                                    # There is a chance we found multiple instances of a CIMInstance based on its key property.
                                     # If that's the case, loop through each instance found and if at least one of them is
                                     # a perfect match, then don't consider this a drift.
                                     $foundOneMatch = $false
+                                    $foundMatchResource = $null
                                     $drift = $null
                                     foreach ($destinationResourceInstance in $destinationResourceInstances)
                                     {
@@ -753,6 +754,7 @@ function Compare-M365DSCConfigurations
                                         if ($foundResourceMatch)
                                         {
                                             $foundOneMatch = $true
+                                            $foundMatchResource = $destinationResourceInstance
                                         }
                                         else
                                         {
@@ -769,6 +771,7 @@ function Compare-M365DSCConfigurations
                                     {
                                         # If a match was found, clear the drift.
                                         $drift = $null
+                                        $destinationResource.$destinationPropertyName = $destinationResource.$destinationPropertyName | Where-Object { $_ -ne $foundMatchResource }
                                     }
                                     else
                                     {
