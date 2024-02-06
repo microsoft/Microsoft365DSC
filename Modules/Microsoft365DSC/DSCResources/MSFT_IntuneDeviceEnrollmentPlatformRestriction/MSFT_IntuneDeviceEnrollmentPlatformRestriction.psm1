@@ -347,7 +347,7 @@ function Set-TargetResource
                 $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
 
                 Update-DeviceConfigurationPolicyAssignment `
-                    -DeviceConfigurationPolicyId $policy.id `
+                    -DeviceConfigurationPolicyId $policy.Id `
                     -Targets $assignmentsHash `
                     -Repository 'deviceManagement/deviceEnrollmentConfigurations'
             }
@@ -355,7 +355,7 @@ function Set-TargetResource
 
         if ($Priority)
         {
-            $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $currentCategory.Identity
+            $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $policy.Id
             $Body = @{
                 priority = $Priority
             }
