@@ -22,7 +22,7 @@ function Get-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet('All', 'PerUser')]
+        [ValidateSet('All', 'PerUser','None')]
         [System.String]
         $BlockAccessScope,
 
@@ -271,6 +271,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $DocumentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SetHeader,
 
         [Parameter()]
         [System.Boolean]
@@ -445,6 +449,7 @@ function Get-TargetResource
                 SentToMemberOf                               = $PolicyRule.FromAddressMatchesPatterns
                 DocumentContainsWords                        = $PolicyRule.DocumentContainsWords
                 ContentIsNotLabeled                          = $PolicyRule.ContentIsNotLabeled
+                SetHeader                                    = $PolicyRule.SetHeader
                 AnyOfRecipientAddressContainsWords           = $AnyOfRecipientAddressContainsWords
                 AnyOfRecipientAddressMatchesPatterns         = $AnyOfRecipientAddressMatchesPatterns
                 ContentExtensionMatchesWords                 = $ContentExtensionMatchesWords
@@ -510,7 +515,7 @@ function Set-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet('All', 'PerUser')]
+        [ValidateSet('All', 'PerUser','None')]
         [System.String]
         $BlockAccessScope,
 
@@ -759,6 +764,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $DocumentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SetHeader,
 
         [Parameter()]
         [System.Boolean]
@@ -955,7 +964,7 @@ function Test-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet('All', 'PerUser')]
+        [ValidateSet('All', 'PerUser','None')]
         [System.String]
         $BlockAccessScope,
 
@@ -1204,6 +1213,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $DocumentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SetHeader,
 
         [Parameter()]
         [System.Boolean]
