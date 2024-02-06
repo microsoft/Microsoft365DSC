@@ -77,7 +77,7 @@
 | **DocumentContainsWords** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for words in message attachments. Only supported attachment types are checked.| |
 | **SentToMemberOf** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for messages sent to members of distribution groups, dynamic distribution groups, or mail-enabled security groups.| |
 | **ContentIsNotLabeled** | Write | Boolean | The  parameter specifies if the content is labeled. A True or False condition. | |
-| **SetHeader** | Write | StringArray[] | The SetHeader parameter specifies an action for the DLP rule that adds or modifies a header field and value in the message header. You can specify multiple header name and value pairs separated by commas"| |
+| **SetHeader** | Write | StringArray[] | The SetHeader parameter specifies an action for the DLP rule that adds or modifies a header field and value in the message header. You can specify multiple header name and value pairs separated by commas| |
 ### MSFT_SCDLPSensitiveInformation
 
 #### Parameters
