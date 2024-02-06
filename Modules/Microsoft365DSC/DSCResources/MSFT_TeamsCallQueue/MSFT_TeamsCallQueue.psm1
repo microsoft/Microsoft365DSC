@@ -910,7 +910,12 @@ function Export-TargetResource
     {
         $i = 1
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-CsCallQueue -ErrorAction Stop
+        $Script:MaxSize = 1000
+        [array] $Script:exportedInstances = Get-CsCallQueue -ErrorAction Stop -First $Script:MaxSize
+        if ($Script:exportedInstances.Count -eq $Script:MaxSize){
+            Write-Verbose -Message "WARNING: CsCallQueue isn't exporting all of them, you reach the max size."
+        }
+
         $dscContent = [System.Text.StringBuilder]::New()
         Write-Host "`r`n" -NoNewline
         foreach ($instance in $exportedInstances)

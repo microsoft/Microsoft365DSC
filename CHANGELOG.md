@@ -94,6 +94,9 @@
 * TeamsCallParkPolicy
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4210](https://github.com/microsoft/Microsoft365DSC/issues/4210)
+* TeamsCallQueue
+  * Optimize performances by doing 1 request instead of n+1
+  FIXES [[#4192](https://github.com/microsoft/Microsoft365DSC/issues/4192)]
 * TeamsComplianceRecordingPolicy
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4212](https://github.com/microsoft/Microsoft365DSC/issues/4212)
