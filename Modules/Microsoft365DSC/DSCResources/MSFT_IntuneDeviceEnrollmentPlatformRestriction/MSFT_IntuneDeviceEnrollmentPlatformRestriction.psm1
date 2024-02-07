@@ -291,6 +291,12 @@ function Set-TargetResource
     $currentCategory = Get-TargetResource @PSBoundParameters
     $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $PSBoundParameters.Remove('Identity') | Out-Null
+    $PriorityPresent = $false
+    if ($PSBoundParameters.Keys.Contains('Priority'))
+    {
+        $PriorityPresent = $true
+        $PSBoundParameters.Remove('Priority') | Out-Null
+    }
 
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
@@ -351,15 +357,15 @@ function Set-TargetResource
                     -Targets $assignmentsHash `
                     -Repository 'deviceManagement/deviceEnrollmentConfigurations'
             }
-        }
 
-        if ($Priority)
-        {
-            $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $policy.Id
-            $Body = @{
-                priority = $Priority
+            if ($PriorityPresent -and $Priority -ne $policy.Priority)
+            {
+                $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $policy.Id
+                $Body = @{
+                    priority = $Priority
+                }
+                Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $Body
             }
-            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $Body
         }
     }
     elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
@@ -420,7 +426,7 @@ function Set-TargetResource
             }
         }
 
-        if ($Priority)
+        if ($PriorityPresent -and $Priority -ne $currentCategory.Priority)
         {
             $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $currentCategory.Identity
             $Body = @{
