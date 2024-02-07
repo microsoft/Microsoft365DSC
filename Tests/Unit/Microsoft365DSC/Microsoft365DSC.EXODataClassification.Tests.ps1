@@ -31,9 +31,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-DataClassification -MockWith {
-            }
-
             Mock -CommandName Set-DataClassification -MockWith {
             }
 
@@ -57,10 +54,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-DataClassification -MockWith {
                     return $null
-                }
-
-                Mock -CommandName New-DataClassification -MockWith {
-
                 }
             }
 
