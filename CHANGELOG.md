@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Added Priority parameter
+    FIXES [#4081](https://github.com/microsoft/Microsoft365DSC/issues/4081)
 * TeamsMeetingPolicy
   * Ignore the AllowUserToJoinExternalMeeting  parameterfor drift evaluation
     since it doesn't do anything based on official documentation.
