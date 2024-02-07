@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* SCDLPComplianceRule
+  * Properly escapes fancy quotes in the Get method.
 * TeamsMeetingPolicy
   * Ignore the AllowUserToJoinExternalMeeting  parameterfor drift evaluation
     since it doesn't do anything based on official documentation.
