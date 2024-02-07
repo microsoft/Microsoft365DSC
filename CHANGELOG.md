@@ -1,15 +1,18 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.180.
+  * Updated MSCloudLoginAssistant to version 1.1.11
+  * Updated ReverseDSC to version 2.0.0.19
+
 # 1.24.131.2
 
 * TeamsMeetingPolicy
   * Fixed issue with missing ManagedIdentity parameter in Test signature.
 * TeamsUpdateManagementPolicy
   * Fixed issue with missing ManagedIdentity parameter in Set signature.
-* DEPENDENCIES
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.180.
-  * Updated MSCloudLoginAssistant to version 1.1.11
-  * Updated ReverseDSC to version 2.0.0.19
 
 # 1.24.131.1
 
