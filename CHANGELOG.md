@@ -7,6 +7,7 @@
 * TeamsUpdateManagementPolicy
   * Fixed issue with missing ManagedIdentity parameter in Set signature.
 * DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.180.
   * Updated MSCloudLoginAssistant to version 1.1.11
 
 # 1.24.131.1
