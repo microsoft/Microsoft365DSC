@@ -424,15 +424,15 @@ function Set-TargetResource
                     -Targets $assignmentsHash `
                     -Repository 'deviceManagement/deviceEnrollmentConfigurations'
             }
-        }
 
-        if ($PriorityPresent -and $Priority -ne $currentCategory.Priority)
-        {
-            $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $currentCategory.Identity
-            $Body = @{
-                priority = $Priority
+            if ($PriorityPresent -and $Priority -ne $currentCategory.Priority)
+            {
+                $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $currentCategory.Identity
+                $Body = @{
+                    priority = $Priority
+                }
+                Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $Body
             }
-            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $Body
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
