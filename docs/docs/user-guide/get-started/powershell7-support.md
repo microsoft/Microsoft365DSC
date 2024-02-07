@@ -25,7 +25,7 @@ To solve this, make sure the Microsoft365DSC is properly installed under C:\Prog
 
 **Issues loading the PnP.PowerShell Module**
 
-The PnP.PowerShell module, which is currently being used by the SharePoint Online and OndeDrive for Business workloads needs to be loaded using Windows PowerShell. In PowerShell 7+, this is done by running the **Import-Module** cmdlet using the **-UseWindowsPowerShell** switch, and requires the modules to be located under C:\Program Files\WindowsPowerShell. In order for Microsoft365DSC to work for SharePoint Online and OneDrive for Business with PowerShell 7, you need to make sure that the PnP.PowerShell module is located under C:\Program Files\WindowsPowerShell\Modules\PnP.PowerShell. This can be achieve =d by either manually moving the module to that location, or by using PowerShell 5.1 to install it using the following line:
+The PnP.PowerShell module, which is currently being used by the SharePoint Online and OndeDrive for Business workloads needs to be loaded using Windows PowerShell. In PowerShell 7+, this is done by running the **Import-Module** cmdlet using the **-UseWindowsPowerShell** switch, and requires the modules to be located under C:\Program Files\WindowsPowerShell. In order for Microsoft365DSC to work for SharePoint Online and OneDrive for Business with PowerShell 7, you need to make sure that the PnP.PowerShell module is located under C:\Program Files\WindowsPowerShell\Modules\PnP.PowerShell. This can be achieved by either manually moving the module to that location, or by using PowerShell 5.1 to install it using the following line:
 
 ```
 Install-Module PnP.PowerShell -Force -Scope AllUsers

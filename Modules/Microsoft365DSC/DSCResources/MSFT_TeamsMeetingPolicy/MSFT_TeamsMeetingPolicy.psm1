@@ -1118,6 +1118,9 @@ function Test-TargetResource
     # The AllowIPVideo is temporarly not working, therefore we won't check the value.
     $ValuesToCheck.Remove('AllowIPVideo') | Out-Null
 
+    # The AllowUserToJoinExternalMeeting doesn't do anything based on official documentation
+    $ValuesToCheck.Remove('AllowUserToJoinExternalMeeting') | Out-Null
+
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `

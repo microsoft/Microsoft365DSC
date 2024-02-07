@@ -1,5 +1,20 @@
 # Change log for Microsoft365DSC
 
+# 1.24.207.1
+
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Added Priority parameter
+    FIXES [#4081](https://github.com/microsoft/Microsoft365DSC/issues/4081)
+* SCDLPComplianceRule
+  * Properly escapes fancy quotes in the Get method.
+* TeamsMeetingPolicy
+  * Ignore the AllowUserToJoinExternalMeeting  parameterfor drift evaluation
+    since it doesn't do anything based on official documentation.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.180.
+  * Updated MSCloudLoginAssistant to version 1.1.11
+  * Updated ReverseDSC to version 2.0.0.19
+
 # 1.24.131.2
 
 * TeamsMeetingPolicy
@@ -27,9 +42,27 @@
     wasn't properly returned.
 * EXOSafeLinksPolicy
   * Deprecated the UseTranslatedNotificationText property
+* IntuneDeviceConfigurationPolicyAndroidOpenSourceProject,
+  IntuneExploitProtectionPolicyWindows10SettingCatalog, IntuneRoleAssignment,
+  IntuneRoleDefinition, IntuneSettingCatalogASRRulesPolicyWindows10,
+  IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator,
+  IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner,
+  IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile,
+  IntuneWifiConfigurationPolicyAndroidForWork,
+  IntuneWifiConfigurationPolicyAndroidOpenSourceProject,
+  IntuneWifiConfigurationPolicyIOS, IntuneWifiConfigurationPolicyMacOS,
+  IntuneWifiConfigurationPolicyWindows10, TeamsCallParkPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#3897](https://github.com/microsoft/Microsoft365DSC/issues/3897)
+    FIXES [#4256](https://github.com/microsoft/Microsoft365DSC/issues/4256)
+* TeamsFilesPolicy
+  * Add default value ('Present') to parameter Ensure
 * TeamsEmergencyCallRoutingPolicy
   * Fix deletion of resource
     FIXES [#4261](https://github.com/microsoft/Microsoft365DSC/issues/4261)
+* TeamsUserCallingSettings
+  * Added support for Certificate Authentication
+    FIXES [#3180](https://github.com/microsoft/Microsoft365DSC/issues/3180)
 * TEAMS
   * Added support for ManagedIdentity Authentication across Teams resources.
 * DEPENDENCIES
@@ -58,7 +91,7 @@
   * Remove the logic path to create a new instance in favor of the update flow.
 * AADConditionalAccessPolicy
   * Fix issue when not all parameters are specified
-    FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
+    FIXES [#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)
 * AADCrossTenantAccessPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADCrossTenantAccessPolicyCOnfigurationDefault
@@ -77,7 +110,7 @@
   * DEPRECATED Resource.
 * SCAutoSensitivityLabelRule
   * Correct export indentation, which caused an issue with report conversion to JSON.
-    FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
+    FIXES [#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
@@ -94,6 +127,9 @@
 * TeamsCallParkPolicy
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4210](https://github.com/microsoft/Microsoft365DSC/issues/4210)
+* TeamsCallQueue
+  * Optimize performances by doing 1 request instead of n+1
+  FIXES [[#4192](https://github.com/microsoft/Microsoft365DSC/issues/4192)]
 * TeamsComplianceRecordingPolicy
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4212](https://github.com/microsoft/Microsoft365DSC/issues/4212)
@@ -303,6 +339,10 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fix condition in Test-TargetResource to check if resource was removed or not
     FIXES [#3958](https://github.com/microsoft/Microsoft365DSC/issues/3958)
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Fixed Schema Validation
+  * Fixed Import with unknown ID of Policy and Assignments by using DisplayName
+  FIXES [#3961](https://github.com/microsoft/Microsoft365DSC/issues/3961)
 * IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10
   * Fix typo in assignment cmdlet
     FIXES [#3996](https://github.com/microsoft/Microsoft365DSC/issues/3996)
