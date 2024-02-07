@@ -6,6 +6,8 @@
   * Fixed issue with missing ManagedIdentity parameter in Test signature.
 * TeamsUpdateManagementPolicy
   * Fixed issue with missing ManagedIdentity parameter in Set signature.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.11
 
 # 1.24.131.1
 
