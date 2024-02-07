@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* TeamsMeetingPolicy
+  * Ignore the AllowUserToJoinExternalMeeting  parameterfor drift evaluation
+    since it doesn't do anything based on official documentation.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.180.
   * Updated MSCloudLoginAssistant to version 1.1.11
