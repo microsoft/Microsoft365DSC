@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.207.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
   * Added Priority parameter
