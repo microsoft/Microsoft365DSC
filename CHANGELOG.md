@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Fix removal of resource if Identity comes from another tenant or is not
+    present in blueprint
+  * Fix Test-TargetResource by not comparing Identity since it might be from
+    another tenant or not present in blueprint
+  FIXES [#4302](https://github.com/microsoft/Microsoft365DSC/issues/4302)
+
 # 1.24.207.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
