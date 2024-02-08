@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Fixed Test-TargetResource to ensure that resource reports its correct state
+    FIXES [#3959](https://github.com/microsoft/Microsoft365DSC/issues/3959)
+
 # 1.24.207.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
