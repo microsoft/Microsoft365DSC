@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Telemetry
+    * Added a new M365DSCTelemetryEventId parameter to track duplication of events.
+
 # 1.24.207.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
