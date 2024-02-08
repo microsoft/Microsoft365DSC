@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
-  * Fixed Test-TargetResource by removing Id from begin tested and also used
+  * Fixed Test-TargetResource by removing Id from being tested and also used
     correct filter while retrieving the policy otherwise it could not be found
     FIXES [#3964](https://github.com/microsoft/Microsoft365DSC/issues/3964)
 
