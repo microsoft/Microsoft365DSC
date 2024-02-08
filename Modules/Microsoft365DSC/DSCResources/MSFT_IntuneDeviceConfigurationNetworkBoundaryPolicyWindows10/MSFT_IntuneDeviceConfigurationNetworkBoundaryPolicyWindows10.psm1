@@ -92,7 +92,7 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue | Where-Object -FilterScript { `
+                    -ErrorAction SilentlyContinue | Where-Object -FilterScript {
                         $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10NetworkBoundaryConfiguration'
                 }
             }
@@ -527,8 +527,8 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
             -All `
             -ErrorAction Stop | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10NetworkBoundaryConfiguration' `
+            -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10NetworkBoundaryConfiguration'
         }
         #endregion
 
