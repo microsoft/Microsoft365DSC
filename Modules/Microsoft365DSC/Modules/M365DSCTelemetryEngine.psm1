@@ -5,7 +5,7 @@ This function gets the Application Insights key to be used for storing telemetry
 .Functionality
 Internal, Hidden
 #>
-function Get-ApplicationInsightsTelemetryClient
+function Get-M365DSCApplicationInsightsTelemetryClient
 {
     [CmdletBinding()]
     param()
@@ -53,13 +53,12 @@ function Add-M365DSCTelemetryEvent
         [System.Collections.Generic.Dictionary[[System.String], [System.Double]]]
         $Metrics
     )
-
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
             [System.EnvironmentVariableTarget]::Machine)
 
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
-        $TelemetryClient = Get-ApplicationInsightsTelemetryClient
+        $TelemetryClient = Get-M365DSCApplicationInsightsTelemetryClient
 
         try
         {
@@ -207,9 +206,9 @@ function Add-M365DSCTelemetryEvent
             {
                 Write-Verbose -Message $_
             }
-
+            $M365DSCTelemetryEventId = (New-GUID).ToString()
+            $Data.Add('M365DSCTelemetryEventId', $M365DSCTelemetryEventId)
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
-            $TelemetryClient.Flush()
         }
         catch
         {
