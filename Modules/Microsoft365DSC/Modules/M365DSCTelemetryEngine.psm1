@@ -245,7 +245,14 @@ function Add-M365DSCTelemetryEvent
         }
         catch
         {
-            Write-Error $_
+            try
+            {
+                $TelemetryClient.TrackEvent('Error', $Data, $Metrics)
+            }
+            catch
+            {
+                Write-Error $_
+            }
         }
     }
 }
@@ -368,14 +375,25 @@ function Format-M365DSCTelemetryParameters
     {
         $data.Add('Resource', $ResourceName)
         $data.Add('Method', $CommandName)
-        if (-not $Parameters.ApplicationId)
+        if ($Parameters.Credential)
         {
-            $data.Add('Principal', $Parameters.Credential.UserName)
-            $data.Add('TenantId', $Parameters.Credential.UserName.Split('@')[1])
+            try
+            {
+                $data.Add('Principal', $Parameters.Credential.UserName)
+                $data.Add('TenantId', $Parameters.Credential.UserName.Split('@')[1])
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
-        else
+        elseif ($Parameters.ApplicationId)
         {
             $data.Add('Principal', $Parameters.ApplicationId)
+            $data.Add('TenantId', $Parameters.TenantId)
+        }
+        elseif (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
             $data.Add('TenantId', $Parameters.TenantId)
         }
         $data.Add('ConnectionMode', (Get-M365DSCAuthenticationMode -Parameters $Parameters))
