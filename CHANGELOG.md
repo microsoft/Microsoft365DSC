@@ -11,6 +11,8 @@
   * Fixed tests in Test-TargetResource to ensure the resource reports its
     correct state
     FIXES [#3542](https://github.com/microsoft/Microsoft365DSC/issues/3542)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.13.1.
 
 # 1.24.207.2
 

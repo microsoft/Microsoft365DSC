@@ -117,7 +117,7 @@ Configuration Example
             EnforceSchedulingHorizon             = $True;
             Ensure                               = "Present";
             ForwardRequestsToDelegates           = $True;
-            Identity                             = "AdeleV";
+            Identity                             = "admin@$Domain";
             MaximumConflictInstances             = 0;
             MaximumDurationInMinutes             = 1440;
             MinimumDurationInMinutes             = 0;

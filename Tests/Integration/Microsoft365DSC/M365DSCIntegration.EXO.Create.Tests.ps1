@@ -654,6 +654,14 @@
                     Ensure                            = "Present"
                     Credential                        = $Credscredential
                 }
+                EXORecipientPermission 'AddSendAs'
+                {
+                    Identity     = "AlexW@$Domain"
+                    Trustee      = "admin@$Domain"
+                    AccessRights = 'SendAs'
+                    Ensure       = 'Present'
+                    Credential   = $Credscredential
+                }
                 EXORemoteDomain '583b0b70-b45d-401f-98a6-0e7fa8434946'
                 {
                     Identity                             = "Integration"
