@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.207.2
 
 * TeamsAppSetupPolicy
   * Changed the logic to retrieve arrays of Ids in the Get method.
