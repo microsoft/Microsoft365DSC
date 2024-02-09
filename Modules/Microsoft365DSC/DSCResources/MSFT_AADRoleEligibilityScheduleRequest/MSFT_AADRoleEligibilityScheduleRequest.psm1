@@ -182,16 +182,20 @@
 
                 $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
                 [Array]$request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'" | Sort-Object -Property CompletedDateTime -Descending
-`               $request = $request[0]
+`
+                if ($request.Length -gt 1)
+                {
+                    $request = $request[0]
+                }
             }
         }
         else
         {
             $ObjectGuid = [System.Guid]::empty
             if ($PrincipalType -eq 'User')
-            {            
+            {
                 Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
-                
+
                 if ([System.Guid]::TryParse($Principal,[System.Management.Automation.PSReference]$ObjectGuid))
                 {
                     $PrincipalIdValue = Get-MgUser -UserId $Principal -ErrorAction SilentlyContinue

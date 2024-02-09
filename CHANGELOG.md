@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADRoleEligibilityScheduleRequest
+  * Fixed an issue where an error was thrown if no requests were found instead
+    of simply returning the Null object.
 * IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
   * Fixed Test-TargetResource by removing Id from being tested and also used
     correct filter while retrieving the policy otherwise it could not be found
