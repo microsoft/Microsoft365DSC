@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADRoleEligibilityScheduleRequest
+  * Fixed an issue where an error was thrown if no requests were found instead
+    of simply returning the Null object.
 * IntuneSettingCatalogASRRulesPolicyWindows10
   * Fix removal of resource if Identity comes from another tenant or is not
     present in blueprint
