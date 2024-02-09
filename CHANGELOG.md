@@ -11,6 +11,8 @@
   * Fix Test-TargetResource by not comparing Identity since it might be from
     another tenant or not present in blueprint
   FIXES [#4302](https://github.com/microsoft/Microsoft365DSC/issues/4302)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.13.1.
 
 # 1.24.207.2
 

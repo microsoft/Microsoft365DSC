@@ -125,13 +125,6 @@
                     Ensure                              = "Present"
                     Credential                          = $Credscredential
                 }
-                EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
-                {
-                    UserName                 = "AdeleV@$Domain"
-                    AuthenticationPolicyName = "Test Policy" # Updaqted Property
-                    Ensure                   = "Present"
-                    Credential               = $Credscredential
-                }
                 EXOAvailabilityAddressSpace 'ConfigureAvailabilityAddressSpace'
                 {
                     Identity              = 'Contoso.com'
@@ -174,7 +167,7 @@
                     EnforceSchedulingHorizon             = $True;
                     Ensure                               = "Present";
                     ForwardRequestsToDelegates           = $True;
-                    Identity                             = "AdeleV";
+                    Identity                             = "admin@$Domain";
                     MaximumConflictInstances             = 0;
                     MaximumDurationInMinutes             = 1440;
                     MinimumDurationInMinutes             = 0;
@@ -206,10 +199,10 @@
                     ActiveSyncBlockedDeviceIDs              = @()
                     ActiveSyncDebugLogging                  = $False
                     ActiveSyncEnabled                       = $True
-                    ActiveSyncMailboxPolicy                 = 'Demo EXO Mobile Device Policy Default'
+                    ActiveSyncMailboxPolicy                 = 'Default'
                     ActiveSyncSuppressReadReceipt           = $False
                     EwsEnabled                              = $True
-                    Identity                                = 'AdeleV'
+                    Identity                                = "admin@$Domain"
                     ImapEnabled                             = $True # Updated Property
                     ImapForceICalForCalendarRetrievalOption = $False
                     ImapMessagesRetrievalMimeFormat         = 'BestBodyFormat'
@@ -220,7 +213,7 @@
                     OutlookMobileEnabled                    = $True
                     OWAEnabled                              = $True
                     OWAforDevicesEnabled                    = $True
-                    OwaMailboxPolicy                        = 'OwaMailboxPolicy-Default'
+                    OwaMailboxPolicy                        = 'OwaMailboxPolicy-Integration'
                     PopEnabled                              = $False
                     PopForceICalForCalendarRetrievalOption  = $True
                     PopMessagesRetrievalMimeFormat          = 'BestBodyFormat'
@@ -296,8 +289,8 @@
                     Name                              = "Integration Policy"
                     EnabledEmailAddressTemplates      = @("SMTP:@$Domain")
                     EnabledPrimarySMTPAddressTemplate = "@$Domain"
-                    ManagedByFilter                   = ""
-                    Priority                          = 2 # Updated Property
+                    ManagedByFilter                   = "Department -eq 'Sales'" # Updated Property
+                    Priority                          = 1
                     Ensure                            = "Present"
                     Credential                        = $Credscredential
                 }
@@ -312,7 +305,7 @@
                 }
                 EXOGroupSettings 'TestGroup'
                 {
-                    DisplayName                            = "Test Group";
+                    DisplayName                            = "All Company";
                     AccessType                             = "Public";
                     AlwaysSubscribeMembersToCalendarEvents = $False;
                     AuditLogAgeLimit                       = "90.00:00:00";
@@ -483,12 +476,12 @@
                     CreateOOFEvent                   = $False;
                     Credential                       = $Credscredential;
                     DeclineAllEventsForScheduledOOF  = $False;
-                    DeclineEventsForScheduledOOF     = $True; # Updated Property
+                    DeclineEventsForScheduledOOF     = $False;
                     DeclineMeetingMessage            = "";
                     EndTime                          = "1/23/2024 3:00:00 PM";
                     Ensure                           = "Present";
                     ExternalAudience                 = "All";
-                    ExternalMessage                  = "";
+                    ExternalMessage                  = (New-Guid).ToString(); # Updated Property
                     Identity                         = "AdeleV@$Domain";
                     InternalMessage                  = "";
                     OOFEventSubject                  = "";
@@ -499,7 +492,7 @@
                     Credential           = $credsCredential;
                     DetailLevel          = "AvailabilityOnly";
                     Ensure               = "Present";
-                    Identity             = "AdeleV:\Calendar";
+                    Identity             = "AlexW@$Domain" + ":\Calendar";
                     PublishDateRangeFrom = "ThreeMonths";
                     PublishDateRangeTo   = "ThreeMonths";
                     PublishEnabled       = $True; # Updated Property
@@ -511,7 +504,7 @@
                     Credential           = $credsCredential;
                     Deny                 = $True; # Updated Property
                     Ensure               = "Present";
-                    Identity             = "AdeleV";
+                    Identity             = "AlexW@$Domain";
                     InheritanceType      = "All";
                     User                 = "NT AUTHORITY\SELF";
                 }
