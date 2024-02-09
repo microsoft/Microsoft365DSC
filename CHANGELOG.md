@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADRoleEligibilityScheduleRequest
+  * Fixed an issue where an error was thrown if no requests were found instead
+    of simply returning the Null object.
 * IntuneDeviceAndAppManagementAssignmentFilter
   * Fixed Test-TargetResource to ensure that resource reports its correct state
     FIXES [#3959](https://github.com/microsoft/Microsoft365DSC/issues/3959)
