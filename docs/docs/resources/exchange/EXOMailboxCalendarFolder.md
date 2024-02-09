@@ -57,6 +57,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOMailboxCalendarFolder "JohnCalendarFolder"
@@ -64,7 +65,7 @@ Configuration Example
             Credential           = $credsCredential;
             DetailLevel          = "AvailabilityOnly";
             Ensure               = "Present";
-            Identity             = "AdeleV:\Calendar";
+            Identity             = "AlexW@$Domain" + ":\Calendar";
             PublishDateRangeFrom = "ThreeMonths";
             PublishDateRangeTo   = "ThreeMonths";
             PublishEnabled       = $True; # Updated Property
