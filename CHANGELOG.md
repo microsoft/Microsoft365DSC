@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * TeamsAppSetupPolicy
-  * Changed the logic to retrive arrays of Ids in the Get method.
+  * Changed the logic to retrieve arrays of Ids in the Get method.
 * MISC
   * Telemetry
     * Added a new M365DSCTelemetryEventId parameter to track duplication of events.
