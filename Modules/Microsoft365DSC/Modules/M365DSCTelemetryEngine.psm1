@@ -188,26 +188,59 @@ function Add-M365DSCTelemetryEvent
             [array]$version = (Get-Module 'Microsoft365DSC').Version | Sort-Object -Descending
             $Data.Add('M365DSCVersion', $version[0].ToString())
 
-            # Get Dependencies loaded versions
+            # LCM Metadata Information
             try
             {
-                $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '../' -Resolve
-                $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
-                $dependencies = $manifest.RequiredModules
+                $LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
 
-                $dependenciesContent = ''
-                foreach ($dependency in $dependencies)
+                $certificateConfigured = $false
+                if (-not [System.String]::IsNullOrEmpty($LCMInfo.CertificateID))
                 {
-                    $dependenciesContent += Get-Module $dependency.ModuleName | Out-String
+                    $certificateConfigured = $true
                 }
-                $Data.Add('DependenciesVersion', $dependenciesContent)
+
+                $partialConfiguration = $false
+                if (-not [System.String]::IsNullOrEmpty($LCMInfo.PartialConfigurations))
+                {
+                    $partialConfiguration = $true
+                }
+                $Data.Add('LCMUsesPartialConfigurations', $partialConfiguration)
+                $Data.Add('LCMCertificateConfigured', $certificateConfigured)
+                $Data.Add('LCMConfigurationMode', $LCMInfo.ConfigurationMode)
+                $Data.Add('LCMConfigurationModeFrequencyMins', $LCMInfo.ConfigurationModeFrequencyMins)
+                $Data.Add('LCMRefreshMode', $LCMInfo.RefreshMode)
+                $Data.Add('LCMState', $LCMInfo.LCMState)
+                $Data.Add('LCMStateDetail', $LCMInfo.LCMStateDetail)
+
+                if ($Global:M365DSCExportInProgress)
+                {
+                    $Data.Add('M365DSCOperation', 'Export')
+                }
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.')
+                {
+                    $Data.Add('M365DSCOperation', 'MonitoringScheduled')
+                }
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
+                {
+                    $Data.Add('M365DSCOperation', 'MonitoringManual')
+                }
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.')
+                {
+                    $Data.Add('M365DSCOperation', 'ApplyingConfiguration')
+                }
+                else
+                {
+                    $Data.Add('M365DSCOperation', 'Undetermined')
+                }
             }
             catch
             {
                 Write-Verbose -Message $_
             }
+
             $M365DSCTelemetryEventId = (New-GUID).ToString()
             $Data.Add('M365DSCTelemetryEventId', $M365DSCTelemetryEventId)
+
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
         }
         catch

@@ -919,6 +919,7 @@ function Test-M365DSCParameterState
             }
             $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
             $driftedData.Add('Tenant', $TenantName)
+            $driftedData.Add('Resource', $source.Split('_')[1])
             Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
             #endregion
             $EventMessage.Append("            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n") | Out-Null
@@ -970,9 +971,6 @@ function Test-M365DSCParameterState
             -EventID 2 -Source $Source
     }
 
-    #region Telemetry
-    Add-M365DSCTelemetryEvent -Data $data
-    #endregion
     return $returnValue
 }
 
@@ -1164,7 +1162,7 @@ function Export-M365DSCConfiguration
         [Switch]
         $Validate
     )
-
+    $Global:M365DSCExportInProgress = $true
     $Global:MaximumFunctionCount = 32767
 
     # Define the exported resource instances' names Global variable
@@ -1348,6 +1346,7 @@ function Export-M365DSCConfiguration
 
     # Clear the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = $null
+    $Global:M365DSCExportInProgress = $false
 }
 
 $Script:M365DSCDependenciesValidated = $false
