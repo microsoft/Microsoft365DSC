@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADRoleEligibilityScheduleRequest
+  * Fixed an issue where an error was thrown if no requests were found instead
+    of simply returning the Null object.
 * IntuneDeviceConfigurationPolicyAndroidWorkProfile
   * Fix typo in variable which made it export incorrectly and report that
     resource was not in correct state due to testing an incorrect value
