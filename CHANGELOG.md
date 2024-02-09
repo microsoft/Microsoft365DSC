@@ -6,6 +6,16 @@
   * Fixed Test-TargetResource to ensure that resource reports its correct state
     FIXES [#3959](https://github.com/microsoft/Microsoft365DSC/issues/3959)
 
+# 1.24.207.2
+
+* TeamsAppSetupPolicy
+  * Changed the logic to retrieve arrays of Ids in the Get method.
+* MISC
+  * Drift Logging
+    * Now includes the full list of parameters for the current values.
+  * Telemetry
+    * Added a new M365DSCTelemetryEventId parameter to track duplication of events.
+
 # 1.24.207.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
