@@ -8,6 +8,8 @@
 * IntuneDeviceAndAppManagementAssignmentFilter
   * Fixed Test-TargetResource to ensure that resource reports its correct state
     FIXES [#3959](https://github.com/microsoft/Microsoft365DSC/issues/3959)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.13.1.
 
 # 1.24.207.2
 

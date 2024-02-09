@@ -20,8 +20,7 @@ Configuration Example
     {
         EXORecipientPermission 'AddSendAs'
         {
-
-            Identity     = 'AdeleV@$Domain'
+            Identity     = "AlexW@$Domain"
             Trustee      = "admin@$Domain"
             AccessRights = 'SendAs'
             Ensure       = 'Present'
