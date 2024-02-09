@@ -5,6 +5,8 @@
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.13.1.
 
 # 1.24.207.2
 
