@@ -9,6 +9,8 @@
   * Fixed Test-TargetResource by removing Id from being tested and also used
     correct filter while retrieving the policy otherwise it could not be found
     FIXES [#3964](https://github.com/microsoft/Microsoft365DSC/issues/3964)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.13.1.
 
 # 1.24.207.2
 
