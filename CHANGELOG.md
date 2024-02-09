@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADRoleEligibilityScheduleRequest
+  * Fixed an issue where an error was thrown if no requests were found instead
+    of simply returning the Null object.
 * IntuneAppConfigurationPolicy
   * Added parameter Id to avoid having to retrieve the same policy multiple
     times

@@ -172,7 +172,7 @@ function Get-TargetResource
     try
     {
         $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
+            -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
 
