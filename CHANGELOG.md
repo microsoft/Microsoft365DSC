@@ -7,6 +7,16 @@
     correct filter while retrieving the policy otherwise it could not be found
     FIXES [#3964](https://github.com/microsoft/Microsoft365DSC/issues/3964)
 
+# 1.24.207.2
+
+* TeamsAppSetupPolicy
+  * Changed the logic to retrieve arrays of Ids in the Get method.
+* MISC
+  * Drift Logging
+    * Now includes the full list of parameters for the current values.
+  * Telemetry
+    * Added a new M365DSCTelemetryEventId parameter to track duplication of events.
+
 # 1.24.207.1
 
 * IntuneDeviceEnrollmentPlatformRestriction
