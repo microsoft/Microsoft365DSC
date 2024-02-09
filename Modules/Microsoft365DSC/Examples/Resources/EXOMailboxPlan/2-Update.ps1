@@ -17,11 +17,11 @@ Configuration Example
         EXOMailboxPlan 'ConfigureMailboxPlan'
         {
             Ensure                   = "Present";
-            Identity                 = "Integration Plan";
-            IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
+            Identity                 = "ExchangeOnlineEssentials";
+            IssueWarningQuota        = "15 GB (16,106,127,360 bytes)";
             MaxReceiveSize           = "25 MB (26,214,400 bytes)";
             MaxSendSize              = "25 MB (26,214,400 bytes)";
-            ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
+            ProhibitSendQuota        = "15 GB (16,106,127,360 bytes)";
             ProhibitSendReceiveQuota = "15 GB (16,106,127,360 bytes)"; # Updated Property
             RetainDeletedItemsFor    = "14.00:00:00";
             RoleAssignmentPolicy     = "Default Role Assignment Policy";
