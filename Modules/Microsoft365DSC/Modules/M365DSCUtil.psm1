@@ -944,6 +944,17 @@ function Test-M365DSCParameterState
             $EventMessage.Append("        <Param Name =`"$key`">$Value</Param>`r`n") | Out-Null
         }
         $EventMessage.Append("    </DesiredValues>`r`n") | Out-Null
+        $EventMessage.Append("    <CurrentValues>`r`n") | Out-Null
+        foreach ($Key in $CurrentValues.Keys)
+        {
+            $Value = $CurrentValues.$Key
+            if ([System.String]::IsNullOrEmpty($Value))
+            {
+                $Value = "`$null"
+            }
+            $EventMessage.Append("        <Param Name =`"$key`">$Value</Param>`r`n") | Out-Null
+        }
+        $EventMessage.Append("    </CurrentValues>`r`n") | Out-Null
         $EventMessage.Append('</M365DSCEvent>') | Out-Null
 
         Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'Drift' -EntryType 'Warning' `

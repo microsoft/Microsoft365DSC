@@ -5,6 +5,8 @@
 * TeamsAppSetupPolicy
   * Changed the logic to retrieve arrays of Ids in the Get method.
 * MISC
+  * Drift Logging
+    * Now includes the full list of parameters for the current values.
   * Telemetry
     * Added a new M365DSCTelemetryEventId parameter to track duplication of events.
 
