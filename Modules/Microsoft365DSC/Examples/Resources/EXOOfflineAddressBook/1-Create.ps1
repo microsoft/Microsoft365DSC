@@ -19,7 +19,7 @@ Configuration Example
         EXOOfflineAddressBook 'ConfigureOfflineAddressBook'
         {
             Name                 = "Integration Address Book"
-            AddressLists         = @('\Offline Global Address List')
+            AddressLists         = @('\All Users')
             DiffRetentionPeriod  = "30"
             IsDefault            = $true
             Ensure               = "Present"
