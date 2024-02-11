@@ -2,9 +2,41 @@
 
 # UNRELEASED
 
+* AADRoleEligibilityScheduleRequest
+  * Fixed an issue where an error was thrown if no requests were found instead
+    of simply returning the Null object.
+* EXOMobileDeviceMailboxPolicy
+  * Fixes an issue where an empty MinPasswordLength value was always passed down
+    to the update logic flow.
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.13.1.
 * SPOAccessControlSettings
   * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
 
+# 1.24.207.2
+
+* TeamsAppSetupPolicy
+  * Changed the logic to retrieve arrays of Ids in the Get method.
+* MISC
+  * Drift Logging
+    * Now includes the full list of parameters for the current values.
+  * Telemetry
+    * Added a new M365DSCTelemetryEventId parameter to track duplication of events.
+
+# 1.24.207.1
+
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Added Priority parameter
+    FIXES [#4081](https://github.com/microsoft/Microsoft365DSC/issues/4081)
+* SCDLPComplianceRule
+  * Properly escapes fancy quotes in the Get method.
+* TeamsMeetingPolicy
+  * Ignore the AllowUserToJoinExternalMeeting  parameterfor drift evaluation
+    since it doesn't do anything based on official documentation.
+* DEPENDENCIES
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.180.
+  * Updated MSCloudLoginAssistant to version 1.1.11
+  * Updated ReverseDSC to version 2.0.0.19
 # 1.24.131.2
 
 * TeamsMeetingPolicy
