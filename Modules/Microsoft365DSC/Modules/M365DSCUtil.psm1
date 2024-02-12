@@ -897,7 +897,8 @@ function Test-M365DSCParameterState
     {
         $EventMessage = [System.Text.StringBuilder]::New()
         $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
-        $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`">`r`n") | Out-Null
+        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+        $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`" TenantId=`"$TenantName`">`r`n") | Out-Null
 
         $EventMessage.Append("        <ParametersNotInDesiredState>`r`n") | Out-Null
         foreach ($key in $DriftedParameters.Keys)
@@ -917,7 +918,6 @@ function Test-M365DSCParameterState
                 $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]))
                 $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]))
             }
-            $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
             $driftedData.Add('Tenant', $TenantName)
             $driftedData.Add('Resource', $source.Split('_')[1])
             Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
@@ -3771,11 +3771,11 @@ function Get-M365DSCAuthenticationMode
     {
         $AuthenticationType = 'ServicePrincipalWithPath'
     }
-    elseif ($Parameters.Credentials -and $Parameters.ApplicationId)
+    elseif ($Parameters.Credential -and $Parameters.ApplicationId)
     {
         $AuthenticationType = 'CredentialsWithApplicationId'
     }
-    elseif ($Parameters.Credentials)
+    elseif ($Parameters.Credential)
     {
         $AuthenticationType = 'Credentials'
     }
