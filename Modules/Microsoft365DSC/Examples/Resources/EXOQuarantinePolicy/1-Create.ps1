@@ -20,7 +20,7 @@ Configuration Example
         {
             EndUserQuarantinePermissionsValue = 87;
             ESNEnabled                        = $False;
-            Identity                          = "$Domain\DefaultFullAccessPolicy";
+            Identity                          = "$Domain\IntegrationPolicy";
             Ensure                            = "Present"
             Credential                        = $Credscredential
         }
