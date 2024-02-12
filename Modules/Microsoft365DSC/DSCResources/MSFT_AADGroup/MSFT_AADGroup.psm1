@@ -1100,7 +1100,7 @@ function Export-TargetResource
         }
 
         # If any attribute matches, add parameters to $ExportParameters
-        if ($matchConditionFound -or $Filter -like "*endsWith*")) {
+        if ($matchConditionFound -or $Filter -like "*endsWith*") {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
         }
