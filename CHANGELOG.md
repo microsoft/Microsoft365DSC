@@ -5,6 +5,9 @@
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
+* EXOMobileDeviceMailboxPolicy
+  * Fixes an issue where an empty MinPasswordLength value was always passed down
+    to the update logic flow.
 * IntuneAppConfigurationPolicy
   * Added parameter Id to avoid having to retrieve the same policy multiple
     times
