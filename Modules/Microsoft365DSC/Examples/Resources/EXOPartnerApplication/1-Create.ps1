@@ -19,6 +19,7 @@ Configuration Example
         {
             Name                                = "HRApp"
             ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
+            AcceptSecurityIdentifierInformation = $true
             Enabled                             = $True
             Ensure                              = "Present"
             Credential                          = $Credscredential
