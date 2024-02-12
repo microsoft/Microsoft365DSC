@@ -5,6 +5,9 @@
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
+* EXOMobileDeviceMailboxPolicy
+  * Fixes an issue where an empty MinPasswordLength value was always passed down
+    to the update logic flow.
 * IntuneSettingCatalogASRRulesPolicyWindows10
   * Fix removal of resource if Identity comes from another tenant or is not
     present in blueprint
