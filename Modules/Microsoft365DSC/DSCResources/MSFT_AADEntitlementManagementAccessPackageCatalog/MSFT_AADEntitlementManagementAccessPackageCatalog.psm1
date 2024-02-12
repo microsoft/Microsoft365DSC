@@ -95,7 +95,10 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            if (-not [System.String]::IsNullOrEmpty($Id))
+            {
+                Write-Verbose -Message "Nothing with id {$id} was found"
+            }
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
@@ -357,10 +360,10 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
+        Write-Verbose -Message "Test-TargetResource returned $true"
+        return $true
     }
     $testResult = $true
 

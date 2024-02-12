@@ -21,6 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
+            $Script:ExportMode = $false
             $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
@@ -56,13 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-ApplicationAccessPolicy -MockWith {
-                    return @{
-                        Identity      = 'DifferentApplicationAccessPolicy1'
-                        AccessRight   = 'DenyAccess'
-                        AppID         = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
-                        ScopeIdentity = 'Engineering Staff'
-                        Description   = 'Engineering Group Policy'
-                    }
+                    return $null
                 }
 
                 Mock -CommandName Set-ApplicationAccessPolicy -MockWith {
@@ -101,13 +96,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-ApplicationAccessPolicy -MockWith {
-                    return @{
+                    return @(@{
                         Identity      = 'ApplicationAccessPolicy1'
                         AccessRight   = 'DenyAccess'
                         AppID         = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
                         ScopeIdentity = 'Engineering Staff'
                         Description   = 'Engineering Group Policy'
-                    }
+                    })
                 }
             }
 

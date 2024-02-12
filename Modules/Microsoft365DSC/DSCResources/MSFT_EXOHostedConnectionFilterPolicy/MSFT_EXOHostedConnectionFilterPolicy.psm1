@@ -96,7 +96,7 @@ function Get-TargetResource
 
         try
         {
-            $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy -ErrorAction Stop
+            $HostedConnectionFilterPolicy = Get-HostedConnectionFilterPolicy -Identity $Identity -ErrorAction Stop
         }
         catch
         {
@@ -107,10 +107,9 @@ function Get-TargetResource
             return $nullReturn
         }
 
-        $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object -FilterScript { $_. Identity -eq $Identity }
         if (-not $HostedConnectionFilterPolicy)
         {
-            Write-Verbose -Message "HostedConnectionFilterPolicy $($Identity) does not exist."
+            Write-Verbose -Message "HostedConnectionFilterPolicy [$($Identity)] does not exist."
             return $nullReturn
         }
         else
@@ -234,9 +233,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $HostedConnectionFilterPolicys = Get-HostedConnectionFilterPolicy
-
-    $HostedConnectionFilterPolicy = $HostedConnectionFilterPolicys | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $CurrentInstance = Get-TargetResource @PSBoundParameters
 
     $HostedConnectionFilterPolicyParams = [System.Collections.Hashtable]($PSBoundParameters)
     $HostedConnectionFilterPolicyParams.Remove('Ensure') | Out-Null
@@ -257,7 +254,7 @@ function Set-TargetResource
         $HostedConnectionFilterPolicyParams.Remove('RuleScope') | Out-Null
     }
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $HostedConnectionFilterPolicy))
+    if (('Present' -eq $Ensure ) -and $CurrentInstance.Ensure -eq 'Absent')
     {
         $HostedConnectionFilterPolicyParams += @{
             Name = $HostedConnectionFilterPolicyParams.Identity
@@ -265,14 +262,18 @@ function Set-TargetResource
         $HostedConnectionFilterPolicyParams.Remove('Identity') | Out-Null
         if ($PSBoundParameters.MakeDefault)
         {
+            Write-Verbose -Message "Creating New Default Policy {$Identity}"
             New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -MakeDefault
         }
         else
         {
+            Write-Verbose -Message "Creating New Policy {$Identity}"
             New-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams
         }
+
+        Write-Verbose -Message "With Parameters: $(Convert-M365DscHashtableToString -Hashtable $HostedConnectionFilterPolicyParams)"
     }
-    elseif (('Present' -eq $Ensure ) -and ($HostedConnectionFilterPolicy))
+    elseif (('Present' -eq $Ensure ) -and $CurrentInstance.Ensure -eq 'Present')
     {
         if ($PSBoundParameters.MakeDefault)
         {
@@ -283,9 +284,9 @@ function Set-TargetResource
             Set-HostedConnectionFilterPolicy @HostedConnectionFilterPolicyParams -Confirm:$false
         }
     }
-    elseif (('Absent' -eq $Ensure ) -and ($HostedConnectionFilterPolicy))
+    elseif (('Absent' -eq $Ensure ) -and $CurrentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing HostedConnectionFilterPolicy $($Identity) "
+        Write-Verbose -Message "Removing HostedConnectionFilterPolicy $($Identity)"
         Remove-HostedConnectionFilterPolicy -Identity $Identity -Confirm:$false
     }
 }

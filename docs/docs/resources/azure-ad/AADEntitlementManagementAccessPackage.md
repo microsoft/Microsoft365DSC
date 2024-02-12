@@ -148,7 +148,7 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackage 'myAccessPackage'
         {
-            DisplayName                     = 'General'
+            DisplayName                     = 'Integration Package'
             Ensure                          = 'Absent'
             Credential                      = $Credscredential
         }

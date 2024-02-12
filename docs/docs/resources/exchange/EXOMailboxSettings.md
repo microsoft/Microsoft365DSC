@@ -60,9 +60,9 @@ Configuration Example
     {
         EXOMailboxSettings 'OttawaTeamMailboxSettings'
         {
-            DisplayName = 'Ottawa Employees'
+            DisplayName = 'Conf Room Adams'
             TimeZone    = 'Eastern Standard Time'
-            Locale      = 'fr-CA'
+            Locale      = 'en-US' # Updated Property
             Ensure      = 'Present'
             Credential  = $Credscredential
         }

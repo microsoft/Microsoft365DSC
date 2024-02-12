@@ -60,10 +60,7 @@ Configuration Example
         EXODataEncryptionPolicy 'ConfigureDataEncryptionPolicy'
         {
             Identity    = 'US Mailboxes'
-            Name        = 'All US Mailboxes'
-            Description = 'All Mailboxes of users in the US'
-            Enabled     = $true
-            Ensure      = "Present"
+            Ensure      = "Absent"
             Credential  = $Credscredential
         }
     }

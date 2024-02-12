@@ -45,7 +45,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Active Sync Device Access Rule should exist. Active Sync Device Access Rule is missing. Test should fail.' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity       = 'ContosoPhone'
+                    Identity       = 'iOS 6.1 10B145 (DeviceOS)'
                     AccessLevel    = 'Allow'
                     Characteristic = 'DeviceOS'
                     QueryString    = 'iOS 6.1 10B145'
@@ -55,7 +55,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-ActiveSyncDeviceAccessRule -MockWith {
                     return @{
-                        Identity       = 'ContosoDifferentPhone'
+                        Identity       = 'iOS 6.1 10B145 (WrongOS)'
                         AccessLevel    = 'Allow'
                         Characteristic = 'DeviceOS'
                         QueryString    = 'iOS 6.1 10B145'
@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Set-ActiveSyncDeviceAccessRule -MockWith {
                     return @{
-                        Identity       = 'ContosoPhone'
+                        Identity       = 'iOS 6.1 10B145 (DeviceOS)'
                         AccessLevel    = 'Allow'
                         Characteristic = 'DeviceOS'
                         QueryString    = 'iOS 6.1 10B145'
@@ -89,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Active Sync Device Access Rule should exist. Active Sync Device Access Rule exists. Test should pass.' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity       = 'ContosoPhone'
+                    Identity       = 'iOS 6.1 10B145 (DeviceOS)'
                     AccessLevel    = 'Allow'
                     Characteristic = 'DeviceOS'
                     QueryString    = 'iOS 6.1 10B145'
@@ -99,7 +99,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-ActiveSyncDeviceAccessRule -MockWith {
                     return @{
-                        Identity       = 'ContosoPhone'
+                        Identity       = 'iOS 6.1 10B145 (DeviceOS)'
                         AccessLevel    = 'Allow'
                         Characteristic = 'DeviceOS'
                         QueryString    = 'iOS 6.1 10B145'
@@ -119,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Active Sync Device Access Rule should exist. Active Sync Device Access Rule exists, AccessLevel mismatch. Test should fail.' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity       = 'ContosoPhone'
+                    Identity       = 'iOS 6.1 10B145 (DeviceOS)'
                     AccessLevel    = 'Allow'
                     Characteristic = 'DeviceOS'
                     QueryString    = 'iOS 6.1 10B145'
@@ -129,7 +129,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-ActiveSyncDeviceAccessRule -MockWith {
                     return @{
-                        Identity       = 'ContosoPhone'
+                        Identity       = 'iOS 6.1 10B145 (DeviceOS)'
                         AccessLevel    = 'Block'
                         Characteristic = 'DeviceOS'
                         QueryString    = 'iOS 6.1 10B145'
@@ -137,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Set-ActiveSyncDeviceAccessRule -MockWith {
                     return @{
-                        Identity       = 'ContosoPhone'
+                        Identity       = 'iOS 6.1 10B145 (DeviceOS)'
                         AccessLevel    = 'Allow'
                         Characteristic = 'DeviceOS'
                         QueryString    = 'iOS 6.1 10B145'
@@ -165,7 +165,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 $ActiveSyncDeviceAccessRule = @{
-                    Identity       = 'ContosoPhone'
+                    Identity       = 'iOS 6.1 10B145 (DeviceOS)'
                     AccessLevel    = 'Allow'
                     Characteristic = 'DeviceOS'
                     QueryString    = 'iOS 6.1 10B145'

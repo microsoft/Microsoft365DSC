@@ -96,23 +96,24 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credential
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOGroupSettings 'TestGroup'
         {
-            DisplayName                            = "Test Group";
+            DisplayName                            = "All Company";
             AccessType                             = "Public";
             AlwaysSubscribeMembersToCalendarEvents = $False;
             AuditLogAgeLimit                       = "90.00:00:00";
             AutoSubscribeNewMembers                = $False;
             CalendarMemberReadOnly                 = $False;
-            ConnectorsEnabled                      = $True;
-            Credential                             = $credential;
+            ConnectorsEnabled                      = $False; # Updated Property
+            Credential                             = $Credscredential;
             HiddenFromAddressListsEnabled          = $True;
             HiddenFromExchangeClientsEnabled       = $True;
             InformationBarrierMode                 = "Open";
@@ -121,7 +122,7 @@ Configuration Example
             MaxSendSize                            = "35 MB (36,700,160 bytes)";
             ModerationEnabled                      = $False;
             Notes                                  = "My Notes";
-            PrimarySmtpAddress                     = "TestGroup@contoso.com";
+            PrimarySmtpAddress                     = "TestGroup@$Domain";
             RequireSenderAuthenticationEnabled     = $True;
             SubscriptionEnabled                    = $False;
         }

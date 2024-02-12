@@ -5,14 +5,14 @@ This function gets the Application Insights key to be used for storing telemetry
 .Functionality
 Internal, Hidden
 #>
-function Get-ApplicationInsightsTelemetryClient
+function Get-M365DSCApplicationInsightsTelemetryClient
 {
     [CmdletBinding()]
     param()
 
     if ($null -eq $Global:M365DSCTelemetryEngine)
     {
-        $AI = "$PSScriptRoot\..\Dependencies\Microsoft.ApplicationInsights.dll"
+        $AI = "$PSScriptRoot/../Dependencies/Microsoft.ApplicationInsights.dll"
         [Reflection.Assembly]::LoadFile($AI) | Out-Null
 
         $InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
@@ -53,13 +53,12 @@ function Add-M365DSCTelemetryEvent
         [System.Collections.Generic.Dictionary[[System.String], [System.Double]]]
         $Metrics
     )
-
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
             [System.EnvironmentVariableTarget]::Machine)
 
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
-        $TelemetryClient = Get-ApplicationInsightsTelemetryClient
+        $TelemetryClient = Get-M365DSCApplicationInsightsTelemetryClient
 
         try
         {
@@ -189,31 +188,71 @@ function Add-M365DSCTelemetryEvent
             [array]$version = (Get-Module 'Microsoft365DSC').Version | Sort-Object -Descending
             $Data.Add('M365DSCVersion', $version[0].ToString())
 
-            # Get Dependencies loaded versions
+            # LCM Metadata Information
             try
             {
-                $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-                $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
-                $dependencies = $manifest.RequiredModules
+                $LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
 
-                $dependenciesContent = ''
-                foreach ($dependency in $dependencies)
+                $certificateConfigured = $false
+                if (-not [System.String]::IsNullOrEmpty($LCMInfo.CertificateID))
                 {
-                    $dependenciesContent += Get-Module $dependency.ModuleName | Out-String
+                    $certificateConfigured = $true
                 }
-                $Data.Add('DependenciesVersion', $dependenciesContent)
+
+                $partialConfiguration = $false
+                if (-not [System.String]::IsNullOrEmpty($LCMInfo.PartialConfigurations))
+                {
+                    $partialConfiguration = $true
+                }
+                $Data.Add('LCMUsesPartialConfigurations', $partialConfiguration)
+                $Data.Add('LCMCertificateConfigured', $certificateConfigured)
+                $Data.Add('LCMConfigurationMode', $LCMInfo.ConfigurationMode)
+                $Data.Add('LCMConfigurationModeFrequencyMins', $LCMInfo.ConfigurationModeFrequencyMins)
+                $Data.Add('LCMRefreshMode', $LCMInfo.RefreshMode)
+                $Data.Add('LCMState', $LCMInfo.LCMState)
+                $Data.Add('LCMStateDetail', $LCMInfo.LCMStateDetail)
+
+                if ($Global:M365DSCExportInProgress)
+                {
+                    $Data.Add('M365DSCOperation', 'Export')
+                }
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.')
+                {
+                    $Data.Add('M365DSCOperation', 'MonitoringScheduled')
+                }
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
+                {
+                    $Data.Add('M365DSCOperation', 'MonitoringManual')
+                }
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.')
+                {
+                    $Data.Add('M365DSCOperation', 'ApplyingConfiguration')
+                }
+                else
+                {
+                    $Data.Add('M365DSCOperation', 'Undetermined')
+                }
             }
             catch
             {
                 Write-Verbose -Message $_
             }
 
+            $M365DSCTelemetryEventId = (New-GUID).ToString()
+            $Data.Add('M365DSCTelemetryEventId', $M365DSCTelemetryEventId)
+
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
-            $TelemetryClient.Flush()
         }
         catch
         {
-            Write-Error $_
+            try
+            {
+                $TelemetryClient.TrackEvent('Error', $Data, $Metrics)
+            }
+            catch
+            {
+                Write-Error $_
+            }
         }
     }
 }
@@ -336,14 +375,25 @@ function Format-M365DSCTelemetryParameters
     {
         $data.Add('Resource', $ResourceName)
         $data.Add('Method', $CommandName)
-        if (-not $Parameters.ApplicationId)
+        if ($Parameters.Credential)
         {
-            $data.Add('Principal', $Parameters.Credential.UserName)
-            $data.Add('TenantId', $Parameters.Credential.UserName.Split('@')[1])
+            try
+            {
+                $data.Add('Principal', $Parameters.Credential.UserName)
+                $data.Add('TenantId', $Parameters.Credential.UserName.Split('@')[1])
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
-        else
+        elseif ($Parameters.ApplicationId)
         {
             $data.Add('Principal', $Parameters.ApplicationId)
+            $data.Add('TenantId', $Parameters.TenantId)
+        }
+        elseif (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
             $data.Add('TenantId', $Parameters.TenantId)
         }
         $data.Add('ConnectionMode', (Get-M365DSCAuthenticationMode -Parameters $Parameters))

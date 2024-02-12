@@ -57,16 +57,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential            = $Credential
                     Ensure                = 'Present'
                     Identity              = 'contoso.com'
-                    AccessMethod          = 'OrgWideFB'
-                    Credentials           = $Null
+                    AccessMethod          = 'OrgWideFBToken'
                     ForestName            = 'contoso.com'
-                    TargetAutodiscoverEpr = 'http://autodiscover.contoso.com/autodiscover/autodiscover.xml'
+                    TargetServiceEpr      = 'http://autodiscover.contoso.com/autodiscover/autodiscover.xml'
+                    TargetTenantId        = 'contoso.com'
                 }
 
                 Mock -CommandName Get-AvailabilityAddressSpace -MockWith {
-                    return @{
-                        Identity = 'SomeOtherConnector'
-                    }
+                    return $null
                 }
             }
 
