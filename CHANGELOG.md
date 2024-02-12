@@ -5,6 +5,9 @@
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
+* EXOMobileDeviceMailboxPolicy
+  * Fixes an issue where an empty MinPasswordLength value was always passed down
+    to the update logic flow.
 * IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
   * Fixed Test-TargetResource by removing Id from being tested and also used
     correct filter while retrieving the policy otherwise it could not be found
