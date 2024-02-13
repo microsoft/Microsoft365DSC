@@ -85,6 +85,7 @@ Configuration Example
 
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOCASMailboxSettings 'AdeleVCasMailboxSettings'
@@ -93,10 +94,10 @@ Configuration Example
             ActiveSyncBlockedDeviceIDs              = @()
             ActiveSyncDebugLogging                  = $False
             ActiveSyncEnabled                       = $True
-            ActiveSyncMailboxPolicy                 = 'Demo EXO Mobile Device Policy Default'
+            ActiveSyncMailboxPolicy                 = 'Default'
             ActiveSyncSuppressReadReceipt           = $False
             EwsEnabled                              = $True
-            Identity                                = 'AdeleV'
+            Identity                                = "admin@$Domain"
             ImapEnabled                             = $True # Updated Property
             ImapForceICalForCalendarRetrievalOption = $False
             ImapMessagesRetrievalMimeFormat         = 'BestBodyFormat'
@@ -107,7 +108,7 @@ Configuration Example
             OutlookMobileEnabled                    = $True
             OWAEnabled                              = $True
             OWAforDevicesEnabled                    = $True
-            OwaMailboxPolicy                        = 'OwaMailboxPolicy-Default'
+            OwaMailboxPolicy                        = 'OwaMailboxPolicy-Integration'
             PopEnabled                              = $False
             PopForceICalForCalendarRetrievalOption  = $True
             PopMessagesRetrievalMimeFormat          = 'BestBodyFormat'

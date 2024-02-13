@@ -17,7 +17,10 @@
 | **ForwardingTargetType** | Write | String | The forwarding target type. Supported values are Voicemail, SingleTarget, MyDelegates and Group. Voicemail is only supported for Immediate forwarding. | `Group`, `MyDelegates`, `SingleTarget`, `Voicemail` |
 | **ForwardingTarget** | Write | String | The forwarding target. Supported types of values are ObjectId's, SIP addresses and phone numbers. For phone numbers we support the following types of formats: E.164 (+12065551234 or +1206555000;ext=1234) or non-E.164 like 1234. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
-| **Credential** | Required | PSCredential | Credentials of the Teams Global Admin. | |
+| **Credential** | Write | PSCredential | Credentials of the Teams Global Admin. | |
+| **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
+| **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
+| **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
 
