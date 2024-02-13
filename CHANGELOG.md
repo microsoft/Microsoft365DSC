@@ -10,6 +10,7 @@
     to the update logic flow.
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.13.1.
+  * Updated MSCloudLoginAssistant to version 1.1.13.
 
 # 1.24.207.2
 

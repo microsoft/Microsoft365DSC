@@ -897,7 +897,8 @@ function Test-M365DSCParameterState
     {
         $EventMessage = [System.Text.StringBuilder]::New()
         $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
-        $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`">`r`n") | Out-Null
+        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+        $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`" TenantId=`"$TenantName`">`r`n") | Out-Null
 
         $EventMessage.Append("        <ParametersNotInDesiredState>`r`n") | Out-Null
         foreach ($key in $DriftedParameters.Keys)
@@ -917,7 +918,6 @@ function Test-M365DSCParameterState
                 $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]))
                 $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]))
             }
-            $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
             $driftedData.Add('Tenant', $TenantName)
             $driftedData.Add('Resource', $source.Split('_')[1])
             Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
@@ -1256,7 +1256,7 @@ function Export-M365DSCConfiguration
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Event', 'Extraction')
+    $data.Add('M365DSCOperation', 'Extraction')
 
     $data.Add('Path', [System.String]::IsNullOrEmpty($Path))
     $data.Add('FileName', $null -ne [System.String]::IsNullOrEmpty($FileName))
@@ -1718,7 +1718,7 @@ function New-M365DSCConnection
     {
         $message = 'Both Authentication methods are attempted'
         Write-Verbose -Message $message
-        $data.Add('Event', 'Error')
+        $data.Add('M365DSCOperation', 'Error')
         $data.Add('Exception', $message)
         $errorText = "You can't specify both the Credential and CertificateThumbprint"
         $data.Add('CustomMessage', $errorText)
@@ -1735,7 +1735,7 @@ function New-M365DSCConnection
         $message = 'No Authentication method was provided'
         Write-Verbose -Message $message
         $message += "`r`nProvided Keys --> $($InboundParameters.Keys)"
-        $data.Add('Event', 'Error')
+        $data.Add('M365DSCOperation', 'Error')
         $data.Add('Exception', $message)
         $errorText = 'You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters.'
         $data.Add('CustomMessage', $errorText)
@@ -1875,7 +1875,7 @@ function New-M365DSCConnection
             $message = 'No Authentication method was provided'
             Write-Verbose -Message $message
             $message += "`r`nProvided Keys --> $($InboundParameters.Keys)"
-            $data.Add('Event', 'Error')
+            $data.Add('M365DSCOperation', 'Error')
             $data.Add('Exception', $message)
             $errorText = 'You must specify either the Credential or ApplicationId, TenantId and CertificateThumbprint parameters.'
             $data.Add('CustomMessage', $errorText)
@@ -3771,11 +3771,11 @@ function Get-M365DSCAuthenticationMode
     {
         $AuthenticationType = 'ServicePrincipalWithPath'
     }
-    elseif ($Parameters.Credentials -and $Parameters.ApplicationId)
+    elseif ($Parameters.Credential -and $Parameters.ApplicationId)
     {
         $AuthenticationType = 'CredentialsWithApplicationId'
     }
-    elseif ($Parameters.Credentials)
+    elseif ($Parameters.Credential)
     {
         $AuthenticationType = 'Credentials'
     }
