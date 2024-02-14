@@ -93,8 +93,8 @@ Configuration Example
             Name                              = "Integration Policy"
             EnabledEmailAddressTemplates      = @("SMTP:@$Domain")
             EnabledPrimarySMTPAddressTemplate = "@$Domain"
-            ManagedByFilter                   = ""
-            Priority                          = 2 # Updated Property
+            ManagedByFilter                   = "Department -eq 'Sales'" # Updated Property
+            Priority                          = 1
             Ensure                            = "Present"
             Credential                        = $Credscredential
         }

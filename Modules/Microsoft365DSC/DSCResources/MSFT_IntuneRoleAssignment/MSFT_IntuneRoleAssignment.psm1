@@ -559,7 +559,7 @@ function Test-TargetResource
     }
     $PSBoundParameters.Set_Item('ResourceScopes', $ResourceScopes)
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
