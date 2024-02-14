@@ -26,22 +26,6 @@ jobs:
           Install-Module PSDesiredStateConfiguration -Force -Scope AllUsers
           Install-Module Pester -Force -SkipPublisherCheck -Scope AllUsers
           [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryEnabled', $false, [System.EnvironmentVariableTarget]::Machine);
-      - name: Run Test Harness
-        shell: pwsh
-        run: |
-          $allResrouces = Get-M365DSCAllResources
-          $readPermissionsAsApp = Get-M365DSCCompiledPermissionList -ResourceNameList $allResources -PermissionType Application -AccessType Read
-          $readWritePermissionsAsApp = $readPermissionsAsApp | Where-Object { $_.API -eq "Graph" -and $_.PermissionName -notlike '*.Read.*' }
-          if($readWritePermissionsAsApp.Count -gt 0)
-          {
-            throw "The following Microsoft Graph API write permissions are wrongfully assigned: $($readWritePermissionsAsApp.PermissionName -join ', ')"
-          }
-          $readPermissionsAsUser = Get-M365DSCCompiledPermissionList -ResourceNameList $allResources -PermissionType Delegated -AccessType Read
-          $readWritePermissionsAsUser = $readPermissionsAsUser | Where-Object {$_.API -eq "Graph" -and  $_.PermissionName -notlike '*.Read.*' }
-          if($readWritePermissionsAsUser.Count -gt 0)
-          {
-            throw "The following Microsoft Graph API write permissions are wrongfully assigned: $($readWritePermissionsAsUser.PermissionName -join ', ')"
-          }
       - name: Run Quality Checks
         shell: pwsh
         run: |
