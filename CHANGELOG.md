@@ -8,6 +8,9 @@
 * EXOMobileDeviceMailboxPolicy
   * Fixes an issue where an empty MinPasswordLength value was always passed down
     to the update logic flow.
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Fixed Test-TargetResource to ensure that resource reports its correct state
+    FIXES [#3959](https://github.com/microsoft/Microsoft365DSC/issues/3959)
 * IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
   * Fixed Test-TargetResource by removing Id from being tested and also used
     correct filter while retrieving the policy otherwise it could not be found
