@@ -216,7 +216,9 @@ function Add-M365DSCTelemetryEvent
                 {
                     $Data.Add('M365DSCOperation', 'Export')
                 }
-                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.')
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
+                        $LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
+                        $LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
                 {
                     $Data.Add('M365DSCOperation', 'MonitoringScheduled')
                 }
@@ -224,7 +226,8 @@ function Add-M365DSCTelemetryEvent
                 {
                     $Data.Add('M365DSCOperation', 'MonitoringManual')
                 }
-                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.')
+                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
+                        $LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
                 {
                     $Data.Add('M365DSCOperation', 'ApplyingConfiguration')
                 }
