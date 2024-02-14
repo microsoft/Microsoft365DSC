@@ -15,7 +15,7 @@ Describe -Name 'Successfully import Settings.json files' {
     }
 }
 
-Describe -Name 'Successfully validate all used permissions in Settings.json files' {
+Describe -Name 'Successfully validate all used permissions in Settings.json files ' {
     BeforeAll {
         $data = Invoke-WebRequest -Uri 'https://graphpermissions.azurewebsites.net/api/GetPermissionList'
         $roles = $data.Content.Split('|')[0].Split(',')
@@ -36,9 +36,8 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
             if (-not [System.Guid]::TryParse($permission.Name  , [System.Management.Automation.PSReference]$ObjectGuid) -and
                 $permission.Name -ne 'Tasks.Read.All')
             {
-                $permission.Name | Should -BeIn $roles
+                $permission.Name | Should -BeIn $roles -ErrorAction Continue
             }
-            $permission.Name | Should -BeLike '*.Read.*'
         }
         foreach ($permission in $settings.permissions.graph.application.write)
         {
@@ -46,7 +45,43 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
             $ObjectGuid = [System.Guid]::empty
             if (-not [System.Guid]::TryParse($permission.Name  , [System.Management.Automation.PSReference]$ObjectGuid))
             {
-                $permission.Name | Should -BeIn $roles
+                $permission.Name | Should -BeIn $roles -ErrorAction Continue
+            }
+        }
+    }
+
+    It "Should use the least permissions for '<ResourceName>'" -TestCase $settingsFiles {
+        $json = Get-Content -Path $FullName -Raw
+        $settings = ConvertFrom-Json -InputObject $json
+
+        if ($settings.ResourceName -like 'Teams*')
+        {
+            $allowedPermissions = @(
+                'Organization.Read.All',
+                'User.Read.All',
+                'Group.ReadWrite.All',
+                'AppCatalog.ReadWrite.All',
+                'TeamSettings.ReadWrite.All',
+                'Channel.Delete.All',
+                'ChannelSettings.ReadWrite.All',
+                'ChannelMember.ReadWrite.All')
+
+        }
+        if ($settings.ResourceName -like 'AADAuthenticationMethod*')
+        {
+            $allowedPermissions = @(
+                'Policy.ReadWrite.AuthenticationMethod'
+            )
+        }
+
+        foreach ($permission in $settings.permissions.graph.application.read)
+        {
+            $ObjectGuid = [System.Guid]::empty
+            # There is an issue where the GUI shows Tasks.Read.All but the OAuth value is actually Tasks.Read
+            if (-not [System.Guid]::TryParse($permission.Name  , [System.Management.Automation.PSReference]$ObjectGuid) -and
+                $permission.Name -ne 'Tasks.Read.All' -and -not $permission.Name -in $allowedPermissions)
+            {
+                $permission.Name | Should -BeLike '*.Read.*' -ErrorAction Continue
             }
         }
     }

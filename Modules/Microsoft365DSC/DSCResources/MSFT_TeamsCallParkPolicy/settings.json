@@ -16,8 +16,16 @@
                 "update": []
             },
             "application": {
-                "read": [],
-                "update": []
+                "read": [
+                    {
+                        "name": "Organization.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    }
+                ]
             }
         }
     }

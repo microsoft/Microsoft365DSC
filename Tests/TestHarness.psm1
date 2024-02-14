@@ -172,6 +172,9 @@ function Invoke-QualityChecksHarness
         Output = @{
             Verbosity = 'Detailed'
         }
+        Should = @{
+            ErrorAction = 'Continue'
+        }
     }
 
     $results = Invoke-Pester -Configuration $Configuration
