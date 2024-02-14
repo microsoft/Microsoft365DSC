@@ -71,7 +71,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -85,7 +85,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -755,7 +755,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -769,7 +769,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -1738,7 +1738,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -1752,7 +1752,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
