@@ -19,10 +19,10 @@
 | **IncludeRoles** | Write | StringArray[] | AAD Admin Roles in scope of the Policy. | |
 | **ExcludeRoles** | Write | StringArray[] | AAD Admin Roles out of scope of the Policy. | |
 | **IncludeGuestOrExternalUserTypes** | Write | StringArray[] | Represents the Included internal guests or external user types. This is a multi-valued property. Supported values are: b2bCollaborationGuest, b2bCollaborationMember, b2bDirectConnectUser, internalGuest, OtherExternalUser, serviceProvider and unknownFutureValue. | `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue` |
-| **IncludeExternalTenantsMembershipKind** | Write | String | Represents the Included Tenants membership kind. The possible values are: all, enumerated, unknownFutureValue. enumerated references an object of conditionalAccessEnumeratedExternalTenants derived type. | ``, `all`, `enumerated`, `unknownFutureValue` |
+| **IncludeExternalTenantsMembershipKind** | Write | String | Represents the Included Tenants membership kind. The possible values are: all, enumerated, unknownFutureValue. enumerated references an object of conditionalAccessEnumeratedExternalTenants derived type. | `all`, `enumerated`, `unknownFutureValue` |
 | **IncludeExternalTenantsMembers** | Write | StringArray[] | Represents the Included collection of tenant ids in the scope of Conditional Access for guests and external users policy targeting. | |
 | **ExcludeGuestOrExternalUserTypes** | Write | StringArray[] | Represents the Excluded internal guests or external user types. This is a multi-valued property. Supported values are: b2bCollaborationGuest, b2bCollaborationMember, b2bDirectConnectUser, internalGuest, OtherExternalUser, serviceProvider and unknownFutureValue. | `none`, `internalGuest`, `b2bCollaborationGuest`, `b2bCollaborationMember`, `b2bDirectConnectUser`, `otherExternalUser`, `serviceProvider`, `unknownFutureValue` |
-| **ExcludeExternalTenantsMembershipKind** | Write | String | Represents the Excluded Tenants membership kind. The possible values are: all, enumerated, unknownFutureValue. enumerated references an object of conditionalAccessEnumeratedExternalTenants derived type. | ``, `all`, `enumerated`, `unknownFutureValue` |
+| **ExcludeExternalTenantsMembershipKind** | Write | String | Represents the Excluded Tenants membership kind. The possible values are: all, enumerated, unknownFutureValue. enumerated references an object of conditionalAccessEnumeratedExternalTenants derived type. | `all`, `enumerated`, `unknownFutureValue` |
 | **ExcludeExternalTenantsMembers** | Write | StringArray[] | Represents the Excluded collection of tenant ids in the scope of Conditional Access for guests and external users policy targeting. | |
 | **IncludePlatforms** | Write | StringArray[] | Client Device Platforms in scope of the Policy. | |
 | **ExcludePlatforms** | Write | StringArray[] | Client Device Platforms out of scope of the Policy. | |
@@ -80,11 +80,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.Read.All
+    - Agreement.Read.All, Application.Read.All, Group.Read.All, Policy.Read.All, RoleManagement.Read.Directory, User.Read.All
 
 - **Update**
 
-    - Application.Read.All, Policy.ReadWrite.ConditionalAccess
+    - Agreement.Read.All, Application.Read.All, Group.Read.All, Policy.Read.All, Policy.ReadWrite.ConditionalAccess, RoleManagement.Read.Directory, User.Read.All
 
 ## Examples
 
