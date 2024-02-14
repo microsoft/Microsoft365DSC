@@ -54,6 +54,8 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
         $json = Get-Content -Path $FullName -Raw
         $settings = ConvertFrom-Json -InputObject $json
 
+        $allowedPermissions = @()
+
         if ($settings.ResourceName -like 'Teams*')
         {
             $allowedPermissions = @(
@@ -64,10 +66,10 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
                 'TeamSettings.ReadWrite.All',
                 'Channel.Delete.All',
                 'ChannelSettings.ReadWrite.All',
-                'ChannelMember.ReadWrite.All')
-
+                'ChannelMember.ReadWrite.All'
+            )
         }
-        if ($settings.ResourceName -like 'AADAuthenticationMethod*')
+        if ($settings.ResourceName -like 'AADAuthenticationMethod*' -or $settings.ResourceName -eq 'AADAuthenticationStrengthPolicy')
         {
             $allowedPermissions = @(
                 'Policy.ReadWrite.AuthenticationMethod'
@@ -79,7 +81,7 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
             $ObjectGuid = [System.Guid]::empty
             # There is an issue where the GUI shows Tasks.Read.All but the OAuth value is actually Tasks.Read
             if (-not [System.Guid]::TryParse($permission.Name  , [System.Management.Automation.PSReference]$ObjectGuid) -and
-                $permission.Name -ne 'Tasks.Read.All' -and -not $permission.Name -in $allowedPermissions)
+                $permission.Name -ne 'Tasks.Read.All' -and -not ($permission.Name -in $allowedPermissions))
             {
                 $permission.Name | Should -BeLike '*.Read.*' -ErrorAction Continue
             }
