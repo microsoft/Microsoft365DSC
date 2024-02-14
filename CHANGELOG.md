@@ -8,6 +8,10 @@
 * EXOMobileDeviceMailboxPolicy
   * Fixes an issue where an empty MinPasswordLength value was always passed down
     to the update logic flow.
+* IntuneDeviceConfigurationPolicyAndroidWorkProfile
+  * Fix typo in variable which made it export incorrectly and report that
+    resource was not in correct state due to testing an incorrect value
+    FIXES [#3972](https://github.com/microsoft/Microsoft365DSC/issues/3972)
 * DEPENDENCIES
   * Updated DSCParser to version 1.4.0.2.
   * Updated Microsoft.Graph dependencies to version 2.13.1.
