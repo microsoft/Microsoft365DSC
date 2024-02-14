@@ -28,6 +28,8 @@
   * Fix typo in variable which made it export incorrectly and report that
     resource was not in correct state due to testing an incorrect value
     FIXES [#3972](https://github.com/microsoft/Microsoft365DSC/issues/3972)
+* Teams resources
+  * Updated required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
 * DEPENDENCIES
   * Updated DSCParser to version 1.4.0.2.
   * Updated Microsoft.Graph dependencies to version 2.13.1.
@@ -38,6 +40,7 @@
     * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
       FIXES [#4291](https://github.com/microsoft/Microsoft365DSC/issues/4291)
   * Added new QA test to check for missing description in resource schema
+  * Added new QA test to check for falsely assigned write-premissions in settings.json
 
 # 1.24.207.2
 
@@ -57,7 +60,7 @@
 * SCDLPComplianceRule
   * Properly escapes fancy quotes in the Get method.
 * TeamsMeetingPolicy
-  * Ignore the AllowUserToJoinExternalMeeting  parameterfor drift evaluation
+  * Ignore the AllowUserToJoinExternalMeeting  parameter for drift evaluation
     since it doesn't do anything based on official documentation.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.180.
