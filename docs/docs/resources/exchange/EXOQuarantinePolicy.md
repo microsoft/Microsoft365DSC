@@ -69,7 +69,7 @@ Configuration Example
         {
             EndUserQuarantinePermissionsValue = 87;
             ESNEnabled                        = $False;
-            Identity                          = "$Domain\DefaultFullAccessPolicy";
+            Identity                          = "$Domain\IntegrationPolicy";
             Ensure                            = "Present"
             Credential                        = $Credscredential
         }
@@ -100,7 +100,7 @@ Configuration Example
         {
             EndUserQuarantinePermissionsValue = 87;
             ESNEnabled                        = $True; # Updated Property
-            Identity                          = "$Domain\DefaultFullAccessPolicy";
+            Identity                          = "$Domain\IntegrationPolicy";
             Ensure                            = "Present"
             Credential                        = $Credscredential
         }
@@ -129,7 +129,7 @@ Configuration Example
     {
         EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
         {
-            Identity                          = "$Domain\DefaultFullAccessPolicy";
+            Identity                          = "$Domain\IntegrationPolicy";
             Ensure                            = "Absent"
             Credential                        = $Credscredential
         }

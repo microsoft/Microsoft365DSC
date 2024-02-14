@@ -15,13 +15,13 @@ Configuration Example
 
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXORecipientPermission 'AddSendAs'
         {
-
-            Identity     = 'John'
-            Trustee      = "admin@$OrganizationName"
+            Identity     = "AlexW@$Domain"
+            Trustee      = "admin@$Domain"
             AccessRights = 'SendAs'
             Ensure       = 'Present'
             Credential   = $Credscredential

@@ -326,21 +326,24 @@ function Export-TargetResource
 
             if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
             {
-                $Results.Properties = ConvertTo-M365DSCSPOUserProfilePropertyInstanceString -Properties $Results.Properties
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
-                if ($null -ne $Results.Properties)
+                if ($Results.Properties)
                 {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Properties'
+                    $Results.Properties = ConvertTo-M365DSCSPOUserProfilePropertyInstanceString -Properties $Results.Properties
+                    $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                        -Results $Results
+                    $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                        -ConnectionMode $ConnectionMode `
+                        -ModulePath $PSScriptRoot `
+                        -Results $Results `
+                        -Credential $Credential
+                    if ($null -ne $Results.Properties)
+                    {
+                        $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Properties'
+                    }
+                    $dscContent += $currentDSCBlock
+                    Save-M365DSCPartialExport -Content $currentDSCBlock `
+                        -FileName $Global:PartialExportFileName
                 }
-                $dscContent += $currentDSCBlock
-                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
 
                 Write-Host $Global:M365DSCEmojiGreenCheckMark
             }

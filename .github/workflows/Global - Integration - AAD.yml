@@ -6,6 +6,8 @@ jobs:
     # The type of runner that the job will run on
     runs-on: windows-latest
 
+    permissions: write-all
+
     # Only when run from the main repo
     if: github.repository == 'microsoft/Microsoft365DSC'
 
