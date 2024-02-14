@@ -44,7 +44,40 @@
 | **ExceptIfDocumentIsPasswordProtected** | Write | Boolean | The ExceptIfDocumentIsPasswordProtected parameter specifies an exception for the DLP rule that looks for password protected files (because the contents of the file can't be inspected). Password detection only works for Office documents and .zip files.  | |
 | **ContentExtensionMatchesWords** | Write | StringArray[] | The ContentExtensionMatchesWords parameter specifies a condition for the DLP rule that looks for words in file name extensions. You can specify multiple words separated by commas. | |
 | **ExceptIfContentExtensionMatchesWords** | Write | StringArray[] | The ExceptIfContentExtensionMatchesWords parameter specifies an exception for the DLP rule that looks for words in file name extensions. You can specify multiple words separated by commas. | |
-
+| **MessageTypeMatches** | Write | StringArray[] | The MessageTypeMatches parameter specifies a condition for the DLP rule that looks for types of SMIME message patterns.| |
+| **FromScope** | Write | StringArray[] | The FromScope parameter specifies wether messages from inside or outside the organisation are in scope for the DLP rule.| |
+| **ExceptIfFromScope** | Write | StringArray[] | The  parameter specifies wether messages from inside or outside the organisation are in scope for the DLP rule.| |
+| **SubjectContainsWords** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for words or phrases in the Subject field of messages. You can specify multiple words or phrases separated by commas.| |
+| **SubjectMatchesPatterns** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for text patterns in the Subject field of messages by using regular expressions.| |
+| **SubjectOrBodyContainsWords** | Write | StringArray[] | The  parameter specifies a condition for the rule that looks for words in the Subject field or body of messages.| |
+| **SubjectOrBodyMatchesPatterns** | Write | StringArray[] | The  parameter specifies a condition for the rule that looks for text patterns in the Subject field or body of messages.| |
+| **ContentCharacterSetContainsWords** | Write | StringArray[] | The  parameter specifies a condition for the rule that looks for character set names in messages. You can specify multiple values separated by commas.| |
+| **DocumentNameMatchesPatterns** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for text patterns in the name of message attachments by using regular expressions.| |
+| **DocumentNameMatchesWords** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for words or phrases in the name of message attachments. | |
+**ExceptIfAnyOfRecipientAddressContainsWords** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for words or phrases in recipient email addresses.| |
+| **ExceptIfAnyOfRecipientAddressMatchesPatterns** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for text patterns in recipient email addresses by using regular expressions.| |
+| **ExceptIfContentCharacterSetContainsWords** | Write | StringArray[] | The  parameter specifies an exception for the rule that looks for character set names in messages.| |
+| **ExceptIfContentPropertyContainsWords** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that's based on a property match in content.| |
+| **ExceptIfDocumentNameMatchesPatterns** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for text patterns in the name of message attachments by using regular expressions.| |
+| **ExceptIfDocumentNameMatchesWords** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for words or phrases in the name of message attachments.| |
+| **ExceptIfFromAddressContainsWords** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for words or phrases in the sender's email address.| |
+| **ExceptIfFromAddressMatchesPatterns** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for text patterns in the sender's email address by using regular expressions.| |
+| **FromAddressContainsWords** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for words or phrases in the sender's email address.| |
+| **FromAddressMatchesPatterns** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for text patterns in the sender's email address by using regular expressions. | |
+| **ExceptIfMessageTypeMatches** | Write | StringArray[] | The  parameter specifies an exception for the rule that looks for messages of the specified type.| |
+| **RecipientDomainIs** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for recipients with email addresses in the specified domains.| |
+| **ExceptIfRecipientDomainIs** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for recipients with email addresses in the specified domains.| |
+| **ExceptIfSenderDomainIs** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for messages from senders with email address in the specified domains. | |
+| **ExceptIfSenderIpRanges** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for senders whose IP addresses matches the specified value, or fall within the specified ranges.| |
+| **ExceptIfSentTo** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for recipients in messages. You identify the recipients by email address.| |
+| **ExceptIfSubjectContainsWords** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for words or phrases in the Subject field of messages.| |
+| **ExceptIfSubjectMatchesPatterns** | Write | StringArray[] | The  parameter specifies an exception for the DLP rule that looks for text patterns in the Subject field of messages by using regular expressions.| |
+| **ExceptIfSubjectOrBodyContainsWords** | Write | StringArray[] | The  parameter specifies an exception for the rule that looks for words in the Subject field or body of messages.| |
+| **ExceptIfSubjectOrBodyMatchesPatterns** | Write | StringArray[] | The  parameter specifies an exception for the rule that looks for text patterns in the Subject field or body of messages.| |
+| **DocumentContainsWords** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for words in message attachments. Only supported attachment types are checked.| |
+| **SentToMemberOf** | Write | StringArray[] | The  parameter specifies a condition for the DLP rule that looks for messages sent to members of distribution groups, dynamic distribution groups, or mail-enabled security groups.| |
+| **ContentIsNotLabeled** | Write | Boolean | The  parameter specifies if the content is labeled. A True or False condition. | |
+| **SetHeader** | Write | StringArray[] | The SetHeader parameter specifies an action for the DLP rule that adds or modifies a header field and value in the message header. You can specify multiple header name and value pairs separated by commas| |
 ### MSFT_SCDLPSensitiveInformation
 
 #### Parameters
