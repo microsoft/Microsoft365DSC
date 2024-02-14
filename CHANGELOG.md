@@ -9,6 +9,7 @@
   * Fixes an issue where an empty MinPasswordLength value was always passed down
     to the update logic flow.
 * DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.2.
   * Updated Microsoft.Graph dependencies to version 2.13.1.
   * Updated MSCloudLoginAssistant to version 1.1.13.
 
