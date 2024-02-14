@@ -1,5 +1,34 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Added support for assignment GroupDisplayName
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Added support for assignment GroupDisplayName
+* IntuneAccountProtectionPolicy
+  * Added support for assignment GroupDisplayName
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Added support for assignment GroupDisplayName
+* IntuneAppConfigurationPolicy
+  * Added support for assignment GroupDisplayName
+* IntuneApplicationControlPolicyWindows10
+  * Added support for assignment GroupDisplayName
+* IntuneASRRulesPolicyWindows10
+  * Added support for assignment GroupDisplayName
+* IntuneDeviceCompliancePolicyAndroid
+  * Added support for assignment GroupDisplayName
+* IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  * Added support for assignment GroupDisplayName
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * Added support for assignment GroupDisplayName
+* IntuneDeviceCompliancePolicyiOs
+  * Added support for assignment GroupDisplayName
+* IntuneDeviceCompliancePolicyMacOS
+  * Added support for assignment GroupDisplayName
+* IntuneDeviceCompliancePolicyWindows10
+  * Added support for assignment GroupDisplayName
+
 # 1.24.131.2
 
 * TeamsMeetingPolicy

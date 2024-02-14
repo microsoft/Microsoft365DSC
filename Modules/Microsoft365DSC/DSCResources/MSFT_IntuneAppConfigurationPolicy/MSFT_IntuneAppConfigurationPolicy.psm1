@@ -74,7 +74,10 @@ function Get-TargetResource
     {
         $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
             -ErrorAction Stop
-
+        if(([array]$configPolicy).count -gt 1)
+        {
+            throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+        }
         if ($null -eq $configPolicy)
         {
             Write-Verbose -Message "No App Configuration Policy with displayName {$DisplayName} was found"
@@ -96,19 +99,14 @@ function Get-TargetResource
         }
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $returnAssignments)
+        $graphAssignments = Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
+        if ($graphAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($graphAssignments)
         }
-        $returnHashtable.Add('Assignments', $assignmentResult)
+        $returnHashtable.Add('Assignments', $returnAssignments)
 
         return $returnHashtable
     }
@@ -120,7 +118,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
@@ -326,6 +324,11 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    {
+        return $false
+    }
+
     if ($null -ne $CurrentValues.CustomSettings -and $CurrentValues.CustomSettings.Length -gt 0 -and $null -ne $CustomSettings)
     {
         $value = Test-M365DSCAppConfigurationPolicyCustomSetting -Current $CurrentValues.CustomSettings -Desired $CustomSettings
@@ -351,71 +354,19 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CustomSettings') | Out-Null
 
     #region Assignments
-    $testResult = $true
-
-    if ((-not $CurrentValues.Assignments) -xor (-not $ValuesToCheck.Assignments))
-    {
-        Write-Verbose -Message 'Configuration drift: one the assignment is null'
-        return $false
-    }
-
-    if ($CurrentValues.Assignments)
-    {
-        if ($CurrentValues.Assignments.count -ne $ValuesToCheck.Assignments.count)
-        {
-            Write-Verbose -Message "Configuration drift: Number of assignment has changed - current {$($CurrentValues.Assignments.count)} target {$($ValuesToCheck.Assignments.count)}"
-            return $false
-        }
-        foreach ($assignment in $CurrentValues.Assignments)
-        {
-            #GroupId Assignment
-            if (-not [String]::IsNullOrEmpty($assignment.groupId))
-            {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
-                if (-not $source)
-                {
-                    Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                    $testResult = $false
-                    break
-                }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-            }
-            #AllDevices/AllUsers assignment
-            else
-            {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
-                if (-not $source)
-                {
-                    Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                    $testResult = $false
-                    break
-                }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-            }
-
-            if (-not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-        }
-    }
-    if (-not $testResult)
-    {
-        return $false
-    }
+    $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
+    $target = $CurrentValues.Assignments
+    $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
     $ValuesToCheck.Remove('Assignments') | Out-Null
     #endregion
 
-
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
+    if ($testResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult

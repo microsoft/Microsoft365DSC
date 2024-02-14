@@ -345,16 +345,13 @@ function Get-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "ERROR on get-targetresource for $displayName"
-        $nullResult.Ensure = 'ERROR'
-
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+        throw
     }
 }
 
