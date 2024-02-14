@@ -5,6 +5,8 @@
 * AADConditionalAccessPolicy
   * Removed invalid empty string value that was added to the validate set
     of two parameters.
+  * Updated permission reference for app-onlzy authentication.
+    FIXES [[#3329](https://github.com/microsoft/Microsoft365DSC/issues/3329)]
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.

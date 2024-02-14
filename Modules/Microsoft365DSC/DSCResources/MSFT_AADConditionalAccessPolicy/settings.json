@@ -53,15 +53,39 @@
             "application": {
                 "read": [
                     {
+                        "name": "Agreement.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
                         "name": "Policy.Read.All"
+                    },
+                    {
+                        "name": "RoleManagement.Read.Directory"
+                    },
+                    {
+                        "name": "User.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Application.Read.All"
+                        "name": "Agreement.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "Policy.Read.All"
                     },
                     {
                         "name": "Policy.ReadWrite.ConditionalAccess"
+                    },
+                    {
+                        "name": "RoleManagement.Read.Directory"
+                    },
+                    {
+                        "name": "User.Read.All"
                     }
                 ]
             }
