@@ -8,6 +8,12 @@
 * EXOMobileDeviceMailboxPolicy
   * Fixes an issue where an empty MinPasswordLength value was always passed down
     to the update logic flow.
+* IntuneAppConfigurationPolicy
+  * Added parameter Id to avoid having to retrieve the same policy multiple
+    times
+  * Fixed tests in Test-TargetResource to ensure the resource reports its
+    correct state
+    FIXES [#3542](https://github.com/microsoft/Microsoft365DSC/issues/3542)
 * IntuneDeviceAndAppManagementAssignmentFilter
   * Fixed Test-TargetResource to ensure that resource reports its correct state
     FIXES [#3959](https://github.com/microsoft/Microsoft365DSC/issues/3959)
