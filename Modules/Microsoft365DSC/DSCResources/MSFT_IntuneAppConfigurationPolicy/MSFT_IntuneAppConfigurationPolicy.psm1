@@ -4,6 +4,10 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -50,7 +54,7 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of Intune App Configuration Policy {$DisplayName}"
+    Write-Verbose -Message "Getting configuration of Intune App Configuration Policy with Id {$Id}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -72,20 +76,43 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
-            -ErrorAction Stop
-        if(([array]$configPolicy).count -gt 1)
-        {
-            throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+
+        try {
+            $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $Id `
+                -ErrorAction Stop
         }
-        if ($null -eq $configPolicy)
-        {
-            Write-Verbose -Message "No App Configuration Policy with displayName {$DisplayName} was found"
-            return $nullResult
+        catch {
+            $configPolicy = $null
         }
 
-        Write-Verbose -Message "Found App Configuration Policy with displayName {$DisplayName}"
+        if ($null -eq $configPolicy)
+        {
+            Write-Verbose -Message "Could not find an Intune App Configuration Policy with Id {$Id}, searching by DisplayName {$DisplayName}"
+
+            try
+            {
+                $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'" `
+                    -ErrorAction Stop
+            }
+            catch
+            {
+                $configPolicy = $null
+            }
+
+            if ($null -eq $configPolicy)
+            {
+                Write-Verbose -Message "No App Configuration Policy with DisplayName {$DisplayName} was found"
+                return $nullResult
+            }
+            if(([array]$configPolicy).count -gt 1)
+            {
+                throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+            }
+        }
+
+        Write-Verbose -Message "Found App Configuration Policy with Id {$($configPolicy.Id)} and DisplayName {$($configPolicy.DisplayName)}"
         $returnHashtable = @{
+            Id                    = $configPolicy.Id
             DisplayName           = $configPolicy.DisplayName
             Description           = $configPolicy.Description
             CustomSettings        = $configPolicy.customSettings
@@ -127,6 +154,10 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -215,7 +246,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceAppManagement/targetedManagedAppConfigurations'
         }
@@ -224,10 +255,9 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating Intune App Configuration Policy {$DisplayName}"
-        $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'"
 
         $updateParams = @{
-            targetedManagedAppConfigurationId = $configPolicy.Id
+            targetedManagedAppConfigurationId = $currentconfigPolicy.Id
             displayName                       = $DisplayName
             description                       = $Description
         }
@@ -243,15 +273,14 @@ function Set-TargetResource
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $configPolicy.id `
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentconfigPolicy.Id `
             -Targets $assignmentsHash `
             -Repository 'deviceAppManagement/targetedManagedAppConfigurations'
     }
     elseif ($Ensure -eq 'Absent' -and $currentconfigPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Intune App Configuration Policy {$DisplayName}"
-        $configPolicy = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -Filter "displayName eq '$DisplayName'"
-        Remove-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $configPolicy.id
+        Remove-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -TargetedManagedAppConfigurationId $currentconfigPolicy.Id
     }
 }
 
@@ -261,6 +290,10 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Id,
+
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
@@ -306,6 +339,7 @@ function Test-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -320,6 +354,9 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Intune App Configuration Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -438,6 +475,7 @@ function Export-TargetResource
         {
             Write-Host "    |---[$i/$($configPolicies.Count)] $($configPolicy.displayName)" -NoNewline
             $params = @{
+                Id                    = $configPolicy.Id
                 DisplayName           = $configPolicy.displayName
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -517,46 +555,6 @@ function Export-TargetResource
 
         return ''
     }
-}
-
-function Test-M365DSCAppConfigurationPolicyCustomSetting
-{
-    [CmdletBinding()]
-    [OutputType([System.Boolean])]
-    param(
-        [parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Current,
-
-        [parameter(Mandatory = $true)]
-        [System.Object[]]
-        $Desired
-    )
-    if ($Current.Length -ne $Desired.Length)
-    {
-        return $false
-    }
-
-    foreach ($desiredSetting in $Desired)
-    {
-        $found = $false
-        foreach ($currentSetting in $Current)
-        {
-            if ($currentSetting.Name -eq $desiredSetting.Name)
-            {
-                if ($currentSetting.Value -ne $desiredSetting.Value)
-                {
-                    return $false
-                }
-                $found = $true
-            }
-        }
-        if (-not $found)
-        {
-            return $false
-        }
-    }
-    return $true
 }
 
 function Get-M365DSCIntuneAppConfigurationPolicyCustomSettingsAsString

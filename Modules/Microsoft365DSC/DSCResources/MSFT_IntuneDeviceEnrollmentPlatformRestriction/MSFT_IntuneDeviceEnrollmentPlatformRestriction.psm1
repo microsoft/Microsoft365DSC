@@ -58,6 +58,10 @@ function Get-TargetResource
         $Assignments,
 
         [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -107,7 +111,12 @@ function Get-TargetResource
 
     try
     {
-        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction silentlyContinue
+        try {
+            $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction Stop
+        }
+        catch {
+            $config = $null
+        }
 
         if ($null -eq $config)
         {
@@ -127,6 +136,7 @@ function Get-TargetResource
             DisplayName                       = $config.DisplayName
             Description                       = $config.Description
             DeviceEnrollmentConfigurationType = $config.DeviceEnrollmentConfigurationType.toString()
+            Priority                          = $config.Priority
             Ensure                            = 'Present'
             Credential                        = $Credential
             ApplicationId                     = $ApplicationId
@@ -230,6 +240,10 @@ function Set-TargetResource
         $Assignments,
 
         [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
         $Ensure = 'Present',
@@ -258,6 +272,7 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -276,6 +291,12 @@ function Set-TargetResource
     $currentCategory = Get-TargetResource @PSBoundParameters
     $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $PSBoundParameters.Remove('Identity') | Out-Null
+    $PriorityPresent = $false
+    if ($PSBoundParameters.Keys.Contains('Priority'))
+    {
+        $PriorityPresent = $true
+        $PSBoundParameters.Remove('Priority') | Out-Null
+    }
 
     if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
     {
@@ -332,9 +353,18 @@ function Set-TargetResource
                 $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
 
                 Update-DeviceConfigurationPolicyAssignment `
-                    -DeviceConfigurationPolicyId  $policy.id `
+                    -DeviceConfigurationPolicyId $policy.Id `
                     -Targets $assignmentsHash `
                     -Repository 'deviceManagement/deviceEnrollmentConfigurations'
+            }
+
+            if ($PriorityPresent -and $Priority -ne $policy.Priority)
+            {
+                $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $policy.Id
+                $Body = @{
+                    priority = $Priority
+                }
+                Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $Body
             }
         }
     }
@@ -380,29 +410,36 @@ function Set-TargetResource
         #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
         Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -BodyParameter ([hashtable]$PSBoundParameters) `
-            -DeviceEnrollmentConfigurationId $Identity
+            -DeviceEnrollmentConfigurationId $currentCategory.Identity
 
         #Assignments from DefaultPolicy are not editable and will raise an alert
-        if ($Identity -notlike '*_DefaultPlatformRestrictions')
+        if ($currentCategory.Identity -notlike '*_DefaultPlatformRestrictions')
         {
             if ($null -ne $Assignments -and $Assignments -ne @())
             {
                 $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
 
                 Update-DeviceConfigurationPolicyAssignment `
-                -DeviceConfigurationPolicyId  $Identity `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceEnrollmentConfigurations'
+                    -DeviceConfigurationPolicyId $currentCategory.Identity `
+                    -Targets $assignmentsHash `
+                    -Repository 'deviceManagement/deviceEnrollmentConfigurations'
+            }
+
+            if ($PriorityPresent -and $Priority -ne $currentCategory.Priority)
+            {
+                $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $currentCategory.Identity
+                $Body = @{
+                    priority = $Priority
+                }
+                Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $Body
             }
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Device Enrollment Platform Restriction {$DisplayName}"
-        $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "displayName eq '$DisplayName'" `
-        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration' }
 
-        Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $config.id
+        Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $currentCategory.Identity
     }
 }
 
@@ -464,6 +501,10 @@ function Test-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
+
+        [Parameter()]
+        [System.Int32]
+        $Priority,
 
         [Parameter()]
         [System.String]

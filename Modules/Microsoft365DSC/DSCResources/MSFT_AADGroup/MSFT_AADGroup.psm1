@@ -1075,10 +1075,36 @@ function Export-TargetResource
             All         = [switch]$true
             ErrorAction = 'Stop'
         }
-        if ($Filter -like "*endsWith*") {
+
+        # Define the list of attributes
+        $attributesToCheck = @(
+            "description",
+            "displayName",
+            "hasMembersWithLicenseErrors",
+            "mail",
+            "mailNickname",
+            "onPremisesSecurityIdentifier",
+            "onPremisesSyncEnabled",
+            "preferredLanguage"
+        )
+
+        # Initialize a flag to indicate whether any attribute matches the condition
+        $matchConditionFound = $false
+
+        # Check each attribute in the list
+        foreach ($attribute in $attributesToCheck) {
+            if ($Filter -like "*$attribute eq null*") {
+                $matchConditionFound = $true
+                break
+            }
+        }
+
+        # If any attribute matches, add parameters to $ExportParameters
+        if ($matchConditionFound -or $Filter -like "*endsWith*") {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
         }
+
         [array] $Script:exportedGroups = Get-MgGroup @ExportParameters
         $Script:exportedGroups = $Script:exportedGroups | Where-Object -FilterScript {
             -not ($_.MailEnabled -and ($null -eq $_.GroupTypes -or $_.GroupTypes.Length -eq 0)) -and `

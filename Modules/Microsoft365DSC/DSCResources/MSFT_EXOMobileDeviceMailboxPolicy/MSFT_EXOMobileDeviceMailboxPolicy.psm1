@@ -739,6 +739,7 @@ function Set-TargetResource
     if ([System.String]::IsNullOrEmpty($MinPasswordLength))
     {
         $NewMobileDeviceMailboxPolicyParams.Remove('MinPasswordLength') | Out-Null
+        $SetMobileDeviceMailboxPolicyParams.Remove('MinPasswordLength') | Out-Null
     }
 
     # CASE: Mobile Device Mailbox Policy doesn't exist but should;

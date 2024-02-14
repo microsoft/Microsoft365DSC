@@ -468,7 +468,7 @@
                 EXOOfflineAddressBook 'ConfigureOfflineAddressBook'
                 {
                     Name                 = "Integration Address Book"
-                    AddressLists         = @('\Offline Global Address List')
+                    AddressLists         = @('\All Users')
                     DiffRetentionPeriod  = "30"
                     IsDefault            = $true
                     Ensure               = "Present"
@@ -619,6 +619,7 @@
                 {
                     Name                                = "HRApp"
                     ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
+                    AcceptSecurityIdentifierInformation = $true
                     Enabled                             = $True
                     Ensure                              = "Present"
                     Credential                          = $Credscredential
@@ -650,9 +651,17 @@
                 {
                     EndUserQuarantinePermissionsValue = 87;
                     ESNEnabled                        = $False;
-                    Identity                          = "$Domain\DefaultFullAccessPolicy";
+                    Identity                          = "$Domain\IntegrationPolicy";
                     Ensure                            = "Present"
                     Credential                        = $Credscredential
+                }
+                EXORecipientPermission 'AddSendAs'
+                {
+                    Identity     = "AlexW@$Domain"
+                    Trustee      = "admin@$Domain"
+                    AccessRights = 'SendAs'
+                    Ensure       = 'Present'
+                    Credential   = $Credscredential
                 }
                 EXORemoteDomain '583b0b70-b45d-401f-98a6-0e7fa8434946'
                 {
