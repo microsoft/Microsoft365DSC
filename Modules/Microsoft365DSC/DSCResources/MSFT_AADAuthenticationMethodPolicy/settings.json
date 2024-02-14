@@ -14,7 +14,7 @@
             "delegated": {
                 "read": [
                     {
-                        "name": "Policy.Read.AuthenticationMethod"
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
                     }
                 ],
                 "update": [
@@ -26,7 +26,7 @@
             "application": {
                 "read": [
                     {
-                        "name": "Policy.Read.AuthenticationMethod"
+                        "name": "Policy.ReadWrite.AuthenticationMethod"
                     }
                 ],
                 "update": [
