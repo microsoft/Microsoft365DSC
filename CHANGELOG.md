@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Removed invalid empty string value that was added to the validate set
+    of two parameters.
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
@@ -34,6 +37,7 @@
     * Fix nested change detection for CIMInstances
     * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
       FIXES [#4291](https://github.com/microsoft/Microsoft365DSC/issues/4291)
+  * Added new QA test to check for missing description in resource schema
 
 # 1.24.207.2
 
