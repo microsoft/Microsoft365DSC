@@ -80,7 +80,7 @@ function New-M365DSCLogEntry
 
         #region Telemetry
         $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-        $driftedData.Add('Event', 'Error')
+        $driftedData.Add('M365DSCOperation', 'Error')
         $driftedData.Add('CustomMessage', $Message)
         $driftedData.Add('Source', $Source)
 
