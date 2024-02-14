@@ -25,7 +25,7 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
         $delegated = $data.Content.Split('|')[1].Split(',')
     }
 
-     It "Permissions used in settings.json file for '<ResourceName>' should exist" -TestCases $settingsFiles {
+    It "Permissions used in settings.json file for '<ResourceName>' should exist" -TestCases $settingsFiles {
         $json = Get-Content -Path $FullName -Raw
         $settings = ConvertFrom-Json -InputObject $json
         foreach ($permission in $settings.permissions.graph.application.read)
@@ -33,8 +33,18 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
             # Only validate non-GUID (hidden) permissions.
             $ObjectGuid = [System.Guid]::empty
             # There is an issue where the GUI shows Tasks.Read.All but the OAuth value is actually Tasks.Read
-            if (-not [System.Guid]::TryParse($permission.Name  ,[System.Management.Automation.PSReference]$ObjectGuid) -and
+            if (-not [System.Guid]::TryParse($permission.Name  , [System.Management.Automation.PSReference]$ObjectGuid) -and
                 $permission.Name -ne 'Tasks.Read.All')
+            {
+                $permission.Name | Should -BeIn $roles
+            }
+            $permission.Name | Should -BeLike '*.Read.*'
+        }
+        foreach ($permission in $settings.permissions.graph.application.write)
+        {
+            # Only validate non-GUID (hidden) permissions.
+            $ObjectGuid = [System.Guid]::empty
+            if (-not [System.Guid]::TryParse($permission.Name  , [System.Management.Automation.PSReference]$ObjectGuid))
             {
                 $permission.Name | Should -BeIn $roles
             }
