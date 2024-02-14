@@ -70,18 +70,21 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add('ProjectName', $ProjectName)
             }
 
-            if (-not [System.String]::IsNullOrEmpty($Data.Principal))
+            if (-not $Data.ContainsKey('Tenant'))
             {
-                if ($Data.Principal -like '*@*.*')
+                if (-not [System.String]::IsNullOrEmpty($Data.Principal))
                 {
-                    $principalValue = $Data.Principal.Split('@')[1]
+                    if ($Data.Principal -like '*@*.*')
+                    {
+                        $principalValue = $Data.Principal.Split('@')[1]
+                        $Data.Add('Tenant', $principalValue)
+                    }
+                }
+                elseif (-not [System.String]::IsNullOrEmpty($Data.TenantId))
+                {
+                    $principalValue = $Data.TenantId
                     $Data.Add('Tenant', $principalValue)
                 }
-            }
-            elseif (-not [System.String]::IsNullOrEmpty($Data.TenantId))
-            {
-                $principalValue = $Data.TenantId
-                $Data.Add('Tenant', $principalValue)
             }
 
             $Data.Remove('TenandId') | Out-Null

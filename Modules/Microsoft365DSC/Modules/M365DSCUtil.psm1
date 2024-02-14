@@ -918,7 +918,10 @@ function Test-M365DSCParameterState
                 $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]))
                 $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]))
             }
-            $driftedData.Add('Tenant', $TenantName)
+            if (-not $Data.ContainsKey('Tenant'))
+            {
+                $driftedData.Add('Tenant', $TenantName)
+            }
             $driftedData.Add('Resource', $source.Split('_')[1])
             Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
             #endregion
@@ -928,7 +931,11 @@ function Test-M365DSCParameterState
         #region Telemetry
         $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
         $data.Add('Event', 'ConfigurationDrift')
-        $data.Add('Tenant', $TenantName)
+
+        if (-not $Data.ContainsKey('Tenant'))
+        {
+            $data.Add('Tenant', $TenantName)
+        }
         #endregion
 
         $EventMessage.Append("        </ParametersNotInDesiredState>`r`n") | Out-Null
@@ -1281,13 +1288,13 @@ function Export-M365DSCConfiguration
         Write-Verbose -Message 'No existing connections to Microsoft Graph'
     }
 
-    if (-not [System.String]::IsNullOrEmpty($TenantId))
+    if (-not [System.String]::IsNullOrEmpty($TenantId) -and -not $data.ContainsKey('Tenant'))
     {
         $data.Add('Tenant', $TenantId)
     }
     else
     {
-        if ($Credential)
+        if ($Credential -and -not $data.ContainsKey('Tenant'))
         {
             $tenant = $Credential.UserName.Split('@')[1]
             $data.Add('Tenant', $tenant)
@@ -1758,8 +1765,11 @@ function New-M365DSCConnection
 
             try
             {
-                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
-                $data.Add('Tenant', $tenantId)
+                if (-not $Data.ContainsKey('Tenant'))
+                {
+                    $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                    $data.Add('Tenant', $tenantId)
+                }
             }
             catch
             {
@@ -1780,8 +1790,11 @@ function New-M365DSCConnection
 
             try
             {
-                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
-                $data.Add('Tenant', $tenantId)
+                if (-not $Data.ContainsKey('Tenant'))
+                {
+                    $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                    $data.Add('Tenant', $tenantId)
+                }
             }
             catch
             {
@@ -1808,8 +1821,11 @@ function New-M365DSCConnection
 
             try
             {
-                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
-                $data.Add('Tenant', $tenantId)
+                if (-not $Data.ContainsKey('Tenant'))
+                {
+                    $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                    $data.Add('Tenant', $tenantId)
+                }
             }
             catch
             {
@@ -1830,8 +1846,11 @@ function New-M365DSCConnection
 
             try
             {
-                $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
-                $data.Add('Tenant', $tenantId)
+                if (-not $Data.ContainsKey('Tenant'))
+                {
+                    $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
+                    $data.Add('Tenant', $tenantId)
+                }
             }
             catch
             {
@@ -1860,7 +1879,10 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport
 
             $data.Add('ConnectionType', 'ServicePrincipalWithPath')
-            $data.Add('Tenant', $InboundParameters.TenantId)
+            if (-not $data.ContainsKey('Tenant'))
+            {
+                $data.Add('Tenant', $InboundParameters.TenantId)
+            }
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
             return 'ServicePrincipalWithPath'
         }
@@ -1885,7 +1907,17 @@ function New-M365DSCConnection
         else
         {
             $data.Add('ConnectionType', 'ServicePrincipalWithPath')
-            $data.Add('Tenant', $InboundParameters.TenantId)
+            if (-not $data.ContainsKey('Tenant'))
+            {
+                if (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId))
+                {
+                    $data.Add('Tenant', $InboundParameters.TenantId)
+                }
+                elseif ($ null -ne $InboundParameters.Credential)
+                {
+                    $data.Add('Tenant', $InboundParameters.Credential.Split('@')[1])
+                }
+            }
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
 
             return 'ServicePrincipalWithPath'
@@ -1908,7 +1940,10 @@ function New-M365DSCConnection
 
 
             $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
-            $data.Add('Tenant', $InboundParameters.TenantId)
+            if (-not $data.ContainsKey('Tenant'))
+            {
+                $data.Add('Tenant', $InboundParameters.TenantId)
+            }
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
             return 'ServicePrincipalWithSecret'
         }
@@ -1923,7 +1958,10 @@ function New-M365DSCConnection
 
 
             $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
-            $data.Add('Tenant', $InboundParameters.TenantId)
+            if (-not $data.ContainsKey('Tenant'))
+            {
+                $data.Add('Tenant', $InboundParameters.TenantId)
+            }
             Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
             return 'ServicePrincipalWithSecret'
         }
@@ -1939,7 +1977,10 @@ function New-M365DSCConnection
             -Url $Url
 
         $data.Add('ConnectionType', 'ServicePrincipalWithThumbprint')
-        $data.Add('Tenant', $InboundParameters.TenantId)
+        if (-not $data.ContainsKey('Tenant'))
+        {
+            $data.Add('Tenant', $InboundParameters.TenantId)
+        }
         Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
         return 'ServicePrincipalWithThumbprint'
     }
@@ -1966,7 +2007,10 @@ function New-M365DSCConnection
 
 
         $data.Add('ConnectionType', 'ManagedIdentity')
-        $data.Add('Tenant', $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.TenantId)
+        if (-not $data.ContainsKey('Tenant'))
+        {
+            $data.Add('Tenant', $InboundParameters.TenantId)
+        }
         Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
         return 'ManagedIdentity'
     }
