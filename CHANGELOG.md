@@ -5,6 +5,9 @@
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
+* AADUser
+  * Fixed and issue where an user would be created even if the resrouce was set to absent.
+    FIXES [[#4265](https://github.com/microsoft/Microsoft365DSC/issues/4265)]
 * EXOMobileDeviceMailboxPolicy
   * Fixes an issue where an empty MinPasswordLength value was always passed down
     to the update logic flow.
