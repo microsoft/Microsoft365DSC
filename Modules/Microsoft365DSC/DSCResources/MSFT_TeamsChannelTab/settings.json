@@ -8,12 +8,52 @@
     "permissions": {
         "graph": {
             "delegated": {
-                "read": [],
-                "update": []
+                "read": [
+                    {
+                        "name": "ChannelSettings.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.Read.All"
+                    },
+                    {
+                        "name": "TeamsTab.Create"
+                    },
+                    {
+                        "name": "TeamsTab.ReadWrite.All"
+                    }
+                ]
             },
             "application": {
-                "read": [],
-                "update": []
+                "read": [
+                    {
+                        "name": "ChannelSettings.Read.All"
+                    },
+                    {
+                        "name": "Group.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Channel.Delete.All"
+                    },
+                    {
+                        "name": "ChannelSettings.Read.All"
+                    },
+                    {
+                        "name": "TeamsTab.Create"
+                    },
+                    {
+                        "name": "TeamsTab.ReadWrite.All"
+                    }
+                ]
             }
         }
     }
