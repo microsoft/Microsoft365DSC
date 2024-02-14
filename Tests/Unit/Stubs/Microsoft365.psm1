@@ -131,6 +131,27 @@ function Add-MailboxPermission
         $InheritanceType
     )
 }
+function Add-RecipientPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Object]
+        $AccessRights,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Trustee
+    )
+}
 function Disable-JournalRule
 {
     [CmdletBinding()]
@@ -552,8 +573,12 @@ function Get-DistributionGroup
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $SortBy,
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAcceptMessagesOnlyFromDLMembersWithDisplayNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAcceptMessagesOnlyFromWithDisplayNames,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -580,12 +605,20 @@ function Get-DistributionGroup
         $Filter,
 
         [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAcceptMessagesOnlyFromSendersOrMembersWithDisplayNames,
+
+        [Parameter()]
         [System.Object]
         $ResultSize,
 
         [Parameter()]
         [System.String]
-        $Anr
+        $Anr,
+
+        [Parameter()]
+        [System.String]
+        $SortBy
     )
 }
 function Get-DistributionGroupMember
@@ -638,6 +671,39 @@ function Get-GlobalAddressList
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $DefaultOnly
+    )
+}
+function Get-Group
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SortBy,
+
+        [Parameter()]
+        [System.Object]
+        $OrganizationalUnit,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientTypeDetails,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.String]
+        $Anr
     )
 }
 function Get-HostedConnectionFilterPolicy
@@ -736,10 +802,6 @@ function Get-Mailbox
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $ServiceSafetyConfiguration,
-
-        [Parameter()]
         [System.String]
         $SortBy,
 
@@ -766,6 +828,18 @@ function Get-Mailbox
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $SoftDeletedMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAcceptMessagesOnlyFromSendersOrMembersWithDisplayNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAcceptMessagesOnlyFromWithDisplayNames,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAcceptMessagesOnlyFromDLMembersWithDisplayNames,
 
         [Parameter()]
         [System.Object]
@@ -842,17 +916,82 @@ function Get-MailboxCalendarFolder
         $Identity
     )
 }
+function Get-MailboxFolder
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $MailFolderOnly,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $GetChildren,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Recurse
+    )
+}
 function Get-MailboxFolderStatistics
 {
     [CmdletBinding()]
     param(
         [Parameter()]
         [System.Object]
-        $Identity,
+        $Database,
 
         [Parameter()]
         [System.String]
-        $FolderScope
+        $DiagnosticInfo,
+
+        [Parameter()]
+        [System.Object]
+        $StoreMailboxIdentity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeOldestAndNewestItems,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UseCustomRouting,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Archive,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSoftDeletedRecipients,
+
+        [Parameter()]
+        [System.Int32]
+        $SkipCount,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeAnalysis,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Object]
+        $FolderScope,
+
+        [Parameter()]
+        [System.Object]
+        $Identity
     )
 }
 function Get-MailboxPermission
@@ -1340,6 +1479,100 @@ function Get-QuarantinePolicy
         $QuarantinePolicyType
     )
 }
+function Get-Recipient
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $SortBy,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $RecipientPreviewFilter,
+
+        [Parameter()]
+        [System.String]
+        $Anr,
+
+        [Parameter()]
+        [System.String]
+        $BookmarkDisplayName,
+
+        [Parameter()]
+        [System.Object]
+        $Capabilities,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientTypeDetails,
+
+        [Parameter()]
+        [System.String[]]
+        $Properties,
+
+        [Parameter()]
+        [System.Object]
+        $PropertySet,
+
+        [Parameter()]
+        [System.Object]
+        $AuthenticationType,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $IncludeSoftDeletedRecipients,
+
+        [Parameter()]
+        [System.Object[]]
+        $RecipientType,
+
+        [Parameter()]
+        [System.Object]
+        $OrganizationalUnit,
+
+        [Parameter()]
+        [System.Boolean]
+        $IncludeBookmarkObject
+    )
+}
+function Get-RecipientPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $ReadFromDomainController,
+
+        [Parameter()]
+        [System.Object]
+        $AccessRights,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ResultSize,
+
+        [Parameter()]
+        [System.Object]
+        $Trustee
+    )
+}
 function Get-RemoteDomain
 {
     [CmdletBinding()]
@@ -1368,7 +1601,11 @@ function Get-ReportSubmissionRule
     param(
         [Parameter()]
         [System.Object]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $State
     )
 }
 function Get-ResourceConfig
@@ -2001,36 +2238,44 @@ function New-App
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.String]
-        $Etoken,
+        [System.Uri]
+        $Url,
 
         [Parameter()]
-        [System.IO.Stream]
-        $FileStream,
+        [System.String]
+        $Identity,
 
         [Parameter()]
         [System.Boolean]
         $Enabled,
 
         [Parameter()]
-        [System.Uri]
-        $Url,
+        [System.Object]
+        $AddInOverrides,
 
         [Parameter()]
         [System.Object]
         $Mailbox,
 
         [Parameter()]
+        [System.IO.Stream]
+        $FileStream,
+
+        [Parameter()]
         [System.String]
         $MarketplaceServicesUrl,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PrivateCatalog,
+        [System.String]
+        $Etoken,
 
         [Parameter()]
         [System.String]
         $MarketplaceCorrelationID,
+
+        [Parameter()]
+        [System.String]
+        $Version,
 
         [Parameter()]
         [System.Object]
@@ -2045,6 +2290,10 @@ function New-App
         $MarketplaceUserProfileType,
 
         [Parameter()]
+        [System.Object]
+        $AllowSetting,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $DownloadOnly,
 
@@ -2057,8 +2306,16 @@ function New-App
         $UserList,
 
         [Parameter()]
+        [System.String]
+        $AppState,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $OrganizationApp,
+
+        [Parameter()]
+        [System.String]
+        $AppType,
 
         [Parameter()]
         [System.String]
@@ -2074,7 +2331,15 @@ function New-App
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $AllowReadWriteMailbox
+        $AllowReadWriteMailbox,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $PrivateCatalog,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $UpdateAppState
     )
 }
 function New-ApplicationAccessPolicy
@@ -2243,35 +2508,6 @@ function New-ClientAccessRule
         [Parameter()]
         [System.Object]
         $Scope
-    )
-}
-function New-DataClassification
-{
-    [CmdletBinding()]
-    param(
-        [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [System.Globalization.CultureInfo]
-        $Locale,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm,
-
-        [Parameter()]
-        [System.Object]
-        $Fingerprints,
-
-        [Parameter()]
-        [System.Object]
-        $ClassificationRuleCollectionIdentity
     )
 }
 function New-DataEncryptionPolicy
@@ -4353,7 +4589,277 @@ function New-ReportSubmissionPolicy
 {
     [CmdletBinding()]
     param(
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessage,
 
+        [Parameter()]
+        [System.Object]
+        $ReportJunkAddresses,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsForPhishMalwareSubmissionAirInvestigationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PhishingReviewResultMessage,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageTitle,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonTextForNotJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableCustomizedMsg,
+
+        [Parameter()]
+        [System.Object]
+        $NotificationSenderAddress,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageButtonTextForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsForSpamSubmissionAirInvestigationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageForJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageForPhishing,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableThirdPartyAddress,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageTitleForPhishing,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageForJunk,
+
+        [Parameter()]
+        [System.Int32]
+        $UserSubmissionOptions,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageButtonTextForPhishing,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageForNotJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageTitleForPhishing,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageTitleForNotJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonTextForJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageForNotJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportJunkToCustomizedAddress,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageButtonLinkForPhishing,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportNotJunkToCustomizedAddress,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageTitleForJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageForPhishing,
+
+        [Parameter()]
+        [System.String]
+        $NotificationFooterMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageForPhishing,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonLinkForNotJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonLinkForPhishing,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableReportToMicrosoft,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageTitleForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ThirdPartyReportAddresses,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonLinkForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsForCleanSubmissionAirInvestigationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageForNotJunk,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSetting,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableQuarantineReportingOption,
+
+        [Parameter()]
+        [System.Object]
+        $ReportNotJunkAddresses,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUserEmailNotification,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageForJunk,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageTitleForPhishing,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageTitleForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableUserSubmissionOptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $OnlyShowPhishingDisclaimer,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageTitleForNotJunk,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessage,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageTitleForNotJunk,
+
+        [Parameter()]
+        [System.String]
+        $JunkReviewResultMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableCustomNotificationSender,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageToCustomizedAddressEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ReportPhishAddresses,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageTitleForJunk,
+
+        [Parameter()]
+        [System.String]
+        $NotJunkReviewResultMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsForSubmissionAirInvestigationsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreSubmitMessageEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostSubmitMessageEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageTitle,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageTitleForPhishing,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonTextForPhishing,
+
+        [Parameter()]
+        [System.String]
+        $UserSubmissionOptionsMessage,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageForPhishing,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageButtonLinkForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportPhishToCustomizedAddress
     )
 }
 function New-ReportSubmissionRule
@@ -4365,16 +4871,24 @@ function New-ReportSubmissionRule
         $Name,
 
         [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.String[]]
+        [System.Object[]]
         $SentTo,
 
         [Parameter()]
         [System.String]
-        $ReportSubmissionPolicy
+        $Comments,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSubmissionPolicy,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
     )
 }
 function New-RoleAssignmentPolicy
@@ -5504,6 +6018,10 @@ function Remove-App
         $Identity,
 
         [Parameter()]
+        [System.String]
+        $AppType,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $OrganizationApp,
 
@@ -6077,6 +6595,43 @@ function Remove-QuarantinePolicy
         $DomainController
     )
 }
+function Remove-RecipientPermission
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipDomainValidationForMailContact,
+
+        [Parameter()]
+        [System.Object]
+        $AccessRights,
+
+        [Parameter()]
+        [System.Object]
+        $Trustee,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Deny,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipDomainValidationForMailUser,
+
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $SkipDomainValidationForSharedMailbox
+    )
+}
 function Remove-RemoteDomain
 {
     [CmdletBinding()]
@@ -6104,12 +6659,12 @@ function Remove-ReportSubmissionRule
     [CmdletBinding()]
     param(
         [Parameter()]
-        [System.Object]
-        $Identity,
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
+        [System.Object]
+        $Identity
     )
 }
 function Remove-RoleAssignmentPolicy
@@ -9234,6 +9789,10 @@ function Set-MailContact
 
         [Parameter()]
         [System.Object]
+        $UserSMimeCertificate,
+
+        [Parameter()]
+        [System.Object]
         $ExtensionCustomAttribute1,
 
         [Parameter()]
@@ -9278,7 +9837,7 @@ function Set-MailContact
 
         [Parameter()]
         [System.Object]
-        $GrantSendOnBehalfTo,
+        $UserCertificate,
 
         [Parameter()]
         [System.Object]
@@ -9295,6 +9854,10 @@ function Set-MailContact
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $ForceUpgrade,
+
+        [Parameter()]
+        [System.Object]
+        $GrantSendOnBehalfTo,
 
         [Parameter()]
         [System.String]
@@ -10041,6 +10604,10 @@ function Set-OrganizationConfig
         [Parameter()]
         [System.Boolean]
         $MailTipsAllTipsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostponeRoamingSignaturesUntilLater,
 
         [Parameter()]
         [System.Object]
@@ -11430,47 +11997,15 @@ function Set-ReportSubmissionPolicy
     param(
         [Parameter()]
         [System.String]
-        $Identity,
+        $PostSubmitMessage,
+
+        [Parameter()]
+        [System.Object]
+        $ReportJunkAddresses,
 
         [Parameter()]
         [System.Boolean]
-        $DisableQuarantineReportingOption,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableCustomNotificationSender,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableOrganizationBranding,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableReportToMicrosoft,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableThirdPartyAddress,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnableUserEmailNotification,
-
-        [Parameter()]
-        [System.String]
-        $JunkReviewResultMessage,
-
-        [Parameter()]
-        [System.String]
-        $NotJunkReviewResultMessage,
-
-        [Parameter()]
-        [System.String]
-        $NotificationFooterMessage,
-
-        [Parameter()]
-        [System.String]
-        $NotificationSenderAddress,
+        $NotificationsForPhishMalwareSubmissionAirInvestigationsEnabled,
 
         [Parameter()]
         [System.String]
@@ -11478,31 +12013,75 @@ function Set-ReportSubmissionPolicy
 
         [Parameter()]
         [System.String]
-        $PostSubmitMessage,
-
-        [Parameter()]
-        [System.Boolean]
-        $PostSubmitMessageEnabled,
-
-        [Parameter()]
-        [System.String]
         $PostSubmitMessageTitle,
 
         [Parameter()]
-        [System.String]
-        $PreSubmitMessage,
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonTextForNotJunk,
 
         [Parameter()]
         [System.Boolean]
-        $PreSubmitMessageEnabled,
+        $EnableCustomizedMsg,
 
         [Parameter()]
-        [System.String]
-        $PreSubmitMessageTitle,
+        [System.Object]
+        $NotificationSenderAddress,
 
         [Parameter()]
         [System.String[]]
-        $ReportJunkAddresses = @(),
+        $MultiLanguagePostSubmitMessageButtonTextForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsForSpamSubmissionAirInvestigationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageForJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageForPhishing,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableThirdPartyAddress,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageTitleForPhishing,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageForJunk,
+
+        [Parameter()]
+        [System.Int32]
+        $UserSubmissionOptions,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageButtonTextForPhishing,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageForNotJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageTitleForPhishing,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageTitleForNotJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonTextForJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageForNotJunk,
 
         [Parameter()]
         [System.Boolean]
@@ -11510,27 +12089,191 @@ function Set-ReportSubmissionPolicy
 
         [Parameter()]
         [System.String[]]
-        $ReportNotJunkAddresses = @(),
+        $MultiLanguagePostSubmitMessageButtonLinkForPhishing,
 
         [Parameter()]
         [System.Boolean]
         $ReportNotJunkToCustomizedAddress,
 
         [Parameter()]
+        [System.String]
+        $PostSubmitMessageTitleForJunk,
+
+        [Parameter()]
         [System.String[]]
-        $ReportPhishAddresses = @(),
+        $MultiLanguagePreSubmitMessageForPhishing,
+
+        [Parameter()]
+        [System.String]
+        $NotificationFooterMessage,
 
         [Parameter()]
         [System.Boolean]
-        $ReportPhishToCustomizedAddress,
+        $EnableOrganizationBranding,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageForPhishing,
 
         [Parameter()]
         [System.String[]]
-        $ThirdPartyReportAddresses = @(),
+        $MultiLanguagePreSubmitMessageButtonLinkForNotJunk,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonLinkForPhishing,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableReportToMicrosoft,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageTitleForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ThirdPartyReportAddresses,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonLinkForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsForCleanSubmissionAirInvestigationsEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageForNotJunk,
+
+        [Parameter()]
+        [System.Object]
+        $MultiLanguageSetting,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableQuarantineReportingOption,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $Confirm
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $ReportNotJunkAddresses,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableUserEmailNotification,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageForJunk,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageTitleForPhishing,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageTitleForJunk,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisableUserSubmissionOptions,
+
+        [Parameter()]
+        [System.Boolean]
+        $OnlyShowPhishingDisclaimer,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageTitleForNotJunk,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessage,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageTitleForNotJunk,
+
+        [Parameter()]
+        [System.String]
+        $JunkReviewResultMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableCustomNotificationSender,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportChatMessageToCustomizedAddressEnabled,
+
+        [Parameter()]
+        [System.Object]
+        $ReportPhishAddresses,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageTitleForJunk,
+
+        [Parameter()]
+        [System.String]
+        $NotJunkReviewResultMessage,
+
+        [Parameter()]
+        [System.Boolean]
+        $NotificationsForSubmissionAirInvestigationsEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PreSubmitMessageEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $PostSubmitMessageEnabled,
+
+        [Parameter()]
+        [System.String]
+        $PreSubmitMessageTitle,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageTitleForPhishing,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePreSubmitMessageButtonTextForPhishing,
+
+        [Parameter()]
+        [System.String]
+        $UserSubmissionOptionsMessage,
+
+        [Parameter()]
+        [System.String]
+        $PostSubmitMessageForPhishing,
+
+        [Parameter()]
+        [System.String[]]
+        $MultiLanguagePostSubmitMessageButtonLinkForJunk,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Boolean]
+        $ReportPhishToCustomizedAddress
     )
 }
 function Set-ReportSubmissionRule
@@ -11539,15 +12282,23 @@ function Set-ReportSubmissionRule
     param(
         [Parameter()]
         [System.String]
-        $Identity,
+        $Name,
+
+        [Parameter()]
+        [System.Object[]]
+        $SentTo,
 
         [Parameter()]
         [System.String]
         $Comments,
 
         [Parameter()]
-        [System.String[]]
-        $SentTo,
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $ReportSubmissionPolicy,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -12927,7 +13678,11 @@ function Set-User
     param(
         [Parameter()]
         [System.String]
-        $Company,
+        $MailboxRegion,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsShadowMailbox,
 
         [Parameter()]
         [System.String]
@@ -12982,8 +13737,8 @@ function Set-User
         $Force,
 
         [Parameter()]
-        [System.String]
-        $LastName,
+        [System.Object]
+        $ManagedOnboardingType,
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
@@ -13022,8 +13777,8 @@ function Set-User
         $AssistantName,
 
         [Parameter()]
-        [System.Object]
-        $OtherHomePhone,
+        [System.String]
+        $Company,
 
         [Parameter()]
         [System.String]
@@ -13046,12 +13801,12 @@ function Set-User
         $Notes,
 
         [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $PermanentlyClearPreviousMailboxInfo,
+        [System.String]
+        $LastName,
 
         [Parameter()]
-        [System.String]
-        $MailboxRegion,
+        [System.Management.Automation.SwitchParameter]
+        $PermanentlyClearPreviousMailboxInfo,
 
         [Parameter()]
         [System.Object]
@@ -13098,6 +13853,10 @@ function Set-User
         $WindowsEmailAddress,
 
         [Parameter()]
+        [System.String]
+        $StreetAddress,
+
+        [Parameter()]
         [System.Boolean]
         $RemotePowerShellEnabled,
 
@@ -13110,8 +13869,8 @@ function Set-User
         $GeoCoordinates,
 
         [Parameter()]
-        [System.String]
-        $StreetAddress,
+        [System.Object]
+        $OtherHomePhone,
 
         [Parameter()]
         [System.Object]
@@ -13144,6 +13903,7 @@ function Update-RoleGroupMember
     )
 }
 #endregion
+
 #region Microsoft.Graph.Applications
 function Get-MgApplication
 {

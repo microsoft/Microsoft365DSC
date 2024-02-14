@@ -389,6 +389,7 @@ function Get-TargetResource
                 $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
             }
 
+            $fancyDoubleQuotes = "[\u201C\u201D]"
             $result = @{
                 Ensure                                       = 'Present'
                 Name                                         = $PolicyRule.Name

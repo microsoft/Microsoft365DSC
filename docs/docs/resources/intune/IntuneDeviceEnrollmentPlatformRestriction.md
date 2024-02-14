@@ -17,6 +17,7 @@
 | **MacRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac restrictions based on platform, platform operating system version, and device ownership. | |
 | **MacOSRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac OS restrictions based on platform, platform operating system version, and device ownership. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the policy. | |
+| **Priority** | Write | UInt32 | Priority is used when a user exists in multiple groups that are assigned enrollment configuration. Users are subject only to the configuration with the lowest priority value. Inherited from deviceEnrollmentConfiguration. | |
 | **Ensure** | Write | String | Present ensures the restriction exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
