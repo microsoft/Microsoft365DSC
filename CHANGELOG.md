@@ -30,6 +30,12 @@
   * Fix typo in variable which made it export incorrectly and report that
     resource was not in correct state due to testing an incorrect value
     FIXES [#3972](https://github.com/microsoft/Microsoft365DSC/issues/3972)
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Fix removal of resource if Identity comes from another tenant or is not
+    present in blueprint
+  * Fix Test-TargetResource by not comparing Identity since it might be from
+    another tenant or not present in blueprint
+  FIXES [#4302](https://github.com/microsoft/Microsoft365DSC/issues/4302)
 * SPOSharingSettings
   * Fixed an issue where the resource would return multiple sites.
     FIXES [#2759](https://github.com/microsoft/Microsoft365DSC/issues/2759)
