@@ -25,6 +25,8 @@
   * Fix typo in variable which made it export incorrectly and report that
     resource was not in correct state due to testing an incorrect value
     FIXES [#3972](https://github.com/microsoft/Microsoft365DSC/issues/3972)
+* Teams resources
+  * Updated required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
 * DEPENDENCIES
   * Updated DSCParser to version 1.4.0.2.
   * Updated Microsoft.Graph dependencies to version 2.13.1.
