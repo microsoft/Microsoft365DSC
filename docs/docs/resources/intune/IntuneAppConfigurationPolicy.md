@@ -4,6 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **Id** | Write | String | Key of the entity. Read-Only. | |
 | **DisplayName** | Key | String | Display name of the app configuration policy. | |
 | **Description** | Write | String | Description of the app configuration policy. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |

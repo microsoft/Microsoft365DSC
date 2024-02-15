@@ -22,7 +22,7 @@ function Get-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet('All', 'PerUser')]
+        [ValidateSet('All', 'PerUser','None')]
         [System.String]
         $BlockAccessScope,
 
@@ -138,9 +138,147 @@ function Get-TargetResource
         [System.Boolean]
         $DocumentIsPasswordProtected,
 
-        [Parameter()]
+       [Parameter()]
         [System.Boolean]
         $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.String[]]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String[]]
+        $FromScope,
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String[]]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $DocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfDocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $DocumentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SetHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $ContentIsNotLabeled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -231,6 +369,11 @@ function Get-TargetResource
                 $AnyOfRecipientAddressContainsWords = $PolicyRule.AnyOfRecipientAddressContainsWords.Replace(' ', '').Split(',')
             }
 
+            if ($null -ne $PolicyRule.ExceptIfAnyOfRecipientAddressContainsWords -and $PolicyRule.ExceptIfAnyOfRecipientAddressContainsWords.count -gt 0)
+            {
+                $ExceptIfAnyOfRecipientAddressContainsWords = $PolicyRule.ExceptIfAnyOfRecipientAddressContainsWords.Replace(' ', '').Split(',')
+            }
+
             if ($null -ne $PolicyRule.AnyOfRecipientAddressMatchesPatterns -and $PolicyRule.AnyOfRecipientAddressMatchesPatterns -gt 0)
             {
                 $AnyOfRecipientAddressMatchesPatterns = $PolicyRule.AnyOfRecipientAddressMatchesPatterns.Replace(' ', '').Split(',')
@@ -248,46 +391,76 @@ function Get-TargetResource
 
             $fancyDoubleQuotes = "[\u201C\u201D]"
             $result = @{
-                Ensure                                      = 'Present'
-                Name                                        = $PolicyRule.Name
-                Policy                                      = $PolicyRule.ParentPolicyName
-                AccessScope                                 = $PolicyRule.AccessScope
-                BlockAccess                                 = $PolicyRule.BlockAccess
-                BlockAccessScope                            = $PolicyRule.BlockAccessScope
-                Comment                                     = $PolicyRule.Comment
-                ContentContainsSensitiveInformation         = $PolicyRule.ContentContainsSensitiveInformation
-                ExceptIfContentContainsSensitiveInformation = $PolicyRule.ExceptIfContentContainsSensitiveInformation
-                ContentPropertyContainsWords                = $PolicyRule.ContentPropertyContainsWords
-                Disabled                                    = $PolicyRule.Disabled
-                GenerateAlert                               = $PolicyRule.GenerateAlert
-                GenerateIncidentReport                      = $PolicyRule.GenerateIncidentReport
-                IncidentReportContent                       = $ArrayIncidentReportContent
-                NotifyAllowOverride                         = $NotifyAllowOverrideValue
-                NotifyEmailCustomText                       = [regex]::Replace($PolicyRule.NotifyEmailCustomText, $fancyDoubleQuotes, '"')
-                NotifyPolicyTipCustomText                   = [regex]::Replace($PolicyRule.NotifyPolicyTipCustomText, $fancyDoubleQuotes, '"')
-                NotifyUser                                  = $PolicyRule.NotifyUser
-                ReportSeverityLevel                         = $PolicyRule.ReportSeverityLevel
-                RuleErrorAction                             = $PolicyRule.RuleErrorAction
-                RemoveRMSTemplate                           = $PolicyRule.RemoveRMSTemplate
-                StopPolicyProcessing                        = $PolicyRule.StopPolicyProcessing
-                DocumentIsUnsupported                       = $PolicyRule.DocumentIsUnsupported
-                ExceptIfDocumentIsUnsupported               = $PolicyRule.ExceptIfDocumentIsUnsupported
-                HasSenderOverride                           = $PolicyRule.HasSenderOverride
-                ExceptIfHasSenderOverride                   = $PolicyRule.ExceptIfHasSenderOverride
-                ProcessingLimitExceeded                     = $PolicyRule.ProcessingLimitExceeded
-                ExceptIfProcessingLimitExceeded             = $PolicyRule.ExceptIfProcessingLimitExceeded
-                DocumentIsPasswordProtected                 = $PolicyRule.DocumentIsPasswordProtected
-                ExceptIfDocumentIsPasswordProtected         = $PolicyRule.ExceptIfDocumentIsPasswordProtected
-                AnyOfRecipientAddressContainsWords          = $AnyOfRecipientAddressContainsWords
-                AnyOfRecipientAddressMatchesPatterns        = $AnyOfRecipientAddressMatchesPatterns
-                ContentExtensionMatchesWords                = $ContentExtensionMatchesWords
-                ExceptIfContentExtensionMatchesWords        = $ExceptIfContentExtensionMatchesWords
-                Credential                                  = $Credential
-                ApplicationId                               = $ApplicationId
-                TenantId                                    = $TenantId
-                CertificateThumbprint                       = $CertificateThumbprint
-                CertificatePath                             = $CertificatePath
-                CertificatePassword                         = $CertificatePassword
+                Ensure                                       = 'Present'
+                Name                                         = $PolicyRule.Name
+                Policy                                       = $PolicyRule.ParentPolicyName
+                AccessScope                                  = $PolicyRule.AccessScope
+                BlockAccess                                  = $PolicyRule.BlockAccess
+                BlockAccessScope                             = $PolicyRule.BlockAccessScope
+                Comment                                      = $PolicyRule.Comment
+                ContentContainsSensitiveInformation          = $PolicyRule.ContentContainsSensitiveInformation
+                ExceptIfContentContainsSensitiveInformation  = $PolicyRule.ExceptIfContentContainsSensitiveInformation
+                ContentPropertyContainsWords                 = $PolicyRule.ContentPropertyContainsWords
+                Disabled                                     = $PolicyRule.Disabled
+                GenerateAlert                                = $PolicyRule.GenerateAlert
+                GenerateIncidentReport                       = $PolicyRule.GenerateIncidentReport
+                IncidentReportContent                        = $ArrayIncidentReportContent
+                NotifyAllowOverride                          = $NotifyAllowOverrideValue
+                NotifyEmailCustomText                        = $PolicyRule.NotifyEmailCustomText
+                NotifyPolicyTipCustomText                    = $PolicyRule.NotifyPolicyTipCustomText
+                NotifyUser                                   = $PolicyRule.NotifyUser
+                ReportSeverityLevel                          = $PolicyRule.ReportSeverityLevel
+                RuleErrorAction                              = $PolicyRule.RuleErrorAction
+                RemoveRMSTemplate                            = $PolicyRule.RemoveRMSTemplate
+                StopPolicyProcessing                         = $PolicyRule.StopPolicyProcessing
+                DocumentIsUnsupported                        = $PolicyRule.DocumentIsUnsupported
+                ExceptIfDocumentIsUnsupported                = $PolicyRule.ExceptIfDocumentIsUnsupported
+                HasSenderOverride                            = $PolicyRule.HasSenderOverride
+                ExceptIfHasSenderOverride                    = $PolicyRule.ExceptIfHasSenderOverride
+                ProcessingLimitExceeded                      = $PolicyRule.ProcessingLimitExceeded
+                ExceptIfProcessingLimitExceeded              = $PolicyRule.ExceptIfProcessingLimitExceeded
+                DocumentIsPasswordProtected                  = $PolicyRule.DocumentIsPasswordProtected
+                ExceptIfDocumentIsPasswordProtected          = $PolicyRule.ExceptIfDocumentIsPasswordProtected
+                MessageTypeMatches                           = $PolicyRule.MessageTypeMatches
+                ExceptIfMessageTypeMatches                   = $PolicyRule.ExceptIfMessageTypeMatches
+                FromScope                                    = $PolicyRule.FromScope
+                ExceptIfFromScope                            = $PolicyRule.ExceptIfFromScope
+                SubjectContainsWords                         = $PolicyRule.SubjectContainsWords
+                SubjectMatchesPatterns                       = $PolicyRule.SubjectMatchesPatterns
+                SubjectOrBodyContainsWords                   = $PolicyRule.SubjectOrBodyContainsWords
+                SubjectOrBodyMatchesPatterns                 = $PolicyRule.SubjectOrBodyMatchesPatterns
+                ContentCharacterSetContainsWords             = $PolicyRule.ContentCharacterSetContainsWords
+                DocumentNameMatchesPatterns                  = $PolicyRule.DocumentNameMatchesPatterns
+                DocumentNameMatchesWords                     = $PolicyRule.DocumentNameMatchesWords
+                ExceptIfAnyOfRecipientAddressMatchesPatterns = $PolicyRule.ExceptIfAnyOfRecipientAddressMatchesPatterns
+                ExceptIfContentCharacterSetContainsWords     = $PolicyRule.ExceptIfContentCharacterSetContainsWords
+                ExceptIfContentPropertyContainsWords         = $PolicyRule.ExceptIfContentPropertyContainsWords
+                ExceptIfDocumentNameMatchesPatterns          = $PolicyRule.ExceptIfDocumentNameMatchesPatterns
+                ExceptIfDocumentNameMatchesWords             = $PolicyRule.ExceptIfDocumentNameMatchesWords
+                RecipientDomainIs                            = $PolicyRule.RecipientDomainIs
+                ExceptIfRecipientDomainIs                    = $PolicyRule.ExceptIfRecipientDomainIs
+                ExceptIfSenderDomainIs                       = $PolicyRule.ExceptIfSenderDomainIs
+                ExceptIfSenderIPRanges                       = $PolicyRule.ExceptIfSenderIPRanges
+                ExceptIfSentTo                               = $PolicyRule.ExceptIfSentTo
+                ExceptIfSubjectContainsWords                 = $PolicyRule.ExceptIfSubjectContainsWords
+                ExceptIfSubjectMatchesPatterns               = $PolicyRule.ExceptIfSubjectMatchesPatterns
+                ExceptIfSubjectOrBodyContainsWords           = $PolicyRule.ExceptIfSubjectOrBodyContainsWords
+                ExceptIfSubjectOrBodyMatchesPatterns         = $PolicyRule.ExceptIfSubjectOrBodyMatchesPatterns
+                FromAddressMatchesPatterns                   = $PolicyRule.FromAddressMatchesPatterns
+                SentToMemberOf                               = $PolicyRule.FromAddressMatchesPatterns
+                DocumentContainsWords                        = $PolicyRule.DocumentContainsWords
+                ContentIsNotLabeled                          = $PolicyRule.ContentIsNotLabeled
+                SetHeader                                    = $PolicyRule.SetHeader
+                AnyOfRecipientAddressContainsWords           = $AnyOfRecipientAddressContainsWords
+                AnyOfRecipientAddressMatchesPatterns         = $AnyOfRecipientAddressMatchesPatterns
+                ContentExtensionMatchesWords                 = $ContentExtensionMatchesWords
+                ExceptIfContentExtensionMatchesWords         = $ExceptIfContentExtensionMatchesWords
+                Credential                                   = $Credential
+                ApplicationId                                = $ApplicationId
+                TenantId                                     = $TenantId
+                CertificateThumbprint                        = $CertificateThumbprint
+                CertificatePath                              = $CertificatePath
+                CertificatePassword                          = $CertificatePassword
             }
 
             $paramsToRemove = @()
@@ -343,7 +516,7 @@ function Set-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet('All', 'PerUser')]
+        [ValidateSet('All', 'PerUser','None')]
         [System.String]
         $BlockAccessScope,
 
@@ -459,9 +632,147 @@ function Set-TargetResource
         [System.Boolean]
         $DocumentIsPasswordProtected,
 
-        [Parameter()]
+       [Parameter()]
         [System.Boolean]
         $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.String[]]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String[]]
+        $FromScope,
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String[]]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $DocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfDocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $DocumentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SetHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $ContentIsNotLabeled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -562,6 +873,7 @@ function Set-TargetResource
         $CreationParams.Remove('ManagedIdentity') | Out-Null
         $CreationParams.Remove('ApplicationSecret') | Out-Null
 
+
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         New-DLPComplianceRule @CreationParams
     }
@@ -653,7 +965,7 @@ function Test-TargetResource
         $BlockAccess,
 
         [Parameter()]
-        [ValidateSet('All', 'PerUser')]
+        [ValidateSet('All', 'PerUser','None')]
         [System.String]
         $BlockAccessScope,
 
@@ -772,6 +1084,144 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $ExceptIfDocumentIsPasswordProtected,
+
+        [Parameter()]
+        [System.String[]]
+        $MessageTypeMatches,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfMessageTypeMatches,
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String[]]
+        $FromScope,
+
+        [Parameter()]
+        [ValidateSet('InOrganization', 'NotInOrganization')]
+        [System.String[]]
+        $ExceptIfFromScope,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $DocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $DocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfAnyOfRecipientAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentCharacterSetContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfContentPropertyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfDocumentNameMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfDocumentNameMatchesWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfFromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $FromAddressMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSenderIPRanges,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSubjectOrBodyMatchesPatterns,
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf,
+
+        [Parameter()]
+        [System.String[]]
+        $DocumentContainsWords,
+
+        [Parameter()]
+        [System.String[]]
+        $SetHeader,
+
+        [Parameter()]
+        [System.Boolean]
+        $ContentIsNotLabeled,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
