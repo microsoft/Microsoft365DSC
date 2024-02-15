@@ -13,8 +13,8 @@
 * AADConditionalAccessPolicy
   * Removed invalid empty string value that was added to the validate set
     of two parameters.
-  * Updated permission reference for app-onlzy authentication.
-    FIXES [[#3329](https://github.com/microsoft/Microsoft365DSC/issues/3329)]
+  * Updated permission reference for app-only authentication.
+    FIXES [#3329](https://github.com/microsoft/Microsoft365DSC/issues/3329)
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
@@ -22,8 +22,9 @@
   * Fix handling of DisplayName property in comparison
     FIXES [#4019](https://github.com/microsoft/Microsoft365DSC/issues/4019)
 * AADUser
-  * Fixed and issue where an user would be created even if the resrouce was set to absent.
-    FIXES [[#4265](https://github.com/microsoft/Microsoft365DSC/issues/4265)]
+  * Fixed and issue where an user would be created even if the resource was set
+    to absent.
+    FIXES [#4265](https://github.com/microsoft/Microsoft365DSC/issues/4265)
 * EXOMobileDeviceMailboxPolicy
   * Fixes an issue where an empty MinPasswordLength value was always passed down
     to the update logic flow.
