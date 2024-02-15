@@ -722,83 +722,88 @@ function Compare-M365DSCConfigurations
                             {
                                 [string]$key = Get-M365DSCCimInstanceKey -CIMInstance $instance
 
-                                if ($null -ne $key)
-                                {
-                                    $destinationResourceInstances = $destinationResource.$destinationPropertyName | Where-Object -FilterScript {$_."$key" -eq $instance."$key"}
+                                $destinationResourceInstances = $destinationResource.$destinationPropertyName | Where-Object -FilterScript {$_."$key" -eq $instance."$key"}
 
-                                    if ($null -ne $destinationResourceInstances)
+                                if ($null -ne $destinationResourceInstances)
+                                {
+                                    # There is a chance we found multiple instances of a CIMInstance based on its key property.
+                                    # If that's the case, loop through each instance found and if at least one of them is
+                                    # a perfect match, then don't consider this a drift.
+                                    $foundOneMatch = $false
+                                    $foundMatchResource = $null
+                                    $drift = $null
+                                    foreach ($destinationResourceInstance in $destinationResourceInstances)
                                     {
-                                        # There is a chance we found 2 instances of a CIMInstance based on its key property.
-                                        # If that's the case, loop through each instance found and if at least of of them is
-                                        # a perfect match, then don't consider this a drift.
-                                        $foundOneMatch = $false
-                                        $drift = $null
-                                        foreach ($destinationResourceInstance in $destinationResourceInstances)
+                                        $foundResourceMatch = $true
+                                        [array]$driftProperties = @()
+                                        foreach ($property in $instance.Keys)
                                         {
-                                            $foundResourceMatch = $true
-                                            foreach ($property in $instance.Keys)
+                                            if ($null -eq $destinationResourceInstance."$property" -or $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
+                                                -DifferenceObject ($destinationResourceInstance."$property")))
                                             {
-                                                if ($null -eq $destinationResourceInstance."$property" -or $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
-                                                    -DifferenceObject ($destinationResourceInstance."$property")))
-                                                {
-                                                    $drift = @{
-                                                        ResourceName         = $sourceResource.ResourceName
-                                                        ResourceInstanceName = $destinationResource.ResourceInstanceName
-                                                        Key                  = $propertyName
-                                                        KeyValue             = $instance."$key"
-                                                        Properties           = @(@{
-                                                                ParameterName      = $property
-                                                                CIMInstanceKey     = $key
-                                                                CIMInstanceValue   = $instance."$Key"
-                                                                ValueInSource      = $instance."$property"
-                                                                ValueInDestination = $destinationResourceInstance."$property"
-                                                            })
-                                                    }
-                                                    $foundResourceMatch = $false
+                                                $driftProperties += @{
+                                                    ParameterName      = $property
+                                                    CIMInstanceKey     = $key
+                                                    CIMInstanceValue   = $instance."$Key"
+                                                    ValueInSource      = $instance."$property"
+                                                    ValueInDestination = $destinationResourceInstance."$property"
                                                 }
-                                            }
-                                            if ($foundResourceMatch)
-                                            {
-                                                $foundOneMatch = $true
+                                                $foundResourceMatch = $false
                                             }
                                         }
-                                        if ($foundOneMatch)
+                                        if ($foundResourceMatch)
                                         {
-                                            # If a match was found, clear the drift.
-                                            $drift = $null
+                                            $foundOneMatch = $true
+                                            $foundMatchResource = $destinationResourceInstance
                                         }
                                         else
                                         {
-                                            $Delta += , $drift
-                                            $drift = $null
+                                            $drift = @{
+                                                ResourceName         = $sourceResource.ResourceName
+                                                ResourceInstanceName = $destinationResource.ResourceInstanceName
+                                                Key                  = $propertyName
+                                                KeyValue             = $instance."$key"
+                                                Properties           = $driftProperties
+                                            }
                                         }
+                                    }
+                                    if ($foundOneMatch)
+                                    {
+                                        # If a match was found, clear the drift.
+                                        $drift = $null
+                                        $destinationResource.$destinationPropertyName = $destinationResource.$destinationPropertyName | Where-Object { $_ -ne $foundMatchResource }
                                     }
                                     else
                                     {
-                                        # We have detected a drift where the CIM Instance exists in the Source but NOT in the Destination
-                                        $drift = @{
-                                            ResourceName         = $sourceResource.ResourceName
-                                            ResourceInstanceName = $destinationResource.ResourceInstanceName
-                                            Key                  = $propertyName
-                                            KeyValue             = $instance."$key"
-                                            Properties           = @(@{
-                                                    ParameterName      = $propertyName
-                                                    CIMInstanceKey     = $key
-                                                    CIMInstanceValue   = $instance."$Key"
-                                                    ValueInSource      = $instance
-                                                    ValueInDestination = $null
-                                                })
-                                        }
-                                        if ($null -ne $drift)
-                                        {
-                                            $Delta += , $drift
-                                            $drift = $null
-                                        }
+                                        $Delta += , $drift
+                                        $drift = $null
+                                    }
+                                }
+                                else
+                                {
+                                    # We have detected a drift where the CIM Instance exists in the Source but NOT in the Destination
+                                    $drift = @{
+                                        ResourceName         = $sourceResource.ResourceName
+                                        ResourceInstanceName = $destinationResource.ResourceInstanceName
+                                        Key                  = $propertyName
+                                        KeyValue             = $instance."$key"
+                                        Properties           = @(@{
+                                                ParameterName      = $propertyName
+                                                CIMInstanceKey     = $key
+                                                CIMInstanceValue   = $instance."$Key"
+                                                ValueInSource      = $instance
+                                                ValueInDestination = $null
+                                            })
+                                    }
+                                    if ($null -ne $drift)
+                                    {
+                                        $Delta += , $drift
+                                        $drift = $null
                                     }
                                 }
                             }
                         }
-                        # Needs to be a separate nested if statement otherwise the ReferenceObject an be null and it will error out;
+                        # Needs to be a separate nested if statement otherwise the ReferenceObject can be null and it will error out;
                         elseif ($destinationResource.ContainsKey($destinationPropertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
                                 $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
                                         -DifferenceObject ($destinationResource.$destinationPropertyName))) -and
@@ -853,8 +858,8 @@ function Compare-M365DSCConfigurations
                     }
                 }
 
-                # Do the scan the other way around because there's a chance that the property, if null, wasn't part of the source
-                # object. By scanning against the destination we will catch properties that are not null on the source but not null in destination;
+                # Do the scan the other way around because there's a chance that the property, if null, wasn't part of the source object.
+                # By scanning against the destination we will catch properties that are not null on the source but not null in destination;
                 foreach ($propertyName in $destinationResource.Keys)
                 {
                     if ($propertyName -notin $filteredProperties)
@@ -871,88 +876,90 @@ function Compare-M365DSCConfigurations
                             {
                                 [string]$key = Get-M365DSCCimInstanceKey -CIMInstance $instance
 
-                                if ($null -ne $key)
+                                $sourceResourceInstances = $sourceResource.$sourcePropertyName | Where-Object -FilterScript {$_."$key" -eq $instance."$key"}
+
+                                if ($null -ne $sourceResourceInstances)
                                 {
-                                    $sourceResourceInstances = $sourceResource.$sourcePropertyName | Where-Object -FilterScript {$_."$key" -eq $instance."$key"}
-
-                                    if ($null -ne $sourceResourceInstances)
+                                    # There is a chance we found 2 instances of a CIMInstance based on its key property.
+                                    # If that's the case, loop through each instance found and if at least one of them is
+                                    # a perfect match, then don't consider this a drift.
+                                    $foundOneMatch = $false
+                                    $drift = $null
+                                    foreach ($sourceResourceInstance in $sourceResourceInstances)
                                     {
-                                        # There is a chance we found 2 instances of a CIMInstance based on its key property.
-                                        # If that's the case, loop through each instance found and if at least of of them is
-                                        # a perfect match, then don't consider this a drift.
-                                        $foundOneMatch = $false
-                                        $drift = $null
-                                        foreach ($sourceResourceInstance in $sourceResourceInstances)
+                                        $innerDrift = $null
+                                        foreach ($property in $instance.Keys)
                                         {
-                                            foreach ($property in $instance.Keys)
+                                            if ($null -eq $sourceResourceInstance."$property" -or $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
+                                                -DifferenceObject ($sourceResourceInstance."$property")))
                                             {
-                                                if ($null -eq $sourceResourceInstance."$property" -or $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
-                                                    -DifferenceObject ($sourceResourceInstance."$property")))
+                                                # Make sure we haven't already added this drift in the delta return object to prevent duplicates.
+                                                $existing = $delta | Where-Object -FilterScript {$_.ResourceName -eq $destinationResource.ResourceName -and `
+                                                                                                    $_.ResourceInstanceName -eq $destinationResource.ResourceInstanceName}
+
+                                                $sameEntry = $null
+                                                if ($null -ne $existing)
                                                 {
-                                                    # Make sure we haven't already added this drift in the delta return object to prevent duplicates.
-                                                    $existing = $delta | Where-Object -FilterScript {$_.ResourceName -eq $destinationResource.ResourceName -and `
-                                                                                                     $_.ResourceInstanceName -eq $destinationResource.ResourceInstanceName}
+                                                    $sameEntry = $existing.Properties | Where-Object -FilterScript {$_.ParameterName -eq $property -and `
+                                                                                                                    $_.CIMInstanceKey -eq $key -and `
+                                                                                                                    $_.CIMInstanceValue -eq ($instance."$key") -and `
+                                                                                                                    $_.ValueInSource -eq $sourceResourceInstance."$property" -and `
+                                                                                                                    $_.ValueInDestination -eq $instance."$property"}
+                                                }
 
-                                                    $sameEntry = $null
-                                                    if ($null -ne $existing)
-                                                    {
-                                                        $sameEntry = $existing.Properties | Where-Object -FilterScript {$_.ParameterName -eq $property -and `
-                                                                                                                        $_.CIMInstanceKey -eq $key -and `
-                                                                                                                        $_.CIMInstanceValue -eq ($instance."$key") -and `
-                                                                                                                        $_.ValueInSource -eq $sourceResourceInstance."$property" -and `
-                                                                                                                        $_.ValueInDestination -eq $instance."$property"}
-                                                    }
-
-                                                    if ($null -eq $sameEntry)
-                                                    {
-                                                        $drift = @{
-                                                            ResourceName         = $destinationResource.ResourceName
-                                                            ResourceInstanceName = $destinationResource.ResourceInstanceName
-                                                            Key                  = $propertyName
-                                                            KeyValue             = $instance."$key"
-                                                            Properties           = @(@{
-                                                                    ParameterName      = $property
-                                                                    CIMInstanceKey     = $key
-                                                                    CIMInstanceValue   = $instance."$Key"
-                                                                    ValueInSource      = $sourceResourceInstance."$property"
-                                                                    ValueInDestination = $instance."$property"
-                                                                })
-                                                        }
+                                                if ($null -eq $sameEntry)
+                                                {
+                                                    $innerDrift = @{
+                                                        ResourceName         = $destinationResource.ResourceName
+                                                        ResourceInstanceName = $destinationResource.ResourceInstanceName
+                                                        Key                  = $propertyName
+                                                        KeyValue             = $instance."$key"
+                                                        Properties           = @(@{
+                                                                ParameterName      = $property
+                                                                CIMInstanceKey     = $key
+                                                                CIMInstanceValue   = $instance."$Key"
+                                                                ValueInSource      = $sourceResourceInstance."$property"
+                                                                ValueInDestination = $instance."$property"
+                                                            })
                                                     }
                                                 }
                                             }
-                                            if ($null -eq $drift)
-                                            {
-                                                $foundOneMatch = $true
-                                            }
                                         }
-                                        if ($foundOneMatch)
+                                        if ($null -eq $innerDrift)
                                         {
-                                            # If a match was found, clear the drift.
-                                            $drift = $null
+                                            $foundOneMatch = $true
+                                        }
+                                        else
+                                        {
+                                            $drift = $innerDrift
                                         }
                                     }
-                                    else
+                                    if ($foundOneMatch)
                                     {
-                                        # We have detected a drift where the CIM Instance exists in the Destination but NOT in the Source
-                                        $drift = @{
-                                            ResourceName         = $destinationResource.ResourceName
-                                            ResourceInstanceName = $destinationResource.ResourceInstanceName
-                                            Key                  = $propertyName
-                                            KeyValue             = $instance."$key"
-                                            Properties           = @(@{
-                                                    ParameterName      = $propertyName
-                                                    CIMInstanceKey     = $key
-                                                    CIMInstanceValue   = $instance."$Key"
-                                                    ValueInSource      = $null
-                                                    ValueInDestination = $instance
-                                                })
-                                        }
-                                        if ($null -ne $drift)
-                                        {
-                                            $Delta += , $drift
-                                            $drift = $null
-                                        }
+                                        # If a match was found, clear the drift.
+                                        $drift = $null
+                                    }
+                                }
+                                else
+                                {
+                                    # We have detected a drift where the CIM Instance exists in the Destination but NOT in the Source
+                                    $drift = @{
+                                        ResourceName         = $destinationResource.ResourceName
+                                        ResourceInstanceName = $destinationResource.ResourceInstanceName
+                                        Key                  = $propertyName
+                                        KeyValue             = $instance."$key"
+                                        Properties           = @(@{
+                                                ParameterName      = $propertyName
+                                                CIMInstanceKey     = $key
+                                                CIMInstanceValue   = $instance."$Key"
+                                                ValueInSource      = $null
+                                                ValueInDestination = $instance
+                                            })
+                                    }
+                                    if ($null -ne $drift)
+                                    {
+                                        $Delta += , $drift
+                                        $drift = $null
                                     }
                                 }
                             }
@@ -1150,6 +1157,10 @@ function Get-M365DSCResourceKey
         if ($Resource.ResourceName -eq 'AADMSGroup' -and -not [System.String]::IsNullOrEmpty($Resource.Id))
         {
             return @('Id')
+        }
+        if ($Resource.ResourceName -eq 'IntuneDeviceEnrollmentPlatformRestriction' -and $Resource.Keys.Where({ $_ -like "*Restriction"}))
+        {
+            return @('ResourceInstanceName')
         }
         if ($Resource.ResourceName -eq 'TeamsChannel' -and -not [System.String]::IsNullOrEmpty($Resource.TeamName))
         {

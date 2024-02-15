@@ -106,7 +106,7 @@ Configuration Example
     {
         EXOGroupSettings 'TestGroup'
         {
-            DisplayName                            = "Test Group";
+            DisplayName                            = "All Company";
             AccessType                             = "Public";
             AlwaysSubscribeMembersToCalendarEvents = $False;
             AuditLogAgeLimit                       = "90.00:00:00";

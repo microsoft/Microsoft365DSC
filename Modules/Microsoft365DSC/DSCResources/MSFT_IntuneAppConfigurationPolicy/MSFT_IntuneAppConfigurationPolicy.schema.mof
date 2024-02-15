@@ -19,6 +19,7 @@ class MSFT_IntuneAppConfigurationPolicyCustomSetting
 [ClassVersion("1.0.0.0"), FriendlyName("IntuneAppConfigurationPolicy")]
 class MSFT_IntuneAppConfigurationPolicy : OMI_BaseResource
 {
+    [Write, Description("Key of the entity. Read-Only.")] String Id;
     [Key, Description("Display name of the app configuration policy.")] String DisplayName;
     [Write, Description("Description of the app configuration policy.")] String Description;
     [Write, Description("Assignments of the Intune Policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];

@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Displayname** | Key | String | RuleDefinition Displayname | |
+| **DisplayName** | Key | String | RuleDefinition DisplayName | |
 | **Id** | Write | String | Specifies the RoleId. | |
 | **ActivationMaxDuration** | Write | String | Activation maximum duration (hours). | |
 | **ActivationReqJustification** | Write | Boolean | Require justification on activation (True/False) | |
