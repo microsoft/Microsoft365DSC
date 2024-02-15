@@ -921,6 +921,7 @@ function Test-M365DSCParameterState
             }
             if (-not $driftedData.ContainsKey('Tenant'))
             {
+                $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
                 $driftedData.Add('Tenant', $TenantName)
             }
             $driftedData.Add('Resource', $source.Split('_')[1])
@@ -928,16 +929,6 @@ function Test-M365DSCParameterState
             #endregion
             $EventMessage.Append("            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n") | Out-Null
         }
-
-        #region Telemetry
-        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
-        $data.Add('Event', 'ConfigurationDrift')
-
-        if (-not $Data.ContainsKey('Tenant'))
-        {
-            $data.Add('Tenant', $TenantName)
-        }
-        #endregion
 
         $EventMessage.Append("        </ParametersNotInDesiredState>`r`n") | Out-Null
         $EventMessage.Append("    </ConfigurationDrift>`r`n") | Out-Null
