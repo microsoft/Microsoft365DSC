@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# 1.24.214.1
+# 1.24.214.2
 
 * AADConditionalAccessPolicy
   * Removed invalid empty string value that was added to the validate set

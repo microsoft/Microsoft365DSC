@@ -1,6 +1,7 @@
 Once a configuration has been applied to a Microsoft 365 tenant using Microsoft365DSC, the local system will perform regular checks to analyze the configuration of the remote tenant against what its desired state should be and detect any configuration drifts. This feature comes from PowerShell DSC out-of-the-box and is not something specific to Microsoft365DSC. By default the DSC engine on the system where the configuration was applied from will check for configuration drifts every 15 minutes.
 
 ## Microsoft365DSC Event log
+
 If a drift in configuration is detected, Microsoft365DSC will log it in Event Viewer on the machine. Detected drifts will get logged under the **M365DSC** log journal in Event Viewer. Microsoft365DSC provide very detailed entries in event viewer that help you identify exactly in what component a drift was detected as well as what property was detected to have drifted.
 
 <figure markdown>
