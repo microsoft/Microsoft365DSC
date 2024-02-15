@@ -514,8 +514,6 @@ function Get-M365DSCTenantNameFromParameterSet
         [System.Collections.HashTable]
         $ParameterSet
     )
-    $VerbosePreference = 'Continue'
-    Write-Verbose "ParameterSet ==== $($ParameterSet | Out-String)"
     if ($ParameterSet.TenantId)
     {
         return $ParameterSet.TenantId
