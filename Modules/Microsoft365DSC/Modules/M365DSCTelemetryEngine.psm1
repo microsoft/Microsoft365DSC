@@ -53,6 +53,7 @@ function Add-M365DSCTelemetryEvent
         [System.Collections.Generic.Dictionary[[System.String], [System.Double]]]
         $Metrics
     )
+    $verbosepreference = 'continue'
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
             [System.EnvironmentVariableTarget]::Machine)
 
@@ -70,6 +71,7 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add('ProjectName', $ProjectName)
             }
 
+            Write-Verbose -Message "Data ==== $($Data | Out-String)"
             if (-not $Data.ContainsKey('Tenant'))
             {
                 if (-not [System.String]::IsNullOrEmpty($Data.Principal))
