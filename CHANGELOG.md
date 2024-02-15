@@ -42,6 +42,8 @@
   * Fix Test-TargetResource by not comparing Identity since it might be from
     another tenant or not present in blueprint
   FIXES [#4302](https://github.com/microsoft/Microsoft365DSC/issues/4302)
+* SCDPLPCompianceRule
+  * Added support for multiple additional parameters.
 * SPOSharingSettings
   * Fixed an issue where the resource would return multiple sites.
     FIXES [#2759](https://github.com/microsoft/Microsoft365DSC/issues/2759)
