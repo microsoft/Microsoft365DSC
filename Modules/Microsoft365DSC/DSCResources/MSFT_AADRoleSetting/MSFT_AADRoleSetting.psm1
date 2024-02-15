@@ -194,7 +194,7 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of Role: $Displayname"
+    Write-Verbose -Message "Getting configuration of Role: $DisplayName"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -225,7 +225,7 @@ function Get-TargetResource
             -ErrorAction SilentlyContinue
     }
 
-    if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($Displayname))
+    if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($DisplayName))
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
@@ -233,7 +233,7 @@ function Get-TargetResource
         }
         else
         {
-            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
+            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "displayName eq '$DisplayName'"
         }
     }
 
@@ -327,7 +327,7 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Found configuration of Rule $($Displayname)"
+        Write-Verbose -Message "Found configuration of Rule $($DisplayName)"
         $result = @{
             Id                                                        = $Id
             DisplayName                                               = $DisplayName
@@ -587,7 +587,7 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration of Role settings: $Displayname"
+    Write-Verbose -Message "Setting configuration of Role settings: $DisplayName"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -602,7 +602,7 @@ function Set-TargetResource
     #endregion
 
     #get role
-    $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
+    $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "displayName eq '$DisplayName'"
 
     $Policy = $null
     if (-not [System.String]::IsNullOrEmpty($Id))
@@ -943,7 +943,7 @@ function Set-TargetResource
                         else
                         {
                             #try with group
-                            $Filter = "Displayname eq '" + $item + "'"
+                            $Filter = "displayName eq '" + $item + "'"
                             try
                             {
                                 $group = Get-MgGroup -Filter $Filter -ErrorAction Stop
@@ -1312,7 +1312,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Role Assignment: $Displayname"
+    Write-Verbose -Message "Testing configuration of Role Assignment: $DisplayName"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 

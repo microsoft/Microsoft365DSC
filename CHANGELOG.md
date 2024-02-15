@@ -10,6 +10,9 @@
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
+* AADRoleSetting
+  * Fix handling of DisplayName property in comparison
+    FIXES [#4019](https://github.com/microsoft/Microsoft365DSC/issues/4019)
 * AADUser
   * Fixed and issue where an user would be created even if the resrouce was set to absent.
     FIXES [[#4265](https://github.com/microsoft/Microsoft365DSC/issues/4265)]
