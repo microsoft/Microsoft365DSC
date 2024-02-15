@@ -919,11 +919,8 @@ function Test-M365DSCParameterState
                 $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]))
                 $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]))
             }
-            if (-not $driftedData.ContainsKey('Tenant'))
-            {
-                $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
-                $driftedData.Add('Tenant', $TenantName)
-            }
+            $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+            $driftedData.Add('Tenant', $TenantName)
             $driftedData.Add('Resource', $source.Split('_')[1])
             Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
             #endregion
