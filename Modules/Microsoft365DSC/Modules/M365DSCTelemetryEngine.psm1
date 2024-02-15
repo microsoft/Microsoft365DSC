@@ -20,7 +20,7 @@ function Get-M365DSCApplicationInsightsTelemetryClient
 
         if ($null -eq $InstrumentationKey)
         {
-            $InstrumentationKey = 'bc5aa204-0b1e-4499-a955-d6a639bdb4fa'
+            $InstrumentationKey = 'e670af5d-fd30-4407-a796-8ad30491ea7a'
         }
         $TelClient = [Microsoft.ApplicationInsights.TelemetryClient]::new()
         $TelClient.InstrumentationKey = $InstrumentationKey
@@ -43,7 +43,7 @@ function Add-M365DSCTelemetryEvent
     param(
         [Parameter()]
         [System.String]
-        $Type = 'Flow',
+        $Type,
 
         [Parameter()]
         [System.Collections.Generic.Dictionary[[System.String], [System.String]]]
@@ -191,6 +191,20 @@ function Add-M365DSCTelemetryEvent
             [array]$version = (Get-Module 'Microsoft365DSC').Version | Sort-Object -Descending
             $Data.Add('M365DSCVersion', $version[0].ToString())
 
+            # OS Version
+            try
+            {
+                if ($null -eq $Global:M365DSCOSInfo)
+                {
+                    $Global:M365DSCOSInfo = (Get-ComputerInfo -Property OSName -ErrorAction SilentlyContinue).OSName
+                }
+                $Data.Add('M365DSCOSVersion', $Global:M365DSCOSInfo)
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
+
             # LCM Metadata Information
             try
             {
@@ -215,28 +229,31 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add('LCMState', $LCMInfo.LCMState)
                 $Data.Add('LCMStateDetail', $LCMInfo.LCMStateDetail)
 
-                if ($Global:M365DSCExportInProgress)
+                if ([System.String]::IsNullOrEMpty($Type))
                 {
-                    $Data.Add('M365DSCOperation', 'Export')
-                }
-                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
-                        $LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
-                        $LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
-                {
-                    $Data.Add('M365DSCOperation', 'MonitoringScheduled')
-                }
-                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
-                {
-                    $Data.Add('M365DSCOperation', 'MonitoringManual')
-                }
-                elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
-                        $LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
-                {
-                    $Data.Add('M365DSCOperation', 'ApplyingConfiguration')
-                }
-                else
-                {
-                    $Data.Add('M365DSCOperation', 'Undetermined')
+                    if ($Global:M365DSCExportInProgress)
+                    {
+                        $Type = 'Export'
+                    }
+                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
+                            $LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
+                            $LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
+                    {
+                        $Type = 'MonitoringScheduled'
+                    }
+                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
+                    {
+                        $Type = 'MonitoringManual'
+                    }
+                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
+                            $LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
+                    {
+                        $Type = 'ApplyingConfiguration'
+                    }
+                    else
+                    {
+                        $Type = 'Undetermined'
+                    }
                 }
             }
             catch
@@ -386,7 +403,7 @@ function Format-M365DSCTelemetryParameters
             try
             {
                 $data.Add('Principal', $Parameters.Credential.UserName)
-                $data.Add('TenantId', $Parameters.Credential.UserName.Split('@')[1])
+                $data.Add('Tenant', $Parameters.Credential.UserName.Split('@')[1])
             }
             catch
             {
@@ -396,11 +413,11 @@ function Format-M365DSCTelemetryParameters
         elseif ($Parameters.ApplicationId)
         {
             $data.Add('Principal', $Parameters.ApplicationId)
-            $data.Add('TenantId', $Parameters.TenantId)
+            $data.Add('Tenant', $Parameters.TenantId)
         }
         elseif (-not [System.String]::IsNullOrEmpty($TenantId))
         {
-            $data.Add('TenantId', $Parameters.TenantId)
+            $data.Add('Tenant', $Parameters.TenantId)
         }
         $data.Add('ConnectionMode', (Get-M365DSCAuthenticationMode -Parameters $Parameters))
     }
