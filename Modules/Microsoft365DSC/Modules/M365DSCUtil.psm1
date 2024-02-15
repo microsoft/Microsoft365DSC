@@ -919,7 +919,7 @@ function Test-M365DSCParameterState
                 $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]))
                 $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]))
             }
-            if (-not $Data.ContainsKey('Tenant'))
+            if (-not $driftedData.ContainsKey('Tenant'))
             {
                 $driftedData.Add('Tenant', $TenantName)
             }
