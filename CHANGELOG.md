@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+* MISC
+  * Uninstall-M365DSCOutdatedDependencies
+    * Outdated Microsoft365DSC-modules are now removed in their entirety
+
 # 1.24.214.1
 
 * AADConditionalAccessPolicy
