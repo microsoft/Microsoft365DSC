@@ -2949,7 +2949,7 @@ function Uninstall-M365DSCOutdatedDependencies
                 Write-Information -MessageData "Uninstalling $($module.Name) Version {$($module.Version)}"
                 if (Test-Path -Path $($module.Path))
                 {
-                    Remove-Item $($module.Path) -Force -Recurse
+                    Remove-Item $($module.ModuleBase) -Force -Recurse
                 }
             }
             catch
