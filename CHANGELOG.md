@@ -1,17 +1,62 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.214.1
 
+* AADConditionalAccessPolicy
+  * Removed invalid empty string value that was added to the validate set
+    of two parameters.
+  * Updated permission reference for app-onlzy authentication.
+    FIXES [[#3329](https://github.com/microsoft/Microsoft365DSC/issues/3329)]
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
+* AADRoleSetting
+  * Fix handling of DisplayName property in comparison
+    FIXES [#4019](https://github.com/microsoft/Microsoft365DSC/issues/4019)
+* AADUser
+  * Fixed and issue where an user would be created even if the resrouce was set to absent.
+    FIXES [[#4265](https://github.com/microsoft/Microsoft365DSC/issues/4265)]
 * EXOMobileDeviceMailboxPolicy
   * Fixes an issue where an empty MinPasswordLength value was always passed down
     to the update logic flow.
+* IntuneAppConfigurationPolicy
+  * Added parameter Id to avoid having to retrieve the same policy multiple
+    times
+  * Fixed tests in Test-TargetResource to ensure the resource reports its
+    correct state
+    FIXES [#3542](https://github.com/microsoft/Microsoft365DSC/issues/3542)
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Fixed Test-TargetResource to ensure that resource reports its correct state
+    FIXES [#3959](https://github.com/microsoft/Microsoft365DSC/issues/3959)
+* IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
+  * Fixed Test-TargetResource by removing Id from being tested and also used
+    correct filter while retrieving the policy otherwise it could not be found
+    FIXES [#3964](https://github.com/microsoft/Microsoft365DSC/issues/3964)
+* IntuneDeviceConfigurationPolicyAndroidWorkProfile
+  * Fix typo in variable which made it export incorrectly and report that
+    resource was not in correct state due to testing an incorrect value
+    FIXES [#3972](https://github.com/microsoft/Microsoft365DSC/issues/3972)
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Fix removal of resource if Identity comes from another tenant or is not
+    present in blueprint
+  * Fix Test-TargetResource by not comparing Identity since it might be from
+    another tenant or not present in blueprint
+  FIXES [#4302](https://github.com/microsoft/Microsoft365DSC/issues/4302)
+* SCDPLPCompianceRule
+  * Added support for multiple additional parameters.
+* SPOSharingSettings
+  * Fixed an issue where the resource would return multiple sites.
+    FIXES [#2759](https://github.com/microsoft/Microsoft365DSC/issues/2759)
 * DEPENDENCIES
   * Updated DSCParser to version 1.4.0.2.
   * Updated Microsoft.Graph dependencies to version 2.13.1.
   * Updated MSCloudLoginAssistant to version 1.1.13.
+* MISC
+  * M365DSCReport
+    * Fix nested change detection for CIMInstances
+    * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
+      FIXES [#4291](https://github.com/microsoft/Microsoft365DSC/issues/4291)
+  * Added new QA test to check for missing description in resource schema
 
 # 1.24.207.2
 
