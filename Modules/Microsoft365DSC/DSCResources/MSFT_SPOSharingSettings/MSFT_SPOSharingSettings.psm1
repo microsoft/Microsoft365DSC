@@ -520,7 +520,7 @@ function Set-TargetResource
     Set-PnPTenant @CurrentParameters | Out-Null
     if ($SetMySharingCapability)
     {
-        $mysite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.com/' }
+        $mysite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.com/' -and $_.Template -notmatch '^RedirectSite#' }
         Set-PnPTenantSite -Identity $mysite.Url -SharingCapability $MySiteSharingCapability
     }
 }
