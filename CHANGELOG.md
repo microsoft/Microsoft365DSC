@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * M365DSCUtil
+    * When Name is Key of a resource append it to ResourceInstanceName instead
+      of Id during Export
+      FIXES [#4333](https://github.com/microsoft/Microsoft365DSC/issues/4333)
+
 # 1.24.214.1
 
 * AADConditionalAccessPolicy

@@ -3339,6 +3339,10 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = $Results.DisplayName
     }
+    elseif ($Results.ContainsKey('Name'))
+    {
+        $primaryKey = $Results.Name
+    }
     elseif ($Results.ContainsKey('Identity'))
     {
         $primaryKey = $Results.Identity
@@ -3346,10 +3350,6 @@ function Get-M365DSCExportContentForResource
     elseif ($Results.ContainsKey('Id'))
     {
         $primaryKey = $Results.Id
-    }
-    elseif ($Results.ContainsKey('Name'))
-    {
-        $primaryKey = $Results.Name
     }
     elseif ($Results.ContainsKey('Title'))
     {
