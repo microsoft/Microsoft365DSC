@@ -514,7 +514,6 @@ function Get-M365DSCTenantNameFromParameterSet
         [System.Collections.HashTable]
         $ParameterSet
     )
-
     if ($ParameterSet.TenantId)
     {
         return $ParameterSet.TenantId
@@ -898,47 +897,35 @@ function Test-M365DSCParameterState
         $EventMessage = [System.Text.StringBuilder]::New()
         $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
         $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+        Write-Verbose -Message "Found Tenant Name: $TenantName"
         $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`" TenantId=`"$TenantName`">`r`n") | Out-Null
-
         $EventMessage.Append("        <ParametersNotInDesiredState>`r`n") | Out-Null
+
+        $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+        $driftedData.Add('Tenant', $TenantName)
+        $driftedData.Add('Resource', $source.Split('_')[1])
+        $driftedData.Add('Event', 'DriftedParameter')
+
+        # If custom App Insights is specified, allow for the current and desired values to be captured;
+        # ISSUE #1222
+        if ($null -ne $env:M365DSCTelemetryInstrumentationKey -and `
+                $env:M365DSCTelemetryInstrumentationKey -ne 'bc5aa204-0b1e-4499-a955-d6a639bdb4fa' -and `
+                $env:M365DSCTelemetryInstrumentationKey -ne 'e670af5d-fd30-4407-a796-8ad30491ea7a')
+        {
+            $driftedData.Add('CurrentValues', $CurrentValues)
+            $driftedData.Add('DesiredValues', $DesiredValues)
+        }
+        #endregion
+        $telemetryDriftedParameters = ''
         foreach ($key in $DriftedParameters.Keys)
         {
             Write-Verbose -Message "Detected Drifted Parameter [$Source]$key"
-
-            #region Telemetry
-            $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-            $driftedData.Add('Event', 'DriftedParameter')
-            $driftedData.Add('Parameter', "[$Source]$key")
-
-            # If custom App Insights is specified, allow for the current and desired values to be captured;
-            # ISSUE #1222
-            if ($null -ne $env:M365DSCTelemetryInstrumentationKey -and `
-                    $env:M365DSCTelemetryInstrumentationKey -ne 'bc5aa204-0b1e-4499-a955-d6a639bdb4fa' -and `
-                    $env:M365DSCTelemetryInstrumentationKey -ne 'e670af5d-fd30-4407-a796-8ad30491ea7a')
-            {
-                $driftedData.Add('CurrentValue', [string]($CurrentValues[$key]))
-                $driftedData.Add('DesiredValue', [string]($DesiredValues[$key]))
-            }
-            if (-not $Data.ContainsKey('Tenant'))
-            {
-                $driftedData.Add('Tenant', $TenantName)
-            }
-            $driftedData.Add('Resource', $source.Split('_')[1])
-            Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
-            #endregion
+            $telemetryDriftedParameters += $key + "`r`n"
             $EventMessage.Append("            <Param Name=`"$key`">" + $DriftedParameters.$key + "</Param>`r`n") | Out-Null
         }
 
-        #region Telemetry
-        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
-        $data.Add('Event', 'ConfigurationDrift')
-
-        if (-not $Data.ContainsKey('Tenant'))
-        {
-            $data.Add('Tenant', $TenantName)
-        }
-        #endregion
-
+        $driftedData.Add('Parameters', $telemetryDriftedParameters)
+        Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
         $EventMessage.Append("        </ParametersNotInDesiredState>`r`n") | Out-Null
         $EventMessage.Append("    </ConfigurationDrift>`r`n") | Out-Null
         $EventMessage.Append("    <DesiredValues>`r`n") | Out-Null
