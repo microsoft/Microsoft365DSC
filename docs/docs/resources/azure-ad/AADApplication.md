@@ -8,7 +8,6 @@
 | **ObjectId** | Write | String | ObjectID of the app. | |
 | **AppId** | Write | String | AppId for the app. | |
 | **AvailableToOtherTenants** | Write | Boolean | Indicates whether this application is available in other tenants. | |
-| **Description** | Write | String | A free text field to provide a description of the application object to end users. The maximum allowed size is 1024 characters. | |
 | **GroupMembershipClaims** | Write | String | A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects. | |
 | **Homepage** | Write | String | The URL to the application's homepage. | |
 | **IdentifierUris** | Write | StringArray[] | User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain. | |

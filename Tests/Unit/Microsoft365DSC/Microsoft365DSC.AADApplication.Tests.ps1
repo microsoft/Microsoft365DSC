@@ -1,5 +1,5 @@
 [CmdletBinding()]
-                                                param(
+param(
 )
 $M365DSCTestFolder = Join-Path -Path $PSScriptRoot `
     -ChildPath '..\..\Unit' `
