@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* AADApplication
+  * Expose the description field in the resource.
+
 # 1.24.214.2
 
 * AADConditionalAccessPolicy
