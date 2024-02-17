@@ -6,6 +6,7 @@
   * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
 
 # 1.24.214.2
+# 1.24.214.1
 
 * AADConditionalAccessPolicy
   * Removed invalid empty string value that was added to the validate set
