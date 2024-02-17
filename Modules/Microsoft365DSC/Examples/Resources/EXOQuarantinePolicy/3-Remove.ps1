@@ -18,7 +18,7 @@ Configuration Example
     {
         EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
         {
-            Identity                          = "$Domain\DefaultFullAccessPolicy";
+            Identity                          = "$Domain\IntegrationPolicy";
             Ensure                            = "Absent"
             Credential                        = $Credscredential
         }

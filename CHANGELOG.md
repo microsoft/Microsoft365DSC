@@ -1,17 +1,67 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# Unreleased
 
+* SPOAccessControlSettings
+  * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
+
+# 1.24.214.2
+
+* AADConditionalAccessPolicy
+  * Removed invalid empty string value that was added to the validate set
+    of two parameters.
+  * Updated permission reference for app-onlzy authentication.
+    FIXES [[#3329](https://github.com/microsoft/Microsoft365DSC/issues/3329)]
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
+* AADRoleSetting
+  * Fix handling of DisplayName property in comparison
+    FIXES [#4019](https://github.com/microsoft/Microsoft365DSC/issues/4019)
+* AADUser
+  * Fixed and issue where an user would be created even if the resrouce was set to absent.
+    FIXES [[#4265](https://github.com/microsoft/Microsoft365DSC/issues/4265)]
 * EXOMobileDeviceMailboxPolicy
   * Fixes an issue where an empty MinPasswordLength value was always passed down
     to the update logic flow.
+* IntuneAppConfigurationPolicy
+  * Added parameter Id to avoid having to retrieve the same policy multiple
+    times
+  * Fixed tests in Test-TargetResource to ensure the resource reports its
+    correct state
+    FIXES [#3542](https://github.com/microsoft/Microsoft365DSC/issues/3542)
+* IntuneDeviceAndAppManagementAssignmentFilter
+  * Fixed Test-TargetResource to ensure that resource reports its correct state
+    FIXES [#3959](https://github.com/microsoft/Microsoft365DSC/issues/3959)
+* IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10
+  * Fixed Test-TargetResource by removing Id from being tested and also used
+    correct filter while retrieving the policy otherwise it could not be found
+    FIXES [#3964](https://github.com/microsoft/Microsoft365DSC/issues/3964)
+* IntuneDeviceConfigurationPolicyAndroidWorkProfile
+  * Fix typo in variable which made it export incorrectly and report that
+    resource was not in correct state due to testing an incorrect value
+    FIXES [#3972](https://github.com/microsoft/Microsoft365DSC/issues/3972)
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Fix removal of resource if Identity comes from another tenant or is not
+    present in blueprint
+  * Fix Test-TargetResource by not comparing Identity since it might be from
+    another tenant or not present in blueprint
+  FIXES [#4302](https://github.com/microsoft/Microsoft365DSC/issues/4302)
+* SCDPLPCompianceRule
+  * Added support for multiple additional parameters.
+* SPOSharingSettings
+  * Fixed an issue where the resource would return multiple sites.
+    FIXES [#2759](https://github.com/microsoft/Microsoft365DSC/issues/2759)
 * DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.2.
   * Updated Microsoft.Graph dependencies to version 2.13.1.
-* SPOAccessControlSettings
-  * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
+  * Updated MSCloudLoginAssistant to version 1.1.13.
+* MISC
+  * M365DSCReport
+    * Fix nested change detection for CIMInstances
+    * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
+      FIXES [#4291](https://github.com/microsoft/Microsoft365DSC/issues/4291)
+  * Added new QA test to check for missing description in resource schema
 
 # 1.24.207.2
 
@@ -65,9 +115,27 @@
     wasn't properly returned.
 * EXOSafeLinksPolicy
   * Deprecated the UseTranslatedNotificationText property
+* IntuneDeviceConfigurationPolicyAndroidOpenSourceProject,
+  IntuneExploitProtectionPolicyWindows10SettingCatalog, IntuneRoleAssignment,
+  IntuneRoleDefinition, IntuneSettingCatalogASRRulesPolicyWindows10,
+  IntuneWiFiConfigurationPolicyAndroidDeviceAdministrator,
+  IntuneWifiConfigurationPolicyAndroidEnterpriseDeviceOwner,
+  IntuneWifiConfigurationPolicyAndroidEnterpriseWorkProfile,
+  IntuneWifiConfigurationPolicyAndroidForWork,
+  IntuneWifiConfigurationPolicyAndroidOpenSourceProject,
+  IntuneWifiConfigurationPolicyIOS, IntuneWifiConfigurationPolicyMacOS,
+  IntuneWifiConfigurationPolicyWindows10, TeamsCallParkPolicy
+  * Fix condition in Test-TargetResource when resource is absent
+    FIXES [#3897](https://github.com/microsoft/Microsoft365DSC/issues/3897)
+    FIXES [#4256](https://github.com/microsoft/Microsoft365DSC/issues/4256)
+* TeamsFilesPolicy
+  * Add default value ('Present') to parameter Ensure
 * TeamsEmergencyCallRoutingPolicy
   * Fix deletion of resource
     FIXES [#4261](https://github.com/microsoft/Microsoft365DSC/issues/4261)
+* TeamsUserCallingSettings
+  * Added support for Certificate Authentication
+    FIXES [#3180](https://github.com/microsoft/Microsoft365DSC/issues/3180)
 * TEAMS
   * Added support for ManagedIdentity Authentication across Teams resources.
 * DEPENDENCIES
@@ -96,7 +164,7 @@
   * Remove the logic path to create a new instance in favor of the update flow.
 * AADConditionalAccessPolicy
   * Fix issue when not all parameters are specified
-    FIXES [[#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)]
+    FIXES [#4202](https://github.com/microsoft/Microsoft365DSC/issues/4202)
 * AADCrossTenantAccessPolicy
   * Removed the ability to specify a value of Absent for the Ensure property.
 * AADCrossTenantAccessPolicyCOnfigurationDefault
@@ -115,7 +183,7 @@
   * DEPRECATED Resource.
 * SCAutoSensitivityLabelRule
   * Correct export indentation, which caused an issue with report conversion to JSON.
-    FIXES [[#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)]
+    FIXES [#4240](https://github.com/microsoft/Microsoft365DSC/issues/4240)
 * SPOSharingSettings
   * Fixed an Issue where the MySiteSharingCapability could be returned as an
     empty string instead of a null value from the Get method.
@@ -132,6 +200,9 @@
 * TeamsCallParkPolicy
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4210](https://github.com/microsoft/Microsoft365DSC/issues/4210)
+* TeamsCallQueue
+  * Optimize performances by doing 1 request instead of n+1
+  FIXES [[#4192](https://github.com/microsoft/Microsoft365DSC/issues/4192)]
 * TeamsComplianceRecordingPolicy
   * Fix condition in Test-TargetResource when resource is absent
     FIXES [#4212](https://github.com/microsoft/Microsoft365DSC/issues/4212)

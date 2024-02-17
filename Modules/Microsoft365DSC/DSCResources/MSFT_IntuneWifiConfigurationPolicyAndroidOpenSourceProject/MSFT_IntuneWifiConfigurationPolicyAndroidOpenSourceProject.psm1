@@ -497,7 +497,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false

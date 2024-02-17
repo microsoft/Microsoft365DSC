@@ -87,8 +87,8 @@ Configuration Example
         EXORoleAssignmentPolicy 'ConfigureRoleAssignmentPolicy'
         {
             Name                 = "Integration Policy"
-            Description          = "This policy grants end users the permission to set their options in Outlook on the web and perform other self-administration tasks."
-            IsDefault            = $False # Updated Property
+            Description          = "Updated Description"  # Updated Property
+            IsDefault            = $True
             Roles                = @("My Marketplace Apps","MyVoiceMail","MyDistributionGroups","MyRetentionPolicies","MyContactInformation","MyBaseOptions","MyTextMessaging","MyDistributionGroupMembership","MyProfileInformation","My Custom Apps","My ReadWriteMailbox Apps")
             Ensure               = "Present"
             Credential           = $Credscredential

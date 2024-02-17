@@ -18,7 +18,7 @@ Configuration Example
         EXOPerimeterConfiguration 'ConfigurePerimeterConfiguration'
         {
             IsSingleInstance   = 'Yes'
-            GatewayIPAddresses = '123.0.0.1'
+            #GatewayIPAddresses = '123.0.0.1'
             Ensure             = 'Present'
             Credential         = $Credscredential
         }

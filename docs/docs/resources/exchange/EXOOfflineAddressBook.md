@@ -60,7 +60,7 @@ Configuration Example
         EXOOfflineAddressBook 'ConfigureOfflineAddressBook'
         {
             Name                 = "Integration Address Book"
-            AddressLists         = @('\Offline Global Address List')
+            AddressLists         = @('\All Users')
             DiffRetentionPeriod  = "30"
             IsDefault            = $true
             Ensure               = "Present"
@@ -92,8 +92,7 @@ Configuration Example
         EXOOfflineAddressBook 'ConfigureOfflineAddressBook'
         {
             Name                 = "Integration Address Book"
-            AddressLists         = @('\Offline Global Address List')
-            ConfiguredAttributes = @('OfficeLocation, ANR','ProxyAddresses, ANR','PhoneticGivenName, ANR','GivenName, ANR','PhoneticSurname, ANR','Surname, ANR','Account, ANR','PhoneticDisplayName, ANR','ExternalDirectoryObjectId, Value','ExternalMemberCount, Value','TotalMemberCount, Value','ModerationEnabled, Value','MailboxGuid, Value','DelivContLength, Value','MailTipTranslations, Value','ObjectGuid, Value','DisplayTypeEx, Value','DisplayNamePrintableAnsi, Value','HomeMdbA, Value','Certificate, Value','UserSMimeCertificate, Value','UserCertificate, Value','Comment, Value','PagerTelephoneNumber, Value','AssistantTelephoneNumber, Value','MobileTelephoneNumber, Value','PrimaryFaxNumber, Value','Home2TelephoneNumberMv, Value','Business2TelephoneNumberMv, Value','HomeTelephoneNumber, Value','TargetAddress, Value','PhoneticDepartmentName, Value','DepartmentName, Value','Assistant, Value','PhoneticCompanyName, Value','CompanyName, Value','Title, Value','Country, Value','PostalCode, Value','StateOrProvince, Value','Locality, Value','StreetAddress, Value','Initials, Value','BusinessTelephoneNumber, Value','SendRichInfo, Value','ObjectType, Value','DisplayType, Value','RejectMessagesFromDLMembers, Indicator','AcceptMessagesOnlyFromDLMembers, Indicator','RejectMessagesFrom, Indicator','AcceptMessagesOnlyFrom, Indicator','UmSpokenName, Indicator','ThumbnailPhoto, Indicator')
+            AddressLists         = @('\All Users')
             DiffRetentionPeriod  = "30"
             IsDefault            = $false # Updated Property
             Ensure               = "Present"

@@ -27,9 +27,9 @@ Configuration Example
             DisplaySenderName                    = $True
             DomainName                           = "contoso.com"
             IsInternal                           = $False
-            LineWrapSize                         = "Integration"
+            LineWrapSize                         = "Unlimited"
             MeetingForwardNotificationEnabled    = $False
-            Name                                 = "Default"
+            Name                                 = "Integration"
             NonMimeCharacterSet                  = "iso-8859-1"
             PreferredInternetCodePageForShiftJis = "Undefined"
             TargetDeliveryDomain                 = $False
