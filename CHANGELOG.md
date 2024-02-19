@@ -1,5 +1,34 @@
 # Change log for Microsoft365DSC
 
+# 1.24.214.3
+
+* AADAuthenticationMethodPolicy
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyAuthenticator
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyEmail
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyFido2
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicySms
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicySoftware
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyTemporary
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyVoice
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyX509
+  * Fixed an error where the Export method would loop through the response header.
+* IntuneAppConfigurationPolicy
+  * Fixed an error in the export on the Settings property.
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed an error where the Export method would loop through the response header.
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Fixed an error where the Export method would loop through the response header.
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.14.0.
+
 # 1.24.214.2
 
 * AADConditionalAccessPolicy
