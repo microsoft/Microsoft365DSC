@@ -4405,6 +4405,76 @@ function Remove-M365DSCAuthenticationParameter
 
 <#
 .Description
+This function clears the authentication parameters from the hashtable.
+
+.Functionality
+Internal
+#>
+function Clear-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    $BoundParameters.Credential = $null
+    $BoundParameters.ApplicationId = $null
+    $BoundParameters.ApplicationSecret = $null
+    $BoundParameters.TenantId = $null
+    $BoundParameters.CertificatePassword = $null
+    $BoundParameters.CertificatePath = $null
+    $BoundParameters.CertificateThumbprint = $null
+    $BoundParameters.ManagedIdentity = $null
+
+    return $BoundParameters
+}
+<#
+.Description
+This function validate if the authentication parameters from the hashtable have been cleared.
+
+.Functionality
+Internal
+#>
+function Test-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    $authenticationParameterList = @(
+        'Credential'
+        'ApplicationId'
+        'ApplicationSecret'
+        'TenantId'
+        'CertificatePassword'
+        'CertificatePath'
+        'CertificateThumbprint'
+        'ManagedIdentity'
+    )
+
+    $validAuthenticationParameter = $false
+    foreach ($parameter in $authenticationParameterList)
+    {
+        if ($null -ne $BoundParameters.$parameter)
+        {
+            write-host ("$parameter is not null" )
+            $validAuthenticationParameter = $true
+            break
+        }
+    }
+
+    return $validAuthenticationParameter
+}
+
+<#
+.Description
 This function analyzes an M365DSC configuration file and returns information about potential issues (e.g., duplicate primary keys).
 
 .Example
