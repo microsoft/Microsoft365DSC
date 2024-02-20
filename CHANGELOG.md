@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADConditionalAccessPolicy
+  * Fixing issue where Membership kinds no longer accepted empty values.
+    ROLLING BACK [#4344](https://github.com/microsoft/Microsoft365DSC/issues/4344)
+    FIXES [#4347](https://github.com/microsoft/Microsoft365DSC/issues/4347)
+  * Throws an error if role, user or group was not found in the Set method.
+    FIXES [#4342](https://github.com/microsoft/Microsoft365DSC/issues/4342)
+
 # 1.24.214.3
 
 * AADAuthenticationMethodPolicy

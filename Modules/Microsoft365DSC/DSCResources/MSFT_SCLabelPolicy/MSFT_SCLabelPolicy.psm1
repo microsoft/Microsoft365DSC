@@ -678,11 +678,6 @@ function Test-TargetResource
         $TestAdvancedSettings = Test-AdvancedSettings -DesiredProperty $AdvancedSettings -CurrentProperty $CurrentValues.AdvancedSettings
         if ($false -eq $TestAdvancedSettings)
         {
-            New-M365DSCLogEntry -Message 'AdvancedSettings do not match!' `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
-
             return $false
         }
     }
@@ -698,12 +693,6 @@ function Test-TargetResource
         if ($null -eq $configData -and $null -ne $CurrentValues.ModernGroupLocation `
                 -and $null -ne $RemoveModernGroupLocation)
         {
-            #last entry removed so trigger drift
-            New-M365DSCLogEntry -Message 'ModernGroupLocation do not match!' `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
-
             return $false
         }
     }
@@ -721,12 +710,6 @@ function Test-TargetResource
         if ($null -eq $configData -and $null -ne $CurrentValues.ModernGroupLocationException `
                 -and $null -ne $RemoveModernGroupLocationException)
         {
-            #last entry removed so trigger drift
-            New-M365DSCLogEntry -Message 'ModernGroupLocationException do not match!' `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
-
             return $false
         }
     }
@@ -742,12 +725,6 @@ function Test-TargetResource
         if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocation `
                 -and $null -ne $RemoveExchangeLocation)
         {
-            #last entry removed so trigger drift
-            New-M365DSCLogEntry -Message 'ExchangeLocation do not match!' `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
-
             return $false
         }
     }
@@ -765,12 +742,6 @@ function Test-TargetResource
         if ($null -eq $configData -and $null -ne $CurrentValues.ExchangeLocationException `
                 -and $null -ne $RemoveExchangeLocationException)
         {
-            #last entry removed so trigger drift
-            New-M365DSCLogEntry -Message 'ExchangeLocationException do not match!' `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
-
             return $false
         }
     }
@@ -788,12 +759,6 @@ function Test-TargetResource
         if ($null -eq $configData -and $null -ne $CurrentValues.Labels `
                 -and $null -ne $RemoveLabels)
         {
-            #last entry removed so trigger drift
-            New-M365DSCLogEntry -Message 'Labels do not match!' `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
-
             return $false
         }
     }
