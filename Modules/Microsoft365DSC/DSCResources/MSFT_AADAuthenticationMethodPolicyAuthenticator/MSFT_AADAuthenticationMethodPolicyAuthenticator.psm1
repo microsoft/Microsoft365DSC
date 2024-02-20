@@ -715,7 +715,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId MicrosoftAuthenticator `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
         #endregion
 
         $i = 1

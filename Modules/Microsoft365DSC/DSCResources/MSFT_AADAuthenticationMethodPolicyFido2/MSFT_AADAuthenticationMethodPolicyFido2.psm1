@@ -523,7 +523,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId Fido2 `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
         #endregion
 
         $i = 1
