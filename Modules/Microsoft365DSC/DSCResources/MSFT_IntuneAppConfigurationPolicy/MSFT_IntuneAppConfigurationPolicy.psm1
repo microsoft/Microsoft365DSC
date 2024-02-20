@@ -576,7 +576,7 @@ function Get-M365DSCIntuneAppConfigurationPolicyCustomSettingsAsString
     [OutputType([System.String])]
     param(
         [Parameter(Mandatory = $true)]
-        [System.Collections.ArrayList]
+        [System.Object[]]
         $Settings
     )
 

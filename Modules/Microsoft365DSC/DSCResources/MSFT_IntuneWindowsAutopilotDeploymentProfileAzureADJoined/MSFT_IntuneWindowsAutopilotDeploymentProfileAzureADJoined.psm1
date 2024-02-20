@@ -107,7 +107,8 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $Id  -ErrorAction SilentlyContinue `
+            | Where-Object -FilterScript {$null -ne $_.DisplayName}
 
         if ($null -eq $getValue)
         {
@@ -117,7 +118,8 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile `
                     -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue
+                    -ErrorAction SilentlyContinue `
+                    | Where-Object -FilterScript {$null -ne $_.DisplayName}
             }
         }
         #endregion
