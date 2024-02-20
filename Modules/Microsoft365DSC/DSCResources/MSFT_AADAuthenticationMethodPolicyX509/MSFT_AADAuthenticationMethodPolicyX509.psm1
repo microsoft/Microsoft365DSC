@@ -547,7 +547,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId X509Certificate `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
         #endregion
 
         $i = 1
