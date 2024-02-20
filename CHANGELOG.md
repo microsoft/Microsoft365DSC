@@ -27,7 +27,7 @@
 * IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Fixed an error where the Export method would loop through the response header.
 * DEPENDENCIES
-  * Updated Microsoft.Graph to version 2.14.0.
+  * Updated Microsoft.Graph to version 2.14.1.
 
 # 1.24.214.2
 
