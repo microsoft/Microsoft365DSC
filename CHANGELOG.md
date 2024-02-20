@@ -26,6 +26,9 @@
   * Fixed an error where the Export method would loop through the response header.
 * IntuneWindowsAutopilotDeploymentProfileAzureADJoined
   * Fixed an error where the Export method would loop through the response header.
+* SCDLPComplianceRule
+  * Fixed the NotifyEmailCustomText and NotifyPolicyTipCustomText to escape fancy
+    quotes.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.14.1.
 
