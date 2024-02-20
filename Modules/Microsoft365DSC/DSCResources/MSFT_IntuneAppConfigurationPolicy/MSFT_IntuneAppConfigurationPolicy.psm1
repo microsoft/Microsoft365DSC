@@ -145,7 +145,8 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        throw
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
+        return $nullResult
     }
 }
 
@@ -354,6 +355,11 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Intune App Configuration Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Id') | Out-Null
@@ -361,26 +367,10 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    $testResult = $true
     if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
-        return $false
-    }
-
-    if ($null -ne $CurrentValues.CustomSettings -and $CurrentValues.CustomSettings.Length -gt 0 -and $null -ne $CustomSettings)
-    {
-        $value = Test-M365DSCAppConfigurationPolicyCustomSetting -Current $CurrentValues.CustomSettings -Desired $CustomSettings
-        if ($value -eq $false)
-        {
-            return $false
-        }
-    }
-    else
-    {
-        if (($null -eq $CurrentValues.CustomSettings -and $null -ne $CustomSettings) -or
-            ($null -ne $CurrentValues.CustomSettings -and $null -eq $CustomSettings))
-        {
-            return $false
-        }
+        $testResult = $false
     }
 
     $ValuesToCheck = $PSBoundParameters
@@ -390,11 +380,34 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('CustomSettings') | Out-Null
 
+    #region CustomSettings
+    if ($testResult)
+    {
+        $source = $PSBoundParameters.CustomSettings
+        $target = $CurrentValues.CustomSettings
+
+        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+        $testResult = Compare-M365DSCComplexObject `
+            -Source ($source) `
+            -Target ($target)
+
+        if (-Not $testResult)
+        {
+            $testResult = $false
+            break
+        }
+        $ValuesToCheck.Remove('CustomSettings') | Out-Null
+    }
+    #endregion
+
     #region Assignments
-    $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
-    $target = $CurrentValues.Assignments
-    $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-    $ValuesToCheck.Remove('Assignments') | Out-Null
+    if ($testResult)
+    {
+        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
+        $target = $CurrentValues.Assignments
+        $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+        $ValuesToCheck.Remove('Assignments') | Out-Null
+    }
     #endregion
 
     if ($testResult)
@@ -610,6 +623,63 @@ function ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings
         $result += $currentSetting
     }
     return $result
+    Remove-M365DSCAuthenticationParameter
+}
+
+function Clear-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    $BoundParameters.Credential = $null
+    $BoundParameters.ApplicationId = $null
+    $BoundParameters.ApplicationSecret = $null
+    $BoundParameters.TenantId = $null
+    $BoundParameters.CertificatePassword = $null
+    $BoundParameters.CertificatePath = $null
+    $BoundParameters.CertificateThumbprint = $null
+    $BoundParameters.ManagedIdentity = $null
+
+    return $BoundParameters
+}
+function Test-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    $authenticationParameterList = @(
+        'Credential'
+        'ApplicationId'
+        'ApplicationSecret'
+        'TenantId'
+        'CertificatePassword'
+        'CertificatePath'
+        'CertificateThumbprint'
+        'ManagedIdentity'
+    )
+
+    $validAuthenticationParameter = $false
+    foreach ($parameter in $authenticationParameterList)
+    {
+        if ($null -ne $BoundParameters.$parameter)
+        {
+            write-host ("$parameter is not null" )
+            $validAuthenticationParameter = $true
+            break
+        }
+    }
+
+    return $validAuthenticationParameter
 }
 
 Export-ModuleMember -Function *-TargetResource
