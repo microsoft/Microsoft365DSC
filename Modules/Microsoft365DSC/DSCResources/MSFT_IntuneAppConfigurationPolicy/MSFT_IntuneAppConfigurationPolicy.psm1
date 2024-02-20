@@ -623,7 +623,6 @@ function ConvertTo-M365DSCIntuneAppConfigurationPolicyCustomSettings
         $result += $currentSetting
     }
     return $result
-    Remove-M365DSCAuthenticationParameter
 }
 
 Export-ModuleMember -Function *-TargetResource
