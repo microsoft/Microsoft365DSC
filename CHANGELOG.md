@@ -1,11 +1,10 @@
 # Change log for Microsoft365DSC
 
-<<<<<<< HEAD
 # Unreleased
 
 * SPOAccessControlSettings
   * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
-=======
+
 # 1.24.214.3
 
 * AADAuthenticationMethodPolicy
@@ -37,10 +36,8 @@
     quotes.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.14.1.
->>>>>>> dev
 
 # 1.24.214.2
-# 1.24.214.1
 
 * AADConditionalAccessPolicy
   * Removed invalid empty string value that was added to the validate set
