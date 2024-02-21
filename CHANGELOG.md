@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Expose the description field in the resource.
 * AADConditionalAccessPolicy
   * Fixing issue where Membership kinds no longer accepted empty values.
     ROLLING BACK [#4344](https://github.com/microsoft/Microsoft365DSC/issues/4344)
