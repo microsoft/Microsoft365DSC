@@ -1,11 +1,50 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
+
+* AADConditionalAccessPolicy
+  * Fixing issue where Membership kinds no longer accepted empty values.
+    ROLLING BACK [#4344](https://github.com/microsoft/Microsoft365DSC/issues/4344)
+    FIXES [#4347](https://github.com/microsoft/Microsoft365DSC/issues/4347)
+  * Throws an error if role, user or group was not found in the Set method.
+    FIXES [#4342](https://github.com/microsoft/Microsoft365DSC/issues/4342)
 * MISC
   * Uninstall-M365DSCOutdatedDependencies
     * Outdated Microsoft365DSC-modules are now removed in their entirety
 
-# 1.24.214.1
+# 1.24.214.3
+
+* AADAuthenticationMethodPolicy
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyAuthenticator
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyEmail
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyFido2
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicySms
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicySoftware
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyTemporary
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyVoice
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyX509
+  * Fixed an error where the Export method would loop through the response header.
+* IntuneAppConfigurationPolicy
+  * Fixed an error in the export on the Settings property.
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed an error where the Export method would loop through the response header.
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Fixed an error where the Export method would loop through the response header.
+* SCDLPComplianceRule
+  * Fixed the NotifyEmailCustomText and NotifyPolicyTipCustomText to escape fancy
+    quotes.
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.14.1.
+
+# 1.24.214.2
 
 * AADConditionalAccessPolicy
   * Removed invalid empty string value that was added to the validate set
