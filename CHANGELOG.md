@@ -4,8 +4,8 @@
 
 * MISC
   * M365DSCUtil
-    * When Name is Key of a resource append it to ResourceInstanceName instead
-      of Id during Export
+    * Change heuristics on how to find the mandatory key of the resources to
+      include them as part of the ResourceInstanceName during their export
       FIXES [#4333](https://github.com/microsoft/Microsoft365DSC/issues/4333)
 
 # 1.24.214.1
