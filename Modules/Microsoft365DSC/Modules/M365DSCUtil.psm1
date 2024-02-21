@@ -1327,6 +1327,8 @@ function Export-M365DSCConfiguration
 
     $Tenant = Get-M365DSCTenantNameFromParameterSet -ParameterSet $PSBoundParameters
     $data.Add('Tenant', $Tenant)
+    $currentExportID = (New-Guid).ToString()
+    $data.Add('M365DSCExportId', $currentExportID)
 
     Add-M365DSCTelemetryEvent -Type 'ExportInitiated' -Data $data
     if ($null -ne $Workloads)
@@ -1392,6 +1394,8 @@ function Export-M365DSCConfiguration
     # Clear the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = $null
     $Global:M365DSCExportInProgress = $false
+
+    Add-M365DSCTelemetryEvent -Type 'ExportCompleted' -Data $data
 }
 
 $Script:M365DSCDependenciesValidated = $false
@@ -2976,7 +2980,7 @@ function Uninstall-M365DSCOutdatedDependencies
                 Write-Information -MessageData "Uninstalling $($module.Name) Version {$($module.Version)}"
                 if (Test-Path -Path $($module.Path))
                 {
-                    Remove-Item $($module.Path) -Force -Recurse
+                    Remove-Item $($module.ModuleBase) -Force -Recurse
                 }
             }
             catch

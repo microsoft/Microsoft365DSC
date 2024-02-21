@@ -19,6 +19,7 @@ Configuration Example
         {
             DisplayName               = "AppDisplayName"
             AvailableToOtherTenants   = $false
+            Description               = "Application Description"
             GroupMembershipClaims     = "None"
             Homepage                  = "https://$Domain"
             IdentifierUris            = "https://$Domain"
