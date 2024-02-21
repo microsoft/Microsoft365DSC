@@ -8,6 +8,9 @@
     FIXES [#4347](https://github.com/microsoft/Microsoft365DSC/issues/4347)
   * Throws an error if role, user or group was not found in the Set method.
     FIXES [#4342](https://github.com/microsoft/Microsoft365DSC/issues/4342)
+* MISC
+  * Uninstall-M365DSCOutdatedDependencies
+    * Outdated Microsoft365DSC-modules are now removed in their entirety
 
 # 1.24.214.3
 
