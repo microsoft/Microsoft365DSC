@@ -3367,7 +3367,7 @@ function Get-M365DSCExportContentForResource
     }
 
     $primaryKey = ''
-    $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq  $ResourceName })
+    $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
     $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
         Select-Object -ExpandProperty Name
     if ($Keys.Contains('IsSingleInstance'))
