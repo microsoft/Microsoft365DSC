@@ -22,6 +22,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
         $GroupMembershipClaims,
 
         [Parameter()]
@@ -189,6 +193,7 @@ function Get-TargetResource
             $result = @{
                 DisplayName             = $AADApp.DisplayName
                 AvailableToOtherTenants = $AvailableToOtherTenantsValue
+                Description             = $AADApp.Description
                 GroupMembershipClaims   = $AADApp.GroupMembershipClaims
                 Homepage                = $AADApp.web.HomepageUrl
                 IdentifierUris          = $AADApp.IdentifierUris
@@ -252,6 +257,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AvailableToOtherTenants,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.String]
@@ -684,6 +693,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
         $GroupMembershipClaims,
 
         [Parameter()]
@@ -806,12 +819,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ObjectId') | Out-Null
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -890,6 +897,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
+                Description           = $AADApp.Description
                 DisplayName           = $AADApp.DisplayName
                 ObjectID              = $AADApp.Id
                 Credential            = $Credential

@@ -264,6 +264,14 @@ function Add-M365DSCTelemetryEvent
             $M365DSCTelemetryEventId = (New-GUID).ToString()
             $Data.Add('M365DSCTelemetryEventId', $M365DSCTelemetryEventId)
 
+            if ([System.String]::IsNullOrEMpty($Type))
+            {
+                if ((-not [System.String]::IsNullOrEmpty($Data.Method) -and $Data.Method -eq 'Export-TargetResource') -or $Global:M365DSCExportInProgress)
+                {
+                    $Type = 'Export'
+                }
+            }
+
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
         }
         catch
