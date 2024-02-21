@@ -156,6 +156,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Ensure     = 'Absent'
                     Credential = $Credential
+                    ForestName = 'contoso.com'
                     Identity   = 'TestAvailabilityAddressSpace'
                 }
 
