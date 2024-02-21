@@ -71,7 +71,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -85,7 +85,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -755,7 +755,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -769,7 +769,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -1014,6 +1014,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $_
                         }
                         if ($null -eq $userguid)
                         {
@@ -1022,6 +1023,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message
                         }
                         else
                         {
@@ -1059,6 +1061,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $_
                         }
                         if ($null -eq $userguid)
                         {
@@ -1067,6 +1070,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message
                         }
                         else
                         {
@@ -1102,6 +1106,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $_
                     }
                     if ($GroupLookup.Length -gt 1)
                     {
@@ -1110,6 +1115,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $message
                     }
                     elseif ($null -eq $GroupLookup)
                     {
@@ -1118,6 +1124,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $message
                     }
                     else
                     {
@@ -1149,6 +1156,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $_
                     }
                     if ($GroupLookup.Length -gt 1)
                     {
@@ -1157,6 +1165,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $message
                     }
                     elseif ($null -eq $GroupLookup)
                     {
@@ -1165,6 +1174,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $message
                     }
                     else
                     {
@@ -1198,6 +1208,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message
                         }
                         else
                         {
@@ -1231,6 +1242,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message
                         }
                         else
                         {
@@ -1738,7 +1750,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $IncludeExternalTenantsMembershipKind,
 
         [Parameter()]
@@ -1752,7 +1764,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('all', 'enumerated', 'unknownFutureValue')]
+        [ValidateSet('', 'all', 'enumerated', 'unknownFutureValue')]
         $ExcludeExternalTenantsMembershipKind,
 
         [Parameter()]

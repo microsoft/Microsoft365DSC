@@ -1551,14 +1551,6 @@ function Test-LocaleSettings
         }
     }
 
-    if ($foundSettings -eq $false)
-    {
-        New-M365DSCLogEntry -Message "LocaleSettings for label $Name do not match: $($driftedSetting -join ', ')" `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
-    }
-
     Write-Verbose -Message "Test LocaleSettings returns $foundSettings"
     return $foundSettings
 }

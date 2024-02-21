@@ -1,9 +1,20 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
 
+* AADApplication
+  * Expose the description field in the resource.
+* AADConditionalAccessPolicy
+  * Fixing issue where Membership kinds no longer accepted empty values.
+    ROLLING BACK [#4344](https://github.com/microsoft/Microsoft365DSC/issues/4344)
+    FIXES [#4347](https://github.com/microsoft/Microsoft365DSC/issues/4347)
+  * Throws an error if role, user or group was not found in the Set method.
+    FIXES [#4342](https://github.com/microsoft/Microsoft365DSC/issues/4342)
 * SPOAccessControlSettings
-  * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
+  * Added support for the ConditionalAccessPolicy parameter based on the PNP Module    
+* MISC
+  * Uninstall-M365DSCOutdatedDependencies
+    * Outdated Microsoft365DSC-modules are now removed in their entirety
 
 # 1.24.214.3
 
