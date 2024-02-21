@@ -577,7 +577,12 @@ function Test-M365DSCParameterState
     #endregion
     $returnValue = $true
 
-    $DriftedParameters = @{ }
+    $DriftedParameters = @{}
+    $DriftObject = @{
+        DriftInfo     = @{}
+        CurrentValues = @{}
+        DesiredValues = @{}
+    }
     if ($null -ne $IncludedDrifts -and $IncludedDrifts.Keys.Count -gt 0)
     {
         $DriftedParameters = $IncludedDrifts
@@ -643,6 +648,7 @@ function Test-M365DSCParameterState
                                     'values, but it was either not present or ' + `
                                     'was null. This has caused the test method ' + `
                                     'to return false.')
+                            $DriftObject.DriftInfo.Add($fieldName, '')
                             $DriftedParameters.Add($fieldName, '')
                             $returnValue = $false
                         }
@@ -679,6 +685,11 @@ function Test-M365DSCParameterState
 
                                     if (-not $DriftedParameters.ContainsKey($fieldName))
                                     {
+                                        $DriftObject.DriftInfo.Add($fieldName, @{
+                                            PropertyName = $item.PropertyName
+                                            CurrentValue = $item.CurrentValue
+                                            DesiredValue = $item.DesiredValue
+                                        })
                                         $DriftedParameters.Add($fieldName, $EventValue)
                                     }
                                 }
@@ -702,6 +713,10 @@ function Test-M365DSCParameterState
 
                                 $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                 $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                $DriftObject.DriftInfo.Add($fieldName, @{
+                                    CurrentValue = $CurrentValues.$fieldName
+                                    DesiredValue = $DesiredValues.$fieldName
+                                })
                                 $DriftedParameters.Add($fieldName, $EventValue)
                                 $returnValue = $false
                             }
@@ -727,6 +742,10 @@ function Test-M365DSCParameterState
                                             "'$($DesiredValues.$fieldName)'")
                                     $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                     $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftObject.DriftInfo.Add($fieldName, @{
+                                        CurrentValue = $CurrentValues.$fieldName
+                                        DesiredValue = $DesiredValues.$fieldName
+                                    })
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -747,6 +766,10 @@ function Test-M365DSCParameterState
                                             "'$($DesiredValues.$fieldName)'")
                                     $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                     $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftObject.DriftInfo.Add($fieldName, @{
+                                        CurrentValue = $CurrentValues.$fieldName
+                                        DesiredValue = $DesiredValues.$fieldName
+                                    })
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -767,6 +790,10 @@ function Test-M365DSCParameterState
                                             "'$($DesiredValues.$fieldName)'")
                                     $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                     $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftObject.DriftInfo.Add($fieldName, @{
+                                        CurrentValue = $CurrentValues.$fieldName
+                                        DesiredValue = $DesiredValues.$fieldName
+                                    })
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -783,6 +810,10 @@ function Test-M365DSCParameterState
                                             "'$($DesiredValues.$fieldName)'")
                                     $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                     $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftObject.DriftInfo.Add($fieldName, @{
+                                        CurrentValue = $CurrentValues.$fieldName
+                                        DesiredValue = $DesiredValues.$fieldName
+                                    })
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -803,6 +834,10 @@ function Test-M365DSCParameterState
                                             "'$($DesiredValues.$fieldName)'")
                                     $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                     $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+                                    $DriftObject.DriftInfo.Add($fieldName, @{
+                                        CurrentValue = $CurrentValues.$fieldName
+                                        DesiredValue = $DesiredValues.$fieldName
+                                    })
                                     $DriftedParameters.Add($fieldName, $EventValue)
                                     $returnValue = $false
                                 }
@@ -858,6 +893,11 @@ function Test-M365DSCParameterState
                                             if (-not $DriftedParameters.ContainsKey($fieldName))
                                             {
                                                 $DriftedParameters.Add($fieldName, $EventValue)
+                                                $DriftObject.DriftInfo.Add($fieldName, @{
+                                                    PropertyName = $item.PropertyName
+                                                    CurrentValue = $item.CurrentValue
+                                                    DesiredValue = $item.DesiredValue
+                                                })
                                             }
                                         }
                                         $returnValue = $false
@@ -872,6 +912,11 @@ function Test-M365DSCParameterState
                                         'Test-M365DSCParameterState cmdlet')
                                 $EventValue = "<CurrentValue>$($CurrentValues.$fieldName)</CurrentValue>"
                                 $EventValue += "<DesiredValue>$($DesiredValues.$fieldName)</DesiredValue>"
+
+                                $DriftObject.DriftInfo.Add($fieldName, @{
+                                    CurrentValue = $CurrentValues.$fieldName
+                                    DesiredValue = $DesiredValues.$fieldName
+                                })
                                 $DriftedParameters.Add($fieldName, $EventValue)
                                 $returnValue = $false
                             }
@@ -903,7 +948,9 @@ function Test-M365DSCParameterState
 
         $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
         $driftedData.Add('Tenant', $TenantName)
+        $DriftObject.Add('Tenant', $TenantName)
         $driftedData.Add('Resource', $source.Split('_')[1])
+        $DriftObject.Add('Resource', $source.Split('_')[1])
         $driftedData.Add('Event', 'DriftedParameter')
 
         # If custom App Insights is specified, allow for the current and desired values to be captured;
@@ -937,6 +984,7 @@ function Test-M365DSCParameterState
                 $Value = "`$null"
             }
             $EventMessage.Append("        <Param Name =`"$key`">$Value</Param>`r`n") | Out-Null
+            $DriftObject.DesiredValues.Add($key, $value)
         }
         $EventMessage.Append("    </DesiredValues>`r`n") | Out-Null
         $EventMessage.Append("    <CurrentValues>`r`n") | Out-Null
@@ -948,10 +996,12 @@ function Test-M365DSCParameterState
                 $Value = "`$null"
             }
             $EventMessage.Append("        <Param Name =`"$key`">$Value</Param>`r`n") | Out-Null
+            $DriftObject.CurrentValues.Add($key, $value)
         }
         $EventMessage.Append("    </CurrentValues>`r`n") | Out-Null
         $EventMessage.Append('</M365DSCEvent>') | Out-Null
 
+        $Global:CCMCurrentDriftInfo = $DriftObject
         Add-M365DSCEvent -Message $EventMessage.ToString() -EventType 'Drift' -EntryType 'Warning' `
             -EventID 1 -Source $Source
     }
@@ -1254,9 +1304,9 @@ function Export-M365DSCConfiguration
 
     $data.Add('Path', [System.String]::IsNullOrEmpty($Path))
     $data.Add('FileName', $null -ne [System.String]::IsNullOrEmpty($FileName))
-    $data.Add('Components', $null -ne $Components)
-    $data.Add('Workloads', $null -ne $Workloads)
-    $data.Add('MaxProcesses', $null -ne $MaxProcesses)
+    $data.Add('Components', $Components)
+    $data.Add('Workloads', $Workloads)
+    $data.Add('MaxProcesses', $MaxProcesses)
     #endregion
 
     if ($null -eq $MaxProcesses)
@@ -1275,20 +1325,12 @@ function Export-M365DSCConfiguration
         Write-Verbose -Message 'No existing connections to Microsoft Graph'
     }
 
-    if (-not [System.String]::IsNullOrEmpty($TenantId) -and -not $data.ContainsKey('Tenant'))
-    {
-        $data.Add('Tenant', $TenantId)
-    }
-    else
-    {
-        if ($Credential -and -not $data.ContainsKey('Tenant'))
-        {
-            $tenant = $Credential.UserName.Split('@')[1]
-            $data.Add('Tenant', $tenant)
-        }
-    }
+    $Tenant = Get-M365DSCTenantNameFromParameterSet -ParameterSet $PSBoundParameters
+    $data.Add('Tenant', $Tenant)
+    $currentExportID = (New-Guid).ToString()
+    $data.Add('M365DSCExportId', $currentExportID)
 
-    Add-M365DSCTelemetryEvent -Type 'Export' -Data $data
+    Add-M365DSCTelemetryEvent -Type 'ExportInitiated' -Data $data
     if ($null -ne $Workloads)
     {
         Write-Output -InputObject "Exporting Microsoft 365 configuration for Workloads: $($Workloads -join ', ')"
@@ -1352,6 +1394,8 @@ function Export-M365DSCConfiguration
     # Clear the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = $null
     $Global:M365DSCExportInProgress = $false
+
+    Add-M365DSCTelemetryEvent -Type 'ExportCompleted' -Data $data
 }
 
 $Script:M365DSCDependenciesValidated = $false
@@ -1666,7 +1710,7 @@ function New-M365DSCConnection
         [System.Boolean]
         $SkipModuleReload = $false
     )
-
+    $Global:MaximumFunctionCount = 32767
     if ($Workload -eq 'MicrosoftTeams')
     {
         try
@@ -2936,7 +2980,7 @@ function Uninstall-M365DSCOutdatedDependencies
                 Write-Information -MessageData "Uninstalling $($module.Name) Version {$($module.Version)}"
                 if (Test-Path -Path $($module.Path))
                 {
-                    Remove-Item $($module.Path) -Force -Recurse
+                    Remove-Item $($module.ModuleBase) -Force -Recurse
                 }
             }
             catch
@@ -4547,10 +4591,6 @@ function Sync-M365DSCParameter
     if ($PSBoundParameters.ContainsKey('Parameters'))
     {
         $Parameters
-    }
-    else
-    {
-        $global:ALBoundParameters = $Parameters
     }
 }
 

@@ -406,8 +406,8 @@ function Get-TargetResource
                 GenerateIncidentReport                       = $PolicyRule.GenerateIncidentReport
                 IncidentReportContent                        = $ArrayIncidentReportContent
                 NotifyAllowOverride                          = $NotifyAllowOverrideValue
-                NotifyEmailCustomText                        = $PolicyRule.NotifyEmailCustomText
-                NotifyPolicyTipCustomText                    = $PolicyRule.NotifyPolicyTipCustomText
+                NotifyEmailCustomText                        = [regex]::Replace($PolicyRule.NotifyEmailCustomText, $fancyDoubleQuotes, "`"")
+                NotifyPolicyTipCustomText                    = [regex]::Replace($PolicyRule.NotifyPolicyTipCustomText, $fancyDoubleQuotes, "`"")
                 NotifyUser                                   = $PolicyRule.NotifyUser
                 ReportSeverityLevel                          = $PolicyRule.ReportSeverityLevel
                 RuleErrorAction                              = $PolicyRule.RuleErrorAction
