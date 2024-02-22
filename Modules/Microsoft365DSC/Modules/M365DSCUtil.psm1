@@ -3397,13 +3397,9 @@ function Get-M365DSCExportContentForResource
 
     if ([String]::IsNullOrEmpty($primaryKey))
     {
-        if ($Keys.Count -gt 1)
+        foreach ($Key in $Keys)
         {
-            $primaryKey = $Results.$Keys -Join ''
-        }
-        else
-        {
-            $primaryKey = $Results.$Keys
+            $primaryKey += $Results.$Key
         }
     }
 
