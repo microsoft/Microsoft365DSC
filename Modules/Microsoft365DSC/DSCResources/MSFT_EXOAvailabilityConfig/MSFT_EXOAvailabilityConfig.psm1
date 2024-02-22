@@ -346,7 +346,8 @@ function Export-TargetResource
         $OrgWideValue = "NotConfigured"
         if ($null -ne $AvailabilityConfig.OrgWideAccount)
         {
-            $OrgWideValue = $AvailabilityConfig.OrgWideAccount.ToString()
+            $user = Get-User -Identity $AvailabilityConfig.OrgWideAccount.ToString()
+            $OrgWideValue = $user.UserPrincipalName
         }
         $Params = @{
             OrgWideAccount        = $OrgWideValue

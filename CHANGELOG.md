@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.221.1
 
 * AADApplication
   * Expose the description field in the resource.
@@ -10,6 +10,27 @@
     FIXES [#4347](https://github.com/microsoft/Microsoft365DSC/issues/4347)
   * Throws an error if role, user or group was not found in the Set method.
     FIXES [#4342](https://github.com/microsoft/Microsoft365DSC/issues/4342)
+* EXOAuthenticationPolicyAssignment
+  * Improved performance by using a filter to retrieve assignments.
+  * Export now retrieves the user principal name instead of the user id.
+* EXOAvailabilityConfig
+  * Export now retrieves the user principal name instead of the user id.
+* EXOCASMailboxPlan
+  * Added the DisplayName property.
+* EXODataClassification
+  * Added logic to retrieve by name in the GET method if no match found by id.
+* EXOMailboxAutoReplyConfiguration
+  * Added the owner property.
+* EXOMailboxPlan
+  * Added the DisplayName property.
+* EXOMailboxSettings
+  * Export now retrieves instances by User Principal Name instead of GUID.
+* EXOPlace
+  * Added the DisplayName property.
+* EXORecipientPermission
+  * Export now retrieves instances by User Principal Name instead of GUID.
+* EXOSharedMailbox
+  * Added the Identity parameter.
 * MISC
   * Uninstall-M365DSCOutdatedDependencies
     * Outdated Microsoft365DSC-modules are now removed in their entirety

@@ -229,7 +229,7 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add('LCMState', $LCMInfo.LCMState)
                 $Data.Add('LCMStateDetail', $LCMInfo.LCMStateDetail)
 
-                if ([System.String]::IsNullOrEMpty($Type))
+                if ([System.String]::IsNullOrEmpty($Type))
                 {
                     if ($Global:M365DSCExportInProgress)
                     {
