@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * M365DSCUtil
+    * Change heuristics on how to find the mandatory key of the resources to
+      include them as part of the ResourceInstanceName during their export
+      FIXES [#4333](https://github.com/microsoft/Microsoft365DSC/issues/4333)
+
 # 1.24.221.1
 
 * AADApplication
@@ -34,10 +42,6 @@
 * MISC
   * Uninstall-M365DSCOutdatedDependencies
     * Outdated Microsoft365DSC-modules are now removed in their entirety
-  * M365DSCUtil
-    * Change heuristics on how to find the mandatory key of the resources to
-      include them as part of the ResourceInstanceName during their export
-      FIXES [#4333](https://github.com/microsoft/Microsoft365DSC/issues/4333)
 
 # 1.24.214.3
 
