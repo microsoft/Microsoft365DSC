@@ -16,8 +16,7 @@
             "name": "Get current unit test code overage",
             "script": "${workspaceRoot}/.vscode/GetTestCoverage.ps1",
             "args": [
-                "${file}",
-                "${workspaceRoot}/Tests/Unit/Stubs/Microsoft365.psm1"
+                "${file}"
             ],
             "createTemporaryIntegratedConsole": true
         }
