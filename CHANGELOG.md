@@ -2,9 +2,93 @@
 
 # UNRELEASED
 
+* MISC
+  * M365DSCDRGUtil
+    * Add new parameter for customizable assignment identifier
+
+# 1.24.221.1
+
+* AADApplication
+  * Expose the description field in the resource.
+* AADConditionalAccessPolicy
+  * Fixing issue where Membership kinds no longer accepted empty values.
+    ROLLING BACK [#4344](https://github.com/microsoft/Microsoft365DSC/issues/4344)
+    FIXES [#4347](https://github.com/microsoft/Microsoft365DSC/issues/4347)
+  * Throws an error if role, user or group was not found in the Set method.
+    FIXES [#4342](https://github.com/microsoft/Microsoft365DSC/issues/4342)
+* EXOAuthenticationPolicyAssignment
+  * Improved performance by using a filter to retrieve assignments.
+  * Export now retrieves the user principal name instead of the user id.
+* EXOAvailabilityConfig
+  * Export now retrieves the user principal name instead of the user id.
+* EXOCASMailboxPlan
+  * Added the DisplayName property.
+* EXODataClassification
+  * Added logic to retrieve by name in the GET method if no match found by id.
+* EXOMailboxAutoReplyConfiguration
+  * Added the owner property.
+* EXOMailboxPlan
+  * Added the DisplayName property.
+* EXOMailboxSettings
+  * Export now retrieves instances by User Principal Name instead of GUID.
+* EXOPlace
+  * Added the DisplayName property.
+* EXORecipientPermission
+  * Export now retrieves instances by User Principal Name instead of GUID.
+* EXOSharedMailbox
+  * Added the Identity parameter.
+* MISC
+  * Uninstall-M365DSCOutdatedDependencies
+    * Outdated Microsoft365DSC-modules are now removed in their entirety
+
+# 1.24.214.3
+
+* AADAuthenticationMethodPolicy
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyAuthenticator
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyEmail
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyFido2
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicySms
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicySoftware
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyTemporary
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyVoice
+  * Fixed an error where the Export method would loop through the response header.
+* AADAuthenticationMethodPolicyX509
+  * Fixed an error where the Export method would loop through the response header.
+* IntuneAppConfigurationPolicy
+  * Fixed an error in the export on the Settings property.
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Fixed an error where the Export method would loop through the response header.
+* IntuneWindowsAutopilotDeploymentProfileAzureADJoined
+  * Fixed an error where the Export method would loop through the response header.
+* SCDLPComplianceRule
+  * Fixed the NotifyEmailCustomText and NotifyPolicyTipCustomText to escape fancy
+    quotes.
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.14.1.
+
+# 1.24.214.2
+
+* AADConditionalAccessPolicy
+  * Removed invalid empty string value that was added to the validate set
+    of two parameters.
+  * Updated permission reference for app-onlzy authentication.
+    FIXES [[#3329](https://github.com/microsoft/Microsoft365DSC/issues/3329)]
 * AADRoleEligibilityScheduleRequest
   * Fixed an issue where an error was thrown if no requests were found instead
     of simply returning the Null object.
+* AADRoleSetting
+  * Fix handling of DisplayName property in comparison
+    FIXES [#4019](https://github.com/microsoft/Microsoft365DSC/issues/4019)
+* AADUser
+  * Fixed and issue where an user would be created even if the resrouce was set to absent.
+    FIXES [[#4265](https://github.com/microsoft/Microsoft365DSC/issues/4265)]
 * EXOMobileDeviceMailboxPolicy
   * Fixes an issue where an empty MinPasswordLength value was always passed down
     to the update logic flow.
@@ -25,6 +109,17 @@
   * Fix typo in variable which made it export incorrectly and report that
     resource was not in correct state due to testing an incorrect value
     FIXES [#3972](https://github.com/microsoft/Microsoft365DSC/issues/3972)
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Fix removal of resource if Identity comes from another tenant or is not
+    present in blueprint
+  * Fix Test-TargetResource by not comparing Identity since it might be from
+    another tenant or not present in blueprint
+  FIXES [#4302](https://github.com/microsoft/Microsoft365DSC/issues/4302)
+* SCDPLPCompianceRule
+  * Added support for multiple additional parameters.
+* SPOSharingSettings
+  * Fixed an issue where the resource would return multiple sites.
+    FIXES [#2759](https://github.com/microsoft/Microsoft365DSC/issues/2759)
 * DEPENDENCIES
   * Updated DSCParser to version 1.4.0.2.
   * Updated Microsoft.Graph dependencies to version 2.13.1.
@@ -34,8 +129,7 @@
     * Fix nested change detection for CIMInstances
     * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
       FIXES [#4291](https://github.com/microsoft/Microsoft365DSC/issues/4291)
-  * M365DSCDRGUtil
-    * Add new parameter for customizable assignment identifier
+  * Added new QA test to check for missing description in resource schema
 
 # 1.24.207.2
 

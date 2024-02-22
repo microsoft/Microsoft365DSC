@@ -761,10 +761,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-
-    $AllTransportRules = Get-TransportRule
-
-    $TransportRule = $AllTransportRules | Where-Object -FilterScript { $_.Name -eq $Name }
+    $TransportRule = Get-TransportRule -Identity $Name -ErrorAction 'SilentlyContinue'
 
     if ($null -eq $TransportRule)
     {

@@ -73,6 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
+                    Description               = 'App description'
                     GroupMembershipClaims     = '0'
                     Homepage                  = 'https://app.contoso.com'
                     IdentifierUris            = 'https://app.contoso.com'
@@ -108,6 +109,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ObjectId                  = '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
+                    Description               = 'App description'
                     GroupMembershipClaims     = '0'
                     Homepage                  = 'https://app.contoso.com'
                     IdentifierUris            = 'https://app.contoso.com'
@@ -124,6 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
                     $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
+                    $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
                     $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
                     $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value 'https://app.contoso.com'
                     $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value 'https://app.contoso.com'
@@ -156,6 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
+                    Description               = 'App description'
                     GroupMembershipClaims     = '0'
                     Homepage                  = 'https://app.contoso.com'
                     IdentifierUris            = 'https://app.contoso.com'
@@ -171,6 +175,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp = New-Object PSCustomObject
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
+                    $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
                     $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
                     $AADApp | Add-Member -MemberType NoteProperty -Name SignInAudience -Value 'AzureADMyOrg'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Web -Value @{
@@ -203,6 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
+                    Description               = 'App description'
                     GroupMembershipClaims     = '0'
                     Homepage                  = 'https://app1.contoso.com' #drift
                     IdentifierUris            = 'https://app.contoso.com'
@@ -219,6 +225,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
                     $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
+                    $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
                     $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
                     $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value 'https://app.contoso.com'
                     $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value 'https://app.contoso.com'
@@ -251,6 +258,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName               = 'App1'
                     AvailableToOtherTenants   = $false
+                    Description               = 'App description'
                     GroupMembershipClaims     = '0'
                     IdentifierUris            = 'https://app.contoso.com'
                     KnownClientApplications   = ''
@@ -313,6 +321,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     $AADApp | Add-Member -MemberType NoteProperty -Name DisplayName -Value 'App1'
                     $AADApp | Add-Member -MemberType NoteProperty -Name Id -Value '5dcb2237-c61b-4258-9c85-eae2aaeba9d6'
                     $AADApp | Add-Member -MemberType NoteProperty -Name AvailableToOtherTenants -Value $false
+                    $AADApp | Add-Member -MemberType NoteProperty -Name Description -Value 'App description'
                     $AADApp | Add-Member -MemberType NoteProperty -Name GroupMembershipClaims -Value 0
                     $AADApp | Add-Member -MemberType NoteProperty -Name Homepage -Value 'https://app.contoso.com'
                     $AADApp | Add-Member -MemberType NoteProperty -Name IdentifierUris -Value 'https://app.contoso.com'
