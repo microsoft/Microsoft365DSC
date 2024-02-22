@@ -3396,7 +3396,7 @@ function Get-M365DSCExportContentForResource
     }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `
-        -not $Keys.NotContains('IsSingleInstance'))
+        -not $Keys.Contains('IsSingleInstance'))
     {
         foreach ($Key in $Keys)
         {
