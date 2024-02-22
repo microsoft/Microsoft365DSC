@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | The DisplayName parameter specifies the name of the Microsoft 365 Group. The display name is visible in the Exchange admin center, address lists, and Outlook. The maximum length is 64 characters. | |
+| **Id** | Write | String | The unique Id of the group | |
 | **AcceptMessagesOnlyFromSendersOrMembers** | Write | StringArray[] | The AcceptMessagesOnlyFromSendersOrMembers parameter specifies who is allowed to send messages to this recipient. Messages from other senders are rejected. | |
 | **AccessType** | Write | String | Private | `Public`, `Private` |
 | **AlwaysSubscribeMembersToCalendarEvents** | Write | Boolean | The AlwaysSubscribeMembersToCalendarEvents switch controls the default subscription settings of new members that are added to the Microsoft 365 Group. Changing this setting doesn't affect existing group members. | |

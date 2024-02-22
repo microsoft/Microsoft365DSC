@@ -511,11 +511,11 @@
                 EXOMailboxPlan 'ConfigureMailboxPlan'
                 {
                     Ensure                   = "Present";
-                    Identity                 = "Integration Plan";
-                    IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
+                    Identity                 = "ExchangeOnlineEssentials";
+                    IssueWarningQuota        = "15 GB (16,106,127,360 bytes)";
                     MaxReceiveSize           = "25 MB (26,214,400 bytes)";
                     MaxSendSize              = "25 MB (26,214,400 bytes)";
-                    ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
+                    ProhibitSendQuota        = "15 GB (16,106,127,360 bytes)";
                     ProhibitSendReceiveQuota = "15 GB (16,106,127,360 bytes)"; # Updated Property
                     RetainDeletedItemsFor    = "14.00:00:00";
                     RoleAssignmentPolicy     = "Default Role Assignment Policy";
@@ -523,7 +523,7 @@
                 }
                 EXOMailboxSettings 'OttawaTeamMailboxSettings'
                 {
-                    DisplayName = 'Ottawa Employees'
+                    DisplayName = 'Conf Room Adams'
                     TimeZone    = 'Eastern Standard Time'
                     Locale      = 'en-US' # Updated Property
                     Ensure      = 'Present'
@@ -674,7 +674,7 @@
                 EXOOfflineAddressBook 'ConfigureOfflineAddressBook'
                 {
                     Name                 = "Integration Address Book"
-                    AddressLists         = @('\Offline Global Address List')
+                    AddressLists         = @('\All Users')
                     DiffRetentionPeriod  = "30"
                     IsDefault            = $false # Updated Property
                     Ensure               = "Present"
@@ -696,13 +696,13 @@
                 }
                 EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
                 {
-                    Identity          = 'Contoso'
-                    Comment           = 'Mail for Contoso. Updated' # Updated Property
-                    HybridDomains     = 'contoso.com', 'sales.contoso.com'
-                    InboundConnector  = 'Inbound to Contoso'
-                    OrganizationGuid  = 'a1bc23cb-3456-bcde-abcd-feb363cacc88'
-                    OrganizationName  = 'Contoso'
-                    OutboundConnector = 'Outbound to Contoso'
+                    Identity          = 'Integration'
+                    Comment           = 'Mail for Contoso - Updated' #Updated Property
+                    HybridDomains     = 'o365dsc.onmicrosoft.com'
+                    InboundConnector  = 'Integration Inbound Connector'
+                    OrganizationGuid  = 'e7a80bcf-696e-40ca-8775-a7f85fbb3ebc'
+                    OrganizationName  = 'O365DSC'
+                    OutboundConnector = 'Contoso Outbound Connector'
                     Ensure            = 'Present'
                     Credential        = $Credscredential
                 }
@@ -889,14 +889,15 @@
                 {
                     Name                                = "HRApp"
                     ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
-                    Enabled                             = $False # Updated Property
+                    AcceptSecurityIdentifierInformation = $False # Updated Property
+                    Enabled                             = $True
                     Ensure                              = "Present"
                     Credential                          = $Credscredential
                 }
                 EXOPerimeterConfiguration 'ConfigurePerimeterConfiguration'
                 {
                     IsSingleInstance   = 'Yes'
-                    GatewayIPAddresses = '123.0.0.1'
+                    #GatewayIPAddresses = '123.0.0.1'
                     Ensure             = 'Present'
                     Credential         = $Credscredential
                 }
@@ -927,7 +928,7 @@
                 {
                     EndUserQuarantinePermissionsValue = 87;
                     ESNEnabled                        = $True; # Updated Property
-                    Identity                          = "$Domain\DefaultFullAccessPolicy";
+                    Identity                          = "$Domain\IntegrationPolicy";
                     Ensure                            = "Present"
                     Credential                        = $Credscredential
                 }
@@ -944,9 +945,9 @@
                     DisplaySenderName                    = $True
                     DomainName                           = "contoso.com"
                     IsInternal                           = $False
-                    LineWrapSize                         = "Integration"
+                    LineWrapSize                         = "Unlimited"
                     MeetingForwardNotificationEnabled    = $False
-                    Name                                 = "Default"
+                    Name                                 = "Integration"
                     NonMimeCharacterSet                  = "iso-8859-1"
                     PreferredInternetCodePageForShiftJis = "Undefined"
                     TargetDeliveryDomain                 = $False
@@ -992,8 +993,8 @@
                 EXORoleAssignmentPolicy 'ConfigureRoleAssignmentPolicy'
                 {
                     Name                 = "Integration Policy"
-                    Description          = "This policy grants end users the permission to set their options in Outlook on the web and perform other self-administration tasks."
-                    IsDefault            = $False # Updated Property
+                    Description          = "Updated Description"  # Updated Property
+                    IsDefault            = $True
                     Roles                = @("My Marketplace Apps","MyVoiceMail","MyDistributionGroups","MyRetentionPolicies","MyContactInformation","MyBaseOptions","MyTextMessaging","MyDistributionGroupMembership","MyProfileInformation","My Custom Apps","My ReadWriteMailbox Apps")
                     Ensure               = "Present"
                     Credential           = $Credscredential
