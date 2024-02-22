@@ -154,6 +154,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         @{
                             Name                 = 'John.Smith'
                             AuthenticationPolicy = 'Test Policy'
+                            UserPrincipalName    = 'john.smith@contoso.com'
                         }
                     )
                 }

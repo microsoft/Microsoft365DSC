@@ -1412,7 +1412,7 @@ function Confirm-M365DSCDependencies
     [CmdletBinding()]
     param()
 
-    if (-not $Script:M365DSCDependenciesValidated)
+    if (-not $Script:M365DSCDependenciesValidated -and ($null -eq $Global:M365DSCSkipDependenciesValidation -or -not $Global:M365DSCSkipDependenciesValidation))
     {
         Write-Verbose -Message 'Dependencies were not already validated.'
 
