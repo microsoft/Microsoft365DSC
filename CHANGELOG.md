@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Fixes an issue where the keyUsage property format was not correctly handled
+
 # 1.24.221.1
 
 * AADApplication
