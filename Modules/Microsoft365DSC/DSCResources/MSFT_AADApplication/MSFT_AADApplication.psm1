@@ -148,7 +148,7 @@ function Get-TargetResource
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
         {
-            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. These apps will not be exported."
+            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant."
         }
         elseif ($null -eq $AADApp)
         {
@@ -940,6 +940,7 @@ function Export-TargetResource
                     Write-Host "`r`n        $($Global:M365DSCEmojiYellowCircle)" -NoNewline
                     Write-Host " Multiple app instances wth name {$($AADApp.DisplayName)} were found. We will skip exporting these instances."
                 }
+                $i++
             }
         }
         return $dscContent.ToString()
