@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -62,12 +62,12 @@ function Get-TargetResource
         $PlatformType,
 
         [Parameter()]
-        [System.Int32]
-        $Priority,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
+
+        [Parameter()]
+        [System.Int32]
+        $Priority,
 
         [Parameter()]
         [System.String]
@@ -119,13 +119,17 @@ function Get-TargetResource
 
     try
     {
-        $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction SilentlyContinue
+        try {
+            $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Identity -ErrorAction Stop
+        }
+        catch {
+            $config = $null
+        }
 
-        if ($null -eq $getValue)
+        if ($null -eq $config)
         {
             Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with Id {$Identity}"
-
-            $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "DisplayName eq '$DisplayName'" `
+            $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "DisplayName eq '$DisplayName'" `
                 -ErrorAction SilentlyContinue | Where-Object `
                 -FilterScript { `
                     $_.AdditionalProperties.'@odata.type' -like "#microsoft.graph.deviceEnrollmentPlatformRestriction*Configuration" -and `
@@ -133,19 +137,19 @@ function Get-TargetResource
                 }
         }
 
-        if ($null -eq $getValue)
+        if ($null -eq $config)
         {
             Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
             return $nullResult
         }
 
-        Write-Verbose -Message "Found Intune Device Enrollment Platform Restriction with Name {$($getValue.DisplayName)}"
+        Write-Verbose -Message "Found Intune Device Enrollment Platform Restriction with Name {$($config.DisplayName)}"
         $results = @{
-            Identity                          = $getValue.Id
-            DisplayName                       = $getValue.DisplayName
-            Description                       = $getValue.Description
-            DeviceEnrollmentConfigurationType = $getValue.DeviceEnrollmentConfigurationType.ToString()
-            Priority                          = $getValue.Priority
+            Identity                          = $config.Id
+            DisplayName                       = $config.DisplayName
+            Description                       = $config.Description
+            DeviceEnrollmentConfigurationType = $config.DeviceEnrollmentConfigurationType.toString()
+            Priority                          = $config.Priority
             Ensure                            = 'Present'
             Credential                        = $Credential
             ApplicationId                     = $ApplicationId
@@ -156,17 +160,17 @@ function Get-TargetResource
         }
 
         # Check if it is not a "Default platform restriction"
-        if ($getValue.AdditionalProperties.platformType)
+        if ($config.AdditionalProperties.platformType)
         {
-            $results.Add('PlatformType', $getValue.AdditionalProperties.platformType.ToString())
+            $results.Add('PlatformType', $config.AdditionalProperties.platformType.ToString())
 
             $complexPlatformRestriction = @{}
-            $complexPlatformRestriction.Add('BlockedManufacturers', $getValue.AdditionalProperties.platformRestriction.blockedManufacturers)
-            $complexPlatformRestriction.Add('BlockedSkus', $getValue.AdditionalProperties.platformRestriction.blockedSkus)
-            $complexPlatformRestriction.Add('OsMaximumVersion', $getValue.AdditionalProperties.platformRestriction.osMaximumVersion)
-            $complexPlatformRestriction.Add('OsMinimumVersion', $getValue.AdditionalProperties.platformRestriction.osMinimumVersion)
-            $complexPlatformRestriction.Add('PersonalDeviceEnrollmentBlocked', $getValue.AdditionalProperties.platformRestriction.personalDeviceEnrollmentBlocked)
-            $complexPlatformRestriction.Add('PlatformBlocked', $getValue.AdditionalProperties.platformRestriction.platformBlocked)
+            $complexPlatformRestriction.Add('BlockedManufacturers', $config.AdditionalProperties.platformRestriction.blockedManufacturers)
+            $complexPlatformRestriction.Add('BlockedSkus', $config.AdditionalProperties.platformRestriction.blockedSkus)
+            $complexPlatformRestriction.Add('OsMaximumVersion', $config.AdditionalProperties.platformRestriction.osMaximumVersion)
+            $complexPlatformRestriction.Add('OsMinimumVersion', $config.AdditionalProperties.platformRestriction.osMinimumVersion)
+            $complexPlatformRestriction.Add('PersonalDeviceEnrollmentBlocked', $config.AdditionalProperties.platformRestriction.personalDeviceEnrollmentBlocked)
+            $complexPlatformRestriction.Add('PlatformBlocked', $config.AdditionalProperties.platformRestriction.platformBlocked)
             if ($complexPlatformRestriction.values.Where({$null -ne $_}).count -eq 0)
             {
                 $complexPlatformRestriction = $null
@@ -177,96 +181,96 @@ function Get-TargetResource
         else
         {
             $complexAndroidForWorkRestriction = @{}
-            $complexAndroidForWorkRestriction.Add('BlockedManufacturers', $getValue.AdditionalProperties.androidForWorkRestriction.blockedManufacturers)
-            $complexAndroidForWorkRestriction.Add('BlockedSkus', $getValue.AdditionalProperties.androidForWorkRestriction.blockedSkus)
-            $complexAndroidForWorkRestriction.Add('OsMaximumVersion', $getValue.AdditionalProperties.androidForWorkRestriction.osMaximumVersion)
-            $complexAndroidForWorkRestriction.Add('OsMinimumVersion', $getValue.AdditionalProperties.androidForWorkRestriction.osMinimumVersion)
-            $complexAndroidForWorkRestriction.Add('PersonalDeviceEnrollmentBlocked', $getValue.AdditionalProperties.androidForWorkRestriction.personalDeviceEnrollmentBlocked)
-            $complexAndroidForWorkRestriction.Add('PlatformBlocked', $getValue.AdditionalProperties.androidForWorkRestriction.platformBlocked)
+            $complexAndroidForWorkRestriction.Add('BlockedManufacturers', $config.AdditionalProperties.androidForWorkRestriction.blockedManufacturers)
+            $complexAndroidForWorkRestriction.Add('BlockedSkus', $config.AdditionalProperties.androidForWorkRestriction.blockedSkus)
+            $complexAndroidForWorkRestriction.Add('OsMaximumVersion', $config.AdditionalProperties.androidForWorkRestriction.osMaximumVersion)
+            $complexAndroidForWorkRestriction.Add('OsMinimumVersion', $config.AdditionalProperties.androidForWorkRestriction.osMinimumVersion)
+            $complexAndroidForWorkRestriction.Add('PersonalDeviceEnrollmentBlocked', $config.AdditionalProperties.androidForWorkRestriction.personalDeviceEnrollmentBlocked)
+            $complexAndroidForWorkRestriction.Add('PlatformBlocked', $config.AdditionalProperties.androidForWorkRestriction.platformBlocked)
             if ($complexAndroidForWorkRestriction.values.Where({$null -ne $_}).count -eq 0)
             {
                 $complexAndroidForWorkRestriction = $null
             }
 
             $complexAndroidRestriction = @{}
-            $complexAndroidRestriction.Add('BlockedManufacturers', $getValue.AdditionalProperties.androidRestriction.blockedManufacturers)
-            $complexAndroidRestriction.Add('BlockedSkus', $getValue.AdditionalProperties.androidRestriction.blockedSkus)
-            $complexAndroidRestriction.Add('OsMaximumVersion', $getValue.AdditionalProperties.androidRestriction.osMaximumVersion)
-            $complexAndroidRestriction.Add('OsMinimumVersion', $getValue.AdditionalProperties.androidRestriction.osMinimumVersion)
-            $complexAndroidRestriction.Add('PersonalDeviceEnrollmentBlocked', $getValue.AdditionalProperties.androidRestriction.personalDeviceEnrollmentBlocked)
-            $complexAndroidRestriction.Add('PlatformBlocked', $getValue.AdditionalProperties.androidRestriction.platformBlocked)
+            $complexAndroidRestriction.Add('BlockedManufacturers', $config.AdditionalProperties.androidRestriction.blockedManufacturers)
+            $complexAndroidRestriction.Add('BlockedSkus', $config.AdditionalProperties.androidRestriction.blockedSkus)
+            $complexAndroidRestriction.Add('OsMaximumVersion', $config.AdditionalProperties.androidRestriction.osMaximumVersion)
+            $complexAndroidRestriction.Add('OsMinimumVersion', $config.AdditionalProperties.androidRestriction.osMinimumVersion)
+            $complexAndroidRestriction.Add('PersonalDeviceEnrollmentBlocked', $config.AdditionalProperties.androidRestriction.personalDeviceEnrollmentBlocked)
+            $complexAndroidRestriction.Add('PlatformBlocked', $config.AdditionalProperties.androidRestriction.platformBlocked)
             if ($complexAndroidRestriction.values.Where({$null -ne $_}).count -eq 0)
             {
                 $complexAndroidRestriction = $null
             }
 
             $complexIosRestriction = @{}
-            $complexIosRestriction.Add('BlockedManufacturers', $getValue.AdditionalProperties.iosRestriction.blockedManufacturers)
-            $complexIosRestriction.Add('BlockedSkus', $getValue.AdditionalProperties.iosRestriction.blockedSkus)
-            $complexIosRestriction.Add('OsMaximumVersion', $getValue.AdditionalProperties.iosRestriction.osMaximumVersion)
-            $complexIosRestriction.Add('OsMinimumVersion', $getValue.AdditionalProperties.iosRestriction.osMinimumVersion)
-            $complexIosRestriction.Add('PersonalDeviceEnrollmentBlocked', $getValue.AdditionalProperties.iosRestriction.personalDeviceEnrollmentBlocked)
-            $complexIosRestriction.Add('PlatformBlocked', $getValue.AdditionalProperties.iosRestriction.platformBlocked)
+            $complexIosRestriction.Add('BlockedManufacturers', $config.AdditionalProperties.iosRestriction.blockedManufacturers)
+            $complexIosRestriction.Add('BlockedSkus', $config.AdditionalProperties.iosRestriction.blockedSkus)
+            $complexIosRestriction.Add('OsMaximumVersion', $config.AdditionalProperties.iosRestriction.osMaximumVersion)
+            $complexIosRestriction.Add('OsMinimumVersion', $config.AdditionalProperties.iosRestriction.osMinimumVersion)
+            $complexIosRestriction.Add('PersonalDeviceEnrollmentBlocked', $config.AdditionalProperties.iosRestriction.personalDeviceEnrollmentBlocked)
+            $complexIosRestriction.Add('PlatformBlocked', $config.AdditionalProperties.iosRestriction.platformBlocked)
             if ($complexIosRestriction.values.Where({$null -ne $_}).count -eq 0)
             {
                 $complexIosRestriction = $null
             }
 
             $complexMacOSRestriction = @{}
-            $complexMacOSRestriction.Add('BlockedManufacturers', $getValue.AdditionalProperties.macOSRestriction.blockedManufacturers)
-            $complexMacOSRestriction.Add('BlockedSkus', $getValue.AdditionalProperties.macOSRestriction.blockedSkus)
-            $complexMacOSRestriction.Add('OsMaximumVersion', $getValue.AdditionalProperties.macOSRestriction.osMaximumVersion)
-            $complexMacOSRestriction.Add('OsMinimumVersion', $getValue.AdditionalProperties.macOSRestriction.osMinimumVersion)
-            $complexMacOSRestriction.Add('PersonalDeviceEnrollmentBlocked', $getValue.AdditionalProperties.macOSRestriction.personalDeviceEnrollmentBlocked)
-            $complexMacOSRestriction.Add('PlatformBlocked', $getValue.AdditionalProperties.macOSRestriction.platformBlocked)
+            $complexMacOSRestriction.Add('BlockedManufacturers', $config.AdditionalProperties.macOSRestriction.blockedManufacturers)
+            $complexMacOSRestriction.Add('BlockedSkus', $config.AdditionalProperties.macOSRestriction.blockedSkus)
+            $complexMacOSRestriction.Add('OsMaximumVersion', $config.AdditionalProperties.macOSRestriction.osMaximumVersion)
+            $complexMacOSRestriction.Add('OsMinimumVersion', $config.AdditionalProperties.macOSRestriction.osMinimumVersion)
+            $complexMacOSRestriction.Add('PersonalDeviceEnrollmentBlocked', $config.AdditionalProperties.macOSRestriction.personalDeviceEnrollmentBlocked)
+            $complexMacOSRestriction.Add('PlatformBlocked', $config.AdditionalProperties.macOSRestriction.platformBlocked)
             if ($complexMacOSRestriction.values.Where({$null -ne $_}).count -eq 0)
             {
                 $complexMacOSRestriction = $null
             }
 
             $complexMacRestriction = @{}
-            $complexMacRestriction.Add('BlockedManufacturers', $getValue.AdditionalProperties.macRestriction.blockedManufacturers)
-            $complexMacRestriction.Add('BlockedSkus', $getValue.AdditionalProperties.macRestriction.blockedSkus)
-            $complexMacRestriction.Add('OsMaximumVersion', $getValue.AdditionalProperties.macRestriction.osMaximumVersion)
-            $complexMacRestriction.Add('OsMinimumVersion', $getValue.AdditionalProperties.macRestriction.osMinimumVersion)
-            $complexMacRestriction.Add('PersonalDeviceEnrollmentBlocked', $getValue.AdditionalProperties.macRestriction.personalDeviceEnrollmentBlocked)
-            $complexMacRestriction.Add('PlatformBlocked', $getValue.AdditionalProperties.macRestriction.platformBlocked)
+            $complexMacRestriction.Add('BlockedManufacturers', $config.AdditionalProperties.macRestriction.blockedManufacturers)
+            $complexMacRestriction.Add('BlockedSkus', $config.AdditionalProperties.macRestriction.blockedSkus)
+            $complexMacRestriction.Add('OsMaximumVersion', $config.AdditionalProperties.macRestriction.osMaximumVersion)
+            $complexMacRestriction.Add('OsMinimumVersion', $config.AdditionalProperties.macRestriction.osMinimumVersion)
+            $complexMacRestriction.Add('PersonalDeviceEnrollmentBlocked', $config.AdditionalProperties.macRestriction.personalDeviceEnrollmentBlocked)
+            $complexMacRestriction.Add('PlatformBlocked', $config.AdditionalProperties.macRestriction.platformBlocked)
             if ($complexMacRestriction.values.Where({$null -ne $_}).count -eq 0)
             {
                 $complexMacRestriction = $null
             }
 
             $complexWindowsHomeSkuRestriction = @{}
-            $complexWindowsHomeSkuRestriction.Add('BlockedManufacturers', $getValue.AdditionalProperties.windowsHomeSkuRestriction.blockedManufacturers)
-            $complexWindowsHomeSkuRestriction.Add('BlockedSkus', $getValue.AdditionalProperties.windowsHomeSkuRestriction.blockedSkus)
-            $complexWindowsHomeSkuRestriction.Add('OsMaximumVersion', $getValue.AdditionalProperties.windowsHomeSkuRestriction.osMaximumVersion)
-            $complexWindowsHomeSkuRestriction.Add('OsMinimumVersion', $getValue.AdditionalProperties.windowsHomeSkuRestriction.osMinimumVersion)
-            $complexWindowsHomeSkuRestriction.Add('PersonalDeviceEnrollmentBlocked', $getValue.AdditionalProperties.windowsHomeSkuRestriction.personalDeviceEnrollmentBlocked)
-            $complexWindowsHomeSkuRestriction.Add('PlatformBlocked', $getValue.AdditionalProperties.windowsHomeSkuRestriction.platformBlocked)
+            $complexWindowsHomeSkuRestriction.Add('BlockedManufacturers', $config.AdditionalProperties.windowsHomeSkuRestriction.blockedManufacturers)
+            $complexWindowsHomeSkuRestriction.Add('BlockedSkus', $config.AdditionalProperties.windowsHomeSkuRestriction.blockedSkus)
+            $complexWindowsHomeSkuRestriction.Add('OsMaximumVersion', $config.AdditionalProperties.windowsHomeSkuRestriction.osMaximumVersion)
+            $complexWindowsHomeSkuRestriction.Add('OsMinimumVersion', $config.AdditionalProperties.windowsHomeSkuRestriction.osMinimumVersion)
+            $complexWindowsHomeSkuRestriction.Add('PersonalDeviceEnrollmentBlocked', $config.AdditionalProperties.windowsHomeSkuRestriction.personalDeviceEnrollmentBlocked)
+            $complexWindowsHomeSkuRestriction.Add('PlatformBlocked', $config.AdditionalProperties.windowsHomeSkuRestriction.platformBlocked)
             if ($complexWindowsHomeSkuRestriction.values.Where({$null -ne $_}).count -eq 0)
             {
                 $complexWindowsHomeSkuRestriction = $null
             }
 
             $complexWindowsMobileRestriction = @{}
-            $complexWindowsMobileRestriction.Add('BlockedManufacturers', $getValue.AdditionalProperties.windowsMobileRestriction.blockedManufacturers)
-            $complexWindowsMobileRestriction.Add('BlockedSkus', $getValue.AdditionalProperties.windowsMobileRestriction.blockedSkus)
-            $complexWindowsMobileRestriction.Add('OsMaximumVersion', $getValue.AdditionalProperties.windowsMobileRestriction.osMaximumVersion)
-            $complexWindowsMobileRestriction.Add('OsMinimumVersion', $getValue.AdditionalProperties.windowsMobileRestriction.osMinimumVersion)
-            $complexWindowsMobileRestriction.Add('PersonalDeviceEnrollmentBlocked', $getValue.AdditionalProperties.windowsMobileRestriction.personalDeviceEnrollmentBlocked)
-            $complexWindowsMobileRestriction.Add('PlatformBlocked', $getValue.AdditionalProperties.windowsMobileRestriction.platformBlocked)
+            $complexWindowsMobileRestriction.Add('BlockedManufacturers', $config.AdditionalProperties.windowsMobileRestriction.blockedManufacturers)
+            $complexWindowsMobileRestriction.Add('BlockedSkus', $config.AdditionalProperties.windowsMobileRestriction.blockedSkus)
+            $complexWindowsMobileRestriction.Add('OsMaximumVersion', $config.AdditionalProperties.windowsMobileRestriction.osMaximumVersion)
+            $complexWindowsMobileRestriction.Add('OsMinimumVersion', $config.AdditionalProperties.windowsMobileRestriction.osMinimumVersion)
+            $complexWindowsMobileRestriction.Add('PersonalDeviceEnrollmentBlocked', $config.AdditionalProperties.windowsMobileRestriction.personalDeviceEnrollmentBlocked)
+            $complexWindowsMobileRestriction.Add('PlatformBlocked', $config.AdditionalProperties.windowsMobileRestriction.platformBlocked)
             if ($complexWindowsMobileRestriction.values.Where({$null -ne $_}).count -eq 0)
             {
                 $complexWindowsMobileRestriction = $null
             }
 
             $complexWindowsRestriction = @{}
-            $complexWindowsRestriction.Add('BlockedManufacturers', $getValue.AdditionalProperties.windowsRestriction.blockedManufacturers)
-            $complexWindowsRestriction.Add('BlockedSkus', $getValue.AdditionalProperties.windowsRestriction.blockedSkus)
-            $complexWindowsRestriction.Add('OsMaximumVersion', $getValue.AdditionalProperties.windowsRestriction.osMaximumVersion)
-            $complexWindowsRestriction.Add('OsMinimumVersion', $getValue.AdditionalProperties.windowsRestriction.osMinimumVersion)
-            $complexWindowsRestriction.Add('PersonalDeviceEnrollmentBlocked', $getValue.AdditionalProperties.windowsRestriction.personalDeviceEnrollmentBlocked)
-            $complexWindowsRestriction.Add('PlatformBlocked', $getValue.AdditionalProperties.windowsRestriction.platformBlocked)
+            $complexWindowsRestriction.Add('BlockedManufacturers', $config.AdditionalProperties.windowsRestriction.blockedManufacturers)
+            $complexWindowsRestriction.Add('BlockedSkus', $config.AdditionalProperties.windowsRestriction.blockedSkus)
+            $complexWindowsRestriction.Add('OsMaximumVersion', $config.AdditionalProperties.windowsRestriction.osMaximumVersion)
+            $complexWindowsRestriction.Add('OsMinimumVersion', $config.AdditionalProperties.windowsRestriction.osMinimumVersion)
+            $complexWindowsRestriction.Add('PersonalDeviceEnrollmentBlocked', $config.AdditionalProperties.windowsRestriction.personalDeviceEnrollmentBlocked)
+            $complexWindowsRestriction.Add('PlatformBlocked', $config.AdditionalProperties.windowsRestriction.platformBlocked)
             if ($complexWindowsRestriction.values.Where({$null -ne $_}).count -eq 0)
             {
                 $complexWindowsRestriction = $null
@@ -287,7 +291,7 @@ function Get-TargetResource
             $results.Remove('WindowsMobileRestriction') | Out-Null
         }
 
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $getValue.Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $assignmentsValues)
         {
@@ -321,7 +325,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -379,12 +383,12 @@ function Set-TargetResource
         $PlatformType,
 
         [Parameter()]
-        [System.Int32]
-        $Priority,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
+
+        [Parameter()]
+        [System.Int32]
+        $Priority,
 
         [Parameter()]
         [System.String]
@@ -415,6 +419,7 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -442,10 +447,15 @@ function Set-TargetResource
         throw 'Cannot delete the default platform restriction policy.'
     }
 
+    $PriorityPresent = $false
+    if ($PSBoundParameters.Keys.Contains('Priority'))
+    {
+        $PriorityPresent = $true
+        $PSBoundParameters.Remove('Priority') | Out-Null
+    }
+
     $currentInstance = Get-TargetResource @PSBoundParameters
-
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
     $BoundParameters.Remove('Identity') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -497,15 +507,24 @@ function Set-TargetResource
         # Skip for the default platform restriction
         if ($policy.Id -notlike '*_DefaultPlatformRestrictions')
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.Id `
+            if ($null -ne $Assignments -and $Assignments -ne @()) {
+                $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+
+                Update-DeviceConfigurationPolicyAssignment `
+                -DeviceConfigurationPolicyId $policy.Id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceEnrollmentConfigurations' `
                 -RootIdentifier 'enrollmentConfigurationAssignments'
+            }
         }
 
-        if ($policy.Priority -ne $Priority)
+        if ($PriorityPresent -and $Priority -ne $policy.Priority)
         {
-            Write-Warning -Message 'Priority of the new policy is not equal to the specified priority. To solve this issue, reapply the configuration or make sure that the lowest priority policies are applied after the highest priority ones.'
+            $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $policy.Id
+            $Body = @{
+                priority = $Priority
+            }
+            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $($Body | ConvertTo-Json)
         }
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -518,7 +537,6 @@ function Set-TargetResource
             if ($WindowsMobileRestriction.platformBlocked -eq $false)
             {
                 Write-Verbose -Message 'Windows Mobile platform is deprecated and cannot be unblocked, reverting back to blocked'
-
                 $WindowsMobileRestriction.platformBlocked = $true
             }
         }
@@ -549,36 +567,37 @@ function Set-TargetResource
             $UpdateParameters.Remove("PlatformType")
         }
 
-        Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration  `
+        Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -DeviceEnrollmentConfigurationId $currentInstance.Identity `
             -BodyParameter $UpdateParameters
-
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
 
         # Skip for the default platform restriction
         if ($currentInstance.Identity -notlike "*_DefaultPlatformRestrictions")
         {
-            if ($Priority -ne $currentInstance.Priority)
+            if ($null -ne $Assignments -and $Assignments -ne @())
             {
-                $uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/$($currentInstance.Identity)/setpriority"
-                Invoke-MgGraphRequest -Method POST -Uri $uri -Body $(@{ 'priority' = $Priority} | ConvertTo-Json) -ErrorAction Stop
+                $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+
+                Update-DeviceConfigurationPolicyAssignment `
+                    -DeviceConfigurationPolicyId $currentInstance.Identity `
+                    -Targets $assignmentsHash `
+                    -Repository 'deviceManagement/deviceEnrollmentConfigurations' `
+                    -RootIdentifier 'enrollmentConfigurationAssignments'
             }
-            
-            Update-DeviceConfigurationPolicyAssignment `
-                -DeviceConfigurationPolicyId $currentInstance.Identity `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceEnrollmentConfigurations' `
-                -RootIdentifier 'enrollmentConfigurationAssignments'
+
+            if ($PriorityPresent -and $Priority -ne $currentInstance.Priority)
+            {
+                $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $currentInstance.Identity
+                $Body = @{
+                    priority = $Priority
+                }
+                Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $($Body | ConvertTo-Json)
+            }
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Enrollment Platform Restriction with Id {$($currentInstance.Identity)}"
-
+        Write-Verbose -Message "Removing the Intune Device Enrollment Platform Restriction with Name {$DisplayName}"
         Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $currentInstance.Identity
     }
 }
@@ -589,7 +608,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -647,12 +666,12 @@ function Test-TargetResource
         $PlatformType,
 
         [Parameter()]
-        [System.Int32]
-        $Priority,
-
-        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
+
+        [Parameter()]
+        [System.Int32]
+        $Priority,
 
         [Parameter()]
         [System.String]

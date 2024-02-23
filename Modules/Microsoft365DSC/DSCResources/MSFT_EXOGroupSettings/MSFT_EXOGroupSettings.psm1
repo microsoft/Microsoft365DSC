@@ -9,6 +9,10 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
         [System.String[]]
         $AcceptMessagesOnlyFromSendersOrMembers,
 
@@ -273,12 +277,20 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            [Array]$group = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            [Array]$group = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
         }
         else
         {
-            [Array]$group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties -ErrorAction Stop
+            Write-Verbose -Message "Retrieving group by id {$Id}"
+            [Array]$group = Get-UnifiedGroup -Identity $Id -IncludeAllProperties -ErrorAction Stop
+
+            if ($group.Length -eq 0)
+            {
+                Write-Verbose -Message "Couldn't retrieve group by ID. Trying by DisplayName {$DisplayName}"
+                [Array]$group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties -ErrorAction Stop
+            }
         }
+
         if ($group.Length -gt 1)
         {
             Write-Warning -Message "Multiple instances of a group named {$DisplayName} was discovered which could result in inconsistencies retrieving its values."
@@ -298,6 +310,7 @@ function Get-TargetResource
 
     $result = @{
         DisplayName                            = $DisplayName
+        Id                                     = $group.Id
         AcceptMessagesOnlyFromSendersOrMembers = $group.AcceptMessagesOnlyFromSendersOrMembers
         AccessType                             = $group.AccessType
         AlwaysSubscribeMembersToCalendarEvents = $group.AlwaysSubscribeMembersToCalendarEvents
@@ -369,6 +382,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String[]]
@@ -645,6 +662,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String[]]
@@ -979,6 +1000,7 @@ function Export-TargetResource
                 $Params = @{
                     Credential            = $Credential
                     DisplayName           = $groupName
+                    Id                    = $group.Id
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint

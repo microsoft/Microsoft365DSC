@@ -28,7 +28,7 @@ Configuration Example
             ModeratedBy                 = @()
             ModerationEnabled           = $false
             Name                        = 'My Test Contact'
-            OrganizationalUnit          = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$Domain"
+            OrganizationalUnit          = $Domain
             SendModerationNotifications = 'Always'
             UsePreferMessageFormat      = $true
             CustomAttribute1            = 'Custom Value 1'

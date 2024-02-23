@@ -2,6 +2,7 @@
 class MSFT_EXOGroupSettings : OMI_BaseResource
 {
     [Key, Description("The DisplayName parameter specifies the name of the Microsoft 365 Group. The display name is visible in the Exchange admin center, address lists, and Outlook. The maximum length is 64 characters.")] string DisplayName;
+    [Write, Description("The unique Id of the group")] string Id;
     [Write, Description("The AcceptMessagesOnlyFromSendersOrMembers parameter specifies who is allowed to send messages to this recipient. Messages from other senders are rejected.")] string AcceptMessagesOnlyFromSendersOrMembers[];
     [Write, Description("Private"), ValueMap{"Public","Private"}, Values{"Public","Private"}] string AccessType;
     [Write, Description("The AlwaysSubscribeMembersToCalendarEvents switch controls the default subscription settings of new members that are added to the Microsoft 365 Group. Changing this setting doesn't affect existing group members.")] boolean AlwaysSubscribeMembersToCalendarEvents;

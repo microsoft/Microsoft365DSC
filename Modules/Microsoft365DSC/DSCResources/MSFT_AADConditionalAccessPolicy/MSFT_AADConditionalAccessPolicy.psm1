@@ -1014,6 +1014,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $_
                         }
                         if ($null -eq $userguid)
                         {
@@ -1022,6 +1023,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message
                         }
                         else
                         {
@@ -1059,6 +1061,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $_
                         }
                         if ($null -eq $userguid)
                         {
@@ -1067,6 +1070,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message
                         }
                         else
                         {
@@ -1102,6 +1106,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $_
                     }
                     if ($GroupLookup.Length -gt 1)
                     {
@@ -1110,6 +1115,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $message
                     }
                     elseif ($null -eq $GroupLookup)
                     {
@@ -1118,6 +1124,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $message
                     }
                     else
                     {
@@ -1149,6 +1156,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $_
                     }
                     if ($GroupLookup.Length -gt 1)
                     {
@@ -1157,6 +1165,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $message
                     }
                     elseif ($null -eq $GroupLookup)
                     {
@@ -1165,6 +1174,7 @@ function Set-TargetResource
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
                             -Credential $Credential
+                        throw $message
                     }
                     else
                     {
@@ -1198,6 +1208,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message
                         }
                         else
                         {
@@ -1231,6 +1242,7 @@ function Set-TargetResource
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
                                 -Credential $Credential
+                            throw $message
                         }
                         else
                         {

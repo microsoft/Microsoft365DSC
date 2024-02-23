@@ -19,7 +19,7 @@ Configuration Example
             DisplayName                       = "Removed Policy";
             Ensure                            = "Absent";
             Assignments                       = @();
-            Description                       = "Enrollment restriction for POC users. Markus Köchli";
+            Description                       = "This is a single platform restriction policy.";
             DeviceEnrollmentConfigurationType = "singlePlatformRestriction";
             Identity                          = "d59e4c28-b6b2-48ad-a6f0-a2132300b99d_SinglePlatformRestriction";
             PlatformRestriction               = MSFT_DeviceEnrollmentPlatformRestriction{

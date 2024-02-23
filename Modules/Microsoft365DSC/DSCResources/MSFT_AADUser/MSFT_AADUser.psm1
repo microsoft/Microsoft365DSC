@@ -180,8 +180,8 @@ function Get-TargetResource
         }
         else
         {
-            Write-Verbose -Message "Retrieving user from the exported instances"
-            $user = $Script:M365DSCExportInstances | Where-Object -FilterScript {$_.UserPrincipalName -eq $UserPrincipalName}
+            Write-Verbose -Message 'Retrieving user from the exported instances'
+            $user = $Script:M365DSCExportInstances | Where-Object -FilterScript { $_.UserPrincipalName -eq $UserPrincipalName }
         }
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
@@ -193,7 +193,7 @@ function Get-TargetResource
         }
 
         # return membership of static groups only
-        [array]$currentMemberOf = (Get-MgUserMemberOfAsGroup -UserId $UserPrincipalName -All | Where-Object -FilterScript {$_.GroupTypes -notcontains 'DynamicMembership'}).DisplayName
+        [array]$currentMemberOf = (Get-MgUserMemberOfAsGroup -UserId $UserPrincipalName -All | Where-Object -FilterScript { $_.GroupTypes -notcontains 'DynamicMembership' }).DisplayName
 
         $userPasswordPolicyInfo = $user | Select-Object UserprincipalName, @{
             N = 'PasswordNeverExpires'; E = { $_.PasswordPolicies -contains 'DisablePasswordExpiration' }
@@ -204,7 +204,7 @@ function Get-TargetResource
         {
             $Script:allDirectoryRoleAssignment = Get-MgBetaRoleManagementDirectoryRoleAssignment -All
         }
-        $assignedRoles = $Script:allDirectoryRoleAssignment | Where-Object -FilterScript {$_.PrincipalId -eq $user.Id}
+        $assignedRoles = $Script:allDirectoryRoleAssignment | Where-Object -FilterScript { $_.PrincipalId -eq $user.Id }
 
         $rolesValue = @()
         if ($null -eq $Script:allAssignedRoles -and $assignedRoles.Length -gt 0)
@@ -213,7 +213,7 @@ function Get-TargetResource
         }
         foreach ($assignedRole in $assignedRoles)
         {
-            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript {$_.Id -eq $assignedRole.RoleDefinitionId}
+            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript { $_.Id -eq $assignedRole.RoleDefinitionId }
             $rolesValue += $currentRoleInfo.DisplayName
         }
 
@@ -418,7 +418,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing User {$UserPrincipalName}"
         Remove-MgUser -UserId $UserPrincipalName
     }
-    else
+    elseif ($Ensure -eq 'Present')
     {
         $PasswordPolicies = $null
         if ($PasswordNeverExpires)
@@ -498,7 +498,7 @@ function Set-TargetResource
 
             if ($null -ne $Password)
             {
-                Write-Verbose -Message "PasswordProfile property will not be updated"
+                Write-Verbose -Message 'PasswordProfile property will not be updated'
             }
 
             $CreationParams.Add('UserId', $UserPrincipalName)
@@ -584,20 +584,20 @@ function Set-TargetResource
                     if ($null -eq $group)
                     {
                         New-M365DSCLogEntry -Message 'Error updating data:' `
-                        -Exception "Attempting to add a user to a group that doesn't exist" `
-                        -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $TenantId `
-                        -Credential $Credential
+                            -Exception "Attempting to add a user to a group that doesn't exist" `
+                            -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $TenantId `
+                            -Credential $Credential
 
                         throw "Group '$memberOfGroup' does not exist in tenant"
                     }
                     if ($group.GroupTypes -contains 'DynamicMembership')
                     {
                         New-M365DSCLogEntry -Message 'Error updating data:' `
-                        -Exception "Attempting to add a user to a dynamic group" `
-                        -Source $($MyInvocation.MyCommand.Source) `
-                        -TenantId $TenantId `
-                        -Credential $Credential
+                            -Exception 'Attempting to add a user to a dynamic group' `
+                            -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $TenantId `
+                            -Credential $Credential
 
                         throw "Cannot add user $UserPrincipalName to group '$memberOfGroup' because it is a dynamic group"
                     }
@@ -615,20 +615,20 @@ function Set-TargetResource
                         if ($null -eq $group)
                         {
                             New-M365DSCLogEntry -Message 'Error updating data:' `
-                            -Exception "Attempting to add a user to a group that doesn't exist" `
-                            -Source $($MyInvocation.MyCommand.Source) `
-                            -TenantId $TenantId `
-                            -Credential $Credential
+                                -Exception "Attempting to add a user to a group that doesn't exist" `
+                                -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $TenantId `
+                                -Credential $Credential
 
                             throw "Group '$($_.InputObject)' does not exist in tenant"
                         }
                         if ($group.GroupTypes -contains 'DynamicMembership')
                         {
                             New-M365DSCLogEntry -Message 'Error updating data:' `
-                            -Exception "Attempting to add a user to a dynamic group" `
-                            -Source $($MyInvocation.MyCommand.Source) `
-                            -TenantId $TenantId `
-                            -Credential $Credential
+                                -Exception 'Attempting to add a user to a dynamic group' `
+                                -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $TenantId `
+                                -Credential $Credential
 
                             throw "Cannot add user $UserPrincipalName to group '$($_.InputObject)' because it is a dynamic group"
                         }
@@ -914,7 +914,8 @@ function Export-TargetResource
             Property    = $propertiesToRetrieve
             ErrorAction = 'Stop'
         }
-        if ($Filter -like "*endsWith*") {
+        if ($Filter -like '*endsWith*')
+        {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
         }

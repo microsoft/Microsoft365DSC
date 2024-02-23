@@ -110,7 +110,6 @@ Configuration Example
             ModerationEnabled                  = $False;
             Identity                           = "DemoDG";
             Name                               = "DemoDG";
-            OrganizationalUnit                 = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$Domain";
             PrimarySmtpAddress                 = "demodg@$Domain";
             RequireSenderAuthenticationEnabled = $True;
             SendModerationNotifications        = "Always";
@@ -154,7 +153,6 @@ Configuration Example
             ModerationEnabled                  = $False;
             Identity                           = "DemoDG";
             Name                               = "DemoDG";
-            OrganizationalUnit                 = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$Domain";
             PrimarySmtpAddress                 = "demodg@$Domain";
             RequireSenderAuthenticationEnabled = $True;
             SendModerationNotifications        = "Always";

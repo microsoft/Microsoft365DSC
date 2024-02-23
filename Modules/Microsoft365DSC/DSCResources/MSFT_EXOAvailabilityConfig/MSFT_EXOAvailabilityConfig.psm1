@@ -54,6 +54,9 @@ function Get-TargetResource
             -InboundParameters $PSBoundParameters
     }
 
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -76,15 +79,16 @@ function Get-TargetResource
 
         if ($null -ne $AvailabilityConfigs -and $null -ne $AvailabilityConfigs.OrgWideAccount)
         {
-            $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $OrgWideAccount })
+            $user = Get-MgUser -UserId $OrgWideAccount -ErrorAction Stop
+            $AvailabilityConfig = ($AvailabilityConfigs | Where-Object -FilterScript { $_.OrgWideAccount -IMatch $user.UserId })
         }
         if ($null -eq $AvailabilityConfig)
         {
-            Write-Verbose -Message "Availability config for $($OrgWideAccount) does not exist."
+            Write-Verbose -Message "Availability config for [$($OrgWideAccount)] does not exist."
             return $nullReturn
         }
         $result = @{
-            OrgWideAccount        = $AvailabilityConfig.OrgWideAccount
+            OrgWideAccount        = $OrgWideAccount
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -263,10 +267,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $DesiredValues = $PSBoundParameters
-    if ($OrgWideAccount.Contains('@'))
-    {
-        $DesiredValues.OrgWideAccount = $OrgWideAccount.Split('@')[0]
-    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -346,7 +346,8 @@ function Export-TargetResource
         $OrgWideValue = "NotConfigured"
         if ($null -ne $AvailabilityConfig.OrgWideAccount)
         {
-            $OrgWideValue = $AvailabilityConfig.OrgWideAccount.ToString()
+            $user = Get-User -Identity $AvailabilityConfig.OrgWideAccount.ToString()
+            $OrgWideValue = $user.UserPrincipalName
         }
         $Params = @{
             OrgWideAccount        = $OrgWideValue

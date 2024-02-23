@@ -25,7 +25,7 @@ Configuration Example
             Credential             = $Credscredential
             DisplayDeviceName      = "DisplayDeviceName";
             Ensure                 = 'Present'
-            Identity               = "MyRoom@$Domain";
+            Identity               = "Hood@$Domain";
             IsWheelChairAccessible = $True;
             MTREnabled             = $False;
             ParentType             = "None";

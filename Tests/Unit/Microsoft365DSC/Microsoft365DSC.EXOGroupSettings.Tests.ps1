@@ -202,6 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-UnifiedGroup -MockWith {
                     return @{
                         DisplayName                            = "Test Group";
+                        Id                                     = '12345-12345-12345-12345-12345'
                         AccessType                             = "Public";
                         AlwaysSubscribeMembersToCalendarEvents = $False;
                         AuditLogAgeLimit                       = "90.00:00:00";

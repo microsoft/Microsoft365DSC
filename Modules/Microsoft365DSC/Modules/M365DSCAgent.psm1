@@ -20,7 +20,7 @@ function Test-M365DSCAgent
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Event', 'TestAgent')
-    Add-M365DSCTelemetryEvent -Data $data
+    Add-M365DSCTelemetryEvent -Data $data -Type 'TestAgent'
     #endregion
 
     [array]$Recommendations = @()

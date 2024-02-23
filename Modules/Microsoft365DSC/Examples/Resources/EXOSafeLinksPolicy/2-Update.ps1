@@ -24,7 +24,6 @@ Configuration Example
             EnableOrganizationBranding    = $False # Updated Property
             EnableSafeLinksForTeams       = $True
             ScanUrls                      = $True
-            UseTranslatedNotificationText = $True
             Ensure                        = 'Present'
             Credential                    = $Credscredential
         }

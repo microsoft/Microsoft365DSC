@@ -17,7 +17,7 @@ Configuration Example
     {
         EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
         {
-            Identity                  = "Contoso Recipients"
+            Identity                  = "Integration CFR"
             HostedContentFilterPolicy = "Integration CFP"
             Ensure                    = "Absent"
             Credential                = $Credscredential
