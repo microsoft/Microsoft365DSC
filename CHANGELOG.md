@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Update the Intune enrollment platform restriction logic to the single platform approach.
+  * Introduce additional validation for selected properties.
+  * Fixed an issue where nested settings would throw a conflict
+    FIXES [#4082](https://github.com/microsoft/Microsoft365DSC/issues/4082)
+
 # 1.24.221.1
 
 * AADApplication

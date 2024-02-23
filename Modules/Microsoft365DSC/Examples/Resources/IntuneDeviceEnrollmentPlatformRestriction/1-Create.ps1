@@ -33,6 +33,7 @@ Configuration Example
             DeviceEnrollmentConfigurationType = "platformRestrictions";
             DisplayName                       = "All users and all devices";
             Ensure                            = "Present";
+            Identity                          = "3868d43e-873e-4416-8fd1-fc3d67c7c15c_DefaultPlatformRestrictions";
             IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
                 platformBlocked = $False
                 personalDeviceEnrollmentBlocked = $False
