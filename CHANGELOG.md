@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
+  * Fix update and removal of resource when Identity is from another tenant
+    FIXES [#3962](https://github.com/microsoft/Microsoft365DSC/issues/3962)
+
 # 1.24.221.1
 
 * AADApplication
