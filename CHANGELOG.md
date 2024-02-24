@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRLEASED
+
+* SPOAccessControlSettings
+  * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
+
 # 1.24.221.1
 
 * AADApplication
