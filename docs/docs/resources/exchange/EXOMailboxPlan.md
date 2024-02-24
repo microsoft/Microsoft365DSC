@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the Mailbox Plan that you want to modify. | |
+| **DisplayName** | Write | String | The display name of the mailbox plan. | |
 | **Ensure** | Write | String | MailboxPlans cannot be created/removed in O365.  This must be set to 'Present' | `Present` |
 | **IssueWarningQuota** | Write | String | The IssueWarningQuota parameter specifies the warning threshold for the size of the mailboxes that are created or enabled using the mailbox plan. | |
 | **MaxReceiveSize** | Write | String | The MaxReceiveSize parameter specifies the maximum size of a message that can be sent to the mailbox. | |

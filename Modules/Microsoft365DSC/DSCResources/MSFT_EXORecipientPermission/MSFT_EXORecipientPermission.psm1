@@ -87,6 +87,21 @@ function Get-TargetResource
             $recipientPermission = $Script:recipientPermissions | Where-Object -FilterScript {
                 $_.Identity -eq $Identity -and $_.Trustee -eq $Trustee -and $_.AccessRights -eq $AccessRights
             }
+
+            if ($null -eq $recipientPermission)
+            {
+                try
+                {
+                    $userValue = Get-User -Identity $Identity
+                    $recipientPermission = $Script:recipientPermissions | Where-Object -FilterScript {
+                        $_.Identity -eq $userValue.Identity -and $_.Trustee -eq $Trustee -and $_.AccessRights -eq $AccessRights
+                    }
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
+            }
         }
         else
         {
@@ -411,15 +426,21 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
+        $ObjectGuid = [System.Guid]::empty
         foreach ($recipientPermission in $recipientPermissions)
         {
-            Write-Host "    |---[$i/$($recipientPermissions.Length)] $($recipientPermission.Identity)" -NoNewline
+            $IdentityValue = $recipientPermission.Identity
+            if ([System.Guid]::TryParse($IdentityValue,[System.Management.Automation.PSReference]$ObjectGuid))
+            {
+                $user = Get-User -Identity $IdentityValue
+                $IdentityValue = $user.UserPrincipalName
+            }
+            Write-Host "    |---[$i/$($recipientPermissions.Length)] $($IdentityValue)" -NoNewline
 
             $params = @{
-                Identity              = $recipientPermission.Identity
+                Identity              = $IdentityValue
                 Trustee               = $recipientPermission.Trustee
                 AccessRights          = $recipientPermission.AccessRights
-
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

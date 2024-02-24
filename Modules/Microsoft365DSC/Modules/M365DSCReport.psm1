@@ -522,33 +522,40 @@ function New-M365DSCReportFromConfiguration
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Event', 'Report')
     $data.Add('Type', $Type)
-    Add-M365DSCTelemetryEvent -Data $data
+    Add-M365DSCTelemetryEvent -Data $data -Type 'NewReport'
     #endregion
 
     [Array] $parsedContent = Initialize-M365DSCReporting -ConfigurationPath $ConfigurationPath
 
-    switch ($Type)
+    if ($null -ne $parsedContent)
     {
-        'Excel'
+        switch ($Type)
         {
-            New-M365DSCConfigurationToExcel -ParsedContent $parsedContent -OutputPath $OutputPath
+            'Excel'
+            {
+                New-M365DSCConfigurationToExcel -ParsedContent $parsedContent -OutputPath $OutputPath
+            }
+            'HTML'
+            {
+                $template = Get-Item $ConfigurationPath
+                $templateName = $Template.Name.Split('.')[0]
+                New-M365DSCConfigurationToHTML -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
+            }
+            'JSON'
+            {
+                New-M365DSCConfigurationToJSON -ParsedContent $parsedContent -OutputPath $OutputPath
+            }
+            'Markdown'
+            {
+                $template = Get-Item $ConfigurationPath
+                $templateName = $Template.Name.Split('.')[0]
+                New-M365DSCConfigurationToMarkdown -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
+            }
         }
-        'HTML'
-        {
-            $template = Get-Item $ConfigurationPath
-            $templateName = $Template.Name.Split('.')[0]
-            New-M365DSCConfigurationToHTML -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
-        }
-        'JSON'
-        {
-            New-M365DSCConfigurationToJSON -ParsedContent $parsedContent -OutputPath $OutputPath
-        }
-        'Markdown'
-        {
-            $template = Get-Item $ConfigurationPath
-            $templateName = $Template.Name.Split('.')[0]
-            New-M365DSCConfigurationToMarkdown -ParsedContent $parsedContent -OutputPath $OutputPath -TemplateName $templateName
-        }
+    }
+    else
+    {
+        throw "Parsed content was null."
     }
 }
 
@@ -630,7 +637,7 @@ function Compare-M365DSCConfigurations
         #region Telemetry
         $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
         $data.Add('Event', 'Compare')
-        Add-M365DSCTelemetryEvent -Data $data
+        Add-M365DSCTelemetryEvent -Data $data -Type 'CompareConfigurations'
         #endregion
     }
 
@@ -1360,7 +1367,7 @@ function New-M365DSCDeltaReport
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
     $data.Add('Event', 'DeltaReport')
-    Add-M365DSCTelemetryEvent -Data $data
+    Add-M365DSCTelemetryEvent -Data $data -Type 'CompareConfigurations'
     #endregion
 
     # Excluding authentication properties by default.

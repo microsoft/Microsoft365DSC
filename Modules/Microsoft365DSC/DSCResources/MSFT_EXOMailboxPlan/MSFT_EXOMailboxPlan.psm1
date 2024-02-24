@@ -10,6 +10,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
         $IssueWarningQuota,
 
         [Parameter()]
@@ -110,9 +114,16 @@ function Get-TargetResource
 
         if ($null -eq $MailboxPlan)
         {
-            Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                Write-Verbose -Message "Couldn't find MailboxPlan by Identity {$Identity}. Trying by DisplayName."
+                $MailboxPlan = Get-MailboxPlan -Identity $DisplayName
+            }
+            else
+            {
+                $MailboxPlan = Get-MailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])*'"
+            }
 
-            $MailboxPlan = Get-MailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])*'"
             if ($null -eq $MailboxPlan)
             {
                 return $nullResult
@@ -121,6 +132,7 @@ function Get-TargetResource
 
         $result = @{
             Identity                 = $Identity
+            DisplayName              = $MailboxPlan.DisplayName
             IssueWarningQuota        = $MailboxPlan.IssueWarningQuota
             MaxReceiveSize           = $MailboxPlan.MaxReceiveSize
             MaxSendSize              = $MailboxPlan.MaxSendSize
@@ -162,6 +174,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -278,6 +294,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -445,6 +465,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($MailboxPlans.Count)] $($MailboxPlan.Identity.Split('-')[0])" -NoNewline
             $Params = @{
                 Identity              = $MailboxPlan.Identity
+                DisplayName           = $MailboxPlan.DisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
