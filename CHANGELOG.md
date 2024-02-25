@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
+* AADConditionalAccessPolicy
+  * Improved verbose logging to show that items are being skipped.
+
 # 1.24.221.1
 
 * AADApplication
