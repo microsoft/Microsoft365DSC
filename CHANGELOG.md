@@ -2,11 +2,39 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Show current values of resource in Test-TargetResource
+* AADAuthorizationPolicy
+  * Show current values of resource in Test-TargetResource
 * AADConditionalAccessPolicy
   * Improved verbose logging to show that items are being skipped.
+  * Show current values of resource in Test-TargetResource
+* AADExternalIdentityPolicy
+  * Show current values of resource in Test-TargetResource
 * AADGroup
   * Fixed issue with single quotes in the display name.
     FIXES [#4358](https://github.com/microsoft/Microsoft365DSC/issues/4358)
+  * Show current values of resource in Test-TargetResource
+* AADGroupLifecyclePolicy
+  * Show current values of resource in Test-TargetResource
+* AADGroupsNamingPolicy
+  * Show current values of resource in Test-TargetResource
+* AADGroupsSettings
+  * Show current values of resource in Test-TargetResource
+* AADNamedLocationPolicy
+  * Show current values of resource in Test-TargetResource
+* AADRoleDefinition
+  * Show current values of resource in Test-TargetResource
+* AADRoleSetting
+  * Show current values of resource in Test-TargetResource
+* AADSecurityDefaults
+  * Show current values of resource in Test-TargetResource
+* AADServicePrincipal
+  * Show current values of resource in Test-TargetResource
+* AADTenantDetails
+  * Show current values of resource in Test-TargetResource
+* AADTokenLifetimePolicy
+  * Show current values of resource in Test-TargetResource
 * EXOActiveSyncDeviceAccessRule
   * Remove extra property GUID that is stopping EXO integration tests from
     running
