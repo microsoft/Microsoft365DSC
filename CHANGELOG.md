@@ -15,6 +15,8 @@
     FIXES [#3962](https://github.com/microsoft/Microsoft365DSC/issues/3962)
 * SPOAccessControlSettings
   * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
+* TeamsGuestMeetingConfiguration
+  * Added the missing parameter AllowTranscription.
 * MISC
   * M365DSCDRGUtil
     Add new parameter for customizable assignment identifier

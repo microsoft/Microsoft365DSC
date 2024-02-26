@@ -1,5 +1,4 @@
-function Get-TargetResource
-{
+function Get-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Collections.Hashtable])]
     param
@@ -26,6 +25,10 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -69,8 +72,7 @@ function Get-TargetResource
         Identity = 'Global'
     }
 
-    try
-    {
+    try {
         $config = Get-CsTeamsGuestMeetingConfiguration -ErrorAction Stop
 
         $result = @{
@@ -79,6 +81,7 @@ function Get-TargetResource
             LiveCaptionsEnabledType = $config.LiveCaptionsEnabledType
             ScreenSharingMode       = $config.ScreenSharingMode
             AllowMeetNow            = $config.AllowMeetNow
+            AllowTranscription      = $config.AllowTranscription
             Credential              = $Credential
             ApplicationId           = $ApplicationId
             TenantId                = $TenantId
@@ -87,8 +90,7 @@ function Get-TargetResource
         }
         return $result
     }
-    catch
-    {
+    catch {
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -99,8 +101,7 @@ function Get-TargetResource
     }
 }
 
-function Set-TargetResource
-{
+function Set-TargetResource {
     [CmdletBinding()]
     param
     (
@@ -126,6 +127,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -175,8 +180,7 @@ function Set-TargetResource
     Set-CsTeamsGuestMeetingConfiguration @SetParams
 }
 
-function Test-TargetResource
-{
+function Test-TargetResource {
     [CmdletBinding()]
     [OutputType([System.Boolean])]
     param
@@ -203,6 +207,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -255,8 +263,7 @@ function Test-TargetResource
     return $TestResult
 }
 
-function Export-TargetResource
-{
+function Export-TargetResource {
     [CmdletBinding()]
     [OutputType([System.String])]
     param
@@ -296,8 +303,7 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    try
-    {
+    try {
         $dscContent = ''
         $params = @{
             Identity              = 'Global'
@@ -309,8 +315,7 @@ function Export-TargetResource
         }
         $Results = Get-TargetResource @Params
 
-        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
-        {
+        if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1) {
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -324,15 +329,13 @@ function Export-TargetResource
 
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
-        else
-        {
+        else {
             Write-Host $Global:M365DSCEmojiRedX
         }
 
         return $dscContent
     }
-    catch
-    {
+    catch {
         Write-Host $Global:M365DSCEmojiRedX
 
         New-M365DSCLogEntry -Message 'Error during Export:' `
