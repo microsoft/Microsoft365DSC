@@ -135,6 +135,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 $AvailabilityConfig = @{
                     OrgWideAccount = 'johndoe'
+
+                }
+                Mock -CommandName Get-User -MockWith {
+                    return @{
+                        UserPrincipalName = 'john.smith@contoso.com'
+                    }
                 }
                 Mock -CommandName Get-AvailabilityConfig -MockWith {
                     return $AvailabilityConfig

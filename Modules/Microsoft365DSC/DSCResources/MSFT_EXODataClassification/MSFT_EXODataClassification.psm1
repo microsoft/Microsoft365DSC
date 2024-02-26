@@ -102,41 +102,46 @@ function Get-TargetResource
         }
         if ($null -eq $DataClassification)
         {
-            Write-Verbose -Message "Data classification $($Identity) does not exist."
-            return $nullReturn
-        }
-        else
-        {
-
-            $currentDefaultCultureName = ([system.globalization.cultureinfo]$DataClassification.DefaultCulture).Name
-            $DataClassificationLocale = $currentDefaultCultureName
-            $DataClassificationIsDefault = $false
-            if (([String]::IsNullOrEmpty($Locale)) -or ($Locale -eq $currentDefaultCultureName))
+            if (-not [System.String]::IsNullOrEmpty($Name))
             {
-                $DataClassificationIsDefault = $true
+                Write-Verbose -Message "Couldn't retrieve data classification by Identity. Trying by Name {$Name}."
+                $DataClassification = Get-DataClassification -Identity $Name
             }
 
-            $result = @{
-                Identity              = $Identity
-                Description           = $DataClassification.Description
-                Fingerprints          = $DataClassification.Fingerprints
-                IsDefault             = $DataClassificationIsDefault
-                Locale                = $DataClassificationLocale
-                Name                  = $DataClassification.Name
-                Credential            = $Credential
-                Ensure                = 'Present'
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                ManagedIdentity       = $ManagedIdentity.IsPresent
-                TenantId              = $TenantId
+            if ($null -eq $DataClassification)
+            {
+                Write-Verbose -Message "Data classification $($Identity) does not exist."
+                return $nullReturn
             }
-
-            Write-Verbose -Message "Found Data classification policy $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
         }
+        $currentDefaultCultureName = ([system.globalization.cultureinfo]$DataClassification.DefaultCulture).Name
+        $DataClassificationLocale = $currentDefaultCultureName
+        $DataClassificationIsDefault = $false
+        if (([String]::IsNullOrEmpty($Locale)) -or ($Locale -eq $currentDefaultCultureName))
+        {
+            $DataClassificationIsDefault = $true
+        }
+
+        $result = @{
+            Identity              = $Identity
+            Description           = $DataClassification.Description
+            Fingerprints          = $DataClassification.Fingerprints
+            IsDefault             = $DataClassificationIsDefault
+            Locale                = $DataClassificationLocale
+            Name                  = $DataClassification.Name
+            Credential            = $Credential
+            Ensure                = 'Present'
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
+        }
+
+        Write-Verbose -Message "Found Data classification policy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {

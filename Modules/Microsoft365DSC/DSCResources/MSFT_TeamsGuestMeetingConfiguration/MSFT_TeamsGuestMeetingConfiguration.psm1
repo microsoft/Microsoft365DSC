@@ -28,6 +28,10 @@ function Get-TargetResource
         $AllowMeetNow,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -79,6 +83,7 @@ function Get-TargetResource
             LiveCaptionsEnabledType = $config.LiveCaptionsEnabledType
             ScreenSharingMode       = $config.ScreenSharingMode
             AllowMeetNow            = $config.AllowMeetNow
+            AllowTranscription      = $config.AllowTranscription
             Credential              = $Credential
             ApplicationId           = $ApplicationId
             TenantId                = $TenantId
@@ -126,6 +131,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -203,6 +212,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowMeetNow,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

@@ -9,6 +9,10 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
         [Boolean]
         $ActiveSyncEnabled = $true,
 
@@ -95,16 +99,26 @@ function Get-TargetResource
         {
             Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
 
-            $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
-            if ($null -eq $CASMailboxPlan)
+            # Try and retrieve by Display Name
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
-                Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
-                return $nullResult
+                $CASMailboxPlan = Get-CASMailboxPlan -Filter "DisplayName -eq '$DisplayName'"
+            }
+
+            if ($null -eq $MailboxPlan)
+            {
+                $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
+                if ($null -eq $CASMailboxPlan)
+                {
+                    Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
+                    return $nullResult
+                }
             }
         }
 
         $result = @{
             Identity              = $Identity
+            DisplayName           = $CASMailboxPlan.DisplayName
             ActiveSyncEnabled     = $CASMailboxPlan.ActiveSyncEnabled
             ImapEnabled           = $CASMailboxPlan.ImapEnabled
             OwaMailboxPolicy      = $CASMailboxPlan.OwaMailboxPolicy
@@ -142,6 +156,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [Boolean]
@@ -243,6 +261,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [Boolean]
@@ -394,6 +416,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewline
             $Params = @{
                 Identity              = $CASMailboxPlan.Identity
+                DisplayName           = $CASMailboxPlan.DisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

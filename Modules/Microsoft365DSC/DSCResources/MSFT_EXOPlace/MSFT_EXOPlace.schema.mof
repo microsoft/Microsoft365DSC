@@ -3,6 +3,7 @@
 class MSFT_EXOPlace : OMI_BaseResource
 {
     [Key, Description("The Identity parameter specifies the room mailbox that you want to modify. You can use any value that uniquely identifies the room.")] String Identity;
+    [Write, Description("The display name of the place.")] String DisplayName;
     [Write, Description("The AudioDeviceName parameter specifies the name of the audio device in the room. If the value contains spaces, enclose the value in quotation marks.")] String AudioDeviceName;
     [Write, Description("The Building parameter specifies the building name or building number that the room is in. If the value contains spaces, enclose the value in quotation marks.")] String Building;
     [Write, Description("The Capacity parameter specifies the capacity of the room. A valid value is an integer.")] UInt32 Capacity;

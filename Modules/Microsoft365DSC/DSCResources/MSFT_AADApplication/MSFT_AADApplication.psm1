@@ -22,6 +22,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
         $GroupMembershipClaims,
 
         [Parameter()]
@@ -144,7 +148,7 @@ function Get-TargetResource
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
         {
-            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. These apps will not be exported."
+            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant."
         }
         elseif ($null -eq $AADApp)
         {
@@ -189,6 +193,7 @@ function Get-TargetResource
             $result = @{
                 DisplayName             = $AADApp.DisplayName
                 AvailableToOtherTenants = $AvailableToOtherTenantsValue
+                Description             = $AADApp.Description
                 GroupMembershipClaims   = $AADApp.GroupMembershipClaims
                 Homepage                = $AADApp.web.HomepageUrl
                 IdentifierUris          = $AADApp.IdentifierUris
@@ -252,6 +257,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AvailableToOtherTenants,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.String]
@@ -684,6 +693,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
         $GroupMembershipClaims,
 
         [Parameter()]
@@ -800,6 +813,7 @@ function Test-TargetResource
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App and no permissions were specified'
         }
     }
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
@@ -884,6 +898,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
+                Description           = $AADApp.Description
                 DisplayName           = $AADApp.DisplayName
                 ObjectID              = $AADApp.Id
                 Credential            = $Credential
@@ -926,6 +941,7 @@ function Export-TargetResource
                     Write-Host "`r`n        $($Global:M365DSCEmojiYellowCircle)" -NoNewline
                     Write-Host " Multiple app instances wth name {$($AADApp.DisplayName)} were found. We will skip exporting these instances."
                 }
+                $i++
             }
         }
         return $dscContent.ToString()

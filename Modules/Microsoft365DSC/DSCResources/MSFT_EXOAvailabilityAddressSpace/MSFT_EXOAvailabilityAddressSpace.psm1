@@ -99,7 +99,10 @@ function Get-TargetResource
     {
         try
         {
-            $AvailabilityAddressSpace = Get-AvailabilityAddressSpace -Identity $ForestName -ErrorAction Stop
+            if (-not [System.String]::IsNullOrEmpty($ForestName))
+            {
+                $AvailabilityAddressSpace = Get-AvailabilityAddressSpace -Identity $ForestName -ErrorAction Stop
+            }
         }
         catch
         {

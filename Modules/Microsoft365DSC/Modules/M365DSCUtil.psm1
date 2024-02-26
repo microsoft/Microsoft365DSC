@@ -1327,6 +1327,8 @@ function Export-M365DSCConfiguration
 
     $Tenant = Get-M365DSCTenantNameFromParameterSet -ParameterSet $PSBoundParameters
     $data.Add('Tenant', $Tenant)
+    $currentExportID = (New-Guid).ToString()
+    $data.Add('M365DSCExportId', $currentExportID)
 
     Add-M365DSCTelemetryEvent -Type 'ExportInitiated' -Data $data
     if ($null -ne $Workloads)
@@ -1392,6 +1394,8 @@ function Export-M365DSCConfiguration
     # Clear the exported resource instances' names Global variable
     $Global:M365DSCExportedResourceInstancesNames = $null
     $Global:M365DSCExportInProgress = $false
+
+    Add-M365DSCTelemetryEvent -Type 'ExportCompleted' -Data $data
 }
 
 $Script:M365DSCDependenciesValidated = $false
@@ -1408,7 +1412,7 @@ function Confirm-M365DSCDependencies
     [CmdletBinding()]
     param()
 
-    if (-not $Script:M365DSCDependenciesValidated)
+    if (-not $Script:M365DSCDependenciesValidated -and ($null -eq $Global:M365DSCSkipDependenciesValidation -or -not $Global:M365DSCSkipDependenciesValidation))
     {
         Write-Verbose -Message 'Dependencies were not already validated.'
 
@@ -2976,7 +2980,7 @@ function Uninstall-M365DSCOutdatedDependencies
                 Write-Information -MessageData "Uninstalling $($module.Name) Version {$($module.Version)}"
                 if (Test-Path -Path $($module.Path))
                 {
-                    Remove-Item $($module.Path) -Force -Recurse
+                    Remove-Item $($module.ModuleBase) -Force -Recurse
                 }
             }
             catch
@@ -3357,38 +3361,47 @@ function Get-M365DSCExportContentForResource
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
 
+    if ($Script:AllM365DscResources.Count -eq 0)
+    {
+        $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
+    }
+
     $primaryKey = ''
-    if ($Results.ContainsKey('IsSingleInstance'))
+    $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
+    $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
+        Select-Object -ExpandProperty Name
+    if ($Keys.Contains('IsSingleInstance'))
     {
         $primaryKey = ''
     }
-    elseif ($Results.ContainsKey('DisplayName'))
+    elseif ($Keys.Contains('DisplayName'))
     {
         $primaryKey = $Results.DisplayName
     }
-    elseif ($Results.ContainsKey('Identity'))
-    {
-        $primaryKey = $Results.Identity
-    }
-    elseif ($Results.ContainsKey('Id'))
-    {
-        $primaryKey = $Results.Id
-    }
-    elseif ($Results.ContainsKey('Name'))
+    elseif ($Keys.Contains('Name'))
     {
         $primaryKey = $Results.Name
     }
-    elseif ($Results.ContainsKey('Title'))
+    elseif ($Keys.Contains('Title'))
     {
         $primaryKey = $Results.Title
     }
-    elseif ($Results.ContainsKey('CdnType'))
+    elseif ($Keys.Contains('Identity'))
     {
-        $primaryKey = $Results.CdnType
+        $primaryKey = $Results.Identity
     }
-    elseif ($Results.ContainsKey('Usage'))
+    elseif ($Keys.Contains('Id'))
     {
-        $primaryKey = $Results.Usage
+        $primaryKey = $Results.Id
+    }
+
+    if ([String]::IsNullOrEmpty($primaryKey) -and `
+        -not $Keys.Contains('IsSingleInstance'))
+    {
+        foreach ($Key in $Keys)
+        {
+            $primaryKey += $Results.$Key
+        }
     }
 
     $instanceName = $ResourceName
