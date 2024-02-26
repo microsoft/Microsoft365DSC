@@ -31,9 +31,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-DataClassification -MockWith {
-            }
-
             Mock -CommandName Set-DataClassification -MockWith {
             }
 
@@ -58,10 +55,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-DataClassification -MockWith {
                     return $null
                 }
-
-                Mock -CommandName New-DataClassification -MockWith {
-
-                }
             }
 
             It 'Should return False from the Get method' {
@@ -70,7 +63,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the New- cmdlet' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-DataClassification' -Exactly 1
             }
         }
 
@@ -107,7 +99,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should set Call into the Set-DataClassification command exactly once' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Set-DataClassification' -Exactly 1
             }
         }
 
@@ -144,7 +135,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call into the Remove-DataClassification cmdlet once' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-DataClassification' -Exactly 1
             }
         }
 

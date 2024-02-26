@@ -1298,7 +1298,11 @@ function Update-DeviceConfigurationPolicyAssignment
         [Parameter()]
         [ValidateSet('v1.0','beta')]
         [System.String]
-        $APIVersion = 'beta'
+        $APIVersion = 'beta',
+
+        [Parameter()]
+        [System.String]
+        $RootIdentifier = 'assignments'
     )
 
     try
@@ -1309,6 +1313,10 @@ function Update-DeviceConfigurationPolicyAssignment
         foreach ($target in $targets)
         {
             $formattedTarget = @{"@odata.type" = $target.dataType}
+            if(-not $formattedTarget."@odata.type" -and $target."@odata.type")
+            {
+                $formattedTarget."@odata.type" = $target."@odata.type"
+            }
             if ($target.groupId)
             {
                 $formattedTarget.Add('groupId',$target.groupId)
@@ -1327,8 +1335,10 @@ function Update-DeviceConfigurationPolicyAssignment
             }
             $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
         }
-        $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
-        write-verbose -Message $body
+
+        $body = @{$RootIdentifier = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        Write-Verbose -Message $body
+        
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
     }
     catch

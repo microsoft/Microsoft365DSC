@@ -61,14 +61,16 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
         {
-            Identity                  = "Contoso Recipients"
+            Identity                  = "Integration CFR"
             Comments                  = "Applies to all users, except when member of HR group"
             Enabled                   = $True
-            ExceptIfSentToMemberOf    = "Contoso Human Resources"
+            ExceptIfSentToMemberOf    = "LegalTeam@$Domain"
+            RecipientDomainIs         = @('contoso.com')
             HostedContentFilterPolicy = "Integration CFP"
             Ensure                    = "Present"
             Credential                = $Credscredential
@@ -93,14 +95,16 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
         {
-            Identity                  = "Contoso Recipients"
+            Identity                  = "Integration CFR"
             Comments                  = "Applies to all users, except when member of HR group"
             Enabled                   = $False # Updated Property
-            ExceptIfSentToMemberOf    = "Contoso Human Resources"
+            ExceptIfSentToMemberOf    = "LegalTeam@$Domain"
+            RecipientDomainIs         = @('contoso.com')
             HostedContentFilterPolicy = "Integration CFP"
             Ensure                    = "Present"
             Credential                = $Credscredential
@@ -129,7 +133,7 @@ Configuration Example
     {
         EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
         {
-            Identity                  = "Contoso Recipients"
+            Identity                  = "Integration CFR"
             HostedContentFilterPolicy = "Integration CFP"
             Ensure                    = "Absent"
             Credential                = $Credscredential

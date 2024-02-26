@@ -338,15 +338,30 @@ function Export-TargetResource
         Write-Host "`r`n"-NoNewline
     }
     $dscContent = ''
+    $ObjectGuid = [System.Guid]::empty
     foreach ($mailbox in $mailboxes)
     {
-        Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewline
-        $mailboxName = $mailbox.Name
-        if (-not [System.String]::IsNullOrEmpty($mailboxName))
+        $DisplayNameValue = $mailbox.Name
+
+        if ([System.Guid]::TryParse($mailbox.Identity,[System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            try
+            {
+                $user = Get-User -Identity $mailbox.Identity
+                $DisplayNameValue = $user.UserPrincipalName
+            }
+            catch
+            {
+                Write-Verbose -Message "Could not retrieve user with id {$($mailbox.Identity)}"
+            }
+        }
+        Write-Host "    |---[$i/$($mailboxes.Length)] $($DisplayNameValue)" -NoNewline
+
+        if (-not [System.String]::IsNullOrEmpty($DisplayNameValue))
         {
             $Params = @{
                 Credential            = $Credential
-                DisplayName           = $mailbox.Name
+                DisplayName           = $DisplayNameValue
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint

@@ -411,8 +411,12 @@ function Set-TargetResource
             ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
             ConditionalDepartment        = $ConditionalDepartment
             ConditionalStateOrProvince   = $ConditionalStateOrProvince
-            IncludedRecipients           = $IncludedRecipients
             Confirm                      = $false
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($IncludedRecipients))
+        {
+            $NewGlobalAddressListParams.Add('IncludedRecipients', $IncludedRecipients)
         }
     }
 
@@ -437,9 +441,17 @@ function Set-TargetResource
         ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
         ConditionalDepartment        = $ConditionalDepartment
         ConditionalStateOrProvince   = $ConditionalStateOrProvince
-        IncludedRecipients           = $IncludedRecipients
-        RecipientFilter              = $RecipientFilter
         Confirm                      = $false
+    }
+
+    if (-not [System.String]::IsNullOrEmpty($IncludedRecipients))
+    {
+        $SetGlobalAddressListParams.Add('IncludedRecipients', $IncludedRecipients)
+    }
+
+    if (-not [System.String]::IsNullOrEmpty($RecipientFilter))
+    {
+        $SetGlobalAddressListParams.Add('RecipientFilter', $RecipientFilter)
     }
 
     # CASE: Global Address List doesn't exist but should;

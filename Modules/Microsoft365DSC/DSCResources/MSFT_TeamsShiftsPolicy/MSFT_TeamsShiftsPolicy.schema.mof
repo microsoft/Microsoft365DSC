@@ -14,4 +14,5 @@ class MSFT_TeamsShiftsPolicy : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };

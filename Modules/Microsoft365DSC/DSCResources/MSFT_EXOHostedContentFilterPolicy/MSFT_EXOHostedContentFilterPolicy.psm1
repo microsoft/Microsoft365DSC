@@ -50,6 +50,7 @@ function Get-TargetResource
         [System.Boolean]
         $DownloadLink = $false,
 
+        #DEPRECATED
         [Parameter()]
         [System.Boolean]
         $EnableEndUserSpamNotifications = $false,
@@ -302,9 +303,7 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy -ErrorAction Stop
-
-        $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity -ErrorAction Stop
         if ($null -eq $HostedContentFilterPolicy)
         {
             Write-Verbose -Message "HostedContentFilterPolicy $($Identity) does not exist."
@@ -344,12 +343,14 @@ function Get-TargetResource
                 BulkSpamAction                       = $HostedContentFilterPolicy.BulkSpamAction
                 BulkThreshold                        = $HostedContentFilterPolicy.BulkThreshold
                 DownloadLink                         = $HostedContentFilterPolicy.DownloadLink
-                EnableEndUserSpamNotifications       = $HostedContentFilterPolicy.EnableEndUserSpamNotifications
+                #Deprecated
+                #EnableEndUserSpamNotifications       = $HostedContentFilterPolicy.EnableEndUserSpamNotifications
                 EnableLanguageBlockList              = $HostedContentFilterPolicy.EnableLanguageBlockList
                 EnableRegionBlockList                = $HostedContentFilterPolicy.EnableRegionBlockList
-                EndUserSpamNotificationCustomSubject = $HostedContentFilterPolicy.EndUserSpamNotificationCustomSubject
-                EndUserSpamNotificationFrequency     = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
-                EndUserSpamNotificationLanguage      = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
+                #Deprecated
+                #EndUserSpamNotificationCustomSubject = $HostedContentFilterPolicy.EndUserSpamNotificationCustomSubject
+                #EndUserSpamNotificationFrequency     = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
+                #EndUserSpamNotificationLanguage      = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
                 HighConfidencePhishAction            = $HostedContentFilterPolicy.HighConfidencePhishAction
                 HighConfidencePhishQuarantineTag     = $HostedContentFilterPolicy.HighConfidencePhishQuarantineTag
                 HighConfidenceSpamAction             = $HostedContentFilterPolicy.HighConfidenceSpamAction
@@ -406,6 +407,7 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -1055,6 +1057,10 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('EnableEndUserSpamNotifications') | Out-Null
+    $ValuesToCheck.Remove('EndUserSpamNotificationLanguage') | Out-Null
+    $ValuesToCheck.Remove('EndUserSpamNotificationFrequency') | Out-Null
+    $ValuesToCheck.Remove('EndUserSpamNotificationCustomSubject') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

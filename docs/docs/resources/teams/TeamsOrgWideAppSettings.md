@@ -7,6 +7,7 @@
 | **IsSingleInstance** | Key | String | Specifies the resource is a single instance, the value must be 'Yes' | `Yes` |
 | **IsSideloadedAppsInteractionEnabled** | Write | Boolean | Determines whether or not to allow interaction with custom apps. | |
 | **Credential** | Write | PSCredential | Credentials of the Teams Admin | |
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
 
 # TeamsOgWideAppSettings

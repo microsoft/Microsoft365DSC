@@ -83,13 +83,7 @@
                 EXOAntiPhishRule 'ConfigureAntiPhishRule'
                 {
                     Identity                  = "Test Rule"
-                    ExceptIfSentToMemberOf    = $null
-                    ExceptIfSentTo            = $null
-                    SentTo                    = $null
-                    ExceptIfRecipientDomainIs = $null
-                    Comments                  = $null
                     AntiPhishPolicy           = "Our Rule"
-                    RecipientDomainIs         = $null
                     Enabled                   = $True
                     SentToMemberOf            = @("executives@$Domain")
                     Ensure                    = "Present"
@@ -97,10 +91,10 @@
                 }
                 EXOApplicationAccessPolicy 'ConfigureApplicationAccessPolicy'
                 {
-                    Identity             = "Global"
+                    Identity             = "Integration Policy"
                     AccessRight          = "DenyAccess"
-                    AppID                = @("3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5", "6ac794ca-2697-4137-8754-d2a78ae47d93")
-                    PolicyScopeGroupId   = "Engineering Staff"
+                    AppID                = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
+                    PolicyScopeGroupId   = "IntegrationMailEnabled@$Domain"
                     Description          = "Engineering Group Policy"
                     Ensure               = "Present"
                     Credential           = $Credscredential
@@ -125,17 +119,18 @@
                 }
                 EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
                 {
-                    UserName                 = "AdeleV"
+                    UserName                 = "AdeleV@$Domain"
                     AuthenticationPolicyName = "Block Basic Auth"
                     Ensure                   = "Present"
-                    Credential               = $EXOAdmin
+                    Credential               = $Credscredential
                 }
                 EXOAvailabilityAddressSpace 'ConfigureAvailabilityAddressSpace'
                 {
                     Identity              = 'Contoso.com'
-                    AccessMethod          = 'OrgWideFB'
+                    AccessMethod          = 'OrgWideFBToken'
                     ForestName            = 'example.contoso.com'
-                    TargetAutodiscoverEpr = 'https://contoso.com/autodiscover/autodiscover.xml'
+                    TargetServiceEpr      = 'https://contoso.com/autodiscover/autodiscover.xml'
+                    TargetTenantId        = 'o365dsc.onmicrosoft.com'
                     Ensure                = 'Present'
                     Credential            = $Credscredential
                 }
@@ -161,26 +156,7 @@
                     ExceptAnyOfClientIPAddressesOrRanges = @()
                     AnyOfClientIPAddressesOrRanges       = @()
                     Ensure                               = "Present"
-                    Credential                           = $GlobalAdmin
-                }
-                EXODataClassification 'ConfigureDataClassification'
-                {
-                    Identity    = 'Contoso Confidential'
-                    Name        = 'Contoso Confidentiel'
-                    Description = 'Ce message contient des informations confidentielles.'
-                    Locale      = 'fr'
-                    IsDefault   = $true
-                    Ensure      = "Present"
-                    Credential  = $Credscredential
-                }
-                EXODataEncryptionPolicy 'ConfigureDataEncryptionPolicy'
-                {
-                    Identity    = 'US Mailboxes'
-                    Name        = 'All US Mailboxes'
-                    Description = 'All Mailboxes of users in the US'
-                    Enabled     = $true
-                    Ensure      = "Present"
-                    Credential  = $Credscredential
+                    Credential                           = $Credscredential
                 }
                 EXODistributionGroup 'DemoDG'
                 {
@@ -197,7 +173,6 @@
                     ModerationEnabled                  = $False;
                     Identity                           = "DemoDG";
                     Name                               = "DemoDG";
-                    OrganizationalUnit                 = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$Domain";
                     PrimarySmtpAddress                 = "demodg@$Domain";
                     RequireSenderAuthenticationEnabled = $True;
                     SendModerationNotifications        = "Always";
@@ -206,7 +181,7 @@
                 EXODkimSigningConfig 'ConfigureDKIMSigning'
                 {
                     KeySize                = 1024
-                    Identity               = 'contoso.onmicrosoft.com'
+                    Identity               = $Domain
                     HeaderCanonicalization = "Relaxed"
                     Enabled                = $True
                     BodyCanonicalization   = "Relaxed"
@@ -230,19 +205,9 @@
                     ConditionalCompany           = "Contoso"
                     ConditionalDepartment        = "Human Resources"
                     ConditionalStateOrProvince   = "Washington"
+                    IncludedRecipients           = 'AllRecipients'
                     Ensure                       = "Present"
                     Credential                   = $Credscredential
-                }
-                EXOHostedConnectionFilterPolicy 'ConfigureHostedConnectionFilterPolicy'
-                {
-                    Identity         = "Integration Policy"
-                    AdminDisplayName = ""
-                    EnableSafeList   = $False
-                    IPAllowList      = @()
-                    IPBlockList      = @()
-                    MakeDefault      = $False
-                    Ensure           = "Present"
-                    Credential       = $Credscredential
                 }
                 EXOHostedContentFilterPolicy 'ConfigureHostedContentFilterPolicy'
                 {
@@ -252,12 +217,8 @@
                     BulkSpamAction                       = "MoveToJmf"
                     BulkThreshold                        = 7
                     DownloadLink                         = $False
-                    EnableEndUserSpamNotifications       = $False
                     EnableLanguageBlockList              = $False
                     EnableRegionBlockList                = $False
-                    EndUserSpamNotificationCustomSubject = ""
-                    EndUserSpamNotificationFrequency     = 3
-                    EndUserSpamNotificationLanguage      = "Default"
                     HighConfidencePhishAction            = "Quarantine"
                     HighConfidenceSpamAction             = "MoveToJmf"
                     IncreaseScoreWithBizOrInfoUrls       = "Off"
@@ -266,7 +227,7 @@
                     IncreaseScoreWithRedirectToOtherPort = "Off"
                     InlineSafetyTipsEnabled              = $True
                     LanguageBlockList                    = @()
-                    MakeDefault                          = $True
+                    MakeDefault                          = $False
                     MarkAsSpamBulkMail                   = "On"
                     MarkAsSpamEmbedTagsInHtml            = "Off"
                     MarkAsSpamEmptyMessages              = "Off"
@@ -294,10 +255,11 @@
                 }
                 EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
                 {
-                    Identity                  = "Contoso Recipients"
+                    Identity                  = "Integration CFR"
                     Comments                  = "Applies to all users, except when member of HR group"
                     Enabled                   = $True
-                    ExceptIfSentToMemberOf    = "Contoso Human Resources"
+                    ExceptIfSentToMemberOf    = "LegalTeam@$Domain"
+                    RecipientDomainIs         = @('contoso.com')
                     HostedContentFilterPolicy = "Integration CFP"
                     Ensure                    = "Present"
                     Credential                = $Credscredential
@@ -323,30 +285,30 @@
                     Identity                       = "Contoso Executives"
                     Comments                       = "Does not apply to Executives"
                     Enabled                        = $True
-                    ExceptIfFrom                   = "John Smith"
+                    ExceptIfFrom                   = "AdeleV@$Domain"
+                    FromMemberOf                   = "Executives@$Domain"
                     HostedOutboundSpamFilterPolicy = "Integration SFP"
                     Ensure                         = "Present"
                     Credential                     = $Credscredential
                 }
                 EXOInboundConnector 'ConfigureInboundConnector'
                 {
-                    Identity                     = "Contoso Inbound Connector"
-                    CloudServicesMailEnabled     = $True
-                    Comment                      = "Inbound connector for Contoso"
+                    Identity                     = "Integration Inbound Connector"
+                    CloudServicesMailEnabled     = $False
+                    Comment                      = "Inbound connector for Integration"
                     ConnectorSource              = "Default"
-                    ConnectorType                = "OnPremises"
+                    ConnectorType                = "Partner"
                     Enabled                      = $True
                     RequireTls                   = $True
                     SenderDomains                = "*.contoso.com"
                     TlsSenderCertificateName     = "contoso.com"
-                    TreatMessagesAsInternal      = $True
                     Ensure                       = "Present"
                     Credential                   = $Credscredential
                 }
                 EXOIntraOrganizationConnector 'ConfigureIntraOrganizationConnector'
                 {
                     Identity             = "MainCloudConnector"
-                    DiscoveryEndpoint    = "https://ExternalDiscovery.Contoso.com"
+                    DiscoveryEndpoint    = "https://ExternalDiscovery.Contoso.com/"
                     TargetAddressDomains = "Cloud1.contoso.com","Cloud2.contoso.com"
                     Enabled              = $True
                     Ensure               = "Present"
@@ -374,7 +336,7 @@
                     ModeratedBy                 = @()
                     ModerationEnabled           = $false
                     Name                        = 'My Test Contact'
-                    OrganizationalUnit          = "nampr03a010.prod.outlook.com/Microsoft Exchange Hosted Organizations/$Domain"
+                    OrganizationalUnit          = $Domain
                     SendModerationNotifications = 'Always'
                     UsePreferMessageFormat      = $true
                     CustomAttribute1            = 'Custom Value 1'
@@ -419,7 +381,7 @@
                 {
                     Name                 = "MyDisplayName"
                     Description          = ""
-                    Parent               = "contoso.onmicrosoft.com\MyProfileInformation"
+                    Parent               = "$Domain\MyProfileInformation"
                     Ensure               = "Present"
                     Credential           = $Credscredential
                 }
@@ -429,7 +391,7 @@
                     Ensure               = "Present";
                     Name                 = "MyManagementRoleAssignment";
                     Role                 = "UserApplication";
-                    User                 = "AdeleV";
+                    User                 = "AdeleV@$Domain";
                 }
                 EXOMessageClassification 'ConfigureMessageClassification'
                 {
@@ -506,8 +468,7 @@
                 EXOOfflineAddressBook 'ConfigureOfflineAddressBook'
                 {
                     Name                 = "Integration Address Book"
-                    AddressLists         = @('\Offline Global Address List')
-                    ConfiguredAttributes = @('OfficeLocation, ANR', 'ProxyAddresses, ANR', 'PhoneticGivenName, ANR', 'GivenName, ANR', 'PhoneticSurname, ANR', 'Surname, ANR', 'Account, ANR', 'PhoneticDisplayName, ANR', 'UserInformationDisplayName, ANR', 'ExternalMemberCount, Value', 'TotalMemberCount, Value', 'ModerationEnabled, Value', 'DelivContLength, Value', 'MailTipTranslations, Value', 'ObjectGuid, Value', 'IsOrganizational, Value', 'HabSeniorityIndex, Value', 'DisplayTypeEx, Value', 'SimpleDisplayNameAnsi, Value', 'HomeMdbA, Value', 'Certificate, Value', 'UserSMimeCertificate, Value', 'UserCertificate, Value', 'Comment, Value', 'PagerTelephoneNumber, Value', 'AssistantTelephoneNumber, Value', 'MobileTelephoneNumber, Value', 'PrimaryFaxNumber, Value', 'Home2TelephoneNumberMv, Value', 'Business2TelephoneNumberMv, Value', 'HomeTelephoneNumber, Value', 'TargetAddress, Value', 'PhoneticDepartmentName, Value', 'DepartmentName, Value', 'Assistant, Value', 'PhoneticCompanyName, Value', 'CompanyName, Value', 'Title, Value', 'Country, Value', 'PostalCode, Value', 'StateOrProvince, Value', 'Locality, Value', 'StreetAddress, Value', 'Initials, Value', 'BusinessTelephoneNumber, Value', 'SendRichInfo, Value', 'ObjectType, Value', 'DisplayType, Value', 'RejectMessagesFromDLMembers, Indicator', 'AcceptMessagesOnlyFromDLMembers, Indicator', 'RejectMessagesFrom, Indicator', 'AcceptMessagesOnlyFrom, Indicator', 'UmSpokenName, Indicator', 'ThumbnailPhoto, Indicator')
+                    AddressLists         = @('\All Users')
                     DiffRetentionPeriod  = "30"
                     IsDefault            = $true
                     Ensure               = "Present"
@@ -529,15 +490,34 @@
                 }
                 EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
                 {
-                    Identity          = 'Contoso'
+                    Identity          = 'Integration'
                     Comment           = 'Mail for Contoso'
-                    HybridDomains     = 'contoso.com', 'sales.contoso.com'
-                    InboundConnector  = 'Inbound to Contoso'
-                    OrganizationGuid  = 'a1bc23cb-3456-bcde-abcd-feb363cacc88'
-                    OrganizationName  = 'Contoso'
-                    OutboundConnector = 'Outbound to Contoso'
+                    HybridDomains     = 'o365dsc.onmicrosoft.com'
+                    InboundConnector  = 'Integration Inbound Connector'
+                    OrganizationGuid  = 'e7a80bcf-696e-40ca-8775-a7f85fbb3ebc'
+                    OrganizationName  = 'O365DSC'
+                    OutboundConnector = 'Contoso Outbound Connector'
                     Ensure            = 'Present'
                     Credential        = $Credscredential
+                    DependsOn         = "[EXOOutboundConnector]OutboundDependency"
+                }
+                EXOOutboundConnector 'OutboundDependency'
+                {
+                    Identity                      = "Contoso Outbound Connector"
+                    AllAcceptedDomains            = $False
+                    CloudServicesMailEnabled      = $False
+                    Comment                       = "Outbound connector to Contoso"
+                    ConnectorSource               = "Default"
+                    ConnectorType                 = "Partner"
+                    Enabled                       = $True
+                    IsTransportRuleScoped         = $False
+                    RecipientDomains              = "contoso.com"
+                    RouteAllMessagesViaOnPremises = $False
+                    TlsDomain                     = "*.contoso.com"
+                    TlsSettings                   = "DomainValidation"
+                    UseMxRecord                   = $True
+                    Ensure                        = "Present"
+                    Credential                    = $Credscredential
                 }
                 EXOOrganizationRelationship 'ConfigureOrganizationRelationship'
                 {
@@ -556,24 +536,6 @@
                     TargetAutodiscoverEpr = "https://mail.contoso.com/autodiscover/autodiscover.svc/wssecurity"
                     Ensure                = "Present"
                     Credential            = $Credscredential
-                }
-                EXOOutboundConnector 'ConfigureOutboundConnector'
-                {
-                    Identity                      = "Contoso Outbound Connector"
-                    AllAcceptedDomains            = $True
-                    CloudServicesMailEnabled      = $True
-                    Comment                       = "Outbound connector to Contoso"
-                    ConnectorSource               = "Default"
-                    ConnectorType                 = "OnPremises"
-                    Enabled                       = $True
-                    IsTransportRuleScoped         = $True
-                    RecipientDomains              = "*.contoso.com"
-                    RouteAllMessagesViaOnPremises = $True
-                    TlsDomain                     = "*.contoso.com"
-                    TlsSettings                   = "DomainValidation"
-                    UseMxRecord                   = $True
-                    Ensure                        = "Present"
-                    Credential                    = $Credscredential
                 }
                 EXOOwaMailboxPolicy 'ConfigureOwaMailboxPolicy'
                 {
@@ -657,7 +619,7 @@
                 {
                     Name                                = "HRApp"
                     ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
-                    AccountType                         = "OrganizationalAccount"
+                    AcceptSecurityIdentifierInformation = $true
                     Enabled                             = $True
                     Ensure                              = "Present"
                     Credential                          = $Credscredential
@@ -665,12 +627,12 @@
                 EXOPlace 'TestPlace'
                 {
                     AudioDeviceName        = "MyAudioDevice";
-                    Capacity               = 15; #Drift
+                    Capacity               = 15;
                     City                   = "";
                     Credential             = $Credscredential
                     DisplayDeviceName      = "DisplayDeviceName";
                     Ensure                 = 'Present'
-                    Identity               = "MyRoom@$Domain";
+                    Identity               = "Hood@$Domain";
                     IsWheelChairAccessible = $True;
                     MTREnabled             = $False;
                     ParentType             = "None";
@@ -689,9 +651,17 @@
                 {
                     EndUserQuarantinePermissionsValue = 87;
                     ESNEnabled                        = $False;
-                    Identity                          = "$Domain\DefaultFullAccessPolicy";
+                    Identity                          = "$Domain\IntegrationPolicy";
                     Ensure                            = "Present"
                     Credential                        = $Credscredential
+                }
+                EXORecipientPermission 'AddSendAs'
+                {
+                    Identity     = "AlexW@$Domain"
+                    Trustee      = "admin@$Domain"
+                    AccessRights = 'SendAs'
+                    Ensure       = 'Present'
+                    Credential   = $Credscredential
                 }
                 EXORemoteDomain '583b0b70-b45d-401f-98a6-0e7fa8434946'
                 {
@@ -704,11 +674,11 @@
                     ContentType                          = "MimeHtmlText"
                     DeliveryReportEnabled                = $True
                     DisplaySenderName                    = $True
-                    DomainName                           = "*"
+                    DomainName                           = "contoso.com"
                     IsInternal                           = $False
                     LineWrapSize                         = "Unlimited"
                     MeetingForwardNotificationEnabled    = $False
-                    Name                                 = "Default"
+                    Name                                 = "Integration"
                     NonMimeCharacterSet                  = "iso-8859-1"
                     PreferredInternetCodePageForShiftJis = "Undefined"
                     TargetDeliveryDomain                 = $False
@@ -750,9 +720,9 @@
                     Identity                  = "Research Department Attachment Rule"
                     Comments                  = "Applies to Research Department, except managers"
                     Enabled                   = $True
-                    ExceptIfSentToMemberOf    = "Research Department Managers"
+                    ExceptIfSentToMemberOf    = "Executives@$Domain"
                     SafeAttachmentPolicy      = "Marketing Block Attachments"
-                    SentToMemberOf            = "Research Department"
+                    SentToMemberOf            = "LegalTeam@$Domain"
                     Ensure                    = "Present"
                     Credential                = $Credscredential
                 }
@@ -765,7 +735,6 @@
                     EnableOrganizationBranding    = $True
                     EnableSafeLinksForTeams       = $True
                     ScanUrls                      = $True
-                    UseTranslatedNotificationText = $True
                     Ensure                        = 'Present'
                     Credential                    = $Credscredential
                 }
@@ -774,17 +743,18 @@
                     Identity                  = "Research Department URL Rule"
                     Comments                  = "Applies to Research Department, except managers"
                     Enabled                   = $True
-                    ExceptIfSentToMemberOf    = "Research Department Managers"
+                    ExceptIfSentToMemberOf    = "Executives@$Domain"
                     SafeLinksPolicy           = "Marketing Block URL"
-                    SentToMemberOf            = "Research Department"
+                    SentToMemberOf            = "LegalTeam@$Domain"
                     Ensure                    = "Present"
                     Credential                = $Credscredential
                 }
                 EXOSharedMailbox 'SharedMailbox'
                 {
-                    DisplayName        = "Test"
-                    PrimarySMTPAddress = "Test@$Domain"
-                    EmailAddresses     = @("AdeleV@$Domain")
+                    DisplayName        = "Integration"
+                    PrimarySMTPAddress = "Integration@$Domain"
+                    EmailAddresses     = @("IntegrationSM@$Domain")
+                    Alias              = "IntegrationSM"
                     Ensure             = "Present"
                     Credential         = $Credscredential
                 }
@@ -799,10 +769,10 @@
                 }
                 EXOTransportRule 'ConfigureTransportRule'
                 {
-                    Name                                          = "Ethical Wall - Sales and Brokerage Departments"
-                    BetweenMemberOf1                              = "Sales Department"
-                    BetweenMemberOf2                              = "Brokerage Department"
-                    ExceptIfFrom                                  = "Tony Smith","Pilar Ackerman"
+                    Name                                          = "Ethical Wall - Sales and Executives Departments"
+                    BetweenMemberOf1                              = "SalesTeam@$Domain"
+                    BetweenMemberOf2                              = "Executives@$Domain"
+                    ExceptIfFrom                                  = "AdeleV@$Domain"
                     ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
                     RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
                     Enabled                                       = $True

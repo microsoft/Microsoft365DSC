@@ -224,9 +224,7 @@ function Set-TargetResource
         Name                                = $Name
         ApplicationIdentifier               = $ApplicationIdentifier
         AcceptSecurityIdentifierInformation = $AcceptSecurityIdentifierInformation
-        AccountType                         = $AccountType
         Enabled                             = $Enabled
-        LinkedAccount                       = $LinkedAccount
         Confirm                             = $false
     }
 
@@ -235,10 +233,20 @@ function Set-TargetResource
         Name                                = $Name
         ApplicationIdentifier               = $ApplicationIdentifier
         AcceptSecurityIdentifierInformation = $AcceptSecurityIdentifierInformation
-        AccountType                         = $AccountType
         Enabled                             = $Enabled
-        LinkedAccount                       = $LinkedAccount
         Confirm                             = $false
+    }
+
+    if (-not [System.String]::IsNullOrEmpty($AccountType))
+    {
+        $NewPartnerApplicationParams.Add('AccountType', $AccountType)
+        $SetPartnerApplicationParams.Add('AccountType', $AccountType)
+    }
+
+    if (-not [System.String]::IsNullOrEmpty($LinkedAccount))
+    {
+        $NewPartnerApplicationParams.Add('LinkedAccount', $LinkedAccount)
+        $SetPartnerApplicationParams.Add('LinkedAccount', $LinkedAccount)
     }
 
     # CASE: Partner Application doesn't exist but should;

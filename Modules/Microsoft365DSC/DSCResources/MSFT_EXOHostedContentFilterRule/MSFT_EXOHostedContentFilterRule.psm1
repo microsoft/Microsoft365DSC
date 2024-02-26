@@ -114,7 +114,7 @@ function Get-TargetResource
     {
         try
         {
-            $HostedContentFilterRules = Get-HostedContentFilterRule -ErrorAction Stop
+            $HostedContentFilterRule = Get-HostedContentFilterRule -Identity $HostedContentFilterPolicy -ErrorAction Stop
         }
         catch
         {
@@ -123,8 +123,6 @@ function Get-TargetResource
                 -Exception $_ `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
-
-        $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if (-not $HostedContentFilterRule)
         {
             Write-Verbose -Message "HostedContentFilterRule $($Identity) does not exist."
@@ -316,6 +314,7 @@ function Set-TargetResource
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
         }
         Write-Verbose -Message "Creating new HostedContentFilterRule {$Identity}"
+        Write-Verbose -Message "With Parameters: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         $CreationParams.Add('Name', $Identity)
         $CreationParams.Remove('Identity') | Out-Null
         New-HostedContentFilterRule @CreationParams
@@ -332,6 +331,7 @@ function Set-TargetResource
         $UpdateParams.Remove('CertificatePassword') | Out-Null
         $UpdateParams.Remove('ManagedIdentity') | Out-Null
         $UpdateParams.Remove('Enabled') | Out-Null
+        $UpdateParams.Identity = $HostedContentFilterPolicy
         if ($CurrentValues.HostedContentFilterPolicy -eq $UpdateParams.HostedContentFilterPolicy )
         {
             $UpdateParams.Remove('HostedContentFilterPolicy') | Out-Null
@@ -456,6 +456,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

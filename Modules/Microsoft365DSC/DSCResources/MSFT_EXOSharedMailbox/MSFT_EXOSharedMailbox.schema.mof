@@ -2,6 +2,7 @@
 class MSFT_EXOSharedMailbox : OMI_BaseResource
 {
     [Key, Description("The display name of the Shared Mailbox")] string DisplayName;
+    [Write, Description("The unique identifier of the Shared Mailbox")] string Identity;
     [Write, Description("The primary email address of the Shared Mailbox")] string PrimarySMTPAddress;
     [Write, Description("The alias of the Shared Mailbox")] string Alias;
     [Write, Description("The EmailAddresses parameter specifies all the email addresses (proxy addresses) for the Shared Mailbox")] string EmailAddresses[];

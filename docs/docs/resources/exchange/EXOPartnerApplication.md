@@ -61,7 +61,7 @@ Configuration Example
         {
             Name                                = "HRApp"
             ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
-            AccountType                         = "OrganizationalAccount"
+            AcceptSecurityIdentifierInformation = $true
             Enabled                             = $True
             Ensure                              = "Present"
             Credential                          = $Credscredential
@@ -92,8 +92,8 @@ Configuration Example
         {
             Name                                = "HRApp"
             ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
-            AccountType                         = "OrganizationalAccount"
-            Enabled                             = $False # Updated Property
+            AcceptSecurityIdentifierInformation = $False # Updated Property
+            Enabled                             = $True
             Ensure                              = "Present"
             Credential                          = $Credscredential
         }
