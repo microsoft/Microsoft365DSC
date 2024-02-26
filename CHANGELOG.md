@@ -1,9 +1,12 @@
 # Change log for Microsoft365DSC
 
-# Unreleased
+# UNRELEASED
 
 * AADConditionalAccessPolicy
   * Improved verbose logging to show that items are being skipped.
+* EXOActiveSyncDeviceAccessRule
+  * Remove extra property GUID that is stopping EXO integration tests from
+    running
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Fix update and removal of resource when Identity is from another tenant
     FIXES [#3962](https://github.com/microsoft/Microsoft365DSC/issues/3962)
