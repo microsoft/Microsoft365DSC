@@ -3361,38 +3361,47 @@ function Get-M365DSCExportContentForResource
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
 
+    if ($Script:AllM365DscResources.Count -eq 0)
+    {
+        $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
+    }
+
     $primaryKey = ''
-    if ($Results.ContainsKey('IsSingleInstance'))
+    $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
+    $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
+        Select-Object -ExpandProperty Name
+    if ($Keys.Contains('IsSingleInstance'))
     {
         $primaryKey = ''
     }
-    elseif ($Results.ContainsKey('DisplayName'))
+    elseif ($Keys.Contains('DisplayName'))
     {
         $primaryKey = $Results.DisplayName
     }
-    elseif ($Results.ContainsKey('Identity'))
-    {
-        $primaryKey = $Results.Identity
-    }
-    elseif ($Results.ContainsKey('Id'))
-    {
-        $primaryKey = $Results.Id
-    }
-    elseif ($Results.ContainsKey('Name'))
+    elseif ($Keys.Contains('Name'))
     {
         $primaryKey = $Results.Name
     }
-    elseif ($Results.ContainsKey('Title'))
+    elseif ($Keys.Contains('Title'))
     {
         $primaryKey = $Results.Title
     }
-    elseif ($Results.ContainsKey('CdnType'))
+    elseif ($Keys.Contains('Identity'))
     {
-        $primaryKey = $Results.CdnType
+        $primaryKey = $Results.Identity
     }
-    elseif ($Results.ContainsKey('Usage'))
+    elseif ($Keys.Contains('Id'))
     {
-        $primaryKey = $Results.Usage
+        $primaryKey = $Results.Id
+    }
+
+    if ([String]::IsNullOrEmpty($primaryKey) -and `
+        -not $Keys.Contains('IsSingleInstance'))
+    {
+        foreach ($Key in $Keys)
+        {
+            $primaryKey += $Results.$Key
+        }
     }
 
     $instanceName = $ResourceName

@@ -5,7 +5,6 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the identity of the device access rule. | |
-| **GUID** | Write | String | Unique Identifier. Read-Only | |
 | **AccessLevel** | Write | String | The AccessLevel parameter specifies whether the devices are allowed, blocked or quarantined. | `Allow`, `Block`, `Quarantine` |
 | **Characteristic** | Write | String | The Characteristic parameter specifies the device characteristic or category that's used by the rule. | `DeviceModel`, `DeviceType`, `DeviceOS`, `UserAgent`, `XMSWLHeader` |
 | **QueryString** | Write | String | The QueryString parameter specifies the device identifier that's used by the rule. This parameter uses a text value that's used with Characteristic parameter value to define the device. | |
