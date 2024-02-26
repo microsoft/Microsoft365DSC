@@ -25,6 +25,7 @@
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **ConditionalAccessPolicy** | Write | String | Blocks or limits access to SharePoint and OneDrive content from un-managed devices. | `AllowFullAccess`, `AllowLimitedAccess`, `BlockAccess`, `ProtectionLevel` |
 
 
 # SPO Access Control Settings
