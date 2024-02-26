@@ -14,7 +14,8 @@ Configuration Example
 
     node localhost
     {
-        TeamsGuestMeetingConfiguration 'TeamsGuestMeetingConfiguration' {
+        TeamsGuestMeetingConfiguration 'TeamsGuestMeetingConfiguration'
+        {
             Identity                = 'Global'
             AllowIPVideo            = $true
             LiveCaptionsEnabledType = 'Disabled'
