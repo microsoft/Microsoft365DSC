@@ -70,9 +70,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullResult = @{
-        DisplayName = $DisplayName
-    }
+    $nullResult = ([Hashtable]$PSBoundParameters).clone()
     $nullResult.Ensure = 'Absent'
     try
     {
