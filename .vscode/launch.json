@@ -19,6 +19,22 @@
                 "${file}"
             ],
             "createTemporaryIntegratedConsole": true
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Run all QA tests",
+            "script": "Import-Module '${workspaceRoot}/Tests/TestHarness.psm1'; $QaResults = Invoke-QualityChecksHarness ",
+            "args": [],
+            "createTemporaryIntegratedConsole": true
+        },
+        {
+            "type": "PowerShell",
+            "request": "launch",
+            "name": "Run all Unit Tests",
+            "script": "Import-Module '${workspaceRoot}/Tests/TestHarness.psm1'; $UnitResults = Invoke-TestHarness",
+            "args": [],
+            "createTemporaryIntegratedConsole": true
         }
     ]
 }
