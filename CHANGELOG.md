@@ -4,6 +4,9 @@
 
 * AADConditionalAccessPolicy
   * Improved verbose logging to show that items are being skipped.
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
+  * Fix update and removal of resource when Identity is from another tenant
+    FIXES [#3962](https://github.com/microsoft/Microsoft365DSC/issues/3962)
 * MISC
   * M365DSCDRGUtil
     Add new parameter for customizable assignment identifier
