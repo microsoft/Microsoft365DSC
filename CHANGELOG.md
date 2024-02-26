@@ -4,6 +4,9 @@
 
 * AADConditionalAccessPolicy
   * Improved verbose logging to show that items are being skipped.
+* MISC
+  * M365DSCDRGUtil
+    Add new parameter for customizable assignment identifier
 
 # 1.24.221.1
 
