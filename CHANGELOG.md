@@ -4,6 +4,9 @@
 
 * AADConditionalAccessPolicy
   * Improved verbose logging to show that items are being skipped.
+* AADGroup
+  * Fixed issue with single quotes in the display name.
+    FIXES [#4358](https://github.com/microsoft/Microsoft365DSC/issues/4358)
 * EXOActiveSyncDeviceAccessRule
   * Remove extra property GUID that is stopping EXO integration tests from
     running
