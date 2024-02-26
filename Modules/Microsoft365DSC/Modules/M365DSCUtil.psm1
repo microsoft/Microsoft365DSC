@@ -4459,18 +4459,17 @@ function Test-M365DSCAuthenticationParameter
         'ManagedIdentity'
     )
 
-    $validAuthenticationParameter = $false
+    $containsAuthenticationParameter = $false
     foreach ($parameter in $authenticationParameterList)
     {
         if ($null -ne $BoundParameters.$parameter)
         {
-            write-host ("$parameter is not null" )
-            $validAuthenticationParameter = $true
+            $containsAuthenticationParameter = $true
             break
         }
     }
 
-    return $validAuthenticationParameter
+    return $containsAuthenticationParameter
 }
 
 <#
@@ -4662,6 +4661,7 @@ function Sync-M365DSCParameter
 
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
+    'Clear-M365DSCAuthenticationParameter',
     'Confirm-ImportedCmdletIsAvailable',
     'Confirm-M365DSCDependencies',
     'Convert-M365DscHashtableToString',
@@ -4695,6 +4695,7 @@ Export-ModuleMember -Function @(
     'Set-EXOSafeAttachmentRule',
     'Set-EXOSafeLinksRule',
     'Split-ArrayByParts',
+    'Test-M365DSCAuthenticationParameter'
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCModuleValidity',
     'Test-M365DSCParameterState',
