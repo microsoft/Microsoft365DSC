@@ -1,12 +1,21 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# Unreleased
 
+* AADConditionalAccessPolicy
+  * Improved verbose logging to show that items are being skipped.
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
+  * Fix update and removal of resource when Identity is from another tenant
+    FIXES [#3962](https://github.com/microsoft/Microsoft365DSC/issues/3962)
+* SPOAccessControlSettings
+  * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
 * MISC
+  * M365DSCDRGUtil
+    Add new parameter for customizable assignment identifier
   * M365DSCUtil
-    * Change heuristics on how to find the mandatory key of the resources to
-      include them as part of the ResourceInstanceName during their export
-      FIXES [#4333](https://github.com/microsoft/Microsoft365DSC/issues/4333)
+    Change heuristics on how to find the mandatory key of the resources to
+    include them as part of the ResourceInstanceName during their export
+    FIXES [#4333](https://github.com/microsoft/Microsoft365DSC/issues/4333)
 
 # 1.24.221.1
 
