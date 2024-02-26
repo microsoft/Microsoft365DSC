@@ -43,6 +43,9 @@
     FIXES [#3962](https://github.com/microsoft/Microsoft365DSC/issues/3962)
 * SPOAccessControlSettings
   * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
+* TeamsCallQueue
+  * Reduce the number of Calls for Export using new cache pattern
+    FIXES [[#4191](https://github.com/microsoft/Microsoft365DSC/issues/4192)]
 * TeamsGuestMeetingConfiguration
   * Added the missing parameter AllowTranscription.
     FIXES [#4363](https://github.com/microsoft/Microsoft365DSC/issues/4363)
