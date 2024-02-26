@@ -1,4 +1,5 @@
 # Change log for Microsoft365DSC
+
 # UNRELEASED
 
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
@@ -27,9 +28,6 @@
   * Added support for assignment GroupDisplayName
 * IntuneDeviceCompliancePolicyWindows10
   * Added support for assignment GroupDisplayName
-
-# UNRELEASED
-
 * AADApplication
   * Show current values of resource in Test-TargetResource
 * AADAuthorizationPolicy
