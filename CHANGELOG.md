@@ -3,31 +3,47 @@
 # UNRELEASED
 
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneAccountProtectionLocalUserGroupMembershipPolicy
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneAccountProtectionPolicy
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneAntivirusPolicyWindows10SettingCatalog
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneAppConfigurationPolicy
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneApplicationControlPolicyWindows10
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneASRRulesPolicyWindows10
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneDeviceCompliancePolicyAndroid
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneDeviceCompliancePolicyAndroidDeviceOwner
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneDeviceCompliancePolicyAndroidWorkProfile
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneDeviceCompliancePolicyiOs
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneDeviceCompliancePolicyMacOS
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneDeviceCompliancePolicyWindows10
-  * Added support for assignment GroupDisplayName
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationDomainJoinPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationEmailProfilePolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* M365DSCDRGUtil
+  * Added support for groupDisplayName to all devices and all users groups
 * AADApplication
   * Show current values of resource in Test-TargetResource
 * AADAuthorizationPolicy
