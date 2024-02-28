@@ -51,6 +51,9 @@
 * TeamsGuestMeetingConfiguration
   * Added the missing parameter AllowTranscription.
     FIXES [#4363](https://github.com/microsoft/Microsoft365DSC/issues/4363)
+* TeamsTeam
+  * Corrected Parameters for Graph Commands when creating a new Team
+    FIXES [#4383](https://github.com/microsoft/Microsoft365DSC/issues/4383)
 * MISC
   * M365DSCDRGUtil
     Add new parameter for customizable assignment identifier
