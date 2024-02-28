@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the room mailbox that you want to modify. You can use any value that uniquely identifies the room. | |
+| **DisplayName** | Write | String | The display name of the place. | |
 | **AudioDeviceName** | Write | String | The AudioDeviceName parameter specifies the name of the audio device in the room. If the value contains spaces, enclose the value in quotation marks. | |
 | **Building** | Write | String | The Building parameter specifies the building name or building number that the room is in. If the value contains spaces, enclose the value in quotation marks. | |
 | **Capacity** | Write | UInt32 | The Capacity parameter specifies the capacity of the room. A valid value is an integer. | |

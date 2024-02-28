@@ -129,9 +129,9 @@ function Get-TargetResource
             Write-Verbose -Message 'GroupID was specified'
             try
             {
-                if ($null -ne $Script:exportedGroups-and $Script:ExportMode)
+                if ($null -ne $Script:exportedGroups -and $Script:ExportMode)
                 {
-                    $Group = $Script:exportedGroups | Where-Object -FilterScript {$_.Id -eq $Id}
+                    $Group = $Script:exportedGroups | Where-Object -FilterScript { $_.Id -eq $Id }
                 }
                 else
                 {
@@ -141,13 +141,14 @@ function Get-TargetResource
             catch
             {
                 Write-Verbose -Message "Couldn't get group by ID, trying by name"
-                if ($null -ne $Script:exportedGroups-and $Script:ExportMode)
+                if ($null -ne $Script:exportedGroups -and $Script:ExportMode)
                 {
-                    $Group = $Script:exportedGroups | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                    $Group = $Script:exportedGroups | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
                 }
                 else
                 {
-                    $Group = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                    $filter = "DisplayName eq '$DisplayName'" -replace "'", "''"
+                    $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
                 }
                 if ($Group.Length -gt 1)
                 {
@@ -159,13 +160,14 @@ function Get-TargetResource
         {
             Write-Verbose -Message 'Id was NOT specified'
             ## Can retreive multiple AAD Groups since displayname is not unique
-            if ($null -ne $Script:exportedGroups-and $Script:ExportMode)
+            if ($null -ne $Script:exportedGroups -and $Script:ExportMode)
             {
-                $Group = $Script:exportedGroups | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                $Group = $Script:exportedGroups | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
             else
             {
-                $Group = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                $filter = "DisplayName eq '$DisplayName'" -replace "'", "''"
+                $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
             }
             if ($Group.Length -gt 1)
             {
@@ -643,11 +645,11 @@ function Set-TargetResource
                 }
                 try
                 {
-                    New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject -ErrorAction Stop| Out-Null
+                    New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject -ErrorAction Stop | Out-Null
                 }
                 catch
                 {
-                    if ($_.Exception.Message -notlike "*One or more added object references already exist for the following modified properties*")
+                    if ($_.Exception.Message -notlike '*One or more added object references already exist for the following modified properties*')
                     {
                         throw $_
                     }
@@ -945,6 +947,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     # Check Licenses
@@ -1078,29 +1081,32 @@ function Export-TargetResource
 
         # Define the list of attributes
         $attributesToCheck = @(
-            "description",
-            "displayName",
-            "hasMembersWithLicenseErrors",
-            "mail",
-            "mailNickname",
-            "onPremisesSecurityIdentifier",
-            "onPremisesSyncEnabled",
-            "preferredLanguage"
+            'description',
+            'displayName',
+            'hasMembersWithLicenseErrors',
+            'mail',
+            'mailNickname',
+            'onPremisesSecurityIdentifier',
+            'onPremisesSyncEnabled',
+            'preferredLanguage'
         )
 
         # Initialize a flag to indicate whether any attribute matches the condition
         $matchConditionFound = $false
 
         # Check each attribute in the list
-        foreach ($attribute in $attributesToCheck) {
-            if ($Filter -like "*$attribute eq null*") {
+        foreach ($attribute in $attributesToCheck)
+        {
+            if ($Filter -like "*$attribute eq null*")
+            {
                 $matchConditionFound = $true
                 break
             }
         }
 
         # If any attribute matches, add parameters to $ExportParameters
-        if ($matchConditionFound -or $Filter -like "*endsWith*") {
+        if ($matchConditionFound -or $Filter -like '*endsWith*')
+        {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
         }

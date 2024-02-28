@@ -126,7 +126,8 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Id -ErrorAction SilentlyContinue `
+            | Where-Object -FilterScript {$null -ne $_.DisplayName}
 
         if ($null -eq $getValue)
         {
@@ -139,7 +140,7 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
                         $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
-                }
+                } | Where-Object -FilterScript {$null -ne $_.DisplayName}
             }
         }
         #endregion
@@ -149,7 +150,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        if($getValue -is [Array])
+        if($getValue -is [Array] -and $getValue.Length -gt 1)
         {
             Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
         }

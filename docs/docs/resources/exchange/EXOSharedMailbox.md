@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | The display name of the Shared Mailbox | |
+| **Identity** | Write | String | The unique identifier of the Shared Mailbox | |
 | **PrimarySMTPAddress** | Write | String | The primary email address of the Shared Mailbox | |
 | **Alias** | Write | String | The alias of the Shared Mailbox | |
 | **EmailAddresses** | Write | StringArray[] | The EmailAddresses parameter specifies all the email addresses (proxy addresses) for the Shared Mailbox | |

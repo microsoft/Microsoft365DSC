@@ -346,20 +346,15 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        $allUsers = $null
         foreach ($AuthenticationPolicy in $AllAuthenticationPolicies)
         {
             Write-Host "    |---[$i/$($AllAuthenticationPolicies.Count)] $($AuthenticationPolicy.Identity)" -NoNewline
-            if (-not $allUsers)
-            {
-                $allUsers = Get-User -ResultSize 'Unlimited'
-            }
-            $assignedUsers = $allUsers | Where-Object -FilterScript { $_.AuthenticationPolicy -eq $AuthenticationPolicy.Identity }
+            $assignedUsers = Get-User -Filter "AuthenticationPolicy -eq '$($AuthenticationPolicy.DistinguishedName)'"
 
             foreach ($user in $assignedUsers)
             {
                 $Params = @{
-                    UserName              = $user.Name
+                    UserName              = $user.UserPrincipalName
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId

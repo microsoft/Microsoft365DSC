@@ -31,6 +31,7 @@
                 {
                     DisplayName               = "AppDisplayName"
                     AvailableToOtherTenants   = $true # Updated Property
+                    Description               = "Application Description"
                     GroupMembershipClaims     = "None"
                     Homepage                  = "https://$Domain"
                     IdentifierUris            = "https://$Domain"
