@@ -38,6 +38,8 @@
 * EXOActiveSyncDeviceAccessRule
   * Remove extra property GUID that is stopping EXO integration tests from
     running
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Fixes an issue where the keyUsage property format was not correctly handled
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Fix update and removal of resource when Identity is from another tenant
     FIXES [#3962](https://github.com/microsoft/Microsoft365DSC/issues/3962)
