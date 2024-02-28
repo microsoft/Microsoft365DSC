@@ -1,5 +1,6 @@
 # Change log for Microsoft365DSC
 
+
 # UNRELEASED
 
 * AADApplication
@@ -45,6 +46,8 @@
     FIXES [#3962](https://github.com/microsoft/Microsoft365DSC/issues/3962)
 * SPOAccessControlSettings
   * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
+* Teams resources
+  * Updated required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
 * TeamsCallQueue
   * Reduce the number of Calls for Export using new cache pattern
     FIXES [[#4191](https://github.com/microsoft/Microsoft365DSC/issues/4192)]
@@ -187,6 +190,7 @@
     * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
       FIXES [#4291](https://github.com/microsoft/Microsoft365DSC/issues/4291)
   * Added new QA test to check for missing description in resource schema
+  * Added new QA test to check for falsely assigned write-premissions in settings.json
 
 # 1.24.207.2
 
@@ -206,7 +210,7 @@
 * SCDLPComplianceRule
   * Properly escapes fancy quotes in the Get method.
 * TeamsMeetingPolicy
-  * Ignore the AllowUserToJoinExternalMeeting  parameterfor drift evaluation
+  * Ignore the AllowUserToJoinExternalMeeting  parameter for drift evaluation
     since it doesn't do anything based on official documentation.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.180.
