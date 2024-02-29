@@ -1,7 +1,7 @@
 # Change log for Microsoft365DSC
 
 
-# UNRELEASED
+# 1.24.228.1
 
 * AADApplication
   * Show current values of resource in Test-TargetResource
