@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* EXOIntraOrganizationConnector
+  * Fixed issue with TargetSharingEpr
+    FIXES [#4381](https://github.com/microsoft/Microsoft365DSC/issues/4381)
 
 # 1.24.228.1
 

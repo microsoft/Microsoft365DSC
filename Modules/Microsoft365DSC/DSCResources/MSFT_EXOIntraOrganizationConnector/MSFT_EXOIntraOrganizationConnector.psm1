@@ -106,7 +106,7 @@ function Get-TargetResource
                 DiscoveryEndpoint     = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
                 Enabled               = $IntraOrganizationConnector.Enabled
                 TargetAddressDomains  = $IntraOrganizationConnector.TargetAddressDomains
-                TargetSharingEpr      = $IntraOrganizationConnector.TargetSharingEpr
+                TargetSharingEpr      = $IntraOrganizationConnector.TargetSharingEpr.ToString()
                 Credential            = $Credential
                 Ensure                = 'Present'
                 ApplicationId         = $ApplicationId
