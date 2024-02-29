@@ -27,7 +27,7 @@ class MSFT_IntuneDeviceConfigurationScepCertificatePolicyWindows10 : OMI_BaseRes
     [Write, Description("Target store certificate. Possible values are: user, machine."), ValueMap{"user","machine"}, Values{"user","machine"}] String CertificateStore;
     [Write, Description("SCEP Hash Algorithm. Possible values are: sha1, sha2."), ValueMap{"sha1","sha2"}, Values{"sha1","sha2"}] String HashAlgorithm;
     [Write, Description("SCEP Key Size. Possible values are: size1024, size2048, size4096."), ValueMap{"size1024","size2048","size4096"}, Values{"size1024","size2048","size4096"}] String KeySize;
-    [Write, Description("SCEP Key Usage. Possible values are: keyEncipherment, digitalSignature."), ValueMap{"keyEncipherment","digitalSignature"}, Values{"keyEncipherment","digitalSignature"}] String KeyUsage;
+    [Write, Description("SCEP Key Usage. Possible values are: keyEncipherment, digitalSignature."), ValueMap{"keyEncipherment","digitalSignature"}, Values{"keyEncipherment","digitalSignature"}] String KeyUsage[];
     [Write, Description("SCEP Server Url(s).")] String ScepServerUrls[];
     [Write, Description("Custom String that defines the AAD Attribute.")] String SubjectAlternativeNameFormatString;
     [Write, Description("Custom format to use with SubjectNameFormat = Custom. Example: CN={{UserName}},E={{EmailAddress}},OU=Enterprise Users,O=Contoso Corporation,L=Redmond,ST=WA,C=US")] String SubjectNameFormatString;

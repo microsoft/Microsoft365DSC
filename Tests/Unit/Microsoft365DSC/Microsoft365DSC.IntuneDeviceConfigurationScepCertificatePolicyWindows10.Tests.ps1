@@ -86,7 +86,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     id = "FakeStringValue"
                     KeySize = "size1024"
                     keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                    KeyUsage = "keyEncipherment"
+                    KeyUsage = @("keyEncipherment")
                     renewalThresholdPercentage = 25
                     ScepServerUrls = @("FakeStringValue")
                     SubjectAlternativeNameFormatString = "FakeStringValue"
@@ -138,7 +138,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     id = "FakeStringValue"
                     KeySize = "size1024"
                     keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                    KeyUsage = "keyEncipherment"
+                    KeyUsage = @("keyEncipherment")
                     renewalThresholdPercentage = 25
                     ScepServerUrls = @("FakeStringValue")
                     SubjectAlternativeNameFormatString = "FakeStringValue"
@@ -225,7 +225,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     id = "FakeStringValue"
                     KeySize = "size1024"
                     keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                    KeyUsage = "keyEncipherment"
+                    KeyUsage = @("keyEncipherment")
                     renewalThresholdPercentage = 25
                     ScepServerUrls = @("FakeStringValue")
                     SubjectAlternativeNameFormatString = "FakeStringValue"
@@ -305,7 +305,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     id = "FakeStringValue"
                     KeySize = "size1024"
                     keyStorageProvider = "useTpmKspOtherwiseUseSoftwareKsp"
-                    KeyUsage = "keyEncipherment"
+                    KeyUsage = @("keyEncipherment")
                     renewalThresholdPercentage = 25
                     ScepServerUrls = @("FakeStringValue")
                     SubjectAlternativeNameFormatString = "FakeStringValue"

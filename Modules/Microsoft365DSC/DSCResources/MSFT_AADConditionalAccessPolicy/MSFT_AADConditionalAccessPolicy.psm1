@@ -31,7 +31,7 @@ function Get-TargetResource
         $ApplicationsFilter,
 
         [Parameter()]
-        [ValidateSet("include", "exclude")]
+        [ValidateSet('include', 'exclude')]
         [System.String]
         $ApplicationsFilterMode,
 
@@ -300,7 +300,8 @@ function Get-TargetResource
                 }
                 catch
                 {
-                    New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                    $message = "Couldn't find IncludedUser '$IncludeUserGUID', that is defined in policy '$PolicyDisplayName'. Skipping user."
+                    New-M365DSCLogEntry -Message $message `
                         -Exception $_ `
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
@@ -334,8 +335,9 @@ function Get-TargetResource
                 }
                 catch
                 {
-                    $message = "Couldn't find user $ExcludeUserGUID , that is defined in policy $PolicyDisplayName"
+                    $message = "Couldn't find ExcludedUser '$ExcludeUserGUID', that is defined in policy '$PolicyDisplayName'. Skipping user."
                     New-M365DSCLogEntry -Message $message `
+                        -Exception $_ `
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
                         -Credential $Credential
@@ -366,8 +368,9 @@ function Get-TargetResource
             }
             catch
             {
-                $message = "Couldn't find Group $IncludeGroupGUID , that is defined in policy $PolicyDisplayName"
+                $message = "Couldn't find IncludedGroup '$IncludeGroupGUID', that is defined in policy '$PolicyDisplayName'. Skipping group."
                 New-M365DSCLogEntry -Message $message `
+                    -Exception $_ `
                     -Source $($MyInvocation.MyCommand.Source) `
                     -TenantId $TenantId `
                     -Credential $Credential
@@ -393,8 +396,9 @@ function Get-TargetResource
             }
             catch
             {
-                $message = "Couldn't find Group $ExcludeGroupGUID , that is defined in policy $PolicyDisplayName"
+                $message = "Couldn't find ExcludedGroup '$ExcludeGroupGUID', that is defined in policy '$PolicyDisplayName'. Skipping group."
                 New-M365DSCLogEntry -Message $message `
+                    -Exception $_ `
                     -Source $($MyInvocation.MyCommand.Source) `
                     -TenantId $TenantId `
                     -Credential $Credential
@@ -426,7 +430,7 @@ function Get-TargetResource
             {
                 if ($null -eq $rolelookup[$IncludeRoleGUID])
                 {
-                    $message = "Couldn't find role $IncludeRoleGUID , couldn't add to policy $PolicyDisplayName"
+                    $message = "Couldn't find IncludedRole '$IncludeRoleGUID', that is defined in policy '$PolicyDisplayName'. Skipping role."
                     New-M365DSCLogEntry -Message $message `
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
@@ -446,7 +450,7 @@ function Get-TargetResource
             {
                 if ($null -eq $rolelookup[$ExcludeRoleGUID])
                 {
-                    $message = "Couldn't find role $ExcludeRoleGUID , couldn't add to policy $PolicyDisplayName"
+                    $message = "Couldn't find ExcludedRole '$ExcludeRoleGUID', that is defined in policy '$PolicyDisplayName'. Skipping role."
                     New-M365DSCLogEntry -Message $message `
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
@@ -576,7 +580,7 @@ function Get-TargetResource
 
     $AuthenticationStrengthValue = $null
     if ($null -ne $Policy.GrantControls -and $null -ne $Policy.GrantControls.AuthenticationStrength -and `
-        $null -ne $Policy.GrantControls.AuthenticationStrength.Id)
+            $null -ne $Policy.GrantControls.AuthenticationStrength.Id)
     {
         $strengthPolicy = Get-MgBetaPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Policy.GrantControls.AuthenticationStrength.Id
         if ($null -ne $strengthPolicy)
@@ -591,8 +595,8 @@ function Get-TargetResource
         foreach ($class in $Policy.Conditions.Applications.IncludeAuthenticationContextClassReferences)
         {
             $classReference = Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference `
-                                    -AuthenticationContextClassReferenceId $class `
-                                    -ErrorAction SilentlyContinue
+                -AuthenticationContextClassReferenceId $class `
+                -ErrorAction SilentlyContinue
             if ($null -ne $classReference)
             {
                 $AuthenticationContextsValues += $classReference.DisplayName
@@ -678,9 +682,9 @@ function Get-TargetResource
         CertificateThumbprint                    = $CertificateThumbprint
         Managedidentity                          = $ManagedIdentity.IsPresent
     }
+
     Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
     return $result
-
 }
 
 function Set-TargetResource
@@ -715,7 +719,7 @@ function Set-TargetResource
         $ApplicationsFilter,
 
         [Parameter()]
-        [ValidateSet("include", "exclude")]
+        [ValidateSet('include', 'exclude')]
         [System.String]
         $ApplicationsFilterMode,
 
@@ -947,18 +951,16 @@ function Set-TargetResource
         #create Conditions object
         Write-Verbose -Message 'Set-Targetresource: create Conditions object'
         $conditions = @{
-            Applications = @{
-            }
-            Users        = @{
-            }
+            Applications = @{}
+            Users        = @{}
         }
         #create and provision Application Condition object
         Write-Verbose -Message 'Set-Targetresource: create Application Condition object'
-        if ($currentParameters.ContainsKey("IncludeApplications"))
+        if ($currentParameters.ContainsKey('IncludeApplications'))
         {
             $conditions.Applications.Add('IncludeApplications', $IncludeApplications)
         }
-        if ($currentParameters.ContainsKey("ExcludeApplications"))
+        if ($currentParameters.ContainsKey('ExcludeApplications'))
         {
             $conditions.Applications.Add('ExcludeApplications', $ExcludeApplications)
         }
@@ -968,7 +970,7 @@ function Set-TargetResource
                 rule = $ApplicationsFilter
                 mode = $ApplicationsFilterMode
             }
-            $conditions.Applications.Add("ApplicationFilter", $appFilterValue)
+            $conditions.Applications.Add('ApplicationFilter', $appFilterValue)
         }
         if ($IncludeUserActions)
         {
@@ -981,7 +983,7 @@ function Set-TargetResource
             $classReferences = Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference -ErrorAction SilentlyContinue
             foreach ($authContext in $AuthenticationContexts)
             {
-                $currentClassId = $classReferences | Where-Object -FilterScript {$_.DisplayName -eq $authContext}
+                $currentClassId = $classReferences | Where-Object -FilterScript { $_.DisplayName -eq $authContext }
                 if ($null -ne $currentClassId)
                 {
                     $AuthenticationContextsValues += $currentClassId.Id
@@ -1018,7 +1020,7 @@ function Set-TargetResource
                         }
                         if ($null -eq $userguid)
                         {
-                            $message = "Couldn't find user $includeuser , couldn't add to policy $DisplayName"
+                            $message = "Couldn't find user '$includeuser', couldn't add to policy '$DisplayName'"
                             New-M365DSCLogEntry -Message $message `
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
@@ -1065,7 +1067,7 @@ function Set-TargetResource
                         }
                         if ($null -eq $userguid)
                         {
-                            $message = "Couldn't find user $excludeuser , couldn't add to policy $DisplayName"
+                            $message = "Couldn't find user '$excludeuser', couldn't add to policy '$DisplayName'"
                             New-M365DSCLogEntry -Message $message `
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
@@ -1110,7 +1112,7 @@ function Set-TargetResource
                     }
                     if ($GroupLookup.Length -gt 1)
                     {
-                        $message = "Duplicate group found with displayname $includegroup , couldn't add to policy $DisplayName"
+                        $message = "Duplicate group found with displayname '$includegroup', couldn't add to policy '$DisplayName'"
                         New-M365DSCLogEntry -Message $message `
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
@@ -1119,7 +1121,7 @@ function Set-TargetResource
                     }
                     elseif ($null -eq $GroupLookup)
                     {
-                        $message = "Couldn't find group $includegroup , couldn't add to policy $DisplayName"
+                        $message = "Couldn't find group '$includegroup', couldn't add to policy '$DisplayName'"
                         New-M365DSCLogEntry -Message $message `
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
@@ -1128,7 +1130,7 @@ function Set-TargetResource
                     }
                     else
                     {
-                        Write-Verbose -Message 'adding group to includegroups'
+                        Write-Verbose -Message 'Adding group to includegroups'
                         $conditions.Users.IncludeGroups += $GroupLookup.Id
                     }
                 }
@@ -1160,7 +1162,7 @@ function Set-TargetResource
                     }
                     if ($GroupLookup.Length -gt 1)
                     {
-                        $message = "Duplicate group found with displayname $ExcludeGroup , couldn't add to policy $DisplayName"
+                        $message = "Duplicate group found with displayname '$ExcludeGroup', couldn't add to policy '$DisplayName'"
                         New-M365DSCLogEntry -Message $message `
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
@@ -1169,7 +1171,7 @@ function Set-TargetResource
                     }
                     elseif ($null -eq $GroupLookup)
                     {
-                        $message = "Couldn't find group $ExcludeGroup , couldn't add to policy $DisplayName"
+                        $message = "Couldn't find group '$ExcludeGroup', couldn't add to policy '$DisplayName'"
                         New-M365DSCLogEntry -Message $message `
                             -Source $($MyInvocation.MyCommand.Source) `
                             -TenantId $TenantId `
@@ -1178,7 +1180,7 @@ function Set-TargetResource
                     }
                     else
                     {
-                        Write-Verbose -Message 'adding group to ExcludeGroups'
+                        Write-Verbose -Message 'Adding group to ExcludeGroups'
                         $conditions.Users.ExcludeGroups += $GroupLookup.Id
                     }
                 }
@@ -1203,7 +1205,7 @@ function Set-TargetResource
                     {
                         if ($null -eq $rolelookup[$IncludeRole])
                         {
-                            $message = "Couldn't find role $IncludeRole , couldn't add to policy $DisplayName"
+                            $message = "Couldn't find role '$IncludeRole', couldn't add to policy '$DisplayName'"
                             New-M365DSCLogEntry -Message $message `
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
@@ -1237,7 +1239,7 @@ function Set-TargetResource
                     {
                         if ($null -eq $rolelookup[$ExcludeRole])
                         {
-                            $message = "Couldn't find role $ExcludeRole , couldn't add to policy $DisplayName"
+                            $message = "Couldn't find role '$ExcludeRole', couldn't add to policy '$DisplayName'"
                             New-M365DSCLogEntry -Message $message `
                                 -Source $($MyInvocation.MyCommand.Source) `
                                 -TenantId $TenantId `
@@ -1507,12 +1509,12 @@ function Set-TargetResource
             }
             if ($AuthenticationStrength)
             {
-                $strengthPolicy = Get-MgBetaPolicyAuthenticationStrengthPolicy | Where-Object -FilterScript {$_.DisplayName -eq $AuthenticationStrength} -ErrorAction SilentlyContinue
+                $strengthPolicy = Get-MgBetaPolicyAuthenticationStrengthPolicy | Where-Object -FilterScript { $_.DisplayName -eq $AuthenticationStrength } -ErrorAction SilentlyContinue
                 if ($null -ne $strengthPolicy)
                 {
                     $authenticationStrengthInstance = @{
                         id            = $strengthPolicy.Id
-                        "@odata.type" = "#microsoft.graph.authenticationStrengthPolicy"
+                        '@odata.type' = '#microsoft.graph.authenticationStrengthPolicy'
                     }
                     $GrantControls.Add('authenticationStrength', $authenticationStrengthInstance)
                 }
@@ -1575,7 +1577,7 @@ function Set-TargetResource
                 }
                 else
                 {
-                    $sessioncontrols.SignInFrequency.Remove("type") | Out-Null
+                    $sessioncontrols.SignInFrequency.Remove('type') | Out-Null
                 }
                 if ($SignInFrequencyValue -gt 0)
                 {
@@ -1583,7 +1585,7 @@ function Set-TargetResource
                 }
                 else
                 {
-                    $sessioncontrols.SignInFrequency.Remove("value") | Out-Null
+                    $sessioncontrols.SignInFrequency.Remove('value') | Out-Null
                 }
                 $sessioncontrols.SignInFrequency.frequencyInterval = $SignInFrequencyInterval
             }
@@ -1649,9 +1651,9 @@ function Set-TargetResource
         else
         {
             New-M365DSCLogEntry -Message 'Error creating new policy:' `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
 
             Write-Verbose -Message 'Set-Targetresource: Failed creating new policy. At least a user rule, application rule and grant or session control is required'
         }
@@ -1674,7 +1676,7 @@ function Set-TargetResource
             Write-Verbose -Message "Set-Targetresource: Failed deleting policy $DisplayName"
         }
     }
-    Write-Verbose -Message "Set-Targetresource: finished processing Policy $Displayname"
+    Write-Verbose -Message "Set-Targetresource: Finished processing Policy $Displayname"
 }
 
 function Test-TargetResource
@@ -1710,7 +1712,7 @@ function Test-TargetResource
         $ApplicationsFilter,
 
         [Parameter()]
-        [ValidateSet("include", "exclude")]
+        [ValidateSet('include', 'exclude')]
         [System.String]
         $ApplicationsFilterMode,
 
@@ -1912,6 +1914,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters

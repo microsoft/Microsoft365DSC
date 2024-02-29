@@ -21,6 +21,30 @@ As an Admin, you can use the Windows PowerShell command, New-CsTenantTrustedIPAd
 
 ## Permissions
 
+### Microsoft Graph
+
+To authenticate with the Microsoft Graph API, this resource required the following permissions:
+
+#### Delegated permissions
+
+- **Read**
+
+    - None
+
+- **Update**
+
+    - None
+
+#### Application permissions
+
+- **Read**
+
+    - Organization.Read.All
+
+- **Update**
+
+    - Organization.Read.All
+
 ## Examples
 
 ### Example 1

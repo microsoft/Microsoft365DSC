@@ -43,7 +43,7 @@ Configuration Example
             HashAlgorithm                  = "sha2";
             KeySize                        = "size2048";
             KeyStorageProvider             = "useTpmKspOtherwiseUseSoftwareKsp";
-            KeyUsage                       = "digitalSignature";
+            KeyUsage                       = @("digitalSignature");
             RenewalThresholdPercentage     = 30; # Updated Property
             ScepServerUrls                 = @("https://mydomain.com/certsrv/mscep/mscep.dll");
             SubjectAlternativeNameType     = "none";
