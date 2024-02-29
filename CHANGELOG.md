@@ -42,6 +42,7 @@
   * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
   * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+  * Fixed an issue with the parameter InterfaceTypes from firewallrules defined as a string instead of string[]
 * M365DSCDRGUtil
   * Added support for groupDisplayName to all devices and all users groups
 * AADApplication

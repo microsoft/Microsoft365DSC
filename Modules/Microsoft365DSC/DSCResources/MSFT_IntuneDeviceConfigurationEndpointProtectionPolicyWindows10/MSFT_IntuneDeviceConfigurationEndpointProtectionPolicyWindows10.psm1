@@ -1305,7 +1305,7 @@ function Get-TargetResource
             $myfirewallRules.Add('FilePath', $currentfirewallRules.filePath)
             if ($null -ne $currentfirewallRules.interfaceTypes)
             {
-                $myfirewallRules.Add('InterfaceTypes', $currentfirewallRules.interfaceTypes.toString())
+                $myfirewallRules.Add('InterfaceTypes', $currentfirewallRules.interfaceTypes.toString() -split ',')
             }
             $myfirewallRules.Add('LocalAddressRanges', $currentfirewallRules.localAddressRanges)
             $myfirewallRules.Add('LocalPortRanges', $currentfirewallRules.localPortRanges)
@@ -3704,6 +3704,19 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
+        if ($CreateParameters.FirewallRules.count -gt 0)
+        {
+            $intuneFirewallRules = @()
+            foreach ($firewallRule in $CreateParameters.FirewallRules)
+            {
+                if ($firewallRule.interfaceTypes -gt 1)
+                {
+                    $firewallRule.interfaceTypes = $firewallRule.interfaceTypes -join ','
+                }
+                $intuneFirewallRules += $firewallRule
+            }
+            $CreateParameters.FirewallRules = $intuneFirewallRules
+        }
         #region resource generator code
         $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EndpointProtectionConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
@@ -3738,6 +3751,19 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
+        }
+        if ($UpdateParameters.FirewallRules.count -gt 0)
+        {
+            $intuneFirewallRules = @()
+            foreach ($firewallRule in $UpdateParameters.FirewallRules)
+            {
+                if ($firewallRule.interfaceTypes -gt 1)
+                {
+                    $firewallRule.interfaceTypes = $firewallRule.interfaceTypes -join ','
+                }
+                $intuneFirewallRules += $firewallRule
+            }
+            $UpdateParameters.FirewallRules = $intuneFirewallRules
         }
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10EndpointProtectionConfiguration')
