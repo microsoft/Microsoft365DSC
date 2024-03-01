@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADGroup
+  * Fixed issue when filtering groups by display name
+    FIXES [#4394](https://github.com/microsoft/Microsoft365DSC/issues/4394)
 
 # 1.24.228.1
 
