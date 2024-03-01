@@ -618,48 +618,52 @@ function Set-TargetResource
     if ($Ensure -ne 'Absent')
     {
         #Owners
-        $currentOwnersValue = @()
-        if ($currentParameters.Owners.Length -gt 0)
+        if ($PSBoundParameters.ContainsKey('Owners'))
         {
-            $currentOwnersValue = $backCurrentOwners
-        }
-        $desiredOwnersValue = @()
-        if ($Owners.Length -gt 0)
-        {
-            $desiredOwnersValue = $Owners
-        }
-        if ($backCurrentOwners -eq $null)
-        {
-            $backCurrentOwners = @()
-        }
-        $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
-        foreach ($diff in $ownersDiff)
-        {
-            $user = Get-MgUser -UserId $diff.InputObject
-
-            if ($diff.SideIndicator -eq '=>')
+            $currentOwnersValue = @()
+            if ($currentParameters.Owners.Length -gt 0)
             {
-                Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                $ownerObject = @{
-                    '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
-                }
-                try
+                $currentOwnersValue = $backCurrentOwners
+            }
+            $desiredOwnersValue = @()
+            if ($Owners.Length -gt 0)
+            {
+                $desiredOwnersValue = $Owners
+            }
+            if ($backCurrentOwners -eq $null)
+            {
+                $backCurrentOwners = @()
+            }
+            $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
+            foreach ($diff in $ownersDiff)
+            {
+                $user = Get-MgUser -UserId $diff.InputObject
+
+                if ($diff.SideIndicator -eq '=>')
                 {
-                    New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject -ErrorAction Stop | Out-Null
-                }
-                catch
-                {
-                    if ($_.Exception.Message -notlike '*One or more added object references already exist for the following modified properties*')
+                    Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                    $ownerObject = @{
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                    }
+                    try
                     {
-                        throw $_
+                        New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject -ErrorAction Stop | Out-Null
+                    }
+                    catch
+                    {
+                        if ($_.Exception.Message -notlike '*One or more added object references already exist for the following modified properties*')
+                        {
+                            throw $_
+                        }
                     }
                 }
+                elseif ($diff.SideIndicator -eq '<=')
+                {
+                    Write-Verbose -Message "Removing new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                    Remove-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                }
             }
-            elseif ($diff.SideIndicator -eq '<=')
-            {
-                Write-Verbose -Message "Removing new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                Remove-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
-            }
+
         }
 
         #Members
