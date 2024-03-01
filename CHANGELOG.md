@@ -6,6 +6,7 @@
   * Add property RootCertificateDisplayName in order to support assigning root
     certificates by display name since their Ids in a blueprint might be from a
     different source tenant
+    FIXES [#3965](https://github.com/microsoft/Microsoft365DSC/issues/3965)
 
 # 1.24.228.1
 
