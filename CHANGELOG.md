@@ -2,7 +2,7 @@
 
 # UNRELEASED
 
-* AADGroup
+* Verbose logging
   * Enhancement to obfuscate password from verbose logging and avoid empty lines
     FIXES [#4392](https://github.com/microsoft/Microsoft365DSC/issues/4392)
 
