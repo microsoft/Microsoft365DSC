@@ -1,6 +1,12 @@
 # Change log for Microsoft365DSC
 
 
+# UNRELEASED
+
+* AADGroup
+  * Fixed issue where group owners were removed from existing groups when unspecified in the config
+    FIXES [#4390](https://github.com/microsoft/Microsoft365DSC/issues/4390)
+
 # 1.24.228.1
 
 * AADApplication
