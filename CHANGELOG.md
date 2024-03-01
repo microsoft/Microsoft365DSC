@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
+  * Fixed policy assignment when Id is from other tenant, bogus or null
+    FIXES [#3970](https://github.com/microsoft/Microsoft365DSC/issues/3970)
 
 # 1.24.228.1
 
