@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Add property RootCertificateDisplayName in order to support assigning root
+    certificates by display name since their Ids in a blueprint might be from a
+    different source tenant
 
 # 1.24.228.1
 
