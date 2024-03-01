@@ -135,7 +135,14 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $getValue = $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($Id))
+        {
+            $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $id -ErrorAction SilentlyContinue
+        }
+        else
+        {
+            $getValue = $null
+        }
 
         #region resource generator code
         if ($null -eq $getValue)
@@ -149,11 +156,19 @@ function Get-TargetResource
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            if (-not [String]::IsNullOrEmpty($Id))
+            {
+                Write-Verbose -Message "Nothing with id {$Id} was found"
+            }
+            else
+            {
+                Write-Verbose -Message "Nothing with display name {$DisplayName} was found"
+            }
+
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
+        Write-Verbose -Message "Found something with id {$($getValue.Id)}"
         $results = @{
 
             #region resource generator code
@@ -183,7 +198,7 @@ function Get-TargetResource
             Managedidentity                                = $ManagedIdentity.IsPresent
         }
 
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
