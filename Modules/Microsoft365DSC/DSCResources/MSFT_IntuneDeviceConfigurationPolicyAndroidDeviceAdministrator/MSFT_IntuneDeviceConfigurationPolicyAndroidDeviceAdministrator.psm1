@@ -379,7 +379,7 @@ function Get-TargetResource
         {
             if (-not [String]::IsNullOrEmpty($Id))
             {
-                Write-Verbose -Message "Nothing with id {$id} was found"
+                Write-Verbose -Message "Nothing with id {$Id} was found"
             }
             else
             {
@@ -388,7 +388,7 @@ function Get-TargetResource
             return $nullResult
         }
 
-        Write-Verbose -Message "Found something with id {$id}"
+        Write-Verbose -Message "Found something with id {$($getValue.Id)}"
         $results = @{
 
             #region resource generator code
@@ -454,7 +454,7 @@ function Get-TargetResource
             Managedidentity                                = $ManagedIdentity.IsPresent
         }
 
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $getValue.Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
