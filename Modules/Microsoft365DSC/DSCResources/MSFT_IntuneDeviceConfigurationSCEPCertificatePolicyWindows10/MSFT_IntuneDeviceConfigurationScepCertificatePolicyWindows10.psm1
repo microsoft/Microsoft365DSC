@@ -579,6 +579,8 @@ function Set-TargetResource
 
         if ($null -eq $RootCertificate)
         {
+            Write-Verbose -Message "Could not find trusted root certificate with Id {$RootCertificateId}, searching by display name {$RootCertificateDisplayName}"
+
             $RootCertificate = Get-MgBetaDeviceManagementDeviceConfiguration `
                 -Filter "DisplayName eq '$RootCertificateDisplayName'" `
                 -ErrorAction SilentlyContinue | `
@@ -586,6 +588,17 @@ function Set-TargetResource
                         $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows81TrustedRootCertificate"
                     }
             $RootCertificateId = $RootCertificate.Id
+
+            if ($null -eq $RootCertificate)
+            {
+                throw "Could not find trusted root certificate with Id {$RootCertificateId} or display name {$RootCertificateDisplayName}"
+            }
+
+            Write-Verbose -Message "Found trusted root certificate with Id {$($RootCertificate.Id)} and DisplayName {$($RootCertificate.DisplayName)}"
+        }
+        else
+        {
+            Write-Verbose -Message "Found trusted root certificate with Id {$RootCertificateId}"
         }
 
         Update-DeviceConfigurationPolicyRootCertificateId `
