@@ -377,7 +377,14 @@ function Get-TargetResource
         }
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            if (-not [String]::IsNullOrEmpty($Id))
+            {
+                Write-Verbose -Message "Nothing with id {$id} was found"
+            }
+            else
+            {
+                Write-Verbose -Message "Nothing with display name {$DisplayName} was found"
+            }
             return $nullResult
         }
 
