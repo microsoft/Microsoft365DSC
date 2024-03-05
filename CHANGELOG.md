@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsGroupPolicyAssignment
+  * Skip assignments that have orphaned/deleted groups or without display name
+    instead of throwing an error
+    FIXES [#4407](https://github.com/microsoft/Microsoft365DSC/issues/4407)
 
 # 1.24.228.1
 

@@ -384,27 +384,24 @@ function Export-TargetResource
         }
         $dscContent = [System.Text.StringBuilder]::new()
         $j = 1
-        $totalCount = $instances.Length
         foreach ($item in $instances)
         {
             [array]$Group = Find-CsGroup -SearchQuery $item.GroupId -ExactMatchOnly $true
-            if ($null -eq $totalCount)
+            if ($null -eq $Group -or $null -eq $Group.DisplayName)
             {
-                $totalCount = 1
+                $Message = "Group with Id {$($item.GroupId)} could not be found, skipping assignment"
+                Write-Host $Message
+                New-M365DSCLogEntry -Message "Error during Export: $Message" `
+                    -Source $($MyInvocation.MyCommand.Source) `
+                    -TenantId $TenantId `
+                    -Credential $Credential
+
+                continue
             }
-            if ($totalCount -Eq 0)
-            {
-                $Message = "GPA The CSsGroup with ID {$($item.GroupId)} could not be found"
-                New-M365DSCLogEntry -Message $Message `
-                    -Source $MyInvocation.MyCommand.ModuleName
-                Write-Error $Message
-                $groupDisplayName = ""
-            } else {
-                $groupDisplayName = $Group[0].DisplayName
-            }
-            Write-Host "    |---[$j/$totalCount] GroupPolicyAssignment {$($Group[0].DisplayName)}" -NoNewline
+
+            Write-Host "    |---[$j/$($instances.Length)] GroupPolicyAssignment {$($Group.DisplayName)-$($item.PolicyType)}" -NoNewline
             $results = @{
-                GroupDisplayName      = $groupDisplayName
+                GroupDisplayName      = $Group.DisplayName
                 GroupId               = $item.GroupId
                 PolicyType            = $item.PolicyType
                 PolicyName            = $item.PolicyName
