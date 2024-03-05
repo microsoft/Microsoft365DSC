@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* TeamsTeam
+  * Add error handling for teams without displayname during export
+  FIXES [#4406](https://github.com/microsoft/Microsoft365DSC/issues/4406)
 
 # 1.24.228.1
 
