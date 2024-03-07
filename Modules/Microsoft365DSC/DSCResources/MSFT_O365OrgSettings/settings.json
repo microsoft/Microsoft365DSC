@@ -77,7 +77,7 @@
                         "name": "ReportSettings.ReadWrite.All"
                     },
                     {
-                        "name": "83f7232f-763c-47b2-a097-e35d2cbe1da5"
+                        "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
                     },
                     {
                         "name": "OrgSettings-Forms.ReadWrite.All"
