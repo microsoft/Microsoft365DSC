@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* O365OrgSettings
+  * Add read permission for extracting M365 apps installation settings instead
+    of extracting them only with read/write permissions
+    FIXES [#4418](https://github.com/microsoft/Microsoft365DSC/issues/4418)
 
 # 1.24.228.1
 
