@@ -12,6 +12,9 @@
                         "name": "ReportSettings.Read.All"
                     },
                     {
+                        "name": "OrgSettings-Microsoft365Install.Read.All"
+                    },
+                    {
                         "name": "OrgSettings-Forms.Read.All"
                     },
                     {
@@ -55,6 +58,9 @@
                     },
                     {
                         "name": "ReportSettings.Read.All"
+                    },
+                    {
+                        "name": "OrgSettings-Microsoft365Install.Read.All"
                     },
                     {
                         "name": "OrgSettings-Forms.Read.All"
