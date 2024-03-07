@@ -1,5 +1,8 @@
 # Change log for Microsoft365DSC
 
+# Unrelease
+* Fix example in documentation for Update-M365DSCAzureAdApplication
+
 
 # 1.24.228.1
 
