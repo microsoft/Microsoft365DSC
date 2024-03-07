@@ -32,6 +32,9 @@
                         "name": "ReportSettings.ReadWrite.All"
                     },
                     {
+                        "name": "OrgSettings-Microsoft365Install.ReadWrite.All"
+                    },
+                    {
                         "name": "OrgSettings-Forms.ReadWrite.All"
                     },
                     {
