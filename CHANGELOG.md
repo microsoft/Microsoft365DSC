@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsTenantDialPlan
+  * Fix output of property NormalizationRules as a string to the blueprint
+    FIXES [#4428](https://github.com/microsoft/Microsoft365DSC/issues/4428)
 
 # 1.24.228.1
 

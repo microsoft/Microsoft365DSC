@@ -646,20 +646,20 @@ function Get-M365DSCNormalizationRulesAsString
     {
         return $null
     }
-    $currentProperty = '@('
+    $currentProperty = "@(`r`n"
 
     foreach ($rule in $params)
     {
-        $currentProperty += "MSFT_TeamsVoiceNormalizationRule{`r`n"
+        $currentProperty += "                MSFT_TeamsVoiceNormalizationRule{`r`n"
         foreach ($key in $rule.Keys)
         {
             if ($key -eq 'Priority')
             {
-                $currentProperty += '                ' + $key + ' = ' + $rule[$key] + "`r`n"
+                $currentProperty += '                    ' + $key + ' = ' + $rule[$key] + "`r`n"
             }
             elseif ($key -eq 'IsInternalExtension')
             {
-                $currentProperty += '                ' + $key + " = `$" + $rule[$key] + "`r`n"
+                $currentProperty += '                    ' + $key + " = `$" + $rule[$key] + "`r`n"
             }
             else
             {
@@ -668,12 +668,13 @@ function Get-M365DSCNormalizationRulesAsString
                 {
                     $value = $value.Replace("'", "''")
                 }
-                $currentProperty += '                ' + $key + " = '" + $value + "'`r`n"
+                $currentProperty += '                    ' + $key + " = '" + $value + "'`r`n"
             }
         }
-        $currentProperty += '            }'
+        $currentProperty += "                }`r`n"
     }
-    $currentProperty += ')'
+    $currentProperty += '            )'
+
     return $currentProperty
 }
 
