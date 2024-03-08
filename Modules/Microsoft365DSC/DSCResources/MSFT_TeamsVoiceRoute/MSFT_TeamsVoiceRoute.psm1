@@ -215,7 +215,7 @@ function Set-TargetResource
         }
     }
 
-    if ($notFoundUsageList)
+    if ($notFoundGatewayList)
     {
         $notFoundGateways = $notFoundGatewayList -join ','
         throw "Please create the Voice Gateway object(s) ($notFoundGateways) using `"TeamsVoiceRoute`""
