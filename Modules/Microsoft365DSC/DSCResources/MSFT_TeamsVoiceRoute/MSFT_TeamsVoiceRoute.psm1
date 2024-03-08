@@ -223,19 +223,12 @@ function Set-TargetResource
     Write-Verbose -Message "Setting Voice Route {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    $SetParameters = $PSBoundParameters
-    $SetParameters.Remove('Ensure') | Out-Null
-    $SetParameters.Remove('Credential') | Out-Null
-    $SetParameters.Remove('ApplicationId') | Out-Null
-    $SetParameters.Remove('TenantId') | Out-Null
-    $SetParameters.Remove('CertificateThumbprint') | Out-Null
-    $SetParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a new Voice Route {$Identity}"
-        New-CsOnlineVoiceRoute @SetParameters
+        New-CsOnlineVoiceRoute @PSBoundParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
@@ -244,7 +237,7 @@ function Set-TargetResource
             into the Set-CsOnlineVoiceRoute cmdlet.
         #>
         Write-Verbose -Message "Updating settings for Voice Route {$Identity}"
-        Set-CsOnlineVoiceRoute @SetParameters
+        Set-CsOnlineVoiceRoute @PSBoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
