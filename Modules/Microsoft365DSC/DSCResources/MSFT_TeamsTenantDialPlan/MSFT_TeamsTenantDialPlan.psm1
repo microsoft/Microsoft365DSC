@@ -262,7 +262,7 @@ function Set-TargetResource
                 -Translation $ruleToAdd.Translation `
                 -InMemory
             Write-Verbose 'VoiceNormalizationRule created'
-            Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Add = $ruleObject }
+            Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{ Add = $ruleObject }
             Write-Verbose 'Updated the Tenant Dial Plan'
         }
         foreach ($ruleToRemove in $differences.RulesToRemove)
@@ -277,7 +277,7 @@ function Set-TargetResource
             {
                 Write-Verbose "Removing VoiceNormalizationRule {$($ruleToRemove.Identity)}"
                 Write-Verbose 'VoiceNormalizationRule created'
-                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Remove = $ruleObject }
+                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{ Remove = $ruleObject }
                 Write-Verbose 'Updated the Tenant Dial Plan'
             }
         }
@@ -292,14 +292,14 @@ function Set-TargetResource
             if ($null -ne $ruleObject)
             {
                 Write-Verbose "Updating VoiceNormalizationRule {$($ruleToUpdate.Identity)}"
-                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Remove = $ruleObject }
+                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{ Remove = $ruleObject }
                 $ruleObject = New-CsVoiceNormalizationRule -Identity "Global/$($ruleToUpdate.Identity.Replace('Tag:', ''))" `
                     -Description $ruleToUpdate.Description `
                     -Pattern $ruleToUpdate.Pattern `
                     -Translation $ruleToUpdate.Translation `
                     -InMemory
                 Write-Verbose 'VoiceNormalizationRule Updated'
-                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Add = $ruleObject }
+                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{ Add = $ruleObject }
                 Write-Verbose 'Updated the Tenant Dial Plan'
             }
         }
