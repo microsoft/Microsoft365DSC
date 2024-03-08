@@ -171,6 +171,7 @@ function Set-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -301,6 +302,7 @@ function Test-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -373,6 +375,7 @@ function Export-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     $InformationPreference = 'Continue'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
