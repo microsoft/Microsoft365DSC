@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TeamsVoiceRoute
+  * Fix policy removal and also comparison in Test-TargetResource
 
 # 1.24.228.1
 
