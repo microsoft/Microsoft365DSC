@@ -192,7 +192,7 @@ function Set-TargetResource
     $notFoundUsageList = @()
     foreach ($usage in $OnlinePstnUsages)
     {
-        if ( -not ($existingUsages -match $usage))
+        if (-not ($existingUsages -match $usage))
         {
             $notFoundUsageList += $usage
         }
@@ -209,7 +209,7 @@ function Set-TargetResource
     $notFoundGatewayList = @()
     foreach ($gateway in $OnlinePstnGatewayList)
     {
-        if ( -not ($existingGateways -match $gateway))
+        if (-not ($existingGateways -match $gateway))
         {
             $notFoundGatewayList += $gateway
         }
