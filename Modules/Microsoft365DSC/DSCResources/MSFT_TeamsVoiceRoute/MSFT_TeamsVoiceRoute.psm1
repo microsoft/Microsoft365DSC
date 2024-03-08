@@ -218,7 +218,7 @@ function Set-TargetResource
     if ($notFoundGatewayList)
     {
         $notFoundGateways = $notFoundGatewayList -join ','
-        throw "Please create the Voice Gateway object(s) ($notFoundGateways) using `"TeamsVoiceRoute`""
+        throw "Please create the Voice Gateway object(s) ($notFoundGateways) using cmdlet `"New-CsOnlinePSTNGateway`""
     }
 
     Write-Verbose -Message "Setting Voice Route {$Identity}"
