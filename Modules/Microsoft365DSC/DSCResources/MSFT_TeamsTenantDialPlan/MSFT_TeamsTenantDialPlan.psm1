@@ -307,7 +307,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Tenant Dial Plan {$Identity} exists and shouldn't. Removing it."
-        Remove-CsTenantDialPlan -Identity $Identity -Confirm:$false
+        Remove-CsTenantDialPlan -Identity $Identity
     }
 }
 
