@@ -217,25 +217,13 @@ function Set-TargetResource
             $AllRules += $ruleObject
         }
 
-        $NewParameters = $PSBoundParameters
-        $NewParameters.Remove('Credential') | Out-Null
-        $NewParameters.Remove('ApplicationId') | Out-Null
-        $NewParameters.Remove('TenantId') | Out-Null
-        $NewParameters.Remove('CertificateThumbprint') | Out-Null
-        $NewParameters.Remove('Ensure') | Out-Null
-        $NewParameters.Remove('ManagedIdentity') | Out-Null
-        $NewParameters.NormalizationRules = @{Add = $AllRules }
+        $PSBoundParameters.NormalizationRules = @{ Add = $AllRules }
 
-        New-CsTenantDialPlan @NewParameters
+        New-CsTenantDialPlan @PSBoundParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Tenant Dial Plan {$Identity} already exists. Updating it."
-        $SetParameters = $PSBoundParameters
-        $SetParameters.Remove('Credential') | Out-Null
-        $SetParameters.Remove('Ensure') | Out-Null
-        $SetParameters.Remove('SimpleName') | Out-Null
-        $SetParameters.Remove('ManagedIdentity') | Out-Null
 
         $desiredRules = @()
         foreach ($rule in $NormalizationRules)
