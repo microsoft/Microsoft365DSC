@@ -22,4 +22,5 @@ class MSFT_SPOAccessControlSettings : OMI_BaseResource
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Blocks or limits access to SharePoint and OneDrive content from un-managed devices."), ValueMap{"AllowFullAccess","AllowLimitedAccess","BlockAccess","ProtectionLevel"}, Values{"AllowFullAccess","AllowLimitedAccess","BlockAccess","ProtectionLevel"}] string ConditionalAccessPolicy;
 };
