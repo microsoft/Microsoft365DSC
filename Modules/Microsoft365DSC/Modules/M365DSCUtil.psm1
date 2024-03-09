@@ -577,6 +577,19 @@ function Test-M365DSCParameterState
     #endregion
     $returnValue = $true
 
+    $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+
+    #region Telemetry - Evaluation
+    $dataEvaluation = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $dataEvaluation.Add('Resource', "$Source")
+    $dataEvaluation.Add('Method', 'Test-TargetResource')
+    $dataEvaluation.Add('Tenant', $TenantName)
+    $ValuesToCheckData = $ValuesToCheck | Where-Object -FilterScript {$_ -ne 'Verbose'}
+    $dataEvaluation.Add('Parameters', $ValuesToCheckData -join "`r`n")
+    $dataEvaluation.Add('ParametersCount', $ValuesToCheckData.Length)
+    Add-M365DSCTelemetryEvent -Type 'DriftEvaluation' -Data $dataEvaluation
+    #endregion
+
     $DriftedParameters = @{}
     $DriftObject = @{
         DriftInfo     = @{}
@@ -941,7 +954,6 @@ function Test-M365DSCParameterState
     {
         $EventMessage = [System.Text.StringBuilder]::New()
         $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
-        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
         Write-Verbose -Message "Found Tenant Name: $TenantName"
         $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`" TenantId=`"$TenantName`">`r`n") | Out-Null
         $EventMessage.Append("        <ParametersNotInDesiredState>`r`n") | Out-Null
@@ -951,7 +963,6 @@ function Test-M365DSCParameterState
         $DriftObject.Add('Tenant', $TenantName)
         $driftedData.Add('Resource', $source.Split('_')[1])
         $DriftObject.Add('Resource', $source.Split('_')[1])
-        $driftedData.Add('Event', 'DriftedParameter')
 
         # If custom App Insights is specified, allow for the current and desired values to be captured;
         # ISSUE #1222
@@ -1218,6 +1229,7 @@ function Export-M365DSCConfiguration
         [Switch]
         $Validate
     )
+    $currentStartDateTime = [System.DateTime]::Now
     $Global:M365DSCExportInProgress = $true
     $Global:MaximumFunctionCount = 32767
 
@@ -1395,6 +1407,11 @@ function Export-M365DSCConfiguration
     $Global:M365DSCExportedResourceInstancesNames = $null
     $Global:M365DSCExportInProgress = $false
 
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add('Tenant', $Tenant)
+    $data.Add('M365DSCExportId', $currentExportID)
+    $timeTaken = [System.DateTime]::Now.Subtract($currentStartDateTime)
+    $data.Add('TotalSeconds',$timeTaken.TotalSeconds)
     Add-M365DSCTelemetryEvent -Type 'ExportCompleted' -Data $data
 }
 
