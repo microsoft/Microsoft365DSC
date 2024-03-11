@@ -206,6 +206,9 @@ function Test-TargetResource
         $result = ($instances.Length - $DSCConvertedInstances.Length) -eq 0
 
         $message = [System.Text.StringBuilder]::New()
+        [void]$message.AppendLine("ResourceName:`r`n$ResourceName`r`n")
+        [void]$message.AppendLine("RuleDefinition:`r`n$RuleDefinition`r`n")
+
         if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
         {
             Write-Verbose -Message "Checking the After Rule Count"
@@ -225,12 +228,6 @@ function Test-TargetResource
                 }
 
                 [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
-                [void]$message.AppendLine("`r`nRuleDefinition:`r`n$RuleDefinition")
-                [void]$message.AppendLine("`r`AfterRuleCountQuery:`r`n$AfterRuleCountQuery")
-                Add-M365DSCEvent -Message $message.ToString() `
-                            -EventType 'RuleEvaluation' `
-                            -EntryType 'Warning' `
-                            -EventID 1 -Source $CurrentResourceName
             }
         }
         elseif (-not $result)
@@ -244,11 +241,19 @@ function Test-TargetResource
             }
 
             [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
-            [void]$message.AppendLine("`r`nRuleDefinition:`r`n$RuleDefinition")
+        }
+
+        if (-not $result)
+        {
+            if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
+            {
+                [void]$message.AppendLine("AfterRuleCountQuery:`r`n$AfterRuleCountQuery")
+            }
+
             Add-M365DSCEvent -Message $message.ToString() `
-                    -EventType 'RuleEvaluation' `
-                    -EntryType 'Warning' `
-                    -EventID 1 -Source $CurrentResourceName
+                -EventType 'RuleEvaluation' `
+                -EntryType 'Warning' `
+                -EventID 1 -Source $CurrentResourceName
         }
 
         Write-Verbose -Message "Test-TargetResource returned $result"
