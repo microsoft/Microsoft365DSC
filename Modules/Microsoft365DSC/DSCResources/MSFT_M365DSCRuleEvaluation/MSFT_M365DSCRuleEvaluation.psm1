@@ -209,38 +209,41 @@ function Test-TargetResource
         [void]$message.AppendLine("ResourceName:`r`n$ResourceName`r`n")
         [void]$message.AppendLine("RuleDefinition:`r`n$RuleDefinition`r`n")
 
-        if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
+        if ($instances.Length -eq 0)
         {
-            Write-Verbose -Message "Checking the After Rule Count"
-            $afterRuleCountQueryString = "`$instances.Length $AfterRuleCountQuery"
-            $afterRuleCountQueryBlock = [Scriptblock]::Create($afterRuleCountQueryString)
-            $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
-            if ($instances.Length -eq 0)
+            [void]$message.AppendLine("No instances were found for the given Rule Definition.")
+        }
+        else
+        {
+            if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
             {
-                [void]$message.AppendLine("No instances were found for the given Rule Definition.")
+                Write-Verbose -Message "Checking the After Rule Count"
+                $afterRuleCountQueryString = "`$instances.Length $AfterRuleCountQuery"
+                $afterRuleCountQueryBlock = [Scriptblock]::Create($afterRuleCountQueryString)
+                $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
+                if (-not $result)
+                {
+                    $invalidInstancesLogNames = ''
+                    foreach ($invalidInstance in $instances)
+                    {
+                        $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.ResourceInstanceName)`r`n"
+                    }
+
+                    [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
+                }
             }
             elseif (-not $result)
             {
+                $invalidInstances = Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName
+                # Log drifts for each invalid instances found.
                 $invalidInstancesLogNames = ''
-                foreach ($invalidInstance in $instances)
+                foreach ($invalidInstance in $invalidInstances)
                 {
-                    $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.ResourceInstanceName)`r`n"
+                    $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.InputObject)`r`n"
                 }
 
                 [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
             }
-        }
-        elseif (-not $result)
-        {
-            $invalidInstances = Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName
-            # Log drifts for each invalid instances found.
-            $invalidInstancesLogNames = ''
-            foreach ($invalidInstance in $invalidInstances)
-            {
-                $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.InputObject)`r`n"
-            }
-
-            [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
         }
 
         if (-not $result)
