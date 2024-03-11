@@ -223,23 +223,22 @@ function Test-TargetResource
                 $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
                 if (-not $result)
                 {
-                    $invalidInstancesLogNames = ''
-                    foreach ($invalidInstance in $instances)
-                    {
-                        $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.ResourceInstanceName)`r`n"
-                    }
-
-                    [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
+                    $invalidInstances = $instances.ResourceInstanceName
                 }
             }
-            elseif (-not $result)
+            else
             {
                 $invalidInstances = Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName
+                $invalidInstances = $invalidInstances.InputObject
+            }
+
+            if (-not $result)
+            {
                 # Log drifts for each invalid instances found.
                 $invalidInstancesLogNames = ''
                 foreach ($invalidInstance in $invalidInstances)
                 {
-                    $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.InputObject)`r`n"
+                    $invalidInstancesLogNames += "[$ResourceName]$invalidInstance`r`n"
                 }
 
                 [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
