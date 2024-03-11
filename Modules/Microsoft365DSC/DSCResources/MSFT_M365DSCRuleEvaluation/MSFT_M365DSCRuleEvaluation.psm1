@@ -205,13 +205,13 @@ function Test-TargetResource
 
         $result = ($instances.Length - $DSCConvertedInstances.Length) -eq 0
 
+        $message = [System.Text.StringBuilder]::New()
         if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
         {
             Write-Verbose -Message "Checking the After Rule Count"
             $afterRuleCountQueryString = "`$instances.Length $AfterRuleCountQuery"
             $afterRuleCountQueryBlock = [Scriptblock]::Create($afterRuleCountQueryString)
             $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
-            $message = [System.Text.StringBuilder]::New()
             if ($instances.Length -eq 0)
             {
                 [void]$message.AppendLine("No instances were found for the given Rule Definition.")
@@ -243,7 +243,6 @@ function Test-TargetResource
                 $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.InputObject)`r`n"
             }
 
-            $message = [System.Text.StringBuilder]::New()
             [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
             [void]$message.AppendLine("`r`nRuleDefinition:`r`n$RuleDefinition")
             Add-M365DSCEvent -Message $message.ToString() `
