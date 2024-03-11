@@ -250,7 +250,9 @@ function Test-TargetResource
                     -EntryType 'Warning' `
                     -EventID 1 -Source $CurrentResourceName
         }
+
         Write-Verbose -Message "Test-TargetResource returned $result"
+
         return $result
     }
 }
