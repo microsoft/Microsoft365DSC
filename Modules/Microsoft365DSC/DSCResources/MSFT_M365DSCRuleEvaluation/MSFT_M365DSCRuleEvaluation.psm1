@@ -243,16 +243,13 @@ function Test-TargetResource
                 $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.InputObject)`r`n"
             }
 
-            if (-not $result)
-            {
-                $message = [System.Text.StringBuilder]::New()
-                [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
-                [void]$message.AppendLine("`r`nRuleDefinition:`r`n$RuleDefinition")
-                Add-M365DSCEvent -Message $message.ToString() `
-                        -EventType 'RuleEvaluation' `
-                        -EntryType 'Warning' `
-                        -EventID 1 -Source $CurrentResourceName
-            }
+            $message = [System.Text.StringBuilder]::New()
+            [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
+            [void]$message.AppendLine("`r`nRuleDefinition:`r`n$RuleDefinition")
+            Add-M365DSCEvent -Message $message.ToString() `
+                    -EventType 'RuleEvaluation' `
+                    -EntryType 'Warning' `
+                    -EventID 1 -Source $CurrentResourceName
         }
         Write-Verbose -Message "Test-TargetResource returned $result"
         return $result
