@@ -224,12 +224,17 @@ function Test-TargetResource
                 if (-not $result)
                 {
                     $invalidInstances = $instances.ResourceInstanceName
+
+                    [void]$message.AppendLine("AfterRuleCountQuery:`r`n$AfterRuleCountQuery`r`n")
+                    $MessagePrefix = "The following resource instance(s) matched a rule validation, but did not meet the AfterRuleCountQuery:`r`n"
                 }
             }
             else
             {
                 $invalidInstances = Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName
                 $invalidInstances = $invalidInstances.InputObject
+
+                $MessagePrefix = "The following resource instance(s) failed a rule validation:`r`n"
             }
 
             if (-not $result)
@@ -241,17 +246,12 @@ function Test-TargetResource
                     $invalidInstancesLogNames += "[$ResourceName]$invalidInstance`r`n"
                 }
 
-                [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
+                [void]$message.AppendLine("$MessagePrefix$invalidInstancesLogNames")
             }
         }
 
         if (-not $result)
         {
-            if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
-            {
-                [void]$message.AppendLine("AfterRuleCountQuery:`r`n$AfterRuleCountQuery")
-            }
-
             Add-M365DSCEvent -Message $message.ToString() `
                 -EventType 'RuleEvaluation' `
                 -EntryType 'Warning' `
