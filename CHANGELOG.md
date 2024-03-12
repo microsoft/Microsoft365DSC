@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.4.
+  * Updated Microsoft.Graph to version 2.15.0.
+  * Updated MicrosoftTeams to version 6.0.0.
 
 # 1.24.228.1
 
