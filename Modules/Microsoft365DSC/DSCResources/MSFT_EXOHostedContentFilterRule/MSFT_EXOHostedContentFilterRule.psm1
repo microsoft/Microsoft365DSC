@@ -114,7 +114,7 @@ function Get-TargetResource
     {
         try
         {
-            $HostedContentFilterRule = Get-HostedContentFilterRule -Identity $HostedContentFilterPolicy -ErrorAction Stop
+            $HostedContentFilterRule = Get-HostedContentFilterRule -Identity $Identity -ErrorAction Stop
         }
         catch
         {
