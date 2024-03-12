@@ -54,16 +54,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfigurationAssignment -MockWith {
             }
 
-            Mock -CommandName Get-DeviceConfigurationPolicyRootCertificateId -MockWith {
-                return "00000000-0000-0000-0000-000000000000"
+            Mock -CommandName Get-DeviceConfigurationPolicyRootCertificate -MockWith {
+                return @{
+                    Id = "00000000-0000-0000-0000-000000000000"
+                    DisplayName = "RootCertificate"
+                }
             }
 
             Mock -CommandName Update-DeviceConfigurationPolicyRootCertificateId -MockWith {
             }
         }
+
         # Test contexts
         Context -Name "The IntuneDeviceConfigurationScepCertificatePolicyWindows10 should exist but it DOES NOT" -Fixture {
             BeforeAll {
+                $RootCertificateId = ([Guid]::Empty).ToString()
+
                 $testParams = @{
                     CertificateStore = "user"
                     certificateValidityPeriodScale = "days"
@@ -93,13 +99,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     subjectAlternativeNameType = "none"
                     subjectNameFormat = "commonName"
                     SubjectNameFormatString = "FakeStringValue"
-                    RootCertificateId = "00000000-0000-0000-0000-000000000000"
+                    RootCertificateId = $RootCertificateId
+                    RootCertificateDisplayName = "RootCertificate"
                     Ensure = "Present"
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return $null
+                }
+
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -ParameterFilter { $DeviceConfigurationId -eq $RootCertificateId } -MockWith {
+                    $AdditionalProperties = @{}
+                    $AdditionalProperties.'@odata.type' = "#microsoft.graph.windows81TrustedRootCertificate"
+
+                    return @{
+                        Id = $RootCertificateId
+                        DisplayName = "RootCertificate"
+                        AdditionalProperties = $AdditionalProperties
+                    }
                 }
             }
             It 'Should return Values from the Get method' {
@@ -145,7 +163,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     subjectAlternativeNameType = "none"
                     subjectNameFormat = "commonName"
                     SubjectNameFormatString = "FakeStringValue"
-                    RootCertificateId = "00000000-0000-0000-0000-000000000000"
+                    RootCertificateId = $RootCertificateId
+                    RootCertificateDisplayName = "RootCertificate"
                     Ensure = 'Absent'
                     Credential = $Credential;
                 }
@@ -233,6 +252,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     subjectNameFormat = "commonName"
                     SubjectNameFormatString = "FakeStringValue"
                     RootCertificateId = "00000000-0000-0000-0000-000000000000"
+                    RootCertificateDisplayName = "RootCertificate"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
@@ -283,6 +303,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The IntuneDeviceConfigurationScepCertificatePolicyWindows10 exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
+                $RootCertificateId = ([Guid]::Empty).ToString()
+
                 $testParams = @{
                     CertificateStore = "user"
                     certificateValidityPeriodScale = "days"
@@ -312,7 +334,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     subjectAlternativeNameType = "none"
                     subjectNameFormat = "commonName"
                     SubjectNameFormatString = "FakeStringValue"
-                    RootCertificateId = "00000000-0000-0000-0000-000000000000"
+                    RootCertificateId = $RootCertificateId
+                    RootCertificateDisplayName = "RootCertificate"
                     Ensure = 'Present'
                     Credential = $Credential;
                 }
@@ -350,6 +373,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         description = "FakeStringValue"
                         displayName = "FakeStringValue"
                         id = "FakeStringValue"
+                    }
+                }
+
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -ParameterFilter { $DeviceConfigurationId -eq $RootCertificateId } -MockWith {
+                    $AdditionalProperties = @{}
+                    $AdditionalProperties.'@odata.type' = "#microsoft.graph.windows81TrustedRootCertificate"
+
+                    return @{
+                        Id = $RootCertificateId
+                        DisplayName = "RootCertificate"
+                        AdditionalProperties = $AdditionalProperties
                     }
                 }
             }

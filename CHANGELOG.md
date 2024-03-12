@@ -2,10 +2,36 @@
 
 # UNRELEASED
 
+* EXOHostedContentFilterRule
+  * Fixed issue in case of different names of filter rule and filter policy
+  FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
+* IntuneDeviceConfigurationPKCSCertificatePolicyWindows10
+  * Add property RootCertificateDisplayName in order to support assigning root
+    certificates by display name since their Ids in a blueprint might be from a
+    different source tenant
+    FIXES [#3965](https://github.com/microsoft/Microsoft365DSC/issues/3965)
 * IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
   * Fixed policy assignment retrieval when Id is from other tenant, bogus or
     null
     FIXES [#3970](https://github.com/microsoft/Microsoft365DSC/issues/3970)
+* IntuneDeviceConfigurationPolicyAndroidOpenSourceProject
+  * Fixed policy assignment retrieval when Id is from other tenant, bogus or
+    null
+    FIXES [#3971](https://github.com/microsoft/Microsoft365DSC/issues/3971)
+  * Fixed compare logic for CIM instances in Test-TargetResource
+* M365DSCRuleEvaluation
+  * Fix issue when it didn't find any matching resources and it tried to make a
+    comparison
+* O365OrgSettings
+  * Add read permission for extracting M365 apps installation settings instead
+    of extracting them only with read/write permissions
+    FIXES [#4418](https://github.com/microsoft/Microsoft365DSC/issues/4418)
+* TeamsVoiceRoute
+  * Fix policy removal and also comparison in Test-TargetResource
+* MISC
+  * Enhancement to obfuscate password from verbose logging and avoid empty lines
+    FIXES [#4392](https://github.com/microsoft/Microsoft365DSC/issues/4392)
+   * Fix example in documentation for Update-M365DSCAzureAdApplication
 
 # 1.24.228.1
 
