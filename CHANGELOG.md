@@ -10,6 +10,10 @@
     certificates by display name since their Ids in a blueprint might be from a
     different source tenant
     FIXES [#3965](https://github.com/microsoft/Microsoft365DSC/issues/3965)
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
+  * Fixed policy assignment retrieval when Id is from other tenant, bogus or
+    null
+    FIXES [#3970](https://github.com/microsoft/Microsoft365DSC/issues/3970)
 * IntuneDeviceConfigurationPolicyAndroidOpenSourceProject
   * Fixed policy assignment retrieval when Id is from other tenant, bogus or
     null
