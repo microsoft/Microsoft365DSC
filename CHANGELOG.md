@@ -8,6 +8,7 @@
 * MISC
   * Enhancement to obfuscate password from verbose logging and avoid empty lines
     FIXES [#4392](https://github.com/microsoft/Microsoft365DSC/issues/4392)
+  * Initial release of Get-M365DSCEvaluationRulesForConfiguration
 
 # 1.24.228.1
 
