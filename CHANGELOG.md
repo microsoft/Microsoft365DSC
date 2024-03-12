@@ -28,6 +28,10 @@
     FIXES [#4418](https://github.com/microsoft/Microsoft365DSC/issues/4418)
 * TeamsVoiceRoute
   * Fix policy removal and also comparison in Test-TargetResource
+* DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.4.
+  * Updated Microsoft.Graph to version 2.15.0.
+  * Updated MicrosoftTeams to version 6.0.0.
 * MISC
   * Enhancement to obfuscate password from verbose logging and avoid empty lines
     FIXES [#4392](https://github.com/microsoft/Microsoft365DSC/issues/4392)
