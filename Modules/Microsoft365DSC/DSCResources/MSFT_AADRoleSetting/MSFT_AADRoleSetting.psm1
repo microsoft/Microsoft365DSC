@@ -165,6 +165,18 @@ function Get-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
+        [System.Boolean]
+        $AuthenticationContextRequired,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextId,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextName,
+
+        [Parameter()]
         [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
@@ -217,7 +229,7 @@ function Get-TargetResource
     $RoleDefintion = $null
     if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
     {
-        $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+        $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
     }
     elseif (-not [System.String]::IsNullOrEmpty($Id))
     {
@@ -229,7 +241,7 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
         }
         else
         {
@@ -245,7 +257,7 @@ function Get-TargetResource
             $Script:PolicyAssignments = Get-MgBetaPolicyRoleManagementPolicyAssignment -Filter $allFilter -All
         }
 
-        $Policy = $Script:PolicyAssignments | Where-Object -FilterScript {$_.RoleDefinitionId -eq $RoleDefinition.Id}
+        $Policy = $Script:PolicyAssignments | Where-Object -FilterScript { $_.RoleDefinitionId -eq $RoleDefinition.Id }
     }
     catch
     {
@@ -269,6 +281,13 @@ function Get-TargetResource
     $ActivationReqJustification = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Justification'
     $ActivationReqTicket = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Ticketing'
     $ActivationReqMFA = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
+    $AuthenticationContext = ($role | Where-Object { $_.Id -eq 'AuthenticationContext_EndUser_Assignment' }).AdditionalProperties
+    $AuthenticationContextRequired = $AuthenticationContext.isEnabled
+    if ($AuthenticationContextRequired)
+    {
+        $AuthenticationContextId = $AuthenticationContext.claimValue
+        $AuthenticationContextName = (Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference -AuthenticationContextClassReferenceId $AuthenticationContextId).DisplayName
+    }
     $ApprovaltoActivate = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).AdditionalProperties.setting.isApprovalRequired)
     [array]$ActivateApprovers = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).AdditionalProperties.setting.approvalStages.primaryApprovers)
     [string[]]$ActivateApprover = @()
@@ -369,6 +388,9 @@ function Get-TargetResource
             EligibleAssignmentAssigneeNotificationDefaultRecipient    = $EligibleAssignmentAssigneeNotificationDefaultRecipient
             EligibleAssignmentAssigneeNotificationAdditionalRecipient = [System.String[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipient
             EligibleAssignmentAssigneeNotificationOnlyCritical        = $EligibleAssignmentAssigneeNotificationOnlyCritical
+            AuthenticationContextRequired                             = $AuthenticationContextRequired
+            AuthenticationContextId                                   = $AuthenticationContextId
+            AuthenticationContextName                                 = $AuthenticationContextName
             Ensure                                                    = 'Present'
             ApplicationId                                             = $ApplicationId
             TenantId                                                  = $TenantId
@@ -558,6 +580,18 @@ function Set-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
+        [System.Boolean]
+        $AuthenticationContextRequired,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextId,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextName,
+
+        [Parameter()]
         [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
@@ -591,6 +625,7 @@ function Set-TargetResource
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
+    #$PSBoundParameters.Remove('AuthenticationContextName') | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
@@ -1083,6 +1118,22 @@ function Set-TargetResource
                 }
             }
         }
+        elseif ($role.Id -match 'AuthenticationContext_EndUser_Assignment')
+        {
+            if ($PSBoundParameters.ContainsKey('AuthenticationContextRequired') `
+                    -and $PSBoundParameters.ContainsKey('AuthenticationContextId'))
+            {
+                $params = @{
+                    '@odata.type' = $odatatype
+                    'id'          = $role.Id
+                    'isEnabled'   = $true
+                    'claimValue'  = $AuthenticationContextId
+                    target        = @{
+                        '@odata.type' = 'microsoft.graph.unifiedRoleManagementPolicyRuleTarget'
+                    }
+                }
+            }
+        }
 
         if ($params.Count -gt 0)
         {
@@ -1268,6 +1319,18 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
+
+        [Parameter()]
+        [System.Boolean]
+        $AuthenticationContextRequired,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextId,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextName,
 
         [Parameter()]
         [ValidateSet('Present')]

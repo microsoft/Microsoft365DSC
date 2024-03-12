@@ -38,6 +38,10 @@ jobs:
     needs: GenerateResource
     runs-on: ubuntu-latest
 
+    permissions:    
+      contents: write
+      pages: write
+
     # Only when run from the main repo
     if: github.repository == 'microsoft/Microsoft365DSC'
 
