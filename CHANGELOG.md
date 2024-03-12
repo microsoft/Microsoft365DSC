@@ -2,10 +2,19 @@
 
 # UNRELEASED
 
+* M365DSCRuleEvaluation
+  * Fix issue when it didn't find any matching resources and it tried to make a
+    comparison
 * TeamsGroupPolicyAssignment
   * Skip assignments that have orphaned/deleted groups or without display name
     instead of throwing an error
     FIXES [#4407](https://github.com/microsoft/Microsoft365DSC/issues/4407)
+* TeamsVoiceRoute
+  * Fix policy removal and also comparison in Test-TargetResource
+* MISC
+  * Enhancement to obfuscate password from verbose logging and avoid empty lines
+    FIXES [#4392](https://github.com/microsoft/Microsoft365DSC/issues/4392)
+   * Fix example in documentation for Update-M365DSCAzureAdApplication
 
 # 1.24.228.1
 
