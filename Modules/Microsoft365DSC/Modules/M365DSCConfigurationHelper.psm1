@@ -11,7 +11,7 @@
 function Get-M365DSCEvaluationRulesForConfiguration
 {
     [CmdletBinding()]
-    [OutputType([System.String], ParameterSetName = 'Paintext')]
+    [OutputType([System.String], ParameterSetName = 'Plaintext')]
     [OutputType([System.Void], ParameterSetName = 'Configuration')]
     param (
         [Parameter(ParameterSetName = ('Configuration', 'Plaintext'), Mandatory = $true)]
