@@ -5,6 +5,11 @@
 * EXOHostedContentFilterRule
   * Fixed issue in case of different names of filter rule and filter policy
   FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Add property RootCertificateDisplayName in order to support assigning root
+    certificates by display name since their Ids in a blueprint might be from a
+    different source tenant
+    FIXES [#3965](https://github.com/microsoft/Microsoft365DSC/issues/3965)
 * M365DSCRuleEvaluation
   * Fix issue when it didn't find any matching resources and it tried to make a
     comparison
