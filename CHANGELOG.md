@@ -2,9 +2,12 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Fixed issue where group owners were removed from existing groups when unspecified in the config
+    FIXES [#4390](https://github.com/microsoft/Microsoft365DSC/issues/4390)
 * EXOHostedContentFilterRule
   * Fixed issue in case of different names of filter rule and filter policy
-  FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
+    FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
 * IntuneDeviceConfigurationPKCSCertificatePolicyWindows10
   * Add property RootCertificateDisplayName in order to support assigning root
     certificates by display name since their Ids in a blueprint might be from a
@@ -36,12 +39,6 @@
   * Enhancement to obfuscate password from verbose logging and avoid empty lines
     FIXES [#4392](https://github.com/microsoft/Microsoft365DSC/issues/4392)
    * Fix example in documentation for Update-M365DSCAzureAdApplication
-
-# UNRELEASED
-
-* AADGroup
-  * Fixed issue where group owners were removed from existing groups when unspecified in the config
-    FIXES [#4390](https://github.com/microsoft/Microsoft365DSC/issues/4390)
 
 # 1.24.228.1
 
