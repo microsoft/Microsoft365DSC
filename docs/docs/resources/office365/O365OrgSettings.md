@@ -53,21 +53,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Application.Read.All, ReportSettings.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All
+    - Application.Read.All, ReportSettings.Read.All, OrgSettings-Microsoft365Install.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All
 
 - **Update**
 
-    - Application.ReadWrite.All, ReportSettings.ReadWrite.All, OrgSettings-Forms.ReadWrite.All, OrgSettings-Todo.ReadWrite.All, OrgSettings-DynamicsVoice.ReadWrite.All, OrgSettings-AppsAndServices.Read.All
+    - Application.ReadWrite.All, ReportSettings.ReadWrite.All, OrgSettings-Microsoft365Install.ReadWrite.All, OrgSettings-Forms.ReadWrite.All, OrgSettings-Todo.ReadWrite.All, OrgSettings-DynamicsVoice.ReadWrite.All, OrgSettings-AppsAndServices.Read.All
 
 #### Application permissions
 
 - **Read**
 
-    - Application.Read.All, ReportSettings.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All, Tasks.Read.All
+    - Application.Read.All, ReportSettings.Read.All, OrgSettings-Microsoft365Install.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All, Tasks.Read.All
 
 - **Update**
 
-    - Application.ReadWrite.All, ReportSettings.ReadWrite.All, 83f7232f-763c-47b2-a097-e35d2cbe1da5, OrgSettings-Forms.ReadWrite.All, OrgSettings-Todo.ReadWrite.All, OrgSettings-AppsAndServices.ReadWrite.All, OrgSettings-DynamicsVoice.ReadWrite.All, Tasks.ReadWrite.All
+    - Application.ReadWrite.All, ReportSettings.ReadWrite.All, OrgSettings-Microsoft365Install.ReadWrite.All, OrgSettings-Forms.ReadWrite.All, OrgSettings-Todo.ReadWrite.All, OrgSettings-AppsAndServices.ReadWrite.All, OrgSettings-DynamicsVoice.ReadWrite.All, Tasks.ReadWrite.All
 
 ## Examples
 
