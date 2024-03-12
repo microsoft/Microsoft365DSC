@@ -675,8 +675,8 @@
                 {
                     Name                 = "Integration Address Book"
                     AddressLists         = @('\All Users')
-                    DiffRetentionPeriod  = "30"
-                    IsDefault            = $false # Updated Property
+                    DiffRetentionPeriod  = "60" # Updated Property
+                    IsDefault            = $true
                     Ensure               = "Present"
                     Credential           = $Credscredential
                 }

@@ -249,8 +249,18 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $queue = Get-CsCallQueue -NameFilter $Name `
-            -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.Name -eq $Name}
+        if (-not $Script:ExportMode)
+        {
+            Write-Host -Message "Getting Office 365 queue $Name"
+            $queue = Get-CsCallQueue -NameFilter $Name `
+                -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.Name -eq $Name}
+        }
+        else
+        {
+            Write-Host -Message "Retrieving queue $Name from the exported instances"
+            $queue = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+        }
+
 
         if ($null -eq $queue)
         {
