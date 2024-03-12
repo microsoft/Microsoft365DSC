@@ -41,6 +41,9 @@ class MSFT_AADRoleSetting : OMI_BaseResource
     [Write, Description("Send notifications when eligible members activate this role: Notification to activated user (requestor), default recipient (True/False)")] Boolean EligibleAssignmentAssigneeNotificationDefaultRecipient;
     [Write, Description("Send notifications when eligible members activate this role: Notification to activated user (requestor), additional recipient (UPN)")] String EligibleAssignmentAssigneeNotificationAdditionalRecipient[];
     [Write, Description("Send notifications when eligible members activate this role: Notification to activated user (requestor), only critical Email (True/False)")] Boolean EligibleAssignmentAssigneeNotificationOnlyCritical;
+    [Write, Description("Authorization context is required (True/False)")] Boolean AuthenticationContextRequired;
+    [Write, Description("Descriptive name of associated authorization context")] String AuthenticationContextName;
+    [Write, Description("Authorization context id")] String AuthenticationContextId;
     [Write, Description("Specify if the Azure AD role setting should exist or not."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials for the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
