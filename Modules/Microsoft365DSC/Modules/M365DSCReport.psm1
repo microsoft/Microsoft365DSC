@@ -6,28 +6,28 @@ This function creates a new Markdown document from the specified exported config
 Internal, Hidden
 #>
 
-Function New-M365DSCConfigurationToMarkdown
-  {
-      [CmdletBinding()]
-      [OutputType([System.String])]
-      param
-      (
-          [Parameter()]
-          [Array]
-          $ParsedContent,
+function New-M365DSCConfigurationToMarkdown
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+     param
+     (
+        [Parameter()]
+        [Array]
+        $ParsedContent,
 
-          [Parameter()]
-          [System.String]
-          $OutputPath,
+        [Parameter()]
+        [System.String]
+        $OutputPath,
 
-          [Parameter()]
-          [System.String]
-          $TemplateName,
+        [Parameter()]
+        [System.String]
+        $TemplateName,
 
-          [Parameter()]
-          [Switch]
-          $SortProperties
-      )
+        [Parameter()]
+        [Switch]
+        $SortProperties
+    )
 
       $crlf = "`r`n"
       if ([System.String]::IsNullOrEmpty($TemplateName))
@@ -44,7 +44,7 @@ Function New-M365DSCConfigurationToMarkdown
       {
           # Create a new table for each resource
           $percentage = [math]::Round(($currentCount / $totalCount) * 100, 2)
-          Write-Progress -Activity 'Processing generated DSC Object' -Status ("{0:N2} completed - $($resource.ResourceName)" -f $percentage) -PercentComplete $percentage
+          Write-Progress -Activity 'Processing generated DSC Object' -Status ("{0:N2}% completed - $($resource.ResourceName)" -f $percentage) -PercentComplete $percentage
 
           $fullMD += "## " + $resource.ResourceInstanceName + $crlf
           $fullMD += "|Item|Value|`r`n"
@@ -180,7 +180,7 @@ function New-M365DSCConfigurationToHTML
     foreach ($resource in $parsedContent)
     {
         $percentage = [math]::Round(($currentCount / $totalCount) * 100, 2)
-        Write-Progress -Activity 'Processing generated DSC Object' -Status ("{0:N2} completed - $($resource.ResourceName)" -f $percentage) -PercentComplete $percentage
+        Write-Progress -Activity 'Processing generated DSC Object' -Status ("{0:N2}% completed - $($resource.ResourceName)" -f $percentage) -PercentComplete $percentage
 
         $partHTML = "<div width='100%' style='text-align:center;'><table width='80%' style='margin-left:auto; margin-right:auto;'>"
         $partHTML += "<tr><th rowspan='" + ($resource.Keys.Count) + "' width='20%'>"
@@ -216,17 +216,39 @@ function New-M365DSCConfigurationToHTML
                 $value = "`$Null"
                 if ($null -ne $resource.$property)
                 {
-                    if ($resource.$property.GetType().Name -eq 'Object[]')
+                    if ($resource.$property.GetType().Name -eq 'Object[]' -or `
+                        $resource.$property.GetType().Name -eq 'Hashtable')
                     {
-                        if ($resource.$property -and ($resource.$property[0].GetType().Name -eq 'Hashtable' -or
-                                $resource.$property[0].GetType().Name -eq 'OrderedDictionary'))
+                        if ($resource.$property -and `
+                            ($resource.$property.GetType().Name -eq 'Hashtable' -or `
+                            $resource.$property[0].GetType().Name -eq 'Hashtable')
+                        )
                         {
                             $value = ''
                             foreach ($entry in $resource.$property)
                             {
                                 foreach ($key in $entry.Keys)
                                 {
-                                    $value += "<li>$key = $($entry.$key)</li>"
+                                    if ($key -ne 'CIMInstance')
+                                    {
+                                        if ($entry.$key.GetType().Name -eq 'Hashtable' -or `
+                                            $entry.$key.GetType().Name -eq 'Object[]')
+                                        {
+                                            foreach ($subItem in $entry.$key)
+                                            {
+                                                $value += "<table width='100%'><tr><th colspan='2' style='background-color:silver;text-align:center;'>$key</th></tr>"
+                                                foreach ($subkey in $subItem.Keys)
+                                                {
+                                                    $value += "<tr><td style='padding:5px;text-align:right;border:1px solid black;'>$subkey</td><td style='border:1px solid black;'>$($subItem.$subKey)</td></tr>"
+                                                }
+                                                $value += "</tr></table>"
+                                            }
+                                        }
+                                        else
+                                        {
+                                            $value += "<li>$key = $($entry.$key)</li>"
+                                        }
+                                    }
                                 }
                                 $value += '<hr />'
                             }
@@ -745,8 +767,10 @@ function Compare-M365DSCConfigurations
                                         [array]$driftProperties = @()
                                         foreach ($property in $instance.Keys)
                                         {
-                                            if ($null -eq $destinationResourceInstance."$property" -or $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
-                                                -DifferenceObject ($destinationResourceInstance."$property")))
+                                            if ($null -eq $destinationResourceInstance."$property" -or `
+                                                (-not [System.String]::IsNullOrEmpty($instance."$property") -and
+                                                $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
+                                                -DifferenceObject ($destinationResourceInstance."$property"))))
                                             {
                                                 $driftProperties += @{
                                                     ParameterName      = $property
@@ -812,8 +836,9 @@ function Compare-M365DSCConfigurations
                         }
                         # Needs to be a separate nested if statement otherwise the ReferenceObject can be null and it will error out;
                         elseif ($destinationResource.ContainsKey($destinationPropertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
-                                $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
-                                        -DifferenceObject ($destinationResource.$destinationPropertyName))) -and
+                                (-not [System.String]::IsNullOrEmpty($sourceResource.$propertyName) -and
+                                    $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
+                                        -DifferenceObject ($destinationResource.$destinationPropertyName)))) -and
                             -not ([System.String]::IsNullOrEmpty($destinationResource.$destinationPropertyName) -and [System.String]::IsNullOrEmpty($sourceResource.$propertyName)))
                         {
                             if ($null -eq $drift -and (-not $IsBlueprintAssessment -or $destinationResource.ContainsKey($destinationPropertyName)))
@@ -897,8 +922,10 @@ function Compare-M365DSCConfigurations
                                         $innerDrift = $null
                                         foreach ($property in $instance.Keys)
                                         {
-                                            if ($null -eq $sourceResourceInstance."$property" -or $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
-                                                -DifferenceObject ($sourceResourceInstance."$property")))
+                                            if ($null -eq $sourceResourceInstance."$property" -or `
+                                                (-not [System.String]::IsNullOrEmpty($instance."$property") -and `
+                                                    $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
+                                                -DifferenceObject ($sourceResourceInstance."$property"))))
                                             {
                                                 # Make sure we haven't already added this drift in the delta return object to prevent duplicates.
                                                 $existing = $delta | Where-Object -FilterScript {$_.ResourceName -eq $destinationResource.ResourceName -and `
@@ -1389,7 +1416,7 @@ function New-M365DSCDeltaReport
                 -ExcludedResources $ExcludedResources `
                 -IsBluePrintAssessment $true
         }
-        Else
+        else
         {
             $Delta = Compare-M365DSCConfigurations `
                 -Source $Source `
@@ -1671,7 +1698,7 @@ function New-M365DSCDeltaReport
                                 $sourceValue = "<table width = '100%'>"
                                 $sourceValue += "<tr><th colspan='2' width='100%' style='border:1px solid black; text-align:middle;background-color:#CCC'>$($drift.CimInstanceKey) = '$($drift.CIMInstanceValue)'</th></tr>"
 
-                                if ($drift.ValueInSource.GetType().Name -ne 'OrderedDictionary')
+                                if ($drift.ValueInSource.GetType().Name -ne 'Hashtable')
                                 {
                                     $valueForSource = $drift.ValueInSource
                                     $sourceValue += "<tr><td style='border:1px solid black; text-align:right;'>$($drift.ParameterName)</td><td style='border:1px solid black;'>$valueForSource</td>"
