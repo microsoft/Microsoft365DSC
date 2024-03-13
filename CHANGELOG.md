@@ -11,6 +11,9 @@
 * EXOHostedContentFilterRule
   * Fixed issue in case of different names of filter rule and filter policy
   FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
+* EXOIntraOrganizationConnector
+  * Fixed issue with TargetSharingEpr
+    FIXES [#4381](https://github.com/microsoft/Microsoft365DSC/issues/4381)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneAccountProtectionLocalUserGroupMembershipPolicy
