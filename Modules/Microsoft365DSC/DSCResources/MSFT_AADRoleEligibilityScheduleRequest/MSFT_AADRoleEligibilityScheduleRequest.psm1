@@ -154,16 +154,15 @@
             else
             {
                 Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
+                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
                 if ($PrincipalType -eq 'User')
                 {
-                    Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
                     $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
                     $PrincipalTypeValue = 'User'
                 }
 
                 if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
                 {
-                    Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
                     $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
                     $PrincipalTypeValue = 'Group'
                 }
@@ -817,10 +816,10 @@ function Export-TargetResource
         }
         foreach ($request in $Script:exportedInstances)
         {
-            $displayedKey = $request.Id
+            $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
+            $displayedKey = $RoleDefinitionId.DisplayName + " - " + $request.PrincipalId
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
 
-            $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
             $params = @{
                 Id                    = $request.Id
                 Principal             = $request.PrincipalId

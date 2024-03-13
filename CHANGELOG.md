@@ -2,6 +2,15 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Fixed issue where group owners were removed from existing groups when unspecified in the config
+    FIXES [#4390](https://github.com/microsoft/Microsoft365DSC/issues/4390)
+* EXOHostedContentFilterPolicy
+  * Add support for IntraOrgFilterState parameter
+  FIXES [#4424](https://github.com/microsoft/Microsoft365DSC/issues/4424)
+* EXOHostedContentFilterRule
+  * Fixed issue in case of different names of filter rule and filter policy
+  FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
 * IntuneAccountProtectionLocalUserGroupMembershipPolicy
@@ -43,8 +52,41 @@
 * IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
   * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
   * Fixed an issue with the parameter InterfaceTypes from firewallrules defined as a string instead of string[]
-* M365DSCDRGUtil
-  * Added support for groupDisplayName to all devices and all users groups
+* IntuneDeviceConfigurationPKCSCertificatePolicyWindows10
+  * Add property RootCertificateDisplayName in order to support assigning root
+    certificates by display name since their Ids in a blueprint might be from a
+    different source tenant
+    FIXES [#3965](https://github.com/microsoft/Microsoft365DSC/issues/3965)
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
+  * Fixed policy assignment retrieval when Id is from other tenant, bogus or
+    null
+    FIXES [#3970](https://github.com/microsoft/Microsoft365DSC/issues/3970)
+* IntuneDeviceConfigurationPolicyAndroidOpenSourceProject
+  * Fixed policy assignment retrieval when Id is from other tenant, bogus or
+    null
+    FIXES [#3971](https://github.com/microsoft/Microsoft365DSC/issues/3971)
+  * Fixed compare logic for CIM instances in Test-TargetResource
+* M365DSCRuleEvaluation
+  * Fix issue when it didn't find any matching resources and it tried to make a
+    comparison
+* O365OrgSettings
+  * Add read permission for extracting M365 apps installation settings instead
+    of extracting them only with read/write permissions
+    FIXES [#4418](https://github.com/microsoft/Microsoft365DSC/issues/4418)
+* TeamsVoiceRoute
+  * Fix policy removal and also comparison in Test-TargetResource
+* DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.4.
+  * Updated Microsoft.Graph to version 2.15.0.
+  * Updated MicrosoftTeams to version 6.0.0.
+* MISC
+  * Enhancement to obfuscate password from verbose logging and avoid empty lines
+    FIXES [#4392](https://github.com/microsoft/Microsoft365DSC/issues/4392)
+   * Fix example in documentation for Update-M365DSCAzureAdApplication
+   * Added support for groupDisplayName to all devices and all users groups
+
+# 1.24.228.1
+
 * AADApplication
   * Show current values of resource in Test-TargetResource
 * AADAuthorizationPolicy
@@ -81,17 +123,24 @@
 * EXOActiveSyncDeviceAccessRule
   * Remove extra property GUID that is stopping EXO integration tests from
     running
+* IntuneDeviceConfigurationScepCertificatePolicyWindows10
+  * Fixes an issue where the keyUsage property format was not correctly handled
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Fix update and removal of resource when Identity is from another tenant
     FIXES [#3962](https://github.com/microsoft/Microsoft365DSC/issues/3962)
 * SPOAccessControlSettings
   * Added support for the ConditionalAccessPolicy parameter based on the PNP Module
+* Teams resources
+  * Updated required application permissions to support [Application Based Authentication](https://learn.microsoft.com/en-us/microsoftteams/teams-powershell-application-authentication)
 * TeamsCallQueue
   * Reduce the number of Calls for Export using new cache pattern
     FIXES [[#4191](https://github.com/microsoft/Microsoft365DSC/issues/4192)]
 * TeamsGuestMeetingConfiguration
   * Added the missing parameter AllowTranscription.
     FIXES [#4363](https://github.com/microsoft/Microsoft365DSC/issues/4363)
+* TeamsTeam
+  * Corrected Parameters for Graph Commands when creating a new Team
+    FIXES [#4383](https://github.com/microsoft/Microsoft365DSC/issues/4383)
 * MISC
   * M365DSCDRGUtil
     Add new parameter for customizable assignment identifier
@@ -224,6 +273,7 @@
     * Fix IntuneDeviceEnrolllmentPlatformRestriction comparison in report
       FIXES [#4291](https://github.com/microsoft/Microsoft365DSC/issues/4291)
   * Added new QA test to check for missing description in resource schema
+  * Added new QA test to check for falsely assigned write-premissions in settings.json
 
 # 1.24.207.2
 
@@ -243,7 +293,7 @@
 * SCDLPComplianceRule
   * Properly escapes fancy quotes in the Get method.
 * TeamsMeetingPolicy
-  * Ignore the AllowUserToJoinExternalMeeting  parameterfor drift evaluation
+  * Ignore the AllowUserToJoinExternalMeeting  parameter for drift evaluation
     since it doesn't do anything based on official documentation.
 * DEPENDENCIES
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.180.

@@ -14,7 +14,7 @@
             "application": {
                 "read": [
                     {
-                        "name": "RoleEligibilitySchedule.ReadWrite.Directory"
+                        "name": "RoleEligibilitySchedule.Read.Directory"
                     }
                 ],
                 "update": [

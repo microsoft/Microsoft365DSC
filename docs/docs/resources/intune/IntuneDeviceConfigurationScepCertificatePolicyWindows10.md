@@ -7,7 +7,7 @@
 | **CertificateStore** | Write | String | Target store certificate. Possible values are: user, machine. | `user`, `machine` |
 | **HashAlgorithm** | Write | String | SCEP Hash Algorithm. Possible values are: sha1, sha2. | `sha1`, `sha2` |
 | **KeySize** | Write | String | SCEP Key Size. Possible values are: size1024, size2048, size4096. | `size1024`, `size2048`, `size4096` |
-| **KeyUsage** | Write | String | SCEP Key Usage. Possible values are: keyEncipherment, digitalSignature. | `keyEncipherment`, `digitalSignature` |
+| **KeyUsage** | Write | StringArray[] | SCEP Key Usage. Possible values are: keyEncipherment, digitalSignature. | `keyEncipherment`, `digitalSignature` |
 | **ScepServerUrls** | Write | StringArray[] | SCEP Server Url(s). | |
 | **SubjectAlternativeNameFormatString** | Write | String | Custom String that defines the AAD Attribute. | |
 | **SubjectNameFormatString** | Write | String | Custom format to use with SubjectNameFormat = Custom. Example: CN={{UserName}},E={{EmailAddress}},OU=Enterprise Users,O=Contoso Corporation,L=Redmond,ST=WA,C=US | |
@@ -19,6 +19,7 @@
 | **RenewalThresholdPercentage** | Write | UInt32 | Certificate renewal threshold percentage. Valid values 1 to 99 | |
 | **SubjectAlternativeNameType** | Write | String | Certificate Subject Alternative Name Type. Possible values are: none, emailAddress, userPrincipalName, customAzureADAttribute, domainNameService, universalResourceIdentifier. | `none`, `emailAddress`, `userPrincipalName`, `customAzureADAttribute`, `domainNameService`, `universalResourceIdentifier` |
 | **SubjectNameFormat** | Write | String | Certificate Subject Name Format. Possible values are: commonName, commonNameIncludingEmail, commonNameAsEmail, custom, commonNameAsIMEI, commonNameAsSerialNumber, commonNameAsAadDeviceId, commonNameAsIntuneDeviceId, commonNameAsDurableDeviceId. | `commonName`, `commonNameIncludingEmail`, `commonNameAsEmail`, `custom`, `commonNameAsIMEI`, `commonNameAsSerialNumber`, `commonNameAsAadDeviceId`, `commonNameAsIntuneDeviceId`, `commonNameAsDurableDeviceId` |
+| **RootCertificateDisplayName** | Write | String | Trusted Root Certificate DisplayName | |
 | **RootCertificateId** | Write | String | Trusted Root Certificate Id | |
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
 | **DisplayName** | Key | String | Admin provided name of the device configuration. | |
@@ -142,7 +143,7 @@ Configuration Example
             HashAlgorithm                  = "sha2";
             KeySize                        = "size2048";
             KeyStorageProvider             = "useTpmKspOtherwiseUseSoftwareKsp";
-            KeyUsage                       = "digitalSignature";
+            KeyUsage                       = @("digitalSignature");
             RenewalThresholdPercentage     = 25;
             ScepServerUrls                 = @("https://mydomain.com/certsrv/mscep/mscep.dll");
             SubjectAlternativeNameType     = "none";
@@ -200,7 +201,7 @@ Configuration Example
             HashAlgorithm                  = "sha2";
             KeySize                        = "size2048";
             KeyStorageProvider             = "useTpmKspOtherwiseUseSoftwareKsp";
-            KeyUsage                       = "digitalSignature";
+            KeyUsage                       = @("digitalSignature");
             RenewalThresholdPercentage     = 30; # Updated Property
             ScepServerUrls                 = @("https://mydomain.com/certsrv/mscep/mscep.dll");
             SubjectAlternativeNameType     = "none";
