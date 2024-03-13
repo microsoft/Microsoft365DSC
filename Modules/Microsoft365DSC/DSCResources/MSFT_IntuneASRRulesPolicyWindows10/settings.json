@@ -6,6 +6,9 @@
             "delegated": {
                 "read": [
                     {
+                        "name": "Group.Read.All"
+                    },
+                    {
                         "name": "DeviceManagementConfiguration.Read.All"
                     }
                 ],
@@ -17,6 +20,9 @@
             },
             "application": {
                 "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
                     {
                         "name": "DeviceManagementConfiguration.Read.All"
                     }

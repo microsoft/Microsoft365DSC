@@ -96,14 +96,20 @@ function Get-TargetResource
                     -FilterScript { `
                         $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows10CustomConfiguration" `
                     }
+
+                if ($null -eq $getValue)
+                {
+                    Write-Verbose -Message "Could not find an Intune Device Configuration Custom Policy for Windows10 with DisplayName {$DisplayName}"
+                    return $nullResult
+                }
+                if(([array]$getValue).count -gt 1)
+                {
+                    throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+                }
             }
         }
         #endregion
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Could not find an Intune Device Configuration Custom Policy for Windows10 with DisplayName {$DisplayName}"
-            return $nullResult
-        }
+
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Configuration Custom Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
@@ -115,6 +121,7 @@ function Get-TargetResource
 
             if ($currentomaSettings.isEncrypted -eq $true)
             {
+                write-verbose ("IsEncrypted = true -- $($currentomaSettings.displayName)")
                 $SecretReferenceValueId = $currentomaSettings.secretReferenceValueId
                 $OmaSettingPlainTextValue = Get-OmaSettingPlainTextValue -SecretReferenceValueId $SecretReferenceValueId
                 if (![String]::IsNullOrEmpty($OmaSettingPlainTextValue))
@@ -165,20 +172,16 @@ function Get-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+
+        $returnAssignments = @()
+        $graphAssignments = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        if ($graphAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($graphAssignments)
         }
-        $results.Add('Assignments', $assignmentResult)
+        $results.Add('Assignments', $returnAssignments)
 
         return [System.Collections.Hashtable] $results
     }
@@ -190,7 +193,8 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+            $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
+            return $nullResult
     }
 }
 
@@ -446,6 +450,11 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Configuration Custom Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
     if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
@@ -468,6 +477,10 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
+            if ($key -eq 'Assignments')
+            {
+                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+            }
             if (-Not $testResult)
             {
                 $testResult = $false
@@ -587,7 +600,12 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
             }
 
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             if ($null -ne $Results.OmaSettings)

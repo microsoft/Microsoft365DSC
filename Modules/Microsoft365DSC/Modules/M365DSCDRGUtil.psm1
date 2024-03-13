@@ -1153,8 +1153,20 @@ function ConvertFrom-IntunePolicyAssignment
             $group = Get-MgGroup -GroupId ($groupId) -ErrorAction SilentlyContinue
             if ($null -ne $group)
             {
-                $hashAssignment.add('groupDisplayName', $group.DisplayName)
+                $groupDisplayName = $group.DisplayName
             }
+        }
+        if ($dataType -eq '#microsoft.graph.allLicensedUsersAssignmentTarget')
+        {
+            $groupDisplayName = 'All users'
+        }
+        if ($dataType -eq '#microsoft.graph.allDevicesAssignmentTarget')
+        {
+            $groupDisplayName = 'All devices'
+        }
+        if ($null -ne $groupDisplayName)
+        {
+            $hashAssignment.add('groupDisplayName', $groupDisplayName)
         }
         if ($IncludeDeviceFilter)
         {
@@ -1338,7 +1350,7 @@ function Update-DeviceConfigurationPolicyAssignment
 
         $body = @{$RootIdentifier = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
         Write-Verbose -Message $body
-        
+
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
     }
     catch
