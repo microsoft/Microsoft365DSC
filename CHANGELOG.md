@@ -7,6 +7,9 @@
     FIXES [#4394](https://github.com/microsoft/Microsoft365DSC/issues/4394)
   * Fixed issue where group owners were removed from existing groups when unspecified in the config
     FIXES [#4390](https://github.com/microsoft/Microsoft365DSC/issues/4390)
+* EXOAcceptedDomain
+  * Update regular expression to support domains with digits
+    FIXES [#4446](https://github.com/microsoft/Microsoft365DSC/issues/4446)
 * EXOHostedContentFilterPolicy
   * Add support for IntraOrgFilterState parameter
   FIXES [#4424](https://github.com/microsoft/Microsoft365DSC/issues/4424)
