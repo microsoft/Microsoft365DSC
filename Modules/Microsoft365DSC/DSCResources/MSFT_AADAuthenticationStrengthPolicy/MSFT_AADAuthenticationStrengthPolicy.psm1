@@ -75,7 +75,7 @@ function Get-TargetResource
 
         if (-not [System.String]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgBetaPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Id
+            $getValue = Get-MgBetaPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Id -ErrorAction 'SilentlyContinue'
         }
 
         if ($null -eq $getValue)
