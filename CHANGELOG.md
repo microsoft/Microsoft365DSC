@@ -2,12 +2,56 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Fixed issue where group owners were removed from existing groups when unspecified in the config
+    FIXES [#4390](https://github.com/microsoft/Microsoft365DSC/issues/4390)
 * EXOHostedContentFilterPolicy
   * Add support for IntraOrgFilterState parameter
   FIXES [#4424](https://github.com/microsoft/Microsoft365DSC/issues/4424)
 * EXOHostedContentFilterRule
   * Fixed issue in case of different names of filter rule and filter policy
   FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneAccountProtectionPolicy
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneAppConfigurationPolicy
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneApplicationControlPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneASRRulesPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceCompliancePolicyAndroid
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceCompliancePolicyiOs
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceCompliancePolicyMacOS
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceCompliancePolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationDomainJoinPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationEmailProfilePolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from Get-TargetResource
+  * Fixed an issue with the parameter InterfaceTypes from firewallrules defined as a string instead of string[]
 * IntuneDeviceConfigurationPKCSCertificatePolicyWindows10
   * Add property RootCertificateDisplayName in order to support assigning root
     certificates by display name since their Ids in a blueprint might be from a
@@ -39,12 +83,7 @@
   * Enhancement to obfuscate password from verbose logging and avoid empty lines
     FIXES [#4392](https://github.com/microsoft/Microsoft365DSC/issues/4392)
    * Fix example in documentation for Update-M365DSCAzureAdApplication
-
-# UNRELEASED
-
-* AADGroup
-  * Fixed issue where group owners were removed from existing groups when unspecified in the config
-    FIXES [#4390](https://github.com/microsoft/Microsoft365DSC/issues/4390)
+   * Added support for groupDisplayName to all devices and all users groups
 
 # 1.24.228.1
 
@@ -178,7 +217,6 @@
   * Updated Microsoft.Graph to version 2.14.1.
 
 # 1.24.214.2
-
 * AADConditionalAccessPolicy
   * Removed invalid empty string value that was added to the validate set
     of two parameters.
