@@ -70,7 +70,7 @@
         },
         @{
             ModuleName      = 'Microsoft.Graph.Sites'
-            RequiredVersion = '2.14.1'
+            RequiredVersion = '2.15.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Users'

@@ -163,7 +163,7 @@ function Get-TargetResource
     try
     {
         $SPOTenantSettings = Get-PnPTenant -ErrorAction Stop
-        $SPOTenantGraphSettings = Get-MgAdminSharepointSetting # get tenantDefaultTimezone
+        $SPOTenantGraphSettings = Get-MgAdminSharepointSetting -Property TenantDefaultTimeZone # get tenantDefaultTimezone
         $CompatibilityRange = $SPOTenantSettings.CompatibilityRange.Split(',')
         $MinCompat = $null
         $MaxCompat = $null
@@ -378,6 +378,9 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
+    if ($null -ne $TenantDefaultTimezone)
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Credential') | Out-Null
@@ -402,7 +405,6 @@ function Set-TargetResource
 
     if ($CurrentParameters.ContainsKey('TenantDefaultTimezone'))
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
         $tenantGraph = Update-MgAdminSharepointSetting -TenantDefaultTimezone $TenantDefaultTimezone -ErrorAction Stop
     }
 }
