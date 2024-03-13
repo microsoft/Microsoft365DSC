@@ -1,7 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.0.
+
 # 1.24.313.1
 
+* AADAuthenticationStrengthPolicy
+  * Removed the Id paremeter from being checked in the Test-TargetResource.
 * AADGroup
   * Fixed issue when filtering groups by display name
     FIXES [#4394](https://github.com/microsoft/Microsoft365DSC/issues/4394)
