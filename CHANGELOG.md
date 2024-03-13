@@ -3,6 +3,8 @@
 # UNRELEASED
 
 * AADGroup
+  * Fixed issue when filtering groups by display name
+    FIXES [#4394](https://github.com/microsoft/Microsoft365DSC/issues/4394)
   * Fixed issue where group owners were removed from existing groups when unspecified in the config
     FIXES [#4390](https://github.com/microsoft/Microsoft365DSC/issues/4390)
 * EXOHostedContentFilterPolicy
