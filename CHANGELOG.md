@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAuthenticationStrengthPolicy
+  * Removed the Id paremeter from being checked in the Test-TargetResource.
 * EXOHostedContentFilterRule
   * Fixed issue in case of different names of filter rule and filter policy
   FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
