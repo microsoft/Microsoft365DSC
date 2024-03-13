@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOHostedContentFilterPolicy
+  * Add support for IntraOrgFilterState parameter
+  FIXES [#4424](https://github.com/microsoft/Microsoft365DSC/issues/4424)
 * EXOHostedContentFilterRule
   * Fixed issue in case of different names of filter rule and filter policy
   FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
