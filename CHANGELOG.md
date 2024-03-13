@@ -1,5 +1,118 @@
 # Change log for Microsoft365DSC
 
+# 1.24.313.1
+
+* AADGroup
+  * Fixed issue when filtering groups by display name
+    FIXES [#4394](https://github.com/microsoft/Microsoft365DSC/issues/4394)
+  * Fixed issue where group owners were removed from existing groups when unspecified in the config
+    FIXES [#4390](https://github.com/microsoft/Microsoft365DSC/issues/4390)
+* EXOAcceptedDomain
+  * Update regular expression to support domains with digits
+    FIXES [#4446](https://github.com/microsoft/Microsoft365DSC/issues/4446)
+* EXOHostedContentFilterPolicy
+  * Add support for IntraOrgFilterState parameter
+  FIXES [#4424](https://github.com/microsoft/Microsoft365DSC/issues/4424)
+* EXOHostedContentFilterRule
+  * Fixed issue in case of different names of filter rule and filter policy
+  FIXES [#4401](https://github.com/microsoft/Microsoft365DSC/issues/4401)
+* EXOIntraOrganizationConnector
+  * Fixed issue with TargetSharingEpr
+    FIXES [#4381](https://github.com/microsoft/Microsoft365DSC/issues/4381)
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneAccountProtectionLocalUserGroupMembershipPolicy
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneAccountProtectionPolicy
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneAppConfigurationPolicy
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneApplicationControlPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneASRRulesPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceCompliancePolicyAndroid
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceCompliancePolicyAndroidDeviceOwner
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceCompliancePolicyAndroidWorkProfile
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceCompliancePolicyiOs
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceCompliancePolicyMacOS
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceCompliancePolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceConfigurationAdministrativeTemplatePolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceConfigurationDeliveryOptimizationPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceConfigurationDomainJoinPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceConfigurationEmailProfilePolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Added support for assignment GroupDisplayName and improve error handling from
+    Get-TargetResource
+  * Fixed an issue with the parameter InterfaceTypes from firewallrules defined
+    as a string instead of string[]
+* IntuneDeviceConfigurationPKCSCertificatePolicyWindows10
+  * Add property RootCertificateDisplayName in order to support assigning root
+    certificates by display name since their Ids in a blueprint might be from a
+    different source tenant
+    FIXES [#3965](https://github.com/microsoft/Microsoft365DSC/issues/3965)
+* IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator
+  * Fixed policy assignment retrieval when Id is from other tenant, bogus or
+    null
+    FIXES [#3970](https://github.com/microsoft/Microsoft365DSC/issues/3970)
+* IntuneDeviceConfigurationPolicyAndroidOpenSourceProject
+  * Fixed policy assignment retrieval when Id is from other tenant, bogus or
+    null
+    FIXES [#3971](https://github.com/microsoft/Microsoft365DSC/issues/3971)
+  * Fixed compare logic for CIM instances in Test-TargetResource
+* M365DSCRuleEvaluation
+  * Fix issue when it didn't find any matching resources and it tried to make a
+    comparison
+* O365OrgSettings
+  * Add read permission for extracting M365 apps installation settings instead
+    of extracting them only with read/write permissions
+    FIXES [#4418](https://github.com/microsoft/Microsoft365DSC/issues/4418)
+* TeamsVoiceRoute
+  * Fix policy removal and also comparison in Test-TargetResource
+* DEPENDENCIES
+  * Updated DSCParser to version 1.4.0.4.
+  * Updated Microsoft.Graph to version 2.15.0.
+  * Updated MicrosoftTeams to version 6.0.0.
+* MISC
+  * Enhancement to obfuscate password from verbose logging and avoid empty lines
+    FIXES [#4392](https://github.com/microsoft/Microsoft365DSC/issues/4392)
+  * Fix example in documentation for Update-M365DSCAzureAdApplication
+  * Added support for groupDisplayName to all devices and all users groups
 
 # 1.24.228.1
 
@@ -133,7 +246,6 @@
   * Updated Microsoft.Graph to version 2.14.1.
 
 # 1.24.214.2
-
 * AADConditionalAccessPolicy
   * Removed invalid empty string value that was added to the validate set
     of two parameters.
