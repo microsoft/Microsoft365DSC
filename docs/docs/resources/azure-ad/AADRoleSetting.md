@@ -44,6 +44,9 @@
 | **EligibleAssignmentAssigneeNotificationDefaultRecipient** | Write | Boolean | Send notifications when eligible members activate this role: Notification to activated user (requestor), default recipient (True/False) | |
 | **EligibleAssignmentAssigneeNotificationAdditionalRecipient** | Write | StringArray[] | Send notifications when eligible members activate this role: Notification to activated user (requestor), additional recipient (UPN) | |
 | **EligibleAssignmentAssigneeNotificationOnlyCritical** | Write | Boolean | Send notifications when eligible members activate this role: Notification to activated user (requestor), only critical Email (True/False) | |
+| **AuthenticationContextRequired** | Write | Boolean | Authorization context is required (True/False) | |
+| **AuthenticationContextName** | Write | String | Descriptive name of associated authorization context | |
+| **AuthenticationContextId** | Write | String | Authorization context id | |
 | **Ensure** | Write | String | Specify if the Azure AD role setting should exist or not. | `Present` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

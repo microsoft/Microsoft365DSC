@@ -101,12 +101,20 @@ function Get-TargetResource
             {
                 $DiscoveryEndpointValue += '/'
             }
+            if ($IntraOrganizationConnector.TargetSharingEpr)
+            {
+                $TargetSharingEprValue = $IntraOrganizationConnector.TargetSharingEpr.AbsoluteUri.ToString()
+            }
+            else
+            {
+                $TargetSharingEprValue = ''
+            }
             $result = @{
                 Identity              = $Identity
                 DiscoveryEndpoint     = $IntraOrganizationConnector.DiscoveryEndpoint.ToString()
                 Enabled               = $IntraOrganizationConnector.Enabled
                 TargetAddressDomains  = $IntraOrganizationConnector.TargetAddressDomains
-                TargetSharingEpr      = $IntraOrganizationConnector.TargetSharingEpr
+                TargetSharingEpr      = $TargetSharingEprValue
                 Credential            = $Credential
                 Ensure                = 'Present'
                 ApplicationId         = $ApplicationId

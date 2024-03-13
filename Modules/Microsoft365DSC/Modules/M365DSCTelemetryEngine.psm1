@@ -91,59 +91,68 @@ function Add-M365DSCTelemetryEvent
             $Data.Remove('Principal') | Out-Null
 
             # Capture PowerShell Version Info
-            $Data.Add('PSMainVersion', $PSVersionTable.PSVersion.Major.ToString() + '.' + $PSVersionTable.PSVersion.Minor.ToString())
-            $Data.Add('PSVersion', $PSVersionTable.PSVersion.ToString())
-            $Data.Add('PSEdition', $PSVersionTable.PSEdition.ToString())
+            if (-not $Data.Keys.Contains('PSMainVersion'))
+            {
+                $Data.Add('PSMainVersion', $PSVersionTable.PSVersion.Major.ToString() + '.' + $PSVersionTable.PSVersion.Minor.ToString())
+            }
+            if (-not $Data.Keys.Contains('PSVersion'))
+            {
+                $Data.Add('PSVersion', $PSVersionTable.PSVersion.ToString())
+            }
+            if (-not $Data.Keys.Contains('PSEdition'))
+            {
+                $Data.Add('PSEdition', $PSVersionTable.PSEdition.ToString())
+            }
 
-            if ($null -ne $PSVersionTable.BuildVersion)
+            if ($null -ne $PSVersionTable.BuildVersion -and -not $Data.Keys.Contains('PSBuildVersion'))
             {
                 $Data.Add('PSBuildVersion', $PSVersionTable.BuildVersion.ToString())
             }
 
-            if ($null -ne $PSVersionTable.CLRVersion)
+            if ($null -ne $PSVersionTable.CLRVersion -and -not $Data.Keys.Contains('PSCLRVersion'))
             {
                 $Data.Add('PSCLRVersion', $PSVersionTable.CLRVersion.ToString())
             }
 
             # Capture Console/Host Information
-            if ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION)
+            if ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Console')
             }
-            elseif ($host.Name -eq 'Windows PowerShell ISE Host')
+            elseif ($host.Name -eq 'Windows PowerShell ISE Host' -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'ISE')
             }
-            elseif ($host.Name -eq 'ConsoleHost' -and $null -ne $env:WT_SESSION)
+            elseif ($host.Name -eq 'ConsoleHost' -and $null -ne $env:WT_SESSION -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
-                $Data.Add('PowerShellAgent', 'Windows Terminal')
+                $Data.Add('PowerShellAgent', 'Windows Terminal' -and -not $Data.Keys.Contains('PowerShellAgent'))
             }
             elseif ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION -and `
-                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'build')
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'build' -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Azure DevOPS')
                 $Data.Add('AzureDevOPSPipelineType', 'Build')
                 $Data.Add('AzureDevOPSAgent', $env:POWERSHELL_DISTRIBUTION_CHANNEL)
             }
             elseif ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION -and `
-                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'release')
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'release' -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Azure DevOPS')
                 $Data.Add('AzureDevOPSPipelineType', 'Release')
                 $Data.Add('AzureDevOPSAgent', $env:POWERSHELL_DISTRIBUTION_CHANNEL)
             }
             elseif ($host.Name -eq 'Default Host' -and `
-                    $null -ne $env:APPSETTING_FUNCTIONS_EXTENSION_VERSION)
+                    $null -ne $env:APPSETTING_FUNCTIONS_EXTENSION_VERSION -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Azure Function')
                 $Data.Add('AzureFunctionWorkerVersion', $env:FUNCTIONS_WORKER_RUNTIME_VERSION)
             }
-            elseif ($host.Name -eq 'CloudShell')
+            elseif ($host.Name -eq 'CloudShell' -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Cloud Shell')
             }
 
-            if ($null -ne $Data.Resource)
+            if ($null -ne $Data.Resource -and -not $Data.Keys.Contains('Resource'))
             {
                 if ($Data.Resource.StartsWith('MSFT_AAD') -or $Data.Resource.StartsWith('AAD'))
                 {
