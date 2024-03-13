@@ -166,7 +166,11 @@ function Get-TargetResource
             }
             else
             {
-                $filter = "DisplayName eq '$DisplayName'" -replace "'", "''"
+                if ($DisplayName.Contains("'"))
+                {
+                    $DisplayName = $DisplayName -replace "'", "''"
+                }
+                $filter = "DisplayName eq '$DisplayName'"
                 $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
             }
             if ($Group.Length -gt 1)
@@ -273,7 +277,7 @@ function Get-TargetResource
                 Credential                    = $Credential
                 Managedidentity               = $ManagedIdentity.IsPresent
             }
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+
             return $result
         }
     }

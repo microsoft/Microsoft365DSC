@@ -1,33 +1,38 @@
 {
     "resourceName": "IntuneDeviceConfigurationEmailProfilePolicyWindows10",
     "description": "This resource configures an Intune Device Configuration Email Profile Policy for Windows10.",
-    "permissions":    {
-    "graph":  {
-                  "delegated":  {
-                                    "read":  [
-                                                 {
-                                                     "name":  "DeviceManagementConfiguration.Read.All"
-                                                 }
-                                             ],
-                                    "update":  [
-                                                   {
-                                                       "name":  "DeviceManagementConfiguration.ReadWrite.All"
-                                                   }
-                                               ]
-                                },
-                  "application":  {
-                                      "read":  [
-                                                   {
-                                                       "name":  "DeviceManagementConfiguration.Read.All"
-                                                   }
-                                               ],
-                                      "update":  [
-                                                     {
-                                                         "name":  "DeviceManagementConfiguration.ReadWrite.All"
-                                                     }
-                                                 ]
-                                  }
-              }
-}
-
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
 }
