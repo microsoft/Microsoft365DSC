@@ -68,18 +68,33 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
-                return @(@{
-                    target = @{
-                        deviceAndAppManagementAssignmentFilterType = 'none'
-                        deviceAndAppManagementAssignmentFilterId = $null
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            groupId  = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                        }
-                    }
-                })
+            Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
+                return @{
+                    Id          = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
+                    Description = 'My Test Description'
+                    DisplayName = 'My Test'
+                    Assignments = @(@{
+                                        target = @{
+                                            deviceAndAppManagementAssignmentFilterType = 'none'
+                                            deviceAndAppManagementAssignmentFilterId = $null
+                                            AdditionalProperties = @{
+                                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                                                groupId  = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                                            }
+                                        }
+                                    })
+                    Settings    = @(@{
+                                        Id                   = 0
+                                        DefinitionId         = 'deviceConfiguration--windowsIdentityProtectionConfiguration_useSecurityKeyForSignin'
+                                        ValueJson            = 'true'
+                                        AdditionalProperties = @{
+                                            '@odata.type' = '#microsoft.graph.deviceManagementBooleanSettingInstance'
+                                            value = $true
+                                        }
+                                    })
+                }
             }
+
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
 
@@ -142,27 +157,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName             = 'My Test'
                     Ensure                  = 'Present'
                     Identity                = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                    UseSecurityKeyForSignin = $true
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
-                    return @{
-                        Id          = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        DisplayName = 'My Test'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @(@{
-                        Id                   = 0
-                        DefinitionId         = 'deviceConfiguration--windowsIdentityProtectionConfiguration_useSecurityKeyForSignin'
-                        ValueJson            = 'false'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.deviceManagementBooleanSettingInstance'
-                            value = $false
-                        }
-                    })
+                    UseSecurityKeyForSignin = $false
                 }
                 Mock -CommandName Update-MgBetaDeviceManagementIntent -MockWith {
                 }
@@ -201,26 +196,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         } -ClientOnly)
                     )
                 }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
-                    return @{
-                        Id          = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        DisplayName = 'My Test'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @(@{
-                        Id                   = 0
-                        DefinitionId         = 'deviceConfiguration--windowsIdentityProtectionConfiguration_useSecurityKeyForSignin'
-                        ValueJson            = 'true'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.deviceManagementBooleanSettingInstance'
-                            value = $true
-                        }
-                    })
-                }
             }
 
             It 'Should return true from the Test method' {
@@ -244,26 +219,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure      = 'Absent'
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                 }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
-                    return @{
-                        Id          = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        DisplayName = 'My Test'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @(@{
-                        Id                   = 0
-                        DefinitionId         = 'deviceConfiguration--windowsIdentityProtectionConfiguration_useSecurityKeyForSignin'
-                        ValueJson            = 'false'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.deviceManagementBooleanSettingInstance'
-                            value = $false
-                        }
-                    })
-                }
             }
 
             It 'Should return Present from the Get method' {
@@ -286,26 +241,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntent -MockWith {
-                    return @{
-                        Id          = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
-                        Description = 'My Test Description'
-                        DisplayName = 'My Test'
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @(@{
-                        Id                   = 0
-                        DefinitionId         = 'deviceConfiguration--windowsIdentityProtectionConfiguration_useSecurityKeyForSignin'
-                        ValueJson            = 'false'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.deviceManagementBooleanSettingInstance'
-                            value = $false
-                        }
-                    })
                 }
             }
 

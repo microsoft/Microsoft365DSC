@@ -100,6 +100,11 @@ function Get-TargetResource
         $InlineSafetyTipsEnabled = $true,
 
         [Parameter()]
+        [ValidateSet('Default', 'HighConfidencePhish', 'Phish', 'HighConfidenceSpam', 'Spam', 'Disabled')]
+        [System.String]
+        $IntraOrgFilterState = 'Default',
+
+        [Parameter()]
         [ValidateSet('Off', 'On', 'Test')]
         [System.String]
         $IncreaseScoreWithBizOrInfoUrls = 'Off',
@@ -356,6 +361,7 @@ function Get-TargetResource
                 HighConfidenceSpamAction             = $HostedContentFilterPolicy.HighConfidenceSpamAction
                 HighConfidenceSpamQuarantineTag      = $HostedContentFilterPolicy.HighConfidenceSpamQuarantineTag
                 InlineSafetyTipsEnabled              = $HostedContentFilterPolicy.InlineSafetyTipsEnabled
+                IntraOrgFilterState                  = $HostedContentFilterPolicy.IntraOrgFilterState
                 IncreaseScoreWithBizOrInfoUrls       = $HostedContentFilterPolicy.IncreaseScoreWithBizOrInfoUrls
                 IncreaseScoreWithImageLinks          = $HostedContentFilterPolicy.IncreaseScoreWithImageLinks
                 IncreaseScoreWithNumericIps          = $HostedContentFilterPolicy.IncreaseScoreWithNumericIps
@@ -516,6 +522,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $InlineSafetyTipsEnabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Default', 'HighConfidencePhish', 'Phish', 'HighConfidenceSpam', 'Spam', 'Disabled')]
+        [System.String]
+        $IntraOrgFilterState = 'Default',
 
         [Parameter()]
         [ValidateSet('Off', 'On', 'Test')]
@@ -856,6 +867,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $InlineSafetyTipsEnabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Default', 'HighConfidencePhish', 'Phish', 'HighConfidenceSpam', 'Spam', 'Disabled')]
+        [System.String]
+        $IntraOrgFilterState = 'Default',
 
         [Parameter()]
         [ValidateSet('Off', 'On', 'Test')]
