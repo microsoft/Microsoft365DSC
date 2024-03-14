@@ -91,7 +91,7 @@
     Get-TargetResource
   * Fixed an issue with the parameter InterfaceTypes from firewallrules defined
     as a string instead of string[]
-* IntuneDeviceConfigurationPKCSCertificatePolicyWindows10
+* IntuneDeviceConfigurationSCEPCertificatePolicyWindows10
   * Add property RootCertificateDisplayName in order to support assigning root
     certificates by display name since their Ids in a blueprint might be from a
     different source tenant
