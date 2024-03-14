@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* IntuneAppConfigurationPolicy
+  * Fix comparison in Test-TargetResource
+    FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.0.
 
