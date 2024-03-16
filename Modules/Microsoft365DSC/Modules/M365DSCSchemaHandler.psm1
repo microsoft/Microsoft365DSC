@@ -1,6 +1,10 @@
 function New-M365DSCSchemaDefinition
 {
     [CmdletBinding()]
+#Remove
+cd c:\github\microsoft365DSC\
+$verbosePreference = 'Continue'
+#/Remove
 
 $schemaFiles = Get-ChildItem -Path ".\Modules\Microsoft365DSC\DSCResources\*.schema.mof" -Recurse
 
@@ -38,7 +42,7 @@ foreach ($file in $schemaFiles)
                     $itemStart = $line.IndexOf('[') + 1
                     $itemEnd = $line.IndexOf(',', $itemStart)
                     $parameterOption = $line.Substring($itemStart, $itemEnd-$itemStart)
-
+                
                     if ($line.Contains('EmbeddedInstance("'))
                     {
                         $itemStart = $line.IndexOf('EmbeddedInstance("') + 18
@@ -82,4 +86,8 @@ foreach ($file in $schemaFiles)
         $start = $content.IndexOf("`r`nclass ", $start) + 8
     }
     $classDefinitions += $classesInFile
+}
+    $jsonContent = ConvertTo-Json $classDefinitions -Depth 99
+    Set-Content -Value $jsonContent -Path ".\Modules\Microsoft365DSC\SchemaDefinition.json"
+
 }
