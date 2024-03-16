@@ -1,83 +1,93 @@
 function New-M365DSCSchemaDefinition
 {
     [CmdletBinding()]
-    $schemaFiles = Get-ChildItem -Path ".\Modules\Microsoft365DSC\DSCResources\*.schema.mof" -Recurse
+#Remove
+cd c:\github\microsoft365DSC\
+$verbosePreference = 'Continue'
+#/Remove
 
-    $classDefinitions = @{}
-    $classesList = @()
-    foreach ($file in $schemaFiles)
+$schemaFiles = Get-ChildItem -Path ".\Modules\Microsoft365DSC\DSCResources\*.schema.mof" -Recurse
+
+$classDefinitions = @()
+$classesList = @()
+foreach ($file in $schemaFiles)
+{
+    Write-Verbose -Message $file.Name
+    $content = Get-Content $file.FullName -Raw
+    $start = 0
+    $start = $content.IndexOf("`r`nclass ", $start) + 8
+    # For each classes in the current file.
+    $classesInFile = @()
+    while ($start -gt 8)
     {
-        Write-Verbose -Message $file.Name
-        $content = Get-Content $file.FullName -Raw
-        $start = 0
-        $start = $content.IndexOf("`r`nclass ", $start) + 8
-        # For each classes in the current file.
-        $classesInFile = @{}
-        while ($start -gt 8)
+        $end = $content.IndexOf("`r", $start)
+
+        $className = $content.Substring($start, $end-$start).Replace(' : OMI_BaseResource', '')
+        if (-not $classesList.Contains($className))
         {
-            $end = $content.IndexOf("`r", $start)
+            $classesList += $className
+            $currentClassItem = @{
+                ClassName = $className
+                Parameters = @()
+            }
+            $classStart = $content.IndexOf('{', $end) + 1
+            $classEnd = $content.IndexOf('};', $start)
+            $classContent = $content.Substring($classStart, $classEnd-$classStart)
+            $lines = $classContent.Split("`r`n")
 
-            $className = $content.Substring($start, $end-$start).Replace(' : OMI_BaseResource', '')
-            if (-not $classesList.Contains($className))
+            foreach ($line in $lines)
             {
-                $classesList += $className
-                $currentClassItem = @()
-                $classStart = $content.IndexOf('{', $end) + 1
-                $classEnd = $content.IndexOf('};', $start)
-                $classContent = $content.Substring($classStart, $classEnd-$classStart)
-                $lines = $classContent.Split("`r`n")
-
-                foreach ($line in $lines)
+                if (-not [System.String]::IsNullOrEmpty($line))
                 {
-                    if (-not [System.String]::IsNullOrEmpty($line))
+                    $itemStart = $line.IndexOf('[') + 1
+                    $itemEnd = $line.IndexOf(',', $itemStart)
+                    $parameterOption = $line.Substring($itemStart, $itemEnd-$itemStart)
+                
+                    if ($line.Contains('EmbeddedInstance("'))
                     {
-                        $itemStart = $line.IndexOf('[') + 1
-                        $itemEnd = $line.IndexOf(',', $itemStart)
-                        $parameterOption = $line.Substring($itemStart, $itemEnd-$itemStart)
+                        $itemStart = $line.IndexOf('EmbeddedInstance("') + 18
+                        $itemEnd = $line.IndexOf('")]', $itemStart)
+                        $parameterType = $line.Substring($itemStart, $itemEnd-$itemStart)
 
-                        if ($line.Contains('EmbeddedInstance("'))
-                        {
-                            $itemStart = $line.IndexOf('EmbeddedInstance("') + 18
-                            $itemEnd = $line.IndexOf('")]', $itemStart)
-                            $parameterType = $line.Substring($itemStart, $itemEnd-$itemStart)
-
-                            $itemStart = $line.IndexOf(']') + 2
-                            $itemEnd = $line.IndexOf(' ', $itemStart)
-                            $parentType = $line.Substring($itemStart, $itemEnd-$itemStart)
-                        }
-                        else
-                        {
-                            $itemStart = $line.IndexOf(']') + 2
-                            $itemEnd = $line.IndexOf(' ', $itemStart)
-                            $parameterType = $line.Substring($itemStart, $itemEnd-$itemStart)
-                        }
-
-                        $itemStart = $line.IndexOf(' ', $itemEnd) + 1
-                        $itemEnd = $line.IndexOf(';', $itemStart)
-                        $parameterName = $line.Substring($itemStart, $itemEnd-$itemStart)
-
-                        if ($parameterName.Contains('[]'))
-                        {
-                            $parameterType += '[]'
-                            $parameterName = $parameterName.Replace('[]', '')
-                        }
-
-                        $currentClassItem += @{
-                            Option =  $parameterOption
-                            Type   = $parameterType
-                            Name   = $parameterName
-                        }
+                        $itemStart = $line.IndexOf(']') + 2
+                        $itemEnd = $line.IndexOf(' ', $itemStart)
+                        $parentType = $line.Substring($itemStart, $itemEnd-$itemStart)
                     }
-                }
-                if ($null -ne $currentClassItem)
-                {
-                    $classesInFile.Add($className, $currentClassItem)
+                    else
+                    {
+                        $itemStart = $line.IndexOf(']') + 2
+                        $itemEnd = $line.IndexOf(' ', $itemStart)
+                        $parameterType = $line.Substring($itemStart, $itemEnd-$itemStart)
+                    }
+
+                    $itemStart = $line.IndexOf(' ', $itemEnd) + 1
+                    $itemEnd = $line.IndexOf(';', $itemStart)
+                    $parameterName = $line.Substring($itemStart, $itemEnd-$itemStart)
+
+                    if ($parameterName.Contains('[]'))
+                    {
+                        $parameterType += '[]'
+                        $parameterName = $parameterName.Replace('[]', '')
+                    }
+
+                    $currentProperty = @{
+                        Option = $parameterOption
+                        Type   = $parameterType
+                        Name   = $parameterName
+                    }
+                    $currentClassItem.Parameters += $currentProperty
                 }
             }
-            $start = $content.IndexOf("`r`nclass ", $start) + 8
+            if ($null -ne $currentClassItem)
+            {
+                $classesInFile += $currentClassItem
+            }
         }
-        $classDefinitions += $classesInFile
+        $start = $content.IndexOf("`r`nclass ", $start) + 8
     }
+    $classDefinitions += $classesInFile
+}
     $jsonContent = ConvertTo-Json $classDefinitions -Depth 99
     Set-Content -Value $jsonContent -Path ".\Modules\Microsoft365DSC\SchemaDefinition.json"
+
 }
