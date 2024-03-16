@@ -1,10 +1,6 @@
 function New-M365DSCSchemaDefinition
 {
     [CmdletBinding()]
-    #Remove
-cd c:\github\microsoft365DSC\
-$verbosePreference = 'Continue'
-#/Remove
 
 $schemaFiles = Get-ChildItem -Path ".\Modules\Microsoft365DSC\DSCResources\*.schema.mof" -Recurse
 
