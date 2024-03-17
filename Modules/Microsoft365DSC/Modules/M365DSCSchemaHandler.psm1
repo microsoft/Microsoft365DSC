@@ -68,9 +68,9 @@ function New-M365DSCSchemaDefinition
                         }
 
                         $currentProperty = @{
-                            Option = $parameterOption
-                            Type   = $parameterType
-                            Name   = $parameterName
+                            Option  = $parameterOption
+                            CIMType = $parameterType
+                            Name    = $parameterName
                         }
                         $currentClassItem.Parameters += $currentProperty
                     }
