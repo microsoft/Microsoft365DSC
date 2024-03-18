@@ -365,48 +365,40 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $testResult = $true
     if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
-        $testResult = $false
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
     }
+    $testResult = $true
 
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('CustomSettings') | Out-Null
-
-    #region CustomSettings
-    if ($testResult)
+    #Compare Cim instances
+    foreach ($key in $PSBoundParameters.Keys)
     {
-        $source = $PSBoundParameters.CustomSettings
-        $target = $CurrentValues.CustomSettings
-
-        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-        $testResult = Compare-M365DSCComplexObject `
-            -Source ($source) `
-            -Target ($target)
-
-        if (-Not $testResult)
+        $source = $PSBoundParameters.$key
+        $target = $CurrentValues.$key
+        if ($source.getType().Name -like '*CimInstance*')
         {
-            $testResult = $false
-            break
-        }
-        $ValuesToCheck.Remove('CustomSettings') | Out-Null
-    }
-    #endregion
+            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-    #region Assignments
-    if ($testResult)
-    {
-        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
-        $target = $CurrentValues.Assignments
-        $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-        $ValuesToCheck.Remove('Assignments') | Out-Null
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
+
+            if ($key -eq 'Assignments')
+            {
+                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+            }
+
+            if (-Not $testResult)
+            {
+                $testResult = $false
+                break
+            }
+
+            $ValuesToCheck.Remove($key) | Out-Null
+        }
     }
-    #endregion
 
     if ($testResult)
     {
@@ -415,6 +407,7 @@ function Test-TargetResource
             -DesiredValues $PSBoundParameters `
             -ValuesToCheck $ValuesToCheck.Keys
     }
+
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
