@@ -32540,6 +32540,41 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_SCFilePlanProperty",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "FilePlanPropertyDepartment",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "FilePlanPropertyAuthority",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "FilePlanPropertyCategory",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "FilePlanPropertyCitation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "FilePlanPropertyReferenceId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "FilePlanPropertySubCategory",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_SCComplianceTag",
         "Parameters":  [
                            {
@@ -36405,6 +36440,21 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_SPOThemePaletteProperty",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Property",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Value",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_SPOTheme",
         "Parameters":  [
                            {
@@ -37835,6 +37885,26 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_TeamsEmergencyNumber",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EmergencyDialString",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "EmergencyDialMask",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "OnlinePSTNUsage",
                                "Option":  "Write"
                            }
                        ]
@@ -39970,6 +40040,41 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_TeamsVoiceNormalizationRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "Priority",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Description",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Pattern",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Translation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsInternalExtension",
                                "Option":  "Write"
                            }
                        ]
