@@ -5,6 +5,10 @@
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
+* TeamsTenantDialPlan
+  * Fix output of property NormalizationRules as a string to the blueprint
+    FIXES [#4428](https://github.com/microsoft/Microsoft365DSC/issues/4428)
+  * Fix creation, update and deletion of resource
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.0.
 * MISC

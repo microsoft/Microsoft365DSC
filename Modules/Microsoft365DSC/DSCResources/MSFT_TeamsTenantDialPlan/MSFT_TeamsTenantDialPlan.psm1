@@ -97,8 +97,6 @@ function Get-TargetResource
                 Identity              = $Identity.Replace('Tag:', '')
                 Description           = $config.Description
                 NormalizationRules    = $rules
-                ExternalAccessPrefix  = $config.ExternalAccessPrefix
-                OptimizeDeviceDialing = $config.OptimizeDeviceDialing
                 SimpleName            = $config.SimpleName
                 Credential            = $Credential
                 Ensure                = 'Present'
@@ -195,6 +193,19 @@ function Set-TargetResource
     #endregion
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    if ($PSBoundParameters.ContainsKey('OptimizeDeviceDialing'))
+    {
+        $PSBoundParameters.Remove('OptimizeDeviceDialing') | Out-Null
+
+        Write-Verbose -Message "Parameter OptimizeDeviceDialing has been deprecated and must not be used, removing it from PSBoundParameters."
+    }
+    if ($PSBoundParameters.ContainsKey('ExternalAccessPrefix'))
+    {
+        $PSBoundParameters.Remove('ExternalAccessPrefix') | Out-Null
+
+        Write-Verbose -Message "Parameter ExternalAccessPrefix has been deprecated and must not be used, removing it from PSBoundParameters."
+    }
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -215,25 +226,13 @@ function Set-TargetResource
             $AllRules += $ruleObject
         }
 
-        $NewParameters = $PSBoundParameters
-        $NewParameters.Remove('Credential') | Out-Null
-        $NewParameters.Remove('ApplicationId') | Out-Null
-        $NewParameters.Remove('TenantId') | Out-Null
-        $NewParameters.Remove('CertificateThumbprint') | Out-Null
-        $NewParameters.Remove('Ensure') | Out-Null
-        $NewParameters.Remove('ManagedIdentity') | Out-Null
-        $NewParameters.NormalizationRules = @{Add = $AllRules }
+        $PSBoundParameters.NormalizationRules = @{ Add = $AllRules }
 
-        New-CsTenantDialPlan @NewParameters
+        New-CsTenantDialPlan @PSBoundParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Tenant Dial Plan {$Identity} already exists. Updating it."
-        $SetParameters = $PSBoundParameters
-        $SetParameters.Remove('Credential') | Out-Null
-        $SetParameters.Remove('Ensure') | Out-Null
-        $SetParameters.Remove('SimpleName') | Out-Null
-        $SetParameters.Remove('ManagedIdentity') | Out-Null
 
         $desiredRules = @()
         foreach ($rule in $NormalizationRules)
@@ -262,7 +261,7 @@ function Set-TargetResource
                 -Translation $ruleToAdd.Translation `
                 -InMemory
             Write-Verbose 'VoiceNormalizationRule created'
-            Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Add = $ruleObject }
+            Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{ Add = $ruleObject }
             Write-Verbose 'Updated the Tenant Dial Plan'
         }
         foreach ($ruleToRemove in $differences.RulesToRemove)
@@ -277,7 +276,7 @@ function Set-TargetResource
             {
                 Write-Verbose "Removing VoiceNormalizationRule {$($ruleToRemove.Identity)}"
                 Write-Verbose 'VoiceNormalizationRule created'
-                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Remove = $ruleObject }
+                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{ Remove = $ruleObject }
                 Write-Verbose 'Updated the Tenant Dial Plan'
             }
         }
@@ -292,14 +291,14 @@ function Set-TargetResource
             if ($null -ne $ruleObject)
             {
                 Write-Verbose "Updating VoiceNormalizationRule {$($ruleToUpdate.Identity)}"
-                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Remove = $ruleObject }
+                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{ Remove = $ruleObject }
                 $ruleObject = New-CsVoiceNormalizationRule -Identity "Global/$($ruleToUpdate.Identity.Replace('Tag:', ''))" `
                     -Description $ruleToUpdate.Description `
                     -Pattern $ruleToUpdate.Pattern `
                     -Translation $ruleToUpdate.Translation `
                     -InMemory
                 Write-Verbose 'VoiceNormalizationRule Updated'
-                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{Add = $ruleObject }
+                Set-CsTenantDialPlan -Identity $Identity -NormalizationRules @{ Add = $ruleObject }
                 Write-Verbose 'Updated the Tenant Dial Plan'
             }
         }
@@ -307,7 +306,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Tenant Dial Plan {$Identity} exists and shouldn't. Removing it."
-        Remove-CsTenantDialPlan -Identity $Identity -Confirm:$false
+        Remove-CsTenantDialPlan -Identity $Identity
     }
 }
 
@@ -383,6 +382,18 @@ function Test-TargetResource
     Write-Verbose -Message 'Testing configuration of Teams Guest Calling'
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if ($PSBoundParameters.ContainsKey('OptimizeDeviceDialing'))
+    {
+        $PSBoundParameters.Remove('OptimizeDeviceDialing') | Out-Null
+
+        Write-Verbose -Message "Parameter OptimizeDeviceDialing has been deprecated and must not be used, removing it from PSBoundParameters."
+    }
+    if ($PSBoundParameters.ContainsKey('ExternalAccessPrefix'))
+    {
+        $PSBoundParameters.Remove('ExternalAccessPrefix') | Out-Null
+
+        Write-Verbose -Message "Parameter ExternalAccessPrefix has been deprecated and must not be used, removing it from PSBoundParameters."
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -646,20 +657,20 @@ function Get-M365DSCNormalizationRulesAsString
     {
         return $null
     }
-    $currentProperty = '@('
+    $currentProperty = "@(`r`n"
 
     foreach ($rule in $params)
     {
-        $currentProperty += "MSFT_TeamsVoiceNormalizationRule{`r`n"
+        $currentProperty += "                MSFT_TeamsVoiceNormalizationRule{`r`n"
         foreach ($key in $rule.Keys)
         {
             if ($key -eq 'Priority')
             {
-                $currentProperty += '                ' + $key + ' = ' + $rule[$key] + "`r`n"
+                $currentProperty += '                    ' + $key + ' = ' + $rule[$key] + "`r`n"
             }
             elseif ($key -eq 'IsInternalExtension')
             {
-                $currentProperty += '                ' + $key + " = `$" + $rule[$key] + "`r`n"
+                $currentProperty += '                    ' + $key + " = `$" + $rule[$key] + "`r`n"
             }
             else
             {
@@ -668,12 +679,13 @@ function Get-M365DSCNormalizationRulesAsString
                 {
                     $value = $value.Replace("'", "''")
                 }
-                $currentProperty += '                ' + $key + " = '" + $value + "'`r`n"
+                $currentProperty += '                    ' + $key + " = '" + $value + "'`r`n"
             }
         }
-        $currentProperty += '            }'
+        $currentProperty += "                }`r`n"
     }
-    $currentProperty += ')'
+    $currentProperty += '            )'
+
     return $currentProperty
 }
 
