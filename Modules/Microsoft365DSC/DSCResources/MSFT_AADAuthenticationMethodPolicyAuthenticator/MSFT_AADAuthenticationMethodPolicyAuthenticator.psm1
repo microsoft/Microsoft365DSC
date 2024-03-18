@@ -105,7 +105,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexExcludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexExcludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType)
         {
@@ -124,7 +131,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexIncludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexIncludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType)
         {
@@ -154,7 +168,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexExcludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexExcludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType)
         {
@@ -173,7 +194,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexIncludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexIncludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType)
         {
@@ -202,7 +230,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexExcludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexExcludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType)
         {
@@ -221,7 +256,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexIncludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexIncludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType)
         {
