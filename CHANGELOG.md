@@ -5,6 +5,10 @@
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
+* TeamsGroupPolicyAssignment
+  * Skip assignments that have orphaned/deleted groups or without display name
+    instead of throwing an error
+    FIXES [#4407](https://github.com/microsoft/Microsoft365DSC/issues/4407)
 * TeamsTenantDialPlan
   * Fix output of property NormalizationRules as a string to the blueprint
     FIXES [#4428](https://github.com/microsoft/Microsoft365DSC/issues/4428)
