@@ -36520,6 +36520,21 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_SPOUserProfilePropertyInstance",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Key",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Value",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_SPOUserProfileProperty",
         "Parameters":  [
                            {
