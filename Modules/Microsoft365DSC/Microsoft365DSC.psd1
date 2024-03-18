@@ -78,7 +78,8 @@
     'Modules/M365DSCUtil.psm1',
     'Modules/M365DSCDRGUtil.psm1',
     'Modules/EncodingHelpers/M365DSCEmojis.psm1',
-    'Modules/EncodingHelpers/M365DSCStringEncoding.psm1'
+    'Modules/EncodingHelpers/M365DSCStringEncoding.psm1',
+    'Modules/M365DSCConfigurationHelper.psm1'
   )
 
   # Functions to export from this module, for best performance, do not use wildcards and do not delete the entry, use an empty array if there are no functions to export.
@@ -91,6 +92,7 @@
     'Export-M365DSCConfiguration',
     'Export-M365DSCDiagnosticData',
     'Get-M365DSCNotificationEndPointRegistration',
+    'Get-M365DSCEvaluationRulesForConfiguration',
     'Import-M365DSCDependencies',
     'New-M365DSCDeltaReport',
     'New-M365DSCNotificationEndPointRegistration',
