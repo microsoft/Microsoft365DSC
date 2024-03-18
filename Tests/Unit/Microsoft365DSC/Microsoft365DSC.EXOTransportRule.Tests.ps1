@@ -57,14 +57,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-TransportRule -MockWith {
-                    return @{
-                        Name                         = 'Contoso Different Transport Rule'
-                        BetweenMemberOf1             = 'Sales Department'
-                        BetweenMemberOf2             = 'Marketing Department'
-                        ExceptIfSubjectContainsWords = 'Press Release'
-                        RejectMessageReasonText      = 'Messages sent between the Sales and Marketing departments are strictly prohibited.'
-                        FreeBusyAccessLevel          = 'AvailabilityOnly'
-                    }
+                    return $null
                 }
             }
 

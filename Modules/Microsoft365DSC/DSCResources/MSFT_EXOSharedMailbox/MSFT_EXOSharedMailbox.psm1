@@ -10,6 +10,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
         $PrimarySMTPAddress,
 
         [Parameter()]
@@ -84,10 +88,42 @@ function Get-TargetResource
 
     try
     {
-        $mailbox = Get-Mailbox -Identity $DisplayName `
-            -RecipientTypeDetails 'SharedMailbox' `
-            -ResultSize Unlimited `
-            -ErrorAction Stop
+        try
+        {
+            if (-not [System.String]::IsNullOrEmpty($Identity))
+            {
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $mailbox = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+                }
+                else
+                {
+                    $mailbox = $mailbox = Get-Mailbox -Identity $Identity `
+                        -RecipientTypeDetails 'SharedMailbox' `
+                        -ResultSize Unlimited `
+                        -ErrorAction Stop
+                }
+            }
+
+            if ($null -eq $mailbox)
+            {
+                if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
+                {
+                    $mailbox = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                }
+                else
+                {
+                    $mailbox = $mailbox = Get-Mailbox -Identity $DisplayName `
+                        -RecipientTypeDetails 'SharedMailbox' `
+                        -ResultSize Unlimited `
+                        -ErrorAction Stop
+                }
+            }
+        }
+        catch
+        {
+            Write-Verbose -Message "Could not retrieve AAD roledefinition by Id: {$Id}"
+        }
 
         if ($null -eq $mailbox)
         {
@@ -110,6 +146,7 @@ function Get-TargetResource
 
         $result = @{
             DisplayName           = $DisplayName
+            Identity              = $mailbox.Identity
             PrimarySMTPAddress    = $mailbox.PrimarySMTPAddress.ToString()
             Alias                 = $mailbox.Alias
             EmailAddresses        = $CurrentEmailAddresses
@@ -146,6 +183,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Identity,
 
         [Parameter()]
         [System.String]
@@ -326,6 +367,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
         $PrimarySMTPAddress,
 
         [Parameter()]
@@ -454,12 +499,13 @@ function Export-TargetResource
 
     try
     {
-        [array]$mailboxes = Get-Mailbox -RecipientTypeDetails 'SharedMailbox' `
+        $Script:ExportMode = $true
+        [array] $Script:exportedInstances = Get-Mailbox -RecipientTypeDetails 'SharedMailbox' `
             -ResultSize Unlimited `
             -ErrorAction Stop
         $dscContent = ''
         $i = 1
-        if ($mailboxes.Length -eq 0)
+        if ($Script:exportedInstances.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
@@ -467,13 +513,14 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
-        foreach ($mailbox in $mailboxes)
+        foreach ($mailbox in $Script:exportedInstances)
         {
-            Write-Host "    |---[$i/$($mailboxes.Length)] $($mailbox.Name)" -NoNewline
+            Write-Host "    |---[$i/$($Script:exportedInstances.Length)] $($mailbox.Name)" -NoNewline
             $mailboxName = $mailbox.Name
             if ($mailboxName)
             {
                 $params = @{
+                    Identity              = $mailbox.Identity
                     Credential            = $Credential
                     DisplayName           = $mailboxName
                     Alias                 = $mailbox.Alias

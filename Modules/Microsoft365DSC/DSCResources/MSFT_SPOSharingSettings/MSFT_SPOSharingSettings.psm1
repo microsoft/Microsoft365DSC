@@ -193,11 +193,9 @@ function Get-TargetResource
         {
             $DefaultLinkPermission = $SPOSharingSettings.DefaultLinkPermission
         }
-
-        return @{
+        $results = @{
             IsSingleInstance                           = 'Yes'
             SharingCapability                          = $SPOSharingSettings.SharingCapability
-            MySiteSharingCapability                    = $MySiteSharingCapability
             ShowEveryoneClaim                          = $SPOSharingSettings.ShowEveryoneClaim
             ShowAllUsersClaim                          = $SPOSharingSettings.ShowAllUsersClaim
             ShowEveryoneExceptExternalUsersClaim       = $SPOSharingSettings.ShowEveryoneExceptExternalUsersClaim
@@ -206,8 +204,8 @@ function Get-TargetResource
             BccExternalSharingInvitations              = $SPOSharingSettings.BccExternalSharingInvitations
             BccExternalSharingInvitationsList          = $SPOSharingSettings.BccExternalSharingInvitationsList
             RequireAnonymousLinksExpireInDays          = $SPOSharingSettings.RequireAnonymousLinksExpireInDays
-            ExternalUserExpireInDays                   = $SPOCCSharingSettings.ExternalUserExpireInDays
-            ExternalUserExpirationRequired             = $SPOCCSharingSettings.ExternalUserExpirationRequired
+            ExternalUserExpireInDays                   = $SPOSharingSettings.ExternalUserExpireInDays
+            ExternalUserExpirationRequired             = $SPOSharingSettings.ExternalUserExpirationRequired
             SharingAllowedDomainList                   = $allowDomains
             SharingBlockedDomainList                   = $blockDomains
             SharingDomainRestrictionMode               = $SPOSharingSettings.SharingDomainRestrictionMode
@@ -229,6 +227,12 @@ function Get-TargetResource
             Managedidentity                            = $ManagedIdentity.IsPresent
             Ensure                                     = 'Present'
         }
+
+        if (-not [System.String]::IsNullOrEmpty($MySiteSharingCapability))
+        {
+            $results.Add('MySiteSharingCapability', $MySiteSharingCapability)
+        }
+        return $results
     }
     catch
     {
@@ -447,9 +451,9 @@ function Set-TargetResource
         Write-Warning -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured'
         $CurrentParameters.Remove('RequireAnonymousLinksExpireInDays') | Out-Null
     }
-    if ($SharingCapability -ne 'ExternalUserExpirationRequired')
+    if ($ExternalUserExpireInDays -and $ExternalUserExpirationRequired -eq $false)
     {
-        Write-Warning -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserExpirationRequired for that the ExternalUserExpireInDays property cannot be configured'
+        Write-Warning -Message 'ExternalUserExpirationRequired is set to be false. For that the ExternalUserExpireInDays property cannot be configured'
         $CurrentParameters.Remove('ExternalUserExpireInDays') | Out-Null
     }
     if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
@@ -516,7 +520,7 @@ function Set-TargetResource
     Set-PnPTenant @CurrentParameters | Out-Null
     if ($SetMySharingCapability)
     {
-        $mysite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.com/' }
+        $mysite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.com/' -and $_.Template -notmatch '^RedirectSite#' }
         Set-PnPTenantSite -Identity $mysite.Url -SharingCapability $MySiteSharingCapability
     }
 }

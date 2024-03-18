@@ -247,13 +247,37 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
-            $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity  -ErrorAction Stop -ResultSize Unlimited
+            if ($null -ne $PrimarySmtpAddress)
+            {
+                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.PrimarySmtpAddress -eq $PrimarySmtpAddress}
+                $distributionGroupMembers = Get-DistributionGroupMember -Identity $PrimarySmtpAddress `
+                    -ErrorAction 'Stop' `
+                    -ResultSize 'Unlimited'
+            }
+            else
+            {
+                $distributionGroup = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
+                $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity `
+                    -ErrorAction 'Stop' `
+                    -ResultSize 'Unlimited'
+            }
         }
         else
         {
-            $distributionGroup = Get-DistributionGroup -Identity $Identity -ErrorAction Stop
-            $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity  -ErrorAction Stop -ResultSize Unlimited
+            if ($null -ne $PrimarySmtpAddress)
+            {
+                $distributionGroup = Get-DistributionGroup -Identity $PrimarySmtpAddress -ErrorAction Stop
+                $distributionGroupMembers = Get-DistributionGroupMember -Identity $PrimarySmtpAddress `
+                    -ErrorAction 'Stop' `
+                    -ResultSize 'Unlimited'
+            }
+            else
+            {
+                $distributionGroup = Get-DistributionGroup -Identity $Identity -ErrorAction Stop
+                $distributionGroupMembers = Get-DistributionGroupMember -Identity $Identity `
+                    -ErrorAction 'Stop' `
+                    -ResultSize 'Unlimited'
+            }
         }
 
         if ($null -eq $distributionGroup)
@@ -276,6 +300,39 @@ function Get-TargetResource
                 $groupTypeValue = 'Security'
             }
 
+            $ManagedByValue = @()
+            if ($null -ne $distributionGroup.ManagedBy)
+            {
+                foreach ($user in $distributionGroup.ManagedBy)
+                {
+                    try
+                    {
+                        $user = Get-MgUser -UserId $user -ErrorAction Stop
+                        $ManagedByValue += $user.UserPrincipalName
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message "Couldn't retrieve user {$user}"
+                    }
+                }
+            }
+
+            $ModeratedByValue = @()
+            if ($null -ne $distributionGroup.ModeratedBy)
+            {
+                foreach ($user in $distributionGroup.ModeratedBy)
+                {
+                    try
+                    {
+                        $user = Get-MgUser -UserId $user -ErrorAction Stop
+                        $ModeratedByValue += $user.UserPrincipalName
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message "Couldn't retrieve moderating user {$user}"
+                    }
+                }
+            }
             $result = @{
                 Identity                                = $distributionGroup.Identity
                 Alias                                   = $distributionGroup.Alias
@@ -284,11 +341,11 @@ function Get-TargetResource
                 Description                             = $descriptionValue
                 DisplayName                             = $distributionGroup.DisplayName
                 HiddenGroupMembershipEnabled            = $distributionGroup.HiddenGroupMembershipEnabled
-                ManagedBy                               = $distributionGroup.ManagedBy
+                ManagedBy                               = $ManagedByValue
                 MemberDepartRestriction                 = $distributionGroup.MemberDepartRestriction
                 MemberJoinRestriction                   = $distributionGroup.MemberJoinRestriction
                 Members                                 = $distributionGroupMembers.Name
-                ModeratedBy                             = $distributionGroup.ModeratedBy
+                ModeratedBy                             = $ModeratedByValue
                 ModerationEnabled                       = $distributionGroup.ModerationEnabled
                 Name                                    = $distributionGroup.Name
                 Notes                                   = $distributionGroup.Notes
@@ -645,6 +702,7 @@ function Set-TargetResource
         }
         $currentParameters.Remove('OrganizationalUnit') | Out-Null
         $currentParameters.Remove('Type') | Out-Null
+        $currentParameters.Remove('Members') | Out-Null
 
         if ($EmailAddresses.Length -gt 0)
         {
@@ -661,7 +719,7 @@ function Set-TargetResource
         {
             $currentParameters.Identity = $newGroup.Identity
         }
-        Set-DistributionGroup @currentParameters
+        Set-DistributionGroup @currentParameters -BypassSecurityGroupManagerCheck
     }
 }
 
@@ -984,6 +1042,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($distributionGroup.Identity)" -NoNewline
             $params = @{
                 Identity              = $distributionGroup.Identity
+                PrimarySmtpAddress    = $distributionGroup.PrimarySmtpAddress
                 Name                  = $distributionGroup.Name
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId

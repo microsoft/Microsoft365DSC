@@ -125,13 +125,16 @@
             if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
             {
                     Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
+                    $PrincipalTypeValue = $null
                     if ($PrincipalType -eq 'User')
                     {
+                        Write-Verbose -Message "Retrieving Principal by UserPrincipalName {$Principal}"
                         $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
                         $PrincipalTypeValue = 'User'
                     }
                     if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
                     {
+                        Write-Verbose -Message "Retrieving Principal by DisplayName {$Principal}"
                         $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
                         $PrincipalTypeValue = 'Group'
                     }
@@ -146,21 +149,20 @@
                     }
                     Write-Verbose -Message "Found Principal {$PrincipalId}"
                     $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
-                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalId -and $_.RoleDefinitionId -eq $RoleDefinition}
+                    $request = $Script:exportedInstances | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalId -and $_.RoleDefinitionId -eq $RoleDefinition} | Sort-Object -Property CompletedDateTime -Descending
             }
             else
             {
                 Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
+                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
                 if ($PrincipalType -eq 'User')
                 {
-                    Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
                     $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
                     $PrincipalTypeValue = 'User'
                 }
 
                 if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
                 {
-                    Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
                     $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
                     $PrincipalTypeValue = 'Group'
                 }
@@ -177,71 +179,136 @@
                 $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
                 Write-Verbose -Message "Found Role {$RoleDefinitionId}"
 
-                $request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
+                $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'"
+                [Array]$request = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -Filter "PrincipalId eq '$PrincipalId' and RoleDefinitionId eq '$RoleDefinitionId'" | Sort-Object -Property CompletedDateTime -Descending
+`
+                if ($request.Length -gt 1)
+                {
+                    $request = $request[0]
+                }
             }
         }
-        if ($null -eq $request)
+        else
         {
+            $ObjectGuid = [System.Guid]::empty
+            if ($PrincipalType -eq 'User')
+            {
+                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
+
+                if ([System.Guid]::TryParse($Principal,[System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $PrincipalIdValue = Get-MgUser -UserId $Principal -ErrorAction SilentlyContinue
+                }
+                else
+                {
+                    $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
+                }
+                $PrincipalTypeValue = 'User'
+            }
+
+            if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
+            {
+                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
+                if ([System.Guid]::TryParse($Principal,[System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $PrincipalIdValue = Get-MgGroup -GroupId $Principal -ErrorAction SilentlyContinue
+                }
+                else
+                {
+                    $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
+                }
+                $PrincipalTypeValue = 'Group'
+            }
+
+            if ($null -ne $PrincipalIdValue)
+            {
+                $PrincipalId = $PrincipalIdValue.Id
+            }
+            else
+            {
+                return $nullResult
+            }
+            $RoleDefinitionId = (Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$RoleDefinition'").Id
+            $schedule = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -Filter "PrincipalId eq '$($request.PrincipalId)' and RoleDefinitionId eq '$RoleDefinitionId'"
+        }
+        if ($null -eq $schedule -or $null -eq $request)
+        {
+            if ($null -eq $schedule)
+            {
+                Write-Verbose -Message "Could not retrieve the schedule for {$($request.PrincipalId)} & RoleDefinitionId {$RoleDefinitionId}"
+            }
+            if ($null -eq $request)
+            {
+                Write-Verbose -Message "Could not request the schedule for {$RoleDefinition}"
+            }
             return $nullResult
         }
 
         Write-Verbose -Message "Found existing AADRolelLigibilityScheduleRequest"
         if ($PrincipalType -eq 'User')
         {
+            Write-Verbose -Message "Retrieving Principal by UserId {$($request.PrincipalId)}"
             $PrincipalInstance = Get-MgUser -UserId $request.PrincipalId -ErrorAction SilentlyContinue
             $PrincipalTypeValue = 'User'
         }
         if ($null -eq $PrincipalInstance -or $PrincipalType -eq 'Group')
         {
+            Write-Verbose -Message "Retrieving Principal by GroupId {$($request.PrincipalId)}"
+            $requestArray = [Array]$request
+            if ($requestArray.Count -gt 1)
+            {
+                $requestArray = $requestArray | Sort-Object -Property CreatedDateTime -Descending
+                $request = $requestArray[0]
+            }
             $PrincipalInstance = Get-MGGroup -GroupId $request.PrincipalId -ErrorAction SilentlyContinue
             $PrincipalTypeValue = 'Group'
         }
 
         if ($null -eq $PrincipalInstance)
         {
+            Write-Verbose -Message "Couldn't retrieve Principal {$($request.PrincipalId)}"
             return $nullResult
         }
-        $RoleDefinitionValue = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
 
         $ScheduleInfoValue = @{}
 
-        if ($null -ne $request.ScheduleInfo.Expiration)
+        if ($null -ne $schedule.ScheduleInfo.Expiration)
         {
             $expirationValue = @{
-                duration    = $request.ScheduleInfo.Expiration.Duration
-                type        = $request.ScheduleInfo.Expiration.Type
+                duration    = $schedule.ScheduleInfo.Expiration.Duration
+                type        = $schedule.ScheduleInfo.Expiration.Type
             }
-            if ($null -ne $request.ScheduleInfo.Expiration.EndDateTime)
+            if ($null -ne $schedule.ScheduleInfo.Expiration.EndDateTime)
             {
-                $expirationValue.Add('endDateTime', $request.ScheduleInfo.Expiration.EndDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
+                $expirationValue.Add('endDateTime', $schedule.ScheduleInfo.Expiration.EndDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
             }
             $ScheduleInfoValue.Add('expiration', $expirationValue)
         }
-        if ($null -ne $request.ScheduleInfo.Recurrence)
+        if ($null -ne $schedule.ScheduleInfo.Recurrence)
         {
             $recurrenceValue = @{
                 pattern = @{
-                    dayOfMonth     = $request.ScheduleInfo.Recurrence.Pattern.dayOfMonth
-                    daysOfWeek     = $request.ScheduleInfo.Recurrence.Pattern.daysOfWeek
-                    firstDayOfWeek = $request.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek
-                    index          = $request.ScheduleInfo.Recurrence.Pattern.index
-                    interval       = $request.ScheduleInfo.Recurrence.Pattern.interval
-                    month          = $request.ScheduleInfo.Recurrence.Pattern.month
-                    type           = $request.ScheduleInfo.Recurrence.Pattern.type
+                    dayOfMonth     = $schedule.ScheduleInfo.Recurrence.Pattern.dayOfMonth
+                    daysOfWeek     = $schedule.ScheduleInfo.Recurrence.Pattern.daysOfWeek
+                    firstDayOfWeek = $schedule.ScheduleInfo.Recurrence.Pattern.firstDayOfWeek
+                    index          = $schedule.ScheduleInfo.Recurrence.Pattern.index
+                    interval       = $schedule.ScheduleInfo.Recurrence.Pattern.interval
+                    month          = $schedule.ScheduleInfo.Recurrence.Pattern.month
+                    type           = $schedule.ScheduleInfo.Recurrence.Pattern.type
                 }
                 range   = @{
-                    endDate             = $request.ScheduleInfo.Recurrence.Range.endDate
-                    numberOfOccurrences = $request.ScheduleInfo.Recurrence.Range.numberOfOccurrences
-                    recurrenceTimeZone  = $request.ScheduleInfo.Recurrence.Range.recurrenceTimeZone
-                    startDate           = $request.ScheduleInfo.Recurrence.Range.startDate
-                    type                = $request.ScheduleInfo.Recurrence.Range.type
+                    endDate             = $schedule.ScheduleInfo.Recurrence.Range.endDate
+                    numberOfOccurrences = $schedule.ScheduleInfo.Recurrence.Range.numberOfOccurrences
+                    recurrenceTimeZone  = $schedule.ScheduleInfo.Recurrence.Range.recurrenceTimeZone
+                    startDate           = $schedule.ScheduleInfo.Recurrence.Range.startDate
+                    type                = $schedule.ScheduleInfo.Recurrence.Range.type
                 }
             }
             $ScheduleInfoValue.Add('Recurrence', $recurrenceValue)
         }
-        if ($null -ne $request.ScheduleInfo.StartDateTime)
+        if ($null -ne $schedule.ScheduleInfo.StartDateTime)
         {
-            $ScheduleInfoValue.Add('StartDateTime', $request.ScheduleInfo.StartDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
+            $ScheduleInfoValue.Add('StartDateTime', $schedule.ScheduleInfo.StartDateTime.ToString("yyyy-MM-ddThh:mm:ssZ"))
         }
 
         $ticketInfoValue = $null
@@ -254,11 +321,11 @@
         }
 
         $PrincipalValue = $null
-        if ($PrincipalTypeValue -eq 'User')
+        if ($PrincipalType -eq 'User')
         {
             $PrincipalValue = $PrincipalInstance.UserPrincipalName
         }
-        elseif ($PrincipalTypeValue -eq 'Group')
+        if ($null -eq $PrincipalValue -or $PrincipalTypeValue -eq 'Group')
         {
             $PrincipalValue = $PrincipalInstance.DisplayName
         }
@@ -266,7 +333,7 @@
         $results = @{
             Principal             = $PrincipalValue
             PrincipalType         = $PrincipalTypeValue
-            RoleDefinition        = $RoleDefinitionValue.DisplayName
+            RoleDefinition        = $RoleDefinition
             DirectoryScopeId      = $request.DirectoryScopeId
             AppScopeId            = $request.AppScopeId
             Action                = $request.Action
@@ -287,7 +354,7 @@
     }
     catch
     {
-        Write-Verbose "Verbose: $($_.ErrorDetails.Message)"
+        Write-Verbose "Error: $_"
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -620,7 +687,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
+    $ValuesToCheck.Remove("Action") | Out-Null
     if($null -ne $CurrentValues.ScheduleInfo -and $null -ne $ValuesToCheck.ScheduleInfo)
     {
         # Compare ScheduleInfo.Expiration
@@ -729,10 +796,10 @@ function Export-TargetResource
         #region resource generator code
         $schedules = Get-MgBetaRoleManagementDirectoryRoleEligibilitySchedule -All -ErrorAction Stop
         [array] $Script:exportedInstances = @()
+        [array] $allRequests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -All `
+                -Filter "Status ne 'Revoked'" -ErrorAction Stop
         foreach ($schedule in $schedules)
         {
-            [array] $allRequests = Get-MgBetaRoleManagementDirectoryRoleEligibilityScheduleRequest -All `
-                -Filter "Status ne 'Revoked'" -ErrorAction Stop
             [array] $Script:exportedInstances += $allRequests | Where-Object -FilterScript {$_.TargetScheduleId -eq $schedule.Id}
         }
         #endregion
@@ -749,12 +816,14 @@ function Export-TargetResource
         }
         foreach ($request in $Script:exportedInstances)
         {
-            $displayedKey = $request.Id
+            $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
+            $displayedKey = $RoleDefinitionId.DisplayName + " - " + $request.PrincipalId
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
+
             $params = @{
                 Id                    = $request.Id
                 Principal             = $request.PrincipalId
-                RoleDefinition        = 'TempDefinition'
+                RoleDefinition        = $RoleDefinitionId.DisplayName
                 ScheduleInfo          = 'TempSchedule'
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -769,8 +838,17 @@ function Export-TargetResource
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
-
+            try
+            {
+                if ($null -ne $results.ScheduleInfo)
+                {
+                    $Results.ScheduleInfo = Get-M365DSCAzureADEligibilityRequestScheduleInfoAsString -ScheduleInfo $Results.ScheduleInfo
+                }
+            }
+            catch
+            {
+                Write-Verbose -Message "Error converting Schedule: $_"
+            }
             if ($Results.TicketInfo)
             {
                 $Results.TicketInfo = Get-M365DSCAzureADEligibilityRequestTicketInfoAsString -TicketInfo $Results.TicketInfo
@@ -801,15 +879,20 @@ function Export-TargetResource
     }
     catch
     {
-        Write-Verbose -Message "Exception: $($_.Exception.Message)"
-
-        Write-Host $Global:M365DSCEmojiRedX
-
-        New-M365DSCLogEntry -Message 'Error during Export:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+        if ($_.ErrorDetails.Message -like "*The tenant needs an AAD Premium*")
+        {
+            Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
+        }
+        else
+        {
+            Write-Verbose -Message "Exception: $($_.Exception.Message)"
+            Write-Host $Global:M365DSCEmojiRedX
+            New-M365DSCLogEntry -Message 'Error during Export:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return ''
     }

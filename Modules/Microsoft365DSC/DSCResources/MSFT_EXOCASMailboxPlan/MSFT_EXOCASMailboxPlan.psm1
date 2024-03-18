@@ -9,6 +9,10 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
         [Boolean]
         $ActiveSyncEnabled = $true,
 
@@ -91,33 +95,46 @@ function Get-TargetResource
     try
     {
         $CASMailboxPlan = Get-CASMailboxPlan -Identity $Identity -ErrorAction Stop
+        if ($null -eq $MailboxPlan)
+        {
+            Write-Verbose -Message "MailboxPlan $($Identity) does not exist."
 
-        if ($null -eq $CASMailboxPlan)
-        {
-            Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
-            return $nullResult
-        }
-        else
-        {
-            $result = @{
-                Identity              = $Identity
-                ActiveSyncEnabled     = $CASMailboxPlan.ActiveSyncEnabled
-                ImapEnabled           = $CASMailboxPlan.ImapEnabled
-                OwaMailboxPolicy      = $CASMailboxPlan.OwaMailboxPolicy
-                PopEnabled            = $CASMailboxPlan.PopEnabled
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-                TenantId              = $TenantId
+            # Try and retrieve by Display Name
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                $CASMailboxPlan = Get-CASMailboxPlan -Filter "DisplayName -eq '$DisplayName'"
             }
 
-            Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            if ($null -eq $MailboxPlan)
+            {
+                $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
+                if ($null -eq $CASMailboxPlan)
+                {
+                    Write-Verbose -Message "CASMailboxPlan $($Identity) does not exist."
+                    return $nullResult
+                }
+            }
         }
+
+        $result = @{
+            Identity              = $Identity
+            DisplayName           = $CASMailboxPlan.DisplayName
+            ActiveSyncEnabled     = $CASMailboxPlan.ActiveSyncEnabled
+            ImapEnabled           = $CASMailboxPlan.ImapEnabled
+            OwaMailboxPolicy      = $CASMailboxPlan.OwaMailboxPolicy
+            PopEnabled            = $CASMailboxPlan.PopEnabled
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+            TenantId              = $TenantId
+        }
+
+        Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -139,6 +156,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [Boolean]
@@ -217,11 +238,11 @@ function Set-TargetResource
     $CASMailboxPlanParams.Remove('CertificatePassword') | Out-Null
     $CASMailboxPlanParams.Remove('ManagedIdentity') | Out-Null
 
-    $CASMailboxPlans = Get-CASMailboxPlan
-    $CASMailboxPlan = $CASMailboxPlans | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
 
     if ($null -ne $CASMailboxPlan)
     {
+        $CasMailboxPlanParams.Identity = $CASMailboxPlan.Identity
         Write-Verbose -Message "Setting CASMailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $CASMailboxPlanParams)"
         Set-CASMailboxPlan @CASMailboxPlanParams
     }
@@ -240,6 +261,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [Boolean]
@@ -391,6 +416,7 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewline
             $Params = @{
                 Identity              = $CASMailboxPlan.Identity
+                DisplayName           = $CASMailboxPlan.DisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

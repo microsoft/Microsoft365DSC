@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the CAS Mailbox Plan that you want to modify. | |
+| **DisplayName** | Write | String | The display name of the CAS Mailbox Plan. | |
 | **Ensure** | Write | String | CASMailboxPlans cannot be created/removed in O365.  This must be set to 'Present' | `Present` |
 | **ActiveSyncEnabled** | Write | Boolean | The ActiveSyncEnabled parameter enables or disables access to the mailbox by using Exchange Active Sync. Default is $true. | |
 | **ImapEnabled** | Write | Boolean | The ImapEnabled parameter enables or disables access to the mailbox by using IMAP4 clients. The default value is $true for all CAS mailbox plans except ExchangeOnlineDeskless which is $false by default. | |
@@ -50,7 +51,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -60,11 +61,11 @@ Configuration Example
         {
             ActiveSyncEnabled = $True
             OwaMailboxPolicy  = "OwaMailboxPolicy-Default"
-            PopEnabled        = $True
-            Identity          = $CASIdentity
+            PopEnabled        = $False # Updated Property
+            Identity          = 'ExchangeOnlineEnterprise'
             ImapEnabled       = $True
             Ensure            = "Present"
-            Credential        = $credsGlobalAdmin
+            Credential        = $Credscredential
         }
     }
 }

@@ -41,7 +41,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
+        [ValidateSet('Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -91,7 +91,10 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($Id))
+        {
+            $getValue = Get-MgBetaPolicyAuthenticationMethodPolicy -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -290,7 +293,7 @@ function Set-TargetResource
         #endregion
         [Parameter()]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
+        [ValidateSet('Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -357,14 +360,8 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add("@odata.type", "#microsoft.graph.AuthenticationMethodsPolicy")
+        Write-Verbose -Message "Updating AuthenticationMethodPolicy with: `r`n$(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
         Update-MgBetaPolicyAuthenticationMethodPolicy -BodyParameter $UpdateParameters
-        #endregion
-    }
-    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Removing the Azure AD Authentication Method Policy with Id {$($currentInstance.Id)}"
-        #region resource generator code
-        Remove-MgBetaPolicyAuthenticationMethodPolicy
         #endregion
     }
 }
@@ -411,7 +408,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateSet('Absent', 'Present')]
+        [ValidateSet('Present')]
         $Ensure = 'Present',
 
         [Parameter()]
@@ -558,7 +555,7 @@ function Export-TargetResource
     {
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicy `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.DisplayName}
         #endregion
 
         $i = 1
@@ -577,111 +574,112 @@ function Export-TargetResource
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
-            }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
-            $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
-                CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
-            }
 
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            if ($null -ne $Results.RegistrationEnforcement)
-            {
-                $complexMapping = @(
-                    @{
-                        Name = 'RegistrationEnforcement'
-                        CimInstanceName = 'MicrosoftGraphRegistrationEnforcement'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'AuthenticationMethodsRegistrationCampaign'
-                        CimInstanceName = 'MicrosoftGraphAuthenticationMethodsRegistrationCampaign'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ExcludeTargets'
-                        CimInstanceName = 'MicrosoftGraphExcludeTarget'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'IncludeTargets'
-                        CimInstanceName = 'MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget'
-                        IsRequired = $False
-                    }
-                )
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.RegistrationEnforcement `
-                    -CIMInstanceName 'MicrosoftGraphregistrationEnforcement' `
-                    -ComplexTypeMapping $complexMapping
+                Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+                $params = @{
+                    Id = $config.Id
+                    DisplayName           =  $config.DisplayName
+                    Ensure = 'Present'
+                    Credential = $Credential
+                    ApplicationId = $ApplicationId
+                    TenantId = $TenantId
+                    ApplicationSecret = $ApplicationSecret
+                    CertificateThumbprint = $CertificateThumbprint
+                    Managedidentity = $ManagedIdentity.IsPresent
+                }
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                if ($null -ne $Results.RegistrationEnforcement)
                 {
-                    $Results.RegistrationEnforcement = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('RegistrationEnforcement') | Out-Null
-                }
-            }
-            if ($null -ne $Results.SystemCredentialPreferences)
-            {
-                $complexMapping = @(
-                    @{
-                        Name = 'SystemCredentialPreferences'
-                        CimInstanceName = 'MicrosoftGraphSystemCredentialPreferences'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'ExcludeTargets'
-                        CimInstanceName = 'AADAuthenticationMethodPolicyExcludeTarget'
-                        IsRequired = $False
-                    }
-                    @{
-                        Name = 'IncludeTargets'
-                        CimInstanceName = 'AADAuthenticationMethodPolicyIncludeTarget'
-                        IsRequired = $False
-                    }
-                )
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.SystemCredentialPreferences `
-                    -CIMInstanceName 'MicrosoftGraphsystemCredentialPreferences' `
-                    -ComplexTypeMapping $complexMapping
+                    $complexMapping = @(
+                        @{
+                            Name = 'RegistrationEnforcement'
+                            CimInstanceName = 'MicrosoftGraphRegistrationEnforcement'
+                            IsRequired = $False
+                        }
+                        @{
+                            Name = 'AuthenticationMethodsRegistrationCampaign'
+                            CimInstanceName = 'MicrosoftGraphAuthenticationMethodsRegistrationCampaign'
+                            IsRequired = $False
+                        }
+                        @{
+                            Name = 'ExcludeTargets'
+                            CimInstanceName = 'MicrosoftGraphExcludeTarget'
+                            IsRequired = $False
+                        }
+                        @{
+                            Name = 'IncludeTargets'
+                            CimInstanceName = 'MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget'
+                            IsRequired = $False
+                        }
+                    )
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.RegistrationEnforcement `
+                        -CIMInstanceName 'MicrosoftGraphregistrationEnforcement' `
+                        -ComplexTypeMapping $complexMapping
 
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                {
-                    $Results.SystemCredentialPreferences = $complexTypeStringResult
+                    if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.RegistrationEnforcement = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('RegistrationEnforcement') | Out-Null
+                    }
                 }
-                else
+                if ($null -ne $Results.SystemCredentialPreferences)
                 {
-                    $Results.Remove('SystemCredentialPreferences') | Out-Null
-                }
-            }
+                    $complexMapping = @(
+                        @{
+                            Name = 'SystemCredentialPreferences'
+                            CimInstanceName = 'MicrosoftGraphSystemCredentialPreferences'
+                            IsRequired = $False
+                        }
+                        @{
+                            Name = 'ExcludeTargets'
+                            CimInstanceName = 'AADAuthenticationMethodPolicyExcludeTarget'
+                            IsRequired = $False
+                        }
+                        @{
+                            Name = 'IncludeTargets'
+                            CimInstanceName = 'AADAuthenticationMethodPolicyIncludeTarget'
+                            IsRequired = $False
+                        }
+                    )
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                        -ComplexObject $Results.SystemCredentialPreferences `
+                        -CIMInstanceName 'MicrosoftGraphsystemCredentialPreferences' `
+                        -ComplexTypeMapping $complexMapping
 
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            if ($Results.RegistrationEnforcement)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RegistrationEnforcement" -isCIMArray:$False
+                    if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                    {
+                        $Results.SystemCredentialPreferences = $complexTypeStringResult
+                    }
+                    else
+                    {
+                        $Results.Remove('SystemCredentialPreferences') | Out-Null
+                    }
+                }
+
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                if ($Results.RegistrationEnforcement)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RegistrationEnforcement" -isCIMArray:$False
+                }
+                if ($Results.SystemCredentialPreferences)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "SystemCredentialPreferences" -isCIMArray:$False
+                }
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
             }
-            if ($Results.SystemCredentialPreferences)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "SystemCredentialPreferences" -isCIMArray:$False
-            }
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
             $i++
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }

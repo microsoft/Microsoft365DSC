@@ -105,40 +105,44 @@ function Get-TargetResource
 
     try
     {
-        $MessageClassifications = Get-MessageClassification -ErrorAction Stop
+        $MessageClassification = Get-MessageClassification -Identity $Identity -ErrorAction Stop
 
-        $MessageClassification = $MessageClassifications | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $MessageClassification)
         {
-            Write-Verbose -Message "Message Classification policy $($Identity) does not exist."
-            return $nullReturn
-        }
-        else
-        {
-            $result = @{
-                Identity                    = $Identity
-                ClassificationID            = $MessageClassification.ClassificationID
-                DisplayName                 = $MessageClassification.DisplayName
-                DisplayPrecedence           = $MessageClassification.DisplayPrecedence
-                Name                        = $MessageClassification.Name
-                PermissionMenuVisible       = $MessageClassification.PermissionMenuVisible
-                RecipientDescription        = $MessageClassification.RecipientDescription
-                RetainClassificationEnabled = $MessageClassification.RetainClassificationEnabled
-                SenderDescription           = $MessageClassification.SenderDescription
-                Credential                  = $Credential
-                Ensure                      = 'Present'
-                ApplicationId               = $ApplicationId
-                CertificateThumbprint       = $CertificateThumbprint
-                CertificatePath             = $CertificatePath
-                CertificatePassword         = $CertificatePassword
-                Managedidentity             = $ManagedIdentity.IsPresent
-                TenantId                    = $TenantId
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                Write-Verbose -Message "Couldn't retrieve Message Classification policy by Id {$($Identity)}. Trying by DisplayName."
+                $MessageClassification = Get-MessageClassification -Identity $DisplayName
             }
-
-            Write-Verbose -Message "Found Message Classification policy $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            if ($null -eq $MessageClassification)
+            {
+                return $nullReturn
+            }
         }
+
+        $result = @{
+            Identity                    = $Identity
+            ClassificationID            = $MessageClassification.ClassificationID
+            DisplayName                 = $MessageClassification.DisplayName
+            DisplayPrecedence           = $MessageClassification.DisplayPrecedence
+            Name                        = $MessageClassification.Name
+            PermissionMenuVisible       = $MessageClassification.PermissionMenuVisible
+            RecipientDescription        = $MessageClassification.RecipientDescription
+            RetainClassificationEnabled = $MessageClassification.RetainClassificationEnabled
+            SenderDescription           = $MessageClassification.SenderDescription
+            Credential                  = $Credential
+            Ensure                      = 'Present'
+            ApplicationId               = $ApplicationId
+            CertificateThumbprint       = $CertificateThumbprint
+            CertificatePath             = $CertificatePath
+            CertificatePassword         = $CertificatePassword
+            Managedidentity             = $ManagedIdentity.IsPresent
+            TenantId                    = $TenantId
+        }
+
+        Write-Verbose -Message "Found Message Classification policy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -495,6 +499,7 @@ function Export-TargetResource
 
             $Params = @{
                 Identity              = $MessageClassification.Identity
+                DisplayName           = $MessageClassification.Name
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

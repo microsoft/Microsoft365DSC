@@ -176,8 +176,10 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
-
+        if (-not [System.String]::IsNullOrEmpty($Identity))
+        {
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
+        }
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Policy {id: '$Identity'} was found"
@@ -891,7 +893,8 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
+            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
+            $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -957,7 +960,10 @@ function Get-IntuneSettingCatalogPolicySetting
             -SettingValueName $settingValueName `
             -SettingValueType $settingValueType `
             -SettingValueTemplateId $settingValueTemplateId
-        $settingInstance += ($settingValue)
+        if ($null -ne $settingValue)
+        {
+            $settingInstance += [Hashtable]$settingValue
+        }
 
         $settingInstances += @{
             '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'

@@ -59,21 +59,19 @@ It is not meant to use as a production baseline.
 Configuration Example {
     param(
         [System.Management.Automation.PSCredential]
-        $GlobalAdmin
+        $credsCredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node Localhost
     {
-        AADTenantDetails 'Ã‡onfigureTenantDetails'
+        AADTenantDetails 'ConfigureTenantDetails'
         {
             IsSingleInstance                     = 'Yes'
             TechnicalNotificationMails           = "example@contoso.com"
-            SecurityComplianceNotificationPhones = "+1123456789"
-            SecurityComplianceNotificationMails  = "example@contoso.com"
             MarketingNotificationEmails          = "example@contoso.com"
-            Credential                           = $GlobalAdmin
+            Credential                           = $credsCredential
         }
     }
 }

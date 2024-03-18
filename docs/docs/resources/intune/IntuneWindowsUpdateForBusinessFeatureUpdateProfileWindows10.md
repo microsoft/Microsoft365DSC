@@ -28,6 +28,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphWindowsUpdateRolloutSettings
@@ -92,7 +93,6 @@ Configuration Example
     {
         IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 'Example'
         {
-            Id                   = 'b5d1020d-f641-42a0-a882-82f3358bf4c5'
             DisplayName          = 'WUfB Feature -dsc'
             Assignments          = @()
             Description          = 'test 2'
@@ -101,6 +101,66 @@ Configuration Example
                 OfferStartDateTimeInUTC = '2023-02-03T16:00:00.0000000+00:00'
             }
             Ensure               = 'Present'
+            Credential           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 'Example'
+        {
+            DisplayName          = 'WUfB Feature -dsc'
+            Assignments          = @()
+            Description          = 'test 2'
+            FeatureUpdateVersion = 'Windows 10, version 22H2'
+            RolloutSettings = MSFT_MicrosoftGraphwindowsUpdateRolloutSettings {
+                OfferStartDateTimeInUTC = '2023-02-05T16:00:00.0000000+00:00' # Updated Property
+            }
+            Ensure               = 'Present'
+            Credential           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 'Example'
+        {
+            DisplayName          = 'WUfB Feature -dsc'
+            Ensure               = 'Absent'
             Credential           = $Credscredential
         }
     }

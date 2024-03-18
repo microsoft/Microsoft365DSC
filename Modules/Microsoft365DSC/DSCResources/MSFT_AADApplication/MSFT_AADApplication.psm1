@@ -22,6 +22,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
         $GroupMembershipClaims,
 
         [Parameter()]
@@ -31,6 +35,10 @@ function Get-TargetResource
         [Parameter()]
         [System.String[]]
         $IdentifierUris,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFallbackPublicClient,
 
         [Parameter()]
         [System.String]
@@ -140,7 +148,7 @@ function Get-TargetResource
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
         {
-            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. These apps will not be exported."
+            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant."
         }
         elseif ($null -eq $AADApp)
         {
@@ -177,12 +185,19 @@ function Get-TargetResource
                 }
             }
 
+            $IsFallbackPublicClientValue = $false
+            if ($AADApp.IsFallbackPublicClient)
+            {
+                $IsFallbackPublicClientValue = $AADApp.IsFallbackPublicClient
+            }
             $result = @{
                 DisplayName             = $AADApp.DisplayName
                 AvailableToOtherTenants = $AvailableToOtherTenantsValue
+                Description             = $AADApp.Description
                 GroupMembershipClaims   = $AADApp.GroupMembershipClaims
                 Homepage                = $AADApp.web.HomepageUrl
                 IdentifierUris          = $AADApp.IdentifierUris
+                IsFallbackPublicClient  = $IsFallbackPublicClientValue
                 KnownClientApplications = $AADApp.Api.KnownClientApplications
                 LogoutURL               = $AADApp.web.LogoutURL
                 PublicClient            = $isPublicClient
@@ -245,6 +260,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
         $GroupMembershipClaims,
 
         [Parameter()]
@@ -258,6 +277,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $KnownClientApplications,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFallbackPublicClient,
 
         [Parameter()]
         [System.String]
@@ -670,6 +693,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
         $GroupMembershipClaims,
 
         [Parameter()]
@@ -679,6 +706,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $IdentifierUris,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsFallbackPublicClient,
 
         [Parameter()]
         [System.String[]]
@@ -749,18 +780,17 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    if ($CurrentValues.Permissions.Length -gt 0 -and $null -ne $CurrentValues.Permissions.Name)
+    if ($CurrentValues.Permissions.Length -gt 0 -and $null -ne $CurrentValues.Permissions.Name -and $Permissions.Name.Length -gt 0)
     {
         $permissionsDiff = Compare-Object -ReferenceObject ($CurrentValues.Permissions.Name) -DifferenceObject ($Permissions.Name)
+        $driftedParams = @{}
         if ($null -ne $permissionsDiff)
         {
             Write-Verbose -Message "Permissions differ: $($permissionsDiff | Out-String)"
             Write-Verbose -Message "Test-TargetResource returned $false"
-            $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
-                "They should contain {$($Permissions.Name)} but instead contained {$($CurrentValues.Permissions.Name)}"
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-            return $false
+            $EventValue = "<CurrentValue>$($CurrentValues.Permissions.Name)</CurrentValue>"
+            $EventValue += "<DesiredValue>$($Permissions.Name)</DesiredValue>"
+            $driftedParams.Add('Permissions', $EventValue)
         }
         else
         {
@@ -773,34 +803,29 @@ function Test-TargetResource
         {
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App, but permissions were specified for desired state'
             Write-Verbose -Message "Test-TargetResource returned $false"
-            $EventMessage = "Permissions for Azure AD Application {$DisplayName} were not in the desired state.`r`n" + `
-                "They should contain {$($Permissions.Name)} but instead contained {`$null}"
-            Add-M365DSCEvent -Message $EventMessage -EntryType 'Warning' `
-                -EventID 1 -Source $($MyInvocation.MyCommand.Source)
-            return $false
+
+            $EventValue = "<CurrentValue>`$null</CurrentValue>"
+            $EventValue += "<DesiredValue>$($Permissions.Name)</DesiredValue>"
+            $driftedParams.Add('Permissions', $EventValue)
         }
         else
         {
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App and no permissions were specified'
         }
     }
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('ObjectId') | Out-Null
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+        -ValuesToCheck $ValuesToCheck.Keys `
+        -IncludedDrifts $driftedParams
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -873,6 +898,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
+                Description           = $AADApp.Description
                 DisplayName           = $AADApp.DisplayName
                 ObjectID              = $AADApp.Id
                 Credential            = $Credential
@@ -915,6 +941,7 @@ function Export-TargetResource
                     Write-Host "`r`n        $($Global:M365DSCEmojiYellowCircle)" -NoNewline
                     Write-Host " Multiple app instances wth name {$($AADApp.DisplayName)} were found. We will skip exporting these instances."
                 }
+                $i++
             }
         }
         return $dscContent.ToString()

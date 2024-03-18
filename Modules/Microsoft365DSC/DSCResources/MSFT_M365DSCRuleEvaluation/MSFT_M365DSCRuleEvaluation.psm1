@@ -203,58 +203,63 @@ function Test-TargetResource
             Write-Verbose -Message "Identified {$($instances.Length)} instances matching rule."
         }
 
-        $result = ($instances.Length -$DSCConvertedInstances.Length) -eq 0
+        $result = ($instances.Length - $DSCConvertedInstances.Length) -eq 0
 
-        if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
+        $message = [System.Text.StringBuilder]::New()
+        [void]$message.AppendLine("ResourceName:`r`n$ResourceName`r`n")
+        [void]$message.AppendLine("RuleDefinition:`r`n$RuleDefinition`r`n")
+
+        if ($instances.Length -eq 0)
         {
-            Write-Verbose -Message "Checking the After Rule Count"
-            $afterRuleCountQueryString = "`$instances.Length $AfterRuleCountQuery"
-            $afterRuleCountQueryBlock = [Scriptblock]::Create($afterRuleCountQueryString)
-            $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
-            $message = [System.Text.StringBuilder]::New()
-            if ($instances.Length -eq 0)
-            {
-                [void]$message.AppendLine("No instances were found for the given Rule Definition.")
-            }
-            elseif (-not $result)
-            {
-                $invalidInstancesLogNames = ''
-                foreach ($invalidInstance in $instances)
-                {
-                    $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.ResourceInstanceName)`r`n"
-                }
-
-                [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
-                [void]$message.AppendLine("`r`nRuleDefinition:`r`n$RuleDefinition")
-                [void]$message.AppendLine("`r`AfterRuleCountQuery:`r`n$AfterRuleCountQuery")
-                Add-M365DSCEvent -Message $message.ToString() `
-                            -EventType 'RuleEvaluation' `
-                            -EntryType 'Warning' `
-                            -EventID 1 -Source $CurrentResourceName
-            }
+            [void]$message.AppendLine("No instances were found for the given Rule Definition.")
         }
-        elseif (-not $result)
+        else
         {
-            $invalidInstances = Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName
-            # Log drifts for each invalid instances found.
-            $invalidInstancesLogNames = ''
-            foreach ($invalidInstance in $invalidInstances)
+            if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
             {
-                $invalidInstancesLogNames += "[$ResourceName]$($invalidInstance.InputObject)`r`n"
+                Write-Verbose -Message "Checking the After Rule Count"
+                $afterRuleCountQueryString = "`$instances.Length $AfterRuleCountQuery"
+                $afterRuleCountQueryBlock = [Scriptblock]::Create($afterRuleCountQueryString)
+                $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
+                if (-not $result)
+                {
+                    $invalidInstances = $instances.ResourceInstanceName
+
+                    [void]$message.AppendLine("AfterRuleCountQuery:`r`n$AfterRuleCountQuery`r`n")
+                    $MessagePrefix = "The following resource instance(s) matched a rule validation, but did not meet the AfterRuleCountQuery:`r`n"
+                }
+            }
+            else
+            {
+                $invalidInstances = Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName
+                $invalidInstances = $invalidInstances.InputObject
+
+                $MessagePrefix = "The following resource instance(s) failed a rule validation:`r`n"
             }
 
             if (-not $result)
             {
-                $message = [System.Text.StringBuilder]::New()
-                [void]$message.AppendLine("The following resource instance(s) failed a rule validation:`r`n$invalidInstancesLogNames")
-                [void]$message.AppendLine("`r`nRuleDefinition:`r`n$RuleDefinition")
-                Add-M365DSCEvent -Message $message.ToString() `
-                        -EventType 'RuleEvaluation' `
-                        -EntryType 'Warning' `
-                        -EventID 1 -Source $CurrentResourceName
+                # Log drifts for each invalid instances found.
+                $invalidInstancesLogNames = ''
+                foreach ($invalidInstance in $invalidInstances)
+                {
+                    $invalidInstancesLogNames += "[$ResourceName]$invalidInstance`r`n"
+                }
+
+                [void]$message.AppendLine("$MessagePrefix$invalidInstancesLogNames")
             }
         }
+
+        if (-not $result)
+        {
+            Add-M365DSCEvent -Message $message.ToString() `
+                -EventType 'RuleEvaluation' `
+                -EntryType 'Warning' `
+                -EventID 1 -Source $CurrentResourceName
+        }
+
         Write-Verbose -Message "Test-TargetResource returned $result"
+
         return $result
     }
 }
@@ -289,6 +294,7 @@ function Export-TargetResource
         [Switch]
         $ManagedIdentity
     )
+    Write-Host "`r`n" -NoNewline
     return $null
 }
 

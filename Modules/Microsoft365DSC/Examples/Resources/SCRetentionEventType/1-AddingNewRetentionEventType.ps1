@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -19,7 +19,7 @@ Configuration Example
             Name       = "DemoEventType"
             Comment    = "Demo event comment"
             Ensure     = "Present"
-            Credential = $credsGlobalAdmin
+            Credential = $Credscredential
         }
     }
 }

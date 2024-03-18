@@ -28,6 +28,7 @@
 | **RightsManagementServicesTemplateId** | Write | String | TemplateID GUID to use for RMS encryption. The RMS template allows the IT admin to configure the details about who has access to RMS-protected file and how long they have access | |
 | **SmbAutoEncryptedFileExtensions** | Write | MSFT_MicrosoftGraphwindowsInformationProtectionResourceCollection[] | Specifies a list of file extensions, so that files with these extensions are encrypted when copying from an SMB share within the corporate boundary | |
 | **Description** | Write | String | The policy's description. | |
+| **Assignments** | Write | MSFT_IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolledPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -35,6 +36,19 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+
+### MSFT_IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolledPolicyAssignments
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **dataType** | Write | String | The type of the target assignment. | `#microsoft.graph.groupAssignmentTarget`, `#microsoft.graph.allLicensedUsersAssignmentTarget`, `#microsoft.graph.allDevicesAssignmentTarget`, `#microsoft.graph.exclusionGroupAssignmentTarget`, `#microsoft.graph.configurationManagerCollectionAssignmentTarget` |
+| **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
+| **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
+| **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
+| **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphWindowsInformationProtectionDataRecoveryCertificate
 
@@ -162,7 +176,6 @@ Configuration Example
     {
         IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled 'Example'
         {
-            Id                                     = 'M_5c927889-a683-4588-afdb-4c90aa5e7e93'
             DisplayName                            = 'WIP'
             AzureRightsManagementServicesAllowed   = $False
             Description                            = 'DSC'
@@ -197,6 +210,92 @@ Configuration Example
             ProtectionUnderLockConfigRequired      = $False
             RevokeOnUnenrollDisabled               = $False
             Ensure                                 = 'Present'
+            Credential                             = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled 'Example'
+        {
+            DisplayName                            = 'WIP'
+            AzureRightsManagementServicesAllowed   = $False
+            Description                            = 'DSC'
+            EnforcementLevel                       = 'encryptAndAuditOnly'
+            EnterpriseDomain                       = 'domain.com' # Updated Property
+            EnterpriseIPRanges                     = @(
+                MSFT_MicrosoftGraphwindowsInformationProtectionIPRangeCollection {
+                    DisplayName = 'ipv4 range'
+                    Ranges      = @(
+                        MSFT_MicrosoftGraphIpRange {
+                            UpperAddress = '1.1.1.3'
+                            LowerAddress = '1.1.1.1'
+                            odataType    = '#microsoft.graph.iPv4Range'
+                        }
+                    )
+                }
+            )
+            EnterpriseIPRangesAreAuthoritative     = $True
+            EnterpriseProxyServersAreAuthoritative = $True
+            IconsVisible                           = $False
+            IndexingEncryptedStoresOrItemsBlocked  = $False
+            ProtectedApps                          = @(
+                MSFT_MicrosoftGraphwindowsInformationProtectionApp {
+                    Description   = 'Microsoft.MicrosoftEdge'
+                    odataType     = '#microsoft.graph.windowsInformationProtectionStoreApp'
+                    Denied        = $False
+                    PublisherName = 'CN=Microsoft Corporation, O=Microsoft Corporation, L=Redmond, S=Washington, C=US'
+                    ProductName   = 'Microsoft.MicrosoftEdge'
+                    DisplayName   = 'Microsoft Edge'
+                }
+            )
+            ProtectionUnderLockConfigRequired      = $False
+            RevokeOnUnenrollDisabled               = $False
+            Ensure                                 = 'Present'
+            Credential                             = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowsInformationProtectionPolicyWindows10MdmEnrolled 'Example'
+        {
+            DisplayName                            = 'WIP'
+            Ensure                                 = 'Absent'
             Credential                             = $Credscredential
         }
     }

@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'M365DScRuleEvaluation' -GenericStubModule $GenericStubPath
+    -DscResource 'M365DSCRuleEvaluation' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -32,7 +32,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName MSFT_AADConditionalAccessPolicy\Export-TargetResource -MockWith {
-                return "AADConditionalAccessPolicy 'FakeItem1'{`r`n    Enabled = `$true`r`n}`r`nAADConditionalAccessPolicy 'FakeItem2'{`r`n    Enabled = `$false`r`n}"
+                return "AADConditionalAccessPolicy 'FakeItem1'{`r`n    DisplayName='test';State = 'Enabled'`r`n}`r`nAADConditionalAccessPolicy 'FakeItem2'{`r`n    DisplayName='test';State = 'Disabled'`r`n}"
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -45,7 +45,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ResourceName        = 'AADConditionalAccessPolicy'
-                    RuleDefinition      = "`$_.Enabled -eq `$true"
+                    RuleDefinition      = "`$_.State -eq 'Enabled'"
                     AfterRuleCountQuery = '-eq 1'
                     Credential          = $Credential
                 }
@@ -60,7 +60,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     ResourceName        = 'AADConditionalAccessPolicy'
-                    RuleDefinition      = "`$_.Enabled -eq `$true"
+                    RuleDefinition      = "`$_.State -eq 'Enabled'"
                     Credential          = $Credential
                 }
             }

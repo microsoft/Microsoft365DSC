@@ -17,6 +17,7 @@
 | **MacRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac restrictions based on platform, platform operating system version, and device ownership. | |
 | **MacOSRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac OS restrictions based on platform, platform operating system version, and device ownership. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the policy. | |
+| **Priority** | Write | UInt32 | Priority is used when a user exists in multiple groups that are assigned enrollment configuration. Users are subject only to the configuration with the lowest priority value. Inherited from deviceEnrollmentConfiguration. | |
 | **Ensure** | Write | String | Present ensures the restriction exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -35,6 +36,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_DeviceEnrollmentPlatformRestriction
@@ -93,7 +95,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -114,12 +116,11 @@ Configuration Example
                     deviceAndAppManagementAssignmentFilterType = 'none'
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 });
-            Credential                        = $credsGlobalAdmin
+            Credential                        = $Credscredential
             Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
             DeviceEnrollmentConfigurationType = "platformRestrictions";
             DisplayName                       = "All users and all devices";
             Ensure                            = "Present";
-            Identity                          = "5b0e1dba-4523-455e-9fdd-e36c833b57bf_DefaultPlatformRestrictions";
             IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
                 platformBlocked = $False
                 personalDeviceEnrollmentBlocked = $False
@@ -144,6 +145,97 @@ Configuration Example
                 platformBlocked = $False
                 personalDeviceEnrollmentBlocked = $False
             };
+        }
+    }
+}
+```
+
+### Example 2
+
+This example creates a new Device Enrollment Platform Restriction.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
+        {
+            AndroidForWorkRestriction         = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            AndroidRestriction                = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            Assignments                       = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                });
+            Credential                        = $Credscredential
+            Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
+            DeviceEnrollmentConfigurationType = "platformRestrictions";
+            DisplayName                       = "All users and all devices";
+            Ensure                            = "Present";
+            IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $True # Updated Property
+                personalDeviceEnrollmentBlocked = $False
+            };
+            MacOSRestriction                  = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            MacRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            WindowsHomeSkuRestriction         = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+            WindowsMobileRestriction          = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $True
+                personalDeviceEnrollmentBlocked = $False
+            };
+            WindowsRestriction                = MSFT_DeviceEnrollmentPlatformRestriction{
+                platformBlocked = $False
+                personalDeviceEnrollmentBlocked = $False
+            };
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Enrollment Platform Restriction.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
+        {
+            Credential                        = $Credscredential
+            DisplayName                       = "All users and all devices";
+            Ensure                            = "Absent";
         }
     }
 }

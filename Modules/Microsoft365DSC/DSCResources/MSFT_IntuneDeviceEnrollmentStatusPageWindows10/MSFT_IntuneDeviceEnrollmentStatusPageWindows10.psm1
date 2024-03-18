@@ -126,7 +126,8 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $Id -ErrorAction SilentlyContinue `
+            | Where-Object -FilterScript {$null -ne $_.DisplayName}
 
         if ($null -eq $getValue)
         {
@@ -139,7 +140,7 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
                         $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
-                }
+                } | Where-Object -FilterScript {$null -ne $_.DisplayName}
             }
         }
         #endregion
@@ -148,6 +149,12 @@ function Get-TargetResource
             Write-Verbose -Message "Could not find an Intune Device Enrollment Configuration for Windows10 with DisplayName {$DisplayName}"
             return $nullResult
         }
+
+        if($getValue -is [Array] -and $getValue.Length -gt 1)
+        {
+            Throw "The DisplayName {$DisplayName} returned multiple policies, make sure DisplayName is unique."
+        }
+
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
@@ -328,15 +335,7 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -371,13 +370,14 @@ function Set-TargetResource
         $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -BodyParameter $CreateParameters
 
-        foreach ($assignment in $Assignments)
+        $intuneAssignments = @()
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
-            -Targets $assignmentsHash `
-            -Repository 'deviceManagement/deviceEnrollmentConfigurations'
+        $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments} | ConvertTo-Json -Depth 100
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$($policy.Id)/assign"
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
         Update-DeviceEnrollmentConfigurationPriority `
             -DeviceEnrollmentConfigurationId $policy.id `
@@ -408,14 +408,14 @@ function Set-TargetResource
 
         if ($currentInstance.Id -notlike '*_DefaultWindows10EnrollmentCompletionPageConfiguration')
         {
-            foreach ($assignment in $Assignments)
+            $intuneAssignments = @()
+            if($null -ne $Assignments -and $Assignments.count -gt 0)
             {
-                $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+                $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
             }
-
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $currentInstance.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceEnrollmentConfigurations'
+            $body = @{'enrollmentConfigurationAssignments' = $intuneAssignments} | ConvertTo-Json -Depth 100
+            $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$($currentInstance.Id)/assign"
+            Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
             Update-DeviceEnrollmentConfigurationPriority `
                 -DeviceEnrollmentConfigurationId $currentInstance.id `
@@ -554,6 +554,8 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
@@ -584,11 +586,6 @@ function Test-TargetResource
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
-
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -729,7 +726,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -764,17 +762,21 @@ function Update-DeviceEnrollmentConfigurationPriority
     try
     {
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$DeviceEnrollmentConfigurationId/setpriority"
-        $body = @{'priority' = $Priority } | ConvertTo-Json -Depth 20
+        $body = @{'priority' = $Priority } | ConvertTo-Json -Depth 100
         #write-verbose -Message $body
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop 4> Out-Null
+        Invoke-MgGraphRequest `
+            -Method POST `
+            -Body $body `
+            -Uri $Uri  `
+            -ErrorAction Stop 4> Out-Null
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error updating data:'
-        -Exception $_
-        -Source $($MyInvocation.MyCommand.Source)
-        -TenantId $TenantId
-        -Credential $Credential
+        New-M365DSCLogEntry -Message 'Error updating data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
 
         return $null
     }

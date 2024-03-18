@@ -13,6 +13,7 @@
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
 ### MSFT_TeamsEmergencyNumber
 
@@ -69,7 +70,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -89,7 +90,7 @@ Configuration Example
                 }
             )
             Ensure                         = "Present"
-            Credential                     = $credsGlobalAdmin
+            Credential                     = $Credscredential
         }
     }
 }

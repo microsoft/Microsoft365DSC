@@ -4,7 +4,6 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        #region resource generator code
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $AuthenticationModeConfiguration,
@@ -29,8 +28,6 @@ function Get-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
-
-        #endregion
 
         [Parameter()]
         [System.String]
@@ -87,7 +84,7 @@ function Get-TargetResource
         $getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id -ErrorAction SilentlyContinue
 
         #endregion
-        if ($null -eq $getValue)
+        if ($null -eq $getValue -or $getValue.State -eq 'disabled')
         {
             Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy X509 with id {$id}"
             return $nullResult
@@ -111,15 +108,20 @@ function Get-TargetResource
                 {
                     $myRules.Add('X509CertificateRuleType', $currentRules.x509CertificateRuleType.toString())
                 }
-                if ($myRules.values.Where({ $null -ne $_ }).count -gt 0)
+                if ($myRules.values.Where({ $null -ne $_ }).count -gt 0 -and $myRules.Keys.Length -gt 0)
                 {
                     $complexRules += $myRules
+                }
+                if ($complexRules.Length -le 0)
+                {
+                    $complexRules = $null
                 }
                 $complexAuthenticationModeConfiguration.Add('Rules', $complexRules)
             }
         }
-        else {
-            $complexAuthenticationModeConfiguration.Add('Rules', @(''))
+        else
+        {
+            $complexAuthenticationModeConfiguration.Add('Rules', @())
         }
 
         if ($null -ne $getValue.AdditionalProperties.authenticationModeConfiguration.x509CertificateAuthenticationDefaultMode)
@@ -180,6 +182,10 @@ function Get-TargetResource
             if ($null -ne $currentIncludeTargets.targetType)
             {
                 $myIncludeTargets.Add('TargetType', $currentIncludeTargets.targetType.toString())
+            }
+            if ($null -ne $currentIncludeTargets.isRegistrationRequired)
+            {
+                $myIncludeTargets.Add('isRegistrationRequired', [Boolean]$currentIncludeTargets.isRegistrationRequired)
             }
             if ($myIncludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
             {
@@ -304,52 +310,7 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Creating an Azure AD Authentication Method Policy X509 with id {$id}"
-
-        $CreateParameters = ([Hashtable]$BoundParameters).clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Remove('Id') | Out-Null
-
-        $keys = (([Hashtable]$CreateParameters).clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-            if ($key -eq 'IncludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $CreateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $CreateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-        }
-        #region resource generator code
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.x509CertificateAuthenticationMethodConfiguration')
-        $policy = New-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -BodyParameter $CreateParameters
-        #endregion
-    }
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Azure AD Authentication Method Policy X509 with Id {$($currentInstance.Id)}"
 
@@ -365,26 +326,21 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
-            if ($key -eq 'IncludeTargets')
+            if ($key -eq 'ExcludeTargets' -or $key -eq 'IncludeTargets')
             {
                 $i = 0
-                foreach ($entry in $UpdateParameters.$key){
+                foreach ($entry in $UpdateParameters.$key)
+                {
                     if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
                     {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
+                        $Filter = "Displayname eq '$($entry.id)'"
+                        Write-Verbose -Message "Retrieving {$key} Group with DisplayName {$($entry.id)}"
+                        $GroupInstance = Get-MgGroup -Filter $Filter -ErrorAction SilentlyContinue
+                        if ($null -ne $GroupInstance)
+                        {
+                            Write-Verbose -Message "Found {$key} Group {$($GroupInstance.id.ToString())}"
+                            $UpdateParameters.$key[$i].id = $GroupInstance.id.ToString()
+                        }
                     }
                     $i++
                 }
@@ -392,7 +348,8 @@ function Set-TargetResource
         }
         #region resource generator code
         $UpdateParameters.Add('@odata.type', '#microsoft.graph.x509CertificateAuthenticationMethodConfiguration')
-        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
+        Write-Verbose -Message "Updating with Values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParameters)"
+        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         #endregion
@@ -590,7 +547,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId X509Certificate `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
         #endregion
 
         $i = 1

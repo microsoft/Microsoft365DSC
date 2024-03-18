@@ -725,7 +725,16 @@ function Set-TargetResource
         {
             if (-not [String]::IsNullOrEmpty($createParameters.$duration))
             {
-                $createParameters.$duration = [TimeSpan]::parse($createParameters.$duration)
+                Write-Verbose -Message "Parsing {$($createParameters.$duration)} into TimeSpan"
+                if ($createParameters.$duration.startswith('P'))
+                {
+                    $timespan = [System.Xml.XmlConvert]::ToTimeSpan($createParameters.$duration)
+                }
+                else
+                {
+                    $timespan = [TimeSpan]$createParameters.$duration
+                }
+                $createParameters.$duration = $timespan
             }
         }
         $myExemptedAppProtocols = @()
@@ -1180,7 +1189,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

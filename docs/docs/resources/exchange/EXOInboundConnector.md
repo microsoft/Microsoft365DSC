@@ -6,9 +6,9 @@
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the outbound connector that you want to modify. | |
 | **AssociatedAcceptedDomains** | Write | StringArray[] | The AssociatedAcceptedDomains parameter specifies the accepted domains that the connector applies to, thereby limiting its scope. For example, you can apply the connector to a specific accepted domain in your organization, such as contoso.com. | |
-| **CloudServicesMailEnabled** | Write | Boolean | The CloudServicesMailEnabled parameter specifies whether the connector is used for hybrid mail flow between an on-premises Exchange environment and Microsoft Office 365. Specifically, this parameter controls how certain internal X-MS-Exchange-Organization-* message headers are handled in messages that are sent between accepted domains in the on-premises and cloud organizations. These headers are collectively known as cross-premises headers. DO NOT USE MANUALLY! Valid values are: $true | $false | |
+| **CloudServicesMailEnabled** | Write | Boolean | The CloudServicesMailEnabled parameter specifies whether the connector is used for hybrid mail flow between an on-premises Exchange environment and Microsoft Office 365. Specifically, this parameter controls how certain internal X-MS-Exchange-Organization-* message headers are handled in messages that are sent between accepted domains in the on-premises and cloud organizations. These headers are collectively known as cross-premises headers. DO NOT USE MANUALLY! | |
 | **Comment** | Write | String | The Comment parameter specifies an optional comment. | |
-| **ConnectorSource** | Write | String | The ConnectorSource parameter specifies how the connector is created. DO NOT CHANGE THIS! values are Default (the default) | Migrated | HybridWizard | `Default`, `Migrated`, `HybridWizard` |
+| **ConnectorSource** | Write | String | The ConnectorSource parameter specifies how the connector is created. DO NOT CHANGE THIS! | `Default`, `Migrated`, `HybridWizard` |
 | **ConnectorType** | Write | String | The ConnectorType parameter specifies a category for the domains that are serviced by the connector. Valid values are Partner and OnPremises | `Partner`, `OnPremises` |
 | **EFSkipIPs** | Write | StringArray[] | The EFSkipIPs parameter specifies the source IP addresses to skip in Enhanced Filtering for Connectors when the EFSkipLastIP parameter value is $false. | |
 | **EFSkipLastIP** | Write | Boolean | The EFSkipLastIP parameter specifies the behavior of Enhanced Filtering for Connectors. | |
@@ -62,7 +62,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -70,18 +70,81 @@ Configuration Example
     {
         EXOInboundConnector 'ConfigureInboundConnector'
         {
-            Identity                     = "Contoso Inbound Connector"
-            CloudServicesMailEnabled     = $True
-            Comment                      = "Inbound connector for Contoso"
+            Identity                     = "Integration Inbound Connector"
+            CloudServicesMailEnabled     = $False
+            Comment                      = "Inbound connector for Integration"
             ConnectorSource              = "Default"
-            ConnectorType                = "OnPremises"
+            ConnectorType                = "Partner"
             Enabled                      = $True
             RequireTls                   = $True
             SenderDomains                = "*.contoso.com"
             TlsSenderCertificateName     = "contoso.com"
-            TreatMessagesAsInternal      = $True
             Ensure                       = "Present"
-            Credential                   = $credsGlobalAdmin
+            Credential                   = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOInboundConnector 'ConfigureInboundConnector'
+        {
+            Identity                     = "Integration Inbound Connector"
+            CloudServicesMailEnabled     = $False
+            Comment                      = "Inbound connector for Integration"
+            ConnectorSource              = "Default"
+            ConnectorType                = "Partner"
+            Enabled                      = $False # Updated Property
+            RequireTls                   = $True
+            SenderDomains                = "*.contoso.com"
+            TlsSenderCertificateName     = "contoso.com"
+            Ensure                       = "Present"
+            Credential                   = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOInboundConnector 'ConfigureInboundConnector'
+        {
+            Identity                     = "Integration Inbound Connector"
+            Ensure                       = "Absent"
+            Credential                   = $Credscredential
         }
     }
 }

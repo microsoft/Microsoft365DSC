@@ -920,33 +920,6 @@ function Convert-M365DSCPlannerTaskChecklistToCIMArray
     return $StringContent
 }
 
-function Get-M365DSCPlannerPlansFromGroup
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable[]])]
-    Param(
-        [Parameter(Mandatory = $true)]
-        [System.String]
-        $GroupId,
-
-        [Parameter(Mandatory = $true)]
-        [System.Management.Automation.PSCredential]
-        $Credential
-    )
-    $results = @()
-    $uri = "https://graph.microsoft.com/v1.0/groups/$GroupId/planner/plans"
-    $taskResponse = Invoke-MSCloudLoginMicrosoftGraphAPI -CloudCredential $Credential `
-        -Uri $uri `
-        -Method Get
-    foreach ($plan in $taskResponse.value)
-    {
-        $results += @{
-            Id    = $plan.id
-            Title = $plan.title
-        }
-    }
-    return $results
-}
 
 function Get-M365DSCPlannerTasksFromPlan
 {

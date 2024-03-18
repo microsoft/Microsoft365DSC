@@ -54,16 +54,21 @@ function Rename-M365DSCCimInstanceParameter
     )
 
     $result = $Properties
-
     $type = $Properties.getType().FullName
-
     #region Array
     if ($type -like '*[[\]]')
     {
         $values = @()
         foreach ($item in $Properties)
         {
-            $values += Rename-M365DSCCimInstanceParameter $item
+            try
+            {
+                $values += Rename-M365DSCCimInstanceParameter $item -KeyMapping $KeyMapping
+            }
+            catch
+            {
+                Write-Verbose -Message "Error getting values for item {$item}"
+            }
         }
         $result = $values
 
@@ -76,10 +81,12 @@ function Rename-M365DSCCimInstanceParameter
     {
         $result = ([Hashtable]$Properties).clone()
     }
+
     if ($type -like '*CimInstance*' -or $type -like '*Hashtable*' -or $type -like '*Object*')
     {
         $hashProperties = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $result
         $keys = ($hashProperties.clone()).keys
+
         foreach ($key in $keys)
         {
             $keyName = $key.substring(0, 1).tolower() + $key.substring(1, $key.length - 1)
@@ -89,10 +96,22 @@ function Rename-M365DSCCimInstanceParameter
             }
 
             $property = $hashProperties.$key
+
             if ($null -ne $property)
             {
                 $hashProperties.Remove($key)
-                $hashProperties.add($keyName, (Rename-M365DSCCimInstanceParameter $property))
+                try
+                {
+                    $subValue = Rename-M365DSCCimInstanceParameter $property -KeyMapping $KeyMapping
+                    if ($null -ne $subValue)
+                    {
+                        $hashProperties.add($keyName, $subValue)
+                    }
+                }
+                catch
+                {
+                    Write-Verbose -Message "Error adding $property"
+                }
             }
         }
         $result = $hashProperties
@@ -134,21 +153,21 @@ function Get-M365DSCDRGComplexTypeToHashtable
         return , [hashtable[]]$results
     }
 
+
     if ($ComplexObject.getType().fullname -like '*Dictionary*')
     {
         $results = @{}
 
         $ComplexObject = [hashtable]::new($ComplexObject)
         $keys = $ComplexObject.Keys
+
         foreach ($key in $keys)
         {
             if ($null -ne $ComplexObject.$key)
             {
                 $keyName = $key
-
                 $keyType = $ComplexObject.$key.gettype().fullname
-
-                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like '*[[\]]')
+                if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*' -or $keyType -like 'Microsoft.Graph.Beta.PowerShell.Models.*' -or $keyType -like '*[[\]]')
                 {
                     $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$key
 
@@ -185,7 +204,7 @@ function Get-M365DSCDRGComplexTypeToHashtable
         if ($null -ne $ComplexObject.$keyName)
         {
             $keyType = $ComplexObject.$keyName.gettype().fullname
-            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.PowerShell.Models.*')
+            if ($keyType -like '*CimInstance*' -or $keyType -like '*Dictionary*' -or $keyType -like 'Microsoft.Graph.*PowerShell.Models.*')
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
@@ -446,6 +465,14 @@ function Get-M365DSCDRGComplexTypeToString
     if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
     {
         $currentProperty = $null
+    }
+
+    if ($null -ne $currentProperty)
+    {
+        $fancySingleQuotes = "[\u2019\u2018]"
+        $fancyDoubleQuotes = "[\u201C\u201D]"
+        $currentProperty = [regex]::Replace($currentProperty, $fancySingleQuotes, "''")
+        $currentProperty = [regex]::Replace($currentProperty, $fancyDoubleQuotes, '"')
     }
     return $currentProperty
 }
@@ -1010,8 +1037,7 @@ function New-IntuneSettingCatalogPolicy
 
     try
     {
-	$BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
-        $Uri = '$($BaseUrl)/beta/deviceManagement/configurationPolicies'
+        $Uri = '/beta/deviceManagement/configurationPolicies'
 
         $policy = @{
             'name'              = $Name
@@ -1074,8 +1100,7 @@ function Update-IntuneSettingCatalogPolicy
 
     try
     {
-        $BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
-        $Uri = "$($BaseUrl)/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
+        $Uri = "/beta/deviceManagement/configurationPolicies/$DeviceConfigurationPolicyId"
 
         $policy = @{
             'name'              = $Name
@@ -1100,7 +1125,171 @@ function Update-IntuneSettingCatalogPolicy
         return $null
     }
 }
+function ConvertFrom-IntunePolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        [Array]
+        $Assignments,
+        [Parameter()]
+        [System.Boolean]
+        $IncludeDeviceFilter = $true
+    )
 
+    $assignmentResult = @()
+    foreach ($assignment in $Assignments)
+    {
+        $hashAssignment = @{}
+        $dataType = $assignment.Target.AdditionalProperties."@odata.type"
+        $groupId = $assignment.Target.AdditionalProperties.groupId
+
+        $hashAssignment.add('dataType',$dataType)
+        if (-not [string]::IsNullOrEmpty($groupId))
+        {
+            $hashAssignment.add('groupId', $groupId)
+
+            $group = Get-MgGroup -GroupId ($groupId) -ErrorAction SilentlyContinue
+            if ($null -ne $group)
+            {
+                $groupDisplayName = $group.DisplayName
+            }
+        }
+        if ($dataType -eq '#microsoft.graph.allLicensedUsersAssignmentTarget')
+        {
+            $groupDisplayName = 'All users'
+        }
+        if ($dataType -eq '#microsoft.graph.allDevicesAssignmentTarget')
+        {
+            $groupDisplayName = 'All devices'
+        }
+        if ($null -ne $groupDisplayName)
+        {
+            $hashAssignment.add('groupDisplayName', $groupDisplayName)
+        }
+        if ($IncludeDeviceFilter)
+        {
+            if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterType)
+            {
+                $hashAssignment.add('deviceAndAppManagementAssignmentFilterType', $assignment.Target.DeviceAndAppManagementAssignmentFilterType.ToString())
+            }
+            if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
+            {
+                $hashAssignment.add('deviceAndAppManagementAssignmentFilterId', $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
+            }
+        }
+
+        $assignmentResult += $hashAssignment
+    }
+
+    return $assignmentResult
+}
+
+function ConvertTo-IntunePolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([Hashtable[]])]
+    param (
+        [Parameter(Mandatory = $true)]
+        $Assignments,
+        [Parameter()]
+        [System.Boolean]
+        $IncludeDeviceFilter = $true
+    )
+
+    $assignmentResult = @()
+    foreach ($assignment in $Assignments)
+    {
+        $target = @{"@odata.type" = $assignment.dataType}
+        if ($IncludeDeviceFilter)
+        {
+            if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterId)
+            {
+                $target.add('deviceAndAppManagementAssignmentFilterId', $assignment.DeviceAndAppManagementAssignmentFilterId)
+            }
+            if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterType)
+            {
+                $target.add('deviceAndAppManagementAssignmentFilterType',$assignment.DeviceAndAppManagementAssignmentFilterType)
+            }
+        }
+        if ($assignment.dataType -like '*GroupAssignmentTarget')
+        {
+            $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
+            if ($null -eq $group)
+            {
+                $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.groupDisplayName)'" -ErrorAction SilentlyContinue
+                if ($null -eq $group)
+                {
+                    $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it could not be found in the directory.`r`n"
+                    $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
+                    write-verbose -Message $message
+                    $target = $null
+                }
+                if ($group -and $group.count -gt 1)
+                {
+                    $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it is not unique in the directory.`r`n"
+                    $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                    write-verbose -Message $message
+                    $group = $null
+                    $target = $null
+                }
+            }
+            #Skipping assignment if group not found from either groupId or groupDisplayName
+            if ($null -ne $group)
+            {
+                $target.add('groupId',$group.Id)
+            }
+        }
+
+        if ($target)
+        {
+            $assignmentResult += @{target = $target}
+        }
+    }
+
+    return $assignmentResult
+}
+
+function Compare-M365DSCIntunePolicyAssignment
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param (
+        [Parameter()]
+        $Source,
+        [Parameter()]
+        $Target
+    )
+
+    $testResult = $source.count -eq $target.count
+    if ($testResult)
+    {
+        foreach ($assignment in $source)
+        {
+            if ($assignment.dataType -like '*GroupAssignmentTarget')
+            {
+                $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId})
+                #Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
+                if (-not $testResult)
+                {
+                    $groupNotFound =  $null -eq (Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue)
+                }
+                if (-not $testResult -and $groupNotFound)
+                {
+                    $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName})
+                }
+            }
+            else
+            {
+                $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType})
+            }
+            if (-Not $testResult) { break }
+        }
+    }
+
+    return $testResult
+}
 function Update-DeviceConfigurationPolicyAssignment
 {
     [CmdletBinding()]
@@ -1121,17 +1310,25 @@ function Update-DeviceConfigurationPolicyAssignment
         [Parameter()]
         [ValidateSet('v1.0','beta')]
         [System.String]
-        $APIVersion = 'beta'
+        $APIVersion = 'beta',
+
+        [Parameter()]
+        [System.String]
+        $RootIdentifier = 'assignments'
     )
+
     try
     {
         $deviceManagementPolicyAssignments = @()
-        $BaseUrl = $Global:MSCloudLoginConnectionProfile.Intune.GraphBaseUrl
-        $Uri = "$($BaseUrl)/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
+        $Uri = "/$APIVersion/$Repository/$DeviceConfigurationPolicyId/assign"
 
         foreach ($target in $targets)
         {
             $formattedTarget = @{"@odata.type" = $target.dataType}
+            if(-not $formattedTarget."@odata.type" -and $target."@odata.type")
+            {
+                $formattedTarget."@odata.type" = $target."@odata.type"
+            }
             if ($target.groupId)
             {
                 $formattedTarget.Add('groupId',$target.groupId)
@@ -1150,8 +1347,10 @@ function Update-DeviceConfigurationPolicyAssignment
             }
             $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
         }
-        $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
-        #write-verbose -Message $body
+
+        $body = @{$RootIdentifier = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        Write-Verbose -Message $body
+
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
     }
     catch
@@ -1162,6 +1361,69 @@ function Update-DeviceConfigurationPolicyAssignment
             -TenantId $TenantId `
             -Credential $Credential
 
+        return $null
+    }
+}
+
+function Get-OmaSettingPlainTextValue
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    Param(
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $SecretReferenceValueId,
+
+        [Parameter()]
+        [ValidateSet('v1.0', 'beta')]
+        [System.String]
+        $APIVersion = 'beta'
+    )
+
+    try
+    {
+        <#
+            e.g. PolicyId for SecretReferenceValueId '35ea58ec-2a79-471d-8eea-7e28e6cd2722_bdf6c690-05fb-4d02-835d-5a7406c35d58_abe32712-2255-445f-a35e-0c6f143d82ca'
+            is 'bdf6c690-05fb-4d02-835d-5a7406c35d58'
+        #>
+        $SplitSecretReferenceValueId = $SecretReferenceValueId.Split("_")
+        if ($SplitSecretReferenceValueId.Count -eq 3)
+        {
+            $PolicyId = $SplitSecretReferenceValueId[1]
+        }
+        else
+        {
+            return $null
+        }
+    }
+    catch
+    {
+        return $null
+    }
+
+    $Repository = 'deviceManagement/deviceConfigurations'
+    $Uri = "/{0}/{1}/{2}/getOmaSettingPlainTextValue(secretReferenceValueId='{3}')" -f $APIVersion, $Repository, $PolicyId, $SecretReferenceValueId
+
+    try
+    {
+        $Result = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
+    }
+    catch
+    {
+        $Message = "Error decrypting OmaSetting with SecretReferenceValueId {0}:" -f $SecretReferenceValueId
+        New-M365DSCLogEntry -Message $Message `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $null
+    }
+
+    if (![String]::IsNullOrEmpty($Result.Value))
+    {
+        return $Result.Value
+    } else {
         return $null
     }
 }

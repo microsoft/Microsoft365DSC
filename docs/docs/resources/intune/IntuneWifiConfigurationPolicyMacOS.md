@@ -36,6 +36,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 
@@ -82,7 +83,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -90,7 +91,6 @@ Configuration Example
     {
         IntuneWifiConfigurationPolicyMacOS 'myWifiConfigMacOSPolicy'
         {
-            Id                             = 'cad22363-785b-4820-9909-28d5f35048c2'
             DisplayName                    = 'macos wifi'
             Assignments                    = @(
                 MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -106,7 +106,74 @@ Configuration Example
             Ssid                           = 'aaaaaaaaaaaaa'
             WiFiSecurityType               = 'wpaPersonal'
             Ensure                         = 'Present'
-            Credential                     = $credsGlobalAdmin
+            Credential                     = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWifiConfigurationPolicyMacOS 'myWifiConfigMacOSPolicy'
+        {
+            DisplayName                    = 'macos wifi'
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
+            ConnectAutomatically           = $True
+            ConnectWhenNetworkNameIsHidden = $False # Updated Property
+            NetworkName                    = 'ea1cf5d7-8d3e-40ca-9cb8-b8c8a4c6170b'
+            ProxyAutomaticConfigurationUrl = 'AZ500PrivateEndpoint22'
+            ProxySettings                  = 'automatic'
+            Ssid                           = 'aaaaaaaaaaaaa'
+            WiFiSecurityType               = 'wpaPersonal'
+            Ensure                         = 'Present'
+            Credential                     = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWifiConfigurationPolicyMacOS 'myWifiConfigMacOSPolicy'
+        {
+            DisplayName                    = 'macos wifi'
+            Ensure                         = 'Absent'
+            Credential                     = $Credscredential
         }
     }
 }

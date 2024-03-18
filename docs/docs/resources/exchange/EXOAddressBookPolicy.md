@@ -50,7 +50,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -59,12 +59,72 @@ Configuration Example
         EXOAddressBookPolicy 'ConfigureAddressBookPolicy'
         {
             Name                 = "All Fabrikam ABP"
-            AddressLists         = "\All Fabrikam","\All Fabrikam Mailboxes","\All Fabrikam DLs","\All Fabrikam Contacts"
-            RoomList             = "\All Fabrikam-Rooms"
-            OfflineAddressBook   = "\Fabrikam-All-OAB"
-            GlobalAddressList    = "\All Fabrikam"
+            AddressLists         = "\All Distribution Lists"
+            RoomList             = "\All Rooms"
+            OfflineAddressBook   = "\Default Offline Address Book"
+            GlobalAddressList    = "\Default Global Address List"
             Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAddressBookPolicy 'ConfigureAddressBookPolicy'
+        {
+            Name                 = "All Fabrikam ABP"
+            AddressLists         = "\All Users"
+            RoomList             = "\All Rooms"
+            OfflineAddressBook   = "\Default Offline Address Book"
+            GlobalAddressList    = "\Default Global Address List"
+            Ensure               = "Present"
+            Credential           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAddressBookPolicy 'ConfigureAddressBookPolicy'
+        {
+            Name                 = "All Fabrikam ABP"
+            Ensure               = "Absent"
+            Credential           = $Credscredential
         }
     }
 }

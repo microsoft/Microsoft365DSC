@@ -119,7 +119,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     Write-Verbose -Message "Getting configuration of Team $DisplayName"
 
@@ -174,13 +178,19 @@ function Get-TargetResource
 
         Write-Verbose -Message "Getting Team {$DisplayName} Owners"
         [array]$Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq 'owner' }
+        if ($null -eq $Owners)
+        {
+            # Without Users, Get-TeamUser return null instead on empty array
+            $Owners = @()
+        }
+
         Write-Verbose -Message "Found Team $($team.DisplayName)."
 
         $result = @{
             DisplayName                       = $team.DisplayName
             GroupID                           = $team.GroupId
             Description                       = $team.Description
-            Owner                             = $Owners[0].User.ToString()
+            Owner                             = [array]$Owners.User
             MailNickName                      = $team.MailNickName
             Visibility                        = $team.Visibility
             AllowAddRemoveApps                = $team.AllowAddRemoveApps
@@ -201,6 +211,7 @@ function Get-TargetResource
             AllowDeleteChannels               = $team.AllowDeleteChannels
             ShowInTeamsSearchAndSuggestions   = $team.ShowInTeamsSearchAndSuggestions
             Ensure                            = 'Present'
+            ManagedIdentity                   = $ManagedIdentity.IsPresent
         }
 
         if ($ConnectionMode.StartsWith('ServicePrincipal'))
@@ -347,7 +358,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Setting configuration of Team $DisplayName"
@@ -370,6 +385,7 @@ function Set-TargetResource
 
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Ensure') | Out-Null
+    $CurrentParameters.Remove('ManagedIdentity') | Out-Null
 
     if ($Ensure -eq 'Present' -and ($team.Ensure -eq 'Present'))
     {
@@ -412,22 +428,23 @@ function Set-TargetResource
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
-            $group = New-MgGroup -DisplayName $DisplayName -GroupTypes 'Unified' -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
+            $group = New-MgGroup -DisplayName $DisplayName -GroupTypes 'Unified' -MailEnabled -SecurityEnabled -MailNickname $MailNickName -ErrorAction Stop
             $currentOwner = (($CurrentParameters.Owner)[0])
 
             Write-Verbose -Message "Retrieving Group Owner {$currentOwner}"
-            $ownerUser = Get-MgUser -Search $currentOwner
+            $ownerUser = Get-MgUser -Search $currentOwner -ConsistencyLevel eventual
+            $ownerOdataID = "https://graph.microsoft.com/v1.0/directoryObjects/$($ownerUser.Id)"
 
-            Write-Verbose -Message "Adding Owner {$($ownerUser.ObjectId)} to Group {$($group.Id)}"
+            Write-Verbose -Message "Adding Owner {$($ownerUser.Id)} to Group {$($group.Id)}"
             try
             {
-                New-MgGroupOwnerByRef -GroupId $group.Id -RefObjectId $ownerUser.ObjectId -ErrorAction Stop
+                New-MgGroupOwnerByRef -GroupId $group.Id -OdataId $ownerOdataID -ErrorAction Stop
             }
             catch
             {
                 Write-Verbose -Message 'Adding Owner - Sleeping for 15 seconds'
                 Start-Sleep -Seconds 15
-                New-MgGroupOwnerByRef -GroupId $group.Id -RefObjectId $ownerUser.ObjectId
+                New-MgGroupOwnerByRef -GroupId $group.Id -OdataId $ownerOdataID -ErrorAction Stop
             }
 
             try
@@ -438,7 +455,7 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Creating Team - Sleeping for 15 seconds'
                 Start-Sleep -Seconds 15
-                New-Team -GroupId $group.Id
+                New-Team -GroupId $group.Id -ErrorAction Stop
             }
         }
         else
@@ -592,7 +609,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -656,7 +677,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
@@ -697,6 +722,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

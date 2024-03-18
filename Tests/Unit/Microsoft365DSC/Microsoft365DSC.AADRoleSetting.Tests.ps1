@@ -44,6 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                 return @{
                     DisplayName = 'User administrator'
+                    Id          = 'fe930be7-5e62-47db-91af-98c3a49a38b1'
                 }
             }
 
@@ -660,6 +661,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should reverse engineer resource from the export method' {
                 $result = Export-TargetResource @testParams
+                Should -Invoke -Scope It -CommandName 'Get-MgBetaRoleManagementDirectoryRoleDefinition' -ParameterFilter { $Filter -eq '' -and $Sort -eq 'DisplayName' } -Times 1
+                $result | Should -Not -BeNullOrEmpty
+            }
+
+            It 'Should reverse engineer resource from the export method with a filter' {
+                $testParams.Filter = "displayName eq 'Role1'"
+
+                $result = Export-TargetResource @testParams
+                Should -Invoke -Scope It -CommandName 'Get-MgBetaRoleManagementDirectoryRoleDefinition' -ParameterFilter { $Filter -eq "displayName eq 'Role1'" -and $Sort -eq 'DisplayName' } -Times 1
                 $result | Should -Not -BeNullOrEmpty
             }
         }

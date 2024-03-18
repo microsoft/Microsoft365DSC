@@ -60,6 +60,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphWindowsUpdateInstallScheduleType
@@ -126,7 +127,6 @@ Configuration Example
     {
         IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
         {
-            Id                                  = 'f2a9a546-6087-45b9-81da-59994e79dfd2'
             DisplayName                         = 'WUfB Ring'
             AllowWindows11Upgrade               = $False
             Assignments                         = @(
@@ -167,6 +167,98 @@ Configuration Example
             UserPauseAccess                     = 'enabled'
             UserWindowsUpdateScanAccess         = 'enabled'
             Ensure                              = 'Present'
+            Credential                          = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
+        {
+            DisplayName                         = 'WUfB Ring'
+            AllowWindows11Upgrade               = $True # Updated Property
+            Assignments                         = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments
+                {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            )
+            AutomaticUpdateMode                 = 'autoInstallAtMaintenanceTime'
+            AutoRestartNotificationDismissal    = 'notConfigured'
+            BusinessReadyUpdatesOnly            = 'userDefined'
+            DeadlineForFeatureUpdatesInDays     = 1
+            DeadlineForQualityUpdatesInDays     = 2
+            DeadlineGracePeriodInDays           = 3
+            DeliveryOptimizationMode            = 'userDefined'
+            Description                         = ''
+            DriversExcluded                     = $False
+            FeatureUpdatesDeferralPeriodInDays  = 0
+            FeatureUpdatesPaused                = $False
+            FeatureUpdatesPauseExpiryDateTime   = '0001-01-01T00:00:00.0000000+00:00'
+            FeatureUpdatesRollbackStartDateTime = '0001-01-01T00:00:00.0000000+00:00'
+            FeatureUpdatesRollbackWindowInDays  = 10
+            InstallationSchedule = MSFT_MicrosoftGraphwindowsUpdateInstallScheduleType {
+                ActiveHoursStart = '08:00:00'
+                ActiveHoursEnd   = '17:00:00'
+                odataType        = '#microsoft.graph.windowsUpdateActiveHoursInstall'
+            }
+            MicrosoftUpdateServiceAllowed       = $True
+            PostponeRebootUntilAfterDeadline    = $False
+            PrereleaseFeatures                  = 'userDefined'
+            QualityUpdatesDeferralPeriodInDays  = 0
+            QualityUpdatesPaused                = $False
+            QualityUpdatesPauseExpiryDateTime   = '0001-01-01T00:00:00.0000000+00:00'
+            QualityUpdatesRollbackStartDateTime = '0001-01-01T00:00:00.0000000+00:00'
+            SkipChecksBeforeRestart             = $False
+            UpdateNotificationLevel             = 'defaultNotifications'
+            UserPauseAccess                     = 'enabled'
+            UserWindowsUpdateScanAccess         = 'enabled'
+            Ensure                              = 'Present'
+            Credential                          = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
+        {
+            DisplayName                         = 'WUfB Ring'
+            Ensure                              = 'Absent'
             Credential                          = $Credscredential
         }
     }

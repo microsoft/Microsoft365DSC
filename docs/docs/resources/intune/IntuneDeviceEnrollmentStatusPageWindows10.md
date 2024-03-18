@@ -5,7 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | The display name of the device enrollment configuration | |
-| **Id** | Required | String | The unique identifier for an entity. Read-only. | |
+| **Id** | Write | String | The unique identifier for an entity. Read-only. | |
 | **Description** | Write | String | The description of the device enrollment configuration | |
 | **AllowDeviceResetOnInstallFailure** | Write | Boolean | Allow or block device reset on installation failure | |
 | **AllowDeviceUseOnInstallFailure** | Write | Boolean | Allow the user to continue using the device on installation failure | |
@@ -39,6 +39,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 
@@ -84,7 +85,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -108,13 +109,84 @@ Configuration Example
             DisableUserStatusTrackingAfterFirstUser = $True;
             DisplayName                             = "All users and all devices";
             Ensure                                  = "Present";
-            Id                                      = "5b0e1dba-4523-455e-9fdd-e36c833b57bf_DefaultWindows10EnrollmentCompletionPageConfiguration";
             InstallProgressTimeoutInMinutes         = 60;
             InstallQualityUpdates                   = $False;
             Priority                                = 0;
             SelectedMobileAppIds                    = @();
             ShowInstallationProgress                = $True;
             TrackInstallProgressForAutopilotOnly    = $True;
+            Credential                              = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example creates a new Device Enrollment Status Page.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceEnrollmentStatusPageWindows10 '6b43c039-c1d0-4a9f-aab9-48c5531acbd6'
+        {
+            AllowDeviceResetOnInstallFailure        = $True;
+            AllowDeviceUseOnInstallFailure          = $False; # Updated Property
+            AllowLogCollectionOnInstallFailure      = $True;
+            AllowNonBlockingAppInstallation         = $False;
+            Assignments                             = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            );
+            BlockDeviceSetupRetryByUser             = $False;
+            CustomErrorMessage                      = "Setup could not be completed. Please try again or contact your support person for help.";
+            Description                             = "This is the default enrollment status screen configuration applied with the lowest priority to all users and all devices regardless of group membership.";
+            DisableUserStatusTrackingAfterFirstUser = $True;
+            DisplayName                             = "All users and all devices";
+            Ensure                                  = "Present";
+            InstallProgressTimeoutInMinutes         = 60;
+            InstallQualityUpdates                   = $False;
+            Priority                                = 0;
+            SelectedMobileAppIds                    = @();
+            ShowInstallationProgress                = $True;
+            TrackInstallProgressForAutopilotOnly    = $True;
+            Credential                              = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Enrollment Status Page.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceEnrollmentStatusPageWindows10 '6b43c039-c1d0-4a9f-aab9-48c5531acbd6'
+        {
+            DisplayName                             = "All users and all devices";
+            Ensure                                  = "Absent";
             Credential                              = $Credscredential
         }
     }

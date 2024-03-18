@@ -8,6 +8,8 @@ jobs:
   GenerateResource:
     runs-on: windows-latest
 
+    permissions: write-all
+
       # Only when run from the main repo
     if: github.repository == 'microsoft/Microsoft365DSC'
 
@@ -23,8 +25,8 @@ jobs:
         if: always()
         shell: pwsh
         run: |
-          git config --local user.email "nik.charlebois@microsoft.com"
-          git config --local user.name "Nik Charlebois"
+          git config --local user.email "nicharl@microsoft.com"
+          git config --local user.name "NikCharlebois"
           git add D:/a/Microsoft365DSC/Microsoft365DSC/docs/docs/*
           git pull
           git commit -m "Updated Resources and Cmdlet documentation pages"
@@ -35,6 +37,10 @@ jobs:
   deploy:
     needs: GenerateResource
     runs-on: ubuntu-latest
+
+    permissions:    
+      contents: write
+      pages: write
 
     # Only when run from the main repo
     if: github.repository == 'microsoft/Microsoft365DSC'

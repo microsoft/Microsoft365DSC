@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -25,7 +25,7 @@ Configuration Example
             RestrictTeamsConsumerToExternalUserProfiles = $False;
             SharedSipAddressSpace                       = $False;
             TreatDiscoveredPartnersAsUnverified         = $False;
-            Credential                                  = $credsGlobalAdmin
+            Credential                                  = $Credscredential
         }
     }
 }

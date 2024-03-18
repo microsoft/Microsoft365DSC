@@ -31,6 +31,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 
@@ -48,7 +49,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -58,7 +59,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -97,9 +98,73 @@ Configuration Example
             Credential                        = $Credscredential;
             DisplayName                       = "Domain Join";
             Ensure                            = "Present";
-            Id                                = "1ab2945b-36b5-4b34-bbf5-717885c15654";
             OrganizationalUnit                = "OU=workstation,CN=domain,CN=com";
             SupportsScopeTags                 = $True;
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationDomainJoinPolicyWindows10 'Example'
+        {
+            ActiveDirectoryDomainName         = "domain.com";
+            Assignments                       = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            );
+            ComputerNameStaticPrefix          = "WK-";
+            ComputerNameSuffixRandomCharCount = 12;
+            Credential                        = $Credscredential;
+            DisplayName                       = "Domain Join";
+            Ensure                            = "Present";
+            OrganizationalUnit                = "OU=workstation,CN=domain,CN=com";
+            SupportsScopeTags                 = $False; # Updated Property
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationDomainJoinPolicyWindows10 'Example'
+        {
+            Credential                        = $Credscredential;
+            DisplayName                       = "Domain Join";
+            Ensure                            = "Absent";
         }
     }
 }

@@ -39,6 +39,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 
@@ -85,7 +86,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -93,7 +94,6 @@ Configuration Example
     {
         IntuneWifiConfigurationPolicyWindows10 'myWifiConfigWindows10Policy'
         {
-            Id                             = '2273c683-7590-4c56-81d3-14adb6b3d19c'
             DisplayName                    = 'win10 wifi - revised'
             Assignments                    = @(
                 MSFT_DeviceManagementConfigurationPolicyAssignments {
@@ -112,7 +112,77 @@ Configuration Example
             Ssid                           = 'ssid'
             WifiSecurityType               = 'wpa2Personal'
             Ensure                         = 'Present'
-            Credential                     = $credsGlobalAdmin
+            Credential                     = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWifiConfigurationPolicyWindows10 'myWifiConfigWindows10Policy'
+        {
+            DisplayName                    = 'win10 wifi - revised'
+            Assignments                    = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
+            ConnectAutomatically           = $True
+            ConnectToPreferredNetwork      = $False # Updated Property
+            ConnectWhenNetworkNameIsHidden = $True
+            ForceFIPSCompliance            = $True
+            MeteredConnectionLimit         = 'fixed'
+            NetworkName                    = 'MyWifi'
+            ProxyAutomaticConfigurationUrl = 'https://proxy.contoso.com'
+            ProxySetting                   = 'automatic'
+            Ssid                           = 'ssid'
+            WifiSecurityType               = 'wpa2Personal'
+            Ensure                         = 'Present'
+            Credential                     = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWifiConfigurationPolicyWindows10 'myWifiConfigWindows10Policy'
+        {
+            DisplayName                    = 'win10 wifi - revised'
+            Ensure                         = 'Absent'
+            Credential                     = $Credscredential
         }
     }
 }

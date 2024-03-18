@@ -48,7 +48,37 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOAcceptedDomain 'O365DSCDomain'
+        {
+            Identity     = $Domain
+            DomainType   = "Authoritative"
+            OutboundOnly = $false
+            Ensure       = "Present"
+            Credential   = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -56,10 +86,39 @@ Configuration Example
     {
         EXOAcceptedDomain 'O365DSCDomain'
         {
-            Identity   = 'contoso.com'
-            DomainType = "Authoritative"
-            Ensure     = "Present"
-            Credential = $credsGlobalAdmin
+            Identity     = $Domain
+            DomainType   = "Authoritative"
+            OutboundOnly = $true # Updated Property
+            Ensure       = "Present"
+            Credential   = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAcceptedDomain 'O365DSCDomain'
+        {
+            Identity     = $Domain
+            DomainType   = "Authoritative"
+            Ensure       = "Absent"
+            Credential   = $Credscredential
         }
     }
 }

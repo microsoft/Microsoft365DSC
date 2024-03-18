@@ -53,6 +53,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 # IntuneAndroidDeviceCompliancePolicy
@@ -234,7 +235,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -244,7 +245,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -262,7 +263,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -292,7 +293,7 @@ Configuration Example
             SecurityRequireVerifyApps                          = $False
             StorageRequireEncryption                           = $True
             Ensure                                             = 'Present'
-            Credential                                         = $credsglobaladmin
+            Credential                                         = $Credscredential
         }
     }
 }
@@ -300,7 +301,7 @@ Configuration Example
 
 ### Example 2
 
-This example removes an existing Device Compliance Policy for iOs devices
+This example creates a new Device Compliance Policy for Android devices
 
 ```powershell
 Configuration Example
@@ -308,17 +309,63 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyAndroid 'RemoveDeviceCompliancePolicyAndroid'
+        IntuneDeviceCompliancePolicyAndroid 'AddDeviceCompliancePolicy'
         {
-            DisplayName = 'Test Android Device Compliance Policy'
-            Ensure      = 'Absent'
-            Credential  = $credsGlobalAdmin
+            DisplayName                                        = 'Test Policy'
+            Description                                        = ''
+            DeviceThreatProtectionEnabled                      = $False
+            DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+            osMinimumVersion                                   = '7'
+            PasswordExpirationDays                             = 90
+            PasswordMinimumLength                              = 8 # Updated Property
+            PasswordMinutesOfInactivityBeforeLock              = 5
+            PasswordPreviousPasswordBlockCount                 = 10
+            PasswordRequired                                   = $True
+            PasswordRequiredType                               = 'deviceDefault'
+            SecurityBlockJailbrokenDevices                     = $False
+            SecurityDisableUsbDebugging                        = $False
+            SecurityPreventInstallAppsFromUnknownSources       = $False
+            SecurityRequireCompanyPortalAppIntegrity           = $False
+            SecurityRequireGooglePlayServices                  = $False
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $False
+            SecurityRequireUpToDateSecurityProviders           = $False
+            SecurityRequireVerifyApps                          = $False
+            StorageRequireEncryption                           = $True
+            Ensure                                             = 'Present'
+            Credential                                         = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Compliance Policy for Android devices
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceCompliancePolicyAndroid 'AddDeviceCompliancePolicy'
+        {
+            DisplayName                                        = 'Test Policy'
+            Ensure                                             = 'Absent'
+            Credential                                         = $Credscredential
         }
     }
 }

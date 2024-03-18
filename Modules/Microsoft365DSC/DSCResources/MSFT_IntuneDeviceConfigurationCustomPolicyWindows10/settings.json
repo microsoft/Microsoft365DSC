@@ -5,7 +5,10 @@
     "graph":  {
                   "delegated":  {
                                     "read":  [
-                                                 {
+                                                {
+                                                    "name": "Group.Read.All"
+                                                },
+                                                {
                                                      "name":  "DeviceManagementConfiguration.Read.All"
                                                  }
                                              ],
@@ -16,8 +19,11 @@
                                                ]
                                 },
                   "application":  {
-                                      "read":  [
-                                                   {
+                                                "read":  [
+                                                    {
+                                                        "name": "Group.Read.All"
+                                                    },
+                                                    {
                                                        "name":  "DeviceManagementConfiguration.Read.All"
                                                    }
                                                ],

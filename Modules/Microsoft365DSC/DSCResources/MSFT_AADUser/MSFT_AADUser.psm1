@@ -29,6 +29,10 @@ function Get-TargetResource
         $LicenseAssignment,
 
         [Parameter()]
+        [System.String[]]
+        $MemberOf,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Password,
 
@@ -150,6 +154,7 @@ function Get-TargetResource
         LastName              = $null
         UsageLocation         = $null
         LicenseAssignment     = $null
+        MemberOf              = $null
         Password              = $null
         Credential            = $Credential
         ApplicationId         = $ApplicationId
@@ -175,8 +180,8 @@ function Get-TargetResource
         }
         else
         {
-            Write-Verbose -Message "Retrieving user from the exported instances"
-            $user = $Script:M365DSCExportInstances | Where-Object -FilterScript {$_.UserPrincipalName -eq $UserPrincipalName}
+            Write-Verbose -Message 'Retrieving user from the exported instances'
+            $user = $Script:M365DSCExportInstances | Where-Object -FilterScript { $_.UserPrincipalName -eq $UserPrincipalName }
         }
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
@@ -187,6 +192,9 @@ function Get-TargetResource
             $currentLicenseAssignment += $sku.SkuPartNumber
         }
 
+        # return membership of static groups only
+        [array]$currentMemberOf = (Get-MgUserMemberOfAsGroup -UserId $UserPrincipalName -All | Where-Object -FilterScript { $_.GroupTypes -notcontains 'DynamicMembership' }).DisplayName
+
         $userPasswordPolicyInfo = $user | Select-Object UserprincipalName, @{
             N = 'PasswordNeverExpires'; E = { $_.PasswordPolicies -contains 'DisablePasswordExpiration' }
         }
@@ -196,7 +204,7 @@ function Get-TargetResource
         {
             $Script:allDirectoryRoleAssignment = Get-MgBetaRoleManagementDirectoryRoleAssignment -All
         }
-        $assignedRoles = $Script:allDirectoryRoleAssignment | Where-Object -FilterScript {$_.PrincipalId -eq $user.Id}
+        $assignedRoles = $Script:allDirectoryRoleAssignment | Where-Object -FilterScript { $_.PrincipalId -eq $user.Id }
 
         $rolesValue = @()
         if ($null -eq $Script:allAssignedRoles -and $assignedRoles.Length -gt 0)
@@ -205,7 +213,7 @@ function Get-TargetResource
         }
         foreach ($assignedRole in $assignedRoles)
         {
-            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript {$_.Id -eq $assignedRole.RoleDefinitionId}
+            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript { $_.Id -eq $assignedRole.RoleDefinitionId }
             $rolesValue += $currentRoleInfo.DisplayName
         }
 
@@ -216,6 +224,7 @@ function Get-TargetResource
             LastName              = $user.Surname
             UsageLocation         = $user.UsageLocation
             LicenseAssignment     = $currentLicenseAssignment
+            MemberOf              = $currentMemberOf
             Password              = $Password
             City                  = $user.City
             Country               = $user.Country
@@ -282,6 +291,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $LicenseAssignment,
+
+        [Parameter()]
+        [System.String[]]
+        $MemberOf,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -405,7 +418,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing User {$UserPrincipalName}"
         Remove-MgUser -UserId $UserPrincipalName
     }
-    else
+    elseif ($Ensure -eq 'Present')
     {
         $PasswordPolicies = $null
         if ($PasswordNeverExpires)
@@ -485,7 +498,7 @@ function Set-TargetResource
 
             if ($null -ne $Password)
             {
-                Write-Verbose -Message "PasswordProfile property will not be updated"
+                Write-Verbose -Message 'PasswordProfile property will not be updated'
             }
 
             $CreationParams.Add('UserId', $UserPrincipalName)
@@ -556,6 +569,79 @@ function Set-TargetResource
                 -Credential $Credential
 
             return $nullReturn
+        }
+        #endregion
+
+        #region Update MemberOf groups - if specified
+        if ($null -ne $MemberOf)
+        {
+            if ($null -eq $user.MemberOf)
+            {
+                # user is not currently a member of any groups, add user to groups listed in MemberOf
+                foreach ($memberOfGroup in $MemberOf)
+                {
+                    $group = Get-MgGroup -Filter "DisplayName eq '$memberOfGroup'" -Property Id, GroupTypes
+                    if ($null -eq $group)
+                    {
+                        New-M365DSCLogEntry -Message 'Error updating data:' `
+                            -Exception "Attempting to add a user to a group that doesn't exist" `
+                            -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $TenantId `
+                            -Credential $Credential
+
+                        throw "Group '$memberOfGroup' does not exist in tenant"
+                    }
+                    if ($group.GroupTypes -contains 'DynamicMembership')
+                    {
+                        New-M365DSCLogEntry -Message 'Error updating data:' `
+                            -Exception 'Attempting to add a user to a dynamic group' `
+                            -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $TenantId `
+                            -Credential $Credential
+
+                        throw "Cannot add user $UserPrincipalName to group '$memberOfGroup' because it is a dynamic group"
+                    }
+                    New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $user.Id
+                }
+            }
+            else
+            {
+                # user is a member of some groups, ensure that user is only a member of groups listed in MemberOf
+                Compare-Object -ReferenceObject $MemberOf -DifferenceObject $user.MemberOf | ForEach-Object {
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($_.InputObject)" -Property Id, GroupTypes
+                    if ($_.SideIndicator -eq '<=')
+                    {
+                        # Group in MemberOf not present in groups that user is a member of, add user to group
+                        if ($null -eq $group)
+                        {
+                            New-M365DSCLogEntry -Message 'Error updating data:' `
+                                -Exception "Attempting to add a user to a group that doesn't exist" `
+                                -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $TenantId `
+                                -Credential $Credential
+
+                            throw "Group '$($_.InputObject)' does not exist in tenant"
+                        }
+                        if ($group.GroupTypes -contains 'DynamicMembership')
+                        {
+                            New-M365DSCLogEntry -Message 'Error updating data:' `
+                                -Exception 'Attempting to add a user to a dynamic group' `
+                                -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $TenantId `
+                                -Credential $Credential
+
+                            throw "Cannot add user $UserPrincipalName to group '$($_.InputObject)' because it is a dynamic group"
+                        }
+                        New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $user.Id
+                    }
+                    else
+                    {
+                        # Group that user is a member of is not present in MemberOf, remove user from group
+                        # (no need to test for dynamic groups as they are ignored in Get-TargetResource)
+                        Remove-MgGroupMemberByRef -GroupId $group.Id -DirectoryObjectId $user.Id
+                    }
+                }
+            }
         }
         #endregion
 
@@ -632,6 +718,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $LicenseAssignment,
+
+        [Parameter()]
+        [System.String[]]
+        $MemberOf,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -749,6 +839,11 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
+    if ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Absent')
+    {
+        return $true
+    }
+
     $ValuesToCheck = $PSBoundParameters
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -819,7 +914,8 @@ function Export-TargetResource
             Property    = $propertiesToRetrieve
             ErrorAction = 'Stop'
         }
-        if ($Filter -like "*endsWith*") {
+        if ($Filter -like '*endsWith*')
+        {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
         }

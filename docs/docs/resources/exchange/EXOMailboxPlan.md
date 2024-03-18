@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the Mailbox Plan that you want to modify. | |
+| **DisplayName** | Write | String | The display name of the mailbox plan. | |
 | **Ensure** | Write | String | MailboxPlans cannot be created/removed in O365.  This must be set to 'Present' | `Present` |
 | **IssueWarningQuota** | Write | String | The IssueWarningQuota parameter specifies the warning threshold for the size of the mailboxes that are created or enabled using the mailbox plan. | |
 | **MaxReceiveSize** | Write | String | The MaxReceiveSize parameter specifies the maximum size of a message that can be sent to the mailbox. | |
@@ -53,7 +54,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -62,15 +63,15 @@ Configuration Example
         EXOMailboxPlan 'ConfigureMailboxPlan'
         {
             Ensure                   = "Present";
-            Identity                 = "ExchangeOnlineEnterprise";
-            IssueWarningQuota        = "98 GB (105,226,698,752 bytes)";
+            Identity                 = "ExchangeOnlineEssentials";
+            IssueWarningQuota        = "15 GB (16,106,127,360 bytes)";
             MaxReceiveSize           = "25 MB (26,214,400 bytes)";
             MaxSendSize              = "25 MB (26,214,400 bytes)";
-            ProhibitSendQuota        = "99 GB (106,300,440,576 bytes)";
-            ProhibitSendReceiveQuota = "100 GB (107,374,182,400 bytes)";
+            ProhibitSendQuota        = "15 GB (16,106,127,360 bytes)";
+            ProhibitSendReceiveQuota = "15 GB (16,106,127,360 bytes)"; # Updated Property
             RetainDeletedItemsFor    = "14.00:00:00";
             RoleAssignmentPolicy     = "Default Role Assignment Policy";
-            Credential               = $credsGlobalAdmin
+            Credential               = $Credscredential
         }
     }
 }

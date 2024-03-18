@@ -2,4 +2,4 @@
 
 ## Description
 
-This resource configures the Azure AD Tenant Details
+This resource monitors Microsoft365DSC resources based on provided rules.

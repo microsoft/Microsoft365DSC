@@ -9,6 +9,10 @@ function Get-TargetResource
         $AppId,
 
         [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoleAssignedTo,
+
+        [Parameter()]
         [System.String]
         $ObjectId,
 
@@ -125,6 +129,7 @@ function Get-TargetResource
                 else
                 {
                     $AADServicePrincipal = Get-MgServicePrincipal -ServicePrincipalId $ObjectId `
+                        -Expand 'AppRoleAssignedTo' `
                         -ErrorAction Stop
                 }
             }
@@ -142,7 +147,21 @@ function Get-TargetResource
             }
             else
             {
-                $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'"
+                $ObjectGuid = [System.Guid]::empty
+                if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+                {
+                    $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+                    if ($appInstance)
+                    {
+                        $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($appInstance.AppId)'" `
+                                                                    -Expand 'AppRoleAssignedTo'
+                    }
+                }
+                else
+                {
+                    $AADServicePrincipal = Get-MgServicePrincipal -Filter "AppID eq '$($AppId)'" `
+                                                                -Expand 'AppRoleAssignedTo'
+                }
             }
         }
         if ($null -eq $AADServicePrincipal)
@@ -151,8 +170,32 @@ function Get-TargetResource
         }
         else
         {
+            $AppRoleAssignedToValues = @()
+            foreach ($principal in $AADServicePrincipal.AppRoleAssignedTo)
+            {
+                $currentAssignment = @{
+                    PrincipalType = $null
+                    Identity      = $null
+                }
+                if ($principal.PrincipalType -eq 'User')
+                {
+                    $user = Get-MgUser -UserId $principal.PrincipalId
+                    $currentAssignment.PrincipalType = 'User'
+                    $currentAssignment.Identity = $user.UserPrincipalName.Split('@')[0]
+                    $AppRoleAssignedToValues += $currentAssignment
+                }
+                elseif ($principal.PrincipalType -eq 'Group')
+                {
+                    $group = Get-MgGroup -GroupId $principal.PrincipalId
+                    $currentAssignment.PrincipalType = 'Group'
+                    $currentAssignment.Identity = $group.DisplayName
+                    $AppRoleAssignedToValues += $currentAssignment
+                }
+            }
+
             $result = @{
                 AppId                     = $AADServicePrincipal.AppId
+                AppRoleAssignedTo         = $AppRoleAssignedToValues
                 ObjectID                  = $AADServicePrincipal.Id
                 DisplayName               = $AADServicePrincipal.DisplayName
                 AlternativeNames          = $AADServicePrincipal.AlternativeNames
@@ -181,6 +224,7 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -199,6 +243,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $AppId,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoleAssignedTo,
 
         [Parameter()]
         [System.String]
@@ -286,11 +334,9 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "1 - There are now {$((Get-ChildItem function: | Measure-Object).Count) functions}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
-    Write-Verbose -Message "2 - There are now {$((Get-ChildItem function: | Measure-Object).Count) functions}"
     Write-Verbose -Message 'Setting configuration of Azure AD ServicePrincipal'
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -314,21 +360,124 @@ function Set-TargetResource
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('ObjectID') | Out-Null
     $currentParameters.Remove('ApplicationSecret') | Out-Null
-    $currentParameters.Remove('AppId') | Out-Null
 
     # ServicePrincipal should exist but it doesn't
     if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Absent')
     {
+        if ($null -ne $AppRoleAssignedTo)
+        {
+            $currentParameters.AppRoleAssignedTo = $AppRoleAssignedToValue
+        }
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+            $currentParameters.AppId = $appInstance.AppId
+        }
+
         Write-Verbose -Message 'Creating new Service Principal'
+        Write-Verbose -Message "With Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
         New-MgServicePrincipal @currentParameters
     }
     # ServicePrincipal should exist and will be configured to desired state
-    if ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentAADServicePrincipal.Ensure -eq 'Present')
     {
         Write-Verbose -Message 'Updating existing Service Principal'
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($AppId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $appInstance = Get-MgApplication -Filter "DisplayName eq '$AppId'"
+            $currentParameters.AppId = $appInstance.AppId
+        }
         Write-Verbose -Message "CurrentParameters: $($currentParameters | Out-String)"
         Write-Verbose -Message "ServicePrincipalID: $($currentAADServicePrincipal.ObjectID)"
+        $currentParameters.Remove('AppRoleAssignedTo') | Out-Null
         Update-MgServicePrincipal -ServicePrincipalId $currentAADServicePrincipal.ObjectID @currentParameters
+
+        if ($AppRoleAssignedTo)
+        {
+            [Array]$currentPrincipals = $currentAADServicePrincipal.AppRoleAssignedTo.Identity
+            [Array]$desiredPrincipals = $AppRoleAssignedTo.Identity
+
+            [Array]$differences = Compare-Object -ReferenceObject $currentPrincipals -DifferenceObject $desiredPrincipals
+            [Array]$membersToAdd = $differences | Where-Object -FilterScript {$_.SideIndicator -eq '=>'}
+            [Array]$membersToRemove = $differences | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
+
+            if ($differences.Count -gt 0)
+            {
+                if ($membersToAdd.Count -gt 0)
+                {
+                    $AppRoleAssignedToValues = @()
+                    foreach ($assignment in $AppRoleAssignedTo)
+                    {
+                        $AppRoleAssignedToValues += @{
+                            PrincipalType = $assignment.PrincipalType
+                            Identity      = $assignment.Identity
+                        }
+                    }
+                    foreach ($member in $membersToAdd)
+                    {
+                        $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript {$_.Identity -eq $member.InputObject}
+                        if ($assignment.PrincipalType -eq 'User')
+                        {
+                            Write-Verbose -Message "Retrieving user {$($assignment.Identity)}"
+                            $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($assignment.Identity)')"
+                            $PrincipalIdValue = $user.Id
+                        }
+                        else
+                        {
+                            Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
+                            $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
+                            $PrincipalIdValue = $group.Id
+                        }
+
+                        $bodyParam = @{
+                            principalId = $PrincipalIdValue
+                            resourceId  = $currentAADServicePrincipal.ObjectID
+                            appRoleId   = "00000000-0000-0000-0000-000000000000"
+                        }
+                        Write-Verbose -Message "Adding member {$($member.InputObject.ToString())}"
+                        New-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `
+                            -BodyParameter $bodyParam | Out-Null
+                    }
+                }
+
+                if ($membersToRemove.Count -gt 0)
+                {
+                    $AppRoleAssignedToValues = @()
+                    foreach ($assignment in $currentAADServicePrincipal.AppRoleAssignedTo)
+                    {
+                        $AppRoleAssignedToValues += @{
+                            PrincipalType = $assignment.PrincipalType
+                            Identity      = $assignment.Identity
+                        }
+                    }
+                    foreach ($member in $membersToRemove)
+                    {
+                        $assignment = $AppRoleAssignedToValues | Where-Object -FilterScript {$_.Identity -eq $member.InputObject}
+                        if ($assignment.PrincipalType -eq 'User')
+                        {
+                            Write-Verbose -Message "Retrieving user {$($assignment.Identity)}"
+                            $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($assignment.Identity)')"
+                            $PrincipalIdValue = $user.Id
+                        }
+                        else
+                        {
+                            Write-Verbose -Message "Retrieving group {$($assignment.Identity)}"
+                            $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.Identity)'"
+                            $PrincipalIdValue = $group.Id
+                        }
+                        Write-Verbose -Message "PrincipalID Value = '$PrincipalIdValue'"
+                        Write-Verbose -Message "ServicePrincipalId = '$($currentAADServicePrincipal.ObjectID)'"
+                        $allAssignments = Get-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID
+                        $assignmentToRemove = $allAssignments | Where-Object -FilterScript {$_.PrincipalId -eq $PrincipalIdValue}
+                        Write-Verbose -Message "Removing member {$($member.InputObject.ToString())}"
+                        Remove-MgServicePrincipalAppRoleAssignedTo -ServicePrincipalId $currentAADServicePrincipal.ObjectID `
+                            -AppRoleAssignmentId $assignmentToRemove.Id | Out-Null
+                    }
+                }
+            }
+        }
     }
     # ServicePrincipal exists but should not
     elseif ($Ensure -eq 'Absent' -and $currentAADServicePrincipal.Ensure -eq 'Present')
@@ -347,6 +496,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $AppId,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $AppRoleAssignedTo,
 
         [Parameter()]
         [System.String]
@@ -450,6 +603,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
@@ -525,7 +679,10 @@ function Export-TargetResource
         $i = 1
         Write-Host "`r`n" -NoNewline
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-MgServicePrincipal -All:$true -Filter $Filter -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgServicePrincipal -All:$true `
+                                                                   -Filter $Filter `
+                                                                   -Expand 'AppRoleAssignedTo' `
+                                                                   -ErrorAction Stop
         foreach ($AADServicePrincipal in $Script:exportedInstances)
         {
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADServicePrincipal.DisplayName)" -NoNewline
@@ -544,11 +701,20 @@ function Export-TargetResource
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
+                if ($Results.AppRoleAssignedTo.Count -gt 0)
+                {
+                    $Results.AppRoleAssignedTo = Get-M365DSCAzureADServicePrincipalAssignmentAsString -Assignments $Results.AppRoleAssignedTo
+                }
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                     -ConnectionMode $ConnectionMode `
                     -ModulePath $PSScriptRoot `
                     -Results $Results `
                     -Credential $Credential
+                if ($null -ne $Results.AppRoleAssignedTo)
+                {
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock `
+                        -ParameterName 'AppRoleAssignedTo'
+                }
                 $dscContent += $currentDSCBlock
                 Save-M365DSCPartialExport -Content $currentDSCBlock `
                     -FileName $Global:PartialExportFileName
@@ -571,6 +737,28 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-M365DSCAzureADServicePrincipalAssignmentAsString
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.ArrayList]
+        $Assignments
+    )
+
+    $StringContent = '@('
+    foreach ($assignment in $Assignments)
+    {
+        $StringContent += "MSFT_AADServicePrincipalRoleAssignment {`r`n"
+        $StringContent += "                PrincipalType = '" + $assignment.PrincipalType + "'`r`n"
+        $StringContent += "                Identity      = '" + $assignment.Identity + "'`r`n"
+        $StringContent += "            }`r`n"
+    }
+    $StringContent += '            )'
+    return $StringContent
 }
 
 Export-ModuleMember -Function *-TargetResource

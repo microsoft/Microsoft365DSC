@@ -206,6 +206,8 @@ function Set-TargetResource
     $currentParameters.Add('OrganizationId', $(Get-MgBetaOrganization).Id)
     try
     {
+        Write-Verbose -Message "Calling Update-MGBetaOrganization with parameters:"
+        Write-Verbose -Message "$(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
         Update-MgBetaOrganization @currentParameters
     }
     catch
@@ -281,7 +283,8 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Target-Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Credential') | Out-Null

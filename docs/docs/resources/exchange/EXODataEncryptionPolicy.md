@@ -51,7 +51,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -60,11 +60,8 @@ Configuration Example
         EXODataEncryptionPolicy 'ConfigureDataEncryptionPolicy'
         {
             Identity    = 'US Mailboxes'
-            Name        = 'All US Mailboxes'
-            Description = 'All Mailboxes of users in the US'
-            Enabled     = $true
-            Ensure      = "Present"
-            Credential  = $credsGlobalAdmin
+            Ensure      = "Absent"
+            Credential  = $Credscredential
         }
     }
 }

@@ -5,6 +5,9 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | Identity for the teams messaging policy you're modifying. To modify the global policy, use this syntax: -Identity global. To modify a per-user policy, use syntax similar to this: -Identity TeamsMessagingPolicy. | |
+| **AllowCommunicationComplianceEndUserReporting** | Write | Boolean | Report inappropriate content. | |
+| **AllowFluidCollaborate** | Write | Boolean | Determines is Fluid Collaboration should be enabled or not. | |
+| **AllowSecurityEndUserReporting** | Write | Boolean | Report a security concern. | |
 | **AllowGiphy** | Write | Boolean | Determines whether a user is allowed to access and post Giphys. Set this to TRUE to allow. Set this FALSE to prohibit. | |
 | **AllowMemes** | Write | Boolean | Determines whether a user is allowed to access and post memes. Set this to TRUE to allow. Set this FALSE to prohibit. | |
 | **AllowOwnerDeleteMessage** | Write | Boolean | Determines whether owners are allowed to delete all the messages in their team. Set this to TRUE to allow. Set this to FALSE to prohibit. | |
@@ -20,6 +23,7 @@
 | **AllowRemoveUser** | Write | Boolean | Determines whether a user is allowed to remove a user from a conversation. Set this to TRUE to allow. Set this FALSE to prohibit. | |
 | **AllowPriorityMessages** | Write | Boolean | Determines whether a user is allowed to send priorities messages. Set this to TRUE to allow. Set this FALSE to prohibit. | |
 | **AllowUserDeleteChat** | Write | Boolean | Turn this setting on to allow users to permanently delete their 1:1, group chat, and meeting chat as participants (this deletes the chat only for them, not other users in the chat). | |
+| **AllowVideoMessages** | Write | Boolean | Determines whether a user is allowed to send video messages in Chat. Set this to TRUE to allow a user to send video messages. Set this to FALSE to prohibit sending video messages. | |
 | **Description** | Write | String | Provide a description of your policy to identify purpose of creating it. | |
 | **GiphyRatingType** | Write | String | Determines the Giphy content restrictions applicable to a user. Set this to STRICT, MODERATE or NORESTRICTION. | `STRICT`, `MODERATE`, `NORESTRICTION` |
 | **ReadReceiptsEnabledType** | Write | String | Use this setting to specify whether read receipts are user controlled, enabled for everyone, or disabled. Set this to UserPreference, Everyone or None. | `UserPreference`, `Everyone`, `None` |
@@ -31,6 +35,7 @@
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
 ## Description
 
@@ -58,11 +63,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Organization.Read.All, User.Read.All, Group.ReadWrite.All, AppCatalog.ReadWrite.All, TeamSettings.ReadWrite.All, Channel.Delete.All, ChannelSettings.ReadWrite.All, ChannelMember.ReadWrite.All
+    - Organization.Read.All
 
 - **Update**
 
-    - Organization.Read.All, User.Read.All, Group.ReadWrite.All, AppCatalog.ReadWrite.All, TeamSettings.ReadWrite.All, Channel.Delete.All, ChannelSettings.ReadWrite.All, ChannelMember.ReadWrite.All
+    - Organization.Read.All
 
 ## Examples
 
@@ -76,7 +81,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -102,7 +107,7 @@ Configuration Example
             AudioMessageEnabledType = "ChatsOnly"
             AllowOwnerDeleteMessage = $False
             Ensure                  = "Present"
-            Credential              = $credsGlobalAdmin
+            Credential              = $Credscredential
         }
     }
 }

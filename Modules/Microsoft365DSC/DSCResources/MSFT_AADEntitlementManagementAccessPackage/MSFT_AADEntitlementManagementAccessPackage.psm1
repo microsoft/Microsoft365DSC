@@ -104,14 +104,19 @@ function Get-TargetResource
     {
         $getValue = $null
 
-        #region resource generator code
-        $getValue = Get-MgBetaEntitlementManagementAccessPackage -AccessPackageId $id `
-            -ExpandProperty "accessPackageResourceRoleScopes(`$expand=accessPackageResourceRole,accessPackageResourceScope)" `
-            -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($id))
+        {
+            $getValue = Get-MgBetaEntitlementManagementAccessPackage -AccessPackageId $id `
+                -ExpandProperty "accessPackageResourceRoleScopes(`$expand=accessPackageResourceRole,accessPackageResourceScope)" `
+                -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Nothing with id {$id} was found"
+            if(-not [System.String]::IsNullOrEmpty($id))
+            {
+                Write-Verbose -Message "Nothing with id {$id} was found"
+            }
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
@@ -121,7 +126,6 @@ function Get-TargetResource
                     -ErrorAction SilentlyContinue
             }
         }
-        #endregion
 
         if ($null -eq $getValue)
         {
@@ -140,6 +144,8 @@ function Get-TargetResource
                 AccessPackageResourceRoleDisplayName = $accessPackageResourceRoleScope.AccessPackageResourceRole.DisplayName
             }
         }
+
+        $catalog = Get-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalog $getValue.CatalogId
 
         $getIncompatibleAccessPackages = @()
         [Array]$query = Get-MgBetaEntitlementManagementAccessPackageIncompatibleAccessPackage -AccessPackageId $getValue.id
@@ -165,7 +171,7 @@ function Get-TargetResource
 
         $results = @{
             Id                              = $getValue.Id
-            CatalogId                       = $getValue.CatalogId
+            CatalogId                       = $catalog.DisplayName
             Description                     = $getValue.Description
             DisplayName                     = $getValue.DisplayName
             IsHidden                        = $getValue.IsHidden
@@ -313,6 +319,16 @@ function Set-TargetResource
         #region basic information
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
 
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($CreateParameters.CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CreateParameters.CatalogId)'"
+            if ($catalogInstance)
+            {
+                $CreateParameters.CatalogId = $catalogInstance.Id
+            }
+        }
+
         $CreateParameters.Remove('Id') | Out-Null
         $CreateParameters.Remove('Verbose') | Out-Null
         $CreateParameters.Remove('AccessPackageResourceRoleScopes') | Out-Null
@@ -418,6 +434,16 @@ function Set-TargetResource
 
         #region basic information
         $UpdateParameters = ([Hashtable]$PSBoundParameters).clone()
+
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($CreateParameters.CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($UpdateParameters.CatalogId)'"
+            if ($catalogInstance)
+            {
+                $UpdateParameters.CatalogId = $catalogInstance.Id
+            }
+        }
 
         $UpdateParameters.Remove('Id') | Out-Null
         $UpdateParameters.Remove('Verbose') | Out-Null
@@ -755,15 +781,15 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$Id}"
+    Write-Verbose -Message "Testing configuration of {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
+        Write-Verbose -Message "Test-TargetResource returned $true"
+        return $true
     }
     $testResult = $true
 
@@ -778,6 +804,11 @@ function Test-TargetResource
             foreach ($s in [Array]$source)
             {
                 $s.remove('Id')
+            }
+
+            if ($target.getType().Name -like '*CimInstance*')
+            {
+                $target = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $target
             }
             foreach ($t in [Array]$target)
             {

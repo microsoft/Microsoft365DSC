@@ -170,17 +170,17 @@ function Get-TargetResource
             #endregion
         }
 
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipType))
+        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipType))
         {
-            $results.Add('MembershipType', $getValue.AdditionalProperties.MembershipType)
+            $results.Add('MembershipType', $getValue.AdditionalProperties.membershipType)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipRule))
+        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRule))
         {
-            $results.Add('MembershipRule', $getValue.AdditionalProperties.MembershipRule)
+            $results.Add('MembershipRule', $getValue.AdditionalProperties.membershipRule)
         }
-        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.MembershipRuleProcessingState))
+        if (-not [string]::IsNullOrEmpty($getValue.AdditionalProperties.membershipRuleProcessingState))
         {
-            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.MembershipRuleProcessingState)
+            $results.Add('MembershipRuleProcessingState', $getValue.AdditionalProperties.membershipRuleProcessingState)
         }
 
         Write-Verbose -Message "AU {$DisplayName} MembershipType {$($results.MembershipType)}"
@@ -195,7 +195,8 @@ function Get-TargetResource
                 foreach ($auMember in $auMembers)
                 {
                     $member = @{}
-                    $memberObject = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/directoryobjects/$($auMember.Id)"
+                    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directoryobjects/$($auMember.Id)"
+                    $memberObject = Invoke-MgGraphRequest -Uri $url
                     if ($memberObject.'@odata.type' -match 'user')
                     {
                         $member.Add('Identity', $memberObject.UserPrincipalName)
@@ -239,7 +240,8 @@ function Get-TargetResource
                     }
                 }
                 Write-Verbose -Message "AU {$DisplayName} verify RoleMemberInfo.Id {$($auScopedRoleMember.RoleMemberInfo.Id)}"
-                $memberObject = Invoke-MgGraphRequest -Uri "https://graph.microsoft.com/v1.0/directoryobjects/$($auScopedRoleMember.RoleMemberInfo.Id)"
+                $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/directoryobjects/$($auScopedRoleMember.RoleMemberInfo.Id)"
+                $memberObject = Invoke-MgGraphRequest -Uri $url
                 Write-Verbose -Message "AU {$DisplayName} @odata.Type={$($memberObject.'@odata.type')}"
                 if (($memberObject.'@odata.type') -match 'user')
                 {
@@ -543,7 +545,6 @@ function Set-TargetResource
             # ScopedRoleMember-info is added after the AU is created
         }
         $CreateParameters.Remove('ScopedRoleMembers') | Out-Null
-
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -551,14 +552,22 @@ function Set-TargetResource
         Write-Verbose -Message "Creating an Azure AD Administrative Unit with DisplayName {$DisplayName}"
 
         #region resource generator code
-        $policy = New-MgBetaDirectoryAdministrativeUnit -BodyParameter $CreateParameters
+        Write-Verbose -Message "Creating new Administrative Unit with: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+
+        $jsonParams = ConvertTo-Json $CreateParameters
+
+        # TODO - Replace by cmdlet call which has an issue in 2.11.1
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/administrativeUnits'
+        $policy = Invoke-MgGraphRequest -Method POST -Uri $url -Body $jsonParams
 
         if ($MembershipType -ne 'Dynamic')
         {
             foreach ($member in $memberSpecification)
             {
+                Write-Verbose -Message "Adding new dynamic member {$($member.Id)}"
                 $memberBodyParam = @{
-                    '@odata.id' = "https://graph.microsoft.com/v1.0/$($member.Type)/$($member.Id)"
+                    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/$($member.Type)/$($member.Id)"
+                    '@odata.id' = $url
                 }
 
                 New-MgBetaDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId $policy.Id -BodyParameter $memberBodyParam
@@ -597,8 +606,11 @@ function Set-TargetResource
         $UpdateParameters.Remove('ScopedRoleMembers') | Out-Null
 
         #region resource generator code
-        Update-MgBetaDirectoryAdministrativeUnit @UpdateParameters `
-            -AdministrativeUnitId $currentInstance.Id
+        $jsonParams = ConvertTo-Json $UpdateParameters
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/administrativeUnits/$($currentInstance.Id)"
+        Invoke-MgGraphRequest -Method PATCH -Uri $url -Body $jsonParams
+        <#Update-MgBetaDirectoryAdministrativeUnit @UpdateParameters `
+            -AdministrativeUnitId $currentInstance.Id #>
 
         #endregion
 
@@ -652,7 +664,8 @@ function Set-TargetResource
                         Write-Verbose -Message "AdministrativeUnit {$DisplayName} Adding member {$($diff.Identity)}, type {$($diff.Type)}"
 
                         $memberBodyParam = @{
-                            '@odata.id' = "https://graph.microsoft.com/v1.0/$memberType/$($memberObject.Id)"
+                            $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/$memberType/$($memberObject.Id)"
+                            '@odata.id' = $url
                         }
                         New-MgBetaDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $memberBodyParam | Out-Null
                     }
@@ -682,7 +695,7 @@ function Set-TargetResource
                 $desiredScopedRoleMembersValue = @()
             }
 
-            # flatten hashtabls for compare
+            # flatten hashtables for compare
             $compareCurrentScopedRoleMembersValue = @()
             foreach ($roleMember in $currentScopedRoleMembersValue)
             {
@@ -780,9 +793,11 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AU {$DisplayName}"
-        #region resource generator code
-        Remove-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
-        #endregion
+        # Workaround since Remove-MgBetaDirectoryAdministrativeUnit is not working with 2.11.1
+        # https://github.com/microsoftgraph/msgraph-sdk-powershell/issues/2529
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/administrativeUnits/$($currentInstance.Id)"
+        Invoke-MgGraphRequest -Method DELETE -Uri $url | Out-Null
+        #Remove-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $currentInstance.Id
     }
 }
 
@@ -950,6 +965,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -989,12 +1008,14 @@ function Export-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+
+
+
     try
     {
         $Script:ExportMode = $true
         #region resource generator code
-        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit -All `
-            -ErrorAction Stop
+        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit -Filter $Filter -All:$true -ErrorAction Stop
         #endregion
 
         $i = 1

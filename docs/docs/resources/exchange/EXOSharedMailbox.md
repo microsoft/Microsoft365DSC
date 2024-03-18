@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **DisplayName** | Key | String | The display name of the Shared Mailbox | |
+| **Identity** | Write | String | The unique identifier of the Shared Mailbox | |
 | **PrimarySMTPAddress** | Write | String | The primary email address of the Shared Mailbox | |
 | **Alias** | Write | String | The alias of the Shared Mailbox | |
 | **EmailAddresses** | Write | StringArray[] | The EmailAddresses parameter specifies all the email addresses (proxy addresses) for the Shared Mailbox | |
@@ -48,19 +49,83 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSharedMailbox 'SharedMailbox'
         {
-            DisplayName        = "Test"
-            PrimarySMTPAddress = "Test@O365DSC1.onmicrosoft.com"
-            EmailAddresses     = @("Joufflu@o365dsc1.onmicrosoft.com", "Gilles@O365dsc1.onmicrosoft.com")
+            DisplayName        = "Integration"
+            PrimarySMTPAddress = "Integration@$Domain"
+            EmailAddresses     = @("IntegrationSM@$Domain")
+            Alias              = "IntegrationSM"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOSharedMailbox 'SharedMailbox'
+        {
+            DisplayName        = "Integration"
+            PrimarySMTPAddress = "Integration@$Domain"
+            EmailAddresses     = @("IntegrationSM@$Domain", "IntegrationSM2@$Domain")
+            Alias              = "IntegrationSM"
+            Ensure             = "Present"
+            Credential         = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOSharedMailbox 'SharedMailbox'
+        {
+            DisplayName        = "Integration"
+            PrimarySMTPAddress = "Integration@$Domain"
+            EmailAddresses     = @("IntegrationSM@$Domain", "IntegrationSM2@$Domain")
+            Alias              = "IntegrationSM"
+            Ensure             = "Absent"
+            Credential         = $Credscredential
         }
     }
 }

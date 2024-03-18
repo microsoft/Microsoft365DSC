@@ -4,7 +4,7 @@ class MSFT_AADCrossTenantAccessPolicy : OMI_BaseResource
     [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("The name of the policy.")] String DisplayName;
     [Write, Description("Used to specify which Microsoft clouds an organization would like to collaborate with. By default, this value is empty."), ValueMap{"microsoftonline.com","microsoftonline.us", "partner.microsoftonline.cn"}, Values{"microsoftonline.com","microsoftonline.us", "partner.microsoftonline.cn"}] String AllowedCloudEndpoints[];
-    [Write, Description("Specify if the policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Specify if the policy should exist or not."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

@@ -41,6 +41,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ## Description
@@ -177,7 +178,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -187,7 +188,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -206,7 +207,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -232,7 +233,7 @@ Configuration Example
             PasswordPreviousPasswordCountToBlock               = 13
             StorageRequireEncryption                           = $True
             Ensure                                             = 'Present'
-            Credential                                         = $credsGlobalAdmin
+            Credential                                         = $Credscredential
         }
     }
 }
@@ -240,25 +241,85 @@ Configuration Example
 
 ### Example 2
 
-This example removes an existing Device Compliance Policy for Android Device Owner devices
+This example creates a new Device Compliance Policy for Android Device Owner devices
 
 ```powershell
 Configuration Example
 {
-    param(
+    param
+    (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyAndroidDeviceOwner 'RemoveAndroidDeviceCompliancePolicyOwner'
+        IntuneDeviceCompliancePolicyAndroidDeviceOwner 'ConfigureAndroidDeviceCompliancePolicyOwner'
         {
-            DisplayName = 'DeviceOwner'
-            Ensure      = 'Absent'
-            Credential  = $credsGlobalAdmin
+            DisplayName                                        = 'DeviceOwner'
+            Description                                        = ''
+            DeviceThreatProtectionEnabled                      = $False
+            DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+            AdvancedThreatProtectionRequiredSecurityLevel      = 'unavailable'
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $False
+            OsMinimumVersion                                   = '10'
+            OsMaximumVersion                                   = '11'
+            PasswordRequired                                   = $True
+            PasswordMinimumLength                              = 8 # Updated Property
+            PasswordRequiredType                               = 'numericComplex'
+            PasswordMinutesOfInactivityBeforeLock              = 5
+            PasswordExpirationDays                             = 90
+            PasswordPreviousPasswordCountToBlock               = 13
+            StorageRequireEncryption                           = $True
+            Ensure                                             = 'Present'
+            Credential                                         = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Compliance Policy for Android Device Owner devices
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceCompliancePolicyAndroidDeviceOwner 'ConfigureAndroidDeviceCompliancePolicyOwner'
+        {
+            DisplayName                                        = 'DeviceOwner'
+            Description                                        = ''
+            DeviceThreatProtectionEnabled                      = $False
+            DeviceThreatProtectionRequiredSecurityLevel        = 'unavailable'
+            AdvancedThreatProtectionRequiredSecurityLevel      = 'unavailable'
+            SecurityRequireSafetyNetAttestationBasicIntegrity  = $False
+            SecurityRequireSafetyNetAttestationCertifiedDevice = $False
+            OsMinimumVersion                                   = '10'
+            OsMaximumVersion                                   = '11'
+            PasswordRequired                                   = $True
+            PasswordMinimumLength                              = 8 # Updated Property
+            PasswordRequiredType                               = 'numericComplex'
+            PasswordMinutesOfInactivityBeforeLock              = 5
+            PasswordExpirationDays                             = 90
+            PasswordPreviousPasswordCountToBlock               = 13
+            StorageRequireEncryption                           = $True
+            Ensure                                             = 'Present'
+            Credential                                         = $Credscredential
         }
     }
 }

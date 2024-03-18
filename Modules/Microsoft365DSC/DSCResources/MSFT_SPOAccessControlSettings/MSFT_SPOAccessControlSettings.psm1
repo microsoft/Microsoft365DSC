@@ -88,7 +88,12 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess', 'ProtectionLevel')]
+        [System.String]
+        $ConditionalAccessPolicy
     )
 
     Write-Verbose -Message 'Getting configuration of SharePoint Online Access Control Settings'
@@ -137,6 +142,7 @@ function Get-TargetResource
             CertificateThumbprint        = $CertificateThumbprint
             Managedidentity              = $ManagedIdentity.IsPresent
             Ensure                       = 'Present'
+            ConditionalAccessPolicy      = $SPOAccessControlSettings.ConditionalAccessPolicy
         }
     }
     catch
@@ -245,7 +251,12 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess', 'ProtectionLevel')]
+        [System.String]
+        $ConditionalAccessPolicy
     )
 
     Write-Verbose -Message 'Setting configuration of SharePoint Online Access Control Settings'
@@ -377,7 +388,12 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess', 'ProtectionLevel')]
+        [System.String]
+        $ConditionalAccessPolicy
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -413,7 +429,8 @@ function Test-TargetResource
             'DisallowInfectedFileDownload', `
             'ExternalServicesEnabled', `
             'EmailAttestationRequired', `
-            'EmailAttestationReAuthDays')
+            'EmailAttestationReAuthDays',
+            'ConditionalAccessPolicy')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

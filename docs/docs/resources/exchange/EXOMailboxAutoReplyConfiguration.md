@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the mailbox that you want to modify. You can use any value that uniquely identifies the mailbox. | |
+| **Owner** | Write | String | User Principal Name of the mailbox owner | |
 | **AutoDeclineFutureRequestsWhenOOF** | Write | Boolean | The AutoDeclineFutureRequestsWhenOOF parameter specifies whether to automatically decline new meeting requests that are sent to the mailbox during the scheduled time period when Automatic Replies are being sent.  | |
 | **AutoReplyState** | Write | String | The AutoReplyState parameter specifies whether the mailbox is enabled for Automatic Replies. Valid values are: Enabled, Disabled, Scheduled | `Enabled`, `Disabled`, `Scheduled` |
 | **CreateOOFEvent** | Write | Boolean | The CreateOOFEvent parameter specifies whether to create a calendar event that corresponds to the scheduled time period when Automatic Replies are being sent for the mailbox. | |
@@ -58,21 +59,30 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
-        EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
+        EXOMailboxAutoReplyConfiguration "EXOMailboxAutoReplyConfiguration"
         {
-            Name                              = "Default Policy"
-            EnabledEmailAddressTemplates      = @("SMTP:@contoso.onmicrosoft.com")
-            EnabledPrimarySMTPAddressTemplate = "@contoso.onmicrosoft.com"
-            ManagedByFilter                   = ""
-            Priority                          = "Lowest"
-            Ensure                            = "Present"
-            Credential                        = $credsGlobalAdmin
+            AutoDeclineFutureRequestsWhenOOF = $False;
+            AutoReplyState                   = "Disabled";
+            CreateOOFEvent                   = $False;
+            Credential                       = $Credscredential;
+            DeclineAllEventsForScheduledOOF  = $False;
+            DeclineEventsForScheduledOOF     = $False;
+            DeclineMeetingMessage            = "";
+            EndTime                          = "1/23/2024 3:00:00 PM";
+            Ensure                           = "Present";
+            ExternalAudience                 = "All";
+            ExternalMessage                  = (New-Guid).ToString(); # Updated Property
+            Identity                         = "AdeleV@$Domain";
+            InternalMessage                  = "";
+            OOFEventSubject                  = "";
+            StartTime                        = "1/22/2024 3:00:00 PM";
         }
     }
 }

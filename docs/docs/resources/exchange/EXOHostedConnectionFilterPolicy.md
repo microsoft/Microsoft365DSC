@@ -51,7 +51,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -61,12 +61,12 @@ Configuration Example
         {
             Identity         = "Default"
             AdminDisplayName = ""
-            EnableSafeList   = $False
+            EnableSafeList   = $True # Updated Property
             IPAllowList      = @()
             IPBlockList      = @()
-            MakeDefault      = $False
+            MakeDefault      = $True
             Ensure           = "Present"
-            Credential       = $credsGlobalAdmin
+            Credential       = $Credscredential
         }
     }
 }

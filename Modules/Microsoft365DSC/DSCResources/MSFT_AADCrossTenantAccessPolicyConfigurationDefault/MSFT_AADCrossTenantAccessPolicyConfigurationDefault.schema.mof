@@ -36,7 +36,7 @@ class MSFT_AADCrossTenantAccessPolicyConfigurationDefault : OMI_BaseResource
     [Write, Description("Defines your partner-specific configuration for users from other organizations accessing your resources via Azure AD B2B direct connect."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BDirectConnectInbound;
     [Write, Description("Defines your partner-specific configuration for users in your organization going outbound to access resources in another organization via Azure AD B2B direct connect."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyB2BSetting")] String B2BDirectConnectOutbound;
     [Write, Description("Determines the partner-specific configuration for trusting other Conditional Access claims from external Azure AD organizations."), EmbeddedInstance("MSFT_AADCrossTenantAccessPolicyInboundTrust")] String InboundTrust;
-    [Write, Description("Specify if the instance should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Specify if the instance should exist or not."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

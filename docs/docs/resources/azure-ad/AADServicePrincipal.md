@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **AppId** | Key | String | The unique identifier for the associated application. | |
+| **AppRoleAssignedTo** | Write | MSFT_AADServicePrincipalRoleAssignment[] | App role assignments for this app or service, granted to users, groups, and other service principals. | |
 | **ObjectID** | Write | String | The ObjectID of the ServicePrincipal | |
 | **DisplayName** | Write | String | Displayname of the ServicePrincipal. | |
 | **AlternativeNames** | Write | StringArray[] | The alternative names for this service principal | |
@@ -26,6 +27,15 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **Credential** | Write | PSCredential | Credentials of the Azure AD Admin | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+
+### MSFT_AADServicePrincipalRoleAssignment
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **PrincipalType** | Write | String | Type of principal. Accepted values are User or Group | `Group`, `User` |
+| **Identity** | Write | String | Unique identity representing the principal. | |
 
 ## Description
 
@@ -70,7 +80,81 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        AADServicePrincipal 'AADServicePrincipal'
+        {
+            AppId                         = 'AppDisplayName'
+            DisplayName                   = "AppDisplayName"
+            AlternativeNames              = "AlternativeName1","AlternativeName2"
+            AccountEnabled                = $true
+            AppRoleAssignmentRequired     = $false
+            Homepage                      = "https://$Domain"
+            LogoutUrl                     = "https://$Domain/logout"
+            ReplyURLs                     = "https://$Domain"
+            ServicePrincipalType          = "Application"
+            Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
+            Ensure                        = "Present"
+            Credential                    = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        AADServicePrincipal 'AADServicePrincipal'
+        {
+            AppId                         = 'AppDisplayName'
+            DisplayName                   = "AppDisplayName"
+            AlternativeNames              = "AlternativeName1","AlternativeName3" # Updated Property
+            AccountEnabled                = $true
+            AppRoleAssignmentRequired     = $false
+            Homepage                      = "https://$Domain"
+            LogoutUrl                     = "https://$Domain/logout"
+            ReplyURLs                     = "https://$Domain"
+            ServicePrincipalType          = "Application"
+            Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
+            Ensure                        = "Present"
+            Credential                    = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -78,22 +162,10 @@ Configuration Example
     {
         AADServicePrincipal 'AADServicePrincipal'
         {
-            AppId                         = "<AppID GUID>"
-            DisplayName                   = "AADAppName"
-            AlternativeNames              = "AlternativeName1","AlternativeName2"
-            AccountEnabled                = $true
-            AppRoleAssignmentRequired     = $false
-            ErrorUrl                      = ""
-            Homepage                      = "https://AADAppName.contoso.com"
-            LogoutUrl                     = "https://AADAppName.contoso.com/logout"
-            PublisherName                 = "Contoso"
-            ReplyURLs                     = "https://AADAppName.contoso.com"
-            SamlMetadataURL               = ""
-            ServicePrincipalNames         = "<AppID GUID>", "https://AADAppName.contoso.com"
-            ServicePrincipalType          = "Application"
-            Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
-            Ensure                        = "Present"
-            Credential                    = $credsGlobalAdmin
+            AppId                         = "AppDisplayName"
+            DisplayName                   = "AppDisplayName"
+            Ensure                        = "Absent"
+            Credential                    = $Credscredential
         }
     }
 }

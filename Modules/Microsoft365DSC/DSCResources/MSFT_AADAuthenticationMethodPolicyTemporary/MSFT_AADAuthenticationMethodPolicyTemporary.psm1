@@ -99,18 +99,19 @@ function Get-TargetResource
         $getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id -ErrorAction SilentlyContinue
 
         #endregion
-        if ($null -eq $getValue)
+        if ($null -eq $getValue -or $getValue.State -eq 'disabled')
         {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Temporary with DisplayName {$DisplayName}"
+            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Temporary"
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Azure AD Authentication Method Policy Temporary with Id {$Id} and DisplayName {$DisplayName} was found."
+        Write-Verbose -Message "An Azure AD Authentication Method Policy Temporary with Id {$($currentExcludeTargets.id))} was found."
 
         #region resource generator code
         $complexExcludeTargets = @()
         foreach ($currentExcludeTargets in $getValue.excludeTargets)
         {
+            Write-Verbose -Message "Retrieving ExcludeTarget {$currentExcludeTargets}"
             $myExcludeTargets = @{}
             if ($currentExcludeTargets.id -ne 'all_users'){
                 $myExcludeTargetsDisplayName = get-MgGroup -GroupId $currentExcludeTargets.id
@@ -133,6 +134,7 @@ function Get-TargetResource
         $complexincludeTargets = @()
         foreach ($currentincludeTargets in $getValue.AdditionalProperties.includeTargets)
         {
+            Write-Verbose -Message "Retrieving IncludeTarget {$($currentincludeTargets.id)}"
             $myincludeTargets = @{}
             if ($currentIncludeTargets.id -ne 'all_users'){
                 $myIncludeTargetsDisplayName = get-MgGroup -GroupId $currentIncludeTargets.id
@@ -158,6 +160,7 @@ function Get-TargetResource
         }
         #endregion
 
+        Write-Verbose -Message "Get-TargetResource returned values"
         $results = @{
             #region resource generator code
             DefaultLength            = $getValue.AdditionalProperties.defaultLength
@@ -283,52 +286,7 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Creating an Azure AD Authentication Method Policy Temporary with DisplayName {$DisplayName}"
-
-        $CreateParameters = ([Hashtable]$BoundParameters).clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Remove('Id') | Out-Null
-
-        $keys = (([Hashtable]$CreateParameters).clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-            if ($key -eq 'IncludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $CreateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $CreateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $CreateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-        }
-        #region resource generator code
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.temporaryAccessPassAuthenticationMethodConfiguration')
-        $policy = New-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -BodyParameter $CreateParameters
-        #endregion
-    }
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Azure AD Authentication Method Policy Temporary with Id {$($currentInstance.Id)}"
 
@@ -486,6 +444,7 @@ function Test-TargetResource
     $testResult = $true
 
     #Compare Cim instances
+    Write-Verbose -Message "Evaluating keys"
     foreach ($key in $PSBoundParameters.Keys)
     {
         $source = $PSBoundParameters.$key
@@ -581,7 +540,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId TemporaryAccessPass `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
         #endregion
 
         $i = 1

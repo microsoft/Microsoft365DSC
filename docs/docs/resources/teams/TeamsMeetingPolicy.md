@@ -52,7 +52,7 @@
 | **AllowNetworkConfigurationSettingsLookup** | Write | Boolean | Determines whether network configuration setting lookups can be made by users who are not Enterprise Voice enabled. It is used to enable Network Roaming policies. | |
 | **AllowWatermarkForCameraVideo** | Write | Boolean | N/A | |
 | **AllowWatermarkForScreenSharing** | Write | Boolean | N/A | |
-| **NewMeetingRecordingExpirationDays** | Write | UInt32 | Specifies the number of days before meeting recordings will expire and move to the recycle bin. Value can be from 1 to 99,999 days. NOTE: You may opt to set Meeting Recordings to never expire by entering the value -1. | |
+| **NewMeetingRecordingExpirationDays** | Write | SInt32 | Specifies the number of days before meeting recordings will expire and move to the recycle bin. Value can be from 1 to 99,999 days. NOTE: You may opt to set Meeting Recordings to never expire by entering the value -1. | |
 | **AllowCartCaptionsScheduling** | Write | String | Determines whether a user can add a URL for captions from a Communications Access Real-Time Translation (CART) captioner for providing real-time captions in meetings. | `EnabledUserOverride`, `DisabledUserOverride`, `Disabled` |
 | **AllowDocumentCollaboration** | Write | String | N/A | |
 | **AllowedStreamingMediaInput** | Write | String | N/A | |
@@ -72,6 +72,7 @@
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 
 
 ## Description
@@ -100,11 +101,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Organization.Read.All, User.Read.All, Group.ReadWrite.All, AppCatalog.ReadWrite.All, TeamSettings.ReadWrite.All, Channel.Delete.All, ChannelSettings.ReadWrite.All, ChannelMember.ReadWrite.All
+    - Organization.Read.All
 
 - **Update**
 
-    - Organization.Read.All, User.Read.All, Group.ReadWrite.All, AppCatalog.ReadWrite.All, TeamSettings.ReadWrite.All, Channel.Delete.All, ChannelSettings.ReadWrite.All, ChannelMember.ReadWrite.All
+    - Organization.Read.All
 
 ## Examples
 
@@ -118,7 +119,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -145,7 +146,7 @@ Configuration Example
             MediaBitRateKb                             = 50000
             ScreenSharingMode                          = "EntireScreen"
             Ensure                                     = "Present"
-            Credential                                 = $credsglobaladmin
+            Credential                                 = $Credscredential
         }
     }
 }

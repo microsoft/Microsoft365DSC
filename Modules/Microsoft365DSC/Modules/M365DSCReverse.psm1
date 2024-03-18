@@ -95,6 +95,7 @@ function Start-M365DSCConfigurationExtract
     # PowerShell Gallery
     try
     {
+        Write-Verbose -Message 'Testing Module Validity'
         Test-M365DSCModuleValidity
     }
     catch
@@ -111,6 +112,7 @@ function Start-M365DSCConfigurationExtract
 
         if ($null -ne $Workloads)
         {
+            Write-Verbose -Message 'Retrieving the resources to export by workloads'
             $Components = Get-M365DSCResourcesByWorkloads -Workloads $Workloads `
                 -Mode $Mode
         }
@@ -145,6 +147,13 @@ function Start-M365DSCConfigurationExtract
         {
             Write-Host -Object '- Credentials'
             $AuthMethods += 'Credentials'
+        }
+        if ($null -ne $Credential -and `
+                [System.String]::IsNullOrEmpty($ApplicationId) -and `
+                -not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            Write-Host -Object '- Credentials with Tenant Id'
+            $AuthMethods += 'CredentialsWithTenantId'
         }
         if ($null -ne $Credential -and `
                 -not [System.String]::IsNullOrEmpty($ApplicationId))
@@ -182,6 +191,7 @@ function Start-M365DSCConfigurationExtract
         # received, write a warning.
         if ($Components.Length -eq 0)
         {
+            Write-Verbose -Message 'Retrieving all resources'
             $allResourcesInModule = Get-M365DSCAllResources
             $selectedItems = Compare-Object -ReferenceObject $allResourcesInModule `
                 -DifferenceObject $ComponentsToSkip | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }
@@ -196,6 +206,7 @@ function Start-M365DSCConfigurationExtract
             $selectedResources = $Components
         }
 
+        Write-Verbose -Message 'Based on provided parameters, retrieving the most secure authentication method to use.'
         $allSupportedResourcesWithMostSecureAuthMethod = Get-M365DSCComponentsWithMostSecureAuthenticationType -AuthenticationMethod $AuthMethods `
             -Resources $selectedResources
 
@@ -232,7 +243,7 @@ function Start-M365DSCConfigurationExtract
 
             Write-Host '[WARNING]' -NoNewline -ForegroundColor Yellow
             Write-Host ' Based on the provided Authentication parameters, the following resources cannot be extracted: ' -ForegroundColor Gray
-            Write-Host "$resourcesNotSupported" -ForegroundColor Gray
+            Write-Host "$($resourcesNotSupported -join ',')" -ForegroundColor Gray
 
             # If all selected resources are not valid based on the authentication method used, simply return.
             if ($ComponentsToSkip.Length -eq $selectedResources.Length)
@@ -265,6 +276,7 @@ function Start-M365DSCConfigurationExtract
         {
             if ($null -ne $Credential -and $Credential.UserName.Contains('@'))
             {
+                Write-Verbose -Message "Retrieving organization name based on provided credentials."
                 $organization = $Credential.UserName.Split('@')[1]
             }
         }
@@ -409,7 +421,7 @@ function Start-M365DSCConfigurationExtract
                     -Value $ApplicationSecret `
                     -Description 'Azure AD Application Secret for Authentication'
             }
-            { $_ -in 'Credentials', 'CredentialsWithApplicationId' }
+            { $_ -in 'Credentials', 'CredentialsWithApplicationId', 'CredentialsWithTenantId' }
             {
                 if ($newline)
                 {
@@ -436,6 +448,7 @@ function Start-M365DSCConfigurationExtract
                 $newline = $true
 
                 # Add the Credential to the Credentials List
+                Write-Verbose -Message 'Adding the provided credentials to the list of variables'
                 Save-Credentials -UserName 'credential'
             }
             'ManagedIdentity'
@@ -463,14 +476,17 @@ function Start-M365DSCConfigurationExtract
         $DSCContent.Append("    Node localhost`r`n") | Out-Null
         $DSCContent.Append("    {`r`n") | Out-Null
 
+        Write-Verbose -Message 'Adding initial entry in the ConfigurationData file.'
         Add-ConfigurationDataEntry -Node 'localhost' `
             -Key 'ServerNumber' `
             -Value '0' `
             -Description 'Default Value Used to Ensure a Configuration Data File is Generated'
 
+        Write-Verbose -Message 'Retrieving resources path'
         $ResourcesPath = Join-Path -Path $PSScriptRoot `
-            -ChildPath '..\DSCResources\' `
+            -ChildPath '../DSCResources/' `
             -Resolve
+        Write-Verbose -Message 'Loop through all resources files.'
         $AllResources = Get-ChildItem $ResourcesPath -Recurse | Where-Object { $_.Name -like 'MSFT_*.psm1' }
 
         $i = 1
@@ -485,9 +501,15 @@ function Start-M365DSCConfigurationExtract
                 if ((($Components -and ($Components -contains $resourceName)) -or $AllComponents -or `
                         (-not $Components -and $null -eq $Workloads)) -and `
                     ($ComponentsSpecified -or ($ComponentsToSkip -notcontains $resourceName)) -and `
-                        $resourcesNotSupported -notcontains $resourceName)
+                        $resourcesNotSupported -notcontains $resourceName -and `
+                    -not $resourceName.StartsWith("M365DSC"))
                 {
-                    $ResourcesToExport += $ResourceName
+                    $authMethod = $allSupportedResourcesWithMostSecureAuthMethod | Where-Object -FilterScript {$_.Resource -eq $ResourceName}
+                    $resourceInfo = @{
+                        Name = $ResourceName
+                        AuthenticationMethod = $authMethod.AuthMethod
+                    }
+                    $ResourcesToExport += $resourceInfo
                     $ResourcesPath += $ResourceModule
                 }
             }
@@ -506,9 +528,9 @@ function Start-M365DSCConfigurationExtract
         }
         foreach ($Workload in $WorkloadsToConnectTo)
         {
-            Write-Host "Connecting to {$Workload}..." -NoNewline
+            Write-Host "Connecting to {$($Workload.Name)}..." -NoNewline
             $ConnectionParams = @{
-                Workload              = $Workload
+                Workload              = $Workload.Name
                 ApplicationId         = $ApplicationId
                 ApplicationSecret     = $ApplicationSecret
                 TenantId              = $TenantId
@@ -517,6 +539,12 @@ function Start-M365DSCConfigurationExtract
                 CertificatePassword   = $CertificatePassword.Password
                 Credential            = $Credential
                 Identity              = $ManagedIdentity.IsPresent
+            }
+
+            if ($workload.AuthenticationMethod -eq 'Credentials')
+            {
+                $ConnectionParams.Remove('TenantId') | Out-Null
+                $ConnectionParams.Remove('ApplicationId') | Out-Null
             }
 
             try
@@ -531,6 +559,7 @@ function Start-M365DSCConfigurationExtract
             }
         }
 
+        $ResourcesPath = $ResourcesPath | Sort-Object $_.Name
         foreach ($resource in $ResourcesPath)
         {
             $resourceName = $resource.Name.Split('.')[0] -replace 'MSFT_', ''
@@ -569,6 +598,11 @@ function Start-M365DSCConfigurationExtract
                         $parameters.Add('ApplicationId', $ApplicationId)
                     }
                     $parameters.Add('Credential', $Credential)
+                }
+                'CredentialsWithTenantId'
+                {
+                    $parameters.Add('Credential', $Credential)
+                    $parameters.Add('TenantId', $TenantId)
                 }
                 'ManagedIdentity'
                 {
@@ -777,9 +811,12 @@ function Start-M365DSCConfigurationExtract
             {
                 foreach ($fileToCopy in $filesToDownload)
                 {
-                    $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
-                    $destPath = Join-Path $OutputDSCPath $fileToCopy.Name
-                    Copy-Item -Path $filePath -Destination $destPath
+                    if (-not [System.String]::IsNullOrEmpty($env:Temp))
+                    {
+                        $filePath = Join-Path $env:Temp $fileToCopy.Name -Resolve
+                        $destPath = Join-Path $OutputDSCPath $fileToCopy.Name
+                        Copy-Item -Path $filePath -Destination $destPath
+                    }
                 }
             }
         }
@@ -800,44 +837,51 @@ function Start-M365DSCConfigurationExtract
 
         if (!$AzureAutomation -and !$ManagedIdentity.IsPresent)
         {
-            if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
+            try
             {
-                $LCMConfig = Get-DscLocalConfigurationManager
-                if ($null -ne $LCMConfig.CertificateID)
+                if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator))
                 {
-                    try
+                    $LCMConfig = Get-DscLocalConfigurationManager
+                    if ($null -ne $LCMConfig.CertificateID)
                     {
-                        # Export the certificate assigned to the LCM
-                        $certPath = $OutputDSCPath + 'M365DSC.cer'
-                        if (Test-Path $certPath)
+                        try
                         {
-                            Remove-Item $certPath -Force
+                            # Export the certificate assigned to the LCM
+                            $certPath = $OutputDSCPath + 'M365DSC.cer'
+                            if (Test-Path $certPath)
+                            {
+                                Remove-Item $certPath -Force
+                            }
+                            Export-Certificate -FilePath $certPath `
+                                -Cert "cert:\LocalMachine\my\$($LCMConfig.CertificateID)" `
+                                -Type CERT `
+                                -NoClobber | Out-Null
                         }
-                        Export-Certificate -FilePath $certPath `
-                            -Cert "cert:\LocalMachine\my\$($LCMConfig.CertificateID)" `
-                            -Type CERT `
-                            -NoClobber | Out-Null
-                    }
-                    catch
-                    {
-                        New-M365DSCLogEntry -Message 'Error while exporting the DSC certificate:' `
-                            -Exception $_ `
-                            -Source $($MyInvocation.MyCommand.Source) `
-                            -TenantId $TenantId `
-                            -Credential $Credential
-                    }
+                        catch
+                        {
+                            New-M365DSCLogEntry -Message 'Error while exporting the DSC certificate:' `
+                                -Exception $_ `
+                                -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $TenantId `
+                                -Credential $Credential
+                        }
 
-                    Add-ConfigurationDataEntry -Node 'localhost' `
-                        -Key 'CertificateFile' `
-                        -Value 'M365DSC.cer' `
-                        -Description 'Path of the certificate used to encrypt credentials in the file.'
+                        Add-ConfigurationDataEntry -Node 'localhost' `
+                            -Key 'CertificateFile' `
+                            -Value 'M365DSC.cer' `
+                            -Description 'Path of the certificate used to encrypt credentials in the file.'
+                    }
+                }
+                else
+                {
+                    Write-Host "$($Global:M365DSCEmojiYellowCircle) Warning {" -NoNewline
+                    Write-Host "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!" -NoNewline -ForegroundColor DarkCyan
+                    Write-Host '}'
                 }
             }
-            else
+            catch
             {
-                Write-Host "$($Global:M365DSCEmojiYellowCircle) Warning {" -NoNewline
-                Write-Host "Cannot export Local Configuration Manager settings. This process isn't executed with Administrative Privileges!" -NoNewline -ForegroundColor DarkCyan
-                Write-Host '}'
+                Write-Verbose -Message "Could not retrieve current Windows Principal. This may be due to the fact that the current OS is not Windows."
             }
         }
         $outputConfigurationData = $OutputDSCPath + 'ConfigurationData.psd1'
@@ -856,8 +900,11 @@ function Start-M365DSCConfigurationExtract
     }
     catch
     {
-        $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
-        Write-Host "Partial Export file was saved at: $partialPath"
+        if (-not [System.String]::IsNullOrEmpty($env:Temp))
+        {
+            $partialPath = Join-Path $env:TEMP -ChildPath "$($Global:PartialExportFileName)"
+            Write-Host "Partial Export file was saved at: $partialPath"
+        }
         throw $_
     }
 }
