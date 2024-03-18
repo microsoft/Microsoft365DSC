@@ -1018,18 +1018,24 @@ function Export-TargetResource
         $allConditionsMatched = $true
 
         # Check each condition in the filter against the support list
-        foreach ($condition in $Filter.Split(' '))
-        {
-            if ($condition -match '(\w+)/(\w+):(\w+)')
-            {
-                $attribute, $operation, $value = $matches[1], $matches[2], $matches[3]
-                if (-not $queryTypes.ContainsKey($operation) -or -not $queryTypes[$operation].Contains($attribute))
-                {
-                    $allConditionsMatched = $false
-                    break
+        # Assuming the provided PowerShell script is part of a larger context and the variable $Filter is defined elsewhere
+
+        # Check if $Filter is not null
+        if ($Filter) {
+            # Check each condition in the filter against the support list
+            foreach ($condition in $Filter.Split(' ')) {
+                if ($condition -match '(\w+)/(\w+):(\w+)') {
+                    $attribute, $operation, $value = $matches[1], $matches[2], $matches[3]
+                    if (-not $queryTypes.ContainsKey($operation) -or -not $queryTypes[$operation].Contains($attribute)) {
+                        $allConditionsMatched = $false
+                        break
+                    }
                 }
             }
+        } else {
+            Write-Host "$Filter is null or empty."
         }
+
 
         # If all conditions match the support, add parameters to $ExportParameters
         if ($allConditionsMatched -or $Filter -like '*endsWith*')
