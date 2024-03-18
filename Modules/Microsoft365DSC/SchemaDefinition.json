@@ -31780,6 +31780,126 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_SCHeaderPattern",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "Values",
+                               "Option":  "Required"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SCDLPSensitiveInformation",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "name",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "maxconfidence",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "minconfidence",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "classifiertype",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "mincount",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "maxcount",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SCDLPLabel",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "name",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "id",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "type",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SCDLPContainsSensitiveInformationGroup",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_SCDLPSensitiveInformation[]",
+                               "Name":  "SensitiveInformation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SCDLPLabel[]",
+                               "Name":  "Labels",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Required"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Operator",
+                               "Option":  "Required"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_SCDLPContainsSensitiveInformation",
+        "Parameters":  [
+                           {
+                               "CIMType":  "MSFT_SCDLPSensitiveInformation[]",
+                               "Name":  "SensitiveInformation",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_SCDLPContainsSensitiveInformationGroup[]",
+                               "Name":  "Groups",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Operator",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_SCAutoSensitivityLabelRule",
         "Parameters":  [
                            {
