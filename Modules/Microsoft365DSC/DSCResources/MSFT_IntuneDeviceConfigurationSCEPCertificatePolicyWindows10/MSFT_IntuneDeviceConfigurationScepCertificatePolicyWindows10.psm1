@@ -75,6 +75,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $RootCertificateDisplayName,
+
+        [Parameter()]
+        [System.String]
         $RootCertificateId,
 
         [Parameter()]
@@ -250,6 +254,10 @@ function Get-TargetResource
         }
         #endregion
 
+        $RootCertificate = Get-DeviceConfigurationPolicyRootCertificate -DeviceConfigurationPolicyId $getValue.Id
+        $RootCertificateId = $RootCertificate.Id
+        $RootCertificateDisplayName = $RootCertificate.DisplayName
+
         $results = @{
             #region resource generator code
             CertificateStore                   = $enumCertificateStore
@@ -267,7 +275,8 @@ function Get-TargetResource
             RenewalThresholdPercentage         = $getValue.AdditionalProperties.renewalThresholdPercentage
             SubjectAlternativeNameType         = $enumSubjectAlternativeNameType
             SubjectNameFormat                  = $enumSubjectNameFormat
-            RootCertificateId                  = Get-DeviceConfigurationPolicyRootCertificateId -DeviceConfigurationPolicyId $getValue.Id
+            RootCertificateId                  = $RootCertificateId
+            RootCertificateDisplayName         = $RootCertificateDisplayName
             Description                        = $getValue.Description
             DisplayName                        = $getValue.DisplayName
             Id                                 = $getValue.Id
@@ -385,6 +394,10 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $RootCertificateDisplayName,
+
+        [Parameter()]
+        [System.String]
         $RootCertificateId,
 
         [Parameter()]
@@ -470,6 +483,38 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
+
+        $RootCertificate = Get-MgBetaDeviceManagementDeviceConfiguration `
+            -DeviceConfigurationId $RootCertificateId `
+            -ErrorAction SilentlyContinue | `
+                Where-Object -FilterScript {
+                    $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows81TrustedRootCertificate"
+                }
+
+        if ($null -eq $RootCertificate)
+        {
+            Write-Verbose -Message "Could not find trusted root certificate with Id {$RootCertificateId}, searching by display name {$RootCertificateDisplayName}"
+
+            $RootCertificate = Get-MgBetaDeviceManagementDeviceConfiguration `
+                -Filter "DisplayName eq '$RootCertificateDisplayName'" `
+                -ErrorAction SilentlyContinue | `
+                    Where-Object -FilterScript {
+                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows81TrustedRootCertificate"
+                    }
+            $RootCertificateId = $RootCertificate.Id
+
+            if ($null -eq $RootCertificate)
+            {
+                throw "Could not find trusted root certificate with Id {$RootCertificateId} or display name {$RootCertificateDisplayName}"
+            }
+
+            Write-Verbose -Message "Found trusted root certificate with Id {$($RootCertificate.Id)} and DisplayName {$($RootCertificate.DisplayName)}"
+        }
+        else
+        {
+            Write-Verbose -Message "Found trusted root certificate with Id {$RootCertificateId}"
+        }
+
         #region resource generator code
         $CreateParameters.Add("rootCertificate@odata.bind", "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$RootCertificateId')")
         $CreateParameters.Add("@odata.type", "#microsoft.graph.windows81SCEPCertificateProfile")
@@ -493,6 +538,7 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the Intune Device Configuration Scep Certificate Policy for Windows10 with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove("Assignments") | Out-Null
         $BoundParameters.Remove('RootCertificateId') | Out-Null
+        $BoundParameters.Remove('RootCertificateDisplayName') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -523,6 +569,37 @@ function Set-TargetResource
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceConfigurations'
         #endregion
+
+        $RootCertificate = Get-MgBetaDeviceManagementDeviceConfiguration `
+            -DeviceConfigurationId $RootCertificateId `
+            -ErrorAction SilentlyContinue | `
+                Where-Object -FilterScript {
+                    $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows81TrustedRootCertificate"
+                }
+
+        if ($null -eq $RootCertificate)
+        {
+            Write-Verbose -Message "Could not find trusted root certificate with Id {$RootCertificateId}, searching by display name {$RootCertificateDisplayName}"
+
+            $RootCertificate = Get-MgBetaDeviceManagementDeviceConfiguration `
+                -Filter "DisplayName eq '$RootCertificateDisplayName'" `
+                -ErrorAction SilentlyContinue | `
+                    Where-Object -FilterScript {
+                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows81TrustedRootCertificate"
+                    }
+            $RootCertificateId = $RootCertificate.Id
+
+            if ($null -eq $RootCertificate)
+            {
+                throw "Could not find trusted root certificate with Id {$RootCertificateId} or display name {$RootCertificateDisplayName}"
+            }
+
+            Write-Verbose -Message "Found trusted root certificate with Id {$($RootCertificate.Id)} and DisplayName {$($RootCertificate.DisplayName)}"
+        }
+        else
+        {
+            Write-Verbose -Message "Found trusted root certificate with Id {$RootCertificateId}"
+        }
 
         Update-DeviceConfigurationPolicyRootCertificateId `
             -DeviceConfigurationPolicyId $currentInstance.id `
@@ -611,6 +688,10 @@ function Test-TargetResource
         [ValidateSet('commonName','commonNameIncludingEmail','commonNameAsEmail','custom','commonNameAsIMEI','commonNameAsSerialNumber','commonNameAsAadDeviceId','commonNameAsIntuneDeviceId','commonNameAsDurableDeviceId')]
         [System.String]
         $SubjectNameFormat,
+
+        [Parameter()]
+        [System.String]
+        $RootCertificateDisplayName,
 
         [Parameter()]
         [System.String]
@@ -715,6 +796,10 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    if ($null -ne $ValuesToCheck.RootCertificateDisplayName)
+    {
+        $ValuesToCheck.Remove('RootCertificateId') | Out-Null
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -909,7 +994,7 @@ function Export-TargetResource
     }
 }
 
-function Get-DeviceConfigurationPolicyRootCertificateId
+function Get-DeviceConfigurationPolicyRootCertificate
 {
     [CmdletBinding()]
     [OutputType([System.String])]
@@ -922,7 +1007,7 @@ function Get-DeviceConfigurationPolicyRootCertificateId
     $Uri = " https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windows81SCEPCertificateProfile/rootCertificate"
     $result = Invoke-MgGraphRequest -Method Get -Uri $Uri -ErrorAction Stop
 
-    return $result.id
+    return $result
 }
 
 function Update-DeviceConfigurationPolicyRootCertificateId

@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-Class MSFT_TeamsVoiceNormalizationRule
+class MSFT_TeamsVoiceNormalizationRule
 {
     [Write, Description("A unique identifier for the rule. The Identity specified must include the scope followed by a slash and then the name; for example: site:Redmond/Rule1, where site:Redmond is the scope and Rule1 is the name. The name portion will automatically be stored in the Name property. You cannot specify values for Identity and Name in the same command.")] String Identity;
     [Write, Description("The order in which rules are applied. A phone number might match more than one rule. This parameter sets the order in which the rules are tested against the number.")] UInt32 Priority;
