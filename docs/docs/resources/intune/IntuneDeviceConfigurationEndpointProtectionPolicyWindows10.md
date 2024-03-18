@@ -361,7 +361,7 @@
 | **DisplayName** | Write | String | The display name of the rule. Does not need to be unique. | |
 | **EdgeTraversal** | Write | String | Indicates whether edge traversal is enabled or disabled for this rule. The EdgeTraversal setting indicates that specific inbound traffic is allowed to tunnel through NATs and other edge devices using the Teredo tunneling technology. In order for this setting to work correctly, the application or service with the inbound firewall rule needs to support IPv6. The primary application of this setting allows listeners on the host to be globally addressable through a Teredo IPv6 address. New rules have the EdgeTraversal property disabled by default. Possible values are: notConfigured, blocked, allowed. | `notConfigured`, `blocked`, `allowed` |
 | **FilePath** | Write | String | The full file path of an app that's affected by the firewall rule. | |
-| **InterfaceTypes** | Write | String | The interface types of the rule. Possible values are: notConfigured, remoteAccess, wireless, lan. | `notConfigured`, `remoteAccess`, `wireless`, `lan` |
+| **InterfaceTypes** | Write | StringArray[] | The interface types of the rule. Possible values are: notConfigured, remoteAccess, wireless, lan. | `notConfigured`, `remoteAccess`, `wireless`, `lan` |
 | **LocalAddressRanges** | Write | StringArray[] | List of local addresses covered by the rule. Default is any address. Valid tokens include:'' indicates any local address. If present, this must be the only token included.A subnet can be specified using either the subnet mask or network prefix notation. If neither a subnet mask nor a network prefix is specified, the subnet mask defaults to 255.255.255.255.A valid IPv6 address.An IPv4 address range in the format of 'start address - end address' with no spaces included.An IPv6 address range in the format of 'start address - end address' with no spaces included. | |
 | **LocalPortRanges** | Write | StringArray[] | List of local port ranges. For example, '100-120', '200', '300-320'. If not specified, the default is All. | |
 | **LocalUserAuthorizations** | Write | String | Specifies the list of authorized local users for the app container. This is a string in Security Descriptor Definition Language (SDDL) format. | |
@@ -407,7 +407,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -417,7 +417,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
