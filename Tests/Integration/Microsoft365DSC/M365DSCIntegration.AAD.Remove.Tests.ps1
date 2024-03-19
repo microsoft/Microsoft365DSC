@@ -245,6 +245,13 @@
     {
         Master -ConfigurationData $ConfigurationData -Credscredential $Credential
         Start-DscConfiguration Master -Wait -Force -Verbose -ErrorAction Stop
+
+        $TestDscConfigurationResult = Test-DscConfiguration Master -Verbose
+        if ($TestDscConfigurationResult.InDesiredState -ne $true) {
+            throw "Resources not in desired state: $($TestDscConfigurationResult.ResourcesNotInDesiredState.ResourceId)"
+        }
+
+        $GetDscConfigurationResult = Get-DscConfiguration -Verbose
     }
     catch
     {
