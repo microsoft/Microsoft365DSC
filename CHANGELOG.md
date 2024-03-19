@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fix issue with omitted Ensure and/or Id
+    FIXES [#4437](https://github.com/microsoft/Microsoft365DSC/issues/4437)
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
