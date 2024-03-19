@@ -243,7 +243,6 @@ function Set-TargetResource
         InboundConnector         = $InboundConnector
         OrganizationName         = $OrganizationName
         OrganizationGuid         = $OrganizationGuid
-        OrganizationRelationship = $OrganizationRelationship
         OutboundConnector        = $OutboundConnector
         Confirm                  = $false
     }
@@ -254,9 +253,14 @@ function Set-TargetResource
         HybridDomains            = $HybridDomains
         InboundConnector         = $InboundConnector
         OrganizationName         = $OrganizationName
-        OrganizationRelationship = $OrganizationRelationship
         OutboundConnector        = $OutboundConnector
         Confirm                  = $false
+    }
+
+    if (-not [System.String]::IsNullOrEmpty($OrganizationRelationship))
+    {
+        $NewOnPremisesOrganizationParams.Add('OrganizationRelationship', $OrganizationRelationship)
+        $SetOnPremisesOrganizationParams.Add('OrganizationRelationship', $OrganizationRelationship)
     }
 
     # CASE: On-premises Organization doesn't exist but should;

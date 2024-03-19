@@ -30,6 +30,7 @@
 | **IncreaseScoreWithNumericIps** | Write | String | The IncreaseScoreWithNumericIps parameter increases the spam score of messages that contain links to IP addresses. Valid values for this parameter are Off, On or Test. The default value is Off. | `Off`, `On`, `Test` |
 | **IncreaseScoreWithRedirectToOtherPort** | Write | String | The IncreaseScoreWithRedirectToOtherPort parameter increases the spam score of messages that contain links that redirect to other TCP ports. Valid values for this parameter are Off, On or Test. The default value is Off. | `Off`, `On`, `Test` |
 | **InlineSafetyTipsEnabled** | Write | Boolean | The InlineSafetyTipsEnabled parameter specifies whether to enable or disable safety tips that are shown to recipients in messages. The default is $true | |
+| **IntraOrgFilterState** | Write | String | The IntraOrgFilterState parameter specifies whether to enable anti-spam filtering for messages sent between internal users (users in the same organization). | `Default`, `HighConfidencePhish`, `Phish`, `HighConfidenceSpam`, `Spam`, `Disabled` |
 | **LanguageBlockList** | Write | StringArray[] | The LanguageBlockList parameter specifies the languages to block when messages are blocked based on their language. Valid input for this parameter is a supported ISO 639-1 lowercase two-letter language code. You can specify multiple values separated by commas. This parameter is only use when the EnableRegionBlockList parameter is set to $true. | |
 | **MakeDefault** | Write | Boolean | The MakeDefault parameter makes the specified content filter policy the default content filter policy. The default value is $false | |
 | **MarkAsSpamBulkMail** | Write | String | The MarkAsSpamBulkMail parameter classifies the message as spam when the message is identified as a bulk email message. Valid values for this parameter are Off, On or Test. The default value is On. | `Off`, `On`, `Test` |
@@ -105,18 +106,14 @@ Configuration Example
     {
         EXOHostedContentFilterPolicy 'ConfigureHostedContentFilterPolicy'
         {
-            Identity                             = "Default"
+            Identity                             = "Integration CFP"
             AddXHeaderValue                      = ""
             AdminDisplayName                     = ""
             BulkSpamAction                       = "MoveToJmf"
             BulkThreshold                        = 7
             DownloadLink                         = $False
-            EnableEndUserSpamNotifications       = $False
             EnableLanguageBlockList              = $False
             EnableRegionBlockList                = $False
-            EndUserSpamNotificationCustomSubject = ""
-            EndUserSpamNotificationFrequency     = 3
-            EndUserSpamNotificationLanguage      = "Default"
             HighConfidencePhishAction            = "Quarantine"
             HighConfidenceSpamAction             = "MoveToJmf"
             IncreaseScoreWithBizOrInfoUrls       = "Off"
@@ -125,7 +122,7 @@ Configuration Example
             IncreaseScoreWithRedirectToOtherPort = "Off"
             InlineSafetyTipsEnabled              = $True
             LanguageBlockList                    = @()
-            MakeDefault                          = $True
+            MakeDefault                          = $False
             MarkAsSpamBulkMail                   = "On"
             MarkAsSpamEmbedTagsInHtml            = "Off"
             MarkAsSpamEmptyMessages              = "Off"
@@ -149,6 +146,98 @@ Configuration Example
             TestModeAction                       = "None"
             TestModeBccToRecipients              = @()
             Ensure                               = "Present"
+            Credential                           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOHostedContentFilterPolicy 'ConfigureHostedContentFilterPolicy'
+        {
+            Identity                             = "Integration CFP"
+            AddXHeaderValue                      = ""
+            AdminDisplayName                     = ""
+            BulkSpamAction                       = "MoveToJmf"
+            BulkThreshold                        = 7
+            DownloadLink                         = $True # Updated Property
+            EnableLanguageBlockList              = $False
+            EnableRegionBlockList                = $False
+            HighConfidencePhishAction            = "Quarantine"
+            HighConfidenceSpamAction             = "MoveToJmf"
+            IncreaseScoreWithBizOrInfoUrls       = "Off"
+            IncreaseScoreWithImageLinks          = "Off"
+            IncreaseScoreWithNumericIps          = "Off"
+            IncreaseScoreWithRedirectToOtherPort = "Off"
+            InlineSafetyTipsEnabled              = $True
+            LanguageBlockList                    = @()
+            MakeDefault                          = $False
+            MarkAsSpamBulkMail                   = "On"
+            MarkAsSpamEmbedTagsInHtml            = "Off"
+            MarkAsSpamEmptyMessages              = "Off"
+            MarkAsSpamFormTagsInHtml             = "Off"
+            MarkAsSpamFramesInHtml               = "Off"
+            MarkAsSpamFromAddressAuthFail        = "Off"
+            MarkAsSpamJavaScriptInHtml           = "Off"
+            MarkAsSpamNdrBackscatter             = "Off"
+            MarkAsSpamObjectTagsInHtml           = "Off"
+            MarkAsSpamSensitiveWordList          = "Off"
+            MarkAsSpamSpfRecordHardFail          = "Off"
+            MarkAsSpamWebBugsInHtml              = "Off"
+            ModifySubjectValue                   = ""
+            PhishSpamAction                      = "MoveToJmf"
+            PhishZapEnabled                      = $True
+            QuarantineRetentionPeriod            = 15
+            RedirectToRecipients                 = @()
+            RegionBlockList                      = @()
+            SpamAction                           = "MoveToJmf"
+            SpamZapEnabled                       = $True
+            TestModeAction                       = "None"
+            TestModeBccToRecipients              = @()
+            Ensure                               = "Present"
+            Credential                           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOHostedContentFilterPolicy 'ConfigureHostedContentFilterPolicy'
+        {
+            Identity                             = "Integration CFP"
+            Ensure                               = "Absent"
             Credential                           = $Credscredential
         }
     }

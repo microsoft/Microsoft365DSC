@@ -26,6 +26,7 @@
 | **MakeDefault** | Write | Boolean | Make this the default antiphishing policy | |
 | **ExcludedDomains** | Write | StringArray[] | Theâ¯ExcludedDomainsâ¯parameter specifies trusted domains that are excluded from scanning by antiphishing protection. You can specify multiple domains separated by commas. | |
 | **ExcludedSenders** | Write | StringArray[] | Theâ¯ExcludedSendersâ¯parameter specifies a list of trusted sender email addresses that are excluded from scanning by antiphishing protection. You can specify multiple email addresses separated by commas. | |
+| **HonorDmarcPolicy** | Write | Boolean | The HonorDmarcPolicy enables or disables using the sender's DMARC policy to determine what to do to messages that fail DMARC checks. | |
 | **ImpersonationProtectionState** | Write | String | The ImpersonationProtectionState parameter specifies the configuration of impersonation protection. | |
 | **MailboxIntelligenceProtectionAction** | Write | String | The MailboxIntelligenceProtectionAction parameter specifies what to do with messages that fail mailbox intelligence protection. | |
 | **MailboxIntelligenceProtectionActionRecipients** | Write | StringArray[] | Theâ¯MailboxIntelligenceProtectionActionRecipients parameter specifies the recipients to add to detected messages when the MailboxIntelligenceProtectionAction parameter is set to the valueâ¯Redirect or BccMessage. | |
@@ -89,6 +90,98 @@ Configuration Example
             Identity                              = "Our Rule"
             MakeDefault                           = $null
             PhishThresholdLevel                   = 1
+            EnableTargetedDomainsProtection       = $null
+            Enabled                               = $null
+            TargetedDomainsToProtect              = $null
+            EnableSimilarUsersSafetyTips          = $null
+            ExcludedDomains                       = $null
+            TargetedDomainActionRecipients        = $null
+            EnableMailboxIntelligence             = $null
+            EnableSimilarDomainsSafetyTips        = $null
+            AdminDisplayName                      = ""
+            AuthenticationFailAction              = "MoveToJmf"
+            TargetedUserProtectionAction          = "NoAction"
+            TargetedUsersToProtect                = $null
+            EnableTargetedUserProtection          = $null
+            ExcludedSenders                       = $null
+            EnableOrganizationDomainsProtection   = $null
+            EnableUnusualCharactersSafetyTips     = $null
+            TargetedUserActionRecipients          = $null
+            Ensure                                = "Present"
+            Credential                            = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAntiPhishPolicy 'ConfigureAntiphishPolicy'
+        {
+            Identity                              = "Our Rule"
+            MakeDefault                           = $null
+            PhishThresholdLevel                   = 2 # Updated Property
+            EnableTargetedDomainsProtection       = $null
+            Enabled                               = $null
+            TargetedDomainsToProtect              = $null
+            EnableSimilarUsersSafetyTips          = $null
+            ExcludedDomains                       = $null
+            TargetedDomainActionRecipients        = $null
+            EnableMailboxIntelligence             = $null
+            EnableSimilarDomainsSafetyTips        = $null
+            AdminDisplayName                      = ""
+            AuthenticationFailAction              = "MoveToJmf"
+            TargetedUserProtectionAction          = "NoAction"
+            TargetedUsersToProtect                = $null
+            EnableTargetedUserProtection          = $null
+            ExcludedSenders                       = $null
+            EnableOrganizationDomainsProtection   = $null
+            EnableUnusualCharactersSafetyTips     = $null
+            TargetedUserActionRecipients          = $null
+            Ensure                                = "Present"
+            Credential                            = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAntiPhishPolicy 'ConfigureAntiphishPolicy'
+        {
+            Identity                              = "Our Rule"
+            MakeDefault                           = $null
+            PhishThresholdLevel                   = 2 # Updated Property
             EnableTargetedDomainsProtection       = $null
             Enabled                               = $null
             TargetedDomainsToProtect              = $null

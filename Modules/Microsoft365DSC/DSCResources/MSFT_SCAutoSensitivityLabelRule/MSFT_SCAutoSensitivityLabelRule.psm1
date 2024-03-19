@@ -1275,81 +1275,84 @@ function ConvertTo-SCDLPSensitiveInformationStringGroup
 
     foreach ($SensitiveInformationHash in $InformationArray)
     {
-        $StringContent = "MSFT_SCDLPContainsSensitiveInformation`r`n            {`r`n"
+        $StringContent = "MSFT_SCDLPContainsSensitiveInformation {`r`n"
         if ($null -ne $InformationArray.Groups)
         {
-            $StringContent += "                        operator = '$($SensitiveInformationHash.operator.Replace("'", "''"))'`r`n"
-            $StringContent += "                         Groups =  `r`n@("
+            $StringContent += "                operator = '$($SensitiveInformationHash.operator.Replace("'", "''"))'`r`n"
+            $StringContent += "                Groups = @(`r`n"
         }
         foreach ($group in $SensitiveInformationHash.Groups)
         {
-            $StringContent += "MSFT_SCDLPContainsSensitiveInformationGroup`r`n            {`r`n"
-            $StringContent += "                operator = '$($group.operator.Replace("'", "''"))'`r`n"
-            $StringContent += "                name = '$($group.name.Replace("'", "''"))'`r`n"
+            $StringContent += "                    MSFT_SCDLPContainsSensitiveInformationGroup {`r`n"
+            $StringContent += "                        operator = '$($group.operator.Replace("'", "''"))'`r`n"
+            $StringContent += "                        name = '$($group.name.Replace("'", "''"))'`r`n"
             if ($null -ne $group.sensitivetypes)
             {
-                $StringContent += '                SensitiveInformation = @('
+                $StringContent += "                        SensitiveInformation = @(`r`n"
                 foreach ($sit in $group.sensitivetypes)
                 {
-                    $StringContent += "            MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
-                    $StringContent += "                    name = '$($sit.name.Replace("'", "''"))'`r`n"
+                    $StringContent += "                            MSFT_SCDLPSensitiveInformation {`r`n"
+                    $StringContent += "                                name = '$($sit.name.Replace("'", "''"))'`r`n"
                     if ($null -ne $sit.id)
                     {
-                        $StringContent += "                id = '$($sit.id)'`r`n"
+                        $StringContent += "                                id = '$($sit.id)'`r`n"
                     }
 
                     if ($null -ne $sit.maxconfidence)
                     {
-                        $StringContent += "                maxconfidence = '$($sit.maxconfidence)'`r`n"
+                        $StringContent += "                                maxconfidence = '$($sit.maxconfidence)'`r`n"
                     }
 
                     if ($null -ne $sit.minconfidence)
                     {
-                        $StringContent += "                minconfidence = '$($sit.minconfidence)'`r`n"
+                        $StringContent += "                                minconfidence = '$($sit.minconfidence)'`r`n"
                     }
 
                     if ($null -ne $sit.classifiertype)
                     {
-                        $StringContent += "                classifiertype = '$($sit.classifiertype)'`r`n"
+                        $StringContent += "                                classifiertype = '$($sit.classifiertype)'`r`n"
                     }
 
                     if ($null -ne $sit.mincount)
                     {
-                        $StringContent += "                mincount = '$($sit.mincount)'`r`n"
+                        $StringContent += "                                mincount = '$($sit.mincount)'`r`n"
                     }
 
                     if ($null -ne $sit.maxcount)
                     {
-                        $StringContent += "                maxcount = '$($sit.maxcount)'`r`n"
+                        $StringContent += "                                maxcount = '$($sit.maxcount)'`r`n"
                     }
 
-                    $StringContent += "            }`r`n"
+                    $StringContent += "                            }`r`n"
                 }
-                $StringContent += "            )}`r`n"
+                $StringContent += "                        )`r`n"
+                $StringContent += "                    }`r`n"
             }
             if ($null -ne $group.labels)
             {
-                $StringContent += '                labels = @('
+                $StringContent += "                        labels = @(`r`n"
                 foreach ($label in $group.labels)
                 {
-                    $StringContent += "            MSFT_SCDLPLabel`r`n            {`r`n"
-                    $StringContent += "                    name = '$($label.name.Replace("'", "''"))'`r`n"
+                    $StringContent += "                            MSFT_SCDLPLabel {`r`n"
+                    $StringContent += "                                name = '$($label.name.Replace("'", "''"))'`r`n"
                     if ($null -ne $label.id)
                     {
-                        $StringContent += "                id = '$($label.id)'`r`n"
+                        $StringContent += "                                id = '$($label.id)'`r`n"
                     }
 
                     if ($null -ne $label.type)
                     {
-                        $StringContent += "                type = '$($label.type)'`r`n"
+                        $StringContent += "                                type = '$($label.type)'`r`n"
                     }
 
-                    $StringContent += "            }`r`n"
+                    $StringContent += "                            }`r`n"
                 }
-                $StringContent += "            )}`r`n"
+                $StringContent += "                        )`r`n"
+                $StringContent += "                    }`r`n"
             }
         }
-        $StringContent += "            )}`r`n"
+        $StringContent += "                )`r`n"
+        $StringContent += "            }`r`n"
         $result += $StringContent
     }
     return $result
@@ -1365,50 +1368,50 @@ function ConvertTo-SCDLPSensitiveInformationString
         $InformationArray
     )
     $result = ''
-    $StringContent = "MSFT_SCDLPContainsSensitiveInformation`r`n            {`r`n"
+    $StringContent = "MSFT_SCDLPContainsSensitiveInformation {`r`n"
     $StringContent += '                SensitiveInformation = '
     $StringContent += "@(`r`n"
     $result += $StringContent
     foreach ($SensitiveInformationHash in $InformationArray)
     {
 
-        $StringContent = "MSFT_SCDLPSensitiveInformation`r`n            {`r`n"
-        $StringContent += "                name = '$($SensitiveInformationHash.name.Replace("'", "''"))'`r`n"
+        $StringContent = "                    MSFT_SCDLPSensitiveInformation`r`n                    {`r`n"
+        $StringContent += "                        name = '$($SensitiveInformationHash.name.Replace("'", "''"))'`r`n"
 
         if ($null -ne $SensitiveInformationHash.id)
         {
-            $StringContent += "                id = '$($SensitiveInformationHash.id)'`r`n"
+            $StringContent += "                        id = '$($SensitiveInformationHash.id)'`r`n"
         }
 
         if ($null -ne $SensitiveInformationHash.maxconfidence)
         {
-            $StringContent += "                maxconfidence = '$($SensitiveInformationHash.maxconfidence)'`r`n"
+            $StringContent += "                        maxconfidence = '$($SensitiveInformationHash.maxconfidence)'`r`n"
         }
 
         if ($null -ne $SensitiveInformationHash.minconfidence)
         {
-            $StringContent += "                minconfidence = '$($SensitiveInformationHash.minconfidence)'`r`n"
+            $StringContent += "                        minconfidence = '$($SensitiveInformationHash.minconfidence)'`r`n"
         }
 
         if ($null -ne $SensitiveInformationHash.classifiertype)
         {
-            $StringContent += "                classifiertype = '$($SensitiveInformationHash.classifiertype)'`r`n"
+            $StringContent += "                        classifiertype = '$($SensitiveInformationHash.classifiertype)'`r`n"
         }
 
         if ($null -ne $SensitiveInformationHash.mincount)
         {
-            $StringContent += "                mincount = '$($SensitiveInformationHash.mincount)'`r`n"
+            $StringContent += "                        mincount = '$($SensitiveInformationHash.mincount)'`r`n"
         }
 
         if ($null -ne $SensitiveInformationHash.maxcount)
         {
-            $StringContent += "                maxcount = '$($SensitiveInformationHash.maxcount)'`r`n"
+            $StringContent += "                        maxcount = '$($SensitiveInformationHash.maxcount)'`r`n"
         }
 
-        $StringContent += "            }`r`n"
+        $StringContent += "                    }`r`n"
         $result += $StringContent
     }
-    $result += '            )'
+    $result += "                )`r`n"
     $result += "            }`r`n"
     return $result
 }

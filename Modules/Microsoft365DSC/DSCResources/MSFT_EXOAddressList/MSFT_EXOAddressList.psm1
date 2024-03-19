@@ -430,9 +430,13 @@ function Set-TargetResource
                 ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
                 ConditionalDepartment        = $ConditionalDepartment
                 ConditionalStateOrProvince   = $ConditionalStateOrProvince
-                DisplayName                  = $DisplayName
                 IncludedRecipients           = $IncludedRecipients
                 Confirm                      = $false
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                $NewAddressListParams.Add('DisplayName', $DisplayName)
             }
         }
         New-AddressList @NewAddressListParams
@@ -479,10 +483,18 @@ function Set-TargetResource
                 ConditionalCustomAttribute9  = $ConditionalCustomAttribute9
                 ConditionalDepartment        = $ConditionalDepartment
                 ConditionalStateOrProvince   = $ConditionalStateOrProvince
-                DisplayName                  = $DisplayName
                 IncludedRecipients           = $IncludedRecipients
-                RecipientFilter              = $RecipientFilter
                 Confirm                      = $false
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                $SetAddressListParams.Add('DisplayName', $DisplayName)
+            }
+
+            if (-not [System.String]::IsNullOrEmpty($RecipientFilter))
+            {
+                $SetAddressListParams.Add('RecipientFilter', $RecipientFilter)
             }
         }
         Write-Verbose -Message "Setting Address List '$($Name)' with values: $(Convert-M365DscHashtableToString -Hashtable $SetAddressListParams)"

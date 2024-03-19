@@ -2,6 +2,7 @@
 class MSFT_EXOMailboxAutoReplyConfiguration : OMI_BaseResource
 {
     [Key, Description("The Identity parameter specifies the mailbox that you want to modify. You can use any value that uniquely identifies the mailbox.")] String Identity;
+    [Write, Description("User Principal Name of the mailbox owner")] String Owner;
     [Write, Description("The AutoDeclineFutureRequestsWhenOOF parameter specifies whether to automatically decline new meeting requests that are sent to the mailbox during the scheduled time period when Automatic Replies are being sent. ")] Boolean AutoDeclineFutureRequestsWhenOOF;
     [Write, Description("The AutoReplyState parameter specifies whether the mailbox is enabled for Automatic Replies. Valid values are: Enabled, Disabled, Scheduled"), ValueMap{"Enabled", "Disabled", "Scheduled"}, Values{"Enabled", "Disabled", "Scheduled"}] String AutoReplyState;
     [Write, Description("The CreateOOFEvent parameter specifies whether to create a calendar event that corresponds to the scheduled time period when Automatic Replies are being sent for the mailbox.")] Boolean CreateOOFEvent;

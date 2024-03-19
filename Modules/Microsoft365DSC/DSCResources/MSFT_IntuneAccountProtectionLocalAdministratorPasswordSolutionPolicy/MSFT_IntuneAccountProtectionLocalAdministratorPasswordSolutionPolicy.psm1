@@ -130,7 +130,7 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ExpandProperty settings -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
@@ -138,28 +138,32 @@ function Get-TargetResource
             $policyTemplateID = 'adc46e5a-f4aa-4ff6-aeff-4f27bc525796_1'
             $filter = "name eq '$DisplayName' and templateReference/TemplateId eq '$policyTemplateID'"
             $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $filter -ErrorAction SilentlyContinue
+
+            if(([array]$policy).count -gt 1)
+            {
+                throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+            }
+
             if ($null -eq $policy)
             {
                 Write-Verbose -Message "No Account Protection LAPS Policy {displayName: '$DisplayName'} was found"
                 return $nullResult
             }
+
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $policy.Id -ExpandProperty settings -ErrorAction SilentlyContinue
         }
 
         $Identity = $policy.Id
 
         Write-Verbose -Message "Found Account Protection LAPS Policy {$($policy.id):$($policy.Name)}"
-
-        #Retrieve policy specific settings
-        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $Identity `
-            -ErrorAction Stop
+        [array]$settings = $policy.settings
 
         $returnHashtable = @{}
         $returnHashtable.Add('Identity', $Identity)
         $returnHashtable.Add('DisplayName', $policy.name)
         $returnHashtable.Add('Description', $policy.description)
 
-        foreach ($setting in $settings.settingInstance)
+        foreach ($setting in $settings.SettingInstance)
         {
             $addToParameters = $true
             $settingName = $setting.settingDefinitionId.Split('_') | Select-Object -Last 1
@@ -226,8 +230,15 @@ function Get-TargetResource
 
         }
         $returnAssignments = @()
-        $returnAssignments += Get-DeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $Identity
+        $graphAssignments = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
+        if ($graphAssignments.count -gt 0)
+        {
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($graphAssignments)
+        }
         $returnHashtable.Add('Assignments', $returnAssignments)
+
 
         Write-Verbose -Message "Found Account Protection LAPS Policy {$($policy.name)}"
 
@@ -249,6 +260,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -562,87 +574,32 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Account Protection LAPS Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
+    $ValuesToCheck = ([hashtable]$PSBoundParameters).clone()
     $ValuesToCheck.Remove('Identity') | Out-Null
     $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('ApplicationId') | Out-Null
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('Identity') | Out-Null
-
-    if ($BackupDirectory -eq 0)
-    {
-        $ValuesToCheck.Remove('PasswordAgeDays_AAD') | Out-Null
-        $ValuesToCheck.Remove('PasswordAgeDays') | Out-Null
-        $ValuesToCheck.Remove('PasswordExpirationProtectionEnabled') | Out-Null
-        $ValuesToCheck.Remove('AdEncryptedPasswordHistorySize') | Out-Null
-        $ValuesToCheck.Remove('AdPasswordEncryptionEnabled') | Out-Null
-        $ValuesToCheck.Remove('AdPasswordEncryptionPrincipal') | Out-Null
-    }
-    elseif ($BackupDirectory -eq 1) {
-        $ValuesToCheck.Remove('PasswordAgeDays') | Out-Null
-        $ValuesToCheck.Remove('PasswordExpirationProtectionEnabled') | Out-Null
-        $ValuesToCheck.Remove('AdEncryptedPasswordHistorySize') | Out-Null
-        $ValuesToCheck.Remove('AdPasswordEncryptionEnabled') | Out-Null
-        $ValuesToCheck.Remove('AdPasswordEncryptionPrincipal') | Out-Null
-    } elseif ($BackupDirectory -eq 2)
-    {
-        $ValuesToCheck.Remove('PasswordAgeDays_AAD') | Out-Null
-    }
 
     $testResult = $true
-    if ([Array]$Assignments.count -ne $CurrentValues.Assignments.count)
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
     {
-        Write-Verbose -Message "Configuration drift:Number of assignments does not match: Source=$([Array]$Assignments.count) Target=$($CurrentValues.Assignments.count)"
-        $testResult = $false
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
     }
-    if ($testResult)
-    {
-        foreach ($assignment in $CurrentValues.Assignments)
-        {
-            if ($null -ne $Assignment)
-            {
-                #GroupId Assignment
-                if (-not [String]::IsNullOrEmpty($assignment.groupId))
-                {
-                    $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
-                    if (-not $source)
-                    {
-                        Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                        $testResult = $false
-                        break
-                    }
-                    $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                    $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-                }
-                #AllDevices/AllUsers assignment
-                else
-                {
-                    $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
-                    if (-not $source)
-                    {
-                        Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                        $testResult = $false
-                        break
-                    }
-                    $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                    $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-                }
-            }
 
-            if (-not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-        }
-
-    }
+    #Compare Cim instances
+    $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
+    $target = $CurrentValues.Assignments
+    $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
     $ValuesToCheck.Remove('Assignments') | Out-Null
 
     if ($testResult)
@@ -744,7 +701,11 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @params
-
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
             if ($Results.Ensure -eq 'Present')
             {
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
@@ -752,7 +713,8 @@ function Export-TargetResource
 
                 if ($Results.Assignments)
                 {
-                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) -CIMInstanceName IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments
+                    $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ([Array]$Results.Assignments) `
+                                                    -CIMInstanceName IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments
                     if ($complexTypeStringResult)
                     {
                         $Results.Assignments = $complexTypeStringResult
@@ -771,12 +733,7 @@ function Export-TargetResource
 
                 if ($Results.Assignments)
                 {
-                    $isCIMArray = $false
-                    if ($Results.Assignments.getType().Fullname -like '*[[\]]')
-                    {
-                        $isCIMArray = $true
-                    }
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$isCIMArray
+                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
                 }
 
                 $dscContent += $currentDSCBlock

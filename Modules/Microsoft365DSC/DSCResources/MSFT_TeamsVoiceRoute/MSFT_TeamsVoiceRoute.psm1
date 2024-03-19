@@ -47,7 +47,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
 
     Write-Verbose -Message "Getting the Voice Route {$Identity}"
@@ -74,6 +78,7 @@ function Get-TargetResource
         ApplicationId         = $ApplicationId
         TenantId              = $TenantId
         CertificateThumbprint = $CertificateThumbprint
+        ManagedIdentity       = $ManagedIdentity.IsPresent
     }
     try
     {
@@ -97,6 +102,7 @@ function Get-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
         }
     }
     catch
@@ -159,8 +165,13 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -181,7 +192,7 @@ function Set-TargetResource
     $notFoundUsageList = @()
     foreach ($usage in $OnlinePstnUsages)
     {
-        if ( -not ($existingUsages -match $usage))
+        if (-not ($existingUsages -match $usage))
         {
             $notFoundUsageList += $usage
         }
@@ -198,33 +209,27 @@ function Set-TargetResource
     $notFoundGatewayList = @()
     foreach ($gateway in $OnlinePstnGatewayList)
     {
-        if ( -not ($existingGateways -match $gateway))
+        if (-not ($existingGateways -match $gateway))
         {
             $notFoundGatewayList += $gateway
         }
     }
 
-    if ($notFoundUsageList)
+    if ($notFoundGatewayList)
     {
         $notFoundGateways = $notFoundGatewayList -join ','
-        throw "Please create the Voice Gateway object(s) ($notFoundGateways) using `"TeamsVoiceRoute`""
+        throw "Please create the Voice Gateway object(s) ($notFoundGateways) using cmdlet `"New-CsOnlinePSTNGateway`""
     }
 
     Write-Verbose -Message "Setting Voice Route {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-
-    $SetParameters = $PSBoundParameters
-    $SetParameters.Remove('Ensure') | Out-Null
-    $SetParameters.Remove('Credential') | Out-Null
-    $SetParameters.Remove('ApplicationId') | Out-Null
-    $SetParameters.Remove('TenantId') | Out-Null
-    $SetParameters.Remove('CertificateThumbprint') | Out-Null
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating a new Voice Route {$Identity}"
-        New-CsOnlineVoiceRoute @SetParameters
+        New-CsOnlineVoiceRoute @PSBoundParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
@@ -233,12 +238,12 @@ function Set-TargetResource
             into the Set-CsOnlineVoiceRoute cmdlet.
         #>
         Write-Verbose -Message "Updating settings for Voice Route {$Identity}"
-        Set-CsOnlineVoiceRoute @SetParameters
+        Set-CsOnlineVoiceRoute @PSBoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing Voice Route {$Identity}"
-        Remove-CsOnlineVoiceRoute -Identity $Identity -Confirm:$false
+        Remove-CsOnlineVoiceRoute -Identity $Identity
     }
 }
 
@@ -291,8 +296,13 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -308,16 +318,31 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Voice Route {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+
+    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
+    if ($CurrentValues.Ensure -eq 'Absent' -and $PSBoundParameters.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Test-TargetResource returned $true"
+        return $true
+    }
+    $TestResult = $true
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $ValuesToCheck = $PSBoundParameters
-
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    if ($TestResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -344,8 +369,13 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity
     )
+
     $InformationPreference = 'Continue'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -379,6 +409,7 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

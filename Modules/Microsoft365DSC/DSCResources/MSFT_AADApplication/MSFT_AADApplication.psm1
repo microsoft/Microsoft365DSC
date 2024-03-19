@@ -22,6 +22,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
         $GroupMembershipClaims,
 
         [Parameter()]
@@ -144,7 +148,7 @@ function Get-TargetResource
         }
         if ($null -ne $AADApp -and $AADApp.Count -gt 1)
         {
-            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant. These apps will not be exported."
+            Throw "Multiple AAD Apps with the Displayname $($DisplayName) exist in the tenant."
         }
         elseif ($null -eq $AADApp)
         {
@@ -189,6 +193,7 @@ function Get-TargetResource
             $result = @{
                 DisplayName             = $AADApp.DisplayName
                 AvailableToOtherTenants = $AvailableToOtherTenantsValue
+                Description             = $AADApp.Description
                 GroupMembershipClaims   = $AADApp.GroupMembershipClaims
                 Homepage                = $AADApp.web.HomepageUrl
                 IdentifierUris          = $AADApp.IdentifierUris
@@ -252,6 +257,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AvailableToOtherTenants,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter()]
         [System.String]
@@ -684,6 +693,10 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
         $GroupMembershipClaims,
 
         [Parameter()]
@@ -800,18 +813,13 @@ function Test-TargetResource
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App and no permissions were specified'
         }
     }
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('ObjectId') | Out-Null
     $ValuesToCheck.Remove('AppId') | Out-Null
     $ValuesToCheck.Remove('Permissions') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -890,6 +898,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ApplicationSecret     = $ApplicationSecret
+                Description           = $AADApp.Description
                 DisplayName           = $AADApp.DisplayName
                 ObjectID              = $AADApp.Id
                 Credential            = $Credential
@@ -932,6 +941,7 @@ function Export-TargetResource
                     Write-Host "`r`n        $($Global:M365DSCEmojiYellowCircle)" -NoNewline
                     Write-Host " Multiple app instances wth name {$($AADApp.DisplayName)} were found. We will skip exporting these instances."
                 }
+                $i++
             }
         }
         return $dscContent.ToString()

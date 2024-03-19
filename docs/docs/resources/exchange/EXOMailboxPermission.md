@@ -54,15 +54,16 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOMailboxPermission "TestPermission"
         {
             AccessRights         = @("FullAccess","ReadPermission");
             Credential           = $credsCredential;
-            Deny                 = $False;
+            Deny                 = $True; # Updated Property
             Ensure               = "Present";
-            Identity             = "John.Smith";
+            Identity             = "AlexW@$Domain";
             InheritanceType      = "All";
             User                 = "NT AUTHORITY\SELF";
         }

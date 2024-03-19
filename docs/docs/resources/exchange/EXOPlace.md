@@ -5,6 +5,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Identity** | Key | String | The Identity parameter specifies the room mailbox that you want to modify. You can use any value that uniquely identifies the room. | |
+| **DisplayName** | Write | String | The display name of the place. | |
 | **AudioDeviceName** | Write | String | The AudioDeviceName parameter specifies the name of the audio device in the room. If the value contains spaces, enclose the value in quotation marks. | |
 | **Building** | Write | String | The Building parameter specifies the building name or building number that the room is in. If the value contains spaces, enclose the value in quotation marks. | |
 | **Capacity** | Write | UInt32 | The Capacity parameter specifies the capacity of the room. A valid value is an integer. | |
@@ -67,28 +68,101 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credential
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOPlace 'TestPlace'
         {
             AudioDeviceName        = "MyAudioDevice";
-            Capacity               = 15; #Drift
+            Capacity               = 15;
             City                   = "";
-            Credential             = $credential
+            Credential             = $Credscredential
             DisplayDeviceName      = "DisplayDeviceName";
             Ensure                 = 'Present'
-            Identity               = "MyRoom@$contoso.com";
+            Identity               = "Hood@$Domain";
             IsWheelChairAccessible = $True;
             MTREnabled             = $False;
             ParentType             = "None";
             Phone                  = "555-555-5555";
             Tags                   = @("Tag1", "Tag2");
             VideoDeviceName        = "VideoDevice";
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOPlace 'TestPlace'
+        {
+            AudioDeviceName        = "MyAudioDevice";
+            Capacity               = 16; # Updated Property
+            City                   = "";
+            Credential             = $Credscredential
+            DisplayDeviceName      = "DisplayDeviceName";
+            Ensure                 = 'Present'
+            Identity               = "Hood@$Domain";
+            IsWheelChairAccessible = $True;
+            MTREnabled             = $False;
+            ParentType             = "None";
+            Phone                  = "555-555-5555";
+            Tags                   = @("Tag1", "Tag2");
+            VideoDeviceName        = "VideoDevice";
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOPlace 'TestPlace'
+        {
+            AudioDeviceName        = "MyAudioDevice";
+            Credential             = $Credscredential
+            DisplayDeviceName      = "DisplayDeviceName";
+            Ensure                 = 'Absent'
+            Identity               = "Hood@$Domain";
         }
     }
 }

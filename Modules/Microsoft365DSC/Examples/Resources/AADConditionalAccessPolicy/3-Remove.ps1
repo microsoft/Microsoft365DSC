@@ -15,9 +15,9 @@ Configuration Example
 
     node localhost
     {
-        AADConditionalAccessPolicy 'Allin-example'
+        AADConditionalAccessPolicy 'ConditionalAccessPolicy'
         {
-            DisplayName                          = 'Allin-example'
+            DisplayName                          = 'Example CAP'
             Ensure                               = 'Absent'
             Credential                           = $Credscredential
         }

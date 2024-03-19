@@ -10,6 +10,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
         $AudioDeviceName,
 
         [Parameter()]
@@ -161,47 +165,52 @@ function Get-TargetResource
 
         if ($null -eq $place)
         {
-            Write-Verbose -Message "Place $($Identity) does not exist."
-            return $nullReturn
-        }
-        else
-        {
-            $result = @{
-                Identity               = $place.Identity
-                AudioDeviceName        = $place.AudioDeviceName
-                Building               = $place.Building
-                Capacity               = $place.Capacity
-                City                   = $place.City
-                CountryOrRegion        = $place.CountryOrRegion
-                Desks                  = [Array] $place.Desks
-                DisplayDeviceName      = $place.DisplayDeviceName
-                Floor                  = $place.Floor
-                FloorLabel             = $place.FloorLabel
-                GeoCoordinates         = $place.GeoCoordinates
-                IsWheelChairAccessible = [Boolean] $place.IsWheelChairAccessible
-                Label                  = $place.Label
-                MTREnabled             = [Boolean] $place.MTREnabled
-                ParentId               = $place.ParentId
-                ParentType             = $place.ParentType
-                Phone                  = $place.Phone
-                PostalCode             = $place.PostalCode
-                State                  = $place.State
-                Street                 = $place.Street
-                Tags                   = [Array] $place.Tags
-                VideoDeviceName        = $place.VideoDeviceName
-                Credential             = $Credential
-                Ensure                 = 'Present'
-                ApplicationId          = $ApplicationId
-                CertificateThumbprint  = $CertificateThumbprint
-                CertificatePath        = $CertificatePath
-                CertificatePassword    = $CertificatePassword
-                Managedidentity        = $ManagedIdentity.IsPresent
-                TenantId               = $TenantId
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                Write-Verbose -Message "Couldn't retrieve place by Id {$($Identity)}. Trying by DisplayName"
+                $place = Get-Place -ResultSize 'Unlimited' | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
             }
 
-            Write-Verbose -Message "Found Place $($Identity)"
-            return $result
+            if ($null -eq $place)
+            {
+                return $nullReturn
+            }
         }
+
+        $result = @{
+            Identity               = $place.Identity
+            AudioDeviceName        = $place.AudioDeviceName
+            Building               = $place.Building
+            Capacity               = $place.Capacity
+            City                   = $place.City
+            CountryOrRegion        = $place.CountryOrRegion
+            Desks                  = [Array] $place.Desks
+            DisplayDeviceName      = $place.DisplayDeviceName
+            DisplayName            = $place.DisplayName
+            Floor                  = $place.Floor
+            FloorLabel             = $place.FloorLabel
+            GeoCoordinates         = $place.GeoCoordinates
+            IsWheelChairAccessible = [Boolean] $place.IsWheelChairAccessible
+            Label                  = $place.Label
+            MTREnabled             = [Boolean] $place.MTREnabled
+            ParentId               = $place.ParentId
+            ParentType             = $place.ParentType
+            Phone                  = $place.Phone
+            PostalCode             = $place.PostalCode
+            State                  = $place.State
+            Street                 = $place.Street
+            Tags                   = [Array] $place.Tags
+            VideoDeviceName        = $place.VideoDeviceName
+            Credential             = $Credential
+            Ensure                 = 'Present'
+            ApplicationId          = $ApplicationId
+            CertificateThumbprint  = $CertificateThumbprint
+            CertificatePath        = $CertificatePath
+            CertificatePassword    = $CertificatePassword
+            Managedidentity        = $ManagedIdentity.IsPresent
+            TenantId               = $TenantId
+        }
+        return $result
     }
     catch
     {
@@ -223,6 +232,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -385,6 +398,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -604,6 +621,7 @@ function Export-TargetResource
 
             $Params = @{
                 Identity              = $place.Identity
+                DisplayName           = $place.DisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId

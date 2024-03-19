@@ -165,6 +165,18 @@ function Get-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
+        [System.Boolean]
+        $AuthenticationContextRequired,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextId,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextName,
+
+        [Parameter()]
         [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
@@ -194,7 +206,7 @@ function Get-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Getting configuration of Role: $Displayname"
+    Write-Verbose -Message "Getting configuration of Role: $DisplayName"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -217,7 +229,7 @@ function Get-TargetResource
     $RoleDefintion = $null
     if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
     {
-        $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
+        $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript { $_.Id -eq $Id }
     }
     elseif (-not [System.String]::IsNullOrEmpty($Id))
     {
@@ -225,15 +237,15 @@ function Get-TargetResource
             -ErrorAction SilentlyContinue
     }
 
-    if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($Displayname))
+    if ($null -eq $RoleDefinition -and -not [System.String]::IsNullOrEmpty($DisplayName))
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            $RoleDefinition = $Script:exportedInstances | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
         }
         else
         {
-            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
+            $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "displayName eq '$DisplayName'"
         }
     }
 
@@ -245,7 +257,7 @@ function Get-TargetResource
             $Script:PolicyAssignments = Get-MgBetaPolicyRoleManagementPolicyAssignment -Filter $allFilter -All
         }
 
-        $Policy = $Script:PolicyAssignments | Where-Object -FilterScript {$_.RoleDefinitionId -eq $RoleDefinition.Id}
+        $Policy = $Script:PolicyAssignments | Where-Object -FilterScript { $_.RoleDefinitionId -eq $RoleDefinition.Id }
     }
     catch
     {
@@ -269,6 +281,13 @@ function Get-TargetResource
     $ActivationReqJustification = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Justification'
     $ActivationReqTicket = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'Ticketing'
     $ActivationReqMFA = (($role | Where-Object { $_.Id -eq 'Enablement_EndUser_Assignment' }).AdditionalProperties.enabledRules) -contains 'MultiFactorAuthentication'
+    $AuthenticationContext = ($role | Where-Object { $_.Id -eq 'AuthenticationContext_EndUser_Assignment' }).AdditionalProperties
+    $AuthenticationContextRequired = $AuthenticationContext.isEnabled
+    if ($AuthenticationContextRequired)
+    {
+        $AuthenticationContextId = $AuthenticationContext.claimValue
+        $AuthenticationContextName = (Get-MgBetaIdentityConditionalAccessAuthenticationContextClassReference -AuthenticationContextClassReferenceId $AuthenticationContextId).DisplayName
+    }
     $ApprovaltoActivate = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).AdditionalProperties.setting.isApprovalRequired)
     [array]$ActivateApprovers = (($role | Where-Object { $_.Id -eq 'Approval_EndUser_Assignment' }).AdditionalProperties.setting.approvalStages.primaryApprovers)
     [string[]]$ActivateApprover = @()
@@ -327,7 +346,7 @@ function Get-TargetResource
 
     try
     {
-        Write-Verbose -Message "Found configuration of Rule $($Displayname)"
+        Write-Verbose -Message "Found configuration of Rule $($DisplayName)"
         $result = @{
             Id                                                        = $Id
             DisplayName                                               = $DisplayName
@@ -369,6 +388,9 @@ function Get-TargetResource
             EligibleAssignmentAssigneeNotificationDefaultRecipient    = $EligibleAssignmentAssigneeNotificationDefaultRecipient
             EligibleAssignmentAssigneeNotificationAdditionalRecipient = [System.String[]]$EligibleAssignmentAssigneeNotificationAdditionalRecipient
             EligibleAssignmentAssigneeNotificationOnlyCritical        = $EligibleAssignmentAssigneeNotificationOnlyCritical
+            AuthenticationContextRequired                             = $AuthenticationContextRequired
+            AuthenticationContextId                                   = $AuthenticationContextId
+            AuthenticationContextName                                 = $AuthenticationContextName
             Ensure                                                    = 'Present'
             ApplicationId                                             = $ApplicationId
             TenantId                                                  = $TenantId
@@ -558,6 +580,18 @@ function Set-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
+        [System.Boolean]
+        $AuthenticationContextRequired,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextId,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextName,
+
+        [Parameter()]
         [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
@@ -587,10 +621,11 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-    Write-Verbose -Message "Setting configuration of Role settings: $Displayname"
+    Write-Verbose -Message "Setting configuration of Role settings: $DisplayName"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
+    #$PSBoundParameters.Remove('AuthenticationContextName') | Out-Null
 
     #region Telemetry
     $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
@@ -602,7 +637,7 @@ function Set-TargetResource
     #endregion
 
     #get role
-    $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "DisplayName eq '$DisplayName'"
+    $RoleDefinition = Get-MgBetaRoleManagementDirectoryRoleDefinition -Filter "displayName eq '$DisplayName'"
 
     $Policy = $null
     if (-not [System.String]::IsNullOrEmpty($Id))
@@ -943,7 +978,7 @@ function Set-TargetResource
                         else
                         {
                             #try with group
-                            $Filter = "Displayname eq '" + $item + "'"
+                            $Filter = "displayName eq '" + $item + "'"
                             try
                             {
                                 $group = Get-MgGroup -Filter $Filter -ErrorAction Stop
@@ -1079,6 +1114,22 @@ function Set-TargetResource
                     'enabledRules' = $enabledrules
                     target         = @{
                         '@odata.type' = '#microsoft.graph.unifiedRoleManagementPolicyRuleTarget'
+                    }
+                }
+            }
+        }
+        elseif ($role.Id -match 'AuthenticationContext_EndUser_Assignment')
+        {
+            if ($PSBoundParameters.ContainsKey('AuthenticationContextRequired') `
+                    -and $PSBoundParameters.ContainsKey('AuthenticationContextId'))
+            {
+                $params = @{
+                    '@odata.type' = $odatatype
+                    'id'          = $role.Id
+                    'isEnabled'   = $true
+                    'claimValue'  = $AuthenticationContextId
+                    target        = @{
+                        '@odata.type' = 'microsoft.graph.unifiedRoleManagementPolicyRuleTarget'
                     }
                 }
             }
@@ -1270,6 +1321,18 @@ function Test-TargetResource
         $EligibleAssignmentAssigneeNotificationOnlyCritical,
 
         [Parameter()]
+        [System.Boolean]
+        $AuthenticationContextRequired,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextId,
+
+        [Parameter()]
+        [System.String]
+        $AuthenticationContextName,
+
+        [Parameter()]
         [ValidateSet('Present')]
         [System.String]
         $Ensure = 'Present',
@@ -1312,10 +1375,11 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Role Assignment: $Displayname"
+    Write-Verbose -Message "Testing configuration of Role Assignment: $DisplayName"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters

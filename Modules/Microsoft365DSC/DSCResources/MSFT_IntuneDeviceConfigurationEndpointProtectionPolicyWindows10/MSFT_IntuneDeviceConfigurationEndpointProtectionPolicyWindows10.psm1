@@ -1043,7 +1043,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -1054,14 +1054,19 @@ function Get-TargetResource
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
+                if ($null -eq $getValue)
+                {
+                    Write-Verbose -Message "Could not find an Intune Device Configuration Endpoint Protection Policy for Windows10 with DisplayName {$DisplayName}"
+                    return $nullResult
+                }
+                if (([array]$getValue).count -gt 1)
+                {
+                    throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+                }
             }
         }
         #endregion
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Could not find an Intune Device Configuration Endpoint Protection Policy for Windows10 with DisplayName {$DisplayName}"
-            return $nullResult
-        }
+
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Configuration Endpoint Protection Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
@@ -1300,7 +1305,7 @@ function Get-TargetResource
             $myfirewallRules.Add('FilePath', $currentfirewallRules.filePath)
             if ($null -ne $currentfirewallRules.interfaceTypes)
             {
-                $myfirewallRules.Add('InterfaceTypes', $currentfirewallRules.interfaceTypes.toString())
+                $myfirewallRules.Add('InterfaceTypes', $currentfirewallRules.interfaceTypes.toString() -split ',')
             }
             $myfirewallRules.Add('LocalAddressRanges', $currentfirewallRules.localAddressRanges)
             $myfirewallRules.Add('LocalPortRanges', $currentfirewallRules.localPortRanges)
@@ -2618,22 +2623,16 @@ function Get-TargetResource
             Managedidentity                                                              = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+
+        $returnAssignments = @()
+        $graphAssignments = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        if ($graphAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {
-                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
-                    })
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
         }
-        $results.Add('Assignments', $assignmentResult)
+        $results.Add('Assignments', $returnAssignments)
 
         return [System.Collections.Hashtable] $results
     }
@@ -2645,6 +2644,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -3704,11 +3704,24 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
+        if ($CreateParameters.FirewallRules.count -gt 0)
+        {
+            $intuneFirewallRules = @()
+            foreach ($firewallRule in $CreateParameters.FirewallRules)
+            {
+                if ($firewallRule.interfaceTypes -gt 1)
+                {
+                    $firewallRule.interfaceTypes = $firewallRule.interfaceTypes -join ','
+                }
+                $intuneFirewallRules += $firewallRule
+            }
+            $CreateParameters.FirewallRules = $intuneFirewallRules
+        }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10EndpointProtectionConfiguration")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EndpointProtectionConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
-        foreach($assignment in $Assignments)
+        foreach ($assignment in $Assignments)
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
@@ -3739,8 +3752,21 @@ function Set-TargetResource
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
         }
+        if ($UpdateParameters.FirewallRules.count -gt 0)
+        {
+            $intuneFirewallRules = @()
+            foreach ($firewallRule in $UpdateParameters.FirewallRules)
+            {
+                if ($firewallRule.interfaceTypes -gt 1)
+                {
+                    $firewallRule.interfaceTypes = $firewallRule.interfaceTypes -join ','
+                }
+                $intuneFirewallRules += $firewallRule
+            }
+            $UpdateParameters.FirewallRules = $intuneFirewallRules
+        }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windows10EndpointProtectionConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10EndpointProtectionConfiguration')
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -4801,6 +4827,11 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Configuration Endpoint Protection Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Id') | Out-Null
@@ -4824,6 +4855,11 @@ function Test-TargetResource
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
+
+            if ($key -eq 'Assignments')
+            {
+                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+            }
 
             if (-Not $testResult)
             {
@@ -4939,7 +4975,12 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
             }
 
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             if ( $null -ne $Results.BitLockerFixedDrivePolicy)
@@ -6077,7 +6118,7 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-        $_.Exception -like "*Request not applicable to target tenant*")
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

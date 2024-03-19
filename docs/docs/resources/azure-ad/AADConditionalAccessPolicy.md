@@ -80,11 +80,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.Read.All
+    - Agreement.Read.All, Application.Read.All, Group.Read.All, Policy.Read.All, RoleManagement.Read.Directory, User.Read.All
 
 - **Update**
 
-    - Application.Read.All, Policy.ReadWrite.ConditionalAccess
+    - Agreement.Read.All, Application.Read.All, Group.Read.All, Policy.Read.All, Policy.ReadWrite.ConditionalAccess, RoleManagement.Read.Directory, User.Read.All
 
 ## Examples
 
@@ -106,12 +106,10 @@ Configuration Example
 
     node localhost
     {
-        AADConditionalAccessPolicy 'Allin-example'
+        AADConditionalAccessPolicy 'ConditionalAccessPolicy'
         {
-            ApplicationEnforcedRestrictionsIsEnabled = $False;
             BuiltInControls                          = @("mfa");
             ClientAppTypes                           = @("all");
-            CloudAppSecurityIsEnabled                = $False;
             Credential                               = $Credscredential;
             DeviceFilterMode                         = "exclude";
             DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
@@ -121,7 +119,6 @@ Configuration Example
             GrantControlOperator                     = "OR";
             IncludeApplications                      = @("All");
             IncludeRoles                             = @("Attack Payload Author");
-            PersistentBrowserIsEnabled               = $False;
             SignInFrequencyInterval                  = "timeBased";
             SignInFrequencyIsEnabled                 = $True;
             SignInFrequencyType                      = "hours";
@@ -150,12 +147,10 @@ Configuration Example
 
     node localhost
     {
-        AADConditionalAccessPolicy 'Allin-example'
+        AADConditionalAccessPolicy 'ConditionalAccessPolicy'
         {
-            ApplicationEnforcedRestrictionsIsEnabled = $False;
             BuiltInControls                          = @("mfa");
             ClientAppTypes                           = @("all");
-            CloudAppSecurityIsEnabled                = $False;
             Credential                               = $Credscredential;
             DeviceFilterMode                         = "exclude";
             DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
@@ -165,7 +160,6 @@ Configuration Example
             GrantControlOperator                     = "OR";
             IncludeApplications                      = @("All");
             IncludeRoles                             = @("Attack Payload Author");
-            PersistentBrowserIsEnabled               = $False;
             SignInFrequencyInterval                  = "timeBased";
             SignInFrequencyIsEnabled                 = $True;
             SignInFrequencyType                      = "hours";
@@ -194,9 +188,9 @@ Configuration Example
 
     node localhost
     {
-        AADConditionalAccessPolicy 'Allin-example'
+        AADConditionalAccessPolicy 'ConditionalAccessPolicy'
         {
-            DisplayName                          = 'Allin-example'
+            DisplayName                          = 'Example CAP'
             Ensure                               = 'Absent'
             Credential                           = $Credscredential
         }

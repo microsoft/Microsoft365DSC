@@ -127,12 +127,9 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        Write-Verbose -Message 'Global ExchangeOnlineSession status:'
-        Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
-
         try
         {
-            $SafeLinksPolicies = Get-SafeLinksPolicy -ErrorAction Stop
+            $SafeLinksPolicy = Get-SafeLinksPolicy -Identity $Identity -ErrorAction Stop
         }
         catch
         {
@@ -141,8 +138,6 @@ function Get-TargetResource
                 -Exception $_ `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
-
-        $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if (-not $SafeLinksPolicy)
         {
             Write-Verbose -Message "SafeLinksPolicy $($Identity) does not exist."
@@ -165,7 +160,8 @@ function Get-TargetResource
                 DisableUrlRewrite             = $SafeLinksPolicy.DisableUrlRewrite
                 ScanUrls                      = $SafeLinksPolicy.ScanUrls
                 TrackClicks                   = $SafeLinksPolicy.TrackClicks
-                UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
+                # The Get-SafeLinksPolicy no longer returns this property
+                # UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
                 Ensure                        = 'Present'
                 Credential                    = $Credential
                 ApplicationId                 = $ApplicationId
@@ -472,6 +468,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('UseTranslatedNotificationText') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

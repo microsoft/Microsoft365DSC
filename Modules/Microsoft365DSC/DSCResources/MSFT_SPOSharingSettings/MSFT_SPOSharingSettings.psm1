@@ -193,11 +193,9 @@ function Get-TargetResource
         {
             $DefaultLinkPermission = $SPOSharingSettings.DefaultLinkPermission
         }
-
-        return @{
+        $results = @{
             IsSingleInstance                           = 'Yes'
             SharingCapability                          = $SPOSharingSettings.SharingCapability
-            MySiteSharingCapability                    = $MySiteSharingCapability
             ShowEveryoneClaim                          = $SPOSharingSettings.ShowEveryoneClaim
             ShowAllUsersClaim                          = $SPOSharingSettings.ShowAllUsersClaim
             ShowEveryoneExceptExternalUsersClaim       = $SPOSharingSettings.ShowEveryoneExceptExternalUsersClaim
@@ -229,6 +227,12 @@ function Get-TargetResource
             Managedidentity                            = $ManagedIdentity.IsPresent
             Ensure                                     = 'Present'
         }
+
+        if (-not [System.String]::IsNullOrEmpty($MySiteSharingCapability))
+        {
+            $results.Add('MySiteSharingCapability', $MySiteSharingCapability)
+        }
+        return $results
     }
     catch
     {
@@ -516,7 +520,7 @@ function Set-TargetResource
     Set-PnPTenant @CurrentParameters | Out-Null
     if ($SetMySharingCapability)
     {
-        $mysite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.com/' }
+        $mysite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.com/' -and $_.Template -notmatch '^RedirectSite#' }
         Set-PnPTenantSite -Identity $mysite.Url -SharingCapability $MySiteSharingCapability
     }
 }

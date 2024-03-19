@@ -86,7 +86,7 @@ function Get-TargetResource
         $getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id -ErrorAction SilentlyContinue
 
         #endregion
-        if ($null -eq $getValue)
+        if ($null -eq $getValue -or $getValue.State -eq 'disabled')
         {
             Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Authenticator with id {$id}"
             return $nullResult
@@ -105,7 +105,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexExcludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexExcludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.excludeTarget.targetType)
         {
@@ -124,7 +131,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexIncludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexIncludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.companionAppAllowedState.includeTarget.targetType)
         {
@@ -154,7 +168,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexExcludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexExcludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.excludeTarget.targetType)
         {
@@ -173,7 +194,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexIncludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexIncludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayAppInformationRequiredState.includeTarget.targetType)
         {
@@ -202,7 +230,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexExcludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexExcludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexExcludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.excludeTarget.targetType)
         {
@@ -221,7 +256,14 @@ function Get-TargetResource
         }
         else
         {
-            $complexIncludeTarget.Add('Id', 'all_users')
+            if ($getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.id -eq '00000000-0000-0000-0000-000000000000')
+            {
+                $complexIncludeTarget.Add('Id', '00000000-0000-0000-0000-000000000000')
+            }
+            else
+            {
+                $complexIncludeTarget.Add('Id', 'all_users')
+            }
         }
         if ($null -ne $getValue.additionalProperties.featureSettings.displayLocationInformationRequiredState.includeTarget.targetType)
         {
@@ -414,103 +456,15 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Creating an Azure AD Authentication Method Policy Authenticator with id {$id}"
-
-        $CreateParameters = ([Hashtable]$BoundParameters).clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Remove('Id') | Out-Null
-
-        # replace group Displayname with group id
-        if ($CreateParameters.featureSettings.companionAppAllowedState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
-            $Filter = "Displayname eq '$($CreateParameters.featureSettings.companionAppAllowedState.includeTarget.id)'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $CreateParameters.featureSettings.companionAppAllowedState.includeTarget.foreach('id',$groupid)
-        }
-        if ($CreateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
-            $Filter = "Displayname eq '$($CreateParameters.featureSettings.companionAppAllowedState.excludeTarget.id)'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $CreateParameters.featureSettings.companionAppAllowedState.excludeTarget.foreach('id',$groupid)
-        }
-        if ($CreateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
-            $Filter = "Displayname eq '$($CreateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id)'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $CreateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.foreach('id',$groupid)
-        }
-        if ($UpdateParCreateParametersameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
-            $Filter = "Displayname eq '$($CreateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id)'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $CreateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.foreach('id',$groupid)
-        }
-        if ($CreateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
-            $Filter = "Displayname eq '$($CreateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id)'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $CreateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.foreach('id',$groupid)
-        }
-        if ($CreateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users'){
-            $Filter = "Displayname eq '$($CreateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id)'" | Out-String
-            $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
-            $CreateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.foreach('id',$groupid)
-        }
-
-        # DEPRECATED
-        if ($CreateParameters.featureSettings.ContainsKey('NumberMatchingRequiredState'))
-        {
-            Write-Verbose -Message "The NumberMatchingRequiredState feature is deprecated and will be ignored. Please remove it from your configuration."
-            $CreateParameters.featureSettings.Remove('NumberMatchingRequiredState')
-        }
-
-        $keys = (([Hashtable]$CreateParameters).clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-            if ($key -eq 'IncludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $CreateParameters.$key)
-                {
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $CreateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $CreateParameters.$key)
-                {
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $CreateParameters.$key[$i].foreach('id', (Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-        }
-        #region resource generator code
-        $CreateParameters.Add('@odata.type', '#microsoft.graph.microsoftAuthenticatorAuthenticationMethodConfiguration')
-        $policy = New-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -BodyParameter $CreateParameters
-        #endregion
-    }
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    if ($Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Azure AD Authentication Method Policy Authenticator with Id {$($currentInstance.Id)}"
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
 
-
         $UpdateParameters.Remove('Id') | Out-Null
 
-        Write-Verbose -Message "Flag1"
         # replace group Displayname with group id
         if ($UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -and `
             $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
@@ -521,8 +475,6 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.companionAppAllowedState.includeTarget.foreach('id',$groupid)
         }
-
-        Write-Verbose -Message "Flag2"
         if ($UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -and `
             $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('companionAppAllowedState'))
@@ -532,7 +484,6 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.companionAppAllowedState.excludeTarget.foreach('id',$groupid)
         }
-        Write-Verbose -Message "Flag3"
         if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -and `
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayAppInformationRequiredState'))
@@ -542,7 +493,6 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.includeTarget.foreach('id',$groupid)
         }
-        Write-Verbose -Message "Flag4"
         if ($UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -and `
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayAppInformationRequiredState'))
@@ -552,7 +502,6 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayAppInformationRequiredState.excludeTarget.foreach('id',$groupid)
         }
-        Write-Verbose -Message "Flag5"
         if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -and `
             $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayLocationInformationRequiredState'))
@@ -562,7 +511,6 @@ function Set-TargetResource
             $groupid = (Get-MgGroup -Filter $Filter).id.ToString()
             $UpdateParameters.featureSettings.displayLocationInformationRequiredState.includeTarget.foreach('id',$groupid)
         }
-        Write-Verbose -Message "Flag6"
         if ($UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -and `
             $UpdateParameters.featureSettings.displayLocationInformationRequiredState.excludeTarget.id -notmatch '00000000-0000-0000-0000-000000000000|all_users' -and
             $UpdateParameters.featureSettings.ContainsKey('displayLocationInformationRequiredState'))
@@ -574,22 +522,18 @@ function Set-TargetResource
         }
 
         # DEPRECATED
-        Write-Verbose -Message "Flag7"
         if ($UpdateParameters.featureSettings.ContainsKey('NumberMatchingRequiredState'))
         {
             Write-Verbose -Message "The NumberMatchingRequiredState feature is deprecated and will be ignored. Please remove it from your configuration."
             $UpdateParameters.featureSettings.Remove('NumberMatchingRequiredState')
         }
 
-        Write-Verbose -Message "Flag8"
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
         {
             if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
             {
-                Write-Verbose -Message "Flag9a"
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-                Write-Verbose -Message "Flag9b"
             }
             if ($key -eq 'IncludeTargets' -or $key -eq 'ExcludeTargets')
             {
@@ -813,7 +757,7 @@ function Export-TargetResource
         #region resource generator code
         [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
             -AuthenticationMethodConfigurationId MicrosoftAuthenticator `
-            -ErrorAction Stop
+            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
         #endregion
 
         $i = 1
