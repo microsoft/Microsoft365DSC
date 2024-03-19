@@ -122,6 +122,9 @@
   * Add read permission for extracting M365 apps installation settings instead
     of extracting them only with read/write permissions
     FIXES [#4418](https://github.com/microsoft/Microsoft365DSC/issues/4418)
+* TeamsTeam
+  * Add error handling for teams without displayname during export
+  FIXES [#4406](https://github.com/microsoft/Microsoft365DSC/issues/4406)
 * TeamsVoiceRoute
   * Fix policy removal and also comparison in Test-TargetResource
 * DEPENDENCIES
