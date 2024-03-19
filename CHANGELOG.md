@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOTransportRule
+  * Change data type of Priority from String to Int (breaking change)
+    FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
