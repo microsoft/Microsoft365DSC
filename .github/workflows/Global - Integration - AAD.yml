@@ -88,6 +88,15 @@ jobs:
           {
             Write-Host "All resources in the Tenant are in the Desired State"
           }
+
+          try
+          {
+            $Result = Get-DSCConfiguration -Verbose -ErrorAction Stop
+          }
+          catch
+          {
+            throw $_
+          }
       - name: Generate {Update} Integration Tests from Examples
         shell: powershell
         run: |
@@ -145,6 +154,15 @@ jobs:
           else
           {
             Write-Host "All resources in the Tenant are in the Desired State"
+          }
+
+          try
+          {
+            $Result = Get-DSCConfiguration -Verbose -ErrorAction Stop
+          }
+          catch
+          {
+            throw $_
           }
       - name: Generate {Remove} Integration Tests from Examples
         shell: powershell
@@ -205,3 +223,11 @@ jobs:
               Write-Host "All resources in the Tenant are in the Desired State"
             }
 
+            try
+            {
+              $Result = Get-DSCConfiguration -Verbose -ErrorAction Stop
+            }
+            catch
+            {
+              throw $_
+            }
