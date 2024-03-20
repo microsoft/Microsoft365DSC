@@ -506,16 +506,10 @@ function Set-TargetResource
             -AdditionalProperties $AdditionalProperties `
             -ScheduledActionsForRule $scheduledActionsForRule
 
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
-
-        }
-        Update-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
+        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
             -Targets $assignmentsHash `
-            -Repository deviceCompliancePolicies
-
+            -Repository 'deviceManagement/deviceCompliancePolicies'
     }
     elseif ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
@@ -534,15 +528,10 @@ function Set-TargetResource
             -Description $Description `
             -DeviceCompliancePolicyId $configDevicePolicy.Id
 
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
-
-        }
-        Update-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $configDevicePolicy.id `
+        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $configDevicePolicy.id `
             -Targets $assignmentsHash `
-            -Repository deviceCompliancePolicies
+            -Repository 'deviceManagement/deviceCompliancePolicies'
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
