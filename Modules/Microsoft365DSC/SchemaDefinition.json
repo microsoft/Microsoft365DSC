@@ -14083,7 +14083,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "UInt32",
                                "Name":  "Priority",
                                "Option":  "Write"
                            },
