@@ -8,6 +8,10 @@
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
+* IntuneDeviceCompliancePolicyWindows10
+  * Fix group assignment by using the corrected function
+    Update-DeviceConfigurationPolicyAssignment from module M365DSCDRGUtil
+    FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
 * TeamsGroupPolicyAssignment
   * Skip assignments that have orphaned/deleted groups or without display name
     instead of throwing an error
