@@ -16239,11 +16239,6 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Name":  "Platform",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
                                "Name":  "Rule",
                                "Option":  "Write"
                            },
@@ -39060,11 +39055,6 @@
                            {
                                "CIMType":  "String",
                                "Name":  "StreamingAttendeeMode",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "Boolean",
-                               "Name":  "AllowBreakoutRooms",
                                "Option":  "Write"
                            },
                            {
