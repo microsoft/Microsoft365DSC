@@ -2,12 +2,24 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Fixed schema file
+* EXOCalendarProcessing
+  * Fixed schema file
+* EXOGroupSettings
+  * Fixed schema file
+* EXOMessageClassification
+  * Fixed schema file
+* EXOOMEConfiguration
+  * Fixed schema file
 * EXOTransportRule
   * Change data type of Priority from String to Int (breaking change)
     FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
+* TeamsChannelTab
+  * Fixed schema file
 * TeamsGroupPolicyAssignment
   * Skip assignments that have orphaned/deleted groups or without display name
     instead of throwing an error

@@ -38,7 +38,7 @@ class MSFT_EXOGroupSettings : OMI_BaseResource
     [Write, Description("The HiddenFromExchangeClientsEnabled switch specifies whether the Microsoft 365 Group is hidden from Outlook clients connected to Microsoft 365.")] boolean HiddenFromExchangeClientsEnabled;
     [Write, Description("The InformationBarrierMode parameter specifies the information barrier mode for the Microsoft 365 Group."), ValueMap{"Explicit","Implicit","Open","OwnerModerated"}, Values{"Explicit","Implicit","Open","OwnerModerated"}] string InformationBarrierMode;
     [Write, Description("This parameter specifies whether or not members are allow to edit content.")] boolean IsMemberAllowedToEditContent;
-    [Write, Description("The Language parameter specifies language preference for the Microsoft 365 Group.")]string Language;
+    [Write, Description("The Language parameter specifies language preference for the Microsoft 365 Group.")] string Language;
     [Write, Description("The MailboxRegion parameter specifies the preferred data location (PDL) for the Microsoft 365 Group in multi-geo environments.")] string MailboxRegion;
     [Write, Description("The MailTip parameter specifies the custom MailTip text for this recipient. The MailTip is shown to senders when they start drafting an email message to this recipient. ")] string MailTip;
     [Write, Description("The MailTipTranslations parameter specifies additional languages for the custom MailTip text that's defined by the MailTip parameter.")] string MailTipTranslations;
@@ -50,7 +50,7 @@ class MSFT_EXOGroupSettings : OMI_BaseResource
     [Write, Description("The PrimarySmtpAddress parameter specifies the primary return email address that's used for the recipient. You can't use the EmailAddresses and PrimarySmtpAddress parameters in the same command.")] string PrimarySmtpAddress;
     [Write, Description("The RejectMessagesFromSendersOrMembers parameter specifies who isn't allowed to send messages to this recipient. Messages from these senders are rejected.")] string RejectMessagesFromSendersOrMembers[];
     [Write, Description("The RequireSenderAuthenticationEnabled parameter specifies whether to accept messages only from authenticated (internal) senders. ")] boolean RequireSenderAuthenticationEnabled;
-    [Write, Description("The SensitivityLabelId parameter specifies the GUID value of the sensitivity label that's assigned to the Microsoft 365 Group.")] string SensitivityLabelId ;
+    [Write, Description("The SensitivityLabelId parameter specifies the GUID value of the sensitivity label that's assigned to the Microsoft 365 Group.")] string SensitivityLabelId;
     [Write, Description("The SubscriptionEnabled switch specifies whether the group owners can enable subscription to conversations and calendar events on the groups they own. ")] boolean SubscriptionEnabled;
     [Write, Description("The UnifiedGroupWelcomeMessageEnabled switch specifies whether to enable or disable sending system-generated welcome messages to users who are added as members to the Microsoft 365 Group.")] boolean UnifiedGroupWelcomeMessageEnabled;
     [Write, Description("Credentials of the Exchange Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
@@ -61,4 +61,3 @@ class MSFT_EXOGroupSettings : OMI_BaseResource
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
 };
-
