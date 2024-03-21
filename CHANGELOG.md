@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* All resources
+  * Fix issue where Ensure cannot be left as default 'Present'
 * AADConditionalAccessPolicy
   * Fixed schema file
 * EXOCalendarProcessing
