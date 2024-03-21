@@ -421,7 +421,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Identity') | Out-Null
 
     $testResult = $true
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         $testResult = $false
     }
