@@ -206,57 +206,124 @@ function Test-TargetResource
         $result = ($instances.Length - $DSCConvertedInstances.Length) -eq 0
 
         $message = [System.Text.StringBuilder]::New()
-        [void]$message.AppendLine("ResourceName:`r`n$ResourceName`r`n")
-        [void]$message.AppendLine("RuleDefinition:`r`n$RuleDefinition`r`n")
+        [void]$message.AppendLine("<M365DSCRuleEvaluation>")
+        [void]$message.AppendLine("  <ResourceName>$ResourceName</ResourceName>")
+        [void]$message.AppendLine("  <RuleDefinition>$RuleDefinition</RuleDefinition>")
 
         if ($instances.Length -eq 0)
         {
-            [void]$message.AppendLine("No instances were found for the given Rule Definition.")
+            [array]$invalidInstances = $DSCConvertedInstances.ResourceInstanceName
+            [void]$message.AppendLine("  <AfterRuleCount></AfterRuleCount>")
+            [void]$message.AppendLine("  <Match></Match>")
         }
         else
         {
             if (-not [System.String]::IsNullOrEmpty($AfterRuleCountQuery))
             {
-                Write-Verbose -Message "Checking the After Rule Count"
+                [void]$message.AppendLine("  <AfterRuleCount>")
+                [void]$message.AppendLine("    <Query>$AfterRuleCountQuery</Query>")
+
+                Write-Verbose -Message "Checking the After Rule Count Query"
                 $afterRuleCountQueryString = "`$instances.Length $AfterRuleCountQuery"
                 $afterRuleCountQueryBlock = [Scriptblock]::Create($afterRuleCountQueryString)
                 $result = [Boolean](Invoke-Command -ScriptBlock $afterRuleCountQueryBlock)
+                [array]$validInstances = $instances.ResourceInstanceName
+                [array]$invalidInstances = $DSCConvertedInstances.ResourceInstanceName | Where-Object -FilterScript { $_ -notin $validInstances }
+
                 if (-not $result)
                 {
-                    $invalidInstances = $instances.ResourceInstanceName
-
-                    [void]$message.AppendLine("AfterRuleCountQuery:`r`n$AfterRuleCountQuery`r`n")
-                    $MessagePrefix = "The following resource instance(s) matched a rule validation, but did not meet the AfterRuleCountQuery:`r`n"
+                    [void]$message.AppendLine("    <MetQuery>False</MetQuery>")
+                    [void]$message.AppendLine("  </AfterRuleCount>")
+                    if ($validInstances.Count -gt 0)
+                    {
+                        [void]$message.AppendLine("  <Match>")
+                        foreach ($validInstance in $validInstances)
+                        {
+                            [void]$message.AppendLine("    <ResourceInstanceName>[$ResourceName]$validInstance</ResourceInstanceName>")
+                        }
+                        [void]$message.AppendLine("  </Match>")
+                    }
+                    else
+                    {
+                        [void]$message.AppendLine("  <Match></Match>")
+                    }
+                }
+                else
+                {
+                    [void]$message.AppendLine("    <MetQuery>True</MetQuery>")
+                    [void]$message.AppendLine("  </AfterRuleCount>")
+                    [void]$message.AppendLine("  <Match>")
+                    foreach ($validInstance in $validInstances)
+                    {
+                        [void]$message.AppendLine("    <ResourceInstanceName>[$ResourceName]$validInstance</ResourceInstanceName>")
+                    }
+                    [void]$message.AppendLine("  </Match>")
                 }
             }
             else
             {
-                $invalidInstances = Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName
-                $invalidInstances = $invalidInstances.InputObject
+                [void]$message.AppendLine("  <AfterRuleCount></AfterRuleCount>")
 
-                $MessagePrefix = "The following resource instance(s) failed a rule validation:`r`n"
-            }
-
-            if (-not $result)
-            {
-                # Log drifts for each invalid instances found.
-                $invalidInstancesLogNames = ''
-                foreach ($invalidInstance in $invalidInstances)
+                $compareInstances = @()
+                $compareInstances += Compare-Object -ReferenceObject $DSCConvertedInstances.ResourceInstanceName -DifferenceObject $instances.ResourceInstanceName -IncludeEqual
+                if ($compareInstances.Count -gt 0)
                 {
-                    $invalidInstancesLogNames += "[$ResourceName]$invalidInstance`r`n"
+                    [array]$validInstances = $($compareInstances | Where-Object -FilterScript { $_.SideIndicator -eq '==' }).InputObject
+                    [array]$invalidInstances = $($compareInstances | Where-Object -FilterScript { $_.SideIndicator -eq '<=' }).InputObject
+                }
+                else
+                {
+                    [array]$validInstances = @()
+                    [array]$invalidInstances = [array]$DSCConvertedInstances.ResourceInstanceName
                 }
 
-                [void]$message.AppendLine("$MessagePrefix$invalidInstancesLogNames")
+                if ($validInstances.Count -gt 0)
+                {
+                    [void]$message.AppendLine("  <Match>")
+                    foreach ($validInstance in $validInstances)
+                    {
+                        [void]$message.AppendLine("    <ResourceInstanceName>[$ResourceName]$validInstance</ResourceInstanceName>")
+                    }
+                    [void]$message.AppendLine("  </Match>")
+                }
+                else
+                {
+                    [void]$message.AppendLine("  <Match></Match>")
+                }
             }
         }
 
+        # Log drifts for each invalid instances found.
+        if ($invalidInstances.Count -gt 0)
+        {
+            [void]$message.AppendLine("  <NotMatch>")
+            foreach ($invalidInstance in $invalidInstances)
+            {
+                [void]$message.AppendLine("    <ResourceInstanceName>[$ResourceName]$invalidInstance</ResourceInstanceName>")
+            }
+            [void]$message.AppendLine("  </NotMatch>")
+        }
+        else
+        {
+            [void]$message.AppendLine("  <NotMatch></NotMatch>")
+        }
+        [void]$message.AppendLine("</M365DSCRuleEvaluation>")
+
+        $Parameters = @{
+            Message   = $message.ToString()
+            EventType = 'RuleEvaluation'
+            EventID   = 1
+            Source    = $CurrentResourceName
+        }
         if (-not $result)
         {
-            Add-M365DSCEvent -Message $message.ToString() `
-                -EventType 'RuleEvaluation' `
-                -EntryType 'Warning' `
-                -EventID 1 -Source $CurrentResourceName
+            $Parameters.Add('EntryType', 'Warning')
         }
+        else
+        {
+            $Parameters.Add('EntryType', 'Information')
+        }
+        Add-M365DSCEvent @Parameters
 
         Write-Verbose -Message "Test-TargetResource returned $result"
 
