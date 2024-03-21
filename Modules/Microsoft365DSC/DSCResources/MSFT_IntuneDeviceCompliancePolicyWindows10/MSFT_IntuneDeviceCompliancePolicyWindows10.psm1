@@ -506,16 +506,13 @@ function Set-TargetResource
             -AdditionalProperties $AdditionalProperties `
             -ScheduledActionsForRule $scheduledActionsForRule
 
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
+        if ($Assignments.Count -gt 0)
         {
-            $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
-
+            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceCompliancePolicies'
         }
-        Update-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $policy.id `
-            -Targets $assignmentsHash `
-            -Repository deviceCompliancePolicies
-
     }
     elseif ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
@@ -534,15 +531,13 @@ function Set-TargetResource
             -Description $Description `
             -DeviceCompliancePolicyId $configDevicePolicy.Id
 
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
+        if ($Assignments.Count -gt 0)
         {
-            $assignmentsHash += Get-M365DSCAssignmentsAsHashtable -CIMAssignment $Assignment
-
+            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $configDevicePolicy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceCompliancePolicies'
         }
-        Update-M365DSCDeviceManagementPolicyAssignments -DeviceManagementPolicyId $configDevicePolicy.id `
-            -Targets $assignmentsHash `
-            -Repository deviceCompliancePolicies
     }
     elseif ($Ensure -eq 'Absent' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
     {
@@ -765,7 +760,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $testResult = $true
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         $testResult = $false
     }
@@ -1039,127 +1034,3 @@ function Get-M365DSCAssignmentsAsHashtable
     }
     return $CIMAssignmentAsHash
 }
-function Get-M365DSCDeviceManagementPolicyAssignments
-{
-    [CmdletBinding()]
-    param (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DeviceManagementPolicyId,
-
-        [Parameter()]
-        [ValidateSet('deviceCompliancePolicies', 'intents', 'configurationPolicies')]
-        [System.String]
-        $Repository = 'configurationPolicies'
-    )
-    try
-    {
-        $deviceManagementPolicyAssignments = @()
-
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/$Repository/$DeviceManagementPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-        foreach ($result in $results.value.target)
-        {
-            $deviceManagementPolicyAssignments += @{
-                dataType                                   = $result.'@odata.type'
-                groupId                                    = $result.groupId
-                collectionId                               = $result.collectionId
-                deviceAndAppManagementAssignmentFilterType = $result.deviceAndAppManagementAssignmentFilterType
-                deviceAndAppManagementAssignmentFilterId   = $result.deviceAndAppManagementAssignmentFilterId
-            }
-        }
-
-        while ($results.'@odata.nextLink')
-        {
-            $Uri = $results.'@odata.nextLink'
-            $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop
-            foreach ($result in $results.value.target)
-            {
-                $deviceManagementPolicyAssignments += @{
-                    dataType                                   = $result.'@odata.type'
-                    groupId                                    = $result.groupId
-                    collectionId                               = $result.collectionId
-                    deviceAndAppManagementAssignmentFilterType = $result.deviceAndAppManagementAssignmentFilterType
-                    deviceAndAppManagementAssignmentFilterId   = $result.deviceAndAppManagementAssignmentFilterId
-                }
-            }
-        }
-        return $deviceManagementPolicyAssignments
-    }
-    catch
-    {
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
-
-        return $null
-    }
-}
-
-function Update-M365DSCDeviceManagementPolicyAssignments
-{
-    [CmdletBinding()]
-    [OutputType([System.Collections.Hashtable])]
-    param
-    (
-        [Parameter(Mandatory = 'true')]
-        [System.String]
-        $DeviceManagementPolicyId,
-
-        [Parameter()]
-        [Array]
-        $Targets,
-
-        [Parameter()]
-        [ValidateSet('deviceCompliancePolicies', 'intents', 'configurationPolicies')]
-        [System.String]
-        $Repository = 'configurationPolicies'
-    )
-
-    try
-    {
-        $deviceManagementPolicyAssignments = @()
-
-        $Uri = "https://graph.microsoft.com/beta/deviceManagement/$Repository/$DeviceManagementPolicyId/assign"
-
-        foreach ($target in $targets)
-        {
-            $formattedTarget = @{'@odata.type' = $target.dataType }
-            if ($target.groupId)
-            {
-                $formattedTarget.Add('groupId', $target.groupId)
-            }
-            if ($target.collectionId)
-            {
-                $formattedTarget.Add('collectionId', $target.collectionId)
-            }
-            if ($target.deviceAndAppManagementAssignmentFilterType)
-            {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterType', $target.deviceAndAppManagementAssignmentFilterType)
-            }
-            if ($target.deviceAndAppManagementAssignmentFilterId)
-            {
-                $formattedTarget.Add('deviceAndAppManagementAssignmentFilterId', $target.deviceAndAppManagementAssignmentFilterId)
-            }
-            $deviceManagementPolicyAssignments += @{'target' = $formattedTarget }
-        }
-        $body = @{'assignments' = $deviceManagementPolicyAssignments } | ConvertTo-Json -Depth 20
-        #write-verbose -Message $body
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
-
-    }
-    catch
-    {
-        New-M365DSCLogEntry -Message 'Error updating data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
-
-        return $null
-    }
-}
-
-Export-ModuleMember -Function *-TargetResource, *
