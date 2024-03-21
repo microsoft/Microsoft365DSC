@@ -8,6 +8,8 @@
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
+* M365DSCRuleEvaluation
+  * Log both matching and not matching resources and in XML format
 * TeamsGroupPolicyAssignment
   * Skip assignments that have orphaned/deleted groups or without display name
     instead of throwing an error
