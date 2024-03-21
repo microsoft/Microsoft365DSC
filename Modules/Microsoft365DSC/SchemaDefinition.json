@@ -9169,7 +9169,7 @@
         "Parameters":  [
                            {
                                "CIMType":  "String",
-                               "Name":  "Organization",
+                               "Name":  "IsSingleInstance",
                                "Option":  "Key"
                            },
                            {
