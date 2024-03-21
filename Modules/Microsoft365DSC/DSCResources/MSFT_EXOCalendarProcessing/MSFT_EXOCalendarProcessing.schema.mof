@@ -39,7 +39,8 @@ class MSFT_EXOCalendarProcessing : OMI_BaseResource
     [Write, Description("The RequestOutOfPolicy parameter specifies users who are allowed to submit out-of-policy requests that require approval by a resource mailbox delegate. You can use any value that uniquely identifies the user. ")] String RequestOutOfPolicy[];
     [Write, Description("The ResourceDelegates parameter specifies users can approve or reject requests that are sent to the resource mailbox. You can use any value that uniquely identifies the user. ")] String ResourceDelegates[];
     [Write, Description("The ScheduleOnlyDuringWorkHours parameter specifies whether to allow meetings to be scheduled outside of the working hours that are defined for the resource mailbox.")] Boolean ScheduleOnlyDuringWorkHours;
-    [Write, Description("The TentativePendingApproval parameter specifies whether to mark pending requests as tentative on the calendar.")] Boolean TentativePendingApproval;[Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("The TentativePendingApproval parameter specifies whether to mark pending requests as tentative on the calendar.")] Boolean TentativePendingApproval;
+    [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Determines wether or not the instance exist."), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;
