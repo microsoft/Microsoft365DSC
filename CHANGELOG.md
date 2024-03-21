@@ -20,6 +20,10 @@
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
+* IntuneDeviceCompliancePolicyWindows10
+  * Fix group assignment by using the corrected function
+    Update-DeviceConfigurationPolicyAssignment from module M365DSCDRGUtil
+    FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
 * TeamsChannelTab
   * Fixed schema file
 * TeamsGroupPolicyAssignment
@@ -34,6 +38,10 @@
   * Updated DSCParser to version 2.0.0.0.
 * MISC
   * Initial release of Get-M365DSCEvaluationRulesForConfiguration
+  * M365DSCDRGUtil
+    Fix Update-DeviceConfigurationPolicyAssignment so that if the group cannot
+    be found by its Id it tries to search it by display name
+    FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
 
 # 1.24.313.1
 
