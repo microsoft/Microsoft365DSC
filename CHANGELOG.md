@@ -4,6 +4,9 @@
 
 * All resources
   * Fix issue where Ensure cannot be left as default 'Present'
+* AADAdministrativeUnit
+  * Fix issue with omitted Ensure and/or Id
+    FIXES [#4437](https://github.com/microsoft/Microsoft365DSC/issues/4437)
 * AADConditionalAccessPolicy
   * Fixed schema file
 * EXOCalendarProcessing
