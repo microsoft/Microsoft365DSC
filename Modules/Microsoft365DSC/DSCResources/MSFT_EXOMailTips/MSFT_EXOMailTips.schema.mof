@@ -2,7 +2,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOMailTips")]
 class MSFT_EXOMailTips : OMI_BaseResource
 {
-    [Key, Description("Specify the name of your organization.")] String Organization;
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
     [Write, Description("Specifies whether MailTips are enabled.")] Boolean MailTipsAllTipsEnabled;
     [Write, Description("Specifies whether MailTips that rely on group metrics data are enabled.")] Boolean MailTipsGroupMetricsEnabled;
     [Write, Description("Specifies what a large audience is.")] UInt32 MailTipsLargeAudienceThreshold;

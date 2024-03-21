@@ -13,12 +13,15 @@
   * Fixed schema file
 * EXOGroupSettings
   * Fixed schema file
+* EXOMailTips
+  * Replaced the Organization parameter with IsSingleInstance (BREAKING)
+    FIXES [#4117](https://github.com/microsoft/Microsoft365DSC/issues/4117)
 * EXOMessageClassification
   * Fixed schema file
 * EXOOMEConfiguration
   * Fixed schema file
 * EXOTransportRule
-  * Change data type of Priority from String to Int (breaking change)
+  * Change data type of Priority from String to Int (BREAKING)
     FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
