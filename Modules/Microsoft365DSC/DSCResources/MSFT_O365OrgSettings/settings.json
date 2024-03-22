@@ -6,7 +6,7 @@
             "delegated": {
                 "read": [
                     {
-                        "name": "Application.Read.All"
+                        "name": "Application.ReadWrite.All"
                     },
                     {
                         "name": "ReportSettings.Read.All"
@@ -54,7 +54,7 @@
             "application": {
                 "read": [
                     {
-                        "name": "Application.Read.All"
+                        "name": "Application.ReadWrite.All"
                     },
                     {
                         "name": "ReportSettings.Read.All"
