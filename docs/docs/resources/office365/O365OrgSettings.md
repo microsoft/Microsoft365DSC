@@ -53,7 +53,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Application.Read.All, ReportSettings.Read.All, OrgSettings-Microsoft365Install.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All
+    - Application.ReadWrite.All, ReportSettings.Read.All, OrgSettings-Microsoft365Install.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All
 
 - **Update**
 
@@ -63,7 +63,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Application.Read.All, ReportSettings.Read.All, OrgSettings-Microsoft365Install.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All, Tasks.Read.All
+    - Application.ReadWrite.All, ReportSettings.Read.All, OrgSettings-Microsoft365Install.Read.All, OrgSettings-Forms.Read.All, OrgSettings-Todo.Read.All, OrgSettings-AppsAndServices.Read.All, OrgSettings-DynamicsVoice.Read.All, Tasks.Read.All
 
 - **Update**
 
