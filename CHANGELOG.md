@@ -2,11 +2,9 @@
 
 # UNRELEASED
 
-<<<<<<< HEAD
 * AADAdministrativeUnit
-  * Fix issue with omitted Ensure and/or Id
-    FIXES [#4437](https://github.com/microsoft/Microsoft365DSC/issues/4437)
-=======
+  * Fix issue with deploying/creating a new AU with members and/or adding members to an existing AU
+    FIXES [#4404](https://github.com/microsoft/Microsoft365DSC/issues/4404)
 * All resources
   * Fix issue where Ensure cannot be left as default 'Present'
 * AADAdministrativeUnit
@@ -28,7 +26,6 @@
 * EXOTransportRule
   * Change data type of Priority from String to Int (BREAKING)
     FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
->>>>>>> Dev
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
