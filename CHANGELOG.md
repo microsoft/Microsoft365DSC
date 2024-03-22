@@ -55,6 +55,7 @@
     Fix Update-DeviceConfigurationPolicyAssignment so that if the group cannot
     be found by its Id it tries to search it by display name
     FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
+  * Fix broken links to integration tests in README.md
 
 # 1.24.313.1
 
