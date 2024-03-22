@@ -633,7 +633,7 @@ function Test-TargetResource
 
 
     $testResult = $true
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         $testResult = $false
     }

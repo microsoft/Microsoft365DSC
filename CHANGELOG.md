@@ -2,12 +2,44 @@
 
 # UNRELEASED
 
+<<<<<<< HEAD
 * AADAdministrativeUnit
   * Fix issue with omitted Ensure and/or Id
     FIXES [#4437](https://github.com/microsoft/Microsoft365DSC/issues/4437)
+=======
+* All resources
+  * Fix issue where Ensure cannot be left as default 'Present'
+* AADAdministrativeUnit
+  * Fix issue with omitted Ensure and/or Id
+    FIXES [#4437](https://github.com/microsoft/Microsoft365DSC/issues/4437)
+* AADConditionalAccessPolicy
+  * Fixed schema file
+* EXOCalendarProcessing
+  * Fixed schema file
+* EXOGroupSettings
+  * Fixed schema file
+* EXOMailTips
+  * Replaced the Organization parameter with IsSingleInstance (BREAKING)
+    FIXES [#4117](https://github.com/microsoft/Microsoft365DSC/issues/4117)
+* EXOMessageClassification
+  * Fixed schema file
+* EXOOMEConfiguration
+  * Fixed schema file
+* EXOTransportRule
+  * Change data type of Priority from String to Int (BREAKING)
+    FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
+>>>>>>> Dev
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
+* M365DSCRuleEvaluation
+  * Log both matching and not matching resources and in XML format
+* IntuneDeviceCompliancePolicyWindows10
+  * Fix group assignment by using the corrected function
+    Update-DeviceConfigurationPolicyAssignment from module M365DSCDRGUtil
+    FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
+* TeamsChannelTab
+  * Fixed schema file
 * TeamsGroupPolicyAssignment
   * Skip assignments that have orphaned/deleted groups or without display name
     instead of throwing an error
@@ -20,6 +52,10 @@
   * Updated DSCParser to version 2.0.0.0.
 * MISC
   * Initial release of Get-M365DSCEvaluationRulesForConfiguration
+  * M365DSCDRGUtil
+    Fix Update-DeviceConfigurationPolicyAssignment so that if the group cannot
+    be found by its Id it tries to search it by display name
+    FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
 
 # 1.24.313.1
 
@@ -125,6 +161,9 @@
   * Add read permission for extracting M365 apps installation settings instead
     of extracting them only with read/write permissions
     FIXES [#4418](https://github.com/microsoft/Microsoft365DSC/issues/4418)
+* TeamsTeam
+  * Add error handling for teams without displayname during export
+  FIXES [#4406](https://github.com/microsoft/Microsoft365DSC/issues/4406)
 * TeamsVoiceRoute
   * Fix policy removal and also comparison in Test-TargetResource
 * DEPENDENCIES

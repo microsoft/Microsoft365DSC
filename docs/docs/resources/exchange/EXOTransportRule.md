@@ -131,7 +131,7 @@
 | **ModerateMessageByUser** | Write | StringArray[] | The ModerateMessageByUser parameter specifies an action that forwards messages for approval to the specified users. | |
 | **NotifySender** | Write | String | DEPRECATED | `NotifyOnly`, `RejectMessage`, `RejectUnlessFalsePositiveOverride`, `RejectUnlessSilentOverride`, `RejectUnlessExplicitOverride` |
 | **PrependSubject** | Write | String | The PrependSubject parameter specifies an action that adds text to add to the beginning of the Subject field of messages. | |
-| **Priority** | Write | String | The Priority parameter specifies a priority value for the rule that determines the order of rule processing. | |
+| **Priority** | Write | UInt32 | The Priority parameter specifies a priority value for the rule that determines the order of rule processing. | |
 | **Quarantine** | Write | Boolean | The Quarantine parameter specifies an action that quarantines messages. | |
 | **RecipientADAttributeContainsWords** | Write | StringArray[] | The RecipientADAttributeContainsWords parameter specifies a condition that looks for words in the Active Directory attributes of recipients.  | |
 | **RecipientADAttributeMatchesPatterns** | Write | StringArray[] | The RecipientADAttributeMatchesPatterns parameter specifies a condition that looks for text patterns in the Active Directory attributes of recipients by using regular expressions. | |
