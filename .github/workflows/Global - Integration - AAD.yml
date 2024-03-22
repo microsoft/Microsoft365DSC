@@ -62,7 +62,9 @@ jobs:
           {
             throw $_
           }
-
+      - name: Validating {Create} Integration Tests
+        shell: powershell
+        run: |
           try
           {
             $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
@@ -129,7 +131,9 @@ jobs:
           {
             throw $_
           }
-
+      - name: Validating {Update} Integration Tests
+        shell: powershell
+        run: |
           try
           {
             $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
@@ -196,7 +200,9 @@ jobs:
             {
               throw $_
             }
-
+      - name: Validating {Remove} Integration Tests
+        shell: powershell
+        run: |
             try
             {
               $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
