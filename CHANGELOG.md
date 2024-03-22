@@ -26,12 +26,14 @@
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
-* M365DSCRuleEvaluation
-  * Log both matching and not matching resources and in XML format
 * IntuneDeviceCompliancePolicyWindows10
   * Fix group assignment by using the corrected function
     Update-DeviceConfigurationPolicyAssignment from module M365DSCDRGUtil
     FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
+* M365DSCRuleEvaluation
+  * Log both matching and not matching resources and in XML format
+* O365OrgSettings
+  * Fixed missing permissions in settings.json
 * TeamsChannelTab
   * Fixed schema file
 * TeamsGroupPolicyAssignment
