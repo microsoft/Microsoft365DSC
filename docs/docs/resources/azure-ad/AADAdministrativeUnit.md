@@ -88,6 +88,7 @@ Configuration Example
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
+
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'
@@ -120,6 +121,7 @@ Configuration Example
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
+
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'
