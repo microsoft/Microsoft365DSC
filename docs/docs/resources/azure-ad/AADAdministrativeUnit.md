@@ -88,7 +88,7 @@ Configuration Example
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
-
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'
@@ -98,7 +98,17 @@ Configuration Example
             MembershipRule                = "(user.country -eq `"Canada`")"
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
-            Ensure                        = 'Present'
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership
+                {
+                    RoleName       = 'User Administrator'
+                    RoleMemberInfo = MSFT_MicrosoftGraphIdentity
+                    {
+                        Identity = "admin@$Domain"
+                        Type     = "User"
+                    }
+                }
+            )
             Credential                    = $Credscredential
         }
     }
@@ -127,10 +137,22 @@ Configuration Example
         AADAdministrativeUnit 'TestUnit'
         {
             DisplayName                   = 'Test-Unit'
+            Description                   = 'Test Description Updated' # Updated Property
+            Visibility                    = 'HiddenMembership' # Updated Property
             MembershipRule                = "(user.country -eq `"US`")" # Updated Property
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
-            Ensure                        = 'Present'
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership
+                {
+                    RoleName       = 'User Administrator'
+                    RoleMemberInfo = MSFT_MicrosoftGraphIdentity
+                    {
+                        Identity = "AdeleV@$Domain" # Updated Property
+                        Type     = "User"
+                    }
+                }
+            )
             Credential                    = $Credscredential
         }
     }
