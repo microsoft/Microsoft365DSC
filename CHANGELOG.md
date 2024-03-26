@@ -43,7 +43,7 @@
     FIXES [#4428](https://github.com/microsoft/Microsoft365DSC/issues/4428)
   * Fix creation, update and deletion of resource
 * DEPENDENCIES
-  * Updated DSCParser to version 2.0.0.0.
+  * Updated DSCParser to version 2.0.0.2.
 * MISC
   * Initial release of Get-M365DSCEvaluationRulesForConfiguration
   * M365DSCDRGUtil
