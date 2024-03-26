@@ -208,7 +208,10 @@ function Get-M365DSCDRGComplexTypeToHashtable
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
-                $results.Add($keyName, $hash)
+                if ($null -ne $hash -and $hash.Keys.Count -gt 0)
+                {
+                    $results.Add($keyName, $hash)
+                }
             }
             else
             {
