@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Organization** | Key | String | Specify the name of your organization. | |
+| **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
 | **MailTipsAllTipsEnabled** | Write | Boolean | Specifies whether MailTips are enabled. | |
 | **MailTipsGroupMetricsEnabled** | Write | Boolean | Specifies whether MailTips that rely on group metrics data are enabled. | |
 | **MailTipsLargeAudienceThreshold** | Write | UInt32 | Specifies what a large audience is. | |
@@ -59,7 +59,7 @@ Configuration Example
     {
         EXOMailTips 'OrgWideMailTips'
         {
-            Organization                          = $Domain
+            IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
             MailTipsGroupMetricsEnabled           = $True
             MailTipsLargeAudienceThreshold        = 100
@@ -92,7 +92,7 @@ Configuration Example
     {
         EXOMailTips 'OrgWideMailTips'
         {
-            Organization                          = $Domain
+            IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
             MailTipsGroupMetricsEnabled           = $False # Updated Property
             MailTipsLargeAudienceThreshold        = 100
@@ -125,9 +125,9 @@ Configuration Example
     {
         EXOMailTips 'OrgWideMailTips'
         {
-            Organization                          = $Domain
-            Ensure                                = "Absent"
-            Credential                            = $Credscredential
+            IsSingleInstance = 'Yes'
+            Ensure           = "Absent"
+            Credential       = $Credscredential
         }
     }
 }

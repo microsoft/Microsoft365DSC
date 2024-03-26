@@ -17,7 +17,7 @@ Configuration Example
     {
         EXOMailTips 'OrgWideMailTips'
         {
-            Organization                          = $Domain
+            IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
             MailTipsGroupMetricsEnabled           = $True
             MailTipsLargeAudienceThreshold        = 100

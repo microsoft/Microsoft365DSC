@@ -40,7 +40,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'MailTips are Disabled and should be Enabled' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Organization           = 'contoso.onmicrosoft.com'
+                    IsSingleInstance       = 'Yes'
                     MailTipsAllTipsEnabled = $True
                     Ensure                 = 'Present'
                     Credential             = $Credential
@@ -73,7 +73,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'MailTipsGroupMetricsEnabled are Disabled and should be Enabled' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Organization                = 'contoso.onmicrosoft.com'
+                    IsSingleInstance            = 'Yes'
                     MailTipsGroupMetricsEnabled = $True
                     Ensure                      = 'Present'
                     Credential                  = $Credential
@@ -106,7 +106,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'MailTipsLargeAudienceThreshold are 25 and should be 50' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Organization                   = 'contoso.onmicrosoft.com'
+                    IsSingleInstance               = 'Yes'
                     MailTipsLargeAudienceThreshold = 50
                     Ensure                         = 'Present'
                     Credential                     = $Credential
@@ -139,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'MailTipsMailboxSourcedTipsEnabled are Disabled and should be Enabled' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Organization                      = 'contoso.onmicrosoft.com'
+                    IsSingleInstance                  = 'Yes'
                     MailTipsMailboxSourcedTipsEnabled = $True
                     Ensure                            = 'Present'
                     Credential                        = $Credential
@@ -168,7 +168,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'MailTipsExternalRecipientsTipsEnabled are Disabled and should be Enabled' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Organization                          = 'contoso.onmicrosoft.com'
+                    IsSingleInstance                      = 'Yes'
                     MailTipsExternalRecipientsTipsEnabled = $True
                     Ensure                                = 'Present'
                     Credential                            = $Credential
@@ -201,7 +201,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'MailTips are Enabled and should be Enabled' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Organization                          = 'contoso.onmicrosoft.com'
+                    IsSingleInstance                      = 'Yes'
                     MailTipsAllTipsEnabled                = $True
                     MailTipsLargeAudienceThreshold        = 10
                     MailTipsMailboxSourcedTipsEnabled     = $True
@@ -234,7 +234,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'Organization Configuration is null' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Organization           = 'contoso.onmicrosoft.com'
+                    IsSingleInstance       = 'Yes'
                     MailTipsAllTipsEnabled = $True
                     Ensure                 = 'Present'
                     Credential             = $Credential
@@ -260,7 +260,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-OrganizationConfig -MockWith {
                     return @{
-                        Organization                          = 'contoso.onmicrosoft.com'
+                        IsSingleInstance                      = 'Yes'
                         MailTipsAllTipsEnabled                = $True
                         MailTipsGroupMetricsEnabled           = $True
                         MailTipsLargeAudienceThreshold        = $True

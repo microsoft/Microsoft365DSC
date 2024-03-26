@@ -100,22 +100,6 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $getValue = $null
-
-        #region resource generator code
-        if (-Not [string]::IsNullOrEmpty($Id))
-        {
-            $getValue = Get-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $Id -ErrorAction Stop
-        }
-
-        if (-not $getValue -and -Not [string]::IsNullOrEmpty($DisplayName))
-        {
-            $getValue = Get-MgBetaDirectoryAdministrativeUnit -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
-        }
-        #endregion
-
-        $nullResult = $PSBoundParameters
-        $nullResult.Ensure = 'Absent'
 
         $getValue = $null
         #region resource generator code
@@ -388,7 +372,6 @@ function Set-TargetResource
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('Verbose') | Out-Null
 
     $backCurrentMembers = $currentInstance.Members
     $backCurrentScopedRoleMembers = $currentInstance.ScopedRoleMembers
@@ -565,8 +548,8 @@ function Set-TargetResource
             foreach ($member in $memberSpecification)
             {
                 Write-Verbose -Message "Adding new dynamic member {$($member.Id)}"
+                $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/$($member.Type)/$($member.Id)"
                 $memberBodyParam = @{
-                    $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/$($member.Type)/$($member.Id)"
                     '@odata.id' = $url
                 }
 
@@ -663,8 +646,8 @@ function Set-TargetResource
                     {
                         Write-Verbose -Message "AdministrativeUnit {$DisplayName} Adding member {$($diff.Identity)}, type {$($diff.Type)}"
 
+                        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/$memberType/$($memberObject.Id)"
                         $memberBodyParam = @{
-                            $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "v1.0/$memberType/$($memberObject.Id)"
                             '@odata.id' = $url
                         }
                         New-MgBetaDirectoryAdministrativeUnitMemberByRef -AdministrativeUnitId ($currentInstance.Id) -BodyParameter $memberBodyParam | Out-Null
@@ -895,7 +878,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false - Ensure not the same"
         return $false

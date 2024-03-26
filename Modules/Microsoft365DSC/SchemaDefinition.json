@@ -1873,8 +1873,8 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "",
-                               "Name":  "String SignInFrequencyInterval",
+                               "CIMType":  "String",
+                               "Name":  "SignInFrequencyInterval",
                                "Option":  "Write"
                            },
                            {
@@ -3919,7 +3919,7 @@
                            },
                            {
                                "CIMType":  "Boolean",
-                               "Name":  "PermanentEligibleAssignmentisExpirationRequired ",
+                               "Name":  "PermanentEligibleAssignmentisExpirationRequired",
                                "Option":  "Write"
                            },
                            {
@@ -5968,8 +5968,13 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "MSFT_Credential",
+                               "CIMType":  "Boolean",
                                "Name":  "TentativePendingApproval",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
                                "Option":  "Write"
                            },
                            {
@@ -7318,7 +7323,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "string",
                                "Name":  "Language",
                                "Option":  "Write"
                            },
@@ -7379,7 +7384,7 @@
                            },
                            {
                                "CIMType":  "string",
-                               "Name":  "SensitivityLabelId ",
+                               "Name":  "SensitivityLabelId",
                                "Option":  "Write"
                            },
                            {
@@ -9164,7 +9169,7 @@
         "Parameters":  [
                            {
                                "CIMType":  "String",
-                               "Name":  "Organization",
+                               "Name":  "IsSingleInstance",
                                "Option":  "Key"
                            },
                            {
@@ -9649,7 +9654,7 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Name":  "ClassificationID ",
+                               "Name":  "ClassificationID",
                                "Option":  "Write"
                            },
                            {
@@ -9679,7 +9684,7 @@
                            },
                            {
                                "CIMType":  "Boolean",
-                               "Name":  "RetainClassificationEnabled ",
+                               "Name":  "RetainClassificationEnabled",
                                "Option":  "Write"
                            },
                            {
@@ -10159,7 +10164,7 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Name":  "PortalText ",
+                               "Name":  "PortalText",
                                "Option":  "Write"
                            },
                            {
@@ -14083,7 +14088,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "UInt32",
                                "Name":  "Priority",
                                "Option":  "Write"
                            },
@@ -16230,11 +16235,6 @@
                            {
                                "CIMType":  "String",
                                "Name":  "Description",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String",
-                               "Name":  "Platform",
                                "Option":  "Write"
                            },
                            {
@@ -37453,52 +37453,52 @@
         "ClassName":  "MSFT_TeamsChannelTab",
         "Parameters":  [
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "String",
                                "Name":  "DisplayName",
                                "Option":  "Key"
                            },
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "String",
                                "Name":  "TeamName",
                                "Option":  "Key"
                            },
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "String",
                                "Name":  "ChannelName",
                                "Option":  "Key"
                            },
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "String",
                                "Name":  "TeamId",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "String",
                                "Name":  "TeamsApp",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "Int32",
+                               "CIMType":  "UInt32",
                                "Name":  "SortOrderIndex",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "String",
                                "Name":  "WebSiteUrl",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "String",
                                "Name":  "ContentUrl",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "String",
                                "Name":  "RemoveUrl",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "tring",
+                               "CIMType":  "String",
                                "Name":  "EntityId",
                                "Option":  "Write"
                            },
@@ -39058,11 +39058,6 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "Boolean",
-                               "Name":  "AllowBreakoutRooms",
-                               "Option":  "Write"
-                           },
-                           {
                                "CIMType":  "String",
                                "Name":  "TeamsCameraFarEndPTZMode",
                                "Option":  "Write"
@@ -40113,8 +40108,8 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "1,4}:",
-                               "Name":  "that is, it must be a value 0 through 9 and one to four digits in length. The default value is 9.\")] String ExternalAccessPrefix",
+                               "CIMType":  "String",
+                               "Name":  "ExternalAccessPrefix",
                                "Option":  "Write"
                            },
                            {

@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "EXOAddressList",
+    "resourceName": "EXODistributionGroup",
     "roles": {
         "read": [],
         "update": [
