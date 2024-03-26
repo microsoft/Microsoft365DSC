@@ -25,7 +25,17 @@
                     MembershipRule                = "(user.country -eq `"Canada`")"
                     MembershipRuleProcessingState = 'On'
                     MembershipType                = 'Dynamic'
-                    Ensure                        = 'Present'
+                    ScopedRoleMembers             = @(
+                        MSFT_MicrosoftGraphScopedRoleMembership
+                        {
+                            RoleName       = 'User Administrator'
+                            RoleMemberInfo = MSFT_MicrosoftGraphMember
+                            {
+                                Identity = "admin@$Domain"
+                                Type     = "User"
+                            }
+                        }
+                    )
                     Credential                    = $Credscredential
                 }
                 AADApplication 'AADApp1'
