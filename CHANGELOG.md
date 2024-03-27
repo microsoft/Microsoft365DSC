@@ -65,6 +65,9 @@
   * Fix output of property NormalizationRules as a string to the blueprint
     FIXES [#4428](https://github.com/microsoft/Microsoft365DSC/issues/4428)
   * Fix creation, update and deletion of resource
+* TeamsUpdateManagementPolicy
+  * Adds support for the NewTeamsOnly value or the UseNewTeamsClient property.
+    FIXES [#4496](https://github.com/microsoft/Microsoft365DSC/issues/4496)
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.2.
 * MISC
