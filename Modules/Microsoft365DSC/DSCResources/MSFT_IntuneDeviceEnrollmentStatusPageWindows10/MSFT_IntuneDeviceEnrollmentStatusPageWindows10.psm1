@@ -58,6 +58,10 @@ function Get-TargetResource
         $SelectedMobileAppIds,
 
         [Parameter()]
+        [System.String[]]
+        $SelectedMobileAppNames,
+
+        [Parameter()]
         [System.Boolean]
         $ShowInstallationProgress,
 
@@ -121,8 +125,15 @@ function Get-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
+        Write-Verbose -Message "Getting configuration of the Intune Device Enrollment Status Page for Windows 10 with Id {$Id} and DisplayName {$DisplayName}"
+
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
+
+        if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -and $PSBoundParameters.ContainsKey('SelectedMobileAppNames'))
+        {
+            Write-Verbose -Message '[WARNING] Both SelectedMobileAppIds and SelectedMobileAppNames are specified. SelectedMobileAppNames will be ignored!'
+        }
 
         $getValue = $null
         #region resource generator code
@@ -169,7 +180,7 @@ function Get-TargetResource
             DisableUserStatusTrackingAfterFirstUser = $getValue.AdditionalProperties.disableUserStatusTrackingAfterFirstUser
             InstallProgressTimeoutInMinutes         = $getValue.AdditionalProperties.installProgressTimeoutInMinutes
             InstallQualityUpdates                   = $getValue.AdditionalProperties.installQualityUpdates
-            SelectedMobileAppIds                    = $getValue.AdditionalProperties.selectedMobileAppIds
+            SelectedMobileAppNames                  = $getValue.AdditionalProperties.selectedMobileAppIds | ForEach-Object { (Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $_).DisplayName }
             ShowInstallationProgress                = $getValue.AdditionalProperties.showInstallationProgress
             TrackInstallProgressForAutopilotOnly    = $getValue.AdditionalProperties.trackInstallProgressForAutopilotOnly
             Priority                                = $getValue.Priority
@@ -177,12 +188,6 @@ function Get-TargetResource
             DisplayName                             = $getValue.DisplayName
             Id                                      = $getValue.Id
             Ensure                                  = 'Present'
-            Credential                              = $Credential
-            ApplicationId                           = $ApplicationId
-            TenantId                                = $TenantId
-            ApplicationSecret                       = $ApplicationSecret
-            CertificateThumbprint                   = $CertificateThumbprint
-            Managedidentity                         = $ManagedIdentity.IsPresent
             #endregion
         }
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $Id
@@ -275,6 +280,10 @@ function Set-TargetResource
         $SelectedMobileAppIds,
 
         [Parameter()]
+        [System.String[]]
+        $SelectedMobileAppNames,
+
+        [Parameter()]
         [System.Boolean]
         $ShowInstallationProgress,
 
@@ -321,7 +330,6 @@ function Set-TargetResource
         $ManagedIdentity
     )
 
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -334,8 +342,25 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    Write-Verbose -Message "Setting configuration of the Intune Device Enrollment Status Page for Windows 10 with Id {$Id} and DisplayName {$DisplayName}"
+
     $currentInstance = Get-TargetResource @PSBoundParameters
     $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+
+    if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -eq $false -and $PSBoundParameters.ContainsKey('SelectedMobileAppNames') -eq $true)
+    {
+        Write-Verbose -Message 'Converting SelectedMobileAppNames to SelectedMobileAppIds'
+        if ($PSBoundParameters.SelectedMobileAppNames.Count -ne 0)
+        {
+            [Array]$mobileAppIds = $SelectedMobileAppNames | ForEach-Object { (Get-MgBetaDeviceAppManagementMobileApp -Filter "DisplayName eq '$_'").Id }
+            $PSBoundParameters.SelectedMobileAppIds = $mobileAppIds
+        }
+        else
+        {
+            $PSBoundParameters.SelectedMobileAppIds = @()
+        }
+        $PSBoundParameters.Remove('SelectedMobileAppNames') | Out-Null
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -417,9 +442,12 @@ function Set-TargetResource
             $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceEnrollmentConfigurations/$($currentInstance.Id)/assign"
             Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
 
-            Update-DeviceEnrollmentConfigurationPriority `
-                -DeviceEnrollmentConfigurationId $currentInstance.id `
-                -Priority $Priority
+            if ($PSBoundParameters.ContainsKey('Priority') -and $Priority -ne $currentInstance.Priority)
+            {
+                Update-DeviceEnrollmentConfigurationPriority `
+                    -DeviceEnrollmentConfigurationId $currentInstance.id `
+                    -Priority $Priority
+            }
         }
         #endregion
     }
@@ -492,6 +520,10 @@ function Test-TargetResource
         $SelectedMobileAppIds,
 
         [Parameter()]
+        [System.String[]]
+        $SelectedMobileAppNames,
+
+        [Parameter()]
         [System.Boolean]
         $ShowInstallationProgress,
 
@@ -538,7 +570,6 @@ function Test-TargetResource
         $ManagedIdentity
     )
 
-
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -551,8 +582,17 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Device Enrollment Configuration for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Device Enrollment Status Page for Windows 10 with Id {$Id} and DisplayName {$DisplayName}"
+
     $CurrentValues = Get-TargetResource @PSBoundParameters
+
+    if ($PSBoundParameters.ContainsKey('SelectedMobileAppIds') -eq $true)
+    {
+        Write-Verbose -Message 'Converting SelectedMobileAppIds to SelectedMobileAppNames'
+        $PSBoundParameters.SelectedMobileAppNames = $SelectedMobileAppIds | ForEach-Object { (Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $_).DisplayName }
+        $PSBoundParameters.Remove('SelectedMobileAppIds') | Out-Null
+    }
+
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Id') | Out-Null
