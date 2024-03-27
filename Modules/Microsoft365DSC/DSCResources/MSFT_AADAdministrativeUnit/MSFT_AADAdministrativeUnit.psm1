@@ -372,6 +372,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('Verbose') | Out-Null
 
     $backCurrentMembers = $currentInstance.Members
     $backCurrentScopedRoleMembers = $currentInstance.ScopedRoleMembers
