@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-Class MSFT_SPOThemePaletteProperty
+class MSFT_SPOThemePaletteProperty
 {
     [Write, Description("Name of the property.")] String Property;
     [Write, Description("Color value in Hexadecimal.")] String Value;

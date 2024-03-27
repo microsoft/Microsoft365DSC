@@ -8,7 +8,7 @@ class MSFT_EXOOMEConfiguration : OMI_BaseResource
     [Write, Description("The ExternalMailExpiryInDays parameter specifies the number of days that the encrypted message is available to external recipients in the Microsoft 365 portal. A valid value is an integer from 0 to 730.")] UInt32 ExternalMailExpiryInDays;
     [Write, Description("The IntroductionText parameter specifies the default text that accompanies encrypted email messages.")] String IntroductionText;
     [Write, Description("The OTPEnabled parameter specifies whether to allow recipients to use a one-time passcode to view encrypted messages.")] Boolean OTPEnabled;
-    [Write, Description("The PortalText parameter specifies the text that appears at the top of the encrypted email viewing portal.")] String PortalText ;
+    [Write, Description("The PortalText parameter specifies the text that appears at the top of the encrypted email viewing portal.")] String PortalText;
     [Write, Description("The PrivacyStatementUrl parameter specifies the Privacy Statement link in the encrypted email notification message.")] String PrivacyStatementUrl;
     [Write, Description("The ReadButtonText parameter specifies the text that appears on the 'Read the message' button. ")] String ReadButtonText;
     [Write, Description("The SocialIdSignIn parameter specifies whether a user is allowed to view an encrypted message in the Microsoft 365 admin center using their own social network id (Google, Yahoo, and Microsoft account).")] Boolean SocialIdSignIn;

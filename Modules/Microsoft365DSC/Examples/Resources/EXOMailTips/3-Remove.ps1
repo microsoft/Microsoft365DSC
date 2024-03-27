@@ -17,9 +17,9 @@ Configuration Example
     {
         EXOMailTips 'OrgWideMailTips'
         {
-            Organization                          = $Domain
-            Ensure                                = "Absent"
-            Credential                            = $Credscredential
+            IsSingleInstance = 'Yes'
+            Ensure           = "Absent"
+            Credential       = $Credscredential
         }
     }
 }

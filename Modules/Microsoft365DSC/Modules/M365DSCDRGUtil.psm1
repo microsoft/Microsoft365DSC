@@ -208,7 +208,10 @@ function Get-M365DSCDRGComplexTypeToHashtable
             {
                 $hash = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $ComplexObject.$keyName
 
-                $results.Add($keyName, $hash)
+                if ($null -ne $hash -and $hash.Keys.Count -gt 0)
+                {
+                    $results.Add($keyName, $hash)
+                }
             }
             else
             {
@@ -1153,8 +1156,20 @@ function ConvertFrom-IntunePolicyAssignment
             $group = Get-MgGroup -GroupId ($groupId) -ErrorAction SilentlyContinue
             if ($null -ne $group)
             {
-                $hashAssignment.add('groupDisplayName', $group.DisplayName)
+                $groupDisplayName = $group.DisplayName
             }
+        }
+        if ($dataType -eq '#microsoft.graph.allLicensedUsersAssignmentTarget')
+        {
+            $groupDisplayName = 'All users'
+        }
+        if ($dataType -eq '#microsoft.graph.allDevicesAssignmentTarget')
+        {
+            $groupDisplayName = 'All devices'
+        }
+        if ($null -ne $groupDisplayName)
+        {
+            $hashAssignment.add('groupDisplayName', $groupDisplayName)
         }
         if ($IncludeDeviceFilter)
         {
@@ -1206,20 +1221,30 @@ function ConvertTo-IntunePolicyAssignment
             $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
             if ($null -eq $group)
             {
-                $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.groupDisplayName)'" -ErrorAction SilentlyContinue
-                if ($null -eq $group)
+                if ($assignment.groupDisplayName)
                 {
-                    $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it could not be found in the directory.`r`n"
-                    $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
-                    write-verbose -Message $message
-                    $target = $null
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($assignment.groupDisplayName)'" -ErrorAction SilentlyContinue
+                    if ($null -eq $group)
+                    {
+                        $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it could not be found in the directory.`r`n"
+                        $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
+                        write-verbose -Message $message
+                        $target = $null
+                    }
+                    if ($group -and $group.count -gt 1)
+                    {
+                        $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it is not unique in the directory.`r`n"
+                        $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                        write-verbose -Message $message
+                        $group = $null
+                        $target = $null
+                    }
                 }
-                if ($group -and $group.count -gt 1)
+                else
                 {
-                    $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it is not unique in the directory.`r`n"
+                    $message = "Skipping assignment for the group with Id {$($assignment.groupId)} as it could not be found in the directory.`r`n"
                     $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
                     write-verbose -Message $message
-                    $group = $null
                     $target = $null
                 }
             }
@@ -1298,7 +1323,11 @@ function Update-DeviceConfigurationPolicyAssignment
         [Parameter()]
         [ValidateSet('v1.0','beta')]
         [System.String]
-        $APIVersion = 'beta'
+        $APIVersion = 'beta',
+
+        [Parameter()]
+        [System.String]
+        $RootIdentifier = 'assignments'
     )
 
     try
@@ -1315,7 +1344,41 @@ function Update-DeviceConfigurationPolicyAssignment
             }
             if ($target.groupId)
             {
-                $formattedTarget.Add('groupId',$target.groupId)
+                $group = Get-MgGroup -GroupId ($target.groupId) -ErrorAction SilentlyContinue
+                if ($null -eq $group)
+                {
+                    if ($target.groupDisplayName)
+                    {
+                        $group = Get-MgGroup -Filter "DisplayName eq '$($target.groupDisplayName)'" -ErrorAction SilentlyContinue
+                        if ($null -eq $group)
+                        {
+                            $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it could not be found in the directory.`r`n"
+                            $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
+                            write-verbose -Message $message
+                            $target = $null
+                        }
+                        if ($group -and $group.count -gt 1)
+                        {
+                            $message = "Skipping assignment for the group with DisplayName {$($target.groupDisplayName)} as it is not unique in the directory.`r`n"
+                            $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                            write-verbose -Message $message
+                            $group = $null
+                            $target = $null
+                        }
+                    }
+                    else
+                    {
+                        $message = "Skipping assignment for the group with Id {$($target.groupId)} as it could not be found in the directory.`r`n"
+                        $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
+                        write-verbose -Message $message
+                        $target = $null
+                    }
+                }
+                #Skipping assignment if group not found from either groupId or groupDisplayName
+                if ($null -ne $group)
+                {
+                    $formattedTarget.add('groupId',$group.Id)
+                }
             }
             if ($target.collectionId)
             {
@@ -1331,8 +1394,10 @@ function Update-DeviceConfigurationPolicyAssignment
             }
             $deviceManagementPolicyAssignments += @{'target' = $formattedTarget}
         }
-        $body = @{'assignments' = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
-        write-verbose -Message $body
+
+        $body = @{$RootIdentifier = $deviceManagementPolicyAssignments} | ConvertTo-Json -Depth 20
+        Write-Verbose -Message $body
+
         Invoke-MgGraphRequest -Method POST -Uri $Uri -Body $body -ErrorAction Stop
     }
     catch

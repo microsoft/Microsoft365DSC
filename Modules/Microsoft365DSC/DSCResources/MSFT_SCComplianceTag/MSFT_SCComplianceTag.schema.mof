@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-Class MSFT_SCFilePlanProperty
+class MSFT_SCFilePlanProperty
 {
     [Write, Description("File plan department. Can get list by running Get-FilePlanPropertyDepartment.")] String FilePlanPropertyDepartment;
     [Write, Description("File plan Authority. Can get list by running Get-FilePlanPropertyAuthority.")] String FilePlanPropertyAuthority;

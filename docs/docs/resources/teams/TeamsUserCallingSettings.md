@@ -50,11 +50,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - None
+    - Organization.Read.All
 
 - **Update**
 
-    - None
+    - Organization.Read.All
 
 ## Examples
 

@@ -21,8 +21,6 @@ Configuration Example
             StartASiteFormUrl            = "https://contoso.sharepoint.com"
             IPAddressEnforcement         = $false
             IPAddressWACTokenLifetime    = 15
-            CommentsOnSitePagesDisabled  = $false
-            SocialBarOnSitePagesDisabled = $false
             DisallowInfectedFileDownload = $false
             ExternalServicesEnabled      = $true
             EmailAttestationRequired     = $false

@@ -129,9 +129,9 @@ function Get-TargetResource
             Write-Verbose -Message 'GroupID was specified'
             try
             {
-                if ($null -ne $Script:exportedGroups-and $Script:ExportMode)
+                if ($null -ne $Script:exportedGroups -and $Script:ExportMode)
                 {
-                    $Group = $Script:exportedGroups | Where-Object -FilterScript {$_.Id -eq $Id}
+                    $Group = $Script:exportedGroups | Where-Object -FilterScript { $_.Id -eq $Id }
                 }
                 else
                 {
@@ -141,13 +141,14 @@ function Get-TargetResource
             catch
             {
                 Write-Verbose -Message "Couldn't get group by ID, trying by name"
-                if ($null -ne $Script:exportedGroups-and $Script:ExportMode)
+                if ($null -ne $Script:exportedGroups -and $Script:ExportMode)
                 {
-                    $Group = $Script:exportedGroups | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                    $Group = $Script:exportedGroups | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
                 }
                 else
                 {
-                    $Group = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                    $filter = "DisplayName eq '$DisplayName'" -replace "'", "''"
+                    $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
                 }
                 if ($Group.Length -gt 1)
                 {
@@ -159,13 +160,18 @@ function Get-TargetResource
         {
             Write-Verbose -Message 'Id was NOT specified'
             ## Can retreive multiple AAD Groups since displayname is not unique
-            if ($null -ne $Script:exportedGroups-and $Script:ExportMode)
+            if ($null -ne $Script:exportedGroups -and $Script:ExportMode)
             {
-                $Group = $Script:exportedGroups | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+                $Group = $Script:exportedGroups | Where-Object -FilterScript { $_.DisplayName -eq $DisplayName }
             }
             else
             {
-                $Group = Get-MgGroup -Filter "DisplayName eq '$DisplayName'" -ErrorAction Stop
+                if ($DisplayName.Contains("'"))
+                {
+                    $DisplayName = $DisplayName -replace "'", "''"
+                }
+                $filter = "DisplayName eq '$DisplayName'"
+                $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
             }
             if ($Group.Length -gt 1)
             {
@@ -271,7 +277,7 @@ function Get-TargetResource
                 Credential                    = $Credential
                 Managedidentity               = $ManagedIdentity.IsPresent
             }
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+
             return $result
         }
     }
@@ -616,48 +622,52 @@ function Set-TargetResource
     if ($Ensure -ne 'Absent')
     {
         #Owners
-        $currentOwnersValue = @()
-        if ($currentParameters.Owners.Length -gt 0)
+        if ($PSBoundParameters.ContainsKey('Owners'))
         {
-            $currentOwnersValue = $backCurrentOwners
-        }
-        $desiredOwnersValue = @()
-        if ($Owners.Length -gt 0)
-        {
-            $desiredOwnersValue = $Owners
-        }
-        if ($backCurrentOwners -eq $null)
-        {
-            $backCurrentOwners = @()
-        }
-        $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
-        foreach ($diff in $ownersDiff)
-        {
-            $user = Get-MgUser -UserId $diff.InputObject
-
-            if ($diff.SideIndicator -eq '=>')
+            $currentOwnersValue = @()
+            if ($currentParameters.Owners.Length -gt 0)
             {
-                Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                $ownerObject = @{
-                    '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
-                }
-                try
+                $currentOwnersValue = $backCurrentOwners
+            }
+            $desiredOwnersValue = @()
+            if ($Owners.Length -gt 0)
+            {
+                $desiredOwnersValue = $Owners
+            }
+            if ($backCurrentOwners -eq $null)
+            {
+                $backCurrentOwners = @()
+            }
+            $ownersDiff = Compare-Object -ReferenceObject $backCurrentOwners -DifferenceObject $desiredOwnersValue
+            foreach ($diff in $ownersDiff)
+            {
+                $user = Get-MgUser -UserId $diff.InputObject
+
+                if ($diff.SideIndicator -eq '=>')
                 {
-                    New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject -ErrorAction Stop| Out-Null
-                }
-                catch
-                {
-                    if ($_.Exception.Message -notlike "*One or more added object references already exist for the following modified properties*")
+                    Write-Verbose -Message "Adding new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                    $ownerObject = @{
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                    }
+                    try
                     {
-                        throw $_
+                        New-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -BodyParameter $ownerObject -ErrorAction Stop | Out-Null
+                    }
+                    catch
+                    {
+                        if ($_.Exception.Message -notlike '*One or more added object references already exist for the following modified properties*')
+                        {
+                            throw $_
+                        }
                     }
                 }
+                elseif ($diff.SideIndicator -eq '<=')
+                {
+                    Write-Verbose -Message "Removing new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                    Remove-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                }
             }
-            elseif ($diff.SideIndicator -eq '<=')
-            {
-                Write-Verbose -Message "Removing new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                Remove-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
-            }
+
         }
 
         #Members
@@ -945,6 +955,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     # Check Licenses
@@ -1078,29 +1089,32 @@ function Export-TargetResource
 
         # Define the list of attributes
         $attributesToCheck = @(
-            "description",
-            "displayName",
-            "hasMembersWithLicenseErrors",
-            "mail",
-            "mailNickname",
-            "onPremisesSecurityIdentifier",
-            "onPremisesSyncEnabled",
-            "preferredLanguage"
+            'description',
+            'displayName',
+            'hasMembersWithLicenseErrors',
+            'mail',
+            'mailNickname',
+            'onPremisesSecurityIdentifier',
+            'onPremisesSyncEnabled',
+            'preferredLanguage'
         )
 
         # Initialize a flag to indicate whether any attribute matches the condition
         $matchConditionFound = $false
 
         # Check each attribute in the list
-        foreach ($attribute in $attributesToCheck) {
-            if ($Filter -like "*$attribute eq null*") {
+        foreach ($attribute in $attributesToCheck)
+        {
+            if ($Filter -like "*$attribute eq null*")
+            {
                 $matchConditionFound = $true
                 break
             }
         }
 
         # If any attribute matches, add parameters to $ExportParameters
-        if ($matchConditionFound -or $Filter -like "*endsWith*") {
+        if ($matchConditionFound -or $Filter -like '*endsWith*')
+        {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
         }

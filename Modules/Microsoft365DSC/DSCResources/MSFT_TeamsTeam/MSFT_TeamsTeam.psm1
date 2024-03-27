@@ -15,7 +15,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 1024)]
+        [ValidateLength(0, 1024)]
         $Description,
 
         [Parameter()]
@@ -178,7 +178,9 @@ function Get-TargetResource
 
         Write-Verbose -Message "Getting Team {$DisplayName} Owners"
         [array]$Owners = Get-TeamUser -GroupId $team.GroupId | Where-Object { $_.Role -eq 'owner' }
-        if ($null -eq $Owners) { # Without Users, Get-TeamUser return null instead on empty array
+        if ($null -eq $Owners)
+        {
+            # Without Users, Get-TeamUser return null instead on empty array
             $Owners = @()
         }
 
@@ -252,7 +254,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 1024)]
+        [ValidateLength(0, 1024)]
         $Description,
 
         [Parameter()]
@@ -426,22 +428,23 @@ function Set-TargetResource
         {
             $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
                 -InboundParameters $PSBoundParameters
-            $group = New-MgGroup -DisplayName $DisplayName -GroupTypes 'Unified' -MailEnabled $true -SecurityEnabled $true -MailNickname $MailNickName
+            $group = New-MgGroup -DisplayName $DisplayName -GroupTypes 'Unified' -MailEnabled -SecurityEnabled -MailNickname $MailNickName -ErrorAction Stop
             $currentOwner = (($CurrentParameters.Owner)[0])
 
             Write-Verbose -Message "Retrieving Group Owner {$currentOwner}"
-            $ownerUser = Get-MgUser -Search $currentOwner
+            $ownerUser = Get-MgUser -Search $currentOwner -ConsistencyLevel eventual
+            $ownerOdataID = "https://graph.microsoft.com/v1.0/directoryObjects/$($ownerUser.Id)"
 
-            Write-Verbose -Message "Adding Owner {$($ownerUser.ObjectId)} to Group {$($group.Id)}"
+            Write-Verbose -Message "Adding Owner {$($ownerUser.Id)} to Group {$($group.Id)}"
             try
             {
-                New-MgGroupOwnerByRef -GroupId $group.Id -RefObjectId $ownerUser.ObjectId -ErrorAction Stop
+                New-MgGroupOwnerByRef -GroupId $group.Id -OdataId $ownerOdataID -ErrorAction Stop
             }
             catch
             {
                 Write-Verbose -Message 'Adding Owner - Sleeping for 15 seconds'
                 Start-Sleep -Seconds 15
-                New-MgGroupOwnerByRef -GroupId $group.Id -RefObjectId $ownerUser.ObjectId
+                New-MgGroupOwnerByRef -GroupId $group.Id -OdataId $ownerOdataID -ErrorAction Stop
             }
 
             try
@@ -452,7 +455,7 @@ function Set-TargetResource
             {
                 Write-Verbose -Message 'Creating Team - Sleeping for 15 seconds'
                 Start-Sleep -Seconds 15
-                New-Team -GroupId $group.Id
+                New-Team -GroupId $group.Id -ErrorAction Stop
             }
         }
         else
@@ -502,7 +505,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 1024)]
+        [ValidateLength(0, 1024)]
         $Description,
 
         [Parameter()]
@@ -711,29 +714,33 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($team in $teams)
         {
-            Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewline
-            $params = @{
-                DisplayName           = $team.DisplayName
-                GroupID               = $team.GroupId
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
+            # Skip Teams without DisplayName (orphaned/deleted Teams) because the Get method cannot be called without a display name
+            if ($null -ne $team.DisplayName -and $team.DisplayName -ne '')
+            {
+                Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewline
+                $params = @{
+                    DisplayName           = $team.DisplayName
+                    GroupID               = $team.GroupId
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+                $i++
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-            $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
 
         return $dscContent

@@ -75,7 +75,7 @@ function Get-TargetResource
 
         if (-not [System.String]::IsNullOrEmpty($Id))
         {
-            $getValue = Get-MgBetaPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Id
+            $getValue = Get-MgBetaPolicyAuthenticationStrengthPolicy -AuthenticationStrengthPolicyId $Id -ErrorAction 'SilentlyContinue'
         }
 
         if ($null -eq $getValue)
@@ -279,8 +279,8 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    $ValuesToCheck.Remove('Id') | Out-Null
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false

@@ -112,7 +112,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - RoleEligibilitySchedule.ReadWrite.Directory
+    - RoleEligibilitySchedule.Read.Directory
 
 - **Update**
 

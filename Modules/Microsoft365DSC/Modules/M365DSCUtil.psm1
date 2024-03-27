@@ -128,7 +128,7 @@ function Convert-M365DscHashtableToString
     )
 
     $values = @()
-    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', 'CertificateThumbprint', 'CertificatePath', 'CertificatePassword', 'Credential')
+    $parametersToObfuscate = @('ApplicationId', 'ApplicationSecret', 'TenantId', 'CertificateThumbprint', 'CertificatePath', 'CertificatePassword', 'Credential', 'Password')
     foreach ($pair in $Hashtable.GetEnumerator())
     {
         try
@@ -172,7 +172,7 @@ function Convert-M365DscHashtableToString
     }
 
     [array]::Sort($values)
-    return ($values -join "`r`n")
+    return ($values -join [Environment]::NewLine)
 }
 
 <#
@@ -577,6 +577,19 @@ function Test-M365DSCParameterState
     #endregion
     $returnValue = $true
 
+    $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
+
+    #region Telemetry - Evaluation
+    $dataEvaluation = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $dataEvaluation.Add('Resource', "$Source")
+    $dataEvaluation.Add('Method', 'Test-TargetResource')
+    $dataEvaluation.Add('Tenant', $TenantName)
+    $ValuesToCheckData = $ValuesToCheck | Where-Object -FilterScript {$_ -ne 'Verbose'}
+    $dataEvaluation.Add('Parameters', $ValuesToCheckData -join "`r`n")
+    $dataEvaluation.Add('ParametersCount', $ValuesToCheckData.Length)
+    Add-M365DSCTelemetryEvent -Type 'DriftEvaluation' -Data $dataEvaluation
+    #endregion
+
     $DriftedParameters = @{}
     $DriftObject = @{
         DriftInfo     = @{}
@@ -941,7 +954,6 @@ function Test-M365DSCParameterState
     {
         $EventMessage = [System.Text.StringBuilder]::New()
         $EventMessage.Append("<M365DSCEvent>`r`n") | Out-Null
-        $TenantName = Get-M365DSCTenantNameFromParameterSet -ParameterSet $DesiredValues
         Write-Verbose -Message "Found Tenant Name: $TenantName"
         $EventMessage.Append("    <ConfigurationDrift Source=`"$Source`" TenantId=`"$TenantName`">`r`n") | Out-Null
         $EventMessage.Append("        <ParametersNotInDesiredState>`r`n") | Out-Null
@@ -951,7 +963,6 @@ function Test-M365DSCParameterState
         $DriftObject.Add('Tenant', $TenantName)
         $driftedData.Add('Resource', $source.Split('_')[1])
         $DriftObject.Add('Resource', $source.Split('_')[1])
-        $driftedData.Add('Event', 'DriftedParameter')
 
         # If custom App Insights is specified, allow for the current and desired values to be captured;
         # ISSUE #1222
@@ -1218,6 +1229,7 @@ function Export-M365DSCConfiguration
         [Switch]
         $Validate
     )
+    $currentStartDateTime = [System.DateTime]::Now
     $Global:M365DSCExportInProgress = $true
     $Global:MaximumFunctionCount = 32767
 
@@ -1395,6 +1407,11 @@ function Export-M365DSCConfiguration
     $Global:M365DSCExportedResourceInstancesNames = $null
     $Global:M365DSCExportInProgress = $false
 
+    $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
+    $data.Add('Tenant', $Tenant)
+    $data.Add('M365DSCExportId', $currentExportID)
+    $timeTaken = [System.DateTime]::Now.Subtract($currentStartDateTime)
+    $data.Add('TotalSeconds',$timeTaken.TotalSeconds)
     Add-M365DSCTelemetryEvent -Type 'ExportCompleted' -Data $data
 }
 
@@ -3361,38 +3378,47 @@ function Get-M365DSCExportContentForResource
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
 
+    if ($Script:AllM365DscResources.Count -eq 0)
+    {
+        $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
+    }
+
     $primaryKey = ''
-    if ($Results.ContainsKey('IsSingleInstance'))
+    $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
+    $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
+        Select-Object -ExpandProperty Name
+    if ($Keys.Contains('IsSingleInstance'))
     {
         $primaryKey = ''
     }
-    elseif ($Results.ContainsKey('DisplayName'))
+    elseif ($Keys.Contains('DisplayName'))
     {
         $primaryKey = $Results.DisplayName
     }
-    elseif ($Results.ContainsKey('Identity'))
-    {
-        $primaryKey = $Results.Identity
-    }
-    elseif ($Results.ContainsKey('Id'))
-    {
-        $primaryKey = $Results.Id
-    }
-    elseif ($Results.ContainsKey('Name'))
+    elseif ($Keys.Contains('Name'))
     {
         $primaryKey = $Results.Name
     }
-    elseif ($Results.ContainsKey('Title'))
+    elseif ($Keys.Contains('Title'))
     {
         $primaryKey = $Results.Title
     }
-    elseif ($Results.ContainsKey('CdnType'))
+    elseif ($Keys.Contains('Identity'))
     {
-        $primaryKey = $Results.CdnType
+        $primaryKey = $Results.Identity
     }
-    elseif ($Results.ContainsKey('Usage'))
+    elseif ($Keys.Contains('Id'))
     {
-        $primaryKey = $Results.Usage
+        $primaryKey = $Results.Id
+    }
+
+    if ([String]::IsNullOrEmpty($primaryKey) -and `
+        -not $Keys.Contains('IsSingleInstance'))
+    {
+        foreach ($Key in $Keys)
+        {
+            $primaryKey += $Results.$Key
+        }
     }
 
     $instanceName = $ResourceName
@@ -4409,6 +4435,75 @@ function Remove-M365DSCAuthenticationParameter
 
 <#
 .Description
+This function clears the authentication parameters from the hashtable.
+
+.Functionality
+Internal
+#>
+function Clear-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    $BoundParameters.Credential = $null
+    $BoundParameters.ApplicationId = $null
+    $BoundParameters.ApplicationSecret = $null
+    $BoundParameters.TenantId = $null
+    $BoundParameters.CertificatePassword = $null
+    $BoundParameters.CertificatePath = $null
+    $BoundParameters.CertificateThumbprint = $null
+    $BoundParameters.ManagedIdentity = $null
+
+    return $BoundParameters
+}
+<#
+.Description
+This function validate if the authentication parameters from the hashtable have been cleared.
+
+.Functionality
+Internal
+#>
+function Test-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    $authenticationParameterList = @(
+        'Credential'
+        'ApplicationId'
+        'ApplicationSecret'
+        'TenantId'
+        'CertificatePassword'
+        'CertificatePath'
+        'CertificateThumbprint'
+        'ManagedIdentity'
+    )
+
+    $containsAuthenticationParameter = $false
+    foreach ($parameter in $authenticationParameterList)
+    {
+        if ($null -ne $BoundParameters.$parameter)
+        {
+            $containsAuthenticationParameter = $true
+            break
+        }
+    }
+
+    return $containsAuthenticationParameter
+}
+
+<#
+.Description
 This function analyzes an M365DSC configuration file and returns information about potential issues (e.g., duplicate primary keys).
 
 .Example
@@ -4596,6 +4691,7 @@ function Sync-M365DSCParameter
 
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
+    'Clear-M365DSCAuthenticationParameter',
     'Confirm-ImportedCmdletIsAvailable',
     'Confirm-M365DSCDependencies',
     'Convert-M365DscHashtableToString',
@@ -4629,6 +4725,7 @@ Export-ModuleMember -Function @(
     'Set-EXOSafeAttachmentRule',
     'Set-EXOSafeLinksRule',
     'Split-ArrayByParts',
+    'Test-M365DSCAuthenticationParameter'
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCModuleValidity',
     'Test-M365DSCParameterState',

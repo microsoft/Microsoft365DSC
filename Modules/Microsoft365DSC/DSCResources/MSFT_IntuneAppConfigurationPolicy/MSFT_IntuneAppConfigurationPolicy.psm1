@@ -70,9 +70,7 @@ function Get-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $nullResult = @{
-        DisplayName = $DisplayName
-    }
+    $nullResult = ([Hashtable]$PSBoundParameters).clone()
     $nullResult.Ensure = 'Absent'
     try
     {
@@ -104,6 +102,10 @@ function Get-TargetResource
                 Write-Verbose -Message "No App Configuration Policy with DisplayName {$DisplayName} was found"
                 return $nullResult
             }
+            if(([array]$configPolicy).count -gt 1)
+            {
+                throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+            }
         }
 
         Write-Verbose -Message "Found App Configuration Policy with Id {$($configPolicy.Id)} and DisplayName {$($configPolicy.DisplayName)}"
@@ -122,19 +124,14 @@ function Get-TargetResource
         }
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $returnAssignments)
+        $graphAssignments = Get-MgBetaDeviceAppManagementTargetedManagedAppConfigurationAssignment -TargetedManagedAppConfigurationId $configPolicy.Id
+        if ($graphAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($graphAssignments)
         }
-        $returnHashtable.Add('Assignments', $assignmentResult)
+        $returnHashtable.Add('Assignments', $returnAssignments)
 
         return $returnHashtable
     }
@@ -146,6 +143,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -355,19 +353,22 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Intune App Configuration Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Id') | Out-Null
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
-    }
-    if ($CurrentValues.Ensure -eq 'Absent' -and $PSBoundParameters.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Test-TargetResource returned $true"
-        return $true
     }
     $testResult = $true
 
@@ -384,43 +385,22 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
-            if ($key -eq "Assignments")
+            if ($key -eq 'Assignments')
             {
-                $testResult = $source.count -eq $target.count
-                if (-Not $testResult) { break }
-                foreach ($assignment in $source)
-                {
-                    if ($assignment.dataType -like '*GroupAssignmentTarget')
-                    {
-                        $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId})
-                        #Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
-                        if (-not $testResult)
-                        {
-                            $groupNotFound =  $null -eq (Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue)
-                        }
-                        if (-not $testResult -and $groupNotFound)
-                        {
-                            $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName})
-                        }
-                    }
-                    else
-                    {
-                        $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType})
-                    }
-                    if (-Not $testResult) { break }
-                }
-                if (-Not $testResult) { break }
+                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
             }
-            if (-Not $testResult) { break }
+
+            if (-Not $testResult)
+            {
+                $testResult = $false
+                break
+            }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
-    if ($TestResult)
+    if ($testResult)
     {
         $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -510,6 +490,12 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @params
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
+
             if ($Results.CustomSettings.Count -gt 0)
             {
                 $Results.CustomSettings = Get-M365DSCIntuneAppConfigurationPolicyCustomSettingsAsString -Settings $Results.CustomSettings
