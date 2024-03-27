@@ -27753,6 +27753,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "SelectedMobileAppNames",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "Boolean",
                                "Name":  "ShowInstallationProgress",
                                "Option":  "Write"
