@@ -24,7 +24,8 @@ class MSFT_IntuneDeviceEnrollmentStatusPageWindows10 : OMI_BaseResource
     [Write, Description("Only show installation progress for first user post enrollment")] Boolean DisableUserStatusTrackingAfterFirstUser;
     [Write, Description("Set installation progress timeout in minutes")] UInt32 InstallProgressTimeoutInMinutes;
     [Write, Description("Allows quality updates installation during OOBE")] Boolean InstallQualityUpdates;
-    [Write, Description("Selected applications to track the installation status")] String SelectedMobileAppIds[];
+    [Write, Description("Ids of selected applications to track the installation status. When this parameter is used, SelectedMobileAppNames is ignored")] String SelectedMobileAppIds[];
+    [Write, Description("Names of selected applications to track the installation status. This parameter is ignored when SelectedMobileAppIds is also specified")] String SelectedMobileAppNames[];
     [Write, Description("Show or hide installation progress to user")] Boolean ShowInstallationProgress;
     [Write, Description("Only show installation progress for Autopilot enrollment scenarios")] Boolean TrackInstallProgressForAutopilotOnly;
     [Write, Description("Priority is used when a user exists in multiple groups that are assigned enrollment configuration. Users are subject only to the configuration with the lowest priority value.")] UInt32 Priority;
