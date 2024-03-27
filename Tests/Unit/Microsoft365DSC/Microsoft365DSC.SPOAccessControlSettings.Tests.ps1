@@ -48,7 +48,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IPAddressEnforcement         = $false
                     #IPAddressAllowList           = "" #would generate an error while writing this resource
                     IPAddressWACTokenLifetime    = 15
-                    SocialBarOnSitePagesDisabled = $false
                     DisallowInfectedFileDownload = $false
                     ExternalServicesEnabled      = $true
                     EmailAttestationRequired     = $false
@@ -62,7 +61,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IPAddressEnforcement         = $false
                         #IPAddressAllowList           = "" #would generate an error while writing this resource
                         IPAddressWACTokenLifetime    = 15
-                        SocialBarOnSitePagesDisabled = $false
                         DisallowInfectedFileDownload = $false
                         ExternalServicesEnabled      = $true
                         EmailAttestationRequired     = $false
@@ -77,7 +75,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IPAddressEnforcement         = $false
                         #IPAddressAllowList           = "" #would generate an error while writing this resource
                         IPAddressWACTokenLifetime    = 20
-                        SocialBarOnSitePagesDisabled = $false
                         DisallowInfectedFileDownload = $false
                         ExternalServicesEnabled      = $true
                         EmailAttestationRequired     = $false
@@ -110,7 +107,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IPAddressEnforcement         = $false
                         #IPAddressAllowList           = "" #would generate an error while writing this resource
                         IPAddressWACTokenLifetime    = 15
-                        SocialBarOnSitePagesDisabled = $false
                         DisallowInfectedFileDownload = $false
                         ExternalServicesEnabled      = $true
                         EmailAttestationRequired     = $false
