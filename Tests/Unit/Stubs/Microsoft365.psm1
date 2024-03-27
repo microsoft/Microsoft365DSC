@@ -81211,11 +81211,7 @@ function Get-MgBetaDeviceAppManagementMobileApp
 
         [Parameter()]
         [System.String]
-        $CountVariable,
-
-        [Parameter()]
-        [System.Management.Automation.ActionPreference]
-        $ProgressAction
+        $CountVariable
     )
 }
 
@@ -81354,15 +81350,7 @@ function New-MgBetaDeviceAppManagementMobileApp
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.ActionPreference]
-        $ProgressAction,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
+        $ProxyUseDefaultCredentials
     )
 }
 
@@ -81413,15 +81401,7 @@ function Remove-MgBetaDeviceAppManagementMobileApp
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.ActionPreference]
-        $ProgressAction,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
+        $ProxyUseDefaultCredentials
     )
 }
 
@@ -81484,15 +81464,7 @@ function Set-MgBetaDeviceAppManagementMobileApp
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.ActionPreference]
-        $ProgressAction,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
+        $ProxyUseDefaultCredentials
     )
 }
 
@@ -81639,15 +81611,7 @@ function Update-MgBetaDeviceAppManagementMobileApp
 
         [Parameter()]
         [System.Management.Automation.SwitchParameter]
-        $ProxyUseDefaultCredentials,
-
-        [Parameter()]
-        [System.Management.Automation.ActionPreference]
-        $ProgressAction,
-
-        [Parameter()]
-        [System.Management.Automation.SwitchParameter]
-        $Confirm
+        $ProxyUseDefaultCredentials
     )
 }
 
