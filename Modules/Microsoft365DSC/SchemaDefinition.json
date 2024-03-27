@@ -34659,16 +34659,6 @@
                            },
                            {
                                "CIMType":  "boolean",
-                               "Name":  "CommentsOnSitePagesDisabled",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "boolean",
-                               "Name":  "SocialBarOnSitePagesDisabled",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "boolean",
                                "Name":  "DisallowInfectedFileDownload",
                                "Option":  "Write"
                            },
@@ -36383,13 +36373,13 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "string",
-                               "Name":  "ConditionalAccessPolicy",
+                               "CIMType":  "string[]",
+                               "Name":  "DisabledWebPartIds",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "string[]",
-                               "Name":  "DisabledWebPartIds",
+                               "CIMType":  "boolean",
+                               "Name":  "SocialBarOnSitePagesDisabled",
                                "Option":  "Write"
                            },
                            {
