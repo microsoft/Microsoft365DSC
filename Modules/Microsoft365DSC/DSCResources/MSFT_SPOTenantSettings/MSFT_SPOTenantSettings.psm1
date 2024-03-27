@@ -83,17 +83,16 @@ function Get-TargetResource
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
-        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess')]
-        [System.String]
-        $ConditionalAccessPolicy,
-
-        [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
 
         [Parameter()]
         [System.Boolean]
         $IsFluidEnabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -188,8 +187,8 @@ function Get-TargetResource
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
             HideSyncButtonOnTeamSite                      = $SPOTenantSettings.HideSyncButtonOnTeamSite
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
-            ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
             DisabledWebPartIds                            = [String[]]$SPOTenantSettings.DisabledWebPartIds
+            SocialBarOnSitePagesDisabled                  = $SPOTenantSettings.SocialBarOnSitePagesDisabled
             CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
@@ -303,13 +302,12 @@ function Set-TargetResource
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
-        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess')]
-        [System.String]
-        $ConditionalAccessPolicy,
-
-        [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -474,13 +472,12 @@ function Test-TargetResource
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
-        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess')]
-        [System.String]
-        $ConditionalAccessPolicy,
-
-        [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
+
+        [Parameter()]
+        [System.Boolean]
+        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -562,8 +559,8 @@ function Test-TargetResource
             'HideDefaultThemes', `
             'HideSyncButtonOnTeamSite', `
             'MarkNewFilesSensitiveByDefault', `
-            'ConditionalAccessPolicy', `
             'DisabledWebPartIds', `
+            'SocialBarOnSitePagesDisabled', `
             'CommentsOnSitePagesDisabled'
     )
 

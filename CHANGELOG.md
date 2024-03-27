@@ -18,14 +18,14 @@
 * EXOGroupSettings
   * Fixed schema file
 * EXOMailTips
-  * Replaced the Organization parameter with IsSingleInstance (BREAKING)
+  * [BREAKING CHANGE] Replaced the Organization parameter with IsSingleInstance
     FIXES [#4117](https://github.com/microsoft/Microsoft365DSC/issues/4117)
 * EXOMessageClassification
   * Fixed schema file
 * EXOOMEConfiguration
   * Fixed schema file
 * EXOTransportRule
-  * Change data type of Priority from String to Int (BREAKING)
+  * [BREAKING CHANGE] Change data type of Priority from String to Int
     FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
@@ -42,6 +42,17 @@
   * Log both matching and not matching resources and in XML format
 * O365OrgSettings
   * Fixed missing permissions in settings.json
+* SPOAccessControlSettings
+  * [BREAKING CHANGE] Removed CommentsOnSitePagesDisabled parameter, because of
+    duplication in SPOTenantSettings
+    FIXES [#3576](https://github.com/microsoft/Microsoft365DSC/issues/3576)
+  * [BREAKING CHANGE] Moved SocialBarOnSitePagesDisabled parameter to SPOTenantSettings,
+    because it makes more sense there. This has nothing to do with Access Control.
+* SPOTenantSettings
+  * [BREAKING CHANGE] Removed ConditionalAccessPolicy parameter, because of
+    duplication in SPOAccessControlSettings
+    FIXES [#3576](https://github.com/microsoft/Microsoft365DSC/issues/3576)
+  * Added SocialBarOnSitePagesDisabled parameter, moved from SPOAccessControlSettings.
 * TeamsChannelTab
   * Fixed schema file
 * TeamsGroupPolicyAssignment
