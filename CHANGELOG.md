@@ -34,6 +34,10 @@
   * Fix group assignment by using the corrected function
     Update-DeviceConfigurationPolicyAssignment from module M365DSCDRGUtil
     FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Added support for specifying SelectedMobileAppNames in addition to SelectedMobileAppIds,
+    which are different for each tenant.
+    FIXES [#4494](https://github.com/microsoft/Microsoft365DSC/issues/4494)
 * M365DSCRuleEvaluation
   * Log both matching and not matching resources and in XML format
 * O365OrgSettings
