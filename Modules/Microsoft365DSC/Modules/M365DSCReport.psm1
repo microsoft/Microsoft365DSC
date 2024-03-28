@@ -1256,6 +1256,10 @@ function Get-M365DSCResourceKey
     {
         return @('OrgWideAccount')
     }
+    elseif ($Resource.ResourceName -eq 'TeamsGroupPolicyAssignment')
+    {
+        return @('GroupDisplayName', 'PolicyType')
+    }
     elseif ($mandatoryParameters.count -eq 1)
     {
         # returning the only mandatory parameter name
