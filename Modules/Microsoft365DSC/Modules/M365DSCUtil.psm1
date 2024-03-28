@@ -3368,10 +3368,14 @@ function Get-M365DSCExportContentForResource
             $ConnectionMode -eq 'ManagedIdentity')
     {
         $OrganizationName = $Results.TenantId
+    }    
+    elseif ($null -ne $Credential.UserName)
+    {
+        $OrganizationName = $Credential.UserName.Split('@')[1]
     }
     else
     {
-        $OrganizationName = $Credential.UserName.Split('@')[1]
+        $OrganizationName = ''
     }
 
     # Ensure the string properties are properly formatted;
