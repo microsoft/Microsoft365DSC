@@ -29,6 +29,8 @@
 * EXOTransportRule
   * [BREAKING CHANGE] Change data type of Priority from String to Int
     FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Add missing properties
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
