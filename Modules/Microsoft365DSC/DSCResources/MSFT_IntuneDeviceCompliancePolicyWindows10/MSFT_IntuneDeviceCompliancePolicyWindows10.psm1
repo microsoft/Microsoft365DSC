@@ -269,7 +269,6 @@ function Get-TargetResource
     }
     catch
     {
-        write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -853,7 +852,6 @@ function Export-TargetResource
 
         foreach ($configDeviceWindowsPolicy in $configDeviceWindowsPolicies)
         {
-            Write-Verbose -Message $($configDeviceWindowsPolicy.displayName)
             Write-Host "    |---[$i/$($configDeviceWindowsPolicies.Count)] $($configDeviceWindowsPolicy.displayName)" -NoNewline
             $params = @{
                 DisplayName           = $configDeviceWindowsPolicy.displayName
