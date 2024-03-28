@@ -1256,23 +1256,14 @@ function Get-M365DSCResourceKey
     {
         return @('OrgWideAccount')
     }
-    elseif ($Resource.ResourceName -eq 'TeamsGroupPolicyAssignment')
+    elseif ($mandatoryParameters.count -gt 0)
     {
-        return @('GroupDisplayName', 'PolicyType')
-    }
-    elseif ($mandatoryParameters.count -eq 1)
-    {
-        # returning the only mandatory parameter name
-        return @($mandatoryParameters[0].Name)
+        # return all mandatory parameters
+        return @($mandatoryParameters.Name)
     }
     elseif ($mandatoryParameters.count -eq 0)
     {
         Write-Verbose -Message "No mandatory parameters found for $($Resource.ResourceName)"
-    }
-    else
-    {
-        # the function failed to find any key params
-        throw "Multiple mandatory parameters found for $($Resource.ResourceName) but none of them are returned by the function"
     }
 }
 
