@@ -866,6 +866,10 @@ function Export-TargetResource
         $Filter,
 
         [Parameter()]
+        [Switch]
+        $AdvancedQueryFilter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -914,7 +918,7 @@ function Export-TargetResource
             Property    = $propertiesToRetrieve
             ErrorAction = 'Stop'
         }
-        if ($Filter -like '*endsWith*')
+        if ($AdvancedQueryFilter)
         {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
