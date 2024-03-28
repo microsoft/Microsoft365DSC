@@ -920,9 +920,9 @@ function Export-TargetResource
     catch
     {
         write-Host $_
-        
+
         write-Host $_.Exception
-        
+
         write-Host $($_ | Out-String)
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
         $_.Exception -like "*Request not applicable to target tenant*")
@@ -1045,3 +1045,5 @@ function Get-M365DSCAssignmentsAsHashtable
     }
     return $CIMAssignmentAsHash
 }
+
+Export-ModuleMember -Function *-TargetResource
