@@ -34,6 +34,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $allowdatagramprocessingonwinserver,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $allowemailscanning,
 
         [Parameter()]
@@ -55,6 +60,11 @@ function Get-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $allowioavprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $allownetworkprotectiondownlevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -101,6 +111,7 @@ function Get-TargetResource
         [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -124,6 +135,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $disablednsovertcpparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disableenhancednotifications,
 
         [Parameter()]
@@ -135,6 +151,11 @@ function Get-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehttpparsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -518,6 +539,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $allowdatagramprocessingonwinserver,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $allowemailscanning,
 
         [Parameter()]
@@ -539,6 +565,11 @@ function Set-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $allowioavprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $allownetworkprotectiondownlevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -585,6 +616,7 @@ function Set-TargetResource
         [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -608,6 +640,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $disablednsovertcpparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disableenhancednotifications,
 
         [Parameter()]
@@ -619,6 +656,11 @@ function Set-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehttpparsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -954,6 +996,11 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $allowdatagramprocessingonwinserver,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $allowemailscanning,
 
         [Parameter()]
@@ -975,6 +1022,11 @@ function Test-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $allowioavprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $allownetworkprotectiondownlevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -1021,6 +1073,7 @@ function Test-TargetResource
         [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -1044,6 +1097,11 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $disablednsovertcpparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disableenhancednotifications,
 
         [Parameter()]
@@ -1055,6 +1113,11 @@ function Test-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehttpparsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -1268,6 +1331,7 @@ function Test-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
