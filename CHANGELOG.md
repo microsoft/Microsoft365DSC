@@ -77,8 +77,9 @@
     be found by its Id it tries to search it by display name
     FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
   * M365DSCReport
-    Fix issue when asserting TeamsGroupPolicyAssignment configurations by
-    returning its both mandatory parameters in Get-M365DSCResourceKey
+    Fix issue when asserting resources not covered by current conditions in
+    Get-M365DSCResourceKey by always returning all their mandatory parameters
+    FIXES [#4502](https://github.com/microsoft/Microsoft365DSC/issues/4502)
   * Fix broken links to integration tests in README.md
 
 # 1.24.313.1
