@@ -29,11 +29,13 @@
 | **allowarchivescanning** | Write | String | Allows or disallows scanning of archives. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **allowbehaviormonitoring** | Write | String | Allows or disallows Windows Defender Behavior Monitoring functionality. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **allowcloudprotection** | Write | String | To best protect your PC, Windows Defender will send information to Microsoft about any problems it finds. Microsoft will analyze that information, learn more about problems affecting you and other customers, and offer improved solutions. (0: disable feature. 1: enable feature) | `0`, `1` |
-| **allowemailscanning** | Write | String | Allows or disallows scanning of email.  (0: disable feature. 1: enable feature) | `0`, `1` |
+| **allowdatagramprocessingonwinserver** | Write | String | Allows or disallows Network Protection to enable datagram processing on Windows Server. (0: disable feature. 1: enable feature) | `0`, `1` |
+| **allowemailscanning** | Write | String | Allows or disallows scanning of email. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **allowfullscanonmappednetworkdrives** | Write | String | Allows or disallows a full scan of mapped network drives. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **allowfullscanremovabledrivescanning** | Write | String | Allows or disallows a full scan of removable drives. During a quick scan, removable drives may still be scanned. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **allowintrusionpreventionsystem** | Write | String | https://github.com/MicrosoftDocs/memdocs/issues/2250 (0: disable feature. 1: enable feature) | `0`, `1` |
 | **allowioavprotection** | Write | String | Allows or disallows Windows Defender IOAVP Protection functionality. (0: disable feature. 1: enable feature) | `0`, `1` |
+| **allownetworkprotectiondownlevel** | Write | String | Allows or disallows Network Protection to be configured into block or audit mode on windows downlevel of RS3. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **allowrealtimemonitoring** | Write | String | Allows or disallows Windows Defender real-time Monitoring functionality. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **allowscanningnetworkfiles** | Write | String | Allows or disallows a scanning of network files. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **allowscriptscanning** | Write | String | Allows or disallows Windows Defender Script Scanning functionality. (0: disable feature. 1: enable feature) | `0`, `1` |
@@ -45,6 +47,8 @@
 | **daystoretaincleanedmalware** | Write | SInt32 | Time period (in days) that quarantine items will be stored on the system. | |
 | **disablecatchupfullscan** | Write | String | This policy setting allows you to configure catch-up scans for scheduled full scans.  (1: disabled, 0: enabled) | `0`, `1` |
 | **disablecatchupquickscan** | Write | String | This policy setting allows you to configure catch-up scans for scheduled quick scans.  (1: disabled, 0: enabled) | `0`, `1` |
+| **disablednsovertcpparsing** | Write | String | Disables or enables DNS over TCP Parsing for Network Protection. (0: enable feature. 1: disable feature) | `0`, `1` |
+| **disablehttpparsing** | Write | String | Disables or enables HTTP Parsing for Network Protection. (0: enable feature. 1: disable feature) | `0`, `1` |
 | **enablelowcpupriority** | Write | String | This policy setting allows you to enable or disable low CPU priority for scheduled scans. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **enablenetworkprotection** | Write | String | This policy allows you to turn on network protection (block/audit) or off. (0: disabled, 1: block mode, 2: audit mode) | `0`, `1`, `2` |
 | **excludedextensions** | Write | StringArray[] | Allows an administrator to specify a list of file type extensions to ignore during a scan. | |
