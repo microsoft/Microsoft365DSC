@@ -820,7 +820,6 @@ function Export-TargetResource
         [Switch]
         $ManagedIdentity
     )
-    $VerbosePreference = 'Continue'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -887,17 +886,11 @@ function Export-TargetResource
                     $Results.Remove('Assignments') | Out-Null
                 }
             }
-            Write-Host "ResourceName: $ResourceName"
-            Write-Host "ConnectionMode: $ConnectionMode"
-            Write-Host "ModulePath: $PSScriptRoot"
-            Write-Host "Credential: $Credential"
-            Write-Host "Results: $($Results | Out-String)"
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            Write-Verbose -Message $currentDSCBlock
             if ($Results.Assignments)
             {
                 $isCIMArray = $false
@@ -919,11 +912,6 @@ function Export-TargetResource
     }
     catch
     {
-        write-Host $_
-
-        write-Host $_.Exception
-
-        write-Host $($_ | Out-String)
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
         $_.Exception -like "*Request not applicable to target tenant*")
         {

@@ -3375,15 +3375,12 @@ function Get-M365DSCExportContentForResource
     }
 
     # Ensure the string properties are properly formatted;
-    Write-Host "Flag1"
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
 
     $primaryKey = ''
     $ModuleFullName = "MSFT_" + $ResourceName
-    Write-Host "Flag2: $ModuleFullName"
     $moduleInfo = Get-Command -Module $ModuleFullName -ErrorAction SilentlyContinue
-    Write-Host "Flag2b: $($moduleInfo | Out-String)"
     if ($null -eq $moduleInfo)
     {
         if ($Script:AllM365DscResources.Count -eq 0)
@@ -3397,14 +3394,9 @@ function Get-M365DSCExportContentForResource
     }
     else
     {
-        Write-Host "Flag3b"
         $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
-        Write-Host "Flag3c: $($cmdInfo | Out-String)"
         $Keys = $cmdInfo.Parameters.Keys
-        Write-Host "Flag3d: $($cmdInfo.Parmeters | Out-String)"
     }
-
-    Write-Host "Flag4: $($keys | Out-String)"
 
     if ($Keys.Contains('IsSingleInstance'))
     {
