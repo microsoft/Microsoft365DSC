@@ -14949,6 +14949,11 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "allowdatagramprocessingonwinserver",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
                                "Name":  "allowemailscanning",
                                "Option":  "Write"
                            },
@@ -14970,6 +14975,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "allowioavprotection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "allownetworkprotectiondownlevel",
                                "Option":  "Write"
                            },
                            {
@@ -15025,6 +15035,16 @@
                            {
                                "CIMType":  "String",
                                "Name":  "disablecatchupquickscan",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "disablednsovertcpparsing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "disablehttpparsing",
                                "Option":  "Write"
                            },
                            {
