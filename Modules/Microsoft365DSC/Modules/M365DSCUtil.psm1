@@ -3375,14 +3375,17 @@ function Get-M365DSCExportContentForResource
     }
 
     # Ensure the string properties are properly formatted;
+    Write-Host "Flag1"
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
-    
+
     $primaryKey = ''
     $ModuleFullName = "MSFT_" + $ResourceName
+    Write-Host "Flag2: $ModuleFullName"
     $moduleInfo = Get-Command -Module $ModuleFullName -ErrorAction SilentlyContinue
     if ($null -eq $moduleInfo)
     {
+        Write-Host "Flag3a"
         if ($Script:AllM365DscResources.Count -eq 0)
         {
             $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
@@ -3394,9 +3397,12 @@ function Get-M365DSCExportContentForResource
     }
     else
     {
+        Write-Host "Flag3b"
         $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
         $Keys = $cmdInfo.Parameters.Keys
     }
+
+    Write-Host "Flag4: $($keys | Out-String)"
 
     if ($Keys.Contains('IsSingleInstance'))
     {
@@ -3458,17 +3464,28 @@ function Get-M365DSCExportContentForResource
     $content = [System.Text.StringBuilder]::New()
     [void]$content.Append("        $ResourceName `"$instanceName`"`r`n")
     [void]$content.Append("        {`r`n")
+
+    Write-Host "Flag5"
     $partialContent = Get-DSCBlock -Params $Results -ModulePath $ModulePath
+
+    Write-Host "Flag6"
     # Test for both Credentials and CredentialsWithApplicationId
     if ($ConnectionMode -match 'Credentials')
     {
+
+    Write-Host "Flag7"
         $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
             -ParameterName 'Credential'
+
+    Write-Host "Flag8"
         if (![System.String]::IsNullOrEmpty($Results.ApplicationId))
         {
+
+    Write-Host "Flag8b"
             $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
                 -ParameterName 'ApplicationId'
         }
+        Write-Host "Flag9"
     }
     else
     {
