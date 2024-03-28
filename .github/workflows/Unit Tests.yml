@@ -54,7 +54,7 @@ jobs:
 
           try
           {
-              $results = Invoke-TestHarness -IgnoreCodeCoverage
+              $results = Invoke-TestHarness -IgnoreCodeCoverage -Verbose
           }
           catch
           {
