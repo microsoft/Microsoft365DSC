@@ -914,6 +914,7 @@ function Export-TargetResource
     }
     catch
     {
+        write-Host $_
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
         $_.Exception -like "*Request not applicable to target tenant*")
         {
