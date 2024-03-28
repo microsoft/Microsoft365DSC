@@ -820,6 +820,7 @@ function Export-TargetResource
         [Switch]
         $ManagedIdentity
     )
+    $VerbosePreference = 'Continue'
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -853,6 +854,7 @@ function Export-TargetResource
 
         foreach ($configDeviceWindowsPolicy in $configDeviceWindowsPolicies)
         {
+            Write-Verbose -Message $($configDeviceWindowsPolicy.displayName)
             Write-Host "    |---[$i/$($configDeviceWindowsPolicies.Count)] $($configDeviceWindowsPolicy.displayName)" -NoNewline
             $params = @{
                 DisplayName           = $configDeviceWindowsPolicy.displayName
@@ -870,7 +872,6 @@ function Export-TargetResource
                 Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
                 throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
             }
-
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
@@ -891,7 +892,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
+            Write-Verbose -Message $currentDSCBlock
             if ($Results.Assignments)
             {
                 $isCIMArray = $false
