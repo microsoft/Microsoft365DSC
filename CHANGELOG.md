@@ -80,6 +80,8 @@
     Fix issue when asserting TeamsGroupPolicyAssignment configurations by
     returning its both mandatory parameters in Get-M365DSCResourceKey
   * Fix broken links to integration tests in README.md
+  * Changing logic to retrieve DSC Resources properties not to use DSC
+    specific cmdlets.
 
 # 1.24.313.1
 

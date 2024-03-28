@@ -274,7 +274,6 @@ function Get-TargetResource
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
-
         $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
@@ -871,7 +870,6 @@ function Export-TargetResource
                 throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
             }
 
-
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             if ($Results.Assignments)
@@ -891,7 +889,6 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-
             if ($Results.Assignments)
             {
                 $isCIMArray = $false
@@ -1034,3 +1031,5 @@ function Get-M365DSCAssignmentsAsHashtable
     }
     return $CIMAssignmentAsHash
 }
+
+Export-ModuleMember -Function *-TargetResource
