@@ -887,6 +887,11 @@ function Export-TargetResource
                     $Results.Remove('Assignments') | Out-Null
                 }
             }
+            Write-Host "ResourceName: $ResourceName"
+            Write-Host "ConnectionMode: $ConnectionMode"
+            Write-Host "ModulePath: $PSScriptRoot"
+            Write-Host "Credential: $Credential"
+            Write-Host "Results: $($Results | Out-String)"
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
