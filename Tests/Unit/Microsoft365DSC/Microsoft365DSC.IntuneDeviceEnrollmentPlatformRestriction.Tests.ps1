@@ -69,8 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                     Credential                        = $Credential
                     Priority                          = 1
-                    PlatformType                      = 'ios'
-                    PlatformRestriction               = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                    IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
                             platformBlocked                 = $False
                             personalDeviceEnrollmentBlocked = $False
                         } -ClientOnly)
@@ -123,8 +122,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                     Credential                        = $Credential
                     Priority                          = 1
-                    PlatformType                      = 'ios'
-                    PlatformRestriction               = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                    IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
                             platformBlocked                 = $False
                             personalDeviceEnrollmentBlocked = $False
                         } -ClientOnly)
@@ -164,8 +162,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                     Credential                        = $Credential
                     Priority                          = 1
-                    PlatformType                      = 'ios'
-                    PlatformRestriction               = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                    IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
                             platformBlocked                 = $False
                             personalDeviceEnrollmentBlocked = $False
                         } -ClientOnly)
@@ -205,8 +202,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                     Credential                        = $Credential
                     Priority                          = 1
-                    PlatformType                      = 'ios'
-                    PlatformRestriction               = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                    IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
                             platformBlocked                 = $False
                             personalDeviceEnrollmentBlocked = $False
                         } -ClientOnly)

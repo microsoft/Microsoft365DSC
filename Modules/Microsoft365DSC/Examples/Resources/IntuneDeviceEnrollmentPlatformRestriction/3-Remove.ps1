@@ -22,13 +22,10 @@ Configuration Example
             Description                       = "This is a single platform restriction policy.";
             DeviceEnrollmentConfigurationType = "singlePlatformRestriction";
             Identity                          = "d59e4c28-b6b2-48ad-a6f0-a2132300b99d_SinglePlatformRestriction";
-            PlatformRestriction               = MSFT_DeviceEnrollmentPlatformRestriction{
-                PlatformBlocked = $True
-                BlockedSkus = @()
-                BlockedManufacturers = @()
+            IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
+                PlatformBlocked                 = $True
                 PersonalDeviceEnrollmentBlocked = $False
             };
-            PlatformType                      = "android";
             Priority                          = 1;
             TenantId                          = $OrganizationName;
         }
