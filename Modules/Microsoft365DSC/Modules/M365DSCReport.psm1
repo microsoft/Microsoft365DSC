@@ -374,6 +374,10 @@ function Get-IconPath
     {
         return 'http://microsoft365dsc.com/Images/Teams.jpg'
     }
+    elseif ($ResourceName.StartsWith('Intune'))
+    {
+        return 'http://microsoft365dsc.com/Images/Intune.jpg'
+    }
     return $null
 }
 
