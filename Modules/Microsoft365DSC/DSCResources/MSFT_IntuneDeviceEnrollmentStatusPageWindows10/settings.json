@@ -10,6 +10,9 @@
                     },
                     {
                         "name": "DeviceManagementServiceConfig.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementApps.Read.All"
                     }
                 ],
                 "update": [
@@ -18,6 +21,9 @@
                     },
                     {
                         "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                    },
+                    {
+                        "name": "DeviceManagementApps.Read.All"
                     }
                 ]
             },
@@ -28,6 +34,9 @@
                     },
                     {
                         "name": "DeviceManagementServiceConfig.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementApps.Read.All"
                     }
                 ],
                 "update": [
@@ -36,6 +45,9 @@
                     },
                     {
                         "name": "DeviceManagementServiceConfig.ReadWrite.All"
+                    },
+                    {
+                        "name": "DeviceManagementApps.Read.All"
                     }
                 ]
             }

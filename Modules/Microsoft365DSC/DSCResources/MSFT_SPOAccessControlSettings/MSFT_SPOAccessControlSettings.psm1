@@ -31,14 +31,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
         $DisallowInfectedFileDownload,
 
         [Parameter()]
@@ -127,8 +119,6 @@ function Get-TargetResource
             IPAddressEnforcement         = $SPOAccessControlSettings.IPAddressEnforcement
             IPAddressAllowList           = $SPOAccessControlSettings.IPAddressAllowList
             IPAddressWACTokenLifetime    = $SPOAccessControlSettings.IPAddressWACTokenLifetime
-            CommentsOnSitePagesDisabled  = $SPOAccessControlSettings.CommentsOnSitePagesDisabled
-            SocialBarOnSitePagesDisabled = $SPOAccessControlSettings.SocialBarOnSitePagesDisabled
             DisallowInfectedFileDownload = $SPOAccessControlSettings.DisallowInfectedFileDownload
             ExternalServicesEnabled      = $SPOAccessControlSettings.ExternalServicesEnabled
             EmailAttestationRequired     = $SPOAccessControlSettings.EmailAttestationRequired
@@ -191,14 +181,6 @@ function Set-TargetResource
         [Parameter()]
         [System.UInt32]
         $IPAddressWACTokenLifetime,
-
-        [Parameter()]
-        [System.Boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
 
         [Parameter()]
         [System.Boolean]
@@ -331,14 +313,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
         $DisallowInfectedFileDownload,
 
         [Parameter()]
@@ -424,8 +398,6 @@ function Test-TargetResource
             'IPAddressEnforcement', `
             'IPAddressAllowList', `
             'IPAddressWACTokenLifetime', `
-            'CommentsOnSitePagesDisabled', `
-            'SocialBarOnSitePagesDisabled', `
             'DisallowInfectedFileDownload', `
             'ExternalServicesEnabled', `
             'EmailAttestationRequired', `

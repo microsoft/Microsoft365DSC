@@ -5,6 +5,9 @@
 * AADAdministrativeUnit
   * Fix issue with deploying/creating a new AU with members and/or adding members to an existing AU
     FIXES [#4404](https://github.com/microsoft/Microsoft365DSC/issues/4404)
+  * Updated examples to include setting Visibility and ScopedRoleMembers
+  * Fix issue with Set-TargetResource was failing to apply when Verbose is set
+    FIXES [#4497](https://github.com/microsoft/Microsoft365DSC/issues/4497)
 * All resources
   * Fix issue where Ensure cannot be left as default 'Present'
 * AADAdministrativeUnit
@@ -17,15 +20,17 @@
 * EXOGroupSettings
   * Fixed schema file
 * EXOMailTips
-  * Replaced the Organization parameter with IsSingleInstance (BREAKING)
+  * [BREAKING CHANGE] Replaced the Organization parameter with IsSingleInstance
     FIXES [#4117](https://github.com/microsoft/Microsoft365DSC/issues/4117)
 * EXOMessageClassification
   * Fixed schema file
 * EXOOMEConfiguration
   * Fixed schema file
 * EXOTransportRule
-  * Change data type of Priority from String to Int (BREAKING)
+  * [BREAKING CHANGE] Change data type of Priority from String to Int
     FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Add missing properties
 * IntuneAppConfigurationPolicy
   * Fix comparison in Test-TargetResource
     FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
@@ -33,10 +38,25 @@
   * Fix group assignment by using the corrected function
     Update-DeviceConfigurationPolicyAssignment from module M365DSCDRGUtil
     FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Added support for specifying SelectedMobileAppNames in addition to SelectedMobileAppIds,
+    which are different for each tenant.
+    FIXES [#4494](https://github.com/microsoft/Microsoft365DSC/issues/4494)
 * M365DSCRuleEvaluation
   * Log both matching and not matching resources and in XML format
 * O365OrgSettings
   * Fixed missing permissions in settings.json
+* SPOAccessControlSettings
+  * [BREAKING CHANGE] Removed CommentsOnSitePagesDisabled parameter, because of
+    duplication in SPOTenantSettings
+    FIXES [#3576](https://github.com/microsoft/Microsoft365DSC/issues/3576)
+  * [BREAKING CHANGE] Moved SocialBarOnSitePagesDisabled parameter to SPOTenantSettings,
+    because it makes more sense there. This has nothing to do with Access Control.
+* SPOTenantSettings
+  * [BREAKING CHANGE] Removed ConditionalAccessPolicy parameter, because of
+    duplication in SPOAccessControlSettings
+    FIXES [#3576](https://github.com/microsoft/Microsoft365DSC/issues/3576)
+  * Added SocialBarOnSitePagesDisabled parameter, moved from SPOAccessControlSettings.
 * TeamsChannelTab
   * Fixed schema file
 * TeamsGroupPolicyAssignment
@@ -47,8 +67,11 @@
   * Fix output of property NormalizationRules as a string to the blueprint
     FIXES [#4428](https://github.com/microsoft/Microsoft365DSC/issues/4428)
   * Fix creation, update and deletion of resource
+* TeamsUpdateManagementPolicy
+  * Adds support for the NewTeamsOnly value or the UseNewTeamsClient property.
+    FIXES [#4496](https://github.com/microsoft/Microsoft365DSC/issues/4496)
 * DEPENDENCIES
-  * Updated DSCParser to version 2.0.0.0.
+  * Updated DSCParser to version 2.0.0.2.
 * MISC
   * Initial release of Get-M365DSCEvaluationRulesForConfiguration
   * M365DSCDRGUtil
@@ -56,9 +79,12 @@
     be found by its Id it tries to search it by display name
     FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
   * M365DSCReport
-    Fix issue when asserting TeamsGroupPolicyAssignment configurations by
-    returning its both mandatory parameters in Get-M365DSCResourceKey
+    Fix issue when asserting resources not covered by current conditions in
+    Get-M365DSCResourceKey by always returning all their mandatory parameters
+    FIXES [#4502](https://github.com/microsoft/Microsoft365DSC/issues/4502)
   * Fix broken links to integration tests in README.md
+  * Changing logic to retrieve DSC Resources properties not to use DSC
+    specific cmdlets.
 
 # 1.24.313.1
 

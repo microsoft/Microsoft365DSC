@@ -14949,6 +14949,11 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "allowdatagramprocessingonwinserver",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
                                "Name":  "allowemailscanning",
                                "Option":  "Write"
                            },
@@ -14970,6 +14975,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "allowioavprotection",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "allownetworkprotectiondownlevel",
                                "Option":  "Write"
                            },
                            {
@@ -15025,6 +15035,16 @@
                            {
                                "CIMType":  "String",
                                "Name":  "disablecatchupquickscan",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "disablednsovertcpparsing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "disablehttpparsing",
                                "Option":  "Write"
                            },
                            {
@@ -27753,6 +27773,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "SelectedMobileAppNames",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "Boolean",
                                "Name":  "ShowInstallationProgress",
                                "Option":  "Write"
@@ -34654,16 +34679,6 @@
                            },
                            {
                                "CIMType":  "boolean",
-                               "Name":  "CommentsOnSitePagesDisabled",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "boolean",
-                               "Name":  "SocialBarOnSitePagesDisabled",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "boolean",
                                "Name":  "DisallowInfectedFileDownload",
                                "Option":  "Write"
                            },
@@ -36378,13 +36393,13 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "string",
-                               "Name":  "ConditionalAccessPolicy",
+                               "CIMType":  "string[]",
+                               "Name":  "DisabledWebPartIds",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "string[]",
-                               "Name":  "DisabledWebPartIds",
+                               "CIMType":  "boolean",
+                               "Name":  "SocialBarOnSitePagesDisabled",
                                "Option":  "Write"
                            },
                            {

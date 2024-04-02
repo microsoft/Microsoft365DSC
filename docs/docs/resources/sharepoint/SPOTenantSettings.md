@@ -23,8 +23,8 @@
 | **HideDefaultThemes** | Write | Boolean | Defines if the default themes are visible or hidden | |
 | **HideSyncButtonOnTeamSite** | Write | Boolean | To enable or disable Sync button on Team sites | |
 | **MarkNewFilesSensitiveByDefault** | Write | String | Allow or block external sharing until at least one Office DLP policy scans the content of the file. | `AllowExternalSharing`, `BlockExternalSharing` |
-| **ConditionalAccessPolicy** | Write | String | Allow or Block Conditional Access Policy on the SharePoint Tenant | `AllowFullAccess`, `AllowLimitedAccess`, `BlockAccess` |
 | **DisabledWebPartIds** | Write | StringArray[] | Provide GUID for the Web Parts that are to be disabled on the Sharepoint Site | |
+| **SocialBarOnSitePagesDisabled** | Write | Boolean | Disables or enables the Social Bar. It will give users the ability to like a page, see the number of views, likes, and comments on a page, and see the people who have liked a page. | |
 | **CommentsOnSitePagesDisabled** | Write | Boolean | Set to false to enable a comment section on all site pages, users who have access to the pages can leave comments. Set to true to disable this feature. | |
 | **Ensure** | Write | String | Only accepted value is 'Present'. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the account to authenticate with. | |
@@ -115,25 +115,27 @@ Configuration Example
     {
         SPOTenantSettings 'ConfigureTenantSettings'
         {
-            IsSingleInstance                              = "Yes"
+            IsSingleInstance                              = 'Yes'
             MinCompatibilityLevel                         = 16
             MaxCompatibilityLevel                         = 16
             SearchResolveExactEmailOrUPN                  = $false
             OfficeClientADALDisabled                      = $false
             LegacyAuthProtocolsEnabled                    = $true
-            SignInAccelerationDomain                      = ""
+            SignInAccelerationDomain                      = ''
             UsePersistentCookiesForExplorerView           = $false
             UserVoiceForFeedbackEnabled                   = $true
             PublicCdnEnabled                              = $false
-            PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+            PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
             UseFindPeopleInPeoplePicker                   = $false
             NotificationsInSharePointEnabled              = $true
             OwnerAnonymousNotification                    = $true
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
             FilePickerExternalImageSearchEnabled          = $true
             HideDefaultThemes                             = $false
-            MarkNewFilesSensitiveByDefault                = "AllowExternalSharing"
-            Ensure                                        = "Present"
+            MarkNewFilesSensitiveByDefault                = 'AllowExternalSharing'
+            CommentsOnSitePagesDisabled                   = $false
+            SocialBarOnSitePagesDisabled                  = $false
+            Ensure                                        = 'Present'
             Credential                                    = $Credscredential
         }
     }
