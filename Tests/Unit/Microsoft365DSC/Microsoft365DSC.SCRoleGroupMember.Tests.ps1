@@ -150,6 +150,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'Configuration is correct, nothing to do' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Name        = 'Contoso Role Group'
+                    Members     = 'Group1', 'User1', 'User2'
+                    Description = 'This is the Contoso Role Group'
+                    Ensure      = 'Present'
+                    Credential  = $Credential
+                }
+
+                Mock -CommandName Get-RoleGroup -MockWith {
+                    return @{
+                        Name        = 'Contoso Role Group'
+                        Members     = 'Group1', 'User1', 'User2'
+                        Description = 'This is the Contoso Role Group'
+                    }
+                }
+
+                Mock -CommandName Get-RoleGroupMember -MockWith {
+                    return @{
+                        Name = @('Group1','User1','User2')
+                    }
+                }
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
