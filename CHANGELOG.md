@@ -46,6 +46,8 @@
   * Log both matching and not matching resources and in XML format
 * O365OrgSettings
   * Fixed missing permissions in settings.json
+* SCRoleGroupMember
+  * Initial release
 * SPOAccessControlSettings
   * [BREAKING CHANGE] Removed CommentsOnSitePagesDisabled parameter, because of
     duplication in SPOTenantSettings
