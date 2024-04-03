@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.16.0.
+
 # 1.24.403.1
 
 * AADAdministrativeUnit
