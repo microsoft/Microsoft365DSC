@@ -99,6 +99,10 @@ function Get-TargetResource
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableAIPIntegration,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -190,6 +194,7 @@ function Get-TargetResource
             DisabledWebPartIds                            = [String[]]$SPOTenantSettings.DisabledWebPartIds
             SocialBarOnSitePagesDisabled                  = $SPOTenantSettings.SocialBarOnSitePagesDisabled
             CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
+            EnableAIPIntegration                          = $SPOTenantSettings.EnableAIPIntegration
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -312,6 +317,10 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAIPIntegration,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -484,6 +493,10 @@ function Test-TargetResource
         $CommentsOnSitePagesDisabled,
 
         [Parameter()]
+        [System.Boolean]
+        $EnableAIPIntegration,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -561,7 +574,8 @@ function Test-TargetResource
             'MarkNewFilesSensitiveByDefault', `
             'DisabledWebPartIds', `
             'SocialBarOnSitePagesDisabled', `
-            'CommentsOnSitePagesDisabled'
+            'CommentsOnSitePagesDisabled', `
+            'EnableAIPIntegration'
     )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
