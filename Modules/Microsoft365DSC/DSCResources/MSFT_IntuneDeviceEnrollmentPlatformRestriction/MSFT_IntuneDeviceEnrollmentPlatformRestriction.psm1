@@ -8,7 +8,7 @@ function Get-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -113,11 +113,12 @@ function Get-TargetResource
     $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
     foreach ($key in $keys)
     {
-        if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*')
+        if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*' -and $key -like "*Restriction")
         {
             if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
             {
                 $PlatformType = $key.replace('Restriction', '')
+                break
             }
         }
     }
@@ -208,7 +209,7 @@ function Set-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
@@ -378,7 +379,7 @@ function Set-TargetResource
                 }
             }
             Update-DeviceConfigurationPolicyAssignment `
-                -DeviceConfigurationPolicyId $currentInstance.Identity `
+                -DeviceConfigurationPolicyId $policy.Id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceEnrollmentConfigurations' `
                 -RootIdentifier 'enrollmentConfigurationAssignments'
@@ -482,7 +483,7 @@ function Test-TargetResource
         [System.String]
         $Identity,
 
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 

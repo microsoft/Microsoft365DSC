@@ -24,7 +24,7 @@ class MSFT_DeviceEnrollmentPlatformRestriction
 class MSFT_IntuneDeviceEnrollmentPlatformRestriction : OMI_BaseResource
 {
     [Key, Description("Identity of the device enrollment platform restriction.")] String Identity;
-    [Write, Description("Display name of the device enrollment platform restriction.")] String DisplayName;
+    [Key, Description("Display name of the device enrollment platform restriction.")] String DisplayName;
     [Write, Description("Description of the device enrollment platform restriction.")] String Description;
     [Write, Description("Android for work restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String AndroidForWorkRestriction;
     [Write, Description("Android restrictions based on platform, platform operating system version, and device ownership."), EmbeddedInstance("MSFT_DeviceEnrollmentPlatformRestriction")] String AndroidRestriction;
