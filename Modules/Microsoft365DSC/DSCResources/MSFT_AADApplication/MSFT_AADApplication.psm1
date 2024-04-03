@@ -800,6 +800,7 @@ function Test-TargetResource
     }
     else
     {
+        $driftedParams = @{}
         if ($Permissions.Length -gt 0)
         {
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App, but permissions were specified for desired state'

@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.403.1
 
 * AADAdministrativeUnit
   * Fix issue with deploying/creating a new AU with members and/or adding members to an existing AU
@@ -75,7 +75,7 @@
   * Adds support for the NewTeamsOnly value or the UseNewTeamsClient property.
     FIXES [#4496](https://github.com/microsoft/Microsoft365DSC/issues/4496)
 * DEPENDENCIES
-  * Updated DSCParser to version 2.0.0.2.
+  * Updated DSCParser to version 2.0.0.3.
 * MISC
   * Initial release of Get-M365DSCEvaluationRulesForConfiguration
   * M365DSCDRGUtil
