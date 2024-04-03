@@ -57,6 +57,7 @@
     duplication in SPOAccessControlSettings
     FIXES [#3576](https://github.com/microsoft/Microsoft365DSC/issues/3576)
   * Added SocialBarOnSitePagesDisabled parameter, moved from SPOAccessControlSettings.
+  * Added EnableAIPIntegration.
 * TeamsChannelTab
   * Fixed schema file
 * TeamsGroupPolicyAssignment
