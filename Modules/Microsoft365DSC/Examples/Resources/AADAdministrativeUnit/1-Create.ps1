@@ -13,7 +13,7 @@ Configuration Example
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
-
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'
@@ -23,7 +23,17 @@ Configuration Example
             MembershipRule                = "(user.country -eq `"Canada`")"
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
-            Ensure                        = 'Present'
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership
+                {
+                    RoleName       = 'User Administrator'
+                    RoleMemberInfo = MSFT_MicrosoftGraphMember
+                    {
+                        Identity = "admin@$Domain"
+                        Type     = "User"
+                    }
+                }
+            )
             Credential                    = $Credscredential
         }
     }

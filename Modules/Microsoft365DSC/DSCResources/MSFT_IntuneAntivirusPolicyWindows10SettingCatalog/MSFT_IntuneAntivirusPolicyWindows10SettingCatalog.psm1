@@ -34,6 +34,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $allowdatagramprocessingonwinserver,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $allowemailscanning,
 
         [Parameter()]
@@ -55,6 +60,11 @@ function Get-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $allowioavprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $allownetworkprotectiondownlevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -101,6 +111,7 @@ function Get-TargetResource
         [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -124,6 +135,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $disablednsovertcpparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disableenhancednotifications,
 
         [Parameter()]
@@ -135,6 +151,11 @@ function Get-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehttpparsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -373,7 +394,7 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction SilentlyContinue
+        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ExpandProperty settings -ErrorAction SilentlyContinue
 
         if ($null -eq $policy)
         {
@@ -385,12 +406,19 @@ function Get-TargetResource
                 Write-Verbose -Message "No policy with name {$DisplayName} was found."
                 return $nullResult
             }
+
+            if(([array]$policy).count -gt 1)
+            {
+                throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+            }
+
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $policy.id -ExpandProperty settings -ErrorAction SilentlyContinue
+
         }
 
         #Retrieve policy specific settings
-        [array]$settings = Get-MgBetaDeviceManagementConfigurationPolicySetting `
-            -DeviceManagementConfigurationPolicyId $policy.Id `
-            -ErrorAction Stop
+        $Identity = $policy.id
+        [array]$settings = $policy.settings
 
         $returnHashtable = @{}
         $returnHashtable.Add('Identity', $policy.id)
@@ -442,19 +470,14 @@ function Get-TargetResource
 
         }
         $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $returnAssignments)
+        $graphAssignments = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
+        if ($graphAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                                        -IncludeDeviceFilter:$true `
+                                        -Assignments ($graphAssignments)
         }
-        $returnHashtable.Add('Assignments', $assignmentResult)
+        $returnHashtable.Add('Assignments', $returnAssignments)
 
         Write-Verbose -Message "Found Endpoint Protection Policy {$($policy.name)}"
 
@@ -476,7 +499,8 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
-        return $nullResult
+            $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
+            return $nullResult
     }
 }
 
@@ -515,6 +539,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $allowdatagramprocessingonwinserver,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $allowemailscanning,
 
         [Parameter()]
@@ -536,6 +565,11 @@ function Set-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $allowioavprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $allownetworkprotectiondownlevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -582,6 +616,7 @@ function Set-TargetResource
         [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -605,6 +640,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $disablednsovertcpparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disableenhancednotifications,
 
         [Parameter()]
@@ -616,6 +656,11 @@ function Set-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehttpparsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -951,6 +996,11 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $allowdatagramprocessingonwinserver,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $allowemailscanning,
 
         [Parameter()]
@@ -972,6 +1022,11 @@ function Test-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $allowioavprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $allownetworkprotectiondownlevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -1018,6 +1073,7 @@ function Test-TargetResource
         [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -1041,6 +1097,11 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $disablednsovertcpparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disableenhancednotifications,
 
         [Parameter()]
@@ -1052,6 +1113,11 @@ function Test-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehttpparsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -1265,6 +1331,7 @@ function Test-TargetResource
         [Switch]
         $ManagedIdentity
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -1279,6 +1346,11 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Endpoint Protection Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -1286,58 +1358,22 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
     $ValuesToCheck.Remove('Identity') | Out-Null
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
-    if ([Array]$Assignments.count -ne $CurrentValues.Assignments.count)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
-        Write-Verbose -Message "Configuration drift:Number of assignments does not match: Source=$([Array]$Assignments.count) Target=$($CurrentValues.Assignments.count)"
         $testResult = $false
     }
+
+
+    #region Assignments
     if ($testResult)
     {
-        foreach ($assignment in $CurrentValues.Assignments)
-        {
-            #GroupId Assignment
-            if (-not [String]::IsNullOrEmpty($assignment.groupId))
-            {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
-                if (-not $source)
-                {
-                    Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                    $testResult = $false
-                    break
-                }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-            }
-            #AllDevices/AllUsers assignment
-            else
-            {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
-                if (-not $source)
-                {
-                    Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                    $testResult = $false
-                    break
-                }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-            }
-
-            if (-not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-        }
-
+        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
+        $target = $CurrentValues.Assignments
+        $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+        $ValuesToCheck.Remove('Assignments') | Out-Null
     }
-    $ValuesToCheck.Remove('Assignments') | Out-Null
+    #endregion
 
     if ($testResult)
     {
@@ -1451,6 +1487,11 @@ function Export-TargetResource
             }
 
             $Results = Get-TargetResource @params
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
 
             if ($Results.Ensure -eq 'Present')
             {
@@ -1656,7 +1697,7 @@ function Update-IntuneDeviceConfigurationPolicy
         }
         $body = $policy | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
-        Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body $body -ErrorAction Stop
+        Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body $body -ErrorAction Stop 4> Out-Null
 
     }
     catch

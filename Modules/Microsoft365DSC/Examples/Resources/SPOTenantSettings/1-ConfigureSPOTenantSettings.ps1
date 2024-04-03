@@ -16,25 +16,27 @@ Configuration Example
     {
         SPOTenantSettings 'ConfigureTenantSettings'
         {
-            IsSingleInstance                              = "Yes"
+            IsSingleInstance                              = 'Yes'
             MinCompatibilityLevel                         = 16
             MaxCompatibilityLevel                         = 16
             SearchResolveExactEmailOrUPN                  = $false
             OfficeClientADALDisabled                      = $false
             LegacyAuthProtocolsEnabled                    = $true
-            SignInAccelerationDomain                      = ""
+            SignInAccelerationDomain                      = ''
             UsePersistentCookiesForExplorerView           = $false
             UserVoiceForFeedbackEnabled                   = $true
             PublicCdnEnabled                              = $false
-            PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+            PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
             UseFindPeopleInPeoplePicker                   = $false
             NotificationsInSharePointEnabled              = $true
             OwnerAnonymousNotification                    = $true
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
             FilePickerExternalImageSearchEnabled          = $true
             HideDefaultThemes                             = $false
-            MarkNewFilesSensitiveByDefault                = "AllowExternalSharing"
-            Ensure                                        = "Present"
+            MarkNewFilesSensitiveByDefault                = 'AllowExternalSharing'
+            CommentsOnSitePagesDisabled                   = $false
+            SocialBarOnSitePagesDisabled                  = $false
+            Ensure                                        = 'Present'
             Credential                                    = $Credscredential
         }
     }

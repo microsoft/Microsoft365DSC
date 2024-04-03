@@ -40,7 +40,7 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Custom Controls assigned to the grant property of this policy.")] String CustomAuthenticationFactors[];
     [Write, Description("Sign in frequency unit (days/hours) to be interpreted by the policy."), ValueMap{"Days","Hours",""}, Values{"Days","Hours",""}] String SignInFrequencyType;
     [Write, Description("Specifies, whether sign-in frequency is enforced by the Policy.")] Boolean SignInFrequencyIsEnabled;
-    [Write, Description("Sign in frequency interval. Possible values are: timeBased, everyTime and unknownFutureValue."), ValueMap{"timeBased","everyTime","unknownFutureValue"}, Values{"timeBased","everyTime","unknownFutureValue"}]  String SignInFrequencyInterval;
+    [Write, Description("Sign in frequency interval. Possible values are: timeBased, everyTime and unknownFutureValue."), ValueMap{"timeBased","everyTime","unknownFutureValue"}, Values{"timeBased","everyTime","unknownFutureValue"}] String SignInFrequencyInterval;
     [Write, Description("Specifies, whether Browser Persistence is controlled by the Policy.")] Boolean PersistentBrowserIsEnabled;
     [Write, Description("Specifies, what Browser Persistence control is enforced by the Policy."), ValueMap{"Always","Never",""}, Values{"Always","Never",""}] String PersistentBrowserMode;
     [Write, Description("Name of the associated authentication strength policy.")] String AuthenticationStrength;

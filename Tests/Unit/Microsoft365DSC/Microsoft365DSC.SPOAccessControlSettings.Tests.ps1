@@ -48,8 +48,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IPAddressEnforcement         = $false
                     #IPAddressAllowList           = "" #would generate an error while writing this resource
                     IPAddressWACTokenLifetime    = 15
-                    CommentsOnSitePagesDisabled  = $false
-                    SocialBarOnSitePagesDisabled = $false
                     DisallowInfectedFileDownload = $false
                     ExternalServicesEnabled      = $true
                     EmailAttestationRequired     = $false
@@ -63,8 +61,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IPAddressEnforcement         = $false
                         #IPAddressAllowList           = "" #would generate an error while writing this resource
                         IPAddressWACTokenLifetime    = 15
-                        CommentsOnSitePagesDisabled  = $false
-                        SocialBarOnSitePagesDisabled = $false
                         DisallowInfectedFileDownload = $false
                         ExternalServicesEnabled      = $true
                         EmailAttestationRequired     = $false
@@ -79,8 +75,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IPAddressEnforcement         = $false
                         #IPAddressAllowList           = "" #would generate an error while writing this resource
                         IPAddressWACTokenLifetime    = 20
-                        CommentsOnSitePagesDisabled  = $true
-                        SocialBarOnSitePagesDisabled = $false
                         DisallowInfectedFileDownload = $false
                         ExternalServicesEnabled      = $true
                         EmailAttestationRequired     = $false
@@ -113,8 +107,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         IPAddressEnforcement         = $false
                         #IPAddressAllowList           = "" #would generate an error while writing this resource
                         IPAddressWACTokenLifetime    = 15
-                        CommentsOnSitePagesDisabled  = $false
-                        SocialBarOnSitePagesDisabled = $false
                         DisallowInfectedFileDownload = $false
                         ExternalServicesEnabled      = $true
                         EmailAttestationRequired     = $false

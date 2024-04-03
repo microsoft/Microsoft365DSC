@@ -351,7 +351,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Identity') | Out-Null
     $ValuesToCheck.Remove('EnableShiftPresence') | Out-Null
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false

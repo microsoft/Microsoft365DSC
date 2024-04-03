@@ -3368,25 +3368,40 @@ function Get-M365DSCExportContentForResource
             $ConnectionMode -eq 'ManagedIdentity')
     {
         $OrganizationName = $Results.TenantId
+    }    
+    elseif ($null -ne $Credential.UserName)
+    {
+        $OrganizationName = $Credential.UserName.Split('@')[1]
     }
     else
     {
-        $OrganizationName = $Credential.UserName.Split('@')[1]
+        $OrganizationName = ''
     }
 
     # Ensure the string properties are properly formatted;
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
 
-    if ($Script:AllM365DscResources.Count -eq 0)
+    $primaryKey = ''
+    $ModuleFullName = "MSFT_" + $ResourceName
+    $moduleInfo = Get-Command -Module $ModuleFullName -ErrorAction SilentlyContinue
+    if ($null -eq $moduleInfo)
     {
-        $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
+        if ($Script:AllM365DscResources.Count -eq 0)
+        {
+            $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
+        }
+
+        $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
+        $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
+            Select-Object -ExpandProperty Name
+    }
+    else
+    {
+        $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
+        $Keys = $cmdInfo.Parameters.Keys
     }
 
-    $primaryKey = ''
-    $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
-    $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
-        Select-Object -ExpandProperty Name
     if ($Keys.Contains('IsSingleInstance'))
     {
         $primaryKey = ''
@@ -4435,6 +4450,75 @@ function Remove-M365DSCAuthenticationParameter
 
 <#
 .Description
+This function clears the authentication parameters from the hashtable.
+
+.Functionality
+Internal
+#>
+function Clear-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    $BoundParameters.Credential = $null
+    $BoundParameters.ApplicationId = $null
+    $BoundParameters.ApplicationSecret = $null
+    $BoundParameters.TenantId = $null
+    $BoundParameters.CertificatePassword = $null
+    $BoundParameters.CertificatePath = $null
+    $BoundParameters.CertificateThumbprint = $null
+    $BoundParameters.ManagedIdentity = $null
+
+    return $BoundParameters
+}
+<#
+.Description
+This function validate if the authentication parameters from the hashtable have been cleared.
+
+.Functionality
+Internal
+#>
+function Test-M365DSCAuthenticationParameter
+{
+    [CmdletBinding()]
+    [OutputType([System.Boolean])]
+    param(
+        [Parameter(Mandatory = $true)]
+        [System.Collections.Hashtable]
+        $BoundParameters
+    )
+
+    $authenticationParameterList = @(
+        'Credential'
+        'ApplicationId'
+        'ApplicationSecret'
+        'TenantId'
+        'CertificatePassword'
+        'CertificatePath'
+        'CertificateThumbprint'
+        'ManagedIdentity'
+    )
+
+    $containsAuthenticationParameter = $false
+    foreach ($parameter in $authenticationParameterList)
+    {
+        if ($null -ne $BoundParameters.$parameter)
+        {
+            $containsAuthenticationParameter = $true
+            break
+        }
+    }
+
+    return $containsAuthenticationParameter
+}
+
+<#
+.Description
 This function analyzes an M365DSC configuration file and returns information about potential issues (e.g., duplicate primary keys).
 
 .Example
@@ -4622,6 +4706,7 @@ function Sync-M365DSCParameter
 
 Export-ModuleMember -Function @(
     'Assert-M365DSCBlueprint',
+    'Clear-M365DSCAuthenticationParameter',
     'Confirm-ImportedCmdletIsAvailable',
     'Confirm-M365DSCDependencies',
     'Convert-M365DscHashtableToString',
@@ -4655,6 +4740,7 @@ Export-ModuleMember -Function @(
     'Set-EXOSafeAttachmentRule',
     'Set-EXOSafeLinksRule',
     'Split-ArrayByParts',
+    'Test-M365DSCAuthenticationParameter'
     'Test-M365DSCDependenciesForNewVersions',
     'Test-M365DSCModuleValidity',
     'Test-M365DSCParameterState',

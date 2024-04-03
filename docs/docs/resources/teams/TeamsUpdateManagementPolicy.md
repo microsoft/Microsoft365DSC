@@ -12,7 +12,7 @@
 | **UpdateDayOfWeek** | Write | UInt32 | Determines the day of week to perform the updates. Value shoud be between 0 and 6. | |
 | **UpdateTime** | Write | String | Determines the time of day to perform the updates. Must be a valid HH:MM format string with leading 0. For instance 08:30. | |
 | **UpdateTimeOfDay** | Write | String | Determines the time of day to perform the updates. Accepts a DateTime as string. Only the time will be considered. | |
-| **UseNewTeamsClient** | Write | String | Determines whether or not users will use the new Teams client. | `NewTeamsAsDefault`, `UserChoice`, `MicrosoftChoice`, `AdminDisabled` |
+| **UseNewTeamsClient** | Write | String | Determines whether or not users will use the new Teams client. | `NewTeamsAsDefault`, `UserChoice`, `MicrosoftChoice`, `AdminDisabled`, `NewTeamsOnly` |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Teams Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |

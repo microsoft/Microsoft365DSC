@@ -40,14 +40,18 @@ function Format-M365DSCString
         }
     )
 
-    # Cache the DSC resource to a script-scope variable.
-    # This avoids fetching the definition multiple times for the same resource, increasing overall speed.
-    $ResourcePath = Join-Path -Path $PSScriptRoot `
-            -ChildPath "../../DSCResources/MSFT_$ResourceName/MSFT_$ResourceName.psm1" `
-            -Resolve
+    $commandInfo = Get-Command -Module "MSFT_$ResourceName" -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
+    if ($null -eq $commandInfo)
+    {
+        # Cache the DSC resource to a script-scope variable.
+        # This avoids fetching the definition multiple times for the same resource, increasing overall speed.
+        $ResourcePath = Join-Path -Path $PSScriptRoot `
+                -ChildPath "../../DSCResources/MSFT_$ResourceName/MSFT_$ResourceName.psm1" `
+                -Resolve
 
-    Import-Module $ResourcePath
-    $commandInfo = Get-Command -Module "MSFT_$ResourceName" | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
+        Import-Module $ResourcePath
+        $commandInfo = Get-Command -Module "MSFT_$ResourceName" | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
+    }
 
     # For each invalid character, look for an instance in the string,
     # if an instance is found,
