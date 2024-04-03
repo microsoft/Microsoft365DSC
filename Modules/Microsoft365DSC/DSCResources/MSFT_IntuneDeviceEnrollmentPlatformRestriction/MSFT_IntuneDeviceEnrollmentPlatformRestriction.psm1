@@ -4,7 +4,7 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -109,6 +109,20 @@ function Get-TargetResource
     $nullResult = $PSBoundParameters
     $nullResult.Ensure = 'Absent'
 
+    $PlatformType = ''
+    $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
+    foreach ($key in $keys)
+    {
+        if ($null -ne $PSBoundParameters.$key -and $PSBoundParameters.$key.getType().Name -like '*cimInstance*' -and $key -like "*Restriction")
+        {
+            if ($DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' )
+            {
+                $PlatformType = $key.replace('Restriction', '')
+                break
+            }
+        }
+    }
+
     try
     {
         try {
@@ -120,17 +134,21 @@ function Get-TargetResource
 
         if ($null -eq $config)
         {
-            Write-Verbose -Message "No Device Enrollment Platform Restriction {$Identity} was found. Trying to retrieve instance by name {$DisplayName}"
+            Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with Id {$Identity}"
             $config = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter "DisplayName eq '$DisplayName'" `
-                -ErrorAction silentlyContinue
+                -ErrorAction SilentlyContinue | Where-Object -FilterScript {
+                    $_.AdditionalProperties.'@odata.type' -like "#microsoft.graph.deviceEnrollmentPlatformRestriction*Configuration" -and
+                    $(if ($null -ne $_.AdditionalProperties.platformType) { $_.AdditionalProperties.platformType -eq $PlatformType } else { $true })
+                }
+
             if ($null -eq $config)
             {
-                Write-Verbose -Message "No instances found by name {$DisplayName}"
+                Write-Verbose -Message "Could not find an Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
                 return $nullResult
             }
         }
 
-        Write-Verbose -Message "Found Device Enrollment Platform Restriction with Name {$($config.DisplayName)}"
+        Write-Verbose -Message "Found Intune Device Enrollment Platform Restriction with Name {$($config.DisplayName)}"
         $results = @{
             Identity                          = $config.Id
             DisplayName                       = $config.DisplayName
@@ -143,7 +161,7 @@ function Get-TargetResource
             TenantId                          = $TenantId
             ApplicationSecret                 = $ApplicationSecret
             CertificateThumbprint             = $CertificateThumbprint
-            Managedidentity                   = $ManagedIdentity.IsPresent
+            ManagedIdentity                   = $ManagedIdentity.IsPresent
         }
 
         $results += Get-DevicePlatformRestrictionSetting -Properties $config.AdditionalProperties
@@ -153,13 +171,14 @@ function Get-TargetResource
             $results.Remove('WindowsMobileRestriction') | Out-Null
         }
 
-        $AssignmentsValues = Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
+        $assignmentsValues = Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        foreach ($assignmentEntry in $assignmentsValues)
         {
             $assignmentValue = @{
                 dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                                                                 { $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString() })
                 deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
                 groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
             }
@@ -186,7 +205,7 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -288,7 +307,11 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentCategory = Get-TargetResource @PSBoundParameters
+    if ($Ensure -eq 'Absent' -and $Identity -like '*_DefaultPlatformRestrictions') {
+        throw 'Cannot delete the default platform restriction policy.'
+    }
+
+    $currentInstance = Get-TargetResource @PSBoundParameters
     $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
     $PSBoundParameters.Remove('Identity') | Out-Null
     $PriorityPresent = $false
@@ -298,9 +321,9 @@ function Set-TargetResource
         $PSBoundParameters.Remove('Priority') | Out-Null
     }
 
-    if ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Absent')
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Device Enrollment Platform Restriction {$DisplayName}"
+        Write-Verbose -Message "Creating an Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
 
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
@@ -309,12 +332,11 @@ function Set-TargetResource
             if ($WindowsMobileRestriction.platformBlocked -eq $false)
             {
                 Write-Verbose -Message 'Windows Mobile platform is deprecated and cannot be unblocked, reverting back to blocked'
-
                 $WindowsMobileRestriction.platformBlocked = $true
             }
         }
 
-        $keys = (([Hashtable]$PSBoundParameters).clone()).Keys
+        $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
         foreach ($key in $keys)
         {
             $keyName = $key.substring(0, 1).toLower() + $key.substring(1, $key.length - 1)
@@ -345,18 +367,22 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
             -BodyParameter ([hashtable]$PSBoundParameters)
 
-        #Assignments from DefaultPolicy are not editable and will raise an alert
+        # Assignments from DefaultPolicy are not editable and will raise an alert
         if ($policy.Id -notlike '*_DefaultPlatformRestrictions')
         {
-            if ($null -ne $Assignments -and $Assignments -ne @())
+            $assignmentsHash = @()
+            if ($null -ne $Assignments -and $Assignments.Length -gt 0)
             {
-                $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
-
-                Update-DeviceConfigurationPolicyAssignment `
-                    -DeviceConfigurationPolicyId $policy.Id `
-                    -Targets $assignmentsHash `
-                    -Repository 'deviceManagement/deviceEnrollmentConfigurations'
+                foreach ($assignment in $Assignments)
+                {
+                    $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
+                }
             }
+            Update-DeviceConfigurationPolicyAssignment `
+                -DeviceConfigurationPolicyId $policy.Id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceEnrollmentConfigurations' `
+                -RootIdentifier 'enrollmentConfigurationAssignments'
 
             if ($PriorityPresent -and $Priority -ne $policy.Priority)
             {
@@ -368,9 +394,9 @@ function Set-TargetResource
             }
         }
     }
-    elseif ($Ensure -eq 'Present' -and $currentCategory.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Device Enrollment Platform Restriction {$DisplayName}"
+        Write-Verbose -Message "Updating the Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
 
         $PSBoundParameters.Remove('Assignments') | Out-Null
 
@@ -379,12 +405,11 @@ function Set-TargetResource
             if ($WindowsMobileRestriction.platformBlocked -eq $false)
             {
                 Write-Verbose -Message 'Windows Mobile platform is deprecated and cannot be unblocked, reverting back to blocked'
-
                 $WindowsMobileRestriction.platformBlocked = $true
             }
         }
 
-        $keys = (([Hashtable]$PSBoundParameters).clone()).Keys
+        $keys = (([Hashtable]$PSBoundParameters).Clone()).Keys
         foreach ($key in $keys)
         {
             $keyName = $key.substring(0, 1).toLower() + $key.substring(1, $key.length - 1)
@@ -407,27 +432,33 @@ function Set-TargetResource
             $policyType = '#microsoft.graph.deviceEnrollmentPlatformRestrictionsConfiguration'
         }
         $PSBoundParameters.add('@odata.type', $policyType)
+
         #Write-Verbose ($PSBoundParameters | ConvertTo-Json -Depth 20)
+
         Update-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-            -BodyParameter ([hashtable]$PSBoundParameters) `
-            -DeviceEnrollmentConfigurationId $currentCategory.Identity
+            -DeviceEnrollmentConfigurationId $currentInstance.Identity `
+            -BodyParameter ([hashtable]$PSBoundParameters)
 
-        #Assignments from DefaultPolicy are not editable and will raise an alert
-        if ($currentCategory.Identity -notlike '*_DefaultPlatformRestrictions')
+        # Assignments from DefaultPolicy are not editable and will raise an alert
+        if ($currentInstance.Identity -notlike '*_DefaultPlatformRestrictions')
         {
-            if ($null -ne $Assignments -and $Assignments -ne @())
+            $assignmentsHash = @()
+            if ($null -ne $Assignments -and $Assignments.Length -gt 0)
             {
-                $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
-
-                Update-DeviceConfigurationPolicyAssignment `
-                    -DeviceConfigurationPolicyId $currentCategory.Identity `
-                    -Targets $assignmentsHash `
-                    -Repository 'deviceManagement/deviceEnrollmentConfigurations'
+                foreach ($assignment in $Assignments)
+                {
+                    $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
+                }
             }
+            Update-DeviceConfigurationPolicyAssignment `
+                -DeviceConfigurationPolicyId $currentInstance.Identity `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/deviceEnrollmentConfigurations' `
+                -RootIdentifier 'enrollmentConfigurationAssignments'
 
-            if ($PriorityPresent -and $Priority -ne $currentCategory.Priority)
+            if ($PriorityPresent -and $Priority -ne $currentInstance.Priority)
             {
-                $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $currentCategory.Identity
+                $Uri = "/beta/deviceManagement/deviceEnrollmentConfigurations/{0}/setPriority" -f $currentInstance.Identity
                 $Body = @{
                     priority = $Priority
                 }
@@ -435,11 +466,10 @@ function Set-TargetResource
             }
         }
     }
-    elseif ($Ensure -eq 'Absent' -and $currentCategory.Ensure -eq 'Present')
+    elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Device Enrollment Platform Restriction {$DisplayName}"
-
-        Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $currentCategory.Identity
+        Write-Verbose -Message "Removing the Intune Device Enrollment Platform Restriction with DisplayName {$DisplayName}"
+        Remove-MgBetaDeviceManagementDeviceEnrollmentConfiguration -DeviceEnrollmentConfigurationId $currentInstance.Identity
     }
 }
 
@@ -449,7 +479,7 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
+        [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
 
@@ -546,10 +576,10 @@ function Test-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    Write-Verbose -Message "Testing configuration of Device Enrollment Platform Restriction {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Device Enrollment Platform Restriction with Id {$Identity} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     if ($CurrentValues.Ensure -ne $Ensure)
     {
@@ -597,6 +627,7 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+
     #Compare basic parameters
     if ($testResult)
     {
@@ -607,9 +638,9 @@ function Test-TargetResource
             -ValuesToCheck $ValuesToCheck.Keys
     }
 
-    Write-Verbose -Message "Test-TargetResource returned $TestResult"
+    Write-Verbose -Message "Test-TargetResource returned $testResult"
 
-    return $TestResult
+    return $testResult
 }
 
 function Export-TargetResource
@@ -663,8 +694,10 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -All:$true -Filter $Filter -ErrorAction Stop `
-        | Where-Object -FilterScript { $_.AdditionalProperties.'@odata.type' -like '#microsoft.graph.deviceEnrollmentPlatform*Configuration' }
+        [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
+            -All `
+            -Filter "deviceEnrollmentConfigurationType eq 'singlePlatformRestriction'" `
+            -ErrorAction Stop
 
         $i = 1
         $dscContent = ''
@@ -688,7 +721,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
             }
             $Results = Get-TargetResource @Params
 
@@ -817,7 +850,6 @@ function Export-TargetResource
                 -Results $Results `
                 -Credential $Credential
 
-
             if ($null -ne $Results.Assignments)
             {
                 $isCIMArray = $false
@@ -842,6 +874,7 @@ function Export-TargetResource
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsHomeSkuRestriction'
             }
+
             if ($null -ne $Results.WindowsMobileRestriction)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'WindowsMobileRestriction'
