@@ -27600,7 +27600,7 @@
                            {
                                "CIMType":  "String",
                                "Name":  "Identity",
-                               "Option":  "Write"
+                               "Option":  "Key"
                            },
                            {
                                "CIMType":  "String",
@@ -27613,8 +27613,13 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
-                               "Name":  "DeviceEnrollmentConfigurationType",
+                               "CIMType":  "MSFT_DeviceEnrollmentPlatformRestriction",
+                               "Name":  "AndroidForWorkRestriction",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceEnrollmentPlatformRestriction",
+                               "Name":  "AndroidRestriction",
                                "Option":  "Write"
                            },
                            {
@@ -27624,7 +27629,12 @@
                            },
                            {
                                "CIMType":  "MSFT_DeviceEnrollmentPlatformRestriction",
-                               "Name":  "WindowsRestriction",
+                               "Name":  "MacOSRestriction",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceEnrollmentPlatformRestriction",
+                               "Name":  "MacRestriction",
                                "Option":  "Write"
                            },
                            {
@@ -27639,32 +27649,22 @@
                            },
                            {
                                "CIMType":  "MSFT_DeviceEnrollmentPlatformRestriction",
-                               "Name":  "AndroidRestriction",
+                               "Name":  "WindowsRestriction",
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "MSFT_DeviceEnrollmentPlatformRestriction",
-                               "Name":  "AndroidForWorkRestriction",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "MSFT_DeviceEnrollmentPlatformRestriction",
-                               "Name":  "MacRestriction",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "MSFT_DeviceEnrollmentPlatformRestriction",
-                               "Name":  "MacOSRestriction",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
-                               "Name":  "Assignments",
+                               "CIMType":  "String",
+                               "Name":  "DeviceEnrollmentConfigurationType",
                                "Option":  "Write"
                            },
                            {
                                "CIMType":  "UInt32",
                                "Name":  "Priority",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
+                               "Name":  "Assignments",
                                "Option":  "Write"
                            },
                            {
