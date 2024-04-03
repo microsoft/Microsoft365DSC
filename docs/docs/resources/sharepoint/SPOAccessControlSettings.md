@@ -10,8 +10,6 @@
 | **IPAddressEnforcement** | Write | Boolean | Allows access from network locations that are defined by an administrator. | |
 | **IPAddressAllowList** | Write | String | Configures multiple IP addresses or IP address ranges (IPv4 or IPv6). Use commas to separate multiple IP addresses or IP address ranges. | |
 | **IPAddressWACTokenLifetime** | Write | UInt32 | Office webapps TokenLifeTime in minutes | |
-| **CommentsOnSitePagesDisabled** | Write | Boolean | When this feature is set to true, comments on site pages will be disabled | |
-| **SocialBarOnSitePagesDisabled** | Write | Boolean | Disables or enables the Social Bar. It will give users the ability to like a page, see the number of views, likes, and comments on a page, and see the people who have liked a page. | |
 | **DisallowInfectedFileDownload** | Write | Boolean | Prevents the Download button from being displayed on the Virus Found warning page. | |
 | **ExternalServicesEnabled** | Write | Boolean | Enables external services for a tenant. External services are defined as services that are not in the Office 365 datacenters. | |
 | **EmailAttestationRequired** | Write | Boolean | Sets email attestation to required | |
@@ -111,8 +109,6 @@ Configuration Example
             StartASiteFormUrl            = "https://contoso.sharepoint.com"
             IPAddressEnforcement         = $false
             IPAddressWACTokenLifetime    = 15
-            CommentsOnSitePagesDisabled  = $false
-            SocialBarOnSitePagesDisabled = $false
             DisallowInfectedFileDownload = $false
             ExternalServicesEnabled      = $true
             EmailAttestationRequired     = $false

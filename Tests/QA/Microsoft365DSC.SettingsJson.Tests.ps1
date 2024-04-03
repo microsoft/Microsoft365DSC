@@ -69,10 +69,18 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
                 'ChannelMember.ReadWrite.All'
             )
         }
+
         if ($settings.ResourceName -like 'AADAuthenticationMethod*' -or $settings.ResourceName -eq 'AADAuthenticationStrengthPolicy')
         {
             $allowedPermissions = @(
                 'Policy.ReadWrite.AuthenticationMethod'
+            )
+        }
+
+        if ($settings.ResourceName -eq 'O365OrgSettings')
+        {
+            $allowedPermissions = @(
+                'Application.ReadWrite.All'
             )
         }
 

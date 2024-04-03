@@ -1,5 +1,5 @@
 {
-    "resourceName": "AADAttributeSet",
+    "resourceName": "AADSocialIdentityProvider",
     "description": "Represents a group of related custom security attribute definitions.",
     "roles": {
         "read": [

@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "AADTenantDetails",
+    "resourceName": "M365DSCRuleEvaluation",
     "description": "This resource configures the Azure AD Tenant Details.",
     "roles": {
         "read": [],

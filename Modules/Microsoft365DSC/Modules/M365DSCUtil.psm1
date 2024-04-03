@@ -3368,25 +3368,40 @@ function Get-M365DSCExportContentForResource
             $ConnectionMode -eq 'ManagedIdentity')
     {
         $OrganizationName = $Results.TenantId
+    }    
+    elseif ($null -ne $Credential.UserName)
+    {
+        $OrganizationName = $Credential.UserName.Split('@')[1]
     }
     else
     {
-        $OrganizationName = $Credential.UserName.Split('@')[1]
+        $OrganizationName = ''
     }
 
     # Ensure the string properties are properly formatted;
     $Results = Format-M365DSCString -Properties $Results `
         -ResourceName $ResourceName
 
-    if ($Script:AllM365DscResources.Count -eq 0)
+    $primaryKey = ''
+    $ModuleFullName = "MSFT_" + $ResourceName
+    $moduleInfo = Get-Command -Module $ModuleFullName -ErrorAction SilentlyContinue
+    if ($null -eq $moduleInfo)
     {
-        $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
+        if ($Script:AllM365DscResources.Count -eq 0)
+        {
+            $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
+        }
+
+        $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
+        $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
+            Select-Object -ExpandProperty Name
+    }
+    else
+    {
+        $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
+        $Keys = $cmdInfo.Parameters.Keys
     }
 
-    $primaryKey = ''
-    $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
-    $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
-        Select-Object -ExpandProperty Name
     if ($Keys.Contains('IsSingleInstance'))
     {
         $primaryKey = ''

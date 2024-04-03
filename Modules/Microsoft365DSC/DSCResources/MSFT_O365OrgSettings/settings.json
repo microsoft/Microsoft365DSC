@@ -1,12 +1,12 @@
 ﻿{
-    "resourceName": "O365OrgCustomizationSetting",
+    "resourceName": "O365OrgSettings",
     "description": "",
     "permissions": {
         "graph": {
             "delegated": {
                 "read": [
                     {
-                        "name": "Application.Read.All"
+                        "name": "Application.ReadWrite.All"
                     },
                     {
                         "name": "ReportSettings.Read.All"
@@ -54,7 +54,7 @@
             "application": {
                 "read": [
                     {
-                        "name": "Application.Read.All"
+                        "name": "Application.ReadWrite.All"
                     },
                     {
                         "name": "ReportSettings.Read.All"

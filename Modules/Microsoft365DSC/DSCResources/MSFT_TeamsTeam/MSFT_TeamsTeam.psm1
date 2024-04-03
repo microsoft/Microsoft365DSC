@@ -15,7 +15,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 1024)]
+        [ValidateLength(0, 1024)]
         $Description,
 
         [Parameter()]
@@ -254,7 +254,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 1024)]
+        [ValidateLength(0, 1024)]
         $Description,
 
         [Parameter()]
@@ -505,7 +505,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        [ValidateLength(1, 1024)]
+        [ValidateLength(0, 1024)]
         $Description,
 
         [Parameter()]
@@ -714,29 +714,33 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($team in $teams)
         {
-            Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewline
-            $params = @{
-                DisplayName           = $team.DisplayName
-                GroupID               = $team.GroupId
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                ManagedIdentity       = $ManagedIdentity.IsPresent
+            # Skip Teams without DisplayName (orphaned/deleted Teams) because the Get method cannot be called without a display name
+            if ($null -ne $team.DisplayName -and $team.DisplayName -ne '')
+            {
+                Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewline
+                $params = @{
+                    DisplayName           = $team.DisplayName
+                    GroupID               = $team.GroupId
+                    Credential            = $Credential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    ManagedIdentity       = $ManagedIdentity.IsPresent
+                }
+                $Results = Get-TargetResource @Params
+                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                    -ConnectionMode $ConnectionMode `
+                    -ModulePath $PSScriptRoot `
+                    -Results $Results `
+                    -Credential $Credential
+                $dscContent += $currentDSCBlock
+                Save-M365DSCPartialExport -Content $currentDSCBlock `
+                    -FileName $Global:PartialExportFileName
+                $i++
+                Write-Host $Global:M365DSCEmojiGreenCheckMark
             }
-            $Results = Get-TargetResource @Params
-            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                -ConnectionMode $ConnectionMode `
-                -ModulePath $PSScriptRoot `
-                -Results $Results `
-                -Credential $Credential
-            $dscContent += $currentDSCBlock
-            Save-M365DSCPartialExport -Content $currentDSCBlock `
-                -FileName $Global:PartialExportFileName
-            $i++
-            Write-Host $Global:M365DSCEmojiGreenCheckMark
         }
 
         return $dscContent

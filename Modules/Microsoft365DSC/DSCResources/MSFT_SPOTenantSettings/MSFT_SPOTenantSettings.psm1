@@ -83,11 +83,6 @@ function Get-TargetResource
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
-        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess')]
-        [System.String]
-        $ConditionalAccessPolicy,
-
-        [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
 
@@ -97,7 +92,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAIPIntegration,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -188,9 +191,10 @@ function Get-TargetResource
             HideDefaultThemes                             = $SPOTenantSettings.HideDefaultThemes
             HideSyncButtonOnTeamSite                      = $SPOTenantSettings.HideSyncButtonOnTeamSite
             MarkNewFilesSensitiveByDefault                = $SPOTenantSettings.MarkNewFilesSensitiveByDefault
-            ConditionalAccessPolicy                       = $SPOTenantSettings.ConditionalAccessPolicy
             DisabledWebPartIds                            = [String[]]$SPOTenantSettings.DisabledWebPartIds
+            SocialBarOnSitePagesDisabled                  = $SPOTenantSettings.SocialBarOnSitePagesDisabled
             CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
+            EnableAIPIntegration                          = $SPOTenantSettings.EnableAIPIntegration
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -303,17 +307,20 @@ function Set-TargetResource
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
-        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess')]
-        [System.String]
-        $ConditionalAccessPolicy,
-
-        [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
 
         [Parameter()]
         [System.Boolean]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAIPIntegration,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -474,17 +481,20 @@ function Test-TargetResource
         $MarkNewFilesSensitiveByDefault,
 
         [Parameter()]
-        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess')]
-        [System.String]
-        $ConditionalAccessPolicy,
-
-        [Parameter()]
         [System.Guid[]]
         $DisabledWebPartIds,
 
         [Parameter()]
         [System.Boolean]
+        $SocialBarOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
         $CommentsOnSitePagesDisabled,
+
+        [Parameter()]
+        [System.Boolean]
+        $EnableAIPIntegration,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -562,9 +572,10 @@ function Test-TargetResource
             'HideDefaultThemes', `
             'HideSyncButtonOnTeamSite', `
             'MarkNewFilesSensitiveByDefault', `
-            'ConditionalAccessPolicy', `
             'DisabledWebPartIds', `
-            'CommentsOnSitePagesDisabled'
+            'SocialBarOnSitePagesDisabled', `
+            'CommentsOnSitePagesDisabled', `
+            'EnableAIPIntegration'
     )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"

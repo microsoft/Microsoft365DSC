@@ -1,7 +1,99 @@
 # Change log for Microsoft365DSC
 
+# 1.24.403.1
+
+* AADAdministrativeUnit
+  * Fix issue with deploying/creating a new AU with members and/or adding members to an existing AU
+    FIXES [#4404](https://github.com/microsoft/Microsoft365DSC/issues/4404)
+  * Updated examples to include setting Visibility and ScopedRoleMembers
+  * Fix issue with Set-TargetResource was failing to apply when Verbose is set
+    FIXES [#4497](https://github.com/microsoft/Microsoft365DSC/issues/4497)
+* All resources
+  * Fix issue where Ensure cannot be left as default 'Present'
+* AADAdministrativeUnit
+  * Fix issue with omitted Ensure and/or Id
+    FIXES [#4437](https://github.com/microsoft/Microsoft365DSC/issues/4437)
+* AADConditionalAccessPolicy
+  * Fixed schema file
+* EXOCalendarProcessing
+  * Fixed schema file
+* EXOGroupSettings
+  * Fixed schema file
+* EXOMailTips
+  * [BREAKING CHANGE] Replaced the Organization parameter with IsSingleInstance
+    FIXES [#4117](https://github.com/microsoft/Microsoft365DSC/issues/4117)
+* EXOMessageClassification
+  * Fixed schema file
+* EXOOMEConfiguration
+  * Fixed schema file
+* EXOTransportRule
+  * [BREAKING CHANGE] Change data type of Priority from String to Int
+    FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Add missing properties
+* IntuneAppConfigurationPolicy
+  * Fix comparison in Test-TargetResource
+    FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
+* IntuneDeviceCompliancePolicyWindows10
+  * Fix group assignment by using the corrected function
+    Update-DeviceConfigurationPolicyAssignment from module M365DSCDRGUtil
+    FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Fixed an issue where nested settings would throw a conflict
+    FIXES [#4082](https://github.com/microsoft/Microsoft365DSC/issues/4082)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Added support for specifying SelectedMobileAppNames in addition to SelectedMobileAppIds,
+    which are different for each tenant.
+    FIXES [#4494](https://github.com/microsoft/Microsoft365DSC/issues/4494)
+* M365DSCRuleEvaluation
+  * Log both matching and not matching resources and in XML format
+* O365OrgSettings
+  * Fixed missing permissions in settings.json
+* SPOAccessControlSettings
+  * [BREAKING CHANGE] Removed CommentsOnSitePagesDisabled parameter, because of
+    duplication in SPOTenantSettings
+    FIXES [#3576](https://github.com/microsoft/Microsoft365DSC/issues/3576)
+  * [BREAKING CHANGE] Moved SocialBarOnSitePagesDisabled parameter to SPOTenantSettings,
+    because it makes more sense there. This has nothing to do with Access Control.
+* SPOTenantSettings
+  * [BREAKING CHANGE] Removed ConditionalAccessPolicy parameter, because of
+    duplication in SPOAccessControlSettings
+    FIXES [#3576](https://github.com/microsoft/Microsoft365DSC/issues/3576)
+  * Added SocialBarOnSitePagesDisabled parameter, moved from SPOAccessControlSettings.
+  * Added EnableAIPIntegration.
+* TeamsChannelTab
+  * Fixed schema file
+* TeamsGroupPolicyAssignment
+  * Skip assignments that have orphaned/deleted groups or without display name
+    instead of throwing an error
+    FIXES [#4407](https://github.com/microsoft/Microsoft365DSC/issues/4407)
+* TeamsTenantDialPlan
+  * Fix output of property NormalizationRules as a string to the blueprint
+    FIXES [#4428](https://github.com/microsoft/Microsoft365DSC/issues/4428)
+  * Fix creation, update and deletion of resource
+* TeamsUpdateManagementPolicy
+  * Adds support for the NewTeamsOnly value or the UseNewTeamsClient property.
+    FIXES [#4496](https://github.com/microsoft/Microsoft365DSC/issues/4496)
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.3.
+* MISC
+  * Initial release of Get-M365DSCEvaluationRulesForConfiguration
+  * M365DSCDRGUtil
+    Fix Update-DeviceConfigurationPolicyAssignment so that if the group cannot
+    be found by its Id it tries to search it by display name
+    FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
+  * M365DSCReport
+    Fix issue when asserting resources not covered by current conditions in
+    Get-M365DSCResourceKey by always returning all their mandatory parameters
+    FIXES [#4502](https://github.com/microsoft/Microsoft365DSC/issues/4502)
+  * Fix broken links to integration tests in README.md
+  * Changing logic to retrieve DSC Resources properties not to use DSC
+    specific cmdlets.
+
 # 1.24.313.1
 
+* AADAuthenticationStrengthPolicy
+  * Removed the Id paremeter from being checked in the Test-TargetResource.
 * AADGroup
   * Fixed issue when filtering groups by display name
     FIXES [#4394](https://github.com/microsoft/Microsoft365DSC/issues/4394)
@@ -81,7 +173,7 @@
     Get-TargetResource
   * Fixed an issue with the parameter InterfaceTypes from firewallrules defined
     as a string instead of string[]
-* IntuneDeviceConfigurationPKCSCertificatePolicyWindows10
+* IntuneDeviceConfigurationSCEPCertificatePolicyWindows10
   * Add property RootCertificateDisplayName in order to support assigning root
     certificates by display name since their Ids in a blueprint might be from a
     different source tenant
@@ -102,6 +194,9 @@
   * Add read permission for extracting M365 apps installation settings instead
     of extracting them only with read/write permissions
     FIXES [#4418](https://github.com/microsoft/Microsoft365DSC/issues/4418)
+* TeamsTeam
+  * Add error handling for teams without displayname during export
+  FIXES [#4406](https://github.com/microsoft/Microsoft365DSC/issues/4406)
 * TeamsVoiceRoute
   * Fix policy removal and also comparison in Test-TargetResource
 * DEPENDENCIES

@@ -914,7 +914,128 @@ function Export-TargetResource
             Property    = $propertiesToRetrieve
             ErrorAction = 'Stop'
         }
-        if ($Filter -like '*endsWith*')
+        $queryTypes = @{
+                        'eq'        = @('assignedPlans/any(a:a/capabilityStatus)',
+                                        'assignedPlans/any(a:a/service)',
+                                        'assignedPlans/any(a:a/servicePlanId)',
+                                        'authorizationInfo/certificateUserIds/any(p:p)',
+                                        'businessPhones/any(p:p)',
+                                        'companyName',
+                                        'createdObjects/any(c:c/id)',
+                                        'employeeHireDate',
+                                        'employeeOrgData/costCenter',
+                                        'employeeOrgData/division',
+                                        'employeeType',
+                                        'faxNumber',
+                                        'mobilePhone',
+                                        'officeLocation',
+                                        'onPremisesExtensionAttributes/extensionAttribute1',
+                                        'onPremisesExtensionAttributes/extensionAttribute10',
+                                        'onPremisesExtensionAttributes/extensionAttribute11',
+                                        'onPremisesExtensionAttributes/extensionAttribute12',
+                                        'onPremisesExtensionAttributes/extensionAttribute13',
+                                        'onPremisesExtensionAttributes/extensionAttribute14',
+                                        'onPremisesExtensionAttributes/extensionAttribute15',
+                                        'onPremisesExtensionAttributes/extensionAttribute2',
+                                        'onPremisesExtensionAttributes/extensionAttribute3',
+                                        'onPremisesExtensionAttributes/extensionAttribute4',
+                                        'onPremisesExtensionAttributes/extensionAttribute5',
+                                        'onPremisesExtensionAttributes/extensionAttribute6',
+                                        'onPremisesExtensionAttributes/extensionAttribute7',
+                                        'onPremisesExtensionAttributes/extensionAttribute8',
+                                        'onPremisesExtensionAttributes/extensionAttribute9',
+                                        'onPremisesSamAccountName',
+                                        'passwordProfile/forceChangePasswordNextSignIn',
+                                        'passwordProfile/forceChangePasswordNextSignInWithMfa',
+                                        'postalCode',
+                                        'preferredLanguage',
+                                        'provisionedPlans/any(p:p/provisioningStatus)',
+                                        'provisionedPlans/any(p:p/service)',
+                                        'showInAddressList',
+                                        'streetAddress')
+
+                        'startsWith' = @(
+                            'assignedPlans/any(a:a/service)',
+                            'businessPhones/any(p:p)',
+                            'companyName',
+                            'faxNumber',
+                            'mobilePhone',
+                            'officeLocation',
+                            'onPremisesSamAccountName',
+                            'postalCode',
+                            'preferredLanguage',
+                            'provisionedPlans/any(p:p/service)',
+                            'streetAddress'
+                        )
+                        'ge'     = @('employeeHireDate')
+                        'le'     = @('employeeHireDate')
+                        'eq Null' = @(
+                            'city',
+                            'companyName',
+                            'country',
+                            'createdDateTime',
+                            'department',
+                            'displayName',
+                            'employeeId',
+                            'faxNumber',
+                            'givenName',
+                            'jobTitle',
+                            'mail',
+                            'mailNickname',
+                            'mobilePhone',
+                            'officeLocation',
+                            'onPremisesExtensionAttributes/extensionAttribute1',
+                            'onPremisesExtensionAttributes/extensionAttribute10',
+                            'onPremisesExtensionAttributes/extensionAttribute11',
+                            'onPremisesExtensionAttributes/extensionAttribute12',
+                            'onPremisesExtensionAttributes/extensionAttribute13',
+                            'onPremisesExtensionAttributes/extensionAttribute14',
+                            'onPremisesExtensionAttributes/extensionAttribute15',
+                            'onPremisesExtensionAttributes/extensionAttribute2',
+                            'onPremisesExtensionAttributes/extensionAttribute3',
+                            'onPremisesExtensionAttributes/extensionAttribute4',
+                            'onPremisesExtensionAttributes/extensionAttribute5',
+                            'onPremisesExtensionAttributes/extensionAttribute6',
+                            'onPremisesExtensionAttributes/extensionAttribute7',
+                            'onPremisesExtensionAttributes/extensionAttribute8',
+                            'onPremisesExtensionAttributes/extensionAttribute9',
+                            'onPremisesSecurityIdentifier',
+                            'onPremisesSyncEnabled',
+                            'passwordPolicies',
+                            'passwordProfile/forceChangePasswordNextSignIn',
+                            'passwordProfile/forceChangePasswordNextSignInWithMfa',
+                            'postalCode',
+                            'preferredLanguage',
+                            'state',
+                            'streetAddress',
+                            'surname',
+                            'usageLocation',
+                            'userType'
+                            )
+            }
+
+        # Initialize a flag to indicate whether the filter conditions match the attribute support
+        $allConditionsMatched = $true
+
+        # Check each condition in the filter against the support list
+        # Assuming the provided PowerShell script is part of a larger context and the variable $Filter is defined elsewhere
+
+        # Check if $Filter is not null
+        if ($Filter) {
+            # Check each condition in the filter against the support list
+            foreach ($condition in $Filter.Split(' ')) {
+                if ($condition -match '(\w+)/(\w+):(\w+)') {
+                    $attribute, $operation, $value = $matches[1], $matches[2], $matches[3]
+                    if (-not $queryTypes.ContainsKey($operation) -or -not $queryTypes[$operation].Contains($attribute)) {
+                        $allConditionsMatched = $false
+                        break
+                    }
+                }
+            }
+        }
+
+        # If all conditions match the support, add parameters to $ExportParameters
+        if ($allConditionsMatched -or $Filter -like '*endsWith*')
         {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')

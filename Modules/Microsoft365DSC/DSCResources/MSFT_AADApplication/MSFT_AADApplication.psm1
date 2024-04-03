@@ -112,6 +112,7 @@ function Get-TargetResource
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
+    $AADApp = $null
     try
     {
         try
@@ -212,7 +213,7 @@ function Get-TargetResource
                 TenantId                = $TenantId
                 ApplicationSecret       = $ApplicationSecret
                 CertificateThumbprint   = $CertificateThumbprint
-                Managedidentity         = $ManagedIdentity.IsPresent
+                ManagedIdentity         = $ManagedIdentity.IsPresent
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -799,6 +800,7 @@ function Test-TargetResource
     }
     else
     {
+        $driftedParams = @{}
         if ($Permissions.Length -gt 0)
         {
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App, but permissions were specified for desired state'

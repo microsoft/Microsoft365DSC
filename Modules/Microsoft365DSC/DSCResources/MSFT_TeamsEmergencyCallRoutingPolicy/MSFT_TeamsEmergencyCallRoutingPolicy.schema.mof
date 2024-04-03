@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-Class MSFT_TeamsEmergencyNumber
+class MSFT_TeamsEmergencyNumber
 {
     [Write, Description("Specifies the emergency phone number.")] String EmergencyDialString;
     [Write, Description("For each Teams emergency number, you can specify zero or more emergency dial masks. A dial mask is a number that you want to translate into the value of the emergency dial number value when it is dialed.")] String EmergencyDialMask;

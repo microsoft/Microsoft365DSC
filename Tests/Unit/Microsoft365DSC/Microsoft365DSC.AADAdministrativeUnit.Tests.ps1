@@ -151,7 +151,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
-
+            
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
@@ -161,6 +161,39 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
             }
         }
+
+        Context -Name 'The AU exists and values are already in desired state - without ID/Ensure' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description = 'FakeStringValue2'
+                    DisplayName = 'FakeStringValue2'
+                    Credential  = $Credential
+                }
+
+                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
+                    return @{
+                        Description = 'FakeStringValue2'
+                        DisplayName = 'FakeStringValue2'
+                        Id          = 'FakeStringValue2'
+                    }
+                }
+                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitMember -MockWith {
+                    return $null
+                }
+                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
+                    return $null
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
         Context -Name 'The AU Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
