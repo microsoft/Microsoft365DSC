@@ -4,21 +4,21 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Identity** | Write | String | Identity of the device enrollment platform restriction. | |
+| **Identity** | Key | String | Identity of the device enrollment platform restriction. | |
 | **DisplayName** | Key | String | Display name of the device enrollment platform restriction. | |
 | **Description** | Write | String | Description of the device enrollment platform restriction. | |
-| **DeviceEnrollmentConfigurationType** | Write | String | Support for Enrollment Configuration Type Inherited from deviceEnrollmentConfiguration. | `singlePlatformRestriction`, `platformRestrictions` |
+| **AndroidForWorkRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android for work restrictions based on platform, platform operating system version, and device ownership. | |
+| **AndroidRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android restrictions based on platform, platform operating system version, and device ownership. | |
 | **IosRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Ios restrictions based on platform, platform operating system version, and device ownership. | |
-| **WindowsRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows restrictions based on platform, platform operating system version, and device ownership. | |
-| **WindowsHomeSkuRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows home Sku restrictions based on platform, platform operating system version, and device ownership. | |
-| **WindowsMobileRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows Mobile restrictions based on platform, platform operating system version, and device ownership. | |
-| **AndroidRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android Device Administrator restrictions based on platform, platform operating system version, and device ownership. | |
-| **AndroidForWorkRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Android Enterprise restrictions based on platform, platform operating system version, and device ownership. | |
+| **MacOSRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac restrictions based on platform, platform operating system version, and device ownership. | |
 | **MacRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac restrictions based on platform, platform operating system version, and device ownership. | |
-| **MacOSRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Mac OS restrictions based on platform, platform operating system version, and device ownership. | |
+| **WindowsHomeSkuRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows Home Sku restrictions based on platform, platform operating system version, and device ownership. | |
+| **WindowsMobileRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows mobile restrictions based on platform, platform operating system version, and device ownership. | |
+| **WindowsRestriction** | Write | MSFT_DeviceEnrollmentPlatformRestriction | Windows restrictions based on platform, platform operating system version, and device ownership. | |
+| **DeviceEnrollmentConfigurationType** | Write | String | Support for Enrollment Configuration Type | `platformRestrictions`, `singlePlatformRestriction` |
+| **Priority** | Write | UInt32 | Priority is used when a user exists in multiple groups that are assigned enrollment configuration. Users are subject only to the configuration with the lowest priority value. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the policy. | |
-| **Priority** | Write | UInt32 | Priority is used when a user exists in multiple groups that are assigned enrollment configuration. Users are subject only to the configuration with the lowest priority value. Inherited from deviceEnrollmentConfiguration. | |
-| **Ensure** | Write | String | Present ensures the restriction exists, absent ensures it is removed. | `Present`, `Absent` |
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
@@ -56,6 +56,11 @@
 ## Description
 
 This resource configures the Intune device platform enrollment restrictions.
+
+**Be aware**: To deploy a Android platform restriction policy, two individual configurations must exist:
+
+* The first one contains the key for `AndroidRestriction`
+* The second one contains the key for `AndroidForWorkRestriction`
 
 ## Permissions
 
@@ -121,6 +126,7 @@ Configuration Example
             DeviceEnrollmentConfigurationType = "platformRestrictions";
             DisplayName                       = "All users and all devices";
             Ensure                            = "Present";
+            Identity                          = "3868d43e-873e-4416-8fd1-fc3d67c7c15c_DefaultPlatformRestrictions";
             IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
                 platformBlocked = $False
                 personalDeviceEnrollmentBlocked = $False
@@ -185,6 +191,7 @@ Configuration Example
             Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
             DeviceEnrollmentConfigurationType = "platformRestrictions";
             DisplayName                       = "All users and all devices";
+            Identity                          = "3868d43e-873e-4416-8fd1-fc3d67c7c15c_DefaultPlatformRestrictions";
             Ensure                            = "Present";
             IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
                 platformBlocked = $True # Updated Property
@@ -234,8 +241,18 @@ Configuration Example
         IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
         {
             Credential                        = $Credscredential
-            DisplayName                       = "All users and all devices";
+            DisplayName                       = "Removed Policy";
             Ensure                            = "Absent";
+            Assignments                       = @();
+            Description                       = "This is a single platform restriction policy.";
+            DeviceEnrollmentConfigurationType = "singlePlatformRestriction";
+            Identity                          = "d59e4c28-b6b2-48ad-a6f0-a2132300b99d_SinglePlatformRestriction";
+            IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
+                PlatformBlocked                 = $True
+                PersonalDeviceEnrollmentBlocked = $False
+            };
+            Priority                          = 1;
+            TenantId                          = $OrganizationName;
         }
     }
 }
