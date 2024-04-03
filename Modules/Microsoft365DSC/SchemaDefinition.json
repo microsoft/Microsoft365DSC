@@ -36408,6 +36408,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "boolean",
+                               "Name":  "EnableAIPIntegration",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "Ensure",
                                "Option":  "Write"
