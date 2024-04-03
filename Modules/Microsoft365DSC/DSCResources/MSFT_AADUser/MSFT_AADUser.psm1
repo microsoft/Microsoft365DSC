@@ -1032,8 +1032,6 @@ function Export-TargetResource
                     }
                 }
             }
-        } else {
-            Write-Host "$Filter is null or empty."
         }
 
 
