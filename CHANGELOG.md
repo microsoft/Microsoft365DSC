@@ -4,6 +4,7 @@
 
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.16.0.
+  * Updated MicrosoftTeams to version 6.1.0.
 
 # 1.24.403.1
 
