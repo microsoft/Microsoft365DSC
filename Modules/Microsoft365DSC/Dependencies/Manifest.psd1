@@ -82,7 +82,7 @@
         },
         @{
             ModuleName      = 'MicrosoftTeams'
-            RequiredVersion = '6.0.0'
+            RequiredVersion = '6.1.0'
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
