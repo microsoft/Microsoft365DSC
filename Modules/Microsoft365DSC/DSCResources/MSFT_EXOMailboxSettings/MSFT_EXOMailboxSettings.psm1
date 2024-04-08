@@ -179,16 +179,6 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $currentMailbox = Get-TargetResource @PSBoundParameters
-
-    $AllowedTimeZones = (Get-ChildItem 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones' | `
-                ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
-
-    if ($AllowedTimeZones.Contains($TimeZone) -eq $false)
-    {
-        throw "The specified Time Zone {$($TimeZone)} is not valid."
-    }
-
     Set-MailboxRegionalConfiguration -Identity $DisplayName `
         -Language $Locale `
         -TimeZone $TimeZone

@@ -24,12 +24,12 @@ function Invoke-TestHarness
     $repoDir = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
 
     $oldModPath = $env:PSModulePath
-    $env:PSModulePath = $env:PSModulePath + [System.IO.Path]::PathSeparator + (Join-Path -Path $repoDir -ChildPath 'modules\Microsoft365DSC')
+    $env:PSModulePath = $env:PSModulePath + [System.IO.Path]::PathSeparator + (Join-Path -Path $repoDir -ChildPath 'Modules\Microsoft365DSC')
 
     $testCoverageFiles = @()
     if ($IgnoreCodeCoverage.IsPresent -eq $false)
     {
-        Get-ChildItem -Path "$repoDir\modules\Microsoft365DSC\DSCResources\**\*.psm1" -Recurse | ForEach-Object {
+        Get-ChildItem -Path "$repoDir\Modules\Microsoft365DSC\DSCResources\**\*.psm1" -Recurse | ForEach-Object {
             if ($_.FullName -notlike '*\DSCResource.Tests\*')
             {
                 $testCoverageFiles += $_.FullName
@@ -37,7 +37,7 @@ function Invoke-TestHarness
         }
     }
 
-    Import-Module -Name "$repoDir\modules\Microsoft365DSC\Microsoft365DSC.psd1"
+    Import-Module -Name "$repoDir/Modules/Microsoft365DSC/Microsoft365DSC.psd1"
     $testsToRun = @()
 
     # Run Unit Tests

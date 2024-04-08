@@ -56,10 +56,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            It 'Should throw an error from the Set method' {
-                { Set-TargetResource @testParams } | Should -Throw 'The specified Time Zone {Non-Existing} is not valid.'
-            }
-
             It 'Should return the current TimeZone from the Get method' {
                 (Get-TargetResource @testParams).TimeZone | Should -Be 'Eastern Standard Time'
             }

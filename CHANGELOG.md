@@ -2,14 +2,18 @@
 
 # UNRELEASED
 
+* EXOMailboxSettings
+  * Simplifyied the Setlogic and removed Timezone validation to remove checks
+    to regstry key which caused issues in Linux.
 * DEPENDENCIES
-  * Updated Microsoft.Graph dependencies to version 2.16.0.
+  * Updated Microsoft.Graph dependencies to version 2.17.0.
   * Updated MicrosoftTeams to version 6.1.0.
 
 # 1.24.403.1
 
 * AADAdministrativeUnit
-  * Fix issue with deploying/creating a new AU with members and/or adding members to an existing AU
+  * Fix issue with deploying/creating a new AU with members and/or adding members
+    to an existing AU
     FIXES [#4404](https://github.com/microsoft/Microsoft365DSC/issues/4404)
   * Updated examples to include setting Visibility and ScopedRoleMembers
   * Fix issue with Set-TargetResource was failing to apply when Verbose is set
