@@ -6,7 +6,7 @@
   * Simplifyied the Setlogic and removed Timezone validation to remove checks
     to regstry key which caused issues in Linux.
 * DEPENDENCIES
-  * Updated Microsoft.Graph dependencies to version 2.16.0.
+  * Updated Microsoft.Graph dependencies to version 2.17.0.
 
 # 1.24.403.1
 
