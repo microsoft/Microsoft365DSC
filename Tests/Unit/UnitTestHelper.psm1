@@ -1,3 +1,32 @@
+function New-CimInstance
+{
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [String]
+        $ClassName,
+
+        [Parameter(Mandatory = $true)]
+        [Hashtable]
+        $Property,
+
+        [Parameter()]
+        [Switch]
+        $ClientOnly
+    )
+    $cimInstance = [Microsoft.Management.Infrastructure.CimInstance]::new($ClassName)
+    foreach ($key in $Property.Keys) {
+        $cimInstance.CimInstanceProperties.Add(
+            [Microsoft.Management.Infrastructure.CimProperty]::Create(
+                $key,
+                $Property[$key],
+                'Property'
+            )
+        )
+    }
+    return $cimInstance
+}
+
 function New-M365DscUnitTestHelper
 {
     [CmdletBinding()]
@@ -24,7 +53,7 @@ function New-M365DscUnitTestHelper
     )
 
     $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\" -Resolve
-    $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Microsoft365Dsc"
+    $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Microsoft365DSC"
 
     $mainModule = Join-Path -Path $moduleRoot -ChildPath "Microsoft365DSC.psd1"
     Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue
