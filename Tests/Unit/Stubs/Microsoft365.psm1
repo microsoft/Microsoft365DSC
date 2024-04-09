@@ -37492,7 +37492,7 @@ function Remove-MgGroupLifecyclePolicy
         $Break
     )
 }
-function Remove-MgGroupMemberByRef
+function Remove-MgGroupMemberDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -81458,4 +81458,3 @@ function Update-MgBetaDeviceAppManagementMobileApp
 }
 
 #endregion
-

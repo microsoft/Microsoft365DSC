@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADGroup, AADUser
+  * Replace old cmdlet with Remove-MgGroupMemberDirectoryObjectByRef which is
+    available in Graph 2.17.0
 * EXOMailboxSettings
   * Simplifyied the Setlogic and removed Timezone validation to remove checks
     to regstry key which caused issues in Linux.
