@@ -6,8 +6,8 @@
   * Replace old cmdlet with Remove-MgGroupMemberDirectoryObjectByRef which is
     available in Graph 2.17.0
 * EXOMailboxSettings
-  * Simplifyied the Setlogic and removed Timezone validation to remove checks
-    to regstry key which caused issues in Linux.
+  * Simplified the Set logic and removed Timezone validation to remove checks
+    to registry key which caused issues in Linux.
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.17.0.
   * Updated MicrosoftTeams to version 6.1.0.
