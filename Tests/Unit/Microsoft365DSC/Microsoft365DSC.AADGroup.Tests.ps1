@@ -69,7 +69,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgBetaDirectoryRoleMemberByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgGroupOwnerByRef -MockWith {
+            Mock -CommandName Remove-MgGroupOwnerDirectoryObjectByRef -MockWith {
             }
 
             Mock -CommandName Remove-MgGroupMemberDirectoryObjectByRef -MockWith {

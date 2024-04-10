@@ -2,9 +2,10 @@
 
 # UNRELEASED
 
-* AADGroup, AADUser
-  * Replace old cmdlet with Remove-MgGroupMemberDirectoryObjectByRef which is
-    available in Graph 2.17.0
+* AADAdministrativeUnit, AADApplication,
+  AADEntitlementManagementConnectedOrganization, AADGroup, AADUser
+  * Replace old cmdlet and deprecated Remove-Mg\*ByRef with equivalent
+    Remove-Mg\*DirectoryObjectByRef which is available in Graph 2.17.0
 * EXOMailboxSettings
   * Simplified the Set logic and removed Timezone validation to remove checks
     to registry key which caused issues in Linux.

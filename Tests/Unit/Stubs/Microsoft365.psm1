@@ -14809,7 +14809,7 @@ function Remove-MgApplication
         $HttpPipelineAppend
     )
 }
-function Remove-MgApplicationOwnerByRef
+function Remove-MgApplicationOwnerDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -25887,7 +25887,7 @@ function Remove-MgBetaDirectoryAdministrativeUnit
         $Break
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnitMemberByRef
+function Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -30173,7 +30173,7 @@ function Remove-MgBetaEntitlementManagementConnectedOrganization
         $Break
     )
 }
-function Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef
+function Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -30230,7 +30230,7 @@ function Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorB
         $Break
     )
 }
-function Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef
+function Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -37549,7 +37549,7 @@ function Remove-MgGroupMemberDirectoryObjectByRef
         $Break
     )
 }
-function Remove-MgGroupOwnerByRef
+function Remove-MgGroupOwnerDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -41277,7 +41277,7 @@ function Remove-MgApplication
         $HttpPipelineAppend
     )
 }
-function Remove-MgApplicationOwnerByRef
+function Remove-MgApplicationOwnerDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -52370,7 +52370,7 @@ function Remove-MgBetaDirectoryAdministrativeUnit
         $Break
     )
 }
-function Remove-MgBetaDirectoryAdministrativeUnitMemberByRef
+function Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -56322,7 +56322,7 @@ function Remove-MgBetaEntitlementManagementConnectedOrganization
         $Break
     )
 }
-function Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef
+function Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
@@ -56379,7 +56379,7 @@ function Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorB
         $Break
     )
 }
-function Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef
+function Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorDirectoryObjectByRef
 {
     [CmdletBinding()]
     param(
