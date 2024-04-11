@@ -54,12 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-ActiveSyncDeviceAccessRule -MockWith {
-                    return @{
-                        Identity       = 'iOS 6.1 10B145 (WrongOS)'
-                        AccessLevel    = 'Allow'
-                        Characteristic = 'DeviceOS'
-                        QueryString    = 'iOS 6.1 10B145'
-                    }
+                    return $null
                 }
                 Mock -CommandName Set-ActiveSyncDeviceAccessRule -MockWith {
                     return @{

@@ -100,26 +100,23 @@ function Get-TargetResource
                 return $nullReturn
             }
         }
-        else
-        {
-            $result = @{
-                Identity              = $ActiveSyncDeviceAccessRule.Identity
-                AccessLevel           = $ActiveSyncDeviceAccessRule.AccessLevel
-                Characteristic        = $ActiveSyncDeviceAccessRule.Characteristic
-                QueryString           = $ActiveSyncDeviceAccessRule.QueryString
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-            }
-
-            Write-Verbose -Message "Found Active Sync Device Access Rule $($Identity)"
-            return $result
+        $result = @{
+            Identity              = $ActiveSyncDeviceAccessRule.Identity
+            AccessLevel           = $ActiveSyncDeviceAccessRule.AccessLevel
+            Characteristic        = $ActiveSyncDeviceAccessRule.Characteristic
+            QueryString           = $ActiveSyncDeviceAccessRule.QueryString
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
         }
+
+        Write-Verbose -Message "Found Active Sync Device Access Rule $($Identity)"
+        return $result
     }
     catch
     {
