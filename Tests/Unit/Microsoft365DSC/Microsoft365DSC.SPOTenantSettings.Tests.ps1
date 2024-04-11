@@ -232,7 +232,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FilePickerExternalImageSearchEnabled          = $true
                         HideDefaultThemes                             = $false
                     }
-                } }
+                }
 
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams

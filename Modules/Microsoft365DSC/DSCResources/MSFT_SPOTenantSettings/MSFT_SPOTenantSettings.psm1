@@ -388,7 +388,8 @@ function Set-TargetResource
     if (-not [string]::IsNullOrEmpty($TenantDefaultTimezone))
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
-
+    }
+    
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Credential') | Out-Null
     $CurrentParameters.Remove('IsSingleInstance') | Out-Null
