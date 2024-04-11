@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOActiveSyncDeviceAccessRule
+  * Retrieve instance by Identity if not found by characteristic.
 * EXOMailboxSettings
   * Simplifyied the Setlogic and removed Timezone validation to remove checks
     to regstry key which caused issues in Linux.

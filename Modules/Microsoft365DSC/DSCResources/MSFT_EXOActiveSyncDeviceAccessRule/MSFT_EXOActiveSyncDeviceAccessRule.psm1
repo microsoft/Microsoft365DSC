@@ -87,13 +87,18 @@ function Get-TargetResource
     try
     {
         $AllActiveSyncDeviceAccessRules = Get-ActiveSyncDeviceAccessRule -ErrorAction Stop
-
         $ActiveSyncDeviceAccessRule = $AllActiveSyncDeviceAccessRules | Where-Object -FilterScript { $_.Identity -eq "$QueryString ($Characteristic)" }
 
         if ($null -eq $ActiveSyncDeviceAccessRule)
         {
-            Write-Verbose -Message "Active Sync Device Access Rule $($Identity) does not exist."
-            return $nullReturn
+            Write-Verbose -Message "Trying to retrieve instance by Identity"
+            $ActiveSyncDeviceAccessRule = Get-ActiveSyncDeviceAccessRule -Identity $Identity -ErrorAction 'SilentlyContinue'
+
+            if ($null -eq $ActiveSyncDeviceAccessRule)
+            {
+                Write-Verbose -Message "Active Sync Device Access Rule $($Identity) does not exist."
+                return $nullReturn
+            }
         }
         else
         {
