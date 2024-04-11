@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
                     FilePickerExternalImageSearchEnabled          = $true
                     HideDefaultThemes                             = $false
-                    DefaultTimeZone                               = "(UTC-05:00) Eastern Time (US and Canada)"
+                    TenantDefaultTimeZone                         = "(UTC-05:00) Eastern Time (US and Canada)"
                 }
 
                 Mock -CommandName Set-PnPTenant -MockWith {
@@ -143,7 +143,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
                     FilePickerExternalImageSearchEnabled          = $true
                     HideDefaultThemes                             = $false
-                    DefaultTimeZone                               = "(UT-05:00)"
+                    TenantDefaultTimeZone                         = "(UT-05:00)"
                 }
 
                 Mock -CommandName Set-PnPTenant -MockWith {
@@ -233,6 +233,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         HideDefaultThemes                             = $false
                     }
                 }
+
+                Mock -CommandName Get-MgAdminSharepointSetting -MockWith {
+                    return @{
+                        DefaultTimeZone                               = "(UTC-05:00) Eastern Time (US and Canada)"
+                    }
+                }
+            }
 
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
