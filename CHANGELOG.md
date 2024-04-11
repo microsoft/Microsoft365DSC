@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* SPOTenantSettings
+  * Add property TenantDefaultTimezone
+    Implements [#4189](https://github.com/microsoft/Microsoft365DSC/issues/4189)
 * EXOMailboxSettings
   * Simplifyied the Setlogic and removed Timezone validation to remove checks
     to regstry key which caused issues in Linux.
