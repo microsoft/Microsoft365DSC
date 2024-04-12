@@ -825,7 +825,6 @@ function Export-TargetResource
                 Id                    = $request.Id
                 Principal             = $request.PrincipalId
                 RoleDefinition        = $RoleDefinitionId.DisplayName
-                ScheduleInfo          = @{}
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
