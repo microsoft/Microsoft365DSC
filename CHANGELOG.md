@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADRoleEligibilitySecheduleRquest
+  * Cleaned Export logic.
 * EXOActiveSyncDeviceAccessRule
   * Retrieve instance by Identity if not found by characteristic.
 * EXOMailboxSettings
