@@ -30,6 +30,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
 
             Mock -CommandName MSFT_AADConditionalAccessPolicy\Export-TargetResource -MockWith {
                 return "AADConditionalAccessPolicy 'FakeItem1'{`r`n    DisplayName='test';State = 'Enabled'`r`n}`r`nAADConditionalAccessPolicy 'FakeItem2'{`r`n    DisplayName='test';State = 'Disabled'`r`n}"

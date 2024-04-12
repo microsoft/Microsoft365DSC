@@ -70,6 +70,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
         # Test contexts
         Context -Name 'The AU should exist but it DOES NOT' -Fixture {
@@ -151,7 +153,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
-            
+
             It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }

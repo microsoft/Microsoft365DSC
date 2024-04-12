@@ -26,7 +26,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             $Global:PartialExportFileName = 'c:\TestPath'
-            
+
             Mock -CommandName Save-M365DSCPartialExport -MockWith {
             }
 
@@ -46,6 +46,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts

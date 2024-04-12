@@ -47,6 +47,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
         # Test contexts
         Context -Name 'The IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 should exist but it DOES NOT' -Fixture {
