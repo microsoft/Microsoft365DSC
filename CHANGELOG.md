@@ -3,8 +3,7 @@
 # UNRELEASED
 
 * AADRoleEligibilitySecheduleRquest
-  * Changed the logic for Export to ensure we pass in ScheduleInfo as a Hashtable
-    instead of string.
+  * Cleaned Export logic.
 * EXOActiveSyncDeviceAccessRule
   * Retrieve instance by Identity if not found by characteristic.
 * EXOMailboxSettings
