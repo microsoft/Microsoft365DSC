@@ -9,6 +9,8 @@
 * EXOMailboxSettings
   * Simplifyied the Setlogic and removed Timezone validation to remove checks
     to regstry key which caused issues in Linux.
+* M365DSCRuleEvaluation
+  * Changed logic to retrieve resource information.
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.17.0.
   * Updated MicrosoftTeams to version 6.1.0.
