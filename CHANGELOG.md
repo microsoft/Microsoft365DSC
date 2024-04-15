@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* SPOTenantSettings
+  * Add property TenantDefaultTimezone
+    Implements [#4189](https://github.com/microsoft/Microsoft365DSC/issues/4189)
 * AADRoleEligibilitySecheduleRquest
   * Cleaned Export logic.
 * EXOActiveSyncDeviceAccessRule
