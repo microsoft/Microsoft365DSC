@@ -70,16 +70,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
-
-            $member = [Microsoft.Management.Infrastructure.CimInstance]::new('MSFT_MicrosoftGraphMember')
-            $member.CimInstanceProperties.Add([Microsoft.Management.Infrastructure.CimProperty]::Create('Identity', 'John.Doe@mytenant.com', 'Property'))
-            $member.CimInstanceProperties.Add([Microsoft.Management.Infrastructure.CimProperty]::Create('Type', 'User', 'Property'))
-
-            $membership = [Microsoft.Management.Infrastructure.CimInstance]::new('MSFT_MicrosoftGraphScopedRoleMembership')
-            $membership.CimInstanceProperties.Add([Microsoft.Management.Infrastructure.CimProperty]::Create('RoleName', 'User Administrator', 'Property'))
-            $membership.CimInstanceProperties.Add([Microsoft.Management.Infrastructure.CimProperty]::Create('RoleMemberInfo', $member, 'Property'))
-
-            $Script:exportedInstances = $null
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
         # Test contexts
         Context -Name 'The AU should exist but it DOES NOT' -Fixture {
@@ -88,7 +80,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'FakeStringValue1'
                     DisplayName = 'FakeStringValue1'
                     Id          = 'FakeStringValue1'
-                    Members     = @($member)
+                    Members     = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Type     = 'User'
+                            Identity = 'john.smith@contoso.com'
+                        } -ClientOnly)
+                    )
                     Visibility  = 'Public'
                     Ensure      = 'Present'
                     Credential  = $Credential
@@ -128,7 +125,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description = 'FakeStringValue2'
                     DisplayName = 'FakeStringValue2'
                     Id          = 'FakeStringValue2'
-                    Members     = @($member)
+                    Members     = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Type     = 'User'
+                            Identity = 'john.smith@contoso.com'
+                        } -ClientOnly)
+                    )
                     Ensure      = 'Absent'
                     Credential  = $Credential
                 }
@@ -200,10 +202,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description                   = 'DSCAU'
                     DisplayName                   = 'DSCAU'
                     Id                            = 'DSCAU'
-                    Members                       = @($member)
-                    ScopedRoleMembers             = @($membership)
+                    Members                       = @(
+                                    (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Identity = 'John.Doe@mytenant.com'
+                            Type     = 'User'
+                        } -ClientOnly)
+                    )
+                    ScopedRoleMembers             = @(
+                                (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                            RoleName       = 'User Administrator'
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                                    Identity = 'John.Doe@mytenant.com'
+                                    Type     = 'User'
+                                } -ClientOnly)
+                            #Identity = 'John.Doe@mytenant.com'
+                            #Type     = 'User'
+                        } -ClientOnly)
+                    )
                     Visibility                    = 'Public'
                     MembershipType                = 'Assigned'
+                    # MembershipRule and -ProcessingState params are only used when MembershipType is Dynamic
                     MembershipRule                = 'Canada'
                     MembershipRuleProcessingState = 'On'
                     Ensure                        = 'Present'
@@ -354,8 +372,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description       = 'DSCAU2'
                     DisplayName       = 'DSCAU2'
                     Id                = 'DSCAU2'
-                    Members           = @($member)
+                    Members           = @(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Identity = 'John.Doe@mytenant.com'
+                            Type     = 'User'
+                        } -ClientOnly)
+                    )
                     Visibility        = 'Public'
+
                     Ensure            = 'Present'
                     Credential        = $Credential
                 }
@@ -394,15 +418,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'The AU exists and values (Members contains a Group) are NOT in the desired state' -Fixture {
             BeforeAll {
-                $driftedMember = $member
-                $driftedMember.Identity = 'DSCAUMemberGroup'
-                $driftedMember.Type = 'Group'
                 $testParams = @{
                     Description       = 'DSCAU2'
                     DisplayName       = 'DSCAU2'
                     Id                = 'DSCAU2'
-                    Members           = @($driftedMember)
+                    Members           = @(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Identity = 'DSCAUMemberGroup'
+                            Type     = 'Group'
+                        } -ClientOnly)
+                    )
                     Visibility        = 'Public'
+
                     Ensure            = 'Present'
                     Credential        = $Credential
                 }
@@ -440,16 +467,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'The AU exists and values (Members contains a Device) are NOT in the desired state' -Fixture {
             BeforeAll {
-
-                $driftedMember = $member
-                $driftedMember.Identity = 'DSCAUMemberDevice'
-                $driftedMember.Type = 'Device'
                 $testParams = @{
                     Description       = 'DSCAU2'
                     DisplayName       = 'DSCAU2'
                     Id                = 'DSCAU2'
-                    Members           = @($member)
+                    Members           = @(
+                            (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                            Identity = 'DSCAUMemberDevice'
+                            Type     = 'Device'
+                        } -ClientOnly)
+                    )
                     Visibility        = 'Public'
+
                     Ensure            = 'Present'
                     Credential        = $Credential
                 }
@@ -491,7 +520,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Description       = 'DSCAU'
                     DisplayName       = 'DSCAU'
                     Id                = 'DSCAU'
-                    ScopedRoleMembers = @($membership)
+                    ScopedRoleMembers = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                            RoleName       = 'User Administrator'
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                                    Identity = 'John.Doe@mytenant.com'
+                                    Type     = 'User'
+                                } -ClientOnly)
+                            #Identity = 'John.Doe@mytenant.com'
+                            #Type     = 'User'
+                        } -ClientOnly)
+                    )
                     Visibility        = 'Public'
                     Ensure            = 'Present'
                     Credential        = $Credential
@@ -536,9 +575,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'The AU exists and values (ScopedRoleMembers contains a Group) are NOT in the desired state' -Fixture {
             BeforeAll {
-                $driftedMembership = $membership
-                $driftedMembership.RoleMemberInfo.Identity = 'DSCScopedRoleUserAdmins'
-                $driftedMembership.RoleMemberInfo.Type = 'Group'
                 $testParams = @{
                     Description       = 'DSCAU'
                     DisplayName       = 'DSCAU'
@@ -596,14 +632,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'The AU exists, attempt to add as a ScopedRoleMember a Group that is NOT role-enabled. Should throw' -Fixture {
             BeforeAll {
-                $driftedMembership = $membership
-                $driftedMembership.RoleMemberInfo.Identity = 'DSCNotARoleGroup'
-                $driftedMembership.RoleMemberInfo.Type = 'Group'
                 $testParams = @{
                     Description       = 'DSCAU New Description'
                     DisplayName       = 'DSCAU'
                     Id                = 'DSCAU'
-                    ScopedRoleMembers = @($driftedMembership)
+                    ScopedRoleMembers = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                            RoleName       = 'User Administrator'
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                                    Identity = 'DSCNotARoleGroup'
+                                    Type     = 'Group'
+                                } -ClientOnly)
+                        } -ClientOnly)
+                    )
                     Ensure            = 'Present'
                     Credential        = $Credential
                 }
@@ -645,14 +686,19 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'The AU exists and values (ScopedRoleMembers contains an SPN) are NOT in the desired state' -Fixture {
             BeforeAll {
-                $driftedMembership = $membership
-                $driftedMembership.RoleMemberInfo.Identity = 'DSCScopedRoleSPN'
-                $driftedMembership.RoleMemberInfo.Type = 'ServicePrincipal'
                 $testParams = @{
                     Description       = 'DSCAU'
                     DisplayName       = 'DSCAU'
                     Id                = 'DSCAU'
-                    ScopedRoleMembers = @($driftedMembership)
+                    ScopedRoleMembers = @(
+                        (New-CimInstance -ClassName MSFT_MicrosoftGraphScopedRoleMembership -Property @{
+                            RoleName       = 'User Administrator'
+                            RoleMemberInfo = (New-CimInstance -ClassName MSFT_MicrosoftGraphMember -Property @{
+                                    Identity = 'DSCScopedRoleSPN'
+                                    Type     = 'ServicePrincipal'
+                                } -ClientOnly)
+                        } -ClientOnly)
+                    )
                     Visibility        = 'Public'
                     Ensure            = 'Present'
                     Credential        = $Credential
