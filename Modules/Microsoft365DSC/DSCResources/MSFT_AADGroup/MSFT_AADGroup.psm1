@@ -804,7 +804,7 @@ function Set-TargetResource
                     # If the role hasn't been activated, we need to get the role template ID to first activate the role
                     if ($null -eq $role)
                     {
-                        $adminRoleTemplate = Get-MgBetaDirectoryRoleTemplate | Where-Object { $_.DisplayName -eq $diff.InputObject }
+                        $adminRoleTemplate = Get-MgBetaDirectoryRoleTemplate -All | Where-Object { $_.DisplayName -eq $diff.InputObject }
                         $role = New-MgBetaDirectoryRole -RoleTemplateId $adminRoleTemplate.Id
                     }
                 }
