@@ -2,6 +2,13 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fixed an issue when assigning a directory role which is not yet enabled.
+  * Fixed a potential issue if the total directory roles increases in future.
+* AADConditionalAccessPolicy
+  * Fixed a potential issue if the total directory roles increases in future.
+* AADGroup
+  * Fixed a potential issue if the total directory roles increases in future.
 * AADAdministrativeUnit, AADApplication,
   AADEntitlementManagementConnectedOrganization, AADGroup, AADUser
   * Replace old cmdlet and deprecated Remove-Mg\*ByRef with equivalent

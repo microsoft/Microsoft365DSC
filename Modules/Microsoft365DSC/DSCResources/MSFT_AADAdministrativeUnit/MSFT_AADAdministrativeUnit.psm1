@@ -472,7 +472,7 @@ function Set-TargetResource
                 catch
                 {
                     Write-Verbose -Message "Azure AD role {$($rolemember.RoleName)} is not enabled"
-                    $roleTemplate = Get-MgBetaDirectoryRoleTemplate -Filter "DisplayName eq '$($roleMember.RoleName)'" -ErrorAction Stop
+                    $roleTemplate = Get-MgBetaDirectoryRoleTemplate -All -ErrorAction Stop | Where-Object { $_.DisplayName -eq $rolemember.RoleName }
                     if ($null -ne $roleTemplate)
                     {
                         Write-Verbose -Message "Enable Azure AD role {$($rolemember.RoleName)} with id {$($roleTemplate.Id)}"
