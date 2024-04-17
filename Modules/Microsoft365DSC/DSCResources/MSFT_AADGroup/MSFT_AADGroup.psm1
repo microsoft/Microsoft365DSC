@@ -147,7 +147,11 @@ function Get-TargetResource
                 }
                 else
                 {
-                    $filter = "DisplayName eq '$DisplayName'" -replace "'", "''"
+                    if ($DisplayName.Contains("'"))
+                    {
+                        $DisplayName = $DisplayName -replace "'", "''"
+                    }
+                    $filter = "DisplayName eq '$DisplayName'"
                     $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
                 }
                 if ($Group.Length -gt 1)
@@ -664,7 +668,7 @@ function Set-TargetResource
                 elseif ($diff.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Removing new owner {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                    Remove-MgGroupOwnerByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                    Remove-MgGroupOwnerDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
                 }
             }
 
@@ -703,7 +707,7 @@ function Set-TargetResource
                 elseif ($diff.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
-                    Remove-MgGroupMemberByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
+                    Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
                 }
             }
         }
@@ -767,7 +771,7 @@ function Set-TargetResource
                         if ($memberOfgroup.psobject.Typenames -match 'Group')
                         {
                             Write-Verbose -Message "Removing AAD Group {$($currentGroup.DisplayName)} from AAD group {$($memberOfGroup.DisplayName)}"
-                            Remove-MgGroupMemberByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
+                            Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($memberOfGroup.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
                         }
                         else
                         {

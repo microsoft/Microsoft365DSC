@@ -58,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnit -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberByRef -MockWith {
+            Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef -MockWith {
             }
 
             Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
@@ -361,7 +361,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method without removing existing Members or ScopedRoleMembers' {
                 Set-TargetResource @testParams
-                Should -Not -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberByRef
+                Should -Not -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
                 Should -Not -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
             }
 

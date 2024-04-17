@@ -42,10 +42,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef -MockWith {
+            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorDirectoryObjectByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef -MockWith {
+            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorDirectoryObjectByRef -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -320,7 +320,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaEntitlementManagementConnectedOrganization -Exactly 1
-                Should -Invoke -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorDirectoryObjectByRef -Exactly 1
             }
         }
 

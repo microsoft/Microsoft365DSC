@@ -24,6 +24,7 @@ class MSFT_SPOTenantSettings : OMI_BaseResource
     [Write, Description("Disables or enables the Social Bar. It will give users the ability to like a page, see the number of views, likes, and comments on a page, and see the people who have liked a page.")] boolean SocialBarOnSitePagesDisabled;
     [Write, Description("Set to false to enable a comment section on all site pages, users who have access to the pages can leave comments. Set to true to disable this feature.")] boolean CommentsOnSitePagesDisabled;
     [Write, Description("Boolean indicating if Azure Information Protection (AIP) should be enabled on the tenant.")] boolean EnableAIPIntegration;
+    [Write, Description("The default timezone of a tenant for newly created sites.")] String TenantDefaultTimezone;
     [Write, Description("Only accepted value is 'Present'."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials of the account to authenticate with."), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;

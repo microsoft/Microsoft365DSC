@@ -638,7 +638,7 @@ function Set-TargetResource
                     {
                         # Group that user is a member of is not present in MemberOf, remove user from group
                         # (no need to test for dynamic groups as they are ignored in Get-TargetResource)
-                        Remove-MgGroupMemberByRef -GroupId $group.Id -DirectoryObjectId $user.Id
+                        Remove-MgGroupMemberDirectoryObjectByRef -GroupId $group.Id -DirectoryObjectId $user.Id
                     }
                 }
             }

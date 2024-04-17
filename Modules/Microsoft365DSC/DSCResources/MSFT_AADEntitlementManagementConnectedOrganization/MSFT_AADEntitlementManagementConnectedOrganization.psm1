@@ -514,7 +514,7 @@ function Set-TargetResource
         }
         foreach ($sponsor in $sponsorsToRemove)
         {
-            Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef `
+            Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorDirectoryObjectByRef `
                 -ConnectedOrganizationId $currentInstance.Id `
                 -DirectoryObjectId $sponsor
         }
@@ -552,7 +552,7 @@ function Set-TargetResource
         }
         foreach ($sponsor in $sponsorsToRemove)
         {
-            Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef `
+            Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorDirectoryObjectByRef `
                 -ConnectedOrganizationId $currentInstance.Id `
                 -DirectoryObjectId $sponsor
         }

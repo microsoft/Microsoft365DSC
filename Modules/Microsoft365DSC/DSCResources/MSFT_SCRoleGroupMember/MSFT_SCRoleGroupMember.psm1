@@ -18,10 +18,6 @@ function Get-TargetResource
         $Members,
 
         [Parameter()]
-        [System.String[]]
-        $Roles,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -48,16 +44,21 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Getting Role Group configuration for $Name"
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    if ($Global:CurrentModeIsExport)
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters `
+            -SkipModuleReload $true
+    }
+    else
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+            -InboundParameters $PSBoundParameters
+    }
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -93,21 +94,19 @@ function Get-TargetResource
         }
         else
         {
-            # Get RoleGroup Members DN if RoleGroup exists. This is required especially when adding Members like "Exchange Administrator" or "Global Administrator" that have different Names across Tenants
-            $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
+            # Get RoleGroup Members if RoleGroup exists.
+            $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object Name
 
             $result = @{
                 Name                  = $RoleGroup.Name
                 Description           = $RoleGroup.Description
-                Members               = $roleGroupMember.DisplayName
-                Roles                 = $RoleGroup.Roles
+                Members               = $roleGroupMember.Name
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
                 TenantId              = $TenantId
             }
 
@@ -146,10 +145,6 @@ function Set-TargetResource
         $Members,
 
         [Parameter()]
-        [System.String[]]
-        $Roles,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -176,11 +171,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity
+        $CertificatePassword
     )
 
     Write-Verbose -Message "Setting Role Group configuration for $Name"
@@ -199,63 +190,36 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
-    $NewRoleGroupParams = @{
-        Name        = $Name
-        Description = $Description
-        Roles       = $Roles
-        Confirm     = $false
-    }
-    # Remove Description Parameter if null or Empty as the creation fails with $null parameter
-    if ([System.String]::IsNullOrEmpty($Description))
+    # CASE: Role Group has different member values than the desired ones
+    if ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members))
     {
-        $NewRoleGroupParams.Remove('Description') | Out-Null
-    }
-    # CASE: Role Group doesn't exist but should;
-    if ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Role Group '$($Name)' does not exist but it should. Create and configure it."
-        # Create Role Group
-        if ($Members.Length -gt 0)
-        {
-            $NewRoleGroupParams.Add("Members", $Members)
-        }
-        New-RoleGroup @NewRoleGroupParams
-    }
-    # CASE: Role Group exists but it shouldn't;
-    elseif ($Ensure -eq 'Absent' -and $currentRoleGroupConfig.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Role Group '$($Name)' exists but it shouldn't. Remove it."
-        Remove-RoleGroup -Identity $Name -Confirm:$false -Force
-    }
-    # CASE: Role Group exists and it should, but has different member values than the desired ones
-    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members))
-    {
-        Write-Verbose -Message "Role Group '$($Name)' already exists, but members need updating."
-        Write-Verbose -Message "Updating Role Group $($Name) members with values: $(Convert-M365DscHashtableToString -Hashtable $NewRoleGroupParams)"
-        Update-RoleGroupMember -Identity $Name -Members $Members -Confirm:$false
-    }
-    # CASE: Role Assignment Policy exists and it should, but Roles attribute has different values than the desired ones
-    # Set-RoleGroup cannot change Roles attribute. Therefore we have to remove and recreate the assignment policies for the group if Roles attribute should be changed.
-    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Roles) -DifferenceObject $Roles))
-    {
-        Write-Verbose -Message "Role Group '$($Name)' already exists, but roles attribute needs updating."
-        $differences = Compare-Object -ReferenceObject $($currentRoleGroupConfig.Roles) -DifferenceObject $Roles
+        Write-Verbose -Message "Role Group '$($Name)' exists, but members need updating."
+        $differences = Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members
         foreach ($difference in $differences)
         {
             if ($difference.SideIndicator -eq '=>')
             {
-                Write-Verbose -Message "Adding Role {$($difference.InputObject)} to Role Group {$Name}"
-                New-ManagementRoleAssignment -Role $($difference.InputObject) -SecurityGroup $Name
+                Write-Verbose -Message "Adding Member {$($difference.InputObject)} to Role Group {$Name}"
+                Add-RoleGroupMember -Identity $Name -Member $($difference.InputObject)
             }
             elseif ($difference.SideIndicator -eq '<=')
             {
-                Write-Verbose -Message "Removing Role {$($difference.InputObject)} from Role Group {$Name}"
-                Remove-ManagementRoleAssignment -Identity "$($difference.InputObject)-$Name"
+                Write-Verbose -Message "Removing Member {$($difference.InputObject)} from Role Group {$Name}"
+                Remove-RoleGroupMember -Identity $Name -Member $($difference.InputObject)
             }
         }
+    }
+    # CASE: Role Group Membership should be removed
+    elseif ($Ensure -eq 'Absent' -and $currentRoleGroupConfig.Ensure -eq 'Present')
+    {
+         foreach ($member in $Members)
+         {
+             Write-Verbose -Message "Removing Member {$member} from Role Group {$Name}"
+             Remove-RoleGroupMember -Identity $Name -Member $member
+         }
     }
 }
 
@@ -279,10 +243,6 @@ function Test-TargetResource
         $Members,
 
         [Parameter()]
-        [System.String[]]
-        $Roles,
-
-        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -309,11 +269,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity
+        $CertificatePassword
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -341,7 +297,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('CertificatePath') | Out-Null
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -381,14 +336,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword,
-
-        [Parameter()]
-        [Switch]
-        $ManagedIdentity
+        $CertificatePassword
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
+        -InboundParameters $PSBoundParameters `
+        -SkipModuleReload $true
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -421,18 +373,17 @@ function Export-TargetResource
         foreach ($RoleGroup in $Script:exportedInstances)
         {
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($RoleGroup.Name)" -NoNewline
-            $roleGroupMember = Get-RoleGroupMember -Identity $RoleGroup.Name | Select-Object DisplayName
+            $roleGroupMember = Get-RoleGroupMember -Identity $RoleGroup.Name | Select-Object Name
 
             $Params = @{
                 Name                  = $RoleGroup.Name
-                Members               = $roleGroupMember.DisplayName
-                Roles                 = $RoleGroup.Roles
+                Description           = $RoleGroup.Description
+                Members               = $roleGroupMember.Name
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
             }
             $Results = Get-TargetResource @Params

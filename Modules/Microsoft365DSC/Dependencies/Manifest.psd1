@@ -69,6 +69,10 @@
             RequiredVersion = '2.17.0'
         },
         @{
+            ModuleName      = 'Microsoft.Graph.Sites'
+            RequiredVersion = '2.17.0'
+        },
+        @{
             ModuleName      = 'Microsoft.Graph.Users'
             RequiredVersion = '2.17.0'
         },
@@ -86,7 +90,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.14"
+            RequiredVersion = "1.1.15"
         },
         @{
             ModuleName      = 'PnP.PowerShell'
