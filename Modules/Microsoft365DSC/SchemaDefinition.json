@@ -36469,6 +36469,11 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "TenantDefaultTimezone",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
                                "Name":  "Ensure",
                                "Option":  "Write"
                            },
