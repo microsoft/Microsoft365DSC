@@ -15,6 +15,10 @@
     to regstry key which caused issues in Linux.
 * M365DSCRuleEvaluation
   * Changed logic to retrieve resource information.
+* SCRoleGroup
+  * Initial Release.
+* SCRoleGroupMember
+  * Initial Release.
 * SPOTenantSettings
   * Add property TenantDefaultTimezone
     Implements [#4189](https://github.com/microsoft/Microsoft365DSC/issues/4189)
