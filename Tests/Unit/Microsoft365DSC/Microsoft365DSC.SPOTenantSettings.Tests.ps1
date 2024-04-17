@@ -32,6 +32,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
+            Mock -CommandName Update-MgAdminSharepointSetting -MockWith {
+                return $null
+            }
+
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -61,6 +65,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
                     FilePickerExternalImageSearchEnabled          = $true
                     HideDefaultThemes                             = $false
+                    TenantDefaultTimeZone                         = "(UTC-05:00) Eastern Time (US and Canada)"
                 }
 
                 Mock -CommandName Set-PnPTenant -MockWith {
@@ -102,6 +107,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         HideDefaultThemes                             = $true
                     }
                 }
+
+                Mock -CommandName Get-MgAdminSharepointSetting -MockWith {
+                    return @{
+                        DefaultTimeZone                               = "(UTC-05:00) Eastern Time (US and Canada)"
+                    }
+                }
             }
 
             It 'Should return false from the Test method' {
@@ -110,6 +121,90 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Sets the tenant AccessControl settings in Set method' {
                 Set-TargetResource @testParams
+            }
+        }
+
+        Context -Name 'SPO Tenant settings using invalid TenantDefaultTimezone' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    IsSingleInstance                              = 'Yes'
+                    Credential                                    = $Credential
+                    MinCompatibilityLevel                         = 16
+                    MaxCompatibilityLevel                         = 16
+                    SearchResolveExactEmailOrUPN                  = $false
+                    OfficeClientADALDisabled                      = $false
+                    LegacyAuthProtocolsEnabled                    = $true
+                    SignInAccelerationDomain                      = ''
+                    UsePersistentCookiesForExplorerView           = $false
+                    UserVoiceForFeedbackEnabled                   = $true
+                    PublicCdnEnabled                              = $false
+                    PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
+                    UseFindPeopleInPeoplePicker                   = $false
+                    NotificationsInSharePointEnabled              = $true
+                    OwnerAnonymousNotification                    = $true
+                    ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
+                    FilePickerExternalImageSearchEnabled          = $true
+                    HideDefaultThemes                             = $false
+                    TenantDefaultTimeZone                         = "(UT-05:00)"
+                }
+
+                Mock -CommandName Set-PnPTenant -MockWith {
+                    return @{
+                        CompatibilityRange                            = '16,16'
+                        SearchResolveExactEmailOrUPN                  = $false
+                        OfficeClientADALDisabled                      = $false
+                        LegacyAuthProtocolsEnabled                    = $true
+                        SignInAccelerationDomain                      = ''
+                        UsePersistentCookiesForExplorerView           = $false
+                        UserVoiceForFeedbackEnabled                   = $true
+                        PublicCdnEnabled                              = $false
+                        PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
+                        UseFindPeopleInPeoplePicker                   = $false
+                        NotificationsInSharePointEnabled              = $true
+                        OwnerAnonymousNotification                    = $true
+                        ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
+                        FilePickerExternalImageSearchEnabled          = $true
+                        HideDefaultThemes                             = $true
+                    }
+                }
+
+                Mock -CommandName Get-PnPTenant -MockWith {
+                    return @{
+                        CompatibilityRange                            = '16,16'
+                        SearchResolveExactEmailOrUPN                  = $false
+                        OfficeClientADALDisabled                      = $false
+                        LegacyAuthProtocolsEnabled                    = $true
+                        SignInAccelerationDomain                      = ''
+                        UsePersistentCookiesForExplorerView           = $false
+                        UserVoiceForFeedbackEnabled                   = $true
+                        PublicCdnEnabled                              = $false
+                        PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
+                        UseFindPeopleInPeoplePicker                   = $false
+                        NotificationsInSharePointEnabled              = $true
+                        OwnerAnonymousNotification                    = $true
+                        ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
+                        FilePickerExternalImageSearchEnabled          = $true
+                        HideDefaultThemes                             = $true
+                    }
+                }
+
+                Mock -CommandName Get-MgAdminSharepointSetting -MockWith {
+                    return @{
+                        DefaultTimeZone                               = "(UTC-05:00) Eastern Time (US and Canada)"
+                    }
+                }
+
+                Mock -CommandName Update-MgAdminSharepointSetting -MockWith {
+                    throw "Invalid TenantDefaultTimezone '(UT-05:00)'"
+                }
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Sets the tenant AccessControl settings in Set method should throw' {
+                {Set-TargetResource @testParams} | Should -Throw
             }
         }
 
@@ -139,7 +234,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FilePickerExternalImageSearchEnabled          = $true
                         HideDefaultThemes                             = $false
                     }
-                } }
+                }
+
+                Mock -CommandName Get-MgAdminSharepointSetting -MockWith {
+                    return @{
+                        DefaultTimeZone                               = "(UTC-05:00) Eastern Time (US and Canada)"
+                    }
+                }
+            }
 
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
