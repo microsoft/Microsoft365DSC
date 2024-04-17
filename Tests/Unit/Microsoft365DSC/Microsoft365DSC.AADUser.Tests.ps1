@@ -47,7 +47,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgGroupMember -MockWith {
             }
 
-            Mock -CommandName Remove-MgGroupMemberByRef -MockWith {
+            Mock -CommandName Remove-MgGroupMemberDirectoryObjectByRef -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -304,7 +304,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should NOT remove the user from the group in the Set Method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-MgGroupMemberByRef' -Exactly 0
+                Should -Invoke -CommandName 'Remove-MgGroupMemberDirectoryObjectByRef' -Exactly 0
             }
 
             It 'Should return true from the Test method' {
@@ -374,7 +374,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should remove the user from existing group-membership and add the user to the group in the testParams' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName 'Remove-MgGroupMemberByRef' -Exactly 1
+                Should -Invoke -CommandName 'Remove-MgGroupMemberDirectoryObjectByRef' -Exactly 1
                 Should -Invoke -CommandName 'New-MgGroupMember' -Exactly 1
             }
 

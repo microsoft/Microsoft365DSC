@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit, AADApplication,
+  AADEntitlementManagementConnectedOrganization, AADGroup, AADUser
+  * Replace old cmdlet and deprecated Remove-Mg\*ByRef with equivalent
+    Remove-Mg\*DirectoryObjectByRef which is available in Graph 2.17.0
 * AADRoleEligibilitySecheduleRquest
   * Cleaned Export logic.
 * EXOActiveSyncDeviceAccessRule
