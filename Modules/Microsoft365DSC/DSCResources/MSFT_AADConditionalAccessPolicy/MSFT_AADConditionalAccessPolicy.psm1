@@ -418,7 +418,7 @@ function Get-TargetResource
         Write-Verbose -Message 'Get-TargetResource: Role condition defined, processing'
         #build role translation table
         $rolelookup = @{}
-        foreach ($role in Get-MgBetaDirectoryRoleTemplate)
+        foreach ($role in Get-MgBetaDirectoryRoleTemplate -All)
         {
             $rolelookup[$role.Id] = $role.DisplayName
         }
@@ -1195,7 +1195,7 @@ function Set-TargetResource
             {
                 #translate role names to template guid if defined
                 $rolelookup = @{}
-                foreach ($role in Get-MgBetaDirectoryRoleTemplate)
+                foreach ($role in Get-MgBetaDirectoryRoleTemplate -All)
                 {
                     $rolelookup[$role.DisplayName] = $role.Id
                 }
@@ -1229,7 +1229,7 @@ function Set-TargetResource
             {
                 #translate role names to template guid if defined
                 $rolelookup = @{}
-                foreach ($role in Get-MgBetaDirectoryRoleTemplate)
+                foreach ($role in Get-MgBetaDirectoryRoleTemplate -All)
                 {
                     $rolelookup[$role.DisplayName] = $role.Id
                 }
