@@ -1725,11 +1725,7 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.Boolean]
-        $SkipModuleReload = $false,
-
-        [Parameter()]
-        [System.Boolean]
-        $ForceModuleReload = $false
+        $SkipModuleReload = $false
     )
     $Global:MaximumFunctionCount = 32767
     if ($Workload -eq 'MicrosoftTeams')
@@ -1813,8 +1809,7 @@ function New-M365DSCConnection
         {
             Connect-M365Tenant -Workload $Workload `
                 -Credential $InboundParameters.Credential `
-                -SkipModuleReload $Global:CurrentModeIsExport `
-                -ForceModuleReload $ForceModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-Credential")
             {
@@ -1843,8 +1838,7 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -Credential $InboundParameters.Credential `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport `
-                -ForceModuleReload $ForceModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-Credential")
             {
                 $data.Add('ConnectionType', 'Credential')
@@ -1878,8 +1872,7 @@ function New-M365DSCConnection
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -Credential $InboundParameters.Credential `
-                -SkipModuleReload $Global:CurrentModeIsExport `
-                -ForceModuleReload $ForceModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-CredentialsWithApplicationId")
             {
                 $data.Add('ConnectionType', 'CredentialsWithApplicationId')
@@ -1908,8 +1901,7 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -Credential $InboundParameters.Credential `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport `
-                -ForceModuleReload $ForceModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-CredentialsWithApplicationId")
             {
                 $data.Add('ConnectionType', 'CredentialsWithApplicationId')
@@ -1948,8 +1940,7 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -CertificatePassword $InboundParameters.CertificatePassword.Password `
                 -CertificatePath $InboundParameters.CertificatePath `
-                -SkipModuleReload $Global:CurrentModeIsExport `
-                -ForceModuleReload $ForceModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithPath")
             {
@@ -2012,8 +2003,7 @@ function New-M365DSCConnection
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
-                -SkipModuleReload $Global:CurrentModeIsExport `
-                -ForceModuleReload $ForceModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithSecret")
             {
@@ -2034,8 +2024,7 @@ function New-M365DSCConnection
                 -TenantId $InboundParameters.TenantId `
                 -ApplicationSecret $InboundParameters.ApplicationSecret `
                 -Url $Url `
-                -SkipModuleReload $Global:CurrentModeIsExport `
-                -ForceModuleReload $ForceModuleReload
+                -SkipModuleReload $Global:CurrentModeIsExport
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithSecret")
             {
@@ -2057,8 +2046,7 @@ function New-M365DSCConnection
             -ApplicationId $InboundParameters.ApplicationId `
             -TenantId $InboundParameters.TenantId `
             -CertificateThumbprint $InboundParameters.CertificateThumbprint `
-            -SkipModuleReload $Global:CurrentModeIsExport ` `
-            -ForceModuleReload $ForceModuleReload
+            -SkipModuleReload $Global:CurrentModeIsExport `
             -Url $Url
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithThumbprint")
         {
@@ -2080,8 +2068,7 @@ function New-M365DSCConnection
             -TenantId $InboundParameters.TenantId `
             -Credential $InboundParameters.Credential `
             -Url $Url `
-            -SkipModuleReload $Global:CurrentModeIsExport `
-            -ForceModuleReload $ForceModuleReload
+            -SkipModuleReload $Global:CurrentModeIsExport
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-CredentialsWithTenantId")
         {
             $data.Add('ConnectionType', 'CredentialsWithTenantId')
@@ -2102,8 +2089,7 @@ function New-M365DSCConnection
         Connect-M365Tenant -Workload $Workload `
             -Identity `
             -TenantId $InboundParameters.TenantId `
-            -SkipModuleReload $Global:CurrentModeIsExport `
-            -ForceModuleReload $ForceModuleReload
+            -SkipModuleReload $Global:CurrentModeIsExport
 
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ManagedIdentity")
         {

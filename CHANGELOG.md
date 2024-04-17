@@ -2,9 +2,6 @@
 
 # UNRELEASED
 
-* SPOTenantSettings
-  * Add property TenantDefaultTimezone
-    Implements [#4189](https://github.com/microsoft/Microsoft365DSC/issues/4189)
 * AADRoleEligibilitySecheduleRquest
   * Cleaned Export logic.
 * EXOActiveSyncDeviceAccessRule
@@ -14,6 +11,13 @@
     to regstry key which caused issues in Linux.
 * M365DSCRuleEvaluation
   * Changed logic to retrieve resource information.
+* SCRoleGroup
+  * Initial Release.
+* SCRoleGroupMember
+  * Initial Release.
+* SPOTenantSettings
+  * Add property TenantDefaultTimezone
+    Implements [#4189](https://github.com/microsoft/Microsoft365DSC/issues/4189)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.17.0.
   * Updated MSCloudLoginAssistant dependencies to version 1.1.15.

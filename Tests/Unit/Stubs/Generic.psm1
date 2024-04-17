@@ -372,11 +372,7 @@ function New-M365DSCConnection
 
         [Parameter()]
         [System.Boolean]
-        $SkipModuleReload,
-
-        [Parameter()]
-        [System.Boolean]
-        $ForceModuleReload
+        $SkipModuleReload
     )
 }
 
