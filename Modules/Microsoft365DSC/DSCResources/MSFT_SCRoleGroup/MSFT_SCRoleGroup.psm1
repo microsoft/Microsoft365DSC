@@ -15,10 +15,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String[]]
-        $Members,
-
-        [Parameter()]
-        [System.String[]]
         $Roles,
 
         [Parameter()]
@@ -56,7 +52,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting Role Group configuration for $Name"
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -93,13 +89,9 @@ function Get-TargetResource
         }
         else
         {
-            # Get RoleGroup Members DN if RoleGroup exists. This is required especially when adding Members like "Exchange Administrator" or "Global Administrator" that have different Names across Tenants
-            $roleGroupMember = Get-RoleGroupMember -Identity $Name | Select-Object DisplayName
-
             $result = @{
                 Name                  = $RoleGroup.Name
                 Description           = $RoleGroup.Description
-                Members               = $roleGroupMember.DisplayName
                 Roles                 = $RoleGroup.Roles
                 Ensure                = 'Present'
                 Credential            = $Credential
@@ -140,10 +132,6 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $Members,
 
         [Parameter()]
         [System.String[]]
@@ -199,7 +187,7 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     $NewRoleGroupParams = @{
@@ -230,33 +218,6 @@ function Set-TargetResource
         Write-Verbose -Message "Role Group '$($Name)' exists but it shouldn't. Remove it."
         Remove-RoleGroup -Identity $Name -Confirm:$false -Force
     }
-    # CASE: Role Group exists and it should, but has different member values than the desired ones
-    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members))
-    {
-        Write-Verbose -Message "Role Group '$($Name)' already exists, but members need updating."
-        Write-Verbose -Message "Updating Role Group $($Name) members with values: $(Convert-M365DscHashtableToString -Hashtable $NewRoleGroupParams)"
-        Update-RoleGroupMember -Identity $Name -Members $Members -Confirm:$false
-    }
-    # CASE: Role Assignment Policy exists and it should, but Roles attribute has different values than the desired ones
-    # Set-RoleGroup cannot change Roles attribute. Therefore we have to remove and recreate the assignment policies for the group if Roles attribute should be changed.
-    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Roles) -DifferenceObject $Roles))
-    {
-        Write-Verbose -Message "Role Group '$($Name)' already exists, but roles attribute needs updating."
-        $differences = Compare-Object -ReferenceObject $($currentRoleGroupConfig.Roles) -DifferenceObject $Roles
-        foreach ($difference in $differences)
-        {
-            if ($difference.SideIndicator -eq '=>')
-            {
-                Write-Verbose -Message "Adding Role {$($difference.InputObject)} to Role Group {$Name}"
-                New-ManagementRoleAssignment -Role $($difference.InputObject) -SecurityGroup $Name
-            }
-            elseif ($difference.SideIndicator -eq '<=')
-            {
-                Write-Verbose -Message "Removing Role {$($difference.InputObject)} from Role Group {$Name}"
-                Remove-ManagementRoleAssignment -Identity "$($difference.InputObject)-$Name"
-            }
-        }
-    }
 }
 
 function Test-TargetResource
@@ -273,10 +234,6 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Description,
-
-        [Parameter()]
-        [System.String[]]
-        $Members,
 
         [Parameter()]
         [System.String[]]
@@ -387,7 +344,7 @@ function Export-TargetResource
         [Switch]
         $ManagedIdentity
     )
-    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -421,11 +378,9 @@ function Export-TargetResource
         foreach ($RoleGroup in $Script:exportedInstances)
         {
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($RoleGroup.Name)" -NoNewline
-            $roleGroupMember = Get-RoleGroupMember -Identity $RoleGroup.Name | Select-Object DisplayName
 
             $Params = @{
                 Name                  = $RoleGroup.Name
-                Members               = $roleGroupMember.DisplayName
                 Roles                 = $RoleGroup.Roles
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
