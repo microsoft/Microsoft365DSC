@@ -6,12 +6,27 @@
   AADEntitlementManagementConnectedOrganization, AADGroup, AADUser
   * Replace old cmdlet and deprecated Remove-Mg\*ByRef with equivalent
     Remove-Mg\*DirectoryObjectByRef which is available in Graph 2.17.0
+* AADRoleEligibilitySecheduleRquest
+  * Cleaned Export logic.
+* EXOActiveSyncDeviceAccessRule
+  * Retrieve instance by Identity if not found by characteristic.
 * EXOMailboxSettings
-  * Simplified the Set logic and removed Timezone validation to remove checks
-    to registry key which caused issues in Linux.
+  * Simplifyied the Setlogic and removed Timezone validation to remove checks
+    to regstry key which caused issues in Linux.
+* M365DSCRuleEvaluation
+  * Changed logic to retrieve resource information.
+* SPOTenantSettings
+  * Add property TenantDefaultTimezone
+    Implements [#4189](https://github.com/microsoft/Microsoft365DSC/issues/4189)
 * DEPENDENCIES
   * Updated Microsoft.Graph dependencies to version 2.17.0.
+  * Updated MSCloudLoginAssistant dependencies to version 1.1.15.
   * Updated MicrosoftTeams to version 6.1.0.
+* MISC
+  * Provided the ability to force reload the EXO or SC modules to prevent
+    calling the wrong cmdlet where the same names are defined (e.g. Get-RoleGroup).
+  * Telemetry
+    * Get operating system using faster method to speed up telemetry calls.
 
 # 1.24.403.1
 
@@ -63,6 +78,8 @@
   * Log both matching and not matching resources and in XML format
 * O365OrgSettings
   * Fixed missing permissions in settings.json
+* SCRoleGroupMember
+  * Initial release
 * SPOAccessControlSettings
   * [BREAKING CHANGE] Removed CommentsOnSitePagesDisabled parameter, because of
     duplication in SPOTenantSettings

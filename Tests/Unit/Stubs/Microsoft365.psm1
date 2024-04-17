@@ -69078,6 +69078,41 @@ function Update-RoleGroupMember
         $Members
     )
 }
+function Add-RoleGroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Member
+    )
+}
+
+function Remove-RoleGroupMember
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Management.Automation.SwitchParameter]
+        $Confirm,
+
+        [Parameter()]
+        [System.Object]
+        $Identity,
+
+        [Parameter()]
+        [System.Object]
+        $Member
+    )
+}
 #endregion
 
 #region PnP.PowerShell

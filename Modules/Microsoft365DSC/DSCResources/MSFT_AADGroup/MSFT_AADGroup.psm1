@@ -147,7 +147,11 @@ function Get-TargetResource
                 }
                 else
                 {
-                    $filter = "DisplayName eq '$DisplayName'" -replace "'", "''"
+                    if ($DisplayName.Contains("'"))
+                    {
+                        $DisplayName = $DisplayName -replace "'", "''"
+                    }
+                    $filter = "DisplayName eq '$DisplayName'"
                     $Group = Get-MgGroup -Filter $filter -ErrorAction Stop
                 }
                 if ($Group.Length -gt 1)

@@ -27,6 +27,7 @@
 | **SocialBarOnSitePagesDisabled** | Write | Boolean | Disables or enables the Social Bar. It will give users the ability to like a page, see the number of views, likes, and comments on a page, and see the people who have liked a page. | |
 | **CommentsOnSitePagesDisabled** | Write | Boolean | Set to false to enable a comment section on all site pages, users who have access to the pages can leave comments. Set to true to disable this feature. | |
 | **EnableAIPIntegration** | Write | Boolean | Boolean indicating if Azure Information Protection (AIP) should be enabled on the tenant. | |
+| **TenantDefaultTimezone** | Write | String | The default timezone of a tenant for newly created sites. | |
 | **Ensure** | Write | String | Only accepted value is 'Present'. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the account to authenticate with. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -55,21 +56,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Domain.Read.All
+    - Domain.Read.All, SharePointTenantSettings.Read.All
 
 - **Update**
 
-    - Domain.Read.All
+    - Domain.Read.All, SharePointTenantSettings.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - Domain.Read.All
+    - Domain.Read.All, SharePointTenantSettings.Read.All
 
 - **Update**
 
-    - Domain.Read.All
+    - Domain.Read.All, SharePointTenantSettings.ReadWrite.All
 
 ### Microsoft SharePoint
 

@@ -87,34 +87,36 @@ function Get-TargetResource
     try
     {
         $AllActiveSyncDeviceAccessRules = Get-ActiveSyncDeviceAccessRule -ErrorAction Stop
-
         $ActiveSyncDeviceAccessRule = $AllActiveSyncDeviceAccessRules | Where-Object -FilterScript { $_.Identity -eq "$QueryString ($Characteristic)" }
 
         if ($null -eq $ActiveSyncDeviceAccessRule)
         {
-            Write-Verbose -Message "Active Sync Device Access Rule $($Identity) does not exist."
-            return $nullReturn
-        }
-        else
-        {
-            $result = @{
-                Identity              = $ActiveSyncDeviceAccessRule.Identity
-                AccessLevel           = $ActiveSyncDeviceAccessRule.AccessLevel
-                Characteristic        = $ActiveSyncDeviceAccessRule.Characteristic
-                QueryString           = $ActiveSyncDeviceAccessRule.QueryString
-                Ensure                = 'Present'
-                Credential            = $Credential
-                ApplicationId         = $ApplicationId
-                TenantId              = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                CertificatePath       = $CertificatePath
-                CertificatePassword   = $CertificatePassword
-                Managedidentity       = $ManagedIdentity.IsPresent
-            }
+            Write-Verbose -Message "Trying to retrieve instance by Identity"
+            $ActiveSyncDeviceAccessRule = Get-ActiveSyncDeviceAccessRule -Identity $Identity -ErrorAction 'SilentlyContinue'
 
-            Write-Verbose -Message "Found Active Sync Device Access Rule $($Identity)"
-            return $result
+            if ($null -eq $ActiveSyncDeviceAccessRule)
+            {
+                Write-Verbose -Message "Active Sync Device Access Rule $($Identity) does not exist."
+                return $nullReturn
+            }
         }
+        $result = @{
+            Identity              = $ActiveSyncDeviceAccessRule.Identity
+            AccessLevel           = $ActiveSyncDeviceAccessRule.AccessLevel
+            Characteristic        = $ActiveSyncDeviceAccessRule.Characteristic
+            QueryString           = $ActiveSyncDeviceAccessRule.QueryString
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            CertificatePath       = $CertificatePath
+            CertificatePassword   = $CertificatePassword
+            Managedidentity       = $ManagedIdentity.IsPresent
+        }
+
+        Write-Verbose -Message "Found Active Sync Device Access Rule $($Identity)"
+        return $result
     }
     catch
     {
