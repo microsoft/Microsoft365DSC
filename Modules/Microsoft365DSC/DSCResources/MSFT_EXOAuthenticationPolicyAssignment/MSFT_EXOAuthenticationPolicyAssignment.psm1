@@ -47,17 +47,8 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting Authentication Policy configuration for $Identity"
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -305,8 +296,7 @@ function Export-TargetResource
         $ManagedIdentity
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
