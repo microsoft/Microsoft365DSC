@@ -56,17 +56,9 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting Role Group configuration for $Name"
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters `
+        -ForceModuleReload:$true
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -209,7 +201,8 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters
+        -InboundParameters $PSBoundParameters `
+        -ForceModuleReload:$true
 
     $NewRoleGroupParams = @{
         Name        = $Name
@@ -398,7 +391,7 @@ function Export-TargetResource
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+        -ForceModuleReload:$true
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
