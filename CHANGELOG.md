@@ -12,6 +12,8 @@
   * Updated MSCloudLoginAssistant dependencies to version 1.1.15.
   * Updated MicrosoftTeams to version 6.1.0.
 * MISC
+  * Provided the ability to force reload the EXO or SC modules to prevent
+    calling the wrong cmdlet where the same names are defined (e.g. Get-RoleGroup).
   * Telemetry
     * Get operating system using faster method to speed up telemetry calls.
 
