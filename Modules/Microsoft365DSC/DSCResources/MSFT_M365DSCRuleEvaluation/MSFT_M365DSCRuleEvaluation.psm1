@@ -365,5 +365,4 @@ function Export-TargetResource
     return $null
 }
 
-
 Export-ModuleMember -Function *-TargetResource
