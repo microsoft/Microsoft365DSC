@@ -141,7 +141,7 @@ function Test-TargetResource
     Write-Verbose -Message 'Testing configuration of AzureAD Tenant Details'
 
     $Global:PartialExportFileName = "$((New-Guid).ToString()).partial"
-    $module = Get-DSCResource -Module 'Microsoft365DSC' -Name $ResourceName
+    $module = Join-Path -Path $PSScriptRoot -ChildPath "..\MSFT_$ResourceName\MSFT_$ResourceName.psm1" -Resolve
     if ($null -ne $module)
     {
         $params = @{
@@ -157,8 +157,8 @@ function Test-TargetResource
             $params.Add("ApplicationSecret", $PSBoundParameters.ApplicationSecret)
         }
 
-        Write-Verbose -Message "Importing module from Path {$($module.Path)}"
-        Import-Module $module.Path -Force -Function 'Export-TargetResource' | Out-Null
+        Write-Verbose -Message "Importing module from Path {$($module)}"
+        Import-Module $module -Force -Function 'Export-TargetResource' | Out-Null
         $cmdName = "MSFT_$ResourceName\Export-TargetResource"
 
         [Array]$instances = &$cmdName @params
@@ -174,7 +174,7 @@ function Test-TargetResource
             param (
             )
 
-            $OrganizationName = $ConfigurationData.NonNodeData.OrganizationName
+            `$OrganizationName = `$ConfigurationData.NonNodeData.OrganizationName
 
             Import-DscResource -ModuleName 'Microsoft365DSC'
 
@@ -364,6 +364,5 @@ function Export-TargetResource
     Write-Host "`r`n" -NoNewline
     return $null
 }
-
 
 Export-ModuleMember -Function *-TargetResource
