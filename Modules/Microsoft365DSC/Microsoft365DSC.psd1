@@ -11,7 +11,7 @@
   # RootModule = ''
 
   # Version number of this module.
-  ModuleVersion     = '1.24.403.1'
+  ModuleVersion     = '1.24.417.1'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -143,92 +143,41 @@
 
       # ReleaseNotes of this module
       ReleaseNotes = '* AADAdministrativeUnit
-      * Fix issue with deploying/creating a new AU with members and/or adding members to an existing AU
-        FIXES [#4404](https://github.com/microsoft/Microsoft365DSC/issues/4404)
-      * Updated examples to include setting Visibility and ScopedRoleMembers
-      * Fix issue with Set-TargetResource was failing to apply when Verbose is set
-        FIXES [#4497](https://github.com/microsoft/Microsoft365DSC/issues/4497)
-    * All resources
-      * Fix issue where Ensure cannot be left as default Present
-    * AADAdministrativeUnit
-      * Fix issue with omitted Ensure and/or Id
-        FIXES [#4437](https://github.com/microsoft/Microsoft365DSC/issues/4437)
+      * Fixed an issue when assigning a directory role which is not yet enabled.
+      * Fixed a potential issue if the total directory roles increases in future.
     * AADConditionalAccessPolicy
-      * Fixed schema file
-    * EXOCalendarProcessing
-      * Fixed schema file
-    * EXOGroupSettings
-      * Fixed schema file
-    * EXOMailTips
-      * [BREAKING CHANGE] Replaced the Organization parameter with IsSingleInstance
-        FIXES [#4117](https://github.com/microsoft/Microsoft365DSC/issues/4117)
-    * EXOMessageClassification
-      * Fixed schema file
-    * EXOOMEConfiguration
-      * Fixed schema file
-    * EXOTransportRule
-      * [BREAKING CHANGE] Change data type of Priority from String to Int
-        FIXES [[#4136](https://github.com/microsoft/Microsoft365DSC/issues/4136)]
-    * IntuneAntivirusPolicyWindows10SettingCatalog
-      * Add missing properties
-    * IntuneAppConfigurationPolicy
-      * Fix comparison in Test-TargetResource
-        FIXES [#4451](https://github.com/microsoft/Microsoft365DSC/issues/4451)
-    * IntuneDeviceCompliancePolicyWindows10
-      * Fix group assignment by using the corrected function
-        Update-DeviceConfigurationPolicyAssignment from module M365DSCDRGUtil
-        FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
-    * IntuneDeviceEnrollmentPlatformRestriction
-      * Fixed an issue where nested settings would throw a conflict
-        FIXES [#4082](https://github.com/microsoft/Microsoft365DSC/issues/4082)
-    * IntuneDeviceEnrollmentStatusPageWindows10
-      * Added support for specifying SelectedMobileAppNames in addition to SelectedMobileAppIds,
-        which are different for each tenant.
-        FIXES [#4494](https://github.com/microsoft/Microsoft365DSC/issues/4494)
+      * Fixed a potential issue if the total directory roles increases in future.
+    * AADGroup
+      * Fixed a potential issue if the total directory roles increases in future.
+    * AADAdministrativeUnit, AADApplication,
+      AADEntitlementManagementConnectedOrganization, AADGroup, AADUser
+      * Replace old cmdlet and deprecated Remove-Mg\*ByRef with equivalent
+        Remove-Mg\*DirectoryObjectByRef which is available in Graph 2.17.0
+    * AADRoleEligibilitySecheduleRquest
+      * Cleaned Export logic.
+    * EXOActiveSyncDeviceAccessRule
+      * Retrieve instance by Identity if not found by characteristic.
+    * EXOMailboxSettings
+      * Simplifyied the Setlogic and removed Timezone validation to remove checks
+        to regstry key which caused issues in Linux.
     * M365DSCRuleEvaluation
-      * Log both matching and not matching resources and in XML format
-    * O365OrgSettings
-      * Fixed missing permissions in settings.json
-    * SPOAccessControlSettings
-      * [BREAKING CHANGE] Removed CommentsOnSitePagesDisabled parameter, because of
-        duplication in SPOTenantSettings
-        FIXES [#3576](https://github.com/microsoft/Microsoft365DSC/issues/3576)
-      * [BREAKING CHANGE] Moved SocialBarOnSitePagesDisabled parameter to SPOTenantSettings,
-        because it makes more sense there. This has nothing to do with Access Control.
+      * Changed logic to retrieve resource information.
+    * SCRoleGroup
+      * Initial Release.
+    * SCRoleGroupMember
+      * Initial Release.
     * SPOTenantSettings
-      * [BREAKING CHANGE] Removed ConditionalAccessPolicy parameter, because of
-        duplication in SPOAccessControlSettings
-        FIXES [#3576](https://github.com/microsoft/Microsoft365DSC/issues/3576)
-      * Added SocialBarOnSitePagesDisabled parameter, moved from SPOAccessControlSettings.
-      * Added EnableAIPIntegration.
-    * TeamsChannelTab
-      * Fixed schema file
-    * TeamsGroupPolicyAssignment
-      * Skip assignments that have orphaned/deleted groups or without display name
-        instead of throwing an error
-        FIXES [#4407](https://github.com/microsoft/Microsoft365DSC/issues/4407)
-    * TeamsTenantDialPlan
-      * Fix output of property NormalizationRules as a string to the blueprint
-        FIXES [#4428](https://github.com/microsoft/Microsoft365DSC/issues/4428)
-      * Fix creation, update and deletion of resource
-    * TeamsUpdateManagementPolicy
-      * Adds support for the NewTeamsOnly value or the UseNewTeamsClient property.
-        FIXES [#4496](https://github.com/microsoft/Microsoft365DSC/issues/4496)
+      * Add property TenantDefaultTimezone
+        Implements [#4189](https://github.com/microsoft/Microsoft365DSC/issues/4189)
     * DEPENDENCIES
-      * Updated DSCParser to version 2.0.0.3.
+      * Updated Microsoft.Graph dependencies to version 2.17.0.
+      * Updated MSCloudLoginAssistant dependencies to version 1.1.15.
+      * Updated MicrosoftTeams to version 6.1.0.
     * MISC
-      * Initial release of Get-M365DSCEvaluationRulesForConfiguration
-      * M365DSCDRGUtil
-        Fix Update-DeviceConfigurationPolicyAssignment so that if the group cannot
-        be found by its Id it tries to search it by display name
-        FIXES [#4467](https://github.com/microsoft/Microsoft365DSC/issues/4467)
-      * M365DSCReport
-        Fix issue when asserting resources not covered by current conditions in
-        Get-M365DSCResourceKey by always returning all their mandatory parameters
-        FIXES [#4502](https://github.com/microsoft/Microsoft365DSC/issues/4502)
-      * Fix broken links to integration tests in README.md
-      * Changing logic to retrieve DSC Resources properties not to use DSC
-        specific cmdlets.'
+      * Provided the ability to force reload the EXO or SC modules to prevent
+        calling the wrong cmdlet where the same names are defined (e.g. Get-RoleGroup).
+      * Telemetry
+        * Get operating system using faster method to speed up telemetry calls.'
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update
       # RequireLicenseAcceptance = $false
