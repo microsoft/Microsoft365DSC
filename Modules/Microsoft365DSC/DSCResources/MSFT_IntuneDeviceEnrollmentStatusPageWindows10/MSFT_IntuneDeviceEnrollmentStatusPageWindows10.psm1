@@ -652,6 +652,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -694,7 +698,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EnrollmentCompletionPageConfiguration' `
