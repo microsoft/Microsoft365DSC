@@ -1450,7 +1450,7 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_ -match 'The tenant needs an AAD Premium 2 license')
+        if ($_.ErrorDetails.Message -like "*The tenant needs to have Microsoft Entra*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) AAD Premium License is required to get the role."
             return ''

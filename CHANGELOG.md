@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.41.1
 
 * AADAdministrativeUnit
   * Fixed an issue when assigning a directory role which is not yet enabled.
