@@ -56,10 +56,13 @@ function Get-TargetResource
         $ManagedIdentity,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential[]]
+        [System.String[]]
         $AccessTokens
     )
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
+    Write-Verbose -Message "Access: $($AccessTokens | Out-String)"
+
+    Write-Verbose -Message "Tenant: $($TenantId | Out-String)"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -188,7 +191,7 @@ function Set-TargetResource
         $ManagedIdentity,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential[]]
+        [System.String[]]
         $AccessTokens
     )
 
@@ -288,7 +291,7 @@ function Test-TargetResource
         $ManagedIdentity,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential[]]
+        [System.String[]]
         $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
@@ -357,7 +360,7 @@ function Export-TargetResource
         $ManagedIdentity,
 
         [Parameter()]
-        [System.Management.Automation.PSCredential[]]
+        [System.String[]]
         $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `

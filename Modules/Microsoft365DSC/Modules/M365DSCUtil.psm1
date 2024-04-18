@@ -2118,7 +2118,7 @@ function New-M365DSCConnection
     {
         Write-Verbose -Message 'Connecting via Access Tokens'
         Connect-M365Tenant -Workload $Workload `
-            -Identity `
+            -AccessTokens $InboundParameters.AccessTokens `
             -TenantId $InboundParameters.TenantId `
             -SkipModuleReload $Global:CurrentModeIsExport
 
@@ -3356,13 +3356,7 @@ function Update-M365DSCExportAuthenticationResults
 
         if ($null -ne $Results.AccessTokens)
         {
-            $tokenValue = "@("
-            foreach ($token in $Results.AccessTokens)
-            {
-                $tokenValue += "New-Object System.Management.Automation.PSCredential ('AccessToken', (ConvertTo-SecureString `$ConfigurationData.NonNodeData.AccessTokens -AsPlainText -Force))"
-            }
-            $tokenValue += ")"
-            $results.AccessTokens = $tokenValue
+            $results.AccessTokens = "`$ConfigurationData.NonNodeData.AccessTokens"
         }
     }
     return $Results

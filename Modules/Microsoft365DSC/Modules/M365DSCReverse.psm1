@@ -437,6 +437,11 @@ function Start-M365DSCConfigurationExtract
                     -Key 'AccessTokens' `
                     -Value $AccessTokens `
                     -Description 'Access tokens to use for authentication'
+
+                Add-ConfigurationDataEntry -Node 'NonNodeData' `
+                    -Key 'TenantId' `
+                    -Value $TenantId `
+                    -Description 'The Id or Name of the tenant to authenticate against'
             }
             { $_ -in 'Credentials', 'CredentialsWithApplicationId', 'CredentialsWithTenantId' }
             {
@@ -543,15 +548,6 @@ function Start-M365DSCConfigurationExtract
         {
             $WorkloadsToConnectTo = Get-M365DSCWorkloadsListFromResourceNames -ResourceNames $ResourcesToExport
         }
-        $AccessTokenValue = $null
-        if (-not [System.String]::IsNullOrEmpty($AccessTokens))
-        {
-            $AccessTokenValue = @()
-            foreach ($token in $AccessTokens)
-            {
-                $AccessTokenValue += New-Object System.Management.Automation.PSCredential ('AccessToken', (ConvertTo-SecureString $token -AsPlainText -Force))
-            }
-        }
         foreach ($Workload in $WorkloadsToConnectTo)
         {
             Write-Host "Connecting to {$($Workload.Name)}..." -NoNewline
@@ -565,7 +561,7 @@ function Start-M365DSCConfigurationExtract
                 CertificatePassword   = $CertificatePassword.Password
                 Credential            = $Credential
                 Identity              = $ManagedIdentity.IsPresent
-                AccessTokens          = $AccessTokenValue
+                AccessTokens          = $AccessTokens
             }
 
             if ($workload.AuthenticationMethod -eq 'Credentials')
@@ -638,7 +634,7 @@ function Start-M365DSCConfigurationExtract
                 }
                 'AccessTokens'
                 {
-                    $parameters.Add('AccessTokens', $AccessTokenValue)
+                    $parameters.Add('AccessTokens', $AccessTokens)
                     $parameters.Add('TenantId', $TenantId)
                 }
             }
