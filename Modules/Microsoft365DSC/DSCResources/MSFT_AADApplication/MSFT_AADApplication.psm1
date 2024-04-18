@@ -578,7 +578,7 @@ function Set-TargetResource
                     {
                         $ObjectId = $diff.InputObject
                     }
-                    Remove-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -DirectoryObjectId $ObjectId -ErrorAction Stop
+                    Remove-MgApplicationOwnerDirectoryObjectByRef -ApplicationId $currentAADApp.ObjectId -DirectoryObjectId $ObjectId -ErrorAction Stop
                 }
                 catch
                 {

@@ -103,6 +103,10 @@ function Get-TargetResource
         $EnableAIPIntegration,
 
         [Parameter()]
+        [System.String]
+        $TenantDefaultTimezone,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -142,6 +146,7 @@ function Get-TargetResource
 
     Write-Verbose -Message 'Getting configuration for SPO Tenant'
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -161,7 +166,7 @@ function Get-TargetResource
     try
     {
         $SPOTenantSettings = Get-PnPTenant -ErrorAction Stop
-
+        $SPOTenantGraphSettings = Get-MgAdminSharepointSetting -Property TenantDefaultTimeZone # get tenantDefaultTimezone
         $CompatibilityRange = $SPOTenantSettings.CompatibilityRange.Split(',')
         $MinCompat = $null
         $MaxCompat = $null
@@ -195,6 +200,7 @@ function Get-TargetResource
             SocialBarOnSitePagesDisabled                  = $SPOTenantSettings.SocialBarOnSitePagesDisabled
             CommentsOnSitePagesDisabled                   = $SPOTenantSettings.CommentsOnSitePagesDisabled
             EnableAIPIntegration                          = $SPOTenantSettings.EnableAIPIntegration
+            TenantDefaultTimezone                         = $SPOTenantGraphSettings.TenantDefaultTimeZone
             Credential                                    = $Credential
             ApplicationId                                 = $ApplicationId
             TenantId                                      = $TenantId
@@ -323,6 +329,10 @@ function Set-TargetResource
         $EnableAIPIntegration,
 
         [Parameter()]
+        [System.String]
+        $TenantDefaultTimezone,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -375,7 +385,11 @@ function Set-TargetResource
     #endregion
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
-
+    if (-not [string]::IsNullOrEmpty($TenantDefaultTimezone))
+    {
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
+    }
+    
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Credential') | Out-Null
     $CurrentParameters.Remove('IsSingleInstance') | Out-Null
@@ -388,12 +402,19 @@ function Set-TargetResource
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
     $CurrentParameters.Remove('ApplicationSecret') | Out-Null
 
+    $CurrentParameters.Remove('TenantDefaultTimezone') | Out-Null # this one is updated separately using Graph
+
     if ($PublicCdnEnabled -eq $false)
     {
         Write-Verbose -Message 'The use of the public CDN is not enabled, for that the PublicCdnAllowedFileTypes parameter can not be configured and will be removed'
         $CurrentParameters.Remove('PublicCdnAllowedFileTypes') | Out-Null
     }
     $tenant = Set-PnPTenant @CurrentParameters
+
+    if (-not [string]::IsNullOrEmpty($TenantDefaultTimezone))
+    {
+        $tenantGraph = Update-MgAdminSharepointSetting -TenantDefaultTimezone $TenantDefaultTimezone -ErrorAction Stop
+    }
 }
 
 function Test-TargetResource
@@ -497,6 +518,10 @@ function Test-TargetResource
         $EnableAIPIntegration,
 
         [Parameter()]
+        [System.String]
+        $TenantDefaultTimezone,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -575,7 +600,8 @@ function Test-TargetResource
             'DisabledWebPartIds', `
             'SocialBarOnSitePagesDisabled', `
             'CommentsOnSitePagesDisabled', `
-            'EnableAIPIntegration'
+            'EnableAIPIntegration', `
+            'TenantDefaultTimezone'
     )
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
@@ -624,6 +650,8 @@ function Export-TargetResource
     try
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+            -InboundParameters $PSBoundParameters
+        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
 
         #Ensure the proper dependencies are installed in the current environment.

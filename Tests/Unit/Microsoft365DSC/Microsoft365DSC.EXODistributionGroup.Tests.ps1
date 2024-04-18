@@ -49,6 +49,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
 
             Mock -CommandName Get-DistributionGroupMember -MockWith {
             }
@@ -119,7 +121,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SendModerationNotifications        = 'Always'
                     Credential                         = $Credential
                 }
-                
+
 
                 Mock -CommandName Get-MgUser -MockWith {
                     return @{
@@ -186,7 +188,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SendModerationNotifications        = 'Always'
                     Credential                         = $Credential
                 }
-                
+
                 Mock -CommandName Get-MgUser -MockWith {
                     return @{
                         UserPrincipalName = 'john.smith@contoso.com'
@@ -247,7 +249,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SendModerationNotifications        = 'Always'
                     Credential                         = $Credential
                 }
-                
+
                 Mock -CommandName Get-MgUser -MockWith {
                     return @{
                         UserPrincipalName = 'john.smith@contoso.com'
@@ -298,7 +300,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Credential = $Credential
                 }
-                
+
                 Mock -CommandName Get-MgUser -MockWith {
                     return @{
                         UserPrincipalName = 'john.smith@contoso.com'

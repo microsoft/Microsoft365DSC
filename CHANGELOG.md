@@ -1,9 +1,49 @@
 # Change log for Microsoft365DSC
 
+# 1.24.41.1
+
+* AADAdministrativeUnit
+  * Fixed an issue when assigning a directory role which is not yet enabled.
+  * Fixed a potential issue if the total directory roles increases in future.
+* AADConditionalAccessPolicy
+  * Fixed a potential issue if the total directory roles increases in future.
+* AADGroup
+  * Fixed a potential issue if the total directory roles increases in future.
+* AADAdministrativeUnit, AADApplication,
+  AADEntitlementManagementConnectedOrganization, AADGroup, AADUser
+  * Replace old cmdlet and deprecated Remove-Mg\*ByRef with equivalent
+    Remove-Mg\*DirectoryObjectByRef which is available in Graph 2.17.0
+* AADRoleEligibilitySecheduleRquest
+  * Cleaned Export logic.
+* EXOActiveSyncDeviceAccessRule
+  * Retrieve instance by Identity if not found by characteristic.
+* EXOMailboxSettings
+  * Simplifyied the Setlogic and removed Timezone validation to remove checks
+    to regstry key which caused issues in Linux.
+* M365DSCRuleEvaluation
+  * Changed logic to retrieve resource information.
+* SCRoleGroup
+  * Initial Release.
+* SCRoleGroupMember
+  * Initial Release.
+* SPOTenantSettings
+  * Add property TenantDefaultTimezone
+    Implements [#4189](https://github.com/microsoft/Microsoft365DSC/issues/4189)
+* DEPENDENCIES
+  * Updated Microsoft.Graph dependencies to version 2.17.0.
+  * Updated MSCloudLoginAssistant dependencies to version 1.1.15.
+  * Updated MicrosoftTeams to version 6.1.0.
+* MISC
+  * Provided the ability to force reload the EXO or SC modules to prevent
+    calling the wrong cmdlet where the same names are defined (e.g. Get-RoleGroup).
+  * Telemetry
+    * Get operating system using faster method to speed up telemetry calls.
+
 # 1.24.403.1
 
 * AADAdministrativeUnit
-  * Fix issue with deploying/creating a new AU with members and/or adding members to an existing AU
+  * Fix issue with deploying/creating a new AU with members and/or adding members
+    to an existing AU
     FIXES [#4404](https://github.com/microsoft/Microsoft365DSC/issues/4404)
   * Updated examples to include setting Visibility and ScopedRoleMembers
   * Fix issue with Set-TargetResource was failing to apply when Verbose is set
@@ -49,6 +89,8 @@
   * Log both matching and not matching resources and in XML format
 * O365OrgSettings
   * Fixed missing permissions in settings.json
+* SCRoleGroupMember
+  * Initial release
 * SPOAccessControlSettings
   * [BREAKING CHANGE] Removed CommentsOnSitePagesDisabled parameter, because of
     duplication in SPOTenantSettings

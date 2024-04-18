@@ -1751,8 +1751,6 @@ function New-M365DSCConnection
     {
         $Global:CurrentModeIsExport = $false
     }
-    #Ensure the proper dependencies are installed in the current environment.
-    Confirm-M365DSCDependencies
 
     #region Telemetry
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
@@ -3368,7 +3366,7 @@ function Get-M365DSCExportContentForResource
             $ConnectionMode -eq 'ManagedIdentity')
     {
         $OrganizationName = $Results.TenantId
-    }    
+    }
     elseif ($null -ne $Credential.UserName)
     {
         $OrganizationName = $Credential.UserName.Split('@')[1]

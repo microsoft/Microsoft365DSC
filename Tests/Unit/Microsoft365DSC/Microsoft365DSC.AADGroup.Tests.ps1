@@ -69,10 +69,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgBetaDirectoryRoleMemberByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgGroupOwnerByRef -MockWith {
+            Mock -CommandName Remove-MgGroupOwnerDirectoryObjectByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgGroupMemberByRef -MockWith {
+            Mock -CommandName Remove-MgGroupMemberDirectoryObjectByRef -MockWith {
             }
 
             Mock -CommandName Remove-MgBetaDirectoryRoleMemberByRef -MockWith {
@@ -81,6 +81,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts

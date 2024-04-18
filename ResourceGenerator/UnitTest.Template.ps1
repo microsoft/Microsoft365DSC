@@ -48,7 +48,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
-            }<AssignmentMock>
+            }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false<AssignmentMock>
         }
         # Test contexts
         Context -Name "The <ResourceName> should exist but it DOES NOT" -Fixture {

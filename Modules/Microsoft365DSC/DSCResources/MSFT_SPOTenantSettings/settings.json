@@ -7,11 +7,17 @@
                 "read": [
                     {
                         "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "SharePointTenantSettings.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "SharePointTenantSettings.ReadWrite.All"
                     }
                 ]
             },
@@ -19,11 +25,17 @@
                 "read": [
                     {
                         "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "SharePointTenantSettings.Read.All"
                     }
                 ],
                 "update": [
                     {
                         "name": "Domain.Read.All"
+                    },
+                    {
+                        "name": "SharePointTenantSettings.ReadWrite.All"
                     }
                 ]
             }

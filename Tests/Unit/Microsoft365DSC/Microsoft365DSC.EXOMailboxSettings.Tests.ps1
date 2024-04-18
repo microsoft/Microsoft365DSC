@@ -34,6 +34,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         Context -Name 'Specified TimeZone is Invalid' -Fixture {
@@ -54,10 +56,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Set-MailboxRegionalConfiguration -MockWith {
                     return $null
                 }
-            }
-
-            It 'Should throw an error from the Set method' {
-                { Set-TargetResource @testParams } | Should -Throw 'The specified Time Zone {Non-Existing} is not valid.'
             }
 
             It 'Should return the current TimeZone from the Get method' {

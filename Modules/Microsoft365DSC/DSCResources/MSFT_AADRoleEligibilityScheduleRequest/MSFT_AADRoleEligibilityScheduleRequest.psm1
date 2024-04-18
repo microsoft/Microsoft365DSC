@@ -825,7 +825,6 @@ function Export-TargetResource
                 Id                    = $request.Id
                 Principal             = $request.PrincipalId
                 RoleDefinition        = $RoleDefinitionId.DisplayName
-                ScheduleInfo          = 'TempSchedule'
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -880,7 +879,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.ErrorDetails.Message -like "*The tenant needs an AAD Premium*")
+        if ($_.ErrorDetails.Message -like "*The tenant needs an AAD Premium*" -or `
+            $_.ErrorDetails.MEssage -like "*[AadPremiumLicenseRequired]*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
         }
