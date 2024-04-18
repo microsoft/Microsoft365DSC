@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'EXORoleGroup' -GenericStubModule $GenericStubPath
+    -DscResource 'SCRoleGroup' -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -66,7 +66,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name        = 'Contoso Role Group'
-                    Members     = 'Exchange Administrator'
                     Roles       = 'Address Lists'
                     Description = 'This is the Contoso Role Group'
                     Ensure      = 'Present'
@@ -89,7 +88,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name        = 'Contoso Role Group'
-                    Members     = 'Exchange Administrator'
                     Roles       = 'Address Lists'
                     Description = 'This is the Contoso Role Group'
                     Ensure      = 'Present'
@@ -120,48 +118,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'Role Group should exist. Role Group exists, Members mismatch. Test should fail.' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Name        = 'Contoso Role Group'
-                    Members     = 'Exchange Administrator'
-                    Roles       = 'Address Lists'
-                    Description = 'This is the Contoso Role Group'
-                    Ensure      = 'Present'
-                    Credential  = $Credential
-                }
-                Mock -CommandName Get-RoleGroup -MockWith {
-                    return @{
-                        Name        = 'Contoso Role Group'
-                        Members     = 'Drift Administrator'
-                        Roles       = 'Address Lists'
-                        Description = 'This is the Contoso Role Group'
-                    }
-                }
 
-                Mock -Command Get-RoleGroupMember -MockWith {
-                    [PSCustomObject]@{Displayname = 'Drift Administrator'}
-                }
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should return Present from the Get Method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should call the Update Members method' {
-                Set-TargetResource @testParams
-                Assert-MockCalled -CommandName Update-RoleGroupMember -Exactly 1
-            }
-        }
         Context -Name 'Role Group exists and it SHOULD NOT.' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Name        = 'Contoso Role Group'
-                    Members     = 'Exchange Administrator'
                     Roles       = 'Address Lists'
                     Description = 'This is the Contoso Role Group'
                     Ensure      = 'Absent'

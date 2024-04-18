@@ -87,6 +87,10 @@ function Start-M365DSCConfigurationExtract
         $ManagedIdentity,
 
         [Parameter()]
+        [System.String[]]
+        $AccessTokens,
+
+        [Parameter()]
         [Switch]
         $Validate
     )
@@ -183,6 +187,12 @@ function Start-M365DSCConfigurationExtract
         {
             Write-Host -Object '- Managed Identity'
             $AuthMethods += 'ManagedIdentity'
+        }
+
+        if ($null -ne $AccessTokens)
+        {
+            Write-Host -Object '- Access Tokens'
+            $AuthMethods += 'AccessTokens'
         }
 
         Write-Host -Object ' '
@@ -421,6 +431,13 @@ function Start-M365DSCConfigurationExtract
                     -Value $ApplicationSecret `
                     -Description 'Azure AD Application Secret for Authentication'
             }
+            'AccessTokens'
+            {
+                Add-ConfigurationDataEntry -Node 'NonNodeData' `
+                    -Key 'AccessTokens' `
+                    -Value $AccessTokens `
+                    -Description 'Access tokens to use for authentication'
+            }
             { $_ -in 'Credentials', 'CredentialsWithApplicationId', 'CredentialsWithTenantId' }
             {
                 if ($newline)
@@ -526,6 +543,15 @@ function Start-M365DSCConfigurationExtract
         {
             $WorkloadsToConnectTo = Get-M365DSCWorkloadsListFromResourceNames -ResourceNames $ResourcesToExport
         }
+        $AccessTokenValue = $null
+        if (-not [System.String]::IsNullOrEmpty($AccessTokens))
+        {
+            $AccessTokenValue = @()
+            foreach ($token in $AccessTokens)
+            {
+                $AccessTokenValue += New-Object System.Management.Automation.PSCredential ('AccessToken', (ConvertTo-SecureString $token -AsPlainText -Force))
+            }
+        }
         foreach ($Workload in $WorkloadsToConnectTo)
         {
             Write-Host "Connecting to {$($Workload.Name)}..." -NoNewline
@@ -539,6 +565,7 @@ function Start-M365DSCConfigurationExtract
                 CertificatePassword   = $CertificatePassword.Password
                 Credential            = $Credential
                 Identity              = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokenValue
             }
 
             if ($workload.AuthenticationMethod -eq 'Credentials')
@@ -607,6 +634,11 @@ function Start-M365DSCConfigurationExtract
                 'ManagedIdentity'
                 {
                     $parameters.Add('ManagedIdentity', $ManagedIdentity)
+                    $parameters.Add('TenantId', $TenantId)
+                }
+                'AccessTokens'
+                {
+                    $parameters.Add('AccessTokens', $AccessTokenValue)
                     $parameters.Add('TenantId', $TenantId)
                 }
             }
