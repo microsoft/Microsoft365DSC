@@ -59,7 +59,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of HostedConnectionFilterPolicy for $Identity"
@@ -129,6 +133,7 @@ function Get-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 TenantId              = $TenantId
+                AccessTokens          = $AccessTokens
             }
 
             if ($AntiPhishRule.IsDefault)
@@ -213,7 +218,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of HostedConnectionFilterPolicy for $Identity"
@@ -245,6 +254,7 @@ function Set-TargetResource
     $HostedConnectionFilterPolicyParams.Remove('CertificatePath') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('CertificatePassword') | Out-Null
     $HostedConnectionFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
+    $HostedConnectionFilterPolicyParams.Remove('AccessTokens') | Out-Null
 
     if ($HostedConnectionFilterPolicyParams.RuleScope)
     {
@@ -352,7 +362,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -375,16 +389,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = [System.Collections.Hashtable]($PSBoundParameters)
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
-    $ValuesToCheck.Remove('Verbose') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -428,7 +432,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -471,6 +479,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             Write-Host "    |---[$i/$($HostedConnectionFilterPolicies.Length)] $($HostedConnectionFilterPolicy.Identity)" -NoNewline
             $Results = Get-TargetResource @Params

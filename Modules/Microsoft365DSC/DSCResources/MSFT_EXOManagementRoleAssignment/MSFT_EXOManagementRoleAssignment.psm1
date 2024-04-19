@@ -84,7 +84,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting Management Role Assignment for $Name"
@@ -136,9 +140,7 @@ function Get-TargetResource
             $RecipientAdministrativeUnitScopeValue = $null
             if ($roleAssignment.RecipientWriteScope -eq 'AdministrativeUnit')
             {
-                $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                    -InboundParameters $PSBoundParameters
-                $adminUnit = Get-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $roleAssignment.CustomRecipientWriteScope
+                $adminUnit = Get-AdministrativeUnit -Identity $roleAssignment.CustomRecipientWriteScope
 
                 if ($RecipientAdministrativeUnitScope -eq $adminUnit.Id)
                 {
@@ -167,6 +169,7 @@ function Get-TargetResource
                 CertificatePassword              = $CertificatePassword
                 Managedidentity                  = $ManagedIdentity.IsPresent
                 TenantId                         = $TenantId
+                AccessTokens                     = $AccessTokens
             }
 
             if ($roleAssignment.RoleAssigneeType -eq 'SecurityGroup' -or $roleAssignment.RoleAssigneeType -eq 'RoleGroup')
@@ -287,7 +290,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Setting Management Role Assignment for $Name"
 
@@ -317,6 +324,7 @@ function Set-TargetResource
     $NewManagementRoleParams.Remove('CertificatePath') | Out-Null
     $NewManagementRoleParams.Remove('CertificatePassword') | Out-Null
     $NewManagementRoleParams.Remove('ManagedIdentity') | Out-Null
+    $NewManagementRoleParams.Remove('AccessTokens') | Out-Null
 
     # If the RecipientAdministrativeUnitScope parameter is provided, then retrieve its ID by Name
     if (-not [System.String]::IsNullOrEmpty($RecipientAdministrativeUnitScope))
@@ -473,7 +481,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -501,13 +513,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('App') | Out-Null
     $ValuesToCheck.Remove('Policy') | Out-Null
     $ValuesToCheck.Remove('SecurityGroup') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -551,7 +556,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -601,6 +610,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

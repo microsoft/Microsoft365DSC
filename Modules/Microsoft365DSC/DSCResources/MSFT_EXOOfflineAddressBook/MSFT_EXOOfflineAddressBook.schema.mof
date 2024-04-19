@@ -14,4 +14,5 @@ class MSFT_EXOOfflineAddressBook : OMI_BaseResource
     [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

@@ -631,7 +631,7 @@ function Test-M365DSCParameterState
                 -and ($_ -ne 'ApplicationId') -and ($_ -ne 'CertificateThumbprint') `
                 -and ($_ -ne 'CertificatePath') -and ($_ -ne 'CertificatePassword') `
                 -and ($_ -ne 'TenantId') -and ($_ -ne 'ApplicationSecret') `
-                -and ($_ -ne 'ManagedIdentity'))
+                -and ($_ -ne 'ManagedIdentity') -and ($_ -ne 'AccessTokens'))
         {
             if (($CurrentValues.ContainsKey($_) -eq $false) `
                     -or ($CurrentValues.$_ -ne $DesiredValues.$_) `
@@ -1226,6 +1226,10 @@ function Export-M365DSCConfiguration
         $ManagedIdentity,
 
         [Parameter(ParameterSetName = 'Export')]
+        [System.String[]]
+        $AccessTokens,
+
+        [Parameter(ParameterSetName = 'Export')]
         [Switch]
         $Validate
     )
@@ -1306,7 +1310,8 @@ function Export-M365DSCConfiguration
     # Default to Credential if no authentication mechanism were provided
     if ($PSBoundParameters.ContainsKey('Credential') -eq $false -and `
             $ManagedIdentity.IsPresent -eq $false -and `
-            $PSBoundParameters.ContainsKey('ApplicationId') -eq $false)
+            $PSBoundParameters.ContainsKey('ApplicationId') -eq $false -and `
+            $PSBoundParameters.ContainsKey('AccessTokens') -eq $false)
     {
         $Credential = Get-Credential
     }
@@ -1359,6 +1364,7 @@ function Export-M365DSCConfiguration
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity `
+            -AccessTokens $AccessTokens `
             -GenerateInfo $GenerateInfo `
             -Filters $Filters `
             -Validate:$Validate
@@ -1378,6 +1384,7 @@ function Export-M365DSCConfiguration
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity `
+            -AccessTokens $AccessTokens `
             -GenerateInfo $GenerateInfo `
             -Filters $Filters `
             -Validate:$Validate
@@ -1397,6 +1404,7 @@ function Export-M365DSCConfiguration
             -CertificatePath $CertificatePath `
             -CertificatePassword $CertificatePassword `
             -ManagedIdentity:$ManagedIdentity `
+            -AccessTokens $AccessTokens `
             -GenerateInfo $GenerateInfo `
             -AllComponents `
             -Filters $Filters `
@@ -1787,7 +1795,8 @@ function New-M365DSCConnection
             [System.String]::IsNullOrEmpty($InboundParameters.ApplicationId) -and `
             [System.String]::IsNullOrEmpty($InboundParameters.TenantId) -and `
             [System.String]::IsNullOrEmpty($InboundParameters.CertificateThumbprint) -and `
-            -not $InboundParameters.ManagedIdentity)
+            -not $InboundParameters.ManagedIdentity -and `
+            $null -eq $InboundParameters.AccessTokens)
     {
         $message = 'No Authentication method was provided'
         Write-Verbose -Message $message
@@ -2102,6 +2111,28 @@ function New-M365DSCConnection
             $Script:M365ConnectedToWorkloads += "$Workload-ManagedIdentity"
         }
         return 'ManagedIdentity'
+    }
+    # Case Access Token is Specified
+    elseif ($null -ne $InboundParameters.AccessTokens -and `
+    -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId))
+    {
+        Write-Verbose -Message 'Connecting via Access Tokens'
+        Connect-M365Tenant -Workload $Workload `
+            -AccessTokens $InboundParameters.AccessTokens `
+            -TenantId $InboundParameters.TenantId `
+            -SkipModuleReload $Global:CurrentModeIsExport
+
+        if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-AccessTokens")
+        {
+            $data.Add('ConnectionType', 'AccessTokens')
+            if (-not $data.ContainsKey('Tenant'))
+            {
+                $data.Add('Tenant', $InboundParameters.TenantId)
+            }
+            Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
+            $Script:M365ConnectedToWorkloads += "$Workload-AccessTokens"
+        }
+        return 'AccessTokens'
     }
     else
     {
@@ -3158,7 +3189,7 @@ function Update-M365DSCExportAuthenticationResults
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('ServicePrincipalWithThumbprint', 'ServicePrincipalWithSecret', 'ServicePrincipalWithPath', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'Credentials', 'ManagedIdentity')]
+        [ValidateSet('ServicePrincipalWithThumbprint', 'ServicePrincipalWithSecret', 'ServicePrincipalWithPath', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'Credentials', 'ManagedIdentity', 'AccessTokens')]
         $ConnectionMode,
 
         [Parameter(Mandatory = $true)]
@@ -3322,6 +3353,11 @@ function Update-M365DSCExportAuthenticationResults
                 Write-Verbose -Message 'Error removing CertificatePassword from Update-M365DSCExportAuthenticationResults'
             }
         }
+
+        if ($null -ne $Results.AccessTokens)
+        {
+            $results.AccessTokens = "`$ConfigurationData.NonNodeData.AccessTokens"
+        }
     }
     return $Results
 }
@@ -3345,7 +3381,7 @@ function Get-M365DSCExportContentForResource
 
         [Parameter(Mandatory = $true)]
         [System.String]
-        [ValidateSet('ServicePrincipalWithThumbprint', 'ServicePrincipalWithSecret', 'ServicePrincipalWithPath', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'Credentials', 'ManagedIdentity')]
+        [ValidateSet('ServicePrincipalWithThumbprint', 'ServicePrincipalWithSecret', 'ServicePrincipalWithPath', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'Credentials', 'ManagedIdentity', 'AccessTokens')]
         $ConnectionMode,
 
         [Parameter(Mandatory = $true)]
@@ -3504,6 +3540,11 @@ function Get-M365DSCExportContentForResource
             $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
                 -ParameterName 'CertificatePassword'
         }
+        if (![System.String]::IsNullOrEmpty($Results.AccessTokens))
+        {
+            $partialContent = Convert-DSCStringParamToVariable -DSCBlock $partialContent `
+                -ParameterName 'AccessTokens'
+        }
     }
 
     if ($partialContent.ToLower().IndexOf($OrganizationName.ToLower()) -gt 0)
@@ -3614,7 +3655,7 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
     (
         [Parameter()]
         [System.String[]]
-        [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'ManagedIdentity')]
+        [ValidateSet('ApplicationWithSecret', 'CertificateThumbprint', 'CertificatePath', 'Credentials', 'CredentialsWithTenantId', 'CredentialsWithApplicationId', 'ManagedIdentity', 'AccessTokens')]
         $AuthenticationMethod,
 
         [Parameter()]
@@ -3702,6 +3743,14 @@ function Get-M365DSCComponentsWithMostSecureAuthenticationType
                 $Components += @{
                     Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
                     AuthMethod = 'ManagedIdentity'
+                }
+            }
+            elseif ($AuthenticationMethod.Contains('AccessTokens') -and `
+                    $parameters.Contains('AccessTokens'))
+            {
+                $Components += @{
+                    Resource   = $resource.Name -replace 'MSFT_', '' -replace '.psm1', ''
+                    AuthMethod = 'AccessTokens'
                 }
             }
         }
@@ -4442,6 +4491,10 @@ function Remove-M365DSCAuthenticationParameter
     if ($BoundParameters.ContainsKey('Verbose'))
     {
         $BoundParameters.Remove('Verbose') | Out-Null
+    }
+    if ($BoundParameters.ContainsKey('AccessTokens'))
+    {
+        $BoundParameters.Remove('AccessTokens') | Out-Null
     }
     return $BoundParameters
 }

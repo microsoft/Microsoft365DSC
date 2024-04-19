@@ -56,7 +56,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of AtpPolicyForO365 for $Identity"
@@ -113,6 +117,7 @@ function Get-TargetResource
                 CertificatePassword     = $CertificatePassword
                 Managedidentity         = $ManagedIdentity.IsPresent
                 TenantId                = $TenantId
+                AccessTokens            = $AccessTokens
             }
 
             Write-Verbose -Message "Found AtpPolicyForO365 $($Identity)"
@@ -189,7 +194,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of AtpPolicyForO365 for $Identity"
@@ -224,6 +233,7 @@ function Set-TargetResource
     $AtpPolicyParams.Remove('CertificatePath') | Out-Null
     $AtpPolicyParams.Remove('CertificatePassword') | Out-Null
     $AtpPolicyParams.Remove('ManagedIdentity') | Out-Null
+    $AtpPolicyParams.Remove('AccessTokens') | Out-Null
     Write-Verbose -Message "Setting AtpPolicyForO365 $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $AtpPolicyParams)"
 
     Set-AtpPolicyForO365 @AtpPolicyParams
@@ -287,7 +297,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -353,7 +367,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -402,6 +420,7 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
+                    AccessTokens          = $AccessTokens
                 }
                 $Results = Get-TargetResource @Params
 

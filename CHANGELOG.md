@@ -1,6 +1,14 @@
 # Change log for Microsoft365DSC
 
-# 1.24.41.1
+# UNRELEASED
+* EXORecipientPermission
+  * Ensures we only return 1 Trustee per entry.
+* EXOManagementRoleAssignment
+  * Removed logic to use Graph for Adminitrative Unit.
+* MISC
+  * Added support for AccessTokens in EXO resources.
+
+# 1.24.417.1
 
 * AADAdministrativeUnit
   * Fixed an issue when assigning a directory role which is not yet enabled.
