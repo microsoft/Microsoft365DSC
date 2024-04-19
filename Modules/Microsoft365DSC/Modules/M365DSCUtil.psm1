@@ -4492,6 +4492,10 @@ function Remove-M365DSCAuthenticationParameter
     {
         $BoundParameters.Remove('Verbose') | Out-Null
     }
+    if ($BoundParameters.ContainsKey('AccessTokens'))
+    {
+        $BoundParameters.Remove('AccessTokens') | Out-Null
+    }
     return $BoundParameters
 }
 
