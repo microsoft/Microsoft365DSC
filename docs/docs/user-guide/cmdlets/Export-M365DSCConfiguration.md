@@ -30,6 +30,7 @@ This function does not generate any output.
 | CertificatePassword | False | PSCredential |  |  | Specifies the password of the PFX file which is used for authentication. |
 | CertificatePath | False | String |  |  | Specifies the path of the PFX file which is used for authentication. |
 | ManagedIdentity | False | SwitchParameter |  |  | Specifies use of managed identity for authentication. |
+| AccessTokens | False | String[] |  |  |  |
 | Validate | False | SwitchParameter |  |  | Specifies that the configuration needs to be validated for conflicts or issues after its extraction is completed. |
 
 ## Examples
