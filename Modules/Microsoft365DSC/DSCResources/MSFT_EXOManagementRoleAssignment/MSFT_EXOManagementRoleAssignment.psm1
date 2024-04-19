@@ -140,9 +140,7 @@ function Get-TargetResource
             $RecipientAdministrativeUnitScopeValue = $null
             if ($roleAssignment.RecipientWriteScope -eq 'AdministrativeUnit')
             {
-                $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                    -InboundParameters $PSBoundParameters
-                $adminUnit = Get-MgBetaDirectoryAdministrativeUnit -AdministrativeUnitId $roleAssignment.CustomRecipientWriteScope
+                $adminUnit = Get-AdministrativeUnit -Identity $roleAssignment.CustomRecipientWriteScope
 
                 if ($RecipientAdministrativeUnitScope -eq $adminUnit.Id)
                 {

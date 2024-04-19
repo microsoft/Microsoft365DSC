@@ -120,9 +120,11 @@ function Get-TargetResource
 
         #endregion
 
+        [Array]$trustee = $recipientPermission.Trustee
+
         $result = @{
             Identity              = $Identity
-            Trustee               = $recipientPermission.Trustee
+            Trustee               = $trustee[0]
             AccessRights          = $recipientPermission.AccessRights
             Ensure                = 'Present'
             Credential            = $Credential
