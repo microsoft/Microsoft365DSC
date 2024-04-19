@@ -631,7 +631,7 @@ function Test-M365DSCParameterState
                 -and ($_ -ne 'ApplicationId') -and ($_ -ne 'CertificateThumbprint') `
                 -and ($_ -ne 'CertificatePath') -and ($_ -ne 'CertificatePassword') `
                 -and ($_ -ne 'TenantId') -and ($_ -ne 'ApplicationSecret') `
-                -and ($_ -ne 'ManagedIdentity'))
+                -and ($_ -ne 'ManagedIdentity') -and ($_ -ne 'AccessTokens'))
         {
             if (($CurrentValues.ContainsKey($_) -eq $false) `
                     -or ($CurrentValues.$_ -ne $DesiredValues.$_) `

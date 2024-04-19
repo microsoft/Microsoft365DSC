@@ -194,7 +194,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     if ($Global:CurrentModeIsExport)
@@ -313,6 +317,7 @@ function Get-TargetResource
             CertificatePassword                  = $CertificatePassword
             Managedidentity                      = $ManagedIdentity.IsPresent
             TenantId                             = $TenantId
+            AccessTokens                         = $AccessTokens
         }
 
         Write-Verbose -Message "Found Availability Config for $($OrgWideAccount)"
@@ -525,7 +530,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -564,6 +573,7 @@ function Set-TargetResource
     $UpdateParameters.Remove("CertificatePath") | Out-Null
     $UpdateParameters.Remove("CertificatePassword") | Out-Null
     $UpdateParameters.Remove("ManagedIdentity") | Out-Null
+    $UpdateParameters.Remove('AccessTokens') | Out-Null
 
     # Some parameters can only be applied to Resource Mailboxes
     if ($UpdateParameters.ContainsKey('AddNewRequestsTentatively'))
@@ -781,7 +791,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -848,7 +862,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -893,6 +911,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
