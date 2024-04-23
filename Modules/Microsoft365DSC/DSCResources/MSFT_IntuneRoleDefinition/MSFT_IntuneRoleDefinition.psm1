@@ -446,6 +446,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -487,7 +491,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-MgBetaDeviceManagementRoleDefinition `
+        [array]$getValue = Get-MgBetaDeviceManagementRoleDefinition -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceAndAppManagementRoleDefinition'  `

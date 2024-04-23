@@ -694,10 +694,8 @@ function Export-TargetResource
 
     try
     {
-        [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration `
-            -All `
-            -Filter "deviceEnrollmentConfigurationType eq 'singlePlatformRestriction'" `
-            -ErrorAction Stop
+        [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter $Filter -All `
+            -ErrorAction Stop | Where-Object -FilterScript { $_.DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' }
 
         $i = 1
         $dscContent = ''

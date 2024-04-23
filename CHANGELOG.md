@@ -9,6 +9,7 @@
 * MISC
   * Added support for AccessTokens in EXO resources.
   * Updated MSCloudLoginAssistant dependencies to version 1.1.16.
+  * Added Filter support to Intune resources.
 
 # 1.24.417.1
 
