@@ -1,13 +1,15 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
 * EXORecipientPermission
   * Ensures we only return 1 Trustee per entry.
 * EXOManagementRoleAssignment
   * Removed logic to use Graph for Adminitrative Unit.
 * MISC
   * Added support for AccessTokens in EXO resources.
-  * Added `Filter` support to Intune resources.
+  * Updated MSCloudLoginAssistant dependencies to version 1.1.16.
+  * Added Filter support to Intune resources.
 
 # 1.24.417.1
 
