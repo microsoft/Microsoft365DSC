@@ -901,6 +901,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -943,9 +947,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
-            -All `
-            -ErrorAction Stop
+        [array]$getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1

@@ -837,10 +837,8 @@ function Export-TargetResource
     try
     {
         $policyTemplateID = '0e237410-1367-4844-bd7f-15fb0f08943b'
-        [array]$policies = Get-MgBetaDeviceManagementIntent `
-            -Filter "TemplateId eq '$policyTemplateID'" `
-            -ErrorAction Stop `
-            -All:$true
+        [array]$policies = Get-MgBetaDeviceManagementIntent -Filter $Filter -All:$true `
+            -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq $policyTemplateID }
 
         if ($policies.Length -eq 0)
         {

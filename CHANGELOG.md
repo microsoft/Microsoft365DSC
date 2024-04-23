@@ -7,6 +7,7 @@
   * Removed logic to use Graph for Adminitrative Unit.
 * MISC
   * Added support for AccessTokens in EXO resources.
+  * Added `Filter` support to Intune resources.
 
 # 1.24.417.1
 
