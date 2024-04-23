@@ -495,6 +495,12 @@ function Test-TargetResource
     $ValuesToCheck.Remove('TenantId') | Out-Null
     $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
+    if ($AdvancedThreatProtectionAutoPopulateOnboardingBlob -and `
+        $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
+    {
+        $ValuesToCheck.Remove('AdvancedThreatProtectionOnboardingBlob') | Out-Null
+    }
+
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
