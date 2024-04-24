@@ -779,6 +779,10 @@ function Set-TargetResource
     {
         $PSBoundParameters.UpdateDelayPolicy = $UpdateDelayPolicy -join ','
     }
+    else 
+    {
+        $PSBoundParameters.UpdateDelayPolicy = 'none'
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -813,7 +817,8 @@ function Set-TargetResource
         {
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }#>
-        $CreateParameters.add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+        $CreateParameters.Add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+        
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
@@ -1270,6 +1275,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1312,7 +1321,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -like "#microsoft.graph.macOS*"  `

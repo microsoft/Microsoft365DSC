@@ -87,6 +87,10 @@ function Start-M365DSCConfigurationExtract
         $ManagedIdentity,
 
         [Parameter()]
+        [System.String[]]
+        $AccessTokens,
+
+        [Parameter()]
         [Switch]
         $Validate
     )
@@ -183,6 +187,12 @@ function Start-M365DSCConfigurationExtract
         {
             Write-Host -Object '- Managed Identity'
             $AuthMethods += 'ManagedIdentity'
+        }
+
+        if ($null -ne $AccessTokens)
+        {
+            Write-Host -Object '- Access Tokens'
+            $AuthMethods += 'AccessTokens'
         }
 
         Write-Host -Object ' '
@@ -421,6 +431,18 @@ function Start-M365DSCConfigurationExtract
                     -Value $ApplicationSecret `
                     -Description 'Azure AD Application Secret for Authentication'
             }
+            'AccessTokens'
+            {
+                Add-ConfigurationDataEntry -Node 'NonNodeData' `
+                    -Key 'AccessTokens' `
+                    -Value $AccessTokens `
+                    -Description 'Access tokens to use for authentication'
+
+                Add-ConfigurationDataEntry -Node 'NonNodeData' `
+                    -Key 'TenantId' `
+                    -Value $TenantId `
+                    -Description 'The Id or Name of the tenant to authenticate against'
+            }
             { $_ -in 'Credentials', 'CredentialsWithApplicationId', 'CredentialsWithTenantId' }
             {
                 if ($newline)
@@ -539,6 +561,7 @@ function Start-M365DSCConfigurationExtract
                 CertificatePassword   = $CertificatePassword.Password
                 Credential            = $Credential
                 Identity              = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             if ($workload.AuthenticationMethod -eq 'Credentials')
@@ -607,6 +630,11 @@ function Start-M365DSCConfigurationExtract
                 'ManagedIdentity'
                 {
                     $parameters.Add('ManagedIdentity', $ManagedIdentity)
+                    $parameters.Add('TenantId', $TenantId)
+                }
+                'AccessTokens'
+                {
+                    $parameters.Add('AccessTokens', $AccessTokens)
                     $parameters.Add('TenantId', $TenantId)
                 }
             }

@@ -97,7 +97,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Mailbox AutoReply Configuration for $Identity"
@@ -164,6 +168,7 @@ function Get-TargetResource
                 CertificatePassword              = $CertificatePassword
                 Managedidentity                  = $ManagedIdentity.IsPresent
                 TenantId                         = $TenantId
+                AccessTokens                     = $AccessTokens
             }
 
             Write-Verbose -Message "Found Mailbox $($Identity)"
@@ -281,7 +286,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
@@ -310,6 +319,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificatePath') | Out-Null
     $PSBoundParameters.Remove('Credential') | Out-Null
     $PSBoundParameters.Remove('Owner') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     Set-MailboxAutoReplyConfiguration @PSBoundParameters
 }
@@ -413,7 +423,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -479,7 +493,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -524,6 +542,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

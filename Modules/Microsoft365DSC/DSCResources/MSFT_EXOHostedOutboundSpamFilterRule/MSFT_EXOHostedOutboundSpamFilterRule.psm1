@@ -79,7 +79,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of HostedOutboundSpamFilterRule for $Identity"
@@ -152,6 +156,7 @@ function Get-TargetResource
                 CertificatePassword            = $CertificatePassword
                 Managedidentity                = $ManagedIdentity.IsPresent
                 TenantId                       = $TenantId
+                AccessTokens                   = $AccessTokens
             }
 
             if ('Enabled' -eq $HostedOutboundSpamFilterRule.State)
@@ -261,7 +266,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of HostedOutboundSpamFilterRule for $Identity"
@@ -302,6 +311,7 @@ function Set-TargetResource
         $CreationParams.Remove('CertificatePath') | Out-Null
         $CreationParams.Remove('CertificatePassword') | Out-Null
         $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('AccessTokens') | Out-Null
         if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedOutboundSpamFilterRule has the Enabled parameter, Set-HostedOutboundSpamFilterRule does not.
@@ -325,6 +335,7 @@ function Set-TargetResource
         $UpdateParams.Remove('CertificatePath') | Out-Null
         $UpdateParams.Remove('CertificatePassword') | Out-Null
         $UpdateParams.Remove('ManagedIdentity') | Out-Null
+        $UpdateParams.Remove('AccessTokens') | Out-Null
         Write-Verbose -Message "Updating HostedOutboundSpamFilterRule {$Identity}"
         Set-HostedOutboundSpamFilterRule @UpdateParams
     }
@@ -416,7 +427,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -439,13 +454,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -489,7 +497,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -535,6 +547,7 @@ function Export-TargetResource
                 CertificatePassword            = $CertificatePassword
                 Managedidentity                = $ManagedIdentity.IsPresent
                 CertificatePath                = $CertificatePath
+                AccessTokens                   = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

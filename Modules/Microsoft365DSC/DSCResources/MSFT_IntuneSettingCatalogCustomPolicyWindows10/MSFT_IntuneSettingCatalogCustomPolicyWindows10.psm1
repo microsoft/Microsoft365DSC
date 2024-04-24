@@ -521,6 +521,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -563,10 +567,11 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -All `
-            -Filter "Platforms eq 'windows10'" `
-            -ErrorAction Stop | Where-Object { [String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId) }
+        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All `
+            -ErrorAction Stop | Where-Object -FilterScript { `
+                $_.Platforms -eq 'windows10' -and 
+                [String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId)
+            }
         #endregion
 
         $i = 1

@@ -471,8 +471,9 @@ function Export-TargetResource
 
     try
     {
+        $policyTemplateID = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
         [array]$policies = Get-MgBetaDeviceManagementIntent -All:$true -Filter $Filter `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
+            -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq $policyTemplateID }
         if ($policies.Length -eq 0)
         {
             Write-Host $Global:M365DSCEmojiGreenCheckMark

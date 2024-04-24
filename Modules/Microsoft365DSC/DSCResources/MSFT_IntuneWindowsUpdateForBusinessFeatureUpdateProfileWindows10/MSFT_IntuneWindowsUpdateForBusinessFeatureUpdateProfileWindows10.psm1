@@ -467,6 +467,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -509,9 +513,9 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile `
-            -All `
-            -ErrorAction Stop
+        # Filter not supported on this resource
+        # [array]$getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -Filter $Filter -All -ErrorAction Stop
+        [array]$getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -All -ErrorAction Stop
         #endregion
 
         $i = 1

@@ -211,7 +211,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Distribution Group for $Identity"
@@ -385,6 +389,7 @@ function Get-TargetResource
                 CertificatePassword                     = $CertificatePassword
                 Managedidentity                         = $ManagedIdentity.IsPresent
                 TenantId                                = $TenantId
+                AccessTokens                            = $AccessTokens
             }
 
             return $result
@@ -614,7 +619,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     if ($Global:CurrentModeIsExport)
@@ -652,6 +661,7 @@ function Set-TargetResource
     $currentParameters.Remove('CertificatePath') | Out-Null
     $currentParameters.Remove('CertificatePassword') | Out-Null
     $currentParameters.Remove('ManagedIdentity') | Out-Null
+    $currentParameters.Remove('AccessTokens') | Out-Null
 
     # Distribution group doesn't exist but it should
     $newGroup = $null
@@ -936,7 +946,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1005,7 +1019,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -1051,6 +1069,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
 
