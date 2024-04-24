@@ -782,7 +782,7 @@ function Set-TargetResource
             }
         }
 
-        if ($currentGroup.IsAssignableToRole -eq $true)
+        if ($currentGroup.IsAssignableToRole -eq $true -and $currentParameters.ContainsKey('AssignedToRole'))
         {
             #AssignedToRole
             $currentAssignedToRoleValue = @()
