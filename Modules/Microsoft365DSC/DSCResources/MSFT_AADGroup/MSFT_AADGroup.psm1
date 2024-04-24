@@ -707,6 +707,9 @@ function Set-TargetResource
                 elseif ($diff.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                    $memberObject = @{
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                    }
                     Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
                 }
             }
@@ -833,7 +836,7 @@ function Set-TargetResource
                     elseif ($diff.SideIndicator -eq '<=')
                     {
                         Write-Verbose -Message "Removing AAD group {$($currentGroup.DisplayName)} from Directory Role {$($role.DisplayName)}"
-                        Remove-MgBetaDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
+                        Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
                     }
                 }
             }
