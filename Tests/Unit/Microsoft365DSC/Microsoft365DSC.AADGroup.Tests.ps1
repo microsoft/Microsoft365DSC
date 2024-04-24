@@ -470,6 +470,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
+                        AssignedToRole     = @()
                         Ensure             = 'Present'
                     }
                 }
