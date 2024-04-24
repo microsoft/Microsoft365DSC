@@ -19,19 +19,19 @@ Currently, each Microsoft 365 workload can support a different combination of au
 
 The following table provides an overview of what authentication methods are supported by which workload and what underlying module is being used to authenticate:
 
-| Workload | PowerShell Module | Credential | Service Principal | | | Managed Identity |
-| --       | --                | -- | -- | -- | -- | -- |
+| Workload | PowerShell Module | Credential | Service Principal | | | Managed Identity | Access Tokens |
+| --       | --                | -- | -- | -- | -- | -- | -- |
 |          |                   |    | **Certificate Thumbprint** | **Certificate Path** | **Application Secret** |
-| *AzureAD** | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) |
-| *Exchange Online* | ExchangeOnlineManagement<br /> (Connect-ExchangeOnline) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/check.png) |
-| *Intune** | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/check.png) |
-| *Office 365** | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) |
-| *OneDrive* | PnP.PowerShell (Connect-PnPOnline) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/check.png) |
-| *Power Apps* | Microsoft.PowerApps.<br />Administration.PowerShell | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) |
-| *Planner** | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/check.png) |
-| *Security & Compliance Center* | ExchangeOnlineManagement<br /> (Connect-IPPSSession) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/cross.png) |
-| *SharePoint Online* | PnP.PowerShell<br /> (Connect-PnPOnline) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/check.png) |
-| *Teams* | MicrosoftTeams<br /> (Connect-MicrosoftTeams) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) |
+| *AzureAD** | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) |
+| *Exchange Online* | ExchangeOnlineManagement<br /> (Connect-ExchangeOnline) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/check.png) | ![Check](../../Images/check.png) |
+| *Intune** | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/check.png) | ![Cross](../../Images/cross.png) |
+| *Office 365** | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) |
+| *OneDrive* | PnP.PowerShell (Connect-PnPOnline) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/check.png) | ![Cross](../../Images/cross.png) |
+| *Power Apps* | Microsoft.PowerApps.<br />Administration.PowerShell | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/cross.png) |
+| *Planner** | Microsoft.Graph.Authentication<br /> (Connect-MgGraph) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/check.png) | ![Cross](../../Images/cross.png) |
+| *Security & Compliance Center* | ExchangeOnlineManagement<br /> (Connect-IPPSSession) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/cross.png) |
+| *SharePoint Online* | PnP.PowerShell<br /> (Connect-PnPOnline) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/check.png) | ![Cross](../../Images/cross.png) |
+| *Teams* | MicrosoftTeams<br /> (Connect-MicrosoftTeams) | ![Check](../../Images/check.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) | ![Cross](../../Images/cross.png) | ![Check](../../Images/check.png) | ![Cross](../../Images/cross.png) |
 
 > ![Check](../../Images/check.png) = Supported / ![Cross](../../Images/cross.png) = Not supported
 
