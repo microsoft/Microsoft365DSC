@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.424.1
 
 * EXORecipientPermission
   * Ensures we only return 1 Trustee per entry.
