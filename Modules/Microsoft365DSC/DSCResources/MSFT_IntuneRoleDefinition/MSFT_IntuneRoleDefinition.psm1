@@ -499,8 +499,7 @@ function Export-TargetResource
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgBetaDeviceManagementRoleDefinition
-            -ErrorAction Stop
+            [array]$getValue = Get-MgBetaDeviceManagementRoleDefinition -All -ErrorAction Stop
         }
         $i = 1
         $dscContent = ''
