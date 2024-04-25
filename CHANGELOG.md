@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* AADActivityBasedTimeoutPolicy
+  * Initial release, set the azure portal and default Timeout.
+
 # 1.24.424.1
 
 * EXORecipientPermission
