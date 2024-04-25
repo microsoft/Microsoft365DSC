@@ -81523,10 +81523,6 @@ function Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef
         $PassThru,
 
         [Parameter()]
-        [System.Management.Automation.ActionPreference]
-        $ProgressAction,
-
-        [Parameter()]
         [switch]
         $WhatIf,
 
