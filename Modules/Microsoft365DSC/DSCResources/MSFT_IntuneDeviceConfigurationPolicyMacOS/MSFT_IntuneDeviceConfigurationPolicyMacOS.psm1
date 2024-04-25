@@ -779,6 +779,10 @@ function Set-TargetResource
     {
         $PSBoundParameters.UpdateDelayPolicy = $UpdateDelayPolicy -join ','
     }
+    else 
+    {
+        $PSBoundParameters.UpdateDelayPolicy = 'none'
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -813,7 +817,8 @@ function Set-TargetResource
         {
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }#>
-        $CreateParameters.add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+        $CreateParameters.Add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+        
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
