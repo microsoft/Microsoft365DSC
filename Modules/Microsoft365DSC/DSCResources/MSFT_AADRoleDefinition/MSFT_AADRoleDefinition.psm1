@@ -63,7 +63,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of Azure AD role definition'
@@ -137,6 +141,7 @@ function Get-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -218,7 +223,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of Azure AD role definition'
@@ -245,6 +254,7 @@ function Set-TargetResource
     $currentParameters.Remove('ManagedIdentity') | Out-Null
     $currentParameters.Remove('Credential') | Out-Null
     $currentParameters.Remove('Ensure') | Out-Null
+    $currentParameters.Remove('AccessTokens') | Out-Null
 
     $rolePermissionsObj = @()
     $rolePermissionsObj += @{'allowedResourceActions' = $rolePermissions }
@@ -346,7 +356,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -414,7 +428,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -455,6 +473,7 @@ function Export-TargetResource
                 Id                    = $AADRoleDefinition.Id
                 IsEnabled             = $true
                 RolePermissions       = @('temp')
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
 

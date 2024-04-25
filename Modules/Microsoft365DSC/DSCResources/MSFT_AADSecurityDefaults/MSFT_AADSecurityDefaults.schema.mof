@@ -12,4 +12,5 @@ class MSFT_AADSecurityDefaults : OMI_BaseResource
     [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Credentials of the Azure AD Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

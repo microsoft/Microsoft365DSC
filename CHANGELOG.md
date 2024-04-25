@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Added support for Access Tokens across AAD resources.
+
 # 1.24.424.1
 
 * EXORecipientPermission
