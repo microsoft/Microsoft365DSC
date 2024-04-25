@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+#
+* AADGroup
+  * Fixes #4596
+
 # 1.24.424.1
 
 * EXORecipientPermission
