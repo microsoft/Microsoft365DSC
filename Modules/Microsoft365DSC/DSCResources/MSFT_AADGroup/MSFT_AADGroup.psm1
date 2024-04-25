@@ -97,7 +97,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Group'
@@ -280,6 +284,7 @@ function Get-TargetResource
                 ApplicationSecret             = $ApplicationSecret
                 Credential                    = $Credential
                 Managedidentity               = $ManagedIdentity.IsPresent
+                AccessTokens                  = $AccessTokens
             }
 
             return $result
@@ -395,7 +400,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of Azure AD Groups'
@@ -429,6 +438,7 @@ function Set-TargetResource
     $currentParameters.Remove('Members') | Out-Null
     $currentParameters.Remove('MemberOf') | Out-Null
     $currentParameters.Remove('AssignedToRole') | Out-Null
+    $currentParameters.Remove('AccessTokens') | Out-Null
 
     if ($Ensure -eq 'Present' -and `
         ($null -ne $GroupTypes -and $GroupTypes.Contains('Unified')) -and `
@@ -940,7 +950,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1021,7 +1035,6 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('GroupTypes') | Out-Null
     $ValuesToCheck.Remove('AssignedLicenses') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1065,7 +1078,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -1147,6 +1164,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 Credential            = $Credential
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
