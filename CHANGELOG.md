@@ -1,6 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+* MISC
+  * Added support for Access Tokens across AAD resources.
 * AADActivityBasedTimeoutPolicy
   * Initial release, set the azure portal and default Timeout.
 
