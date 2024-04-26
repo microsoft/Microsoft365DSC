@@ -9,12 +9,12 @@
                         "name": "Policy.Read.All"
                     },
                     {
-                        "name": "Policy.ReadWrite.ApplicationConfiguration"
+                        "name": "Policy.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Policy.ReadWrite.ApplicationConfiguration"
+                        "name": "Policy.Read.All"
                     }
                 ]
             },
@@ -24,12 +24,12 @@
                         "name": "Policy.Read.All"
                     },
                     {
-                        "name": "Policy.ReadWrite.ApplicationConfiguration"
+                        "name": "Policy.Read.All"
                     }
                 ],
                 "update": [
                     {
-                        "name": "Policy.ReadWrite.ApplicationConfiguration"
+                        "name": "Policy.Read.All"
                     }
                 ]
             }
