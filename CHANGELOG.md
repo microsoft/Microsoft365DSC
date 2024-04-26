@@ -1,6 +1,9 @@
 # Change log for Microsoft365DSC
 
-#
+# UNRELEASED
+
+* MISC
+  * Added support for Access Tokens across AAD resources.
 * AADGroup
   * Fixes #4596
 
