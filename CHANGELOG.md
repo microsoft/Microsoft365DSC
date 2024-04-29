@@ -2,10 +2,14 @@
 
 # UNRELEASED
 
-* MISC
-  * Added support for Access Tokens across AAD resources.
 * AADGroup
   * Fixes #4596
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.18.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.182.
+* MISC
+  * Added support for Access Tokens across AAD resources.
+  * Fixing fake passwords in Unit Tests.
 
 # 1.24.424.1
 
