@@ -51,7 +51,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of Teams Meeting Broadcast'
@@ -93,6 +97,7 @@ function Get-TargetResource
             TenantId                            = $TenantId
             CertificateThumbprint               = $CertificateThumbprint
             ManagedIdentity                     = $ManagedIdentity.IsPresent
+            AccessTokens                        = $AccessTokens
         }
     }
     catch
@@ -159,7 +164,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of Teams Meeting Broadcast'
@@ -185,6 +194,7 @@ function Set-TargetResource
     $SetParams.Remove('TenantId') | Out-Null
     $SetParams.Remove('CertificateThumbprint') | Out-Null
     $SetParams.Remove('ManagedIdentity') | Out-Null
+    $SetParams.Remove('AccessTokens') | Out-Null
 
     Set-CsTeamsMeetingBroadcastConfiguration @SetParams
 }
@@ -242,7 +252,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -304,7 +318,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -332,6 +350,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         Add-ConfigurationDataEntry -Node 'NonNodeData' -Key 'SdnApiToken' -Value '**********'`
             -Description 'API Token for the Teams SDN Provider for Meeting Broadcast'

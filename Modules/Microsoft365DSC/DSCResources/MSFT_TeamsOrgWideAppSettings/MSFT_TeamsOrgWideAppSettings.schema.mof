@@ -5,4 +5,5 @@ class MSFT_TeamsOrgWideAppSettings : OMI_BaseResource
     [Write, Description("Determines whether or not to allow interaction with custom apps.")] Boolean IsSideloadedAppsInteractionEnabled;
     [Write, Description("Credentials of the Teams Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

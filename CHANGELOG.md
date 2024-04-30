@@ -7,6 +7,7 @@
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.182.
 * MISC
   * Added support for Access Tokens across AAD resources.
+  * Added support for Access Tokens across Teams resources.
   * Fixing fake passwords in Unit Tests.
 
 # 1.24.424.1
