@@ -49,7 +49,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Teams Meeting Broadcast Policy {$Identity}"
@@ -89,6 +93,7 @@ function Get-TargetResource
                 TenantId                        = $TenantId
                 CertificateThumbprint           = $CertificateThumbprint
                 ManagedIdentity                 = $ManagedIdentity.IsPresent
+                AccessTokens                    = $AccessTokens
             }
         }
         return $nullReturn

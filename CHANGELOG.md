@@ -4,6 +4,7 @@
 
 * MISC
   * Added support for Access Tokens across AAD resources.
+  * Added support for Access Tokens across Teams resources.
 
 # 1.24.424.1
 
