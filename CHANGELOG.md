@@ -5,6 +5,8 @@
 * SCAutoSensitivityLabelPolicy
   * Fix incorrect mandatory Credential parameter in Set and Test methods
     FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Fixed an issue where the payload of xml files was not encoded as base64.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.18.0.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.182.
