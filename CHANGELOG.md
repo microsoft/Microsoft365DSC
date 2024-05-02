@@ -5,6 +5,9 @@
 * SCAutoSensitivityLabelPolicy
   * Fix incorrect mandatory Credential parameter in Set and Test methods
     FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
+* IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
+  * Fixed a creation and update issue when the exported policy contains a 
+    onboarding blob and the tenant is connected to Defender for Endpoint Service.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.18.0.
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.182.
