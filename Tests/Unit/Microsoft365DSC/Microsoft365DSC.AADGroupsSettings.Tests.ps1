@@ -150,6 +150,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'Group.Unified'
                         Values      = @(
                             @{
+                                Name  = 'NewUnifiedGroupWritebackDefault'
+                                Value = $true
+                            },
+                            @{
                                 Name  = 'GroupCreationAllowedGroupId'
                                 Value = ''
                             },
@@ -223,6 +227,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     return @{
                         DisplayName = 'Group.Unified'
                         Values      = @(
+                            @{
+                                Name  = 'NewUnifiedGroupWritebackDefault'
+                                Value = $true
+                            },
                             @{
                                 Name  = 'GroupCreationAllowedGroupId'
                                 Value = '12345-12345-12345-12345-12345'
