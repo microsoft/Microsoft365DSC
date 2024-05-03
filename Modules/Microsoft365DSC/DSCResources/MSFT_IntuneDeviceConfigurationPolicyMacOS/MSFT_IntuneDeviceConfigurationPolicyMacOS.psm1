@@ -294,7 +294,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -797,17 +801,6 @@ function Set-TargetResource
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $CreateParameters
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-
-        <#$AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $CreateParameters.remove($keyName)
-            }
-        }#>
-
         $CreateParameters.Remove('Id') | Out-Null
 
         foreach ($key in ($CreateParameters.clone()).Keys)
