@@ -196,7 +196,7 @@ function Get-TargetResource
         ApplicationSecret     = $ApplicationSecret
         CertificateThumbprint = $CertificateThumbprint
         Managedidentity       = $ManagedIdentity.IsPresent
-        $AccessTokens         = $AccessTokens
+        AccessTokens          = $AccessTokens
     }
     try
     {
