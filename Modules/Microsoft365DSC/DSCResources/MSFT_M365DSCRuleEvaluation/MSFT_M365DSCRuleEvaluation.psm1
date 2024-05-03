@@ -38,7 +38,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     return $null
 }
@@ -82,7 +86,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     # Not Implemented
 }
@@ -127,7 +135,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #region Telemetry
     $CurrentResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
@@ -150,6 +162,7 @@ function Test-TargetResource
             TenantId              = $PSBoundParameters.TenantId
             CertificateThumbprint = $PSBoundParameters.CertificateThumbprint
             ManagedIdentity       = $PSBoundParameters.ManagedIdentity
+            AccessTokens          = $AccessTokens
         }
 
         if ($null -ne $PSBoundParameters.ApplicationSecret)
@@ -359,7 +372,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Host "`r`n" -NoNewline
     return $null
