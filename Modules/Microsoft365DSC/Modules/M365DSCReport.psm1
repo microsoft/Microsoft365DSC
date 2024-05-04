@@ -342,46 +342,45 @@ function Get-IconPath
         $ResourceName
     )
 
-    #TODO: Convert the below into a switch statement
     if ($ResourceName.StartsWith('Promo'))
     {
-        return Get-Base64EncodedImage -IconName "Promo"
+        return Get-Base64EncodedImage -IconName "Promo.png"
     }
     elseif ($ResourceName.StartsWith('AAD'))
     {
-        return Get-Base64EncodedImage -IconName "AzureAD"
+        return Get-Base64EncodedImage -IconName "AzureAD.jpg"
     }
     elseif ($ResourceName.StartsWith('EXO'))
     {
-        return Get-Base64EncodedImage -IconName "Exchange"
+        return Get-Base64EncodedImage -IconName "Exchange.jpg"
     }
     elseif ($ResourceName.StartsWith('O365'))
     {
-        return Get-Base64EncodedImage -IconName "Office365"
+        return Get-Base64EncodedImage -IconName "Office365.jpg"
     }
     elseif ($ResourceName.StartsWith('OD'))
     {
-        return Get-Base64EncodedImage -IconName "OneDrive"
+        return Get-Base64EncodedImage -IconName "OneDrive.jpg"
     }
     elseif ($ResourceName.StartsWith('PP'))
     {
-        return Get-Base64EncodedImage -IconName "PowerApps"
+        return Get-Base64EncodedImage -IconName "PowerApps.jpg"
     }
     elseif ($ResourceName.StartsWith('SC'))
     {
-        return Get-Base64EncodedImage -IconName "SecurityAndComplance"
+        return Get-Base64EncodedImage -IconName "SecurityAndComplance.png"
     }
     elseif ($ResourceName.StartsWith('SPO'))
     {
-        return Get-Base64EncodedImage -IconName "SharePoint"
+        return Get-Base64EncodedImage -IconName "SharePoint.jpg"
     }
     elseif ($ResourceName.StartsWith('Teams'))
     {
-        return Get-Base64EncodedImage -IconName "Teams"
+        return Get-Base64EncodedImage -IconName "Teams.jpg"
     }
     elseif ($ResourceName.StartsWith('Intune'))
     {
-        return Get-Base64EncodedImage -IconName "Intune"
+        return Get-Base64EncodedImage -IconName "Intune.jpg"
     }
     return $null
 }
@@ -403,22 +402,25 @@ function Get-Base64EncodedImage
         [string]
         $IconName
     )
+
     $IconPath = Join-Path -Path $PSScriptRoot `
                         -ChildPath "..\dependencies\Images\$($IconName)" `
                         -Resolve
 
     if(Test-Path -Path $IconPath)
     {
-        if($icon.Extension.endsWith("jpg") || $icon.Extension.endsWith("jpeg"))
+        $icon = Get-Item -Path $IconPath
+
+        if($icon.Extension.endsWith("jpg") -or $icon.Extension.endsWith("jpeg"))
         {
             $mimeType = "image/jpeg"
         }
-        if(icon.Extension.endsWith("png"))
+        if($icon.Extension.endsWith("png"))
         {
             $mimeType = "image/png"
         }
 
-        $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $iconPath -AsByteStream -ReadCount 0))
+        $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $iconPath -Encoding Byte -ReadCount 0))
         return $("data:$($mimeType);base64,$($base64EncodedImage)")
     }
     else
@@ -1507,7 +1509,7 @@ function New-M365DSCDeltaReport
         }
         [void]$reportSB.AppendLine("<html><head><meta charset='utf-8'><title>$ReportTitle</title></head><body>")
         [void]$reportSB.AppendLine("<div style='width:100%;text-align:center;'>")
-        $partHTML += "<img src='" + (Get-IconPath -ResourceName "Promo") + "' alt='Microsoft365DSC Slogan' width='500'  />"
+        [void]$reportSB.AppendLine("<img src='" + (Get-IconPath -ResourceName "Promo") + "' alt='Microsoft365DSC Slogan' width='500'  />")
         [void]$ReportSB.AppendLine('</div>')
 
         [array]$resourcesMissingInSource = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -eq '_IsInConfiguration_' -and `
