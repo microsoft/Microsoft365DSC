@@ -101,7 +101,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message 'Getting IRM Configuration'
 
@@ -166,6 +170,7 @@ function Get-TargetResource
             CertificatePassword                        = $CertificatePassword
             Managedidentity                            = $ManagedIdentity.IsPresent
             TenantId                                   = $TenantId
+            AccessTokens                               = $AccessTokens
         }
 
         Write-Verbose -Message 'Found IRM configuration '
@@ -286,7 +291,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -315,6 +324,7 @@ function Set-TargetResource
     $IRMConfigurationParams.Remove('CertificatePassword') | Out-Null
     $IRMConfigurationParams.Remove('ManagedIdentity') | Out-Null
     $IRMConfigurationParams.Remove('IsSingleInstance') | Out-Null
+    $IRMConfigurationParams.Remove('AccessTokens') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($Null -ne $IRMConfigurationParams))
     {
@@ -428,7 +438,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -494,7 +508,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
@@ -527,6 +545,7 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             Managedidentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
+            AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params

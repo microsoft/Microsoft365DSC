@@ -181,7 +181,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Mail Contact for $Name"
@@ -248,6 +252,7 @@ function Get-TargetResource
                 CertificatePassword         = $CertificatePassword
                 Managedidentity             = $ManagedIdentity.IsPresent
                 TenantId                    = $TenantId
+                AccessTokens                = $AccessTokens
             }
 
             foreach ($i in (1..15))
@@ -464,7 +469,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting Mail Contact configuration for $Name"
@@ -713,7 +722,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -735,13 +748,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    [void]$ValuesToCheck.Remove('Credential')
-    [void]$ValuesToCheck.Remove('ApplicationId')
-    [void]$ValuesToCheck.Remove('TenantId')
-    [void]$ValuesToCheck.Remove('CertificateThumbprint')
-    [void]$ValuesToCheck.Remove('CertificatePath')
-    [void]$ValuesToCheck.Remove('CertificatePassword')
-    [void]$ValuesToCheck.Remove('ManagedIdentity')
     [void]$ValuesToCheck.Remove('OrganizationalUnit')
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -785,7 +791,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -829,6 +839,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

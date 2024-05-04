@@ -468,7 +468,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting EXOOrganizationConfig'
@@ -623,6 +627,7 @@ function Get-TargetResource
             CertificatePassword                                       = $CertificatePassword
             Managedidentity                                           = $ManagedIdentity.IsPresent
             TenantId                                                  = $TenantId
+            AccessTokens                                              = $AccessTokens
         }
 
         if ($null -eq $ConfigSettings.AutoExpandingArchiveEnabled)
@@ -1128,7 +1133,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1163,6 +1172,7 @@ function Set-TargetResource
     $SetValues.Remove('CertificatePath') | Out-Null
     $SetValues.Remove('CertificatePassword') | Out-Null
     $SetValues.Remove('ManagedIdentity') | Out-Null
+    $SetValues.Remove('AccessTokens') | Out-Null
 
     $isAutoExpandingArchiveEnabled = Get-OrganizationConfig | Select-Object -Property AutoExpandingArchiveEnabled
 
@@ -1644,7 +1654,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1666,13 +1680,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1716,7 +1723,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -1746,6 +1757,7 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             Managedidentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
+            AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params

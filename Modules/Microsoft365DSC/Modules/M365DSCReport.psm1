@@ -382,6 +382,10 @@ function Get-IconPath
     {
         return Get-Base64EncodedImage -IconName "Intune.jpg"
     }
+    elseif ($ResourceName.StartsWith('Intune'))
+    {
+        return 'http://microsoft365dsc.com/Images/Intune.jpg'
+    }
     return $null
 }
 

@@ -59,7 +59,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of CASMailboxPlan for $Identity"
@@ -130,6 +134,7 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             Managedidentity       = $ManagedIdentity.IsPresent
             TenantId              = $TenantId
+            AccessTokens          = $AccessTokens
         }
 
         Write-Verbose -Message "Found CASMailboxPlan $($Identity)"
@@ -208,7 +213,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of CASMailboxPlan for $Identity"
@@ -237,6 +246,7 @@ function Set-TargetResource
     $CASMailboxPlanParams.Remove('CertificatePath') | Out-Null
     $CASMailboxPlanParams.Remove('CertificatePassword') | Out-Null
     $CASMailboxPlanParams.Remove('ManagedIdentity') | Out-Null
+    $CASMailboxPlanParams.Remove('AccessTokens') | Out-Null
 
     $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
 
@@ -313,7 +323,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -379,7 +393,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -424,6 +442,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

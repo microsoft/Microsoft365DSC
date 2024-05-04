@@ -95,7 +95,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of OneDrive Settings'
@@ -197,6 +201,7 @@ function Get-TargetResource
             CertificateThumbprint                     = $CertificateThumbprint
             Credential                                = $Credential
             Managedidentity                           = $ManagedIdentity.IsPresent
+            AccessTokens                              = $AccessTokens
         }
     }
     catch
@@ -307,7 +312,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of OneDrive Settings'
@@ -424,6 +433,7 @@ function Set-TargetResource
     $CurrentParameters.Remove('CertificatePassword') | Out-Null
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
+    $CurrentParameters.Remove('AccessTokens') | Out-Null
 
     Write-Verbose -Message 'Configuring OneDrive settings.'
     Set-PnPTenant @CurrentParameters
@@ -535,7 +545,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -611,7 +625,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -640,6 +658,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
+            AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params

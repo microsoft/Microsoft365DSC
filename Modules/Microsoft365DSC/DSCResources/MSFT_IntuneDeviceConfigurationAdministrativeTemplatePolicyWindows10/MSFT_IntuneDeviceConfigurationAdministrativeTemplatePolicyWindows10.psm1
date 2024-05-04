@@ -58,7 +58,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -230,6 +234,7 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
             #endregion
         }
         $returnAssignments = @()
@@ -326,7 +331,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -350,6 +359,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
     $keyToRename = @{
         'odataType'          = '@odata.type'
         'BooleanValue'       = 'value'
@@ -650,7 +660,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -737,13 +751,6 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-    $ValuesToCheck.Remove('Verbose') | Out-Null
     $ValuesToCheck.Remove('Ensure') | Out-Null
     $ValuesToCheck.Remove('PolicyConfigurationIngestionType') | Out-Null
 
@@ -770,6 +777,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -791,7 +802,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -812,9 +827,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementGroupPolicyConfiguration `
-            -All `
-            -ErrorAction Stop
+        [array]$getValue = Get-MgBetaDeviceManagementGroupPolicyConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -845,6 +858,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens`         = $AccessTokens
             }
 
             $Results = Get-TargetResource @params

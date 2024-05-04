@@ -203,7 +203,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Role: $DisplayName"
@@ -398,6 +402,7 @@ function Get-TargetResource
             ApplicationSecret                                         = $ApplicationSecret
             Credential                                                = $Credential
             ManagedIdentity                                           = $ManagedIdentity.IsPresent
+            AccessTokens                                              = $AccessTokens
         }
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
         return $result
@@ -618,7 +623,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Role settings: $DisplayName"
@@ -1359,7 +1368,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $Script:ExportMode = $false
 
@@ -1426,7 +1439,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -1450,7 +1467,7 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_ -match 'The tenant needs an AAD Premium 2 license')
+        if ($_.ErrorDetails.Message -like "*The tenant needs to have Microsoft Entra*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) AAD Premium License is required to get the role."
             return ''
@@ -1475,6 +1492,7 @@ function Export-TargetResource
                 Managedidentity       = $ManagedIdentity.IsPresent
                 ApplicationSecret     = $ApplicationSecret
                 Credential            = $Credential
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
