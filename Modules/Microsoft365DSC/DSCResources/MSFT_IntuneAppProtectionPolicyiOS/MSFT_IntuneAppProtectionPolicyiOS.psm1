@@ -245,7 +245,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Checking for the Intune iOS App Protection Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -404,6 +408,7 @@ function Get-TargetResource
             TenantId                                       = $TenantId
             CertificateThumbprint                          = $CertificateThumbprint
             Managedidentity                                = $ManagedIdentity.IsPresent
+            AccessTokens                                   = $AccessTokens
         }
     }
     catch
@@ -556,22 +561,18 @@ function Set-TargetResource
         [System.String]
         $AppDataEncryptionType,
 
-
         [Parameter()]
         [System.String]
         $MinimumWipeOSVersion,
-
 
         [Parameter()]
         [System.String]
         $MinimumWipeAppVersion,
 
-
         [Parameter()]
         [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfDeviceComplianceRequired,
-
 
         [Parameter()]
         [ValidateSet('block', 'wipe', 'warn')]
@@ -582,11 +583,9 @@ function Set-TargetResource
         [System.String]
         $PinRequiredInsteadOfBiometricTimeout,
 
-
         [Parameter()]
         [System.Uint32]
         $AllowedOutboundClipboardSharingExceptionLength,
-
 
         [Parameter()]
         [ValidateSet('allow', 'blockOrganizationalData', 'block')]
@@ -610,22 +609,18 @@ function Set-TargetResource
         [System.String[]]
         $AllowedIosDeviceModels,
 
-
         [Parameter()]
         [ValidateSet('block', 'wipe', 'warn')]
         [System.String]
         $AppActionIfIosDeviceModelNotAllowed,
 
-
         [Parameter()]
         [System.Boolean]
         $FilterOpenInToOnlyManagedApps,
 
-
         [Parameter()]
         [System.Boolean]
         $DisableProtectionOfManagedOutboundOpenInData,
-
 
         [Parameter()]
         [System.Boolean]
@@ -674,7 +669,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -702,6 +701,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
     {
@@ -1061,7 +1061,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1126,7 +1130,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -1169,6 +1177,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
 
