@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADGroupSettings
+  * Added support for parameter NewUnifiedGroupWritebackDefault
 * SCAutoSensitivityLabelPolicy
   * Fix incorrect mandatory Credential parameter in Set and Test methods
     FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
