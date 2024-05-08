@@ -226,7 +226,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Conditional Access Policy'
@@ -681,6 +685,7 @@ function Get-TargetResource
         TenantId                                 = $TenantId
         CertificateThumbprint                    = $CertificateThumbprint
         Managedidentity                          = $ManagedIdentity.IsPresent
+        AccessTokens                             = $AccessTokens
     }
 
     Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -914,7 +919,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message 'Setting configuration of AzureAD Conditional Access Policy'
 
@@ -941,6 +950,7 @@ function Set-TargetResource
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('Credential') | Out-Null
     $currentParameters.Remove('ManagedIdentity') | Out-Null
+    $currentParameters.Remove('AccessTokens') | Out-Null
 
     if ($Ensure -eq 'Present')#create policy attribute objects
     {
@@ -1907,7 +1917,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Testing configuration of AzureAD CA Policies'
@@ -1918,10 +1932,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -1966,7 +1976,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -2009,6 +2023,7 @@ function Export-TargetResource
                     CertificateThumbprint = $CertificateThumbprint
                     Credential            = $Credential
                     Managedidentity       = $ManagedIdentity.IsPresent
+                    AccessTokens          = $AccessTokens
                 }
                 $Results = Get-TargetResource @Params
 

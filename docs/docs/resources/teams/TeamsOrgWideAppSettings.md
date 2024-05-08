@@ -8,6 +8,7 @@
 | **IsSideloadedAppsInteractionEnabled** | Write | Boolean | Determines whether or not to allow interaction with custom apps. | |
 | **Credential** | Write | PSCredential | Credentials of the Teams Admin | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 # TeamsOgWideAppSettings

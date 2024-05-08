@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {

@@ -39,7 +39,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of External Identity Policy'
@@ -102,6 +106,7 @@ function Get-TargetResource
             TenantId                          = $TenantId
             CertificateThumbprint             = $CertificateThumbprint
             Managedidentity                   = $ManagedIdentity.IsPresent
+            AccessTokens                      = $AccessTokens
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -149,7 +154,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message 'Setting configuration for External Identity Policy'
 
@@ -173,6 +182,7 @@ function Set-TargetResource
     $desiredParameters.Remove('ApplicationSecret') | Out-Null
     $desiredParameters.Remove('Credential') | Out-Null
     $desiredParameters.Remove('ManagedIdentity') | Out-Null
+    $desiredParameters.Remove('AccessTokens') | Out-Null
 
     try
     {
@@ -234,7 +244,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Testing configuration of External Identity Policy'
@@ -284,7 +298,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -313,6 +331,7 @@ function Export-TargetResource
             ApplicationSecret              = $ApplicationSecret
             CertificateThumbprint          = $CertificateThumbprint
             ManagedIdentity                = $ManagedIdentity
+            AccessTokens                   = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 

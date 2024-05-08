@@ -36,7 +36,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message 'Checking the Teams Upgrade Configuration'
 
@@ -71,6 +75,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
     }
     catch
@@ -124,7 +129,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting Teams Upgrade Configuration'
@@ -152,6 +161,8 @@ function Set-TargetResource
     $SetParameters.Remove('CertificateThumbprint') | Out-Null
     $SetParameters.Remove('ManagedIdentity') | Out-Null
     $SetParameters.Add("Identity", "Global")
+    $SetParameters.Remove('AccessTokens') | Out-Null
+
     Write-Verbose -Message "Updating with Values: $(Convert-M365DscHashtableToString -Hashtable $SetParameters)"
     Set-CsTeamsUpgradeConfiguration @SetParameters
 }
@@ -194,7 +205,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -251,7 +266,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -279,6 +298,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 

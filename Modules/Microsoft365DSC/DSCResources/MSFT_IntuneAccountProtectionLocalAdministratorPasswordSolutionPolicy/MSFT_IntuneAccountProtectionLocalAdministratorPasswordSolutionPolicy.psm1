@@ -103,7 +103,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Checking for the Intune Account Protection LAPS Policy {$DisplayName}"
@@ -249,6 +253,7 @@ function Get-TargetResource
         $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
         $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
         $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        $returnHashtable.Add('AccessTokens', $AccessTokens)
 
         return $returnHashtable
     }
@@ -369,7 +374,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -392,6 +401,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $templateReferenceId = 'adc46e5a-f4aa-4ff6-aeff-4f27bc525796_1'
     $platforms = 'windows10'
@@ -557,7 +567,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -584,10 +598,6 @@ function Test-TargetResource
 
     $ValuesToCheck = ([hashtable]$PSBoundParameters).clone()
     $ValuesToCheck.Remove('Identity') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $testResult = $true
     if ($CurrentValues.Ensure -ne $Ensure)
@@ -647,7 +657,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -698,6 +712,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @params

@@ -45,6 +45,7 @@ function Get-TargetResource
             IsSingleInstance      = 'Yes'
             IsSideloadedAppsInteractionEnabled = $settings.IsSideloadedAppsInteractionEnabled
             Credential                         = $Credential
+            AccessTokens                       = $AccessTokens
         }
     }
     catch
@@ -84,7 +85,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting Teams Upgrade Configuration'
@@ -107,6 +112,7 @@ function Set-TargetResource
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove('IsSingleInstance') | Out-Null
     $SetParameters.Remove('Credential') | Out-Null
+    $SetParameters.Remove('AccessTokens') | Out-Null
 
     Set-CsTeamsSettingsCustomApp @SetParameters
 }
@@ -128,7 +134,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -169,7 +179,11 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -193,6 +207,7 @@ function Export-TargetResource
         $params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
+            AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 

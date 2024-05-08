@@ -225,7 +225,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Teams Call Queue {$Name}"
@@ -323,6 +327,7 @@ function Get-TargetResource
                 TenantId                                      = $TenantId
                 CertificateThumbprint                         = $CertificateThumbprint
                 ManagedIdentity                               = $ManagedIdentity.IsPresent
+                AccessTokens                                  = $AccessTokens
             }
         }
     }
@@ -564,7 +569,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Teams Call Queue {$Name}"
@@ -593,6 +602,7 @@ function Set-TargetResource
     $opsParameters.Remove('CertificateThumbprint') | Out-Null
     $opsParameters.Remove('Ensure') | Out-Null
     $opsParameters.Remove('ManagedIdentity') | Out-Null
+    $opsParameters.Remove('AccessTokens') | Out-Null
 
     if ($currentValues.Ensure -eq 'Absent' -and 'Present' -eq $Ensure )
     {
@@ -841,7 +851,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -899,7 +913,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -940,6 +958,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
