@@ -3583,6 +3583,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "Boolean",
+                               "Name":  "NewUnifiedGroupWritebackDefault",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "Ensure",
                                "Option":  "Write"
