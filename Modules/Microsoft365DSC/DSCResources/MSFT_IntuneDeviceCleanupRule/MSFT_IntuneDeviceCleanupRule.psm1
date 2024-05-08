@@ -45,7 +45,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     if ($Enabled -and $DeviceInactivityBeforeRetirementInDays -eq 0)
@@ -87,6 +91,7 @@ function Get-TargetResource
             ApplicationSecret                      = $ApplicationSecret
             CertificateThumbprint                  = $CertificateThumbprint
             Managedidentity                        = $ManagedIdentity.IsPresent
+            AccessTokens                           = $AccessTokens
         }
 
         if ($return.Enabled)
@@ -154,7 +159,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     if ($Enabled -and $DeviceInactivityBeforeRetirementInDays -eq 0)
@@ -233,7 +242,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     if ($Enabled -and $DeviceInactivityBeforeRetirementInDays -eq 0)
@@ -260,10 +273,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
 
     if ($CurrentValues.Enabled -eq $false) {
         $ValuesToCheck.Remove('DeviceInactivityBeforeRetirementInDays') | Out-Null
@@ -307,7 +316,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -352,6 +365,7 @@ function Export-TargetResource
                 TenantId                               = $TenantId
                 CertificateThumbprint                  = $CertificateThumbprint
                 Managedidentity                        = $ManagedIdentity.IsPresent
+                AccessTokens                           = $AccessTokens
             }
 
             if ($params.Enabled) {
