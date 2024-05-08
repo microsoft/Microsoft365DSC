@@ -13,6 +13,7 @@
 | **GroupCreationAllowedGroupName** | Write | String | Name of the security group for which the members are allowed to create Office 365 groups even when EnableGroupCreation == false. | |
 | **AllowToAddGuests** | Write | Boolean | A boolean indicating whether or not is allowed to add guests to this directory. | |
 | **UsageGuidelinesUrl** | Write | String | A link to the Group Usage Guidelines. | |
+| **NewUnifiedGroupWritebackDefault** | Write | Boolean | Boolean, a tenant-wide setting that assigns the default value to the writebackConfiguration/isEnabled property of new groups, if the property isn't specified during group creation. This setting is applicable when group writeback is configured in Microsoft Entra Connect. | |
 | **Ensure** | Write | String | Specify if the Azure AD Groups Naming Policy should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
