@@ -32,10 +32,15 @@ class MSFT_IntuneDeviceConfigurationWiredNetworkPolicyWindows10 : OMI_BaseResour
     [Write, Description("Specify the secondary authentication method. Possible values are: certificate, usernameAndPassword, derivedCredential. Possible values are: certificate, usernameAndPassword, derivedCredential, unknownFutureValue."), ValueMap{"certificate","usernameAndPassword","derivedCredential","unknownFutureValue"}, Values{"certificate","usernameAndPassword","derivedCredential","unknownFutureValue"}] String SecondaryAuthenticationMethod;
     [Write, Description("Specify trusted server certificate names.")] String TrustedServerCertificateNames[];
     [Write, Description("Specify root certificates for server validation. This collection can contain a maximum of 500 elements.")] String RootCertificatesForServerValidationIds[];
+    [Write, Description("Specify root certificate display names for server validation. This collection can contain a maximum of 500 elements.")] String RootCertificatesForServerValidationDisplayNames[];
     [Write, Description("Specify identity certificate for client authentication.")] String IdentityCertificateForClientAuthenticationId;
+    [Write, Description("Specify identity certificate display name for client authentication.")] String IdentityCertificateForClientAuthenticationDisplayName;
     [Write, Description("Specify root certificate for client validation")] String SecondaryIdentityCertificateForClientAuthenticationId;
+    [Write, Description("Specify root certificate display name for client validation")] String SecondaryIdentityCertificateForClientAuthenticationDisplayName;
     [Write, Description("Specify root certificate for client validation.")] String RootCertificateForClientValidationId;
+    [Write, Description("Specify root certificate display name for client validation.")] String RootCertificateForClientValidationDisplayName;
     [Write, Description("Specify secondary root certificate for client validation.")] String SecondaryRootCertificateForClientValidationId;
+    [Write, Description("Specify secondary root certificate display name for client validation.")] String SecondaryRootCertificateForClientValidationDisplayName;
     [Write, Description("Admin provided description of the Device Configuration.")] String Description;
     [Key, Description("Admin provided name of the device configuration.")] String DisplayName;
     [Write, Description("The unique identifier for an entity. Read-only.")] String Id;
