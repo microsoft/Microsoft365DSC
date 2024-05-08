@@ -8,6 +8,7 @@
     "through2": "^2.0.3",
     "markdownlint": "^0.11.0"
   },
+  "glad" : "92^7"
   "devDependencies": {
     "gulp-concat": "^2.6.1"
   },
