@@ -24,10 +24,15 @@
 | **SecondaryAuthenticationMethod** | Write | String | Specify the secondary authentication method. Possible values are: certificate, usernameAndPassword, derivedCredential. Possible values are: certificate, usernameAndPassword, derivedCredential, unknownFutureValue. | `certificate`, `usernameAndPassword`, `derivedCredential`, `unknownFutureValue` |
 | **TrustedServerCertificateNames** | Write | StringArray[] | Specify trusted server certificate names. | |
 | **RootCertificatesForServerValidationIds** | Write | StringArray[] | Specify root certificates for server validation. This collection can contain a maximum of 500 elements. | |
+| **RootCertificatesForServerValidationDisplayNames** | Write | StringArray[] | Specify root certificate display names for server validation. This collection can contain a maximum of 500 elements. | |
 | **IdentityCertificateForClientAuthenticationId** | Write | String | Specify identity certificate for client authentication. | |
+| **IdentityCertificateForClientAuthenticationDisplayName** | Write | String | Specify identity certificate display name for client authentication. | |
 | **SecondaryIdentityCertificateForClientAuthenticationId** | Write | String | Specify root certificate for client validation | |
+| **SecondaryIdentityCertificateForClientAuthenticationDisplayName** | Write | String | Specify root certificate display name for client validation | |
 | **RootCertificateForClientValidationId** | Write | String | Specify root certificate for client validation. | |
+| **RootCertificateForClientValidationDisplayName** | Write | String | Specify root certificate display name for client validation. | |
 | **SecondaryRootCertificateForClientValidationId** | Write | String | Specify secondary root certificate for client validation. | |
+| **SecondaryRootCertificateForClientValidationDisplayName** | Write | String | Specify secondary root certificate display name for client validation. | |
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
 | **DisplayName** | Key | String | Admin provided name of the device configuration. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
