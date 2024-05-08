@@ -5,6 +5,8 @@
 * SCAutoSensitivityLabelPolicy
   * Fix incorrect mandatory Credential parameter in Set and Test methods
     FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Fixed an issue where the payload of xml files was not encoded as base64.
 * M365DSCUtil
   * Fixed an issue where one could not pass empty arrays to the 
     `Compare-PSCustomObjectArrays` function.
