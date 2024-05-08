@@ -10,10 +10,14 @@
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fixed an issue where the payload of xml files was not encoded as base64.
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
-  * Fixed a creation and update issue when the exported policy contains a 
+  * Fixed a creation and update issue when the exported policy contains a
     onboarding blob and the tenant is connected to Defender for Endpoint Service.
+* TeamsUpdateManagementPolicy
+  * Remove unnecessary parameters from PSBoundParameters such as authentication
+    methods, Ensure and Verbose by calling Remove-M365DSCAuthenticationParameter
+    FIXES [#4651](https://github.com/microsoft/Microsoft365DSC/issues/4651)
 * M365DSCUtil
-  * Fixed an issue where one could not pass empty arrays to the 
+  * Fixed an issue where one could not pass empty arrays to the
     `Compare-PSCustomObjectArrays` function.
 * DEPENDENCIES
   * Updated Microsoft.Graph to version 2.18.0.
@@ -36,7 +40,7 @@
   * Fixed an issue where the update policy setting was not handled properly.
 * IntuneDeviceConfigurationWiredNetworkPolicyWindows10
   * Added functionality for specifying the certificates with a display name since their
-    ids in the blueprint might be from a different source tenant.  
+    ids in the blueprint might be from a different source tenant.
     FIXES [#4582](https://github.com/microsoft/Microsoft365DSC/issues/4582)
 * MISC
   * Added support for AccessTokens in EXO resources.
