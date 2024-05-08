@@ -9,6 +9,9 @@
     FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fixed an issue where the payload of xml files was not encoded as base64.
+* IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
+  * Fixed a creation and update issue when the exported policy contains a 
+    onboarding blob and the tenant is connected to Defender for Endpoint Service.
 * M365DSCUtil
   * Fixed an issue where one could not pass empty arrays to the 
     `Compare-PSCustomObjectArrays` function.

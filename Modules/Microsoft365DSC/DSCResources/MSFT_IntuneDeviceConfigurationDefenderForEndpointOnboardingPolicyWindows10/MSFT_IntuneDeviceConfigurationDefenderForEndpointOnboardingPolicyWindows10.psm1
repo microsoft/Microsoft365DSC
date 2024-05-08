@@ -290,6 +290,13 @@ function Set-TargetResource
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+
+        if ($AdvancedThreatProtectionAutoPopulateOnboardingBlob -and `
+            $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
+        {
+            $CreateParameters.Remove('AdvancedThreatProtectionOnboardingBlob') | Out-Null
+        }
+
         $CreateParameters.Remove('Id') | Out-Null
 
         $keys = (([Hashtable]$CreateParameters).clone()).Keys
@@ -324,6 +331,12 @@ function Set-TargetResource
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+
+        if ($AdvancedThreatProtectionAutoPopulateOnboardingBlob -and `
+            $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
+        {
+            $UpdateParameters.Remove('AdvancedThreatProtectionOnboardingBlob') | Out-Null
+        }
 
         $UpdateParameters.Remove('Id') | Out-Null
 
