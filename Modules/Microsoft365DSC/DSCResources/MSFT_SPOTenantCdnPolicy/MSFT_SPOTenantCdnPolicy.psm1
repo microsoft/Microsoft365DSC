@@ -201,10 +201,10 @@ function Set-TargetResource
     {
         Write-Verbose 'Found difference in ExcludeRestrictedSiteClassifications'
 
-
+        $ExcludeRestrictedSiteClassifications = $ExcludeRestrictedSiteClassifications -join ','
         Set-PnPTenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'ExcludeRestrictedSiteClassifications' `
-            -PolicyValue $stringValue
+            -PolicyValue $ExcludeRestrictedSiteClassifications
     }
 }
 
