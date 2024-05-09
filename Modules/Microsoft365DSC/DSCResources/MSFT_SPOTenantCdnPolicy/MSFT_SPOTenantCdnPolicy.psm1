@@ -190,15 +190,10 @@ function Set-TargetResource
     {
         Write-Verbose 'Found difference in IncludeFileExtensions'
 
-        $stringValue = ''
-        foreach ($entry in $IncludeFileExtensions.Split(','))
-        {
-            $stringValue += $entry + ','
-        }
-        $stringValue = $stringValue.Remove($stringValue.Length - 1, 1)
+        $IncludeFileExtensions = $IncludeFileExtensions -join ','
         Set-PnPTenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'IncludeFileExtensions' `
-            -PolicyValue $stringValue
+            -PolicyValue $IncludeFileExtensions
     }
 
     if ($null -ne (Compare-Object -ReferenceObject $curPolicies.ExcludeRestrictedSiteClassifications `
