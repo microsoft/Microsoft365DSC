@@ -190,7 +190,7 @@ function Set-TargetResource
     {
         Write-Verbose 'Found difference in IncludeFileExtensions'
 
-        $IncludeFileExtensions = $IncludeFileExtensions -join ','
+        [String]$IncludeFileExtensions = [String[]]$IncludeFileExtensions -join ','
         Set-PnPTenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'IncludeFileExtensions' `
             -PolicyValue $IncludeFileExtensions
@@ -201,7 +201,7 @@ function Set-TargetResource
     {
         Write-Verbose 'Found difference in ExcludeRestrictedSiteClassifications'
 
-        $ExcludeRestrictedSiteClassifications = $ExcludeRestrictedSiteClassifications -join ','
+        [String]$ExcludeRestrictedSiteClassifications = [String[]]$ExcludeRestrictedSiteClassifications -join ','
         Set-PnPTenantCdnPolicy -CdnType $CDNType `
             -PolicyType 'ExcludeRestrictedSiteClassifications' `
             -PolicyValue $ExcludeRestrictedSiteClassifications
