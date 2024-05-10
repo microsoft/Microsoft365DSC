@@ -198,6 +198,10 @@ function Get-TargetResource
         [System.String[]]
         $AuthenticationContexts,
 
+        [Parameter()]
+        [System.String]
+        $TransferMethods,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -676,6 +680,7 @@ function Get-TargetResource
         #no translation needed
         AuthenticationStrength                   = $AuthenticationStrengthValue
         AuthenticationContexts                   = $AuthenticationContextsValues
+        TransferMethods                          = [System.String]$Policy.Conditions.AuthenticationFlows.TransferMethods
         #Standard part
         TermsOfUse                               = $termOfUseName
         Ensure                                   = 'Present'
@@ -890,6 +895,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String[]]
         $AuthenticationContexts,
+
+        [Parameter()]
+        [System.String]
+        $TransferMethods,
 
         #generic
         [Parameter()]
@@ -1505,6 +1514,23 @@ function Set-TargetResource
             $Conditions.Add('clientAppTypes', $ClientAppTypes)
             #no translation or conversion needed
         }
+
+        Write-Verbose -Message "Set-Targetresource: authenticationFlows transferMethods: $TransferMethods"
+        if ($currentParameters.ContainsKey('TransferMethods'))
+        {
+            #create and provision TransferMethods condition object if used
+            if (-not $conditions.Contains('authenticationFlows'))
+            {
+                $conditions.Add('authenticationFlows', @{
+                        transferMethods = $TransferMethods
+                    })
+            }
+            else
+            {
+                $conditions.authenticationFlows.Add('transferMethods', $TransferMethods)
+            }
+
+        }
         Write-Verbose -Message 'Set-Targetresource: Adding processed conditions'
         #add all conditions to the parameter list
         $NewParameters.Add('conditions', $Conditions)
@@ -1896,6 +1922,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $AuthenticationContexts,
+
+        [Parameter()]
+        [System.String]
+        $TransferMethods,
 
         #generic
         [Parameter()]
