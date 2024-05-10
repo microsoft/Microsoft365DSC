@@ -154,7 +154,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Checking for the Intune Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
@@ -271,6 +275,7 @@ function Get-TargetResource
         $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
         $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
         $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        $returnHashtable.Add('AccessTokens', $AccessTokens)
 
         return $returnHashtable
     }
@@ -441,7 +446,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -694,7 +703,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -717,7 +730,7 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message 'The policy was not found'
         return $false
@@ -836,7 +849,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -860,9 +877,7 @@ function Export-TargetResource
     try
     {
         $policyTemplateID = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
-        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -ErrorAction Stop `
-            -All:$true
+        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All -ErrorAction Stop
 
         $policies = $policies | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateId }
 
@@ -888,6 +903,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @params

@@ -34,6 +34,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $allowdatagramprocessingonwinserver,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $allowemailscanning,
 
         [Parameter()]
@@ -55,6 +60,11 @@ function Get-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $allowioavprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $allownetworkprotectiondownlevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -101,6 +111,7 @@ function Get-TargetResource
         [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -124,6 +135,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $disablednsovertcpparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disableenhancednotifications,
 
         [Parameter()]
@@ -135,6 +151,11 @@ function Get-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehttpparsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -346,7 +367,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Checking for the Intune Endpoint Protection Policy {$DisplayName}"
@@ -467,6 +492,7 @@ function Get-TargetResource
         $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
         $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
         $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        $returnHashtable.Add('AccessTokens', $AccessTokens)
 
         return $returnHashtable
     }
@@ -518,6 +544,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $allowdatagramprocessingonwinserver,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $allowemailscanning,
 
         [Parameter()]
@@ -539,6 +570,11 @@ function Set-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $allowioavprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $allownetworkprotectiondownlevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -585,6 +621,7 @@ function Set-TargetResource
         [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -608,6 +645,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $disablednsovertcpparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disableenhancednotifications,
 
         [Parameter()]
@@ -619,6 +661,11 @@ function Set-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehttpparsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -830,7 +877,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -857,6 +908,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('templateId') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $templateReferenceId = $templateId
     $platforms = 'windows10'
@@ -954,6 +1006,11 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $allowdatagramprocessingonwinserver,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $allowemailscanning,
 
         [Parameter()]
@@ -975,6 +1032,11 @@ function Test-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $allowioavprotection,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $allownetworkprotectiondownlevel,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -1021,6 +1083,7 @@ function Test-TargetResource
         [Parameter()]
         [System.Int32]
         $daystoretaincleanedmalware,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -1044,6 +1107,11 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
+        $disablednsovertcpparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
         $disableenhancednotifications,
 
         [Parameter()]
@@ -1055,6 +1123,11 @@ function Test-TargetResource
         [ValidateSet('0', '1')]
         [System.String]
         $disablehealthui,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disablehttpparsing,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -1266,8 +1339,13 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
+
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
 
@@ -1295,7 +1373,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Identity') | Out-Null
 
     $testResult = $true
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         $testResult = $false
     }
@@ -1365,7 +1443,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -1391,11 +1473,11 @@ function Export-TargetResource
     {
         $templateFamily = 'endpointSecurityAntivirus'
         $templateReferences = "d948ff9b-99cb-4ee0-8012-1fbc09685377_1", "e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1", "45fea5e9-280d-4da1-9792-fb5736da0ca9_1","804339ad-1553-4478-a742-138fb5807418_1"
-        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -ErrorAction Stop `
-            -All:$true `
-            -Filter $Filter
-        $policies = $policies | Where-Object -FilterScript { $_.TemplateReference.TemplateFamily -eq $templateFamily -and $_.TemplateReference.TemplateId -in $templateReferences }
+        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All:$true `
+            -ErrorAction Stop | Where-Object -FilterScript {
+                $_.TemplateReference.TemplateFamily -eq $templateFamily -and
+                $_.TemplateReference.TemplateId -in $templateReferences
+            }
 
         if ($policies.Length -eq 0)
         {
@@ -1420,6 +1502,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @params

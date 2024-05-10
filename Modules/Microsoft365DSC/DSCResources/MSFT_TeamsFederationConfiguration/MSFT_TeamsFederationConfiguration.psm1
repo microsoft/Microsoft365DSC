@@ -63,7 +63,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of Teams Federation'
@@ -129,6 +133,7 @@ function Get-TargetResource
             TenantId                                    = $TenantId
             CertificateThumbprint                       = $CertificateThumbprint
             ManagedIdentity                             = $ManagedIdentity.IsPresent
+            AccessTokens                                = $AccessTokens
         }
     }
     catch
@@ -207,7 +212,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of Teams Federation'
@@ -234,6 +243,7 @@ function Set-TargetResource
     $SetParams.Remove('CertificateThumbprint') | Out-Null
     $SetParams.Remove('AllowedDomains') | Out-Null
     $SetParams.Remove('ManagedIdentity') | Out-Null
+    $SetParams.Remove('AccessTokens') | Out-Null
     if ($allowedDomains.Length -gt 0)
     {
         $SetParams.Add('AllowedDomainsAsAList', $AllowedDomains)
@@ -313,7 +323,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -370,7 +384,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -398,6 +416,7 @@ function Export-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 

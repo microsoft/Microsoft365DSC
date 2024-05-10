@@ -39,7 +39,7 @@ function Get-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled', 'NewTeamsAsDefault')]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled', 'NewTeamsAsDefault', 'NewTeamsOnly')]
         [System.String]
         $UseNewTeamsClient,
 
@@ -66,7 +66,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -114,6 +118,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         if (-not [System.String]::IsNullOrEmpty($policy.UpdateTimeOfDay))
         {
@@ -174,7 +179,7 @@ function Set-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled', 'NewTeamsAsDefault')]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled', 'NewTeamsAsDefault', 'NewTeamsOnly')]
         [System.String]
         $UseNewTeamsClient,
 
@@ -201,7 +206,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -232,6 +241,7 @@ function Set-TargetResource
         $newParams.Remove('TenantId') | Out-Null
         $newParams.Remove('CertificateThumbprint') | Out-Null
         $newParams.Remove('ManagedIdentity') | Out-Null
+        $newParams.Remove('AccessTokens') | Out-Null
 
         New-CsTeamsUpdateManagementPolicy @newParams | Out-Null
     }
@@ -245,6 +255,7 @@ function Set-TargetResource
         $setParams.Remove('TenantId') | Out-Null
         $setParams.Remove('CertificateThumbprint') | Out-Null
         $setParams.Remove('ManagedIdentity') | Out-Null
+        $setParams.Remove('AccessTokens') | Out-Null
 
         Set-CsTeamsUpdateManagementPolicy @setParams | Out-Null
     }
@@ -297,7 +308,7 @@ function Test-TargetResource
         $UpdateTimeOfDay,
 
         [Parameter()]
-        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled', 'NewTeamsAsDefault')]
+        [ValidateSet('UserChoice', 'MicrosoftChoice', 'AdminDisabled', 'NewTeamsAsDefault', 'NewTeamsOnly')]
         [System.String]
         $UseNewTeamsClient,
 
@@ -324,7 +335,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -380,7 +395,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -419,6 +438,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $result = Get-TargetResource @params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

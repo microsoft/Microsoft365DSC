@@ -77,7 +77,11 @@
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     try
     {
@@ -154,15 +158,16 @@
             else
             {
                 Write-Verbose -Message "Getting Role Eligibility by PrincipalId and RoleDefinitionId"
-                Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
                 if ($PrincipalType -eq 'User')
                 {
+                    Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
                     $PrincipalIdValue = Get-MgUser -Filter "UserPrincipalName eq '$Principal'" -ErrorAction SilentlyContinue
                     $PrincipalTypeValue = 'User'
                 }
 
                 if ($null -eq $PrincipalIdValue -or $PrincipalType -eq 'Group')
                 {
+                    Write-Verbose -Message "Retrieving principal {$Principal} of type {$PrincipalType}"
                     $PrincipalIdValue = Get-MgGroup -Filter "DisplayName eq '$Principal'" -ErrorAction SilentlyContinue
                     $PrincipalTypeValue = 'Group'
                 }
@@ -349,6 +354,7 @@
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         return $results
     }
@@ -443,7 +449,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     try
     {
@@ -477,6 +487,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $ParametersOps = ([Hashtable]$PSBoundParameters).clone()
 
@@ -668,7 +679,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -772,7 +787,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -816,15 +835,14 @@ function Export-TargetResource
         }
         foreach ($request in $Script:exportedInstances)
         {
-            $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
-            $displayedKey = $RoleDefinitionId.DisplayName + " - " + $request.PrincipalId
+            $displayedKey = $request.Id
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $displayedKey" -NoNewline
 
+            $RoleDefinitionId = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $request.RoleDefinitionId
             $params = @{
                 Id                    = $request.Id
                 Principal             = $request.PrincipalId
                 RoleDefinition        = $RoleDefinitionId.DisplayName
-                ScheduleInfo          = 'TempSchedule'
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
@@ -832,6 +850,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -879,7 +898,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.ErrorDetails.Message -like "*The tenant needs an AAD Premium*")
+        if ($_.ErrorDetails.Message -like "*The tenant needs an AAD Premium*" -or `
+            $_.ErrorDetails.MEssage -like "*[AadPremiumLicenseRequired]*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) Tenant does not meet license requirement to extract this component."
         }

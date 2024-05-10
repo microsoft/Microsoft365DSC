@@ -97,7 +97,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Getting configuration of ClientAccessRule for $Identity"
     if ($Global:CurrentModeIsExport)
@@ -161,6 +165,7 @@ function Get-TargetResource
                 CertificatePassword                  = $CertificatePassword
                 Managedidentity                      = $ManagedIdentity.IsPresent
                 TenantId                             = $TenantId
+                AccessTokens                         = $AccessTokens
             }
 
             if (-not [System.String]::IsNullOrEmpty($ClientAccessRule.RuleScope))
@@ -283,7 +288,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of ClientAccessRule for $Identity"
@@ -324,6 +333,7 @@ function Set-TargetResource
     $ClientAccessRuleParams.Remove('CertificatePath') | Out-Null
     $ClientAccessRuleParams.Remove('CertificatePassword') | Out-Null
     $ClientAccessRuleParams.Remove('ManagedIdentity') | Out-Null
+    $ClientAccessRuleParams.Remove('AccessTokens') | Out-Null
     if ($ClientAccessRuleParams.RuleScope)
     {
         $ClientAccessRuleParams += @{
@@ -450,7 +460,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -472,13 +486,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -522,7 +529,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -568,6 +579,7 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
+                    AccessTokens          = $AccessTokens
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

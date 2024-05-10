@@ -294,7 +294,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -420,6 +424,7 @@ function Get-TargetResource
             ApplicationSecret                               = $ApplicationSecret
             CertificateThumbprint                           = $CertificateThumbprint
             Managedidentity                                 = $ManagedIdentity.IsPresent
+            AccessTokens                                    = $AccessTokens
         }
         if ($getValue.additionalProperties.compliantAppsList)
         {
@@ -748,7 +753,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -779,6 +788,10 @@ function Set-TargetResource
     {
         $PSBoundParameters.UpdateDelayPolicy = $UpdateDelayPolicy -join ','
     }
+    else
+    {
+        $PSBoundParameters.UpdateDelayPolicy = 'none'
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -788,17 +801,6 @@ function Set-TargetResource
         $CreateParameters = ([Hashtable]$PSBoundParameters).clone()
         $CreateParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $CreateParameters
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-
-        <#$AdditionalProperties = Get-M365DSCAdditionalProperties -Properties ($CreateParameters)
-        foreach ($key in $AdditionalProperties.keys)
-        {
-            if ($key -ne '@odata.type')
-            {
-                $keyName = $key.substring(0, 1).ToUpper() + $key.substring(1, $key.length - 1)
-                $CreateParameters.remove($keyName)
-            }
-        }#>
-
         $CreateParameters.Remove('Id') | Out-Null
 
         foreach ($key in ($CreateParameters.clone()).Keys)
@@ -813,7 +815,8 @@ function Set-TargetResource
         {
             $CreateParameters.add('AdditionalProperties', $AdditionalProperties)
         }#>
-        $CreateParameters.add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+        $CreateParameters.Add('@odata.type','#microsoft.graph.macOSGeneralDeviceConfiguration')
+
         #region resource generator code
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
@@ -1185,7 +1188,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1207,7 +1214,7 @@ function Test-TargetResource
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
     $ValuesToCheck.Remove('Id') | Out-Null
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -1270,6 +1277,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -1291,7 +1302,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -1312,7 +1327,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -like "#microsoft.graph.macOS*"  `
@@ -1342,6 +1357,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

@@ -16,8 +16,18 @@ Configuration Example
         IntuneDeviceEnrollmentPlatformRestriction 'DeviceEnrollmentPlatformRestriction'
         {
             Credential                        = $Credscredential
-            DisplayName                       = "All users and all devices";
+            DisplayName                       = "Removed Policy";
             Ensure                            = "Absent";
+            Assignments                       = @();
+            Description                       = "This is a single platform restriction policy.";
+            DeviceEnrollmentConfigurationType = "singlePlatformRestriction";
+            Identity                          = "d59e4c28-b6b2-48ad-a6f0-a2132300b99d_SinglePlatformRestriction";
+            IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
+                PlatformBlocked                 = $True
+                PersonalDeviceEnrollmentBlocked = $False
+            };
+            Priority                          = 1;
+            TenantId                          = $OrganizationName;
         }
     }
 }

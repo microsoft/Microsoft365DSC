@@ -26,6 +26,7 @@
 | **Permissions** | Write | MSFT_AADApplicationPermission[] | API permissions for the Azure Active Directory Application. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_AADApplicationPermission
 

@@ -732,7 +732,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting Transport Rule configuration for $Name"
@@ -959,6 +963,7 @@ function Get-TargetResource
             CertificatePassword                          = $CertificatePassword
             Managedidentity                              = $ManagedIdentity.IsPresent
             TenantId                                     = $TenantId
+            AccessTokens                                 = $AccessTokens
         }
 
         # Formats DateTime as String
@@ -1709,7 +1714,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting Transport Rule configuration for $Name"
@@ -1740,6 +1749,7 @@ function Set-TargetResource
     $NewTransportRuleParams.Remove('CertificatePath') | Out-Null
     $NewTransportRuleParams.Remove('CertificatePassword') | Out-Null
     $NewTransportRuleParams.Remove('ManagedIdentity') | Out-Null
+    $NewTransportRuleParams.Remove('AccessTokens') | Out-Null
 
     # check for deprecated DLP parameters and remove them
     if ($NewTransportRuleParams.ContainsKey('MessageContainsDataClassifications') `
@@ -2518,7 +2528,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -2541,13 +2555,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -2590,7 +2597,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $InformationPreference = 'Continue'
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -2634,6 +2645,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

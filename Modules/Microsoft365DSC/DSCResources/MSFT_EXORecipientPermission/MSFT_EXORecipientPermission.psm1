@@ -48,7 +48,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Recipient permission $Identity"
@@ -116,11 +120,12 @@ function Get-TargetResource
 
         #endregion
 
+        [Array]$trustee = $recipientPermission.Trustee
+
         $result = @{
             Identity              = $Identity
-            Trustee               = $recipientPermission.Trustee
+            Trustee               = $trustee[0]
             AccessRights          = $recipientPermission.AccessRights
-
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -129,6 +134,7 @@ function Get-TargetResource
             CertificatePassword   = $CertificatePassword
             Managedidentity       = $ManagedIdentity.IsPresent
             TenantId              = $TenantId
+            AccessTokens          = $AccessTokens
         }
 
         Write-Verbose -Message "Found an existing instance of Recipient permissions '$($DisplayName)'"
@@ -195,7 +201,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting Mail Contact configuration for $Name"
@@ -235,6 +245,7 @@ function Set-TargetResource
     $parameters.Remove('CertificatePassword') | Out-Null
     $parameters.Remove('ManagedIdentity') | Out-Null
     $parameters.Remove('Ensure') | Out-Null
+    $parameters.Remove('AccessTokens') | Out-Null
     $parameters.AccessRights = $AccessRights #Parameters with default values are not part PSBoundParameters
 
     # Receipient Permission doesn't exist but it should
@@ -306,7 +317,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -391,7 +406,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -448,6 +467,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

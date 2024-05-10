@@ -95,7 +95,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Authorization Policy'
@@ -173,6 +177,7 @@ function Get-TargetResource
             TenantId                                                = $TenantId
             CertificateThumbprint                                   = $CertificateThumbprint
             Managedidentity                                         = $ManagedIdentity.IsPresent
+            AccessTokens                                            = $AccessTokens
         }
 
         Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -276,7 +281,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message 'Setting configuration of AzureAD Authorization Policy'
 
@@ -305,6 +314,7 @@ function Set-TargetResource
     $desiredParameters.Remove('Ensure') | Out-Null
     $desiredParameters.Remove('Credential') | Out-Null
     $desiredParameters.Remove('ManagedIdentity') | Out-Null
+    $desiredParameters.Remove('AccessTokens') | Out-Null
 
     Write-Verbose -Message 'Set-Targetresource: Authorization Policy Ensure Present'
     $UpdateParameters = @{
@@ -482,7 +492,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Testing configuration of AzureAD Authorization Policy'
@@ -493,8 +507,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -534,7 +546,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -564,6 +580,7 @@ function Export-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity
+            AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 

@@ -134,7 +134,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -419,6 +423,7 @@ function Get-TargetResource
             ApplicationSecret                      = $ApplicationSecret
             CertificateThumbprint                  = $CertificateThumbprint
             Managedidentity                        = $ManagedIdentity.IsPresent
+            AccessTokens                           = $AccessTokens
             #endregion
         }
         if ($getValue.assignments.count -gt 0)
@@ -575,7 +580,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -600,6 +609,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -816,7 +826,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -836,7 +850,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -871,11 +885,6 @@ function Test-TargetResource
 
         }
     }
-
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -901,6 +910,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -922,7 +935,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -943,9 +960,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy `
-            -All `
-            -ErrorAction Stop
+        [array]$getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -976,6 +991,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

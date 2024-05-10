@@ -20,6 +20,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_MicrosoftGraphMember
 
@@ -88,7 +89,7 @@ Configuration Example
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
-
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'
@@ -98,7 +99,17 @@ Configuration Example
             MembershipRule                = "(user.country -eq `"Canada`")"
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
-            Ensure                        = 'Present'
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership
+                {
+                    RoleName       = 'User Administrator'
+                    RoleMemberInfo = MSFT_MicrosoftGraphMember
+                    {
+                        Identity = "admin@$Domain"
+                        Type     = "User"
+                    }
+                }
+            )
             Credential                    = $Credscredential
         }
     }
@@ -121,16 +132,28 @@ Configuration Example
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
-
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'
         {
             DisplayName                   = 'Test-Unit'
+            Description                   = 'Test Description Updated' # Updated Property
+            Visibility                    = 'HiddenMembership' # Updated Property
             MembershipRule                = "(user.country -eq `"US`")" # Updated Property
             MembershipRuleProcessingState = 'On'
             MembershipType                = 'Dynamic'
-            Ensure                        = 'Present'
+            ScopedRoleMembers             = @(
+                MSFT_MicrosoftGraphScopedRoleMembership
+                {
+                    RoleName       = 'User Administrator'
+                    RoleMemberInfo = MSFT_MicrosoftGraphMember
+                    {
+                        Identity = "AdeleV@$Domain" # Updated Property
+                        Type     = "User"
+                    }
+                }
+            )
             Credential                    = $Credscredential
         }
     }
@@ -153,7 +176,7 @@ Configuration Example
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
-
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'

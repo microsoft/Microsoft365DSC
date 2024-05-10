@@ -7,8 +7,6 @@ class MSFT_SPOAccessControlSettings : OMI_BaseResource
     [Write, Description("Allows access from network locations that are defined by an administrator.")] boolean IPAddressEnforcement;
     [Write, Description("Configures multiple IP addresses or IP address ranges (IPv4 or IPv6). Use commas to separate multiple IP addresses or IP address ranges.")] string IPAddressAllowList;
     [Write, Description("Office webapps TokenLifeTime in minutes")] uint32 IPAddressWACTokenLifetime;
-    [Write, Description("When this feature is set to true, comments on site pages will be disabled")] boolean CommentsOnSitePagesDisabled;
-    [Write, Description("Disables or enables the Social Bar. It will give users the ability to like a page, see the number of views, likes, and comments on a page, and see the people who have liked a page.")] boolean SocialBarOnSitePagesDisabled;
     [Write, Description("Prevents the Download button from being displayed on the Virus Found warning page.")] boolean DisallowInfectedFileDownload;
     [Write, Description("Enables external services for a tenant. External services are defined as services that are not in the Office 365 datacenters.")] boolean ExternalServicesEnabled;
     [Write, Description("Sets email attestation to required")] boolean EmailAttestationRequired;

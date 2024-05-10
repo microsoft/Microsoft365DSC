@@ -47,7 +47,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Mailbox Settings for $DisplayName"
@@ -106,6 +110,7 @@ function Get-TargetResource
         CertificatePassword   = $CertificatePassword
         Managedidentity       = $ManagedIdentity.IsPresent
         TenantId              = $TenantId
+        AccessTokens          = $AccessTokens
     }
 
     Write-Verbose -Message "Found an existing instance of Mailbox '$($DisplayName)'"
@@ -160,7 +165,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 Mailbox Settings for $DisplayName"
@@ -178,16 +187,6 @@ function Set-TargetResource
     #endregion
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
-
-    $currentMailbox = Get-TargetResource @PSBoundParameters
-
-    $AllowedTimeZones = (Get-ChildItem 'HKLM:\Software\Microsoft\Windows NT\CurrentVersion\Time zones' | `
-                ForEach-Object { Get-ItemProperty $_.PSPath }).PSChildName
-
-    if ($AllowedTimeZones.Contains($TimeZone) -eq $false)
-    {
-        throw "The specified Time Zone {$($TimeZone)} is not valid."
-    }
 
     Set-MailboxRegionalConfiguration -Identity $DisplayName `
         -Language $Locale `
@@ -243,7 +242,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -308,7 +311,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -368,6 +375,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
 

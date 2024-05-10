@@ -15,6 +15,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **Credential** | Write | PSCredential | Credentials of the Azure AD Admin | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 

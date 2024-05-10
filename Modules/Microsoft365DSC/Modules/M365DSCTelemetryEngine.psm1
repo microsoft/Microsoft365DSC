@@ -205,7 +205,7 @@ function Add-M365DSCTelemetryEvent
             {
                 if ($null -eq $Global:M365DSCOSInfo)
                 {
-                    $Global:M365DSCOSInfo = (Get-ComputerInfo -Property OSName -ErrorAction SilentlyContinue).OSName
+                    $Global:M365DSCOSInfo = (Get-CimInstance -ClassName Win32_OperatingSystem -Property Caption -ErrorAction SilentlyContinue).Caption
                 }
                 $Data.Add('M365DSCOSVersion', $Global:M365DSCOSInfo)
             }

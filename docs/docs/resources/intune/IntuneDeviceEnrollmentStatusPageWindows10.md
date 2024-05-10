@@ -16,7 +16,8 @@
 | **DisableUserStatusTrackingAfterFirstUser** | Write | Boolean | Only show installation progress for first user post enrollment | |
 | **InstallProgressTimeoutInMinutes** | Write | UInt32 | Set installation progress timeout in minutes | |
 | **InstallQualityUpdates** | Write | Boolean | Allows quality updates installation during OOBE | |
-| **SelectedMobileAppIds** | Write | StringArray[] | Selected applications to track the installation status | |
+| **SelectedMobileAppIds** | Write | StringArray[] | Ids of selected applications to track the installation status. When this parameter is used, SelectedMobileAppNames is ignored | |
+| **SelectedMobileAppNames** | Write | StringArray[] | Names of selected applications to track the installation status. This parameter is ignored when SelectedMobileAppIds is also specified | |
 | **ShowInstallationProgress** | Write | Boolean | Show or hide installation progress to user | |
 | **TrackInstallProgressForAutopilotOnly** | Write | Boolean | Only show installation progress for Autopilot enrollment scenarios | |
 | **Priority** | Write | UInt32 | Priority is used when a user exists in multiple groups that are assigned enrollment configuration. Users are subject only to the configuration with the lowest priority value. | |
@@ -28,6 +29,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -57,21 +59,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All, DeviceManagementServiceConfig.Read.All
+    - DeviceManagementConfiguration.Read.All, DeviceManagementServiceConfig.Read.All, DeviceManagementApps.Read.All
 
 - **Update**
 
-    - DeviceManagementConfiguration.ReadWrite.All, DeviceManagementServiceConfig.ReadWrite.All
+    - DeviceManagementConfiguration.ReadWrite.All, DeviceManagementServiceConfig.ReadWrite.All, DeviceManagementApps.Read.All
 
 #### Application permissions
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All, DeviceManagementServiceConfig.Read.All
+    - DeviceManagementConfiguration.Read.All, DeviceManagementServiceConfig.Read.All, DeviceManagementApps.Read.All
 
 - **Update**
 
-    - DeviceManagementConfiguration.ReadWrite.All, DeviceManagementServiceConfig.ReadWrite.All
+    - DeviceManagementConfiguration.ReadWrite.All, DeviceManagementServiceConfig.ReadWrite.All, DeviceManagementApps.Read.All
 
 ## Examples
 

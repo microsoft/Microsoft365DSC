@@ -81,7 +81,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -190,6 +194,7 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         return [System.Collections.Hashtable] $results
@@ -288,7 +293,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -325,6 +334,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('addedBy') | Out-Null
     $PSBoundParameters.Remove('addedOn') | Out-Null
     $PSBoundParameters.Remove('isPendingOnboarding') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -551,7 +561,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -571,7 +585,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -649,7 +663,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -725,6 +743,7 @@ function Export-TargetResource
                     ApplicationSecret     = $ApplicationSecret
                     CertificateThumbprint = $CertificateThumbprint
                     ManagedIdentity       = $ManagedIdentity.IsPresent
+                    AccessTokens          = $AccessTokens
                 }
 
                 $Results = Get-TargetResource @Params

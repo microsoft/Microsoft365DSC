@@ -91,7 +91,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -112,6 +116,7 @@ function Get-TargetResource
 
     $nullReturn = $PSBoundParameters
     $nullReturn.Ensure = 'Absent'
+    $AADApp = $null
     try
     {
         try
@@ -212,7 +217,8 @@ function Get-TargetResource
                 TenantId                = $TenantId
                 ApplicationSecret       = $ApplicationSecret
                 CertificateThumbprint   = $CertificateThumbprint
-                Managedidentity         = $ManagedIdentity.IsPresent
+                ManagedIdentity         = $ManagedIdentity.IsPresent
+                AccessTokens            = $AccessTokens
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -329,7 +335,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of Azure AD Application'
@@ -368,6 +378,7 @@ function Set-TargetResource
     $currentParameters.Remove('Ensure') | Out-Null
     $currentParameters.Remove('Credential') | Out-Null
     $currentParameters.Remove('ManagedIdentity') | Out-Null
+    $currentParameters.Remove('AccessTokens') | Out-Null
     $backCurrentOwners = $currentAADApp.Owners
     $currentParameters.Remove('Owners') | Out-Null
 
@@ -577,7 +588,7 @@ function Set-TargetResource
                     {
                         $ObjectId = $diff.InputObject
                     }
-                    Remove-MgApplicationOwnerByRef -ApplicationId $currentAADApp.ObjectId -DirectoryObjectId $ObjectId -ErrorAction Stop
+                    Remove-MgApplicationOwnerDirectoryObjectByRef -ApplicationId $currentAADApp.ObjectId -DirectoryObjectId $ObjectId -ErrorAction Stop
                 }
                 catch
                 {
@@ -762,7 +773,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -799,6 +814,7 @@ function Test-TargetResource
     }
     else
     {
+        $driftedParams = @{}
         if ($Permissions.Length -gt 0)
         {
             Write-Verbose -Message 'No Permissions exist for the current Azure AD App, but permissions were specified for desired state'
@@ -864,7 +880,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -903,6 +923,7 @@ function Export-TargetResource
                 ObjectID              = $AADApp.Id
                 Credential            = $Credential
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             try
             {

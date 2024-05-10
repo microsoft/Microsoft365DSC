@@ -42,6 +42,10 @@ function Get-TargetResource
         $UsageGuidelinesUrl,
 
         [Parameter()]
+        [System.Boolean]
+        $NewUnifiedGroupWritebackDefault,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -68,7 +72,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Groups Settings'
@@ -119,23 +127,26 @@ function Get-TargetResource
             $valueGuestUsageGuidelinesUrl = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'GuestUsageGuidelinesUrl' }
             $valueAllowToAddGuests = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'AllowToAddGuests' }
             $valueUsageGuidelinesUrl = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'UsageGuidelinesUrl' }
+            $valueNewUnifiedGroupWritebackDefault = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'NewUnifiedGroupWritebackDefault' }
 
             $result = @{
-                IsSingleInstance          = 'Yes'
-                EnableGroupCreation       = [Boolean]::Parse($valueEnableGroupCreation.Value)
-                EnableMIPLabels           = [Boolean]::Parse($valueEnableMIPLabels.Value)
-                AllowGuestsToBeGroupOwner = [Boolean]::Parse($valueAllowGuestsToBeGroupOwner.Value)
-                AllowGuestsToAccessGroups = [Boolean]::Parse($valueAllowGuestsToAccessGroups.Value)
-                GuestUsageGuidelinesUrl   = $valueGuestUsageGuidelinesUrl.Value
-                AllowToAddGuests          = [Boolean]::Parse($valueAllowToAddGuests.Value)
-                UsageGuidelinesUrl        = $valueUsageGuidelinesUrl.Value
-                Ensure                    = 'Present'
-                ApplicationId             = $ApplicationId
-                TenantId                  = $TenantId
-                ApplicationSecret         = $ApplicationSecret
-                CertificateThumbprint     = $CertificateThumbprint
-                Credential                = $Credential
-                Managedidentity           = $ManagedIdentity.IsPresent
+                IsSingleInstance                = 'Yes'
+                EnableGroupCreation             = [Boolean]::Parse($valueEnableGroupCreation.Value)
+                EnableMIPLabels                 = [Boolean]::Parse($valueEnableMIPLabels.Value)
+                AllowGuestsToBeGroupOwner       = [Boolean]::Parse($valueAllowGuestsToBeGroupOwner.Value)
+                AllowGuestsToAccessGroups       = [Boolean]::Parse($valueAllowGuestsToAccessGroups.Value)
+                GuestUsageGuidelinesUrl         = $valueGuestUsageGuidelinesUrl.Value
+                AllowToAddGuests                = [Boolean]::Parse($valueAllowToAddGuests.Value)
+                UsageGuidelinesUrl              = $valueUsageGuidelinesUrl.Value
+                NewUnifiedGroupWritebackDefault = [Boolean]::Parse($valueNewUnifiedGroupWritebackDefault.Value)
+                Ensure                          = 'Present'
+                ApplicationId                   = $ApplicationId
+                TenantId                        = $TenantId
+                ApplicationSecret               = $ApplicationSecret
+                CertificateThumbprint           = $CertificateThumbprint
+                Credential                      = $Credential
+                Managedidentity                 = $ManagedIdentity.IsPresent
+                AccessTokens                    = $AccessTokens
             }
 
             if (-not [System.String]::IsNullOrEmpty($AllowedGroupName))
@@ -202,6 +213,10 @@ function Set-TargetResource
         $UsageGuidelinesUrl,
 
         [Parameter()]
+        [System.Boolean]
+        $NewUnifiedGroupWritebackDefault,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -228,7 +243,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of Azure AD Groups Settings'
@@ -312,6 +331,11 @@ function Set-TargetResource
                 $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'UsageGuidelinesUrl' }
                 $entry.Value = $UsageGuidelinesUrl
             }
+            elseif ($property.Name -eq 'NewUnifiedGroupWritebackDefault')
+            {
+                $entry = $Policy.Values | Where-Object -FilterScript { $_.Name -eq 'NewUnifiedGroupWritebackDefault' }
+                $entry.Value = [System.Boolean]$NewUnifiedGroupWritebackDefault
+            }
             $index++
         }
 
@@ -369,6 +393,10 @@ function Test-TargetResource
         $UsageGuidelinesUrl,
 
         [Parameter()]
+        [System.Boolean]
+        $NewUnifiedGroupWritebackDefault,
+
+        [Parameter()]
         [ValidateSet('Present', 'Absent')]
         [System.String]
         $Ensure = 'Present',
@@ -395,7 +423,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
 
@@ -458,7 +490,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -486,6 +522,7 @@ function Export-TargetResource
             ApplicationSecret     = $ApplicationSecret
             Credential            = $Credential
             Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         $dscContent = ''
         $Results = Get-TargetResource @Params

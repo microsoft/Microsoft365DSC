@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Organization** | Key | String | Specify the name of your organization. | |
+| **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
 | **MailTipsAllTipsEnabled** | Write | Boolean | Specifies whether MailTips are enabled. | |
 | **MailTipsGroupMetricsEnabled** | Write | Boolean | Specifies whether MailTips that rely on group metrics data are enabled. | |
 | **MailTipsLargeAudienceThreshold** | Write | UInt32 | Specifies what a large audience is. | |
@@ -18,6 +18,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -59,7 +60,7 @@ Configuration Example
     {
         EXOMailTips 'OrgWideMailTips'
         {
-            Organization                          = $Domain
+            IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
             MailTipsGroupMetricsEnabled           = $True
             MailTipsLargeAudienceThreshold        = 100
@@ -92,7 +93,7 @@ Configuration Example
     {
         EXOMailTips 'OrgWideMailTips'
         {
-            Organization                          = $Domain
+            IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
             MailTipsGroupMetricsEnabled           = $False # Updated Property
             MailTipsLargeAudienceThreshold        = 100
@@ -125,9 +126,9 @@ Configuration Example
     {
         EXOMailTips 'OrgWideMailTips'
         {
-            Organization                          = $Domain
-            Ensure                                = "Absent"
-            Credential                            = $Credscredential
+            IsSingleInstance = 'Yes'
+            Ensure           = "Absent"
+            Credential       = $Credscredential
         }
     }
 }

@@ -32,6 +32,7 @@ Configuration Example
             Description                       = "This is the default Device Type Restriction applied with the lowest priority to all users regardless of group membership.";
             DeviceEnrollmentConfigurationType = "platformRestrictions";
             DisplayName                       = "All users and all devices";
+            Identity                          = "3868d43e-873e-4416-8fd1-fc3d67c7c15c_DefaultPlatformRestrictions";
             Ensure                            = "Present";
             IosRestriction                    = MSFT_DeviceEnrollmentPlatformRestriction{
                 platformBlocked = $True # Updated Property

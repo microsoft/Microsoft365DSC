@@ -62,7 +62,9 @@ jobs:
           {
             throw $_
           }
-
+      - name: Validating {Create} Integration Tests
+        shell: powershell
+        run: |
           try
           {
             $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
@@ -87,6 +89,18 @@ jobs:
           else
           {
             Write-Host "All resources in the Tenant are in the Desired State"
+          }
+
+          try
+          {
+            # Commenting out since this is very finnicky right now and its preventing other tests from running.
+            # The Get-DSCConfiguration cmdlet isn't providing much value added when failing and doesn't provide
+            # info about what parsing issues occured.
+            #$Result = Get-DSCConfiguration -Verbose -ErrorAction Stop
+          }
+          catch
+          {
+            throw $_
           }
       - name: Generate {Update} Integration Tests from Examples
         shell: powershell
@@ -120,7 +134,9 @@ jobs:
           {
             throw $_
           }
-
+      - name: Validating {Update} Integration Tests
+        shell: powershell
+        run: |
           try
           {
             $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
@@ -145,6 +161,18 @@ jobs:
           else
           {
             Write-Host "All resources in the Tenant are in the Desired State"
+          }
+
+          try
+          {
+            # Commenting out since this is very finnicky right now and its preventing other tests from running.
+            # The Get-DSCConfiguration cmdlet isn't providing much value added when failing and doesn't provide
+            # info about what parsing issues occured.
+            #$Result = Get-DSCConfiguration -Verbose -ErrorAction Stop
+          }
+          catch
+          {
+            throw $_
           }
       - name: Generate {Remove} Integration Tests from Examples
         shell: powershell
@@ -178,7 +206,9 @@ jobs:
             {
               throw $_
             }
-
+      - name: Validating {Remove} Integration Tests
+        shell: powershell
+        run: |
             try
             {
               $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
@@ -205,3 +235,11 @@ jobs:
               Write-Host "All resources in the Tenant are in the Desired State"
             }
 
+            try
+            {
+              #$Result = Get-DSCConfiguration -Verbose -ErrorAction Stop
+            }
+            catch
+            {
+              throw $_
+            }

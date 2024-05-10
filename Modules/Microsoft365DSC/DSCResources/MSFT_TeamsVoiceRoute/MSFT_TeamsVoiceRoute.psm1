@@ -51,7 +51,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting the Voice Route {$Identity}"
@@ -79,6 +83,7 @@ function Get-TargetResource
         TenantId              = $TenantId
         CertificateThumbprint = $CertificateThumbprint
         ManagedIdentity       = $ManagedIdentity.IsPresent
+        AccessTokens          = $AccessTokens
     }
     try
     {
@@ -103,6 +108,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
     }
     catch
@@ -169,7 +175,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -300,7 +310,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -321,12 +335,12 @@ function Test-TargetResource
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    if ($CurrentValues.Ensure -eq 'Absent' -and $PSBoundParameters.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Test-TargetResource returned $true"
         return $true
@@ -373,7 +387,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $InformationPreference = 'Continue'
@@ -410,6 +428,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

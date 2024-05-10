@@ -6,7 +6,8 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Organization,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Boolean]
@@ -59,10 +60,14 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of Mailtips for $Organization"
+    Write-Verbose -Message "Getting configuration of Mailtips"
     if ($Global:CurrentModeIsExport)
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -101,7 +106,7 @@ function Get-TargetResource
         }
 
         $result = @{
-            Organization                          = $Organization
+            IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $OrgConfig.MailTipsAllTipsEnabled
             MailTipsGroupMetricsEnabled           = $OrgConfig.MailTipsGroupMetricsEnabled
             MailTipsLargeAudienceThreshold        = $OrgConfig.MailTipsLargeAudienceThreshold
@@ -115,9 +120,9 @@ function Get-TargetResource
             CertificatePassword                   = $CertificatePassword
             Managedidentity                       = $ManagedIdentity.IsPresent
             TenantId                              = $TenantId
+            AccessTokens                          = $AccessTokens
         }
 
-        Write-Verbose -Message "Found configuration of the Mailtips for $($Organization)"
         return $result
     }
     catch
@@ -140,7 +145,8 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Organization,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Boolean]
@@ -193,10 +199,14 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
-    Write-Verbose -Message "Setting configuration of Mailtips for $Organization"
+    Write-Verbose -Message "Setting configuration of Mailtips"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -219,31 +229,31 @@ function Set-TargetResource
 
     if ($PSBoundParameters.ContainsKey('MailTipsAllTipsEnabled'))
     {
-        Write-Verbose -Message "Setting Mailtips for $($Organization) to $($MailTipsAllTipsEnabled)"
+        Write-Verbose -Message "Setting Mailtips to $($MailTipsAllTipsEnabled)"
         Set-OrganizationConfig -MailTipsAllTipsEnabled $MailTipsAllTipsEnabled
     }
     # CASE : MailTipsGroupMetricsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsGroupMetricsEnabled'))
     {
-        Write-Verbose -Message "Setting Mailtips for Group Metrics of $($Organization) to $($MailTipsGroupMetricsEnabled)"
+        Write-Verbose -Message "Setting Mailtips for Group Metrics to $($MailTipsGroupMetricsEnabled)"
         Set-OrganizationConfig -MailTipsGroupMetricsEnabled $MailTipsGroupMetricsEnabled
     }
     # CASE : MailTipsLargeAudienceThreshold is used
     if ($PSBoundParameters.ContainsKey('MailTipsLargeAudienceThreshold'))
     {
-        Write-Verbose -Message "Setting Mailtips for Large Audience of $($Organization) to $($MailTipsLargeAudienceThreshold)"
+        Write-Verbose -Message "Setting Mailtips for Large Audience to $($MailTipsLargeAudienceThreshold)"
         Set-OrganizationConfig -MailTipsLargeAudienceThreshold $MailTipsLargeAudienceThreshold
     }
     # CASE : MailTipsMailboxSourcedTipsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsMailboxSourcedTipsEnabled'))
     {
-        Write-Verbose -Message "Setting Mailtips for Mailbox Data (OOF/Mailbox Full) of $($Organization) to $($MailTipsMailboxSourcedTipsEnabled)"
+        Write-Verbose -Message "Setting Mailtips for Mailbox Data (OOF/Mailbox Full) to $($MailTipsMailboxSourcedTipsEnabled)"
         Set-OrganizationConfig -MailTipsMailboxSourcedTipsEnabled $MailTipsMailboxSourcedTipsEnabled
     }
     # CASE : MailTipsExternalRecipientsTipsEnabled is used
     if ($PSBoundParameters.ContainsKey('MailTipsExternalRecipientsTipsEnabled'))
     {
-        Write-Verbose -Message "Setting Mailtips for External Users of $($Organization) to $($MailTipsExternalRecipientsTipsEnabled)"
+        Write-Verbose -Message "Setting Mailtips for External Users to $($MailTipsExternalRecipientsTipsEnabled)"
         Set-OrganizationConfig -MailTipsExternalRecipientsTipsEnabled $MailTipsExternalRecipientsTipsEnabled
     }
 }
@@ -256,7 +266,8 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $Organization,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
         [System.Boolean]
@@ -309,7 +320,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -324,7 +339,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Mailtips for $Organization"
+    Write-Verbose -Message "Testing configuration of Mailtips"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
@@ -378,7 +393,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -398,26 +417,16 @@ function Export-TargetResource
 
     try
     {
-        $OrganizationName = ''
-        if ($ConnectionMode -like 'ServicePrincipal*')
-        {
-            $OrganizationName = Get-M365DSCTenantDomain -ApplicationId $ApplicationId `
-                -TenantId $TenantId `
-                -CertificateThumbprint $CertificateThumbprint
-        }
-        else
-        {
-            $OrganizationName = $Credential.UserName.Split('@')[1]
-        }
         $Params = @{
             Credential            = $Credential
-            Organization          = $OrganizationName
+            IsSingleInstance      = 'Yes'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             CertificatePassword   = $CertificatePassword
             Managedidentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
+            AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
         $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
