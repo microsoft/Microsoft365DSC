@@ -437,10 +437,12 @@ function Compare-PSCustomObjectArrays
     param
     (
         [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
         [System.Object[]]
         $DesiredValues,
 
         [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
         [System.Object[]]
         $CurrentValues
     )

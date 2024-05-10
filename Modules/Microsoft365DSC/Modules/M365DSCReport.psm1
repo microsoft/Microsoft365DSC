@@ -342,43 +342,95 @@ function Get-IconPath
         $ResourceName
     )
 
-    if ($ResourceName.StartsWith('AAD'))
+    if ($ResourceName.StartsWith('Promo'))
     {
-        return 'http://microsoft365dsc.com/Images/AzureAD.jpg'
+        return Get-Base64EncodedImage -IconName "Promo.png"
+    }
+    elseif ($ResourceName.StartsWith('AAD'))
+    {
+        return Get-Base64EncodedImage -IconName "AzureAD.jpg"
     }
     elseif ($ResourceName.StartsWith('EXO'))
     {
-        return 'http://microsoft365dsc.com/Images/Exchange.jpg'
+        return Get-Base64EncodedImage -IconName "Exchange.jpg"
     }
     elseif ($ResourceName.StartsWith('O365'))
     {
-        return 'http://microsoft365dsc.com/Images/Office365.jpg'
+        return Get-Base64EncodedImage -IconName "Office365.jpg"
     }
     elseif ($ResourceName.StartsWith('OD'))
     {
-        return 'http://microsoft365dsc.com/Images/OneDrive.jpg'
+        return Get-Base64EncodedImage -IconName "OneDrive.jpg"
     }
     elseif ($ResourceName.StartsWith('PP'))
     {
-        return 'http://microsoft365dsc.com/Images/PowerApps.jpg'
+        return Get-Base64EncodedImage -IconName "PowerApps.jpg"
     }
     elseif ($ResourceName.StartsWith('SC'))
     {
-        return 'http://microsoft365dsc.com/Images/SecurityAndCompliance.png'
+        return Get-Base64EncodedImage -IconName "SecurityAndComplance.png"
     }
     elseif ($ResourceName.StartsWith('SPO'))
     {
-        return 'http://microsoft365dsc.com/Images/SharePoint.jpg'
+        return Get-Base64EncodedImage -IconName "SharePoint.jpg"
     }
     elseif ($ResourceName.StartsWith('Teams'))
     {
-        return 'http://microsoft365dsc.com/Images/Teams.jpg'
+        return Get-Base64EncodedImage -IconName "Teams.jpg"
+    }
+    elseif ($ResourceName.StartsWith('Intune'))
+    {
+        return Get-Base64EncodedImage -IconName "Intune.jpg"
     }
     elseif ($ResourceName.StartsWith('Intune'))
     {
         return 'http://microsoft365dsc.com/Images/Intune.jpg'
     }
     return $null
+}
+
+<#
+.Description
+This function returns a string containing mime-type and base64 encoded image to embed into DSC report directly.
+
+.Functionality
+Internal, Hidden
+#>
+function Get-Base64EncodedImage
+{
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param
+    (
+        [Parameter()]
+        [string]
+        $IconName
+    )
+
+    $IconPath = Join-Path -Path $PSScriptRoot `
+                        -ChildPath "..\dependencies\Images\$($IconName)" `
+                        -Resolve
+
+    if(Test-Path -Path $IconPath)
+    {
+        $icon = Get-Item -Path $IconPath
+
+        if($icon.Extension.endsWith("jpg") -or $icon.Extension.endsWith("jpeg"))
+        {
+            $mimeType = "image/jpeg"
+        }
+        if($icon.Extension.endsWith("png"))
+        {
+            $mimeType = "image/png"
+        }
+
+        $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $iconPath -Encoding Byte -ReadCount 0))
+        return $("data:$($mimeType);base64,$($base64EncodedImage)")
+    }
+    else
+    {
+        return $null
+    }
 }
 
 <#
@@ -1461,7 +1513,7 @@ function New-M365DSCDeltaReport
         }
         [void]$reportSB.AppendLine("<html><head><meta charset='utf-8'><title>$ReportTitle</title></head><body>")
         [void]$reportSB.AppendLine("<div style='width:100%;text-align:center;'>")
-        [void]$reportSB.AppendLine("<img src='http://Microsoft365DSC.com/Images/Promo.png' alt='Microsoft365DSC Slogan' width='500' />")
+        [void]$reportSB.AppendLine("<img src='" + (Get-IconPath -ResourceName "Promo") + "' alt='Microsoft365DSC Slogan' width='500'  />")
         [void]$ReportSB.AppendLine('</div>')
 
         [array]$resourcesMissingInSource = $Delta | Where-Object -FilterScript { $_.Properties.ParameterName -eq '_IsInConfiguration_' -and `

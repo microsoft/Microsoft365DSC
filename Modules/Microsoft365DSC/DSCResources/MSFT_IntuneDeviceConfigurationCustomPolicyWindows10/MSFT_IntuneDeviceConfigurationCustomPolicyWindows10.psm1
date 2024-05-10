@@ -173,7 +173,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             AccessTokens          = $AccessTokens
             #endregion
         }
@@ -312,12 +312,18 @@ function Set-TargetResource
         $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10CustomConfiguration")
         foreach ($omaSetting in $CreateParameters.OmaSettings)
         {
-            if ($omaSetting.odataType -ne '#microsoft.graph.omaSettingInteger')
+            if ($omaSetting.'@odata.type' -ne '#microsoft.graph.omaSettingInteger')
             {
                 $omaSetting.remove('isReadOnly')
             }
+            if ($omaSetting.'@odata.type' -eq '#microsoft.graph.omaSettingStringXml')
+            {
+                $base64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($omaSetting.value))
+                $omaSetting.value = $base64
+            }
         }
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
+
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -355,9 +361,14 @@ function Set-TargetResource
 
         foreach ($omaSetting in $UpdateParameters.OmaSettings)
         {
-            if ($omaSetting.odataType -ne '#microsoft.graph.omaSettingInteger')
+            if ($omaSetting.'@odata.type' -ne '#microsoft.graph.omaSettingInteger')
             {
                 $omaSetting.remove('isReadOnly')
+            }
+            if ($omaSetting.'@odata.type' -eq '#microsoft.graph.omaSettingStringXml')
+            {
+                $base64 = [System.Convert]::ToBase64String([System.Text.Encoding]::UTF8.GetBytes($omaSetting.value))
+                $omaSetting.value = $base64
             }
         }
         Update-MgBetaDeviceManagementDeviceConfiguration  `
@@ -614,7 +625,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
@@ -657,6 +668,7 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
+
             if ($Results.OmaSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "OmaSettings" -isCIMArray:$True

@@ -50,7 +50,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDeviceManagementDeviceConfigurationAssignment -MockWith {
             }
 
-            Mock -CommandName Get-DeviceConfigurationPolicyCertificateId -MockWith {
+            Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
             }
 
             Mock -CommandName Update-DeviceConfigurationPolicyCertificateId -MockWith {
@@ -59,42 +59,68 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-DeviceConfigurationPolicyCertificateId -MockWith {
             }
 
+            Mock -CommandName Get-IntuneDeviceConfigurationCertificateId -MockWith {
+            }
+
         }
         # Test contexts
         Context -Name 'The IntuneDeviceConfigurationWiredNetworkPolicyWindows10 should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    AuthenticationBlockPeriodInMinutes                    = 25
-                    AuthenticationMethod                                  = 'certificate'
-                    AuthenticationPeriodInSeconds                         = 25
-                    AuthenticationRetryDelayPeriodInSeconds               = 25
-                    AuthenticationType                                    = 'none'
-                    CacheCredentials                                      = $True
-                    Description                                           = 'FakeStringValue'
-                    DisableUserPromptForServerValidation                  = $True
-                    DisplayName                                           = 'FakeStringValue'
-                    EapolStartPeriodInSeconds                             = 25
-                    EapType                                               = 'eapTls'
-                    Enforce8021X                                          = $True
-                    ForceFIPSCompliance                                   = $True
-                    Id                                                    = 'FakeStringValue'
-                    InnerAuthenticationProtocolForEAPTTLS                 = 'unencryptedPassword'
-                    MaximumAuthenticationFailures                         = 25
-                    MaximumEAPOLStartMessages                             = 25
-                    OuterIdentityPrivacyTemporaryValue                    = 'FakeStringValue'
-                    PerformServerValidation                               = $True
-                    RequireCryptographicBinding                           = $True
-                    SecondaryAuthenticationMethod                         = 'certificate'
-                    TrustedServerCertificateNames                         = @('FakeStringValue')
-                    Ensure                                                = 'Present'
-                    Credential                                            = $Credential
-                    RootCertificatesForServerValidationIds                = @('a485d322-13cd-43ef-beda-733f656f48ea')
-                    SecondaryIdentityCertificateForClientAuthenticationId = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                    AuthenticationBlockPeriodInMinutes                             = 25
+                    AuthenticationMethod                                           = 'certificate'
+                    AuthenticationPeriodInSeconds                                  = 25
+                    AuthenticationRetryDelayPeriodInSeconds                        = 25
+                    AuthenticationType                                             = 'none'
+                    CacheCredentials                                               = $True
+                    Description                                                    = 'FakeStringValue'
+                    DisableUserPromptForServerValidation                           = $True
+                    DisplayName                                                    = 'FakeStringValue'
+                    EapolStartPeriodInSeconds                                      = 25
+                    EapType                                                        = 'eapTls'
+                    Enforce8021X                                                   = $True
+                    ForceFIPSCompliance                                            = $True
+                    Id                                                             = 'FakeStringValue'
+                    InnerAuthenticationProtocolForEAPTTLS                          = 'unencryptedPassword'
+                    MaximumAuthenticationFailures                                  = 25
+                    MaximumEAPOLStartMessages                                      = 25
+                    OuterIdentityPrivacyTemporaryValue                             = 'FakeStringValue'
+                    PerformServerValidation                                        = $True
+                    RequireCryptographicBinding                                    = $True
+                    SecondaryAuthenticationMethod                                  = 'certificate'
+                    TrustedServerCertificateNames                                  = @('FakeStringValue')
+                    Ensure                                                         = 'Present'
+                    Credential                                                     = $Credential
+                    RootCertificatesForServerValidationIds                         = @('a485d322-13cd-43ef-beda-733f656f48ea')
+                    RootCertificatesForServerValidationDisplayNames                = @('RootCertificate')
+                    SecondaryIdentityCertificateForClientAuthenticationId          = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                    SecondaryIdentityCertificateForClientAuthenticationDisplayName = 'ClientCertificate'
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
                     return $null
                 }
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @(@{
+                        Id = 'a485d322-13cd-43ef-beda-733f656f48ea'
+                        DisplayName = 'RootCertificate'
+                    })
+                } -ParameterFilter { $CertificateName -eq 'rootCertificatesForServerValidation' }
+
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @{
+                        Id = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                        DisplayName = 'ClientCertificate'
+                    }
+                } -ParameterFilter { $CertificateName -eq 'secondaryIdentityCertificateForClientAuthentication' }
+
+                Mock -CommandName Get-IntuneDeviceConfigurationCertificateId -MockWith {
+                    return 'a485d322-13cd-43ef-beda-733f656f48ea'
+                } -ParameterFilter { $DisplayName -eq 'RootCertificate' }
+
+                Mock -CommandName Get-IntuneDeviceConfigurationCertificateId -MockWith {
+                    return '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                } -ParameterFilter { $DisplayName -eq 'ClientCertificate' }
             }
             It 'Should return Values from the Get method' {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
@@ -134,9 +160,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     SecondaryAuthenticationMethod                         = 'certificate'
                     TrustedServerCertificateNames                         = @('FakeStringValue')
                     Ensure                                                = 'Absent'
-                    Credential                                            = $Credential
-                    RootCertificatesForServerValidationIds                = @('a485d322-13cd-43ef-beda-733f656f48ea')
-                    SecondaryIdentityCertificateForClientAuthenticationId = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                    Credential                                                     = $Credential
+                    RootCertificatesForServerValidationIds                         = @('a485d322-13cd-43ef-beda-733f656f48ea')
+                    RootCertificatesForServerValidationDisplayNames                = @('RootCertificate')
+                    SecondaryIdentityCertificateForClientAuthenticationId          = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                    SecondaryIdentityCertificateForClientAuthenticationDisplayName = 'ClientCertificate'
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
@@ -166,17 +194,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Description          = 'FakeStringValue'
                         DisplayName          = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
-
                     }
                 }
 
-                Mock -CommandName Get-DeviceConfigurationPolicyCertificateId -MockWith {
-                    return @('a485d322-13cd-43ef-beda-733f656f48ea')
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @(@{
+                        Id = 'a485d322-13cd-43ef-beda-733f656f48ea'
+                        DisplayName = 'RootCertificate'
+                    })
                 } -ParameterFilter { $CertificateName -eq 'rootCertificatesForServerValidation' }
 
-                Mock -CommandName Get-DeviceConfigurationPolicyCertificateId -MockWith {
-                    return '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @{
+                        Id = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                        DisplayName = 'ClientCertificate'
+                    }
                 } -ParameterFilter { $CertificateName -eq 'secondaryIdentityCertificateForClientAuthentication' }
+
+                Mock -CommandName Get-IntuneDeviceConfigurationCertificateId -MockWith {
+                    return 'a485d322-13cd-43ef-beda-733f656f48ea'
+                } -ParameterFilter { $DisplayName -eq 'RootCertificate' }
+
+                Mock -CommandName Get-IntuneDeviceConfigurationCertificateId -MockWith {
+                    return '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                } -ParameterFilter { $DisplayName -eq 'ClientCertificate' }
             }
 
             It 'Should return Values from the Get method' {
@@ -253,15 +294,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-DeviceConfigurationPolicyCertificateId -MockWith {
-                    return @('a485d322-13cd-43ef-beda-733f656f48ea')
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @(@{
+                        Id = 'a485d322-13cd-43ef-beda-733f656f48ea'
+                        DisplayName = 'RootCertificate'
+                    })
                 } -ParameterFilter { $CertificateName -eq 'rootCertificatesForServerValidation' }
 
-                Mock -CommandName Get-DeviceConfigurationPolicyCertificateId -MockWith {
-                    return '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @{
+                        Id = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                        DisplayName = 'ClientCertificate'
+                    }
                 } -ParameterFilter { $CertificateName -eq 'secondaryIdentityCertificateForClientAuthentication' }
             }
-
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
@@ -296,7 +342,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                                                = 'Present'
                     Credential                                            = $Credential
                     RootCertificatesForServerValidationIds                = @('a485d322-13cd-43ef-beda-733f656f48ea')
+                    RootCertificatesForServerValidationDisplayNames       = @('RootCertificate')
                     SecondaryIdentityCertificateForClientAuthenticationId = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                    SecondaryIdentityCertificateForClientAuthenticationDisplayName = 'ClientCertificate'
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceConfiguration -MockWith {
@@ -323,13 +371,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-DeviceConfigurationPolicyCertificateId -MockWith {
-                    return @('a485d322-13cd-43ef-beda-733f656f48ea')
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @(@{
+                        Id = 'a485d322-13cd-43ef-beda-733f656f48ea'
+                        DisplayName = 'RootCertificate'
+                    })
                 } -ParameterFilter { $CertificateName -eq 'rootCertificatesForServerValidation' }
 
-                Mock -CommandName Get-DeviceConfigurationPolicyCertificateId -MockWith {
-                    return '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @{
+                        Id = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                        DisplayName = 'ClientCertificate'
+                    }
                 } -ParameterFilter { $CertificateName -eq 'secondaryIdentityCertificateForClientAuthentication' }
+                
+                Mock -CommandName Get-IntuneDeviceConfigurationCertificateId -MockWith {
+                    return 'a485d322-13cd-43ef-beda-733f656f48ea'
+                } -ParameterFilter { $DisplayName -eq 'RootCertificate' }
+
+                Mock -CommandName Get-IntuneDeviceConfigurationCertificateId -MockWith {
+                    return '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                } -ParameterFilter { $DisplayName -eq 'ClientCertificate' }
             }
 
             It 'Should return Values from the Get method' {
@@ -385,12 +447,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
 
-                Mock -CommandName Get-DeviceConfigurationPolicyCertificateId -MockWith {
-                    return @('a485d322-13cd-43ef-beda-733f656f48ea')
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @(@{
+                        Id = 'a485d322-13cd-43ef-beda-733f656f48ea'
+                        DisplayName = 'RootCertificate'
+                    })
                 } -ParameterFilter { $CertificateName -eq 'rootCertificatesForServerValidation' }
 
-                Mock -CommandName Get-DeviceConfigurationPolicyCertificateId -MockWith {
-                    return '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                Mock -CommandName Get-DeviceConfigurationPolicyCertificate -MockWith {
+                    return @{
+                        Id = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+                        DisplayName = 'ClientCertificate'
+                    }
                 } -ParameterFilter { $CertificateName -eq 'secondaryIdentityCertificateForClientAuthentication' }
             }
             It 'Should Reverse Engineer resource from the Export method' {

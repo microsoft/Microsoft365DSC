@@ -91,8 +91,16 @@ function Get-TargetResource
         $RootCertificatesForServerValidationIds,
 
         [Parameter()]
+        [System.String[]]
+        $RootCertificatesForServerValidationDisplayNames,
+
+        [Parameter()]
         [System.String]
         $IdentityCertificateForClientAuthenticationId,
+
+        [Parameter()]
+        [System.String]
+        $IdentityCertificateForClientAuthenticationDisplayName,
 
         [Parameter()]
         [System.String]
@@ -100,11 +108,23 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $SecondaryIdentityCertificateForClientAuthenticationDisplayName,
+
+        [Parameter()]
+        [System.String]
         $RootCertificateForClientValidationId,
 
         [Parameter()]
         [System.String]
+        $RootCertificateForClientValidationDisplayName,
+
+        [Parameter()]
+        [System.String]
         $SecondaryRootCertificateForClientValidationId,
+
+        [Parameter()]
+        [System.String]
+        $SecondaryRootCertificateForClientValidationDisplayName,
 
         [Parameter()]
         [System.String]
@@ -236,43 +256,54 @@ function Get-TargetResource
         }
         #endregion
 
+        $rootCertificateForClientValidation                  = Get-DeviceConfigurationPolicyCertificate -DeviceConfigurationPolicyId $getValue.Id -CertificateName rootCertificateForClientValidation
+        $rootCertificatesForServerValidation                 = Get-DeviceConfigurationPolicyCertificate -DeviceConfigurationPolicyId $getValue.Id -CertificateName rootCertificatesForServerValidation
+        $identityCertificateForClientAuthentication          = Get-DeviceConfigurationPolicyCertificate -DeviceConfigurationPolicyId $getValue.Id -CertificateName identityCertificateForClientAuthentication
+        $secondaryIdentityCertificateForClientAuthentication = Get-DeviceConfigurationPolicyCertificate -DeviceConfigurationPolicyId $getValue.Id -CertificateName secondaryIdentityCertificateForClientAuthentication
+        $secondaryRootCertificateForClientValidation         = Get-DeviceConfigurationPolicyCertificate -DeviceConfigurationPolicyId $getValue.Id -CertificateName secondaryRootCertificateForClientValidation
+
         $results = @{
             #region resource generator code
-            AuthenticationBlockPeriodInMinutes                    = $getValue.AdditionalProperties.authenticationBlockPeriodInMinutes
-            AuthenticationMethod                                  = $enumAuthenticationMethod
-            AuthenticationPeriodInSeconds                         = $getValue.AdditionalProperties.authenticationPeriodInSeconds
-            AuthenticationRetryDelayPeriodInSeconds               = $getValue.AdditionalProperties.authenticationRetryDelayPeriodInSeconds
-            AuthenticationType                                    = $enumAuthenticationType
-            CacheCredentials                                      = $getValue.AdditionalProperties.cacheCredentials
-            DisableUserPromptForServerValidation                  = $getValue.AdditionalProperties.disableUserPromptForServerValidation
-            EapolStartPeriodInSeconds                             = $getValue.AdditionalProperties.eapolStartPeriodInSeconds
-            EapType                                               = $enumEapType
-            Enforce8021X                                          = $getValue.AdditionalProperties.enforce8021X
-            ForceFIPSCompliance                                   = $getValue.AdditionalProperties.forceFIPSCompliance
-            InnerAuthenticationProtocolForEAPTTLS                 = $enumInnerAuthenticationProtocolForEAPTTLS
-            MaximumAuthenticationFailures                         = $getValue.AdditionalProperties.maximumAuthenticationFailures
-            MaximumEAPOLStartMessages                             = $getValue.AdditionalProperties.maximumEAPOLStartMessages
-            OuterIdentityPrivacyTemporaryValue                    = $getValue.AdditionalProperties.outerIdentityPrivacyTemporaryValue
-            PerformServerValidation                               = $getValue.AdditionalProperties.performServerValidation
-            RequireCryptographicBinding                           = $getValue.AdditionalProperties.requireCryptographicBinding
-            SecondaryAuthenticationMethod                         = $enumSecondaryAuthenticationMethod
-            TrustedServerCertificateNames                         = $getValue.AdditionalProperties.trustedServerCertificateNames
-            RootCertificatesForServerValidationIds                = Get-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $getValue.Id -CertificateName rootCertificatesForServerValidation
-            IdentityCertificateForClientAuthenticationId          = Get-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $getValue.Id -CertificateName identityCertificateForClientAuthentication
-            SecondaryIdentityCertificateForClientAuthenticationId = Get-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $getValue.Id -CertificateName secondaryIdentityCertificateForClientAuthentication
-            RootCertificateForClientValidationId                  = Get-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $getValue.Id -CertificateName rootCertificateForClientValidation
-            SecondaryRootCertificateForClientValidationId         = Get-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $getValue.Id -CertificateName secondaryRootCertificateForClientValidation
-            Description                                           = $getValue.Description
-            DisplayName                                           = $getValue.DisplayName
-            Id                                                    = $getValue.Id
-            Ensure                                                = 'Present'
-            Credential                                            = $Credential
-            ApplicationId                                         = $ApplicationId
-            TenantId                                              = $TenantId
-            ApplicationSecret                                     = $ApplicationSecret
-            CertificateThumbprint                                 = $CertificateThumbprint
-            Managedidentity                                       = $ManagedIdentity.IsPresent
-            AccessTokens                                          = $AccessTokens
+            AuthenticationBlockPeriodInMinutes                             = $getValue.AdditionalProperties.authenticationBlockPeriodInMinutes
+            AuthenticationMethod                                           = $enumAuthenticationMethod
+            AuthenticationPeriodInSeconds                                  = $getValue.AdditionalProperties.authenticationPeriodInSeconds
+            AuthenticationRetryDelayPeriodInSeconds                        = $getValue.AdditionalProperties.authenticationRetryDelayPeriodInSeconds
+            AuthenticationType                                             = $enumAuthenticationType
+            CacheCredentials                                               = $getValue.AdditionalProperties.cacheCredentials
+            DisableUserPromptForServerValidation                           = $getValue.AdditionalProperties.disableUserPromptForServerValidation
+            EapolStartPeriodInSeconds                                      = $getValue.AdditionalProperties.eapolStartPeriodInSeconds
+            EapType                                                        = $enumEapType
+            Enforce8021X                                                   = $getValue.AdditionalProperties.enforce8021X
+            ForceFIPSCompliance                                            = $getValue.AdditionalProperties.forceFIPSCompliance
+            InnerAuthenticationProtocolForEAPTTLS                          = $enumInnerAuthenticationProtocolForEAPTTLS
+            MaximumAuthenticationFailures                                  = $getValue.AdditionalProperties.maximumAuthenticationFailures
+            MaximumEAPOLStartMessages                                      = $getValue.AdditionalProperties.maximumEAPOLStartMessages
+            OuterIdentityPrivacyTemporaryValue                             = $getValue.AdditionalProperties.outerIdentityPrivacyTemporaryValue
+            PerformServerValidation                                        = $getValue.AdditionalProperties.performServerValidation
+            RequireCryptographicBinding                                    = $getValue.AdditionalProperties.requireCryptographicBinding
+            SecondaryAuthenticationMethod                                  = $enumSecondaryAuthenticationMethod
+            TrustedServerCertificateNames                                  = $getValue.AdditionalProperties.trustedServerCertificateNames
+            RootCertificatesForServerValidationIds                         = @($rootCertificatesForServerValidation.Id)
+            RootCertificatesForServerValidationDisplayNames                = @($rootCertificatesForServerValidation.DisplayName)
+            IdentityCertificateForClientAuthenticationId                   = $identityCertificateForClientAuthentication.Id
+            IdentityCertificateForClientAuthenticationDisplayName          = $identityCertificateForClientAuthentication.DisplayName
+            SecondaryIdentityCertificateForClientAuthenticationId          = $secondaryIdentityCertificateForClientAuthentication.Id
+            SecondaryIdentityCertificateForClientAuthenticationDisplayName = $secondaryIdentityCertificateForClientAuthentication.DisplayName
+            RootCertificateForClientValidationId                           = $rootCertificateForClientValidation.Id
+            RootCertificateForClientValidationDisplayName                  = $rootCertificateForClientValidation.DisplayName
+            SecondaryRootCertificateForClientValidationId                  = $secondaryRootCertificateForClientValidation.Id
+            SecondaryRootCertificateForClientValidationDisplayName         = $secondaryRootCertificateForClientValidation.DisplayName
+            Description                                                    = $getValue.Description
+            DisplayName                                                    = $getValue.DisplayName
+            Id                                                             = $getValue.Id
+            Ensure                                                         = 'Present'
+            Credential                                                     = $Credential
+            ApplicationId                                                  = $ApplicationId
+            TenantId                                                       = $TenantId
+            ApplicationSecret                                              = $ApplicationSecret
+            CertificateThumbprint                                          = $CertificateThumbprint
+            ManagedIdentity                                                = $ManagedIdentity.IsPresent
+            AccessTokens                                                   = $AccessTokens
             #endregion
         }
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
@@ -398,8 +429,16 @@ function Set-TargetResource
         $RootCertificatesForServerValidationIds,
 
         [Parameter()]
+        [System.String[]]
+        $RootCertificatesForServerValidationDisplayNames,
+
+        [Parameter()]
         [System.String]
         $IdentityCertificateForClientAuthenticationId,
+
+        [Parameter()]
+        [System.String]
+        $IdentityCertificateForClientAuthenticationDisplayName,
 
         [Parameter()]
         [System.String]
@@ -407,11 +446,23 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
+        $SecondaryIdentityCertificateForClientAuthenticationDisplayName,
+
+        [Parameter()]
+        [System.String]
         $RootCertificateForClientValidationId,
 
         [Parameter()]
         [System.String]
+        $RootCertificateForClientValidationDisplayName,
+
+        [Parameter()]
+        [System.String]
         $SecondaryRootCertificateForClientValidationId,
+
+        [Parameter()]
+        [System.String]
+        $SecondaryRootCertificateForClientValidationDisplayName,
 
         [Parameter()]
         [System.String]
@@ -485,10 +536,15 @@ function Set-TargetResource
         Write-Verbose -Message "Creating an Intune Device Configuration Wired Network Policy for Windows10 with DisplayName {$DisplayName}"
         $BoundParameters.Remove('Assignments') | Out-Null
         $BoundParameters.Remove('RootCertificatesForServerValidationIds') | Out-Null
+        $BoundParameters.Remove('RootCertificatesForServerValidationDisplayNames') | Out-Null
         $BoundParameters.Remove('IdentityCertificateForClientAuthenticationId') | Out-Null
+        $BoundParameters.Remove('IdentityCertificateForClientAuthenticationDisplayName') | Out-Null
         $BoundParameters.Remove('SecondaryIdentityCertificateForClientAuthenticationId') | Out-Null
+        $BoundParameters.Remove('SecondaryIdentityCertificateForClientAuthenticationDisplayName') | Out-Null
         $BoundParameters.Remove('RootCertificateForClientValidationId') | Out-Null
+        $BoundParameters.Remove('RootCertificateForClientValidationDisplayName') | Out-Null
         $BoundParameters.Remove('SecondaryRootCertificateForClientValidationId') | Out-Null
+        $BoundParameters.Remove('SecondaryRootCertificateForClientValidationDisplayName') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -507,34 +563,62 @@ function Set-TargetResource
         if ($null -ne $RootCertificatesForServerValidationIds -and $RootCertificatesForServerValidationIds.count -gt 0 )
         {
             $rootCertificatesForServerValidation = @()
-            foreach ($certId in $RootCertificatesForServerValidationIds)
+            for ($i = 0; $i -lt $RootCertificatesForServerValidationIds.Length; $i++)
             {
-                $rootCertificatesForServerValidation += "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$certId')"
+                $checkedCertId = Get-IntuneDeviceConfigurationCertificateId `
+                    -CertificateId $RootCertificatesForServerValidationIds[$i] `
+                    -CertificateDisplayName $RootCertificatesForServerValidationDisplayNames[$i] `
+                    -OdataTypes @('#microsoft.graph.windows81TrustedRootCertificate')
+                $rootCertificatesForServerValidation += "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$checkedCertId')"
             }
             $CreateParameters.Add('rootCertificatesForServerValidation@odata.bind', $rootCertificatesForServerValidation)
         }
 
         if (-not [String]::IsNullOrWhiteSpace($IdentityCertificateForClientAuthenticationId))
         {
-            $ref = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$IdentityCertificateForClientAuthenticationId')"
+            $checkedCertId = Get-IntuneDeviceConfigurationCertificateId `
+                -CertificateId $IdentityCertificateForClientAuthenticationId `
+                -CertificateDisplayName $IdentityCertificateForClientAuthenticationDisplayName `
+                -OdataTypes @( `
+                    '#microsoft.graph.windows81SCEPCertificateProfile', `
+                    '#microsoft.graph.windows81TrustedRootCertificate', `
+                    '#microsoft.graph.windows10PkcsCertificateProfile' `
+                )
+            $ref = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$checkedCertId')"
             $CreateParameters.Add('identityCertificateForClientAuthentication@odata.bind', $ref)
         }
 
         if (-not [String]::IsNullOrWhiteSpace($SecondaryIdentityCertificateForClientAuthenticationId))
         {
-            $ref = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$SecondaryIdentityCertificateForClientAuthenticationId')"
+            $checkedCertId = Get-IntuneDeviceConfigurationCertificateId `
+                -CertificateId $SecondaryIdentityCertificateForClientAuthenticationId `
+                -CertificateDisplayName $SecondaryIdentityCertificateForClientAuthenticationDisplayName `
+                -OdataTypes @( `
+                    '#microsoft.graph.windows81SCEPCertificateProfile', `
+                    '#microsoft.graph.windows81TrustedRootCertificate', `
+                    '#microsoft.graph.windows10PkcsCertificateProfile' `
+                )
+            $ref = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$checkedCertId')"
             $CreateParameters.Add('secondaryIdentityCertificateForClientAuthentication@odata.bind', $ref)
         }
 
         if (-not [String]::IsNullOrWhiteSpace($RootCertificateForClientValidationId))
         {
-            $ref = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$RootCertificateForClientValidationId')"
+            $checkedCertId = Get-IntuneDeviceConfigurationCertificateId `
+                -CertificateId $RootCertificateForClientValidationId `
+                -CertificateDisplayName $RootCertificateForClientValidationDisplayName `
+                -OdataTypes @('#microsoft.graph.windows81TrustedRootCertificate')
+            $ref = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$checkedCertId')"
             $CreateParameters.Add('rootCertificateForClientValidation@odata.bind', $ref)
         }
 
         if (-not [String]::IsNullOrWhiteSpace($SecondaryRootCertificateForClientValidationId))
         {
-            $ref = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$SecondaryRootCertificateForClientValidationId')"
+            $checkedCertId = Get-IntuneDeviceConfigurationCertificateId `
+                -CertificateId $SecondaryRootCertificateForClientValidationId `
+                -CertificateDisplayName $SecondaryRootCertificateForClientValidationDisplayName `
+                -OdataTypes @('#microsoft.graph.windows81TrustedRootCertificate')
+            $ref = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$checkedCertId')"
             $CreateParameters.Add('secondaryRootCertificateForClientValidation@odata.bind', $ref)
         }
 
@@ -559,10 +643,15 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the Intune Device Configuration Wired Network Policy for Windows10 with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove('Assignments') | Out-Null
         $BoundParameters.Remove('RootCertificatesForServerValidationIds') | Out-Null
+        $BoundParameters.Remove('RootCertificatesForServerValidationDisplayNames') | Out-Null
         $BoundParameters.Remove('IdentityCertificateForClientAuthenticationId') | Out-Null
+        $BoundParameters.Remove('IdentityCertificateForClientAuthenticationDisplayName') | Out-Null
         $BoundParameters.Remove('SecondaryIdentityCertificateForClientAuthenticationId') | Out-Null
+        $BoundParameters.Remove('SecondaryIdentityCertificateForClientAuthenticationDisplayName') | Out-Null
         $BoundParameters.Remove('RootCertificateForClientValidationId') | Out-Null
+        $BoundParameters.Remove('RootCertificateForClientValidationDisplayName') | Out-Null
         $BoundParameters.Remove('SecondaryRootCertificateForClientValidationId') | Out-Null
+        $BoundParameters.Remove('SecondaryRootCertificateForClientValidationDisplayName') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -585,16 +674,25 @@ function Set-TargetResource
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
         }
         Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentInstance.id `
+            -DeviceConfigurationPolicyId $currentInstance.Id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceConfigurations'
         #endregion
 
         if ($null -ne $RootCertificatesForServerValidationIds -and $RootCertificatesForServerValidationIds.count -gt 0 )
         {
+            [Array]$rootCertificatesForServerValidationChecked = @()
+            for ($i = 0; $i -lt $RootCertificatesForServerValidationIds.Count; $i++)
+            {
+                $certId = $RootCertificatesForServerValidationIds[$i]
+                $certName = $RootCertificatesForServerValidationDisplayNames[$i]
+                $checkedCertId = Get-IntuneDeviceConfigurationCertificateId -CertificateId $certId -CertificateDisplayName $certName -OdataTypes @('#microsoft.graph.windows81TrustedRootCertificate')
+                $rootCertificatesForServerValidationChecked += $checkedCertId
+            }
+            $RootCertificatesForServerValidationIds = $rootCertificatesForServerValidationChecked
             $compareResult = Compare-Object -ReferenceObject $currentInstance.RootCertificatesForServerValidationIds `
                 -DifferenceObject $RootCertificatesForServerValidationIds
 
@@ -603,14 +701,14 @@ function Set-TargetResource
 
             if ($certsToAdd.count -gt 0)
             {
-                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $Id `
+                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $currentInstance.Id `
                     -CertificateIds $certsToAdd `
                     -CertificateName rootCertificatesForServerValidation
             }
 
             if ($certsToRemove.count -gt 0)
             {
-                Remove-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $Id `
+                Remove-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $currentInstance.Id `
                     -CertificateIds $certsToRemove `
                     -CertificateName rootCertificatesForServerValidation
             }
@@ -620,9 +718,17 @@ function Set-TargetResource
         {
             if ($IdentityCertificateForClientAuthenticationId -ne $currentInstance.IdentityCertificateForClientAuthenticationId)
             {
-                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $Id `
+                $IdentityCertificateForClientAuthenticationId = Get-IntuneDeviceConfigurationCertificateId `
+                    -CertificateId $IdentityCertificateForClientAuthenticationId `
+                    -CertificateDisplayName $IdentityCertificateForClientAuthenticationDisplayName `
+                    -OdataTypes @( `
+                        '#microsoft.graph.windows81SCEPCertificateProfile', `
+                        '#microsoft.graph.windows81TrustedRootCertificate', `
+                        '#microsoft.graph.windows10PkcsCertificateProfile' `
+                    )
+                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $currentInstance.Id `
                     -CertificateIds $IdentityCertificateForClientAuthenticationId `
-                    -CertificateName identityCertificateForClientAuthenticationId
+                    -CertificateName identityCertificateForClientAuthentication
             }
         }
 
@@ -630,9 +736,17 @@ function Set-TargetResource
         {
             if ($SecondaryIdentityCertificateForClientAuthenticationId -ne $currentInstance.SecondaryIdentityCertificateForClientAuthenticationId)
             {
-                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $Id `
+                $SecondaryIdentityCertificateForClientAuthenticationId = Get-IntuneDeviceConfigurationCertificateId `
+                    -CertificateId $SecondaryIdentityCertificateForClientAuthenticationId `
+                    -CertificateDisplayName $SecondaryIdentityCertificateForClientAuthenticationDisplayName `
+                    -OdataTypes @( `
+                        '#microsoft.graph.windows81SCEPCertificateProfile', `
+                        '#microsoft.graph.windows81TrustedRootCertificate', `
+                        '#microsoft.graph.windows10PkcsCertificateProfile' `
+                    )
+                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $currentInstance.Id `
                     -CertificateIds $SecondaryIdentityCertificateForClientAuthenticationId `
-                    -CertificateName secondaryIdentityCertificateForClientAuthenticationId
+                    -CertificateName secondaryIdentityCertificateForClientAuthentication
             }
         }
 
@@ -640,9 +754,13 @@ function Set-TargetResource
         {
             if ($RootCertificateForClientValidationId -ne $currentInstance.RootCertificateForClientValidationId)
             {
-                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $Id `
+                $RootCertificateForClientValidationId = Get-IntuneDeviceConfigurationCertificateId `
+                    -CertificateId $RootCertificateForClientValidationId `
+                    -CertificateDisplayName $RootCertificateForClientValidationDisplayName `
+                    -OdataTypes @('#microsoft.graph.windows81TrustedRootCertificate')
+                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $currentInstance.Id `
                     -CertificateIds $RootCertificateForClientValidationId `
-                    -CertificateName rootCertificateForClientValidationId
+                    -CertificateName rootCertificateForClientValidation
             }
         }
 
@@ -650,9 +768,13 @@ function Set-TargetResource
         {
             if ($SecondaryRootCertificateForClientValidationId -ne $currentInstance.SecondaryRootCertificateForClientValidationId)
             {
-                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $Id `
+                $SecondaryRootCertificateForClientValidationId = Get-IntuneDeviceConfigurationCertificateId `
+                    -CertificateId $SecondaryRootCertificateForClientValidationId `
+                    -CertificateDisplayName $SecondaryRootCertificateForClientValidationDisplayName `
+                    -OdataTypes @('#microsoft.graph.windows81TrustedRootCertificate')
+                Update-DeviceConfigurationPolicyCertificateId -DeviceConfigurationPolicyId $currentInstance.Id `
                     -CertificateIds $SecondaryRootCertificateForClientValidationId `
-                    -CertificateName secondaryRootCertificateForClientValidationId
+                    -CertificateName secondaryRootCertificateForClientValidation
             }
         }
     }
@@ -758,8 +880,16 @@ function Test-TargetResource
         $RootCertificatesForServerValidationIds,
 
         [Parameter()]
+        [System.String[]]
+        $RootCertificatesForServerValidationDisplayNames,
+
+        [Parameter()]
         [System.String]
         $IdentityCertificateForClientAuthenticationId,
+
+        [Parameter()]
+        [System.String]
+        $IdentityCertificateForClientAuthenticationDisplayName,
 
         [Parameter()]
         [System.String]
@@ -767,11 +897,23 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
+        $SecondaryIdentityCertificateForClientAuthenticationDisplayName,
+
+        [Parameter()]
+        [System.String]
         $RootCertificateForClientValidationId,
 
         [Parameter()]
         [System.String]
+        $RootCertificateForClientValidationDisplayName,
+
+        [Parameter()]
+        [System.String]
         $SecondaryRootCertificateForClientValidationId,
+
+        [Parameter()]
+        [System.String]
+        $SecondaryRootCertificateForClientValidationDisplayName,
 
         [Parameter()]
         [System.String]
@@ -848,30 +990,31 @@ function Test-TargetResource
     }
     $testResult = $true
 
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
-    {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
-        {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-Not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-            $ValuesToCheck.Remove($key) | Out-Null
-        }
-    }
+    $testResult = Compare-M365DSCIntunePolicyAssignment -Source $CurrentValues.Assignments -Target $Assignments
 
     $ValuesToCheck.remove('Id') | Out-Null
+    $ValuesToCheck.Remove('Assignments') | Out-Null
+
+    if ($null -ne $ValuesToCheck.RootCertificatesForServerValidationDisplayNames)
+    {
+        $ValuesToCheck.Remove('RootCertificatesForServerValidationIds')
+    }
+    if ($null -ne $ValuesToCheck.IdentityCertificateForClientAuthenticationDisplayName)
+    {
+        $ValuesToCheck.Remove('IdentityCertificateForClientAuthenticationId')
+    }
+    if ($null -ne $ValuesToCheck.SecondaryIdentityCertificateForClientAuthenticationDisplayName)
+    {
+        $ValuesToCheck.Remove('SecondaryIdentityCertificateForClientAuthenticationId')
+    }
+    if ($null -ne $ValuesToCheck.RootCertificateForClientValidationDisplayName)
+    {
+        $ValuesToCheck.Remove('RootCertificateForClientValidationId')
+    }
+    if ($null -ne $ValuesToCheck.SecondaryRootCertificateForClientValidationDisplayName)
+    {
+        $ValuesToCheck.Remove('SecondaryRootCertificateForClientValidationId')
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -1040,7 +1183,7 @@ function Export-TargetResource
     }
 }
 
-function Get-DeviceConfigurationPolicyCertificateId
+function Get-DeviceConfigurationPolicyCertificate
 {
     [CmdletBinding()]
     [OutputType([System.String], [System.String[]])]
@@ -1059,14 +1202,15 @@ function Get-DeviceConfigurationPolicyCertificateId
     try
     {
         $result = Invoke-MgGraphRequest -Method Get -Uri $Uri 4>$null
-        return $(if ($result.id)
-            {
-                $result.id
-            }
-            else
-            {
-                $result.value.id
-            })
+
+        return $(if ($result.value)
+        {
+            $result.value
+        }
+        else
+        {
+            $result
+        })
     }
     catch
     {
@@ -1094,7 +1238,16 @@ function Update-DeviceConfigurationPolicyCertificateId
         $CertificateName
     )
 
-    $Uri = " https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windowsWiredNetworkConfiguration/$CertificateName/`$ref"
+    $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windowsWiredNetworkConfiguration/$CertificateName/`$ref"
+    
+    if ($CertificateName -eq 'rootCertificatesForServerValidation')
+    {
+        $method = 'POST'
+    }
+    else 
+    {
+        $method = 'PUT'
+    }
 
     foreach ($certificateId in $CertificateIds)
     {
@@ -1102,7 +1255,7 @@ function Update-DeviceConfigurationPolicyCertificateId
             '@odata.id' = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$certificateId')"
         }
 
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($ref | ConvertTo-Json) -ErrorAction Stop 4>$null
+        Invoke-MgGraphRequest -Method $method -Uri $Uri -Body ($ref | ConvertTo-Json) -ErrorAction Stop 4>$null
     }
 }
 
@@ -1130,6 +1283,57 @@ function Remove-DeviceConfigurationPolicyCertificateId
         $Uri = " https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windowsWiredNetworkConfiguration/$CertificateName/$certificateId/`$ref"
         Invoke-MgGraphRequest -Method DELETE -Uri $Uri -Body ($ref | ConvertTo-Json) -ErrorAction Stop 4>$null
     }
+}
+
+function Get-IntuneDeviceConfigurationCertificateId
+{
+    [CmdletBinding()]
+    param (
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CertificateId,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $CertificateDisplayName,
+
+        [Parameter(Mandatory = $true)]
+        [ValidateNotNullOrEmpty()]
+        [System.String[]]
+        $OdataTypes
+    )
+    $Certificate = Get-MgBetaDeviceManagementDeviceConfiguration `
+        -DeviceConfigurationId $CertificateId `
+        -ErrorAction SilentlyContinue | `
+            Where-Object -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -in $OdataTypes
+            }
+
+    if ($null -eq $Certificate)
+    {
+        Write-Verbose -Message "Could not find certificate with Id {$CertificateId}, searching by display name {$CertificateDisplayName}"
+
+        $Certificate = Get-MgBetaDeviceManagementDeviceConfiguration `
+            -Filter "DisplayName eq '$CertificateDisplayName'" `
+            -ErrorAction SilentlyContinue | `
+                Where-Object -FilterScript {
+                    $_.AdditionalProperties.'@odata.type' -in $OdataTypes
+                }
+
+        if ($null -eq $Certificate)
+        {
+            throw "Could not find certificate with Id {$CertificateId} or display name {$CertificateDisplayName}"
+        }
+
+        $CertificateId = $Certificate.Id
+        Write-Verbose -Message "Found certificate with Id {$($CertificateId)} and DisplayName {$($Certificate.DisplayName)}"
+    }
+    else
+    {
+        Write-Verbose -Message "Found certificate with Id {$CertificateId}"
+    }
+
+    return $CertificateId
 }
 
 Export-ModuleMember -Function *-TargetResource
