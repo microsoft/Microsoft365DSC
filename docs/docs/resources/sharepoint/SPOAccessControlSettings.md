@@ -24,6 +24,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **ConditionalAccessPolicy** | Write | String | Blocks or limits access to SharePoint and OneDrive content from un-managed devices. | `AllowFullAccess`, `AllowLimitedAccess`, `BlockAccess`, `ProtectionLevel` |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 # SPO Access Control Settings

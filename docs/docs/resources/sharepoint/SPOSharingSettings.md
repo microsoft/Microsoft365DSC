@@ -37,6 +37,7 @@
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
 | **ExternalUserExpirationRequired** | Write | Boolean | Enable Guest access to a site or Onedrive to expire after | |
 | **ExternalUserExpireInDays** | Write | UInt32 | Specifies Number of days for Guest Access links to expire. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 ## Description
