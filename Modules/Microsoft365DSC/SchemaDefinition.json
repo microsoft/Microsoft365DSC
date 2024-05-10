@@ -31561,6 +31561,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -31615,6 +31620,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -31681,6 +31691,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -31725,6 +31740,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -31901,6 +31921,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -31935,6 +31960,11 @@
                            {
                                "CIMType":  "MSFT_Credential",
                                "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -32050,6 +32080,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -32576,6 +32611,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -32735,6 +32775,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -33111,6 +33156,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -33186,6 +33236,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -33251,6 +33306,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -33305,6 +33365,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -33411,6 +33476,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -33495,6 +33565,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -33626,6 +33701,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -33681,6 +33761,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -33735,6 +33820,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -33880,6 +33970,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -34256,6 +34351,11 @@
                                "CIMType":  "String[]",
                                "Name":  "ExceptIfContentExtensionMatchesWords",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -34301,6 +34401,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -34345,6 +34450,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -34401,6 +34511,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -34446,6 +34561,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -34490,6 +34610,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -34540,6 +34665,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -34685,6 +34815,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -34846,6 +34981,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -34986,6 +35126,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -35071,6 +35216,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -35120,6 +35270,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -35181,6 +35336,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -35235,6 +35395,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -35305,6 +35470,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -35576,6 +35746,11 @@
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -35630,6 +35805,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -35690,6 +35870,11 @@
                            {
                                "CIMType":  "String",
                                "Name":  "CertificatePath",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -35796,6 +35981,11 @@
                                "CIMType":  "string",
                                "Name":  "ConditionalAccessPolicy",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -35866,6 +36056,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -35931,6 +36126,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -35990,6 +36190,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -36076,6 +36281,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -36141,6 +36351,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -36205,6 +36420,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -36351,6 +36571,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -36440,6 +36665,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -36610,6 +36840,11 @@
                            {
                                "CIMType":  "uint32",
                                "Name":  "ExternalUserExpireInDays",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -36791,6 +37026,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -36845,6 +37085,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -36936,6 +37181,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -37000,6 +37250,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -37071,6 +37326,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -37140,6 +37400,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -37221,6 +37486,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -37281,6 +37551,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -37340,6 +37615,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
@@ -37511,6 +37791,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -37591,6 +37876,11 @@
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
                                "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
                            }
                        ]
     },
@@ -37655,6 +37945,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
