@@ -1,7 +1,7 @@
 [ClassVersion("1.0.0.0"), FriendlyName("EXOManagementRoleEntry")]
 class MSFT_EXOManagementRoleEntry : OMI_BaseResource
 {
-    [Write, Description("The Identity parameter specifies the role entry that you want to modify.")] String Identity;
+    [Key, Description("The Identity parameter specifies the role entry that you want to modify.")] String Identity;
     [Write, Description("The Parameters parameter specifies the parameters to be added to or removed from the role entry.")] String Parameters[];
     [Write, Description("The Type parameter specifies the type of role entry to return."), ValueMap{"Cmdlet","Script","ApplicationPermission"}, Values{"Cmdlet","Script","ApplicationPermission"}] String Type;
     [Write, Description("Credentials of the Exchange Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
