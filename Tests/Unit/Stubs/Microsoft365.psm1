@@ -1156,6 +1156,35 @@ function Get-MalwareFilterRule
         $State
     )
 }
+
+function Get-ManagementRoleEntry
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Identity
+    )
+}
+
+function Set-ManagementRoleEntry
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $Parameters,
+
+        [Parameter()]
+        [System.Boolean]
+        $AddParameter,
+
+        [Parameter()]
+        [System.Boolean]
+        $RemoveParameter
+    )
+}
+
 function Get-ManagementRole
 {
     [CmdletBinding()]
