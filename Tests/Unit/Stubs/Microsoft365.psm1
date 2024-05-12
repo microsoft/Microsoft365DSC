@@ -1163,7 +1163,11 @@ function Get-ManagementRoleEntry
     param(
         [Parameter()]
         [System.String]
-        $Identity
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $ResultSize
     )
 }
 
