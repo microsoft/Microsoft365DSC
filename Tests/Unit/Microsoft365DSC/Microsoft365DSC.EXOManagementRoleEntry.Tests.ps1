@@ -63,7 +63,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity        = 'Information Rights Management'
                         Name            = "Get-BookingMailbox"
                         Type            = "Cmdlet"
-                        Properties      = @("ANR", "RecipientTypeDetails", "ResultSize")
+                        Parameters      = @("ANR", "RecipientTypeDetails", "ResultSize")
                     }
                 }
             }
@@ -90,7 +90,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity        = 'Information Rights Management'
                         Name            = "Get-BookingMailbox"
                         Type            = "Cmdlet"
-                        Properties      = @("RecipientTypeDetails", "ResultSize") # Drift
+                        Parameters      = @("RecipientTypeDetails", "ResultSize") # Drift
                     }
                 }
             }
@@ -117,7 +117,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         Identity        = 'Information Rights Management'
                         Name            = "Get-BookingMailbox"
                         Type            = "Cmdlet"
-                        Properties      = @("ANR", "RecipientTypeDetails", "ResultSize")
+                        Parameters      = @("ANR", "RecipientTypeDetails", "ResultSize")
                     }
                 }
             }
