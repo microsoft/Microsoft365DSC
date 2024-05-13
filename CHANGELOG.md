@@ -26,6 +26,7 @@
   * Added support for Access Tokens across SPO resources.
   * Added support for Access Tokens across Teams resources.
   * Fixing fake passwords in Unit Tests.
+  * Added ability to configure Telemetry client by ConnectionString.
 
 # 1.24.424.1
 
