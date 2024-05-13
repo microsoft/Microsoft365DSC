@@ -172,7 +172,7 @@ function Get-TargetResource
     try
     {
         $SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
-        $MySite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.com/' -and $_.Template -notmatch '^RedirectSite#' }
+        $MySite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.' -and $_.Template -notmatch '^RedirectSite#' }
 
         if ($null -ne $MySite)
         {

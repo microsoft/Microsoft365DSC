@@ -14,6 +14,8 @@
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
   * Fixed a creation and update issue when the exported policy contains a
     onboarding blob and the tenant is connected to Defender for Endpoint Service.
+* SPOSharingSettings
+  * Changed logic to retrieve my site for sovereign clouds.
 * M365DSCUtil
   * Fixed an issue where one could not pass empty arrays to the
     `Compare-PSCustomObjectArrays` function.
