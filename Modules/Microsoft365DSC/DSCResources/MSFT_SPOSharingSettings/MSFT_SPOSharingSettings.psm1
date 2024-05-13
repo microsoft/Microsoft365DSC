@@ -143,7 +143,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration for SPO Sharing settings'
@@ -226,6 +230,7 @@ function Get-TargetResource
             CertificateThumbprint                      = $CertificateThumbprint
             Managedidentity                            = $ManagedIdentity.IsPresent
             Ensure                                     = 'Present'
+            AccessTokens                               = $AccessTokens
         }
 
         if (-not [System.String]::IsNullOrEmpty($MySiteSharingCapability))
@@ -395,7 +400,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration for SPO Sharing settings'
@@ -427,6 +436,8 @@ function Set-TargetResource
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
     $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters.Remove('AccessTokens') | Out-Null
+
     [bool]$SetMySharingCapability = $false
     if ($null -ne $CurrentParameters['MySiteSharingCapability'])
     {
@@ -669,7 +680,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -700,6 +715,7 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('AccessTokens') | Out-Null
 
     if ($DefaultLinkPermission -eq 'None')
     {
@@ -753,7 +769,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -783,6 +803,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
+            AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params

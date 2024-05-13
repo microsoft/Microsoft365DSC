@@ -141,7 +141,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration for SPO Tenant'
@@ -210,6 +214,7 @@ function Get-TargetResource
             CertificateThumbprint                         = $CertificateThumbprint
             Managedidentity                               = $ManagedIdentity.IsPresent
             Ensure                                        = 'Present'
+            AccessTokens                                  = $AccessTokens
         }
     }
     catch
@@ -367,7 +372,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration for SPO Tenant'
@@ -389,7 +398,7 @@ function Set-TargetResource
     {
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
     }
-    
+
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Credential') | Out-Null
     $CurrentParameters.Remove('IsSingleInstance') | Out-Null
@@ -401,6 +410,7 @@ function Set-TargetResource
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
     $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters.Remove('AccessTokens') | Out-Null
 
     $CurrentParameters.Remove('TenantDefaultTimezone') | Out-Null # this one is updated separately using Graph
 
@@ -556,7 +566,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -644,7 +658,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -676,6 +694,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
+            AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params
