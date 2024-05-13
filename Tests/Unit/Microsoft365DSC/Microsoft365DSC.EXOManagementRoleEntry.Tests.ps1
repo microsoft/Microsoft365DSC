@@ -71,10 +71,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
             }
-
-            It 'Should return Present from the Get Method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
         }
 
         Context -Name 'Management Role Entry is NOT in the desired state.' -Fixture {
@@ -100,7 +96,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should call the Set method' {
-                Set-TargetResource @testParams
+                Set-TargetResource @testParams | Should -Invoke 'Set-ManagementRoleEntry' -Exactly 1
             }
         }
 

@@ -203,7 +203,7 @@ function Set-TargetResource
     if ($paramsToAddEntries.Count -gt 0)
     {
         Write-Verbose -Message "Adding the following parameters to {$Identity}: $($paramsToAddEntries -join ',')"
-        Set-ManagementRoleEntry $Identity -AddParameter -Parameters $paramsToAddEntries
+        Set-ManagementRoleEntry -Identity $Identity -AddParameter -Parameters $paramsToAddEntries
     }
 
     $paramsToRemove = $paramDifference | Where-Object -FilterScript {$_.SideIndicator -eq '<='}
@@ -215,7 +215,7 @@ function Set-TargetResource
     if ($paramsToRemoveEntries.Count -gt 0)
     {
         Write-Verbose -Message "Removing the following parameters to {$Identity}: $($paramsToRemoveEntries -join ',')"
-        Set-ManagementRoleEntry $Identity -RemoveParameter -Parameters $paramsToRemoveEntries
+        Set-ManagementRoleEntry -Identity $Identity -RemoveParameter -Parameters $paramsToRemoveEntries
     }
 }
 

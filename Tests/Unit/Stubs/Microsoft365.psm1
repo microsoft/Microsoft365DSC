@@ -1177,14 +1177,18 @@ function Set-ManagementRoleEntry
     param(
         [Parameter()]
         [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
         $Parameters,
 
         [Parameter()]
-        [System.Boolean]
+        [Switch]
         $AddParameter,
 
         [Parameter()]
-        [System.Boolean]
+        [Switch]
         $RemoveParameter
     )
 }
