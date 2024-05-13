@@ -215,7 +215,7 @@ function Get-TargetResource
         $MediaBitRateKb,
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledExceptAnonymous')]
         [System.String]
         $MeetingChatEnabledType = 'Enabled',
 
@@ -636,7 +636,7 @@ function Set-TargetResource
         $MediaBitRateKb,
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledExceptAnonymous')]
         [System.String]
         $MeetingChatEnabledType = 'Enabled',
 
@@ -1014,7 +1014,7 @@ function Test-TargetResource
         $MediaBitRateKb,
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledExceptAnonymous')]
         [System.String]
         $MeetingChatEnabledType = 'Enabled',
 

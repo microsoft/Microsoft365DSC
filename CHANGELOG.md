@@ -12,6 +12,10 @@
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
   * Fixed a creation and update issue when the exported policy contains a
     onboarding blob and the tenant is connected to Defender for Endpoint Service.
+* TeamsMeetingPolicy
+  * Fixed issue with property MeetingChatEnabledType by allowing the value
+    EnabledExceptAnonymous to be selected
+    FIXES [#4667](https://github.com/microsoft/Microsoft365DSC/issues/4667)
 * M365DSCUtil
   * Fixed an issue where one could not pass empty arrays to the
     `Compare-PSCustomObjectArrays` function.
