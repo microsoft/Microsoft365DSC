@@ -209,7 +209,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Id
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -340,6 +344,7 @@ function Get-TargetResource
         $policy.add('ManagedBrowserToOpenLinksRequired', $policyInfo.ManagedBrowserToOpenLinksRequired)
         $policy.add('CustomBrowserDisplayName', $policyInfo.CustomBrowserDisplayName)
         $policy.add('CustomBrowserPackageId', $policyInfo.CustomBrowserPackageId)
+        $policy.add('AccessTokens', $AccessTokens)
 
         return $policy
     }
@@ -566,7 +571,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $Id
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -914,7 +923,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $Id
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1066,7 +1079,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -1109,6 +1126,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @params
             if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))

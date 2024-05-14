@@ -66,7 +66,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -114,6 +118,7 @@ function Get-TargetResource
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         if (-not [System.String]::IsNullOrEmpty($policy.UpdateTimeOfDay))
         {
@@ -201,7 +206,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -221,32 +230,19 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($CurrentValues.Ensure -eq 'Absent' -and $Ensure -eq 'Present')
     {
         Write-Verbose "Creating new Teams Update Management Policy {$Identity}"
-        $newParams = $PSBoundParameters
-        $newParams.Remove('Ensure') | Out-Null
-        $newParams.Remove('Credential') | Out-Null
-        $newParams.Remove('ApplicationId') | Out-Null
-        $newParams.Remove('TenantId') | Out-Null
-        $newParams.Remove('CertificateThumbprint') | Out-Null
-        $newParams.Remove('ManagedIdentity') | Out-Null
 
-        New-CsTeamsUpdateManagementPolicy @newParams | Out-Null
+        New-CsTeamsUpdateManagementPolicy @PSBoundParameters | Out-Null
     }
     elseif ($CurrentValues.Ensure -eq 'Present' -and $Ensure -eq 'Present')
     {
         Write-Verbose "Updating existing Teams Update Management Policy {$Identity}"
-        $setParams = $PSBoundParameters
-        $setParams.Remove('Ensure') | Out-Null
-        $setParams.Remove('Credential') | Out-Null
-        $setParams.Remove('ApplicationId') | Out-Null
-        $setParams.Remove('TenantId') | Out-Null
-        $setParams.Remove('CertificateThumbprint') | Out-Null
-        $setParams.Remove('ManagedIdentity') | Out-Null
 
-        Set-CsTeamsUpdateManagementPolicy @setParams | Out-Null
+        Set-CsTeamsUpdateManagementPolicy @PSBoundParameters | Out-Null
     }
     elseif ($CurrentValues.Ensure -eq 'Present' -and $Ensure -eq 'Absent')
     {
@@ -324,7 +320,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -340,16 +340,27 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Team Update Management Policy {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+
+    if ($CurrentValues.Ensure -ne $Ensure)
+    {
+        Write-Verbose -Message "Test-TargetResource returned $false"
+        return $false
+    }
+    $testResult = $true
+
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
-
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    if ($testResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -380,7 +391,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -419,6 +434,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $result = Get-TargetResource @params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

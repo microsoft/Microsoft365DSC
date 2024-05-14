@@ -15,6 +15,7 @@ This function does not generate any output.
 | Enabled | False | Boolean |  |  | Enables or disables telemetry collection. |
 | InstrumentationKey | False | String |  |  | Specifies the Instrumention Key to be used to send the telemetry to. |
 | ProjectName | False | String |  |  | Specifies the name of the project to store the telemetry data under. |
+| ConnectionString | False | String |  |  |  |
 
 ## Examples
 

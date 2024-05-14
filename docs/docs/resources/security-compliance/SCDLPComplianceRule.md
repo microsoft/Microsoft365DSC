@@ -78,6 +78,7 @@
 | **SetHeader** | Write | StringArray[] | The SetHeader The SetHeader parameter specifies an action for the DLP rule that adds or modifies a header field and value in the message header. You can specify multiple header name and value pairs separated by commas | |
 | **ContentExtensionMatchesWords** | Write | StringArray[] | The ContentExtensionMatchesWords parameter specifies a condition for the DLP rule that looks for words in file name extensions. You can specify multiple words separated by commas. | |
 | **ExceptIfContentExtensionMatchesWords** | Write | StringArray[] | The ExceptIfContentExtensionMatchesWords parameter specifies an exception for the DLP rule that looks for words in file name extensions. You can specify multiple words separated by commas. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_SCDLPSensitiveInformation
 

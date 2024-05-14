@@ -3460,6 +3460,10 @@ function Get-M365DSCExportContentForResource
     {
         $primaryKey = $Results.Id
     }
+    elseif ($Keys.Contains('CDNType'))
+    {
+        $primaryKey = $Results.CDNType
+    }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `
         -not $Keys.Contains('IsSingleInstance'))

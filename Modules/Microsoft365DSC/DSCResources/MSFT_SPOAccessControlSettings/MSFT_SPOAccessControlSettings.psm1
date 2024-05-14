@@ -85,7 +85,11 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess', 'ProtectionLevel')]
         [System.String]
-        $ConditionalAccessPolicy
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of SharePoint Online Access Control Settings'
@@ -133,6 +137,7 @@ function Get-TargetResource
             Managedidentity              = $ManagedIdentity.IsPresent
             Ensure                       = 'Present'
             ConditionalAccessPolicy      = $SPOAccessControlSettings.ConditionalAccessPolicy
+            AccessTokens                 = $AccessTokens
         }
     }
     catch
@@ -238,7 +243,11 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess', 'ProtectionLevel')]
         [System.String]
-        $ConditionalAccessPolicy
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of SharePoint Online Access Control Settings'
@@ -258,7 +267,6 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
-
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Ensure') | Out-Null
     $CurrentParameters.Remove('Credential') | Out-Null
@@ -270,6 +278,7 @@ function Set-TargetResource
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
     $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters.Remove('AccessTokens') | Out-Null
 
     if ($IPAddressAllowList -eq '')
     {
@@ -367,7 +376,11 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess', 'ProtectionLevel')]
         [System.String]
-        $ConditionalAccessPolicy
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -392,7 +405,6 @@ function Test-TargetResource
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @('IsSingleInstance', `
-            'Credential', `
             'DisplayStartASiteOption', `
             'StartASiteFormUrl', `
             'IPAddressEnforcement', `
@@ -445,7 +457,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -475,6 +491,7 @@ function Export-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
             ApplicationSecret     = $ApplicationSecret
+            AccessTokens          = $AccessTokens
         }
 
         $dscContent = ''

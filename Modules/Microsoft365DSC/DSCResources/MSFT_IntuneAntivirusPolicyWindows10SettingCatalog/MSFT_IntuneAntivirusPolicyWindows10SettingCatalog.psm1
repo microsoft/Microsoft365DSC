@@ -90,6 +90,14 @@ function Get-TargetResource
         [System.int32]
         $avgcpuloadfactor,
 
+        [Parameter]
+        [System.Int32]
+        $archivemaxdepth,
+
+        [Parameter]
+        [System.Int32]
+        $archivemaxsize,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -243,6 +251,11 @@ function Get-TargetResource
         $engineupdateschannel,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $meteredconnectionupdates,
+
+        [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
         $platformupdateschannel,
@@ -274,6 +287,21 @@ function Get-TargetResource
         [Parameter()]
         [System.Int32]
         $schedulescantime,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabletlsparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $randomizescheduletasktimes,
+
+        [Parameter()]
+        [ValidateRange(1,23)]
+        [System.Int32]
+        $schedulerrandomizationtime,
 
         [Parameter()]
         [System.String[]]
@@ -367,7 +395,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Checking for the Intune Endpoint Protection Policy {$DisplayName}"
@@ -488,6 +520,7 @@ function Get-TargetResource
         $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
         $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
         $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        $returnHashtable.Add('AccessTokens', $AccessTokens)
 
         return $returnHashtable
     }
@@ -594,6 +627,14 @@ function Set-TargetResource
         [Parameter()]
         [System.int32]
         $avgcpuloadfactor,
+
+        [Parameter]
+        [System.Int32]
+        $archivemaxdepth,
+
+        [Parameter]
+        [System.Int32]
+        $archivemaxsize,
 
         [Parameter()]
         [ValidateSet('0', '1')]
@@ -748,6 +789,11 @@ function Set-TargetResource
         $engineupdateschannel,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $meteredconnectionupdates,
+
+        [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
         $platformupdateschannel,
@@ -779,6 +825,21 @@ function Set-TargetResource
         [Parameter()]
         [System.Int32]
         $schedulescantime,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabletlsparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $randomizescheduletasktimes,
+
+        [Parameter()]
+        [ValidateRange(1,23)]
+        [System.Int32]
+        $schedulerrandomizationtime,
 
         [Parameter()]
         [System.String[]]
@@ -872,7 +933,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -899,6 +964,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('templateId') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $templateReferenceId = $templateId
     $platforms = 'windows10'
@@ -1052,6 +1118,14 @@ function Test-TargetResource
         [System.int32]
         $avgcpuloadfactor,
 
+        [Parameter]
+        [System.Int32]
+        $archivemaxdepth,
+
+        [Parameter]
+        [System.Int32]
+        $archivemaxsize,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -1205,6 +1279,11 @@ function Test-TargetResource
         $engineupdateschannel,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $meteredconnectionupdates,
+
+        [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
         $platformupdateschannel,
@@ -1236,6 +1315,21 @@ function Test-TargetResource
         [Parameter()]
         [System.Int32]
         $schedulescantime,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabletlsparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $randomizescheduletasktimes,
+
+        [Parameter()]
+        [ValidateRange(1,23)]
+        [System.Int32]
+        $schedulerrandomizationtime,
 
         [Parameter()]
         [System.String[]]
@@ -1329,7 +1423,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -1355,15 +1453,45 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    [Hashtable]$ValuesToCheck = @{}
+    $MyInvocation.MyCommand.Parameters.GetEnumerator() | ForEach-Object {
+        if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))
+        {
+            if ($null -ne $CurrentValues[$_.Key] -or $null -ne $PSBoundParameters[$_.Key])
+            {
+                $ValuesToCheck.Add($_.Key, $null)
+                if (-not $PSBoundParameters.ContainsKey($_.Key))
+                {
+                    $value = $null
+                    switch ($CurrentValues[$_.Key].GetType().Name)
+                    {
+                        'String'
+                        {
+                            $value = ''
+                        }
+                        'Int32'
+                        {
+                            $value = 0
+                        }
+                        'String[]'
+                        {
+                            $value = @()
+                        }
+                    }
+                    $PSBoundParameters.Add($_.Key, $value)
+                }
+            }
+        }
+    }
     $ValuesToCheck.Remove('Identity') | Out-Null
+
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     $testResult = $true
     if ($CurrentValues.Ensure -ne $Ensure)
     {
         $testResult = $false
     }
-
 
     #region Assignments
     if ($testResult)
@@ -1429,7 +1557,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -1456,9 +1588,9 @@ function Export-TargetResource
         $templateFamily = 'endpointSecurityAntivirus'
         $templateReferences = "d948ff9b-99cb-4ee0-8012-1fbc09685377_1", "e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1", "45fea5e9-280d-4da1-9792-fb5736da0ca9_1","804339ad-1553-4478-a742-138fb5807418_1"
         [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All:$true `
-            -ErrorAction Stop | Where-Object -FilterScript { 
-                $_.TemplateReference.TemplateFamily -eq $templateFamily -and 
-                $_.TemplateReference.TemplateId -in $templateReferences 
+            -ErrorAction Stop | Where-Object -FilterScript {
+                $_.TemplateReference.TemplateFamily -eq $templateFamily -and
+                $_.TemplateReference.TemplateId -in $templateReferences
             }
 
         if ($policies.Length -eq 0)
@@ -1484,6 +1616,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @params
