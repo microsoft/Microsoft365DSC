@@ -20,6 +20,8 @@
   * Fixed a creation and update issue when the exported policy contains a
     onboarding blob and the tenant is connected to Defender for Endpoint Service.
 * SPOSharingSettings
+  * Remove properties from being tested in certain conditions
+    FIXES [#4649](https://github.com/microsoft/Microsoft365DSC/issues/4649)
   * Changed logic to retrieve my site for sovereign clouds.
 * TeamsGroupPolicyAssignment
   * Add missing policy type TeamsVerticalPackagePolicy
