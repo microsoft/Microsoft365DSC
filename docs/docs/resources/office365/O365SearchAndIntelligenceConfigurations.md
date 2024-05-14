@@ -10,6 +10,7 @@
 | **PersonInsightsIsEnabledInOrganization** | Write | Boolean | Specifies whether or not Person Insights should be available for the organization. | |
 | **PersonInsightsDisabledForGroup** | Write | String | Specifies a single Azure AD Group for which Person Insights needs to be disabled. | |
 | **Credential** | Write | PSCredential | Credentials of the Global Admin | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 

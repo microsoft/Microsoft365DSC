@@ -21,4 +21,5 @@ class MSFT_SPOAccessControlSettings : OMI_BaseResource
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Blocks or limits access to SharePoint and OneDrive content from un-managed devices."), ValueMap{"AllowFullAccess","AllowLimitedAccess","BlockAccess","ProtectionLevel"}, Values{"AllowFullAccess","AllowLimitedAccess","BlockAccess","ProtectionLevel"}] string ConditionalAccessPolicy;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

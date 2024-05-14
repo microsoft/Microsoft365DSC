@@ -2,21 +2,42 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Fixes #4596
 * AADGroupSettings
   * Added support for parameter NewUnifiedGroupWritebackDefault
-* SCAutoSensitivityLabelPolicy
-  * Fix incorrect mandatory Credential parameter in Set and Test methods
-    FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
+* EXOManagementRoleEntry
+  * Initial Rrelease
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Add missing properties from templates
+  * Update setting handling so that the value is reverted to default when unset
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fixed an issue where the payload of xml files was not encoded as base64.
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
   * Fixed a creation and update issue when the exported policy contains a
     onboarding blob and the tenant is connected to Defender for Endpoint Service.
+* SCAutoSensitivityLabelPolicy
+  * Fix incorrect mandatory Credential parameter in Set and Test methods
+    FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
+* SPOSharingSettings
+  * Remove properties from being tested in certain conditions
+    FIXES [#4649](https://github.com/microsoft/Microsoft365DSC/issues/4649)
+  * Changed logic to retrieve my site for sovereign clouds.
 * SPOTenantCdnPolicy
   * Fixed an issue when both IncludeFileExtensions and
     ExcludeRestrictedSiteClassifications needed to be changed but the latter got
     the value of the former instead of the correct one
     FIXES [#4658](https://github.com/microsoft/Microsoft365DSC/issues/4658)
+* TeamsMeetingPolicy
+  * Fix creation and set of resource when cloud recording is set to false (off)
+    FIXES [#4653](https://github.com/microsoft/Microsoft365DSC/issues/4653)
+* TeamsGroupPolicyAssignment
+  * Add missing policy type TeamsVerticalPackagePolicy
+    FIXES [#4647](https://github.com/microsoft/Microsoft365DSC/issues/4647)
+* TeamsUpdateManagementPolicy
+  * Remove unnecessary parameters from PSBoundParameters such as authentication
+    methods, Ensure and Verbose by calling Remove-M365DSCAuthenticationParameter
+    FIXES [#4651](https://github.com/microsoft/Microsoft365DSC/issues/4651)
 * M365DSCUtil
   * Fixed an issue where one could not pass empty arrays to the
     `Compare-PSCustomObjectArrays` function.
@@ -25,12 +46,16 @@
     heuristics
     FIXES [#4658](https://github.com/microsoft/Microsoft365DSC/issues/4658)
 * DEPENDENCIES
-  * Updated Microsoft.Graph to version 2.18.0.
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.182.
+  * Updated DSCParser to version 2.0.0.4.
+  * Updated Microsoft.Graph to version 2.19.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.187.
 * MISC
   * Added support for Access Tokens across AAD resources.
+  * Added support for Access Tokens across SC resources.
+  * Added support for Access Tokens across SPO resources.
   * Added support for Access Tokens across Teams resources.
   * Fixing fake passwords in Unit Tests.
+  * Added ability to configure Telemetry client by ConnectionString.
 
 # 1.24.424.1
 
