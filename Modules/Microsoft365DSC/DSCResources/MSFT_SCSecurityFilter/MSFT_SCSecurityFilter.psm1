@@ -71,7 +71,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Security Filter for $FilterName"
@@ -121,7 +125,7 @@ function Get-TargetResource
         else
         {
             Write-Verbose "Found existing Security Filter $($FilterName)"
-            $result = MapSecurityFilter $secFilter $Credential $ApplicationId $TenantId $CertificateThumbprint $CertificatePath $CertificatePassword
+            $result = Get-M365DSCSCMapSecurityFilter $secFilter $Credential $ApplicationId $TenantId $CertificateThumbprint $CertificatePath $CertificatePassword
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -139,7 +143,7 @@ function Get-TargetResource
     }
 }
 
-function MapSecurityFilter
+function Get-M365DSCSCMapSecurityFilter
 {
     param(
         [Parameter(Mandatory = $true)]
@@ -261,7 +265,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Security Filter for $FilterName"
@@ -301,6 +309,7 @@ function Set-TargetResource
         $CreationParams.Remove('CertificateThumbprint') | Out-Null
         $CreationParams.Remove('ManagedIdentity') | Out-Null
         $CreationParams.Remove('ApplicationSecret') | Out-Null
+        $CreationParams.Remove('AccessTokens') | Out-Null
 
         try
         {
@@ -329,6 +338,7 @@ function Set-TargetResource
         $SetParams.Remove('CertificateThumbprint') | Out-Null
         $SetParams.Remove('ManagedIdentity') | Out-Null
         $SetParams.Remove('ApplicationSecret') | Out-Null
+        $SetParams.Remove('AccessTokens') | Out-Null
 
         try
         {
@@ -428,7 +438,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -446,16 +460,6 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $ValuesToCheck = $PSBoundParameters
-
-    # Remove authentication parameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -497,7 +501,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
@@ -536,7 +544,7 @@ function Export-TargetResource
             # $GetParams = ([Hashtable]$PSBoundParameters).Clone()
             # $GetParams.Add("FilterName", $filter.FilterName)
             # $Results = Get-TargetResource @GetParams
-            $Results = MapSecurityFilter -Filter $filter -Credential $Credential -ApplicationId $ApplicationId `
+            $Results = Get-M365DSCSCMapSecurityFilter -Filter $filter -Credential $Credential -ApplicationId $ApplicationId `
                 -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
 
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
