@@ -81530,3 +81530,41 @@ function Update-MgBetaDeviceAppManagementMobileApp
 }
 
 #endregion
+function Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [string]
+        $DirectoryObjectId,
+
+        [Parameter(Mandatory = $true)]
+        [string]
+        $DirectoryRoleId,
+
+        [Parameter()]
+        [string]
+        $IfMatch,
+
+        [Parameter()]
+        [string]
+        $ResponseHeadersVariable,
+
+        [Parameter()]
+        [System.Collections.IDictionary]
+        $Headers,
+
+        [Parameter()]
+        [switch]
+        $PassThru,
+
+        [Parameter()]
+        [switch]
+        $WhatIf,
+
+        [Parameter()]
+        [switch]
+        $Confirm
+    )
+}

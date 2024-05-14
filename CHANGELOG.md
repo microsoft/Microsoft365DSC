@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Fixes #4596
 * AADGroupSettings
   * Added support for parameter NewUnifiedGroupWritebackDefault
 * EXOManagementRoleEntry
