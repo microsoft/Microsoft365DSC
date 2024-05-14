@@ -45,7 +45,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration for Office 365 Audit Log'
@@ -98,6 +102,7 @@ function Get-TargetResource
                 CertificatePassword             = $CertificatePassword
                 Managedidentity                 = $ManagedIdentity.IsPresent
                 UnifiedAuditLogIngestionEnabled = $UnifiedAuditLogIngestionEnabledReturnValue
+                AccessTokens                    = $AccessTokens
             }
             return $Result
         }
@@ -160,7 +165,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration for Office 365 Audit Log'
@@ -262,7 +271,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -326,7 +339,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
@@ -363,6 +380,7 @@ function Export-TargetResource
             CertificatePassword             = $CertificatePassword
             Managedidentity                 = $ManagedIdentity.IsPresent
             CertificatePath                 = $CertificatePath
+            AccessTokens                    = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 

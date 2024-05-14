@@ -123,7 +123,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Getting configuration of Team $DisplayName"
 
@@ -212,6 +216,7 @@ function Get-TargetResource
             ShowInTeamsSearchAndSuggestions   = $team.ShowInTeamsSearchAndSuggestions
             Ensure                            = 'Present'
             ManagedIdentity                   = $ManagedIdentity.IsPresent
+            AccessTokens                      = $AccessTokens
         }
 
         if ($ConnectionMode.StartsWith('ServicePrincipal'))
@@ -362,7 +367,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Team $DisplayName"
@@ -386,6 +395,7 @@ function Set-TargetResource
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Ensure') | Out-Null
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
+    $CurrentParameters.Remove('AccessTokens') | Out-Null
 
     if ($Ensure -eq 'Present' -and ($team.Ensure -eq 'Present'))
     {
@@ -613,7 +623,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -639,7 +653,6 @@ function Test-TargetResource
         $PSBoundParameters.Add('Ensure', $Ensure)
     }
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('GroupID') | Out-Null
 
     if ($null -eq $CurrentValues.Owner)
@@ -681,7 +694,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' -InboundParameters $PSBoundParameters
 
@@ -726,6 +743,7 @@ function Export-TargetResource
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     ManagedIdentity       = $ManagedIdentity.IsPresent
+                    AccessTokens          = $AccessTokens
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

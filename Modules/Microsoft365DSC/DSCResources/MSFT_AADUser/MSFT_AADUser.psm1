@@ -1081,7 +1081,7 @@ function Export-TargetResource
                 }
 
                 $Results = Get-TargetResource @Params
-                $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString 'Pass@word!11' -AsPlainText -Force));"
+                $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force));"
                 if ($null -ne $Results.UserPrincipalName)
                 {
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

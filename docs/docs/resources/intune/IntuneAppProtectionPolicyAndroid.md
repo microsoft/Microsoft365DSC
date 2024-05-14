@@ -55,6 +55,7 @@
 | **CustomBrowserDisplayName** | Write | String | The application name for browser associated with the 'Unmanaged Browser ID'. This name will be displayed to users if the specified browser is not installed. | |
 | **CustomBrowserPackageId** | Write | String | The application ID for a single browser. Web content (http/s) from policy managed applications will open in the specified browser. | |
 | **Id** | Write | String | Id of the Intune policy. To avoid creation of duplicate policies DisplayName will be searched for if the ID is not found | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 ## Description

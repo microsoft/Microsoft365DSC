@@ -52,4 +52,5 @@ class MSFT_IntuneAppProtectionPolicyAndroid : OMI_BaseResource
     [Write, Description("The application name for browser associated with the 'Unmanaged Browser ID'. This name will be displayed to users if the specified browser is not installed.")] String CustomBrowserDisplayName;
     [Write, Description("The application ID for a single browser. Web content (http/s) from policy managed applications will open in the specified browser.")] String CustomBrowserPackageId;
     [Write, Description("Id of the Intune policy. To avoid creation of duplicate policies DisplayName will be searched for if the ID is not found")] String Id;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

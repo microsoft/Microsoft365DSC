@@ -77,7 +77,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -151,6 +155,7 @@ function Get-TargetResource
             ApplicationSecret                                  = $ApplicationSecret
             CertificateThumbprint                              = $CertificateThumbprint
             Managedidentity                                    = $ManagedIdentity.IsPresent
+            AccessTokens                                       = $AccessTokens
             #endregion
         }
         $returnAssignments = @()
@@ -255,7 +260,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -281,6 +290,13 @@ function Set-TargetResource
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+
+        if ($AdvancedThreatProtectionAutoPopulateOnboardingBlob -and `
+            $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
+        {
+            $CreateParameters.Remove('AdvancedThreatProtectionOnboardingBlob') | Out-Null
+        }
+
         $CreateParameters.Remove('Id') | Out-Null
 
         $keys = (([Hashtable]$CreateParameters).clone()).Keys
@@ -315,6 +331,12 @@ function Set-TargetResource
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
+
+        if ($AdvancedThreatProtectionAutoPopulateOnboardingBlob -and `
+            $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
+        {
+            $UpdateParameters.Remove('AdvancedThreatProtectionOnboardingBlob') | Out-Null
+        }
 
         $UpdateParameters.Remove('Id') | Out-Null
 
@@ -430,7 +452,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -490,10 +516,6 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     if ($AdvancedThreatProtectionAutoPopulateOnboardingBlob -and `
         $PSBoundParameters.AdvancedThreatProtectionAutoPopulateOnboardingBlob)
@@ -549,7 +571,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -596,15 +622,16 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
+                Id                    = $config.Id
                 DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @params

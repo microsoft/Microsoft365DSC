@@ -52,7 +52,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
@@ -116,6 +120,7 @@ function Get-TargetResource
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
     }
     catch
@@ -183,7 +188,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -311,7 +320,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -380,7 +393,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -427,6 +444,7 @@ function Export-TargetResource
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
                 Credential            = $Credential
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             if ($Results.Ensure -eq 'Present')
@@ -454,6 +472,8 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 CertificateThumbprint = $CertificateThumbprint
                 Credential            = $Credential
+                ManagedIdentity       = $ManagedIdentity
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             if ($Results.Ensure -eq 'Present')
