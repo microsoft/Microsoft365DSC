@@ -15643,6 +15643,16 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "sInt32",
+                               "Name":  "archivemaxdepth",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "sInt32",
+                               "Name":  "archivemaxsize",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "checkforsignaturesbeforerunningscan",
                                "Option":  "Write"
@@ -15719,6 +15729,11 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "meteredconnectionupdates",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
                                "Name":  "platformupdateschannel",
                                "Option":  "Write"
                            },
@@ -15750,6 +15765,21 @@
                            {
                                "CIMType":  "sInt32",
                                "Name":  "schedulescantime",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "disabletlsparsing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "randomizescheduletasktimes",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "sInt32",
+                               "Name":  "schedulerrandomizationtime",
                                "Option":  "Write"
                            },
                            {
@@ -15845,11 +15875,6 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "ManagedIdentity",
-                               "Option":  "Write"
-                           },
-                           {
-                               "CIMType":  "String[]",
-                               "Name":  "AccessTokens",
                                "Option":  "Write"
                            }
                        ]
