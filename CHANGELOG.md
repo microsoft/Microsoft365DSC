@@ -36,6 +36,9 @@
 * TeamsMeetingPolicy
   * Fix creation and set of resource when cloud recording is set to false (off)
     FIXES [#4653](https://github.com/microsoft/Microsoft365DSC/issues/4653)
+  * Fixed issue with property MeetingChatEnabledType by allowing the value
+    EnabledExceptAnonymous to be selected
+    FIXES [#4667](https://github.com/microsoft/Microsoft365DSC/issues/4667)
 * TeamsGroupPolicyAssignment
   * Add missing policy type TeamsVerticalPackagePolicy
     FIXES [#4647](https://github.com/microsoft/Microsoft365DSC/issues/4647)
