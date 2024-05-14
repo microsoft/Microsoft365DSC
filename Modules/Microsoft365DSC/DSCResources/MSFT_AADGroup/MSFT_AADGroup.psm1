@@ -437,8 +437,7 @@ function Set-TargetResource
     $currentParameters.Remove('Owners') | Out-Null
     $currentParameters.Remove('Members') | Out-Null
     $currentParameters.Remove('MemberOf') | Out-Null
-    $currentParameters.Remove('AssignedToRole') | Out-Null
-    $currentParameters.Remove('AccessTokens') | Out-Null
+    #$currentParameters.Remove('AssignedToRole') | Out-Null
 
     if ($Ensure -eq 'Present' -and `
         ($null -ne $GroupTypes -and $GroupTypes.Contains('Unified')) -and `
@@ -717,6 +716,9 @@ function Set-TargetResource
                 elseif ($diff.SideIndicator -eq '<=')
                 {
                     Write-Verbose -Message "Removing new member {$($diff.InputObject)} to AAD Group {$($currentGroup.DisplayName)}"
+                    $memberObject = @{
+                        '@odata.id' = "https://graph.microsoft.com/v1.0/users/{$($user.Id)}"
+                    }
                     Remove-MgGroupMemberDirectoryObjectByRef -GroupId ($currentGroup.Id) -DirectoryObjectId ($user.Id) | Out-Null
                 }
             }
@@ -792,7 +794,7 @@ function Set-TargetResource
             }
         }
 
-        if ($currentGroup.IsAssignableToRole -eq $true)
+        if ($currentGroup.IsAssignableToRole -eq $true -and $currentParameters.ContainsKey('AssignedToRole'))
         {
             #AssignedToRole
             $currentAssignedToRoleValue = @()
@@ -843,7 +845,7 @@ function Set-TargetResource
                     elseif ($diff.SideIndicator -eq '<=')
                     {
                         Write-Verbose -Message "Removing AAD group {$($currentGroup.DisplayName)} from Directory Role {$($role.DisplayName)}"
-                        Remove-MgBetaDirectoryRoleMemberByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
+                        Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef -DirectoryRoleId ($role.Id) -DirectoryObjectId ($currentGroup.Id) | Out-Null
                     }
                 }
             }
