@@ -4,6 +4,8 @@
 
 * AADActivityBasedTimeoutPolicy
   * Initial release, set the azure portal and default Timeout.
+* AADGroup
+  * Fixes #4596
 * AADGroupSettings
   * Added support for parameter NewUnifiedGroupWritebackDefault
 * EXOManagementRoleEntry
@@ -11,19 +13,28 @@
 * SCAutoSensitivityLabelPolicy
   * Fix incorrect mandatory Credential parameter in Set and Test methods
     FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Add missing properties from templates
+  * Update setting handling so that the value is reverted to default when unset
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fixed an issue where the payload of xml files was not encoded as base64.
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
   * Fixed a creation and update issue when the exported policy contains a
     onboarding blob and the tenant is connected to Defender for Endpoint Service.
 * SPOSharingSettings
+  * Remove properties from being tested in certain conditions
+    FIXES [#4649](https://github.com/microsoft/Microsoft365DSC/issues/4649)
   * Changed logic to retrieve my site for sovereign clouds.
+* TeamsGroupPolicyAssignment
+  * Add missing policy type TeamsVerticalPackagePolicy
+    FIXES [#4647](https://github.com/microsoft/Microsoft365DSC/issues/4647)
 * M365DSCUtil
   * Fixed an issue where one could not pass empty arrays to the
     `Compare-PSCustomObjectArrays` function.
 * DEPENDENCIES
-  * Updated Microsoft.Graph to version 2.18.0.
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.182.
+  * Updated DSCParser to version 2.0.0.4.
+  * Updated Microsoft.Graph to version 2.19.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.187.
 * MISC
   * Added support for Access Tokens across AAD resources.
   * Added support for Access Tokens across SC resources.
