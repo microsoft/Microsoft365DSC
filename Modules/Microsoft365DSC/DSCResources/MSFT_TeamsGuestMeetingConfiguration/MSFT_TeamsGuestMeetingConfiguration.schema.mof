@@ -12,4 +12,5 @@ class MSFT_TeamsGuestMeetingConfiguration : OMI_BaseResource
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

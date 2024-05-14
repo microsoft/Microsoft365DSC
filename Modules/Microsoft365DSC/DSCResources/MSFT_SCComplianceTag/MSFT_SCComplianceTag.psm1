@@ -77,7 +77,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of ComplianceTag for $Name"
@@ -137,6 +141,7 @@ function Get-TargetResource
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
                 Ensure                = 'Present'
+                AccessTokens          = $AccessTokens
             }
 
             if (-not [System.String]::IsNullOrEmpty($tagObject.FilePlanMetadata))
@@ -239,7 +244,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of ComplianceTag for $Name"
@@ -275,6 +284,7 @@ function Set-TargetResource
         $CreationParams.Remove('CertificateThumbprint') | Out-Null
         $CreationParams.Remove('ManagedIdentity') | Out-Null
         $CreationParams.Remove('ApplicationSecret') | Out-Null
+        $CreationParams.Remove('AccessTokens') | Out-Null
 
         #Convert File plan to JSON before Set
         if ($FilePlanProperty)
@@ -307,6 +317,7 @@ function Set-TargetResource
         $SetParams.Remove('CertificateThumbprint') | Out-Null
         $SetParams.Remove('ManagedIdentity') | Out-Null
         $SetParams.Remove('ApplicationSecret') | Out-Null
+        $SetParams.Remove('AccessTokens') | Out-Null
 
         # Once set, a label can't be removed;
         if ($SetParams.IsRecordLabel -eq $false -and $CurrentTag.IsRecordLabel -eq $true)
@@ -432,7 +443,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -453,16 +468,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-
-    # Remove authentication parameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     $TestFilePlanProperties = Test-SCFilePlanProperties -CurrentProperty $CurrentValues `
         -DesiredProperty $PSBoundParameters
@@ -511,7 +516,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `
