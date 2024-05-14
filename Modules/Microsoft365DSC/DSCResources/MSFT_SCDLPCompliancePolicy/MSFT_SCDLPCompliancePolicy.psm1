@@ -116,7 +116,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
@@ -206,6 +210,7 @@ function Get-TargetResource
                 CertificateThumbprint                 = $CertificateThumbprint
                 CertificatePath                       = $CertificatePath
                 CertificatePassword                   = $CertificatePassword
+                AccessTokens                          = $AccessTokens
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -341,7 +346,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of DLPCompliancePolicy for $Name"
@@ -366,27 +375,29 @@ function Set-TargetResource
     if (('Present' -eq $Ensure) -and ('Absent' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
-        $CreationParams.Remove('ApplicationId')
-        $CreationParams.Remove('TenantId')
-        $CreationParams.Remove('CertificateThumbprint')
-        $CreationParams.Remove('CertificatePath')
-        $CreationParams.Remove('CertificatePassword')
-        $CreationParams.Remove('Ensure')
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('AccessTokens') | Out-Null
         New-DLPCompliancePolicy @CreationParams
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentPolicy.Ensure))
     {
         $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Credential')
-        $CreationParams.Remove('ApplicationId')
-        $CreationParams.Remove('TenantId')
-        $CreationParams.Remove('CertificateThumbprint')
-        $CreationParams.Remove('CertificatePath')
-        $CreationParams.Remove('CertificatePassword')
-        $CreationParams.Remove('Ensure')
-        $CreationParams.Remove('Name')
-        $CreationParams.Add('Identity', $Name)
+        $CreationParams.Remove('Credential') | Out-Null
+        $CreationParams.Remove('ApplicationId') | Out-Null
+        $CreationParams.Remove('TenantId') | Out-Null
+        $CreationParams.Remove('CertificateThumbprint') | Out-Null
+        $CreationParams.Remove('CertificatePath') | Out-Null
+        $CreationParams.Remove('CertificatePassword') | Out-Null
+        $CreationParams.Remove('Ensure') | Out-Null
+        $CreationParams.Remove('Name') | Out-Null
+        $CreationParams.Add('Identity', $Name) | Out-Null
+        $CreationParams.Remove('AccessTokens') | Out-Null
 
         # SharePoint Location is specified or already existing, we need to determine
         # the delta.
@@ -854,7 +865,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -915,7 +930,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
         -InboundParameters $PSBoundParameters `

@@ -2,16 +2,25 @@
 
 # UNRELEASED
 
+* AADGroup
+  * Fixes #4596
 * AADGroupSettings
   * Added support for parameter NewUnifiedGroupWritebackDefault
+* EXOManagementRoleEntry
+  * Initial Rrelease
 * SCAutoSensitivityLabelPolicy
   * Fix incorrect mandatory Credential parameter in Set and Test methods
     FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Add missing properties from templates
+  * Update setting handling so that the value is reverted to default when unset
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fixed an issue where the payload of xml files was not encoded as base64.
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
   * Fixed a creation and update issue when the exported policy contains a
     onboarding blob and the tenant is connected to Defender for Endpoint Service.
+* SPOSharingSettings
+  * Changed logic to retrieve my site for sovereign clouds.
 * TeamsGroupPolicyAssignment
   * Add missing policy type TeamsVerticalPackagePolicy
     FIXES [#4647](https://github.com/microsoft/Microsoft365DSC/issues/4647)
@@ -23,8 +32,11 @@
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.182.
 * MISC
   * Added support for Access Tokens across AAD resources.
+  * Added support for Access Tokens across SC resources.
+  * Added support for Access Tokens across SPO resources.
   * Added support for Access Tokens across Teams resources.
   * Fixing fake passwords in Unit Tests.
+  * Added ability to configure Telemetry client by ConnectionString.
 
 # 1.24.424.1
 

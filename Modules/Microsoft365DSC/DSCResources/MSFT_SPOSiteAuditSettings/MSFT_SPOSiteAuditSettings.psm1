@@ -42,7 +42,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
@@ -85,6 +89,7 @@ function Get-TargetResource
             CertificatePath       = $CertificatePath
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
     }
     catch
@@ -147,7 +152,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting Audit settings for {$Url}"
@@ -223,7 +232,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -289,7 +302,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -348,6 +365,7 @@ function Export-TargetResource
                     CertificateThumbprint = $CertificateThumbprint
                     Managedidentity       = $ManagedIdentity.IsPresent
                     Credential            = $Credential
+                    AccessTokens          = $AccessTokens
                 }
 
                 $Results = Get-TargetResource @params

@@ -14,5 +14,5 @@ class MSFT_SPOApp : OMI_BaseResource
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };
-
