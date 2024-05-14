@@ -755,6 +755,10 @@ function Set-TargetResource
     $SetParameters.Remove('ManagedIdentity') | Out-Null
     $SetParameters.Remove('Verbose') | Out-Null # Needs to be implicitly removed for the cmdlet to work
     $SetParameters.Remove('AccessTokens') | Out-Null
+    if ($AllowCloudRecording -eq $false -and $SetParameters.Keys -contains 'AllowRecordingStorageOutsideRegion')
+    {
+        $SetParameters.Remove('AllowRecordingStorageOutsideRegion') | Out-Null
+    }
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -1134,6 +1138,11 @@ function Test-TargetResource
 
     # The AllowUserToJoinExternalMeeting doesn't do anything based on official documentation
     $ValuesToCheck.Remove('AllowUserToJoinExternalMeeting') | Out-Null
+
+    if ($AllowCloudRecording -eq $false -and $ValuesToCheck.Keys -contains 'AllowRecordingStorageOutsideRegion')
+    {
+        $ValuesToCheck.Remove('AllowRecordingStorageOutsideRegion') | Out-Null
+    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

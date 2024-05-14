@@ -19,6 +19,11 @@
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
   * Fixed a creation and update issue when the exported policy contains a
     onboarding blob and the tenant is connected to Defender for Endpoint Service.
+<<<<<<< fix4653
+* TeamsMeetingPolicy
+  * Fix creation and set of resource when cloud recording is set to false (off)
+    FIXES [#4653](https://github.com/microsoft/Microsoft365DSC/issues/4653)
+=======
 * SPOSharingSettings
   * Remove properties from being tested in certain conditions
     FIXES [#4649](https://github.com/microsoft/Microsoft365DSC/issues/4649)
@@ -30,6 +35,7 @@
   * Remove unnecessary parameters from PSBoundParameters such as authentication
     methods, Ensure and Verbose by calling Remove-M365DSCAuthenticationParameter
     FIXES [#4651](https://github.com/microsoft/Microsoft365DSC/issues/4651)
+>>>>>>> Dev
 * M365DSCUtil
   * Fixed an issue where one could not pass empty arrays to the
     `Compare-PSCustomObjectArrays` function.
