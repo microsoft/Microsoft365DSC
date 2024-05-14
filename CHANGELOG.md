@@ -26,6 +26,10 @@
 * TeamsGroupPolicyAssignment
   * Add missing policy type TeamsVerticalPackagePolicy
     FIXES [#4647](https://github.com/microsoft/Microsoft365DSC/issues/4647)
+* TeamsUpdateManagementPolicy
+  * Remove unnecessary parameters from PSBoundParameters such as authentication
+    methods, Ensure and Verbose by calling Remove-M365DSCAuthenticationParameter
+    FIXES [#4651](https://github.com/microsoft/Microsoft365DSC/issues/4651)
 * M365DSCUtil
   * Fixed an issue where one could not pass empty arrays to the
     `Compare-PSCustomObjectArrays` function.
