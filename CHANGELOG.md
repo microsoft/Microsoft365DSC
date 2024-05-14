@@ -11,6 +11,9 @@
 * SCAutoSensitivityLabelPolicy
   * Fix incorrect mandatory Credential parameter in Set and Test methods
     FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Add missing properties from templates
+  * Update setting handling so that the value is reverted to default when unset
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fixed an issue where the payload of xml files was not encoded as base64.
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
