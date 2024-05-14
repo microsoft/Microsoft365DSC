@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.515.1
 
 * AADActivityBasedTimeoutPolicy
   * Initial release, set the azure portal and default Timeout.
