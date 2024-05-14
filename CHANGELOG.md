@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADActivityBasedTimeoutPolicy
+  * Initial release, set the azure portal and default Timeout.
 * AADGroup
   * Fixes #4596
 * AADGroupSettings
