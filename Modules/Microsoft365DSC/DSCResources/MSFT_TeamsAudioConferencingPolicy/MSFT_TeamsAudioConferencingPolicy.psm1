@@ -75,7 +75,7 @@ function Get-TargetResource
         $results = @{
             Identity                  = $instance.Identity
             AllowTollFreeDialin       = $instance.AllowTollFreeDialin
-            MeetingInvitePhoneNumbers = $instance.MeetingInvitePhoneNumbers
+            MeetingInvitePhoneNumbers = $instance.MeetingInvitePhoneNumbers -join ','
             Ensure                    = 'Present'
             Credential                = $Credential
             ApplicationId             = $ApplicationId
@@ -170,6 +170,11 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('AccessTokens') | Out-Null
+
+    if (![String]::IsNullOrEmpty($MeetingInvitePhoneNumbers))
+    {
+        [String[]]$MeetingInvitePhoneNumbers = $MeetingInvitePhoneNumbers.Split(',')
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {

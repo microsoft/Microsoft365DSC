@@ -28,6 +28,11 @@
     ExcludeRestrictedSiteClassifications needed to be changed but the latter got
     the value of the former instead of the correct one
     FIXES [#4658](https://github.com/microsoft/Microsoft365DSC/issues/4658)
+* TeamsAudioConferencingPolicy
+  * Fix export and creation/set of this resource by converting a string array
+    into a comma-separated string and a comma-separated string into a string
+    array respectively
+    FIXES [#4655](https://github.com/microsoft/Microsoft365DSC/issues/4655)
 * TeamsMeetingPolicy
   * Fix creation and set of resource when cloud recording is set to false (off)
     FIXES [#4653](https://github.com/microsoft/Microsoft365DSC/issues/4653)
