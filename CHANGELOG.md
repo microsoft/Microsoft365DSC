@@ -28,8 +28,9 @@
   * Fixed an issue where one could not pass empty arrays to the
     `Compare-PSCustomObjectArrays` function.
 * DEPENDENCIES
-  * Updated Microsoft.Graph to version 2.18.0.
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.182.
+  * Updated DSCParser to version 2.0.0.4.
+  * Updated Microsoft.Graph to version 2.19.0.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.187.
 * MISC
   * Added support for Access Tokens across AAD resources.
   * Added support for Access Tokens across SC resources.
