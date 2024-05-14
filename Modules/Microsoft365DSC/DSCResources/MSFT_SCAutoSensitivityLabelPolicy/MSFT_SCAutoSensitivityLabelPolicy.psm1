@@ -128,7 +128,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Auto sensitivity Label Policy for $Name"
@@ -209,6 +213,7 @@ function Get-TargetResource
                 CertificateThumbprint             = $CertificateThumbprint
                 CertificatePath                   = $CertificatePath
                 CertificatePassword               = $CertificatePassword
+                AccessTokens                      = $AccessTokens
             }
 
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -356,7 +361,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Sensitivity label policy for $Name"
@@ -401,6 +410,7 @@ function Set-TargetResource
         $CreationParams.Remove('CertificateThumbprint') | Out-Null
         $CreationParams.Remove('ManagedIdentity') | Out-Null
         $CreationParams.Remove('ApplicationSecret') | Out-Null
+        $CreationParams.Remove('AccessTokens') | Out-Null
 
         Write-Verbose "Creating new Auto Sensitivity label policy $Name."
 
@@ -436,6 +446,7 @@ function Set-TargetResource
             $SetParams.Remove('CertificateThumbprint') | Out-Null
             $SetParams.Remove('ManagedIdentity') | Out-Null
             $SetParams.Remove('ApplicationSecret') | Out-Null
+            $SetParams.Remove('AccessTokens') | Out-Null
 
             Set-AutoSensitivityLabelPolicy @SetParams -Identity $Name
         }
@@ -467,6 +478,7 @@ function Set-TargetResource
         $SetParams.Remove('CertificateThumbprint') | Out-Null
         $SetParams.Remove('ManagedIdentity') | Out-Null
         $SetParams.Remove('ApplicationSecret') | Out-Null
+        $SetParams.Remove('AccessTokens') | Out-Null
 
         try
         {
@@ -623,7 +635,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #region Telemetry
@@ -639,16 +655,6 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
     $ValuesToCheck = $PSBoundParameters
-
-    # Remove authentication parameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     if ($null -ne $RemoveExchangeLocation -or $null -ne $AddExchangeLocation -or $null -ne $ExchangeLocation)
     {
@@ -792,7 +798,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `
