@@ -307,7 +307,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of DLPCompliancePolicy for $Name"
@@ -461,6 +465,7 @@ function Get-TargetResource
                 CertificateThumbprint                        = $CertificateThumbprint
                 CertificatePath                              = $CertificatePath
                 CertificatePassword                          = $CertificatePassword
+                AccessTokens                                 = $AccessTokens
             }
 
             $paramsToRemove = @()
@@ -801,7 +806,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of DLPComplianceRule for $Name"
@@ -872,7 +881,7 @@ function Set-TargetResource
         $CreationParams.Remove('CertificateThumbprint') | Out-Null
         $CreationParams.Remove('ManagedIdentity') | Out-Null
         $CreationParams.Remove('ApplicationSecret') | Out-Null
-
+        $CreationParams.Remove('AccessTokens') | Out-Null
 
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         New-DLPComplianceRule @CreationParams
@@ -930,6 +939,7 @@ function Set-TargetResource
         $UpdateParams.Remove('CertificateThumbprint') | Out-Null
         $UpdateParams.Remove('ManagedIdentity') | Out-Null
         $UpdateParams.Remove('ApplicationSecret') | Out-Null
+        $UpdateParams.Remove('AccessTokens') | Out-Null
 
         Write-Verbose "Updating Rule with values: $(Convert-M365DscHashtableToString -Hashtable $UpdateParams)"
         Set-DLPComplianceRule @UpdateParams
@@ -1250,7 +1260,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1271,16 +1285,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-
-    # Remove authentication parameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     #region Test Sensitive Information Type
     # For each Desired SIT check to see if there is an existing rule with the same name
@@ -1367,7 +1371,11 @@ function Export-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $CertificatePassword
+        $CertificatePassword,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'SecurityComplianceCenter' `

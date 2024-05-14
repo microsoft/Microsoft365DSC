@@ -90,6 +90,14 @@ function Get-TargetResource
         [System.int32]
         $avgcpuloadfactor,
 
+        [Parameter]
+        [System.Int32]
+        $archivemaxdepth,
+
+        [Parameter]
+        [System.Int32]
+        $archivemaxsize,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -243,6 +251,11 @@ function Get-TargetResource
         $engineupdateschannel,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $meteredconnectionupdates,
+
+        [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
         $platformupdateschannel,
@@ -274,6 +287,21 @@ function Get-TargetResource
         [Parameter()]
         [System.Int32]
         $schedulescantime,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabletlsparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $randomizescheduletasktimes,
+
+        [Parameter()]
+        [ValidateRange(1,23)]
+        [System.Int32]
+        $schedulerrandomizationtime,
 
         [Parameter()]
         [System.String[]]
@@ -600,6 +628,14 @@ function Set-TargetResource
         [System.int32]
         $avgcpuloadfactor,
 
+        [Parameter]
+        [System.Int32]
+        $archivemaxdepth,
+
+        [Parameter]
+        [System.Int32]
+        $archivemaxsize,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -753,6 +789,11 @@ function Set-TargetResource
         $engineupdateschannel,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $meteredconnectionupdates,
+
+        [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
         $platformupdateschannel,
@@ -784,6 +825,21 @@ function Set-TargetResource
         [Parameter()]
         [System.Int32]
         $schedulescantime,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabletlsparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $randomizescheduletasktimes,
+
+        [Parameter()]
+        [ValidateRange(1,23)]
+        [System.Int32]
+        $schedulerrandomizationtime,
 
         [Parameter()]
         [System.String[]]
@@ -1062,6 +1118,14 @@ function Test-TargetResource
         [System.int32]
         $avgcpuloadfactor,
 
+        [Parameter]
+        [System.Int32]
+        $archivemaxdepth,
+
+        [Parameter]
+        [System.Int32]
+        $archivemaxsize,
+
         [Parameter()]
         [ValidateSet('0', '1')]
         [System.String]
@@ -1215,6 +1279,11 @@ function Test-TargetResource
         $engineupdateschannel,
 
         [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $meteredconnectionupdates,
+
+        [Parameter()]
         [ValidateSet('0', '2', '3', '4', '5', '6')]
         [System.String]
         $platformupdateschannel,
@@ -1246,6 +1315,21 @@ function Test-TargetResource
         [Parameter()]
         [System.Int32]
         $schedulescantime,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $disabletlsparsing,
+
+        [Parameter()]
+        [ValidateSet('0', '1')]
+        [System.String]
+        $randomizescheduletasktimes,
+
+        [Parameter()]
+        [ValidateRange(1,23)]
+        [System.Int32]
+        $schedulerrandomizationtime,
 
         [Parameter()]
         [System.String[]]
@@ -1369,15 +1453,45 @@ function Test-TargetResource
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    [Hashtable]$ValuesToCheck = @{}
+    $MyInvocation.MyCommand.Parameters.GetEnumerator() | ForEach-Object {
+        if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))
+        {
+            if ($null -ne $CurrentValues[$_.Key] -or $null -ne $PSBoundParameters[$_.Key])
+            {
+                $ValuesToCheck.Add($_.Key, $null)
+                if (-not $PSBoundParameters.ContainsKey($_.Key))
+                {
+                    $value = $null
+                    switch ($CurrentValues[$_.Key].GetType().Name)
+                    {
+                        'String'
+                        {
+                            $value = ''
+                        }
+                        'Int32'
+                        {
+                            $value = 0
+                        }
+                        'String[]'
+                        {
+                            $value = @()
+                        }
+                    }
+                    $PSBoundParameters.Add($_.Key, $value)
+                }
+            }
+        }
+    }
     $ValuesToCheck.Remove('Identity') | Out-Null
+
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     $testResult = $true
     if ($CurrentValues.Ensure -ne $Ensure)
     {
         $testResult = $false
     }
-
 
     #region Assignments
     if ($testResult)
