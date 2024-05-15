@@ -397,6 +397,8 @@ function Get-M365DSCTelemetryOption
                     [System.EnvironmentVariableTarget]::Machine)
             ProjectName        = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryProjectName', `
                     [System.EnvironmentVariableTarget]::Machine)
+            ConnectionString   = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryConnectionString', `
+                    [System.EnvironmentVariableTarget]::Machine)
         }
     }
     catch

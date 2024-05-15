@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.24.515.2
+
+* EXOManagementRoleEntry
+  * Added support for the WebSite type.
+
 # 1.24.515.1
 
 * AADActivityBasedTimeoutPolicy
