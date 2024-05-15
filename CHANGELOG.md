@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.515.2
 
 * EXOManagementRoleEntry
   * Added support for the WebSite type.
