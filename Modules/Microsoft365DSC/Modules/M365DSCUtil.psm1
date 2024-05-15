@@ -437,12 +437,10 @@ function Compare-PSCustomObjectArrays
     param
     (
         [Parameter(Mandatory = $true)]
-        [AllowEmptyCollection()]
         [System.Object[]]
         $DesiredValues,
 
         [Parameter(Mandatory = $true)]
-        [AllowEmptyCollection()]
         [System.Object[]]
         $CurrentValues
     )
@@ -3461,6 +3459,10 @@ function Get-M365DSCExportContentForResource
     elseif ($Keys.Contains('Id'))
     {
         $primaryKey = $Results.Id
+    }
+    elseif ($Keys.Contains('CDNType'))
+    {
+        $primaryKey = $Results.CDNType
     }
 
     if ([String]::IsNullOrEmpty($primaryKey) -and `
