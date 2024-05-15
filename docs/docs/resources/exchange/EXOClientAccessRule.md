@@ -26,6 +26,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -65,7 +66,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -87,7 +88,74 @@ Configuration Example
             ExceptAnyOfClientIPAddressesOrRanges = @()
             AnyOfClientIPAddressesOrRanges       = @()
             Ensure                               = "Present"
-            Credential                           = $GlobalAdmin
+            Credential                           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOClientAccessRule 'ConfigureClientAccessRule'
+        {
+            Action                               = "AllowAccess"
+            UserRecipientFilter                  = $null
+            ExceptAnyOfAuthenticationTypes       = @()
+            ExceptUsernameMatchesAnyOfPatterns   = @()
+            AnyOfAuthenticationTypes             = @()
+            UsernameMatchesAnyOfPatterns         = @()
+            Identity                             = "Always Allow Remote PowerShell"
+            Priority                             = 1
+            AnyOfProtocols                       = @("RemotePowerShell")
+            Enabled                              = $False # Updated Property
+            ExceptAnyOfProtocols                 = @()
+            ExceptAnyOfClientIPAddressesOrRanges = @()
+            AnyOfClientIPAddressesOrRanges       = @()
+            Ensure                               = "Present"
+            Credential                           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOClientAccessRule 'ConfigureClientAccessRule'
+        {
+            Action                               = "AllowAccess"
+            Identity                             = "Always Allow Remote PowerShell"
+            Ensure                               = "Absent"
+            Credential                           = $Credscredential
         }
     }
 }

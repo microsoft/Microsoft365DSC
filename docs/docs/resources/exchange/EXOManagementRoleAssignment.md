@@ -24,6 +24,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -60,6 +61,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOManagementRoleAssignment 'AssignManagementRole'
@@ -68,7 +70,67 @@ Configuration Example
             Ensure               = "Present";
             Name                 = "MyManagementRoleAssignment";
             Role                 = "UserApplication";
-            User                 = "John.Smith";
+            User                 = "AdeleV@$Domain";
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOManagementRoleAssignment 'AssignManagementRole'
+        {
+            Credential           = $credsCredential;
+            Ensure               = "Present";
+            Name                 = "MyManagementRoleAssignment";
+            Role                 = "UserApplication";
+            User                 = "AlexW@$Domain"; # Updated Property
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOManagementRoleAssignment 'AssignManagementRole'
+        {
+            Credential           = $credsCredential;
+            Ensure               = "Absent";
+            Name                 = "MyManagementRoleAssignment";
+            Role                 = "UserApplication";
+            User                 = "AlexW@$Domain"; # Updated Property
         }
     }
 }

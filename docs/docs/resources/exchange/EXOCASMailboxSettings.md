@@ -47,6 +47,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -80,11 +81,12 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOCASMailboxSettings 'AdeleVCasMailboxSettings'
@@ -93,11 +95,11 @@ Configuration Example
             ActiveSyncBlockedDeviceIDs              = @()
             ActiveSyncDebugLogging                  = $False
             ActiveSyncEnabled                       = $True
-            ActiveSyncMailboxPolicy                 = 'Demo EXO Mobile Device Policy Default'
+            ActiveSyncMailboxPolicy                 = 'Default'
             ActiveSyncSuppressReadReceipt           = $False
             EwsEnabled                              = $True
-            Identity                                = 'AdeleV'
-            ImapEnabled                             = $False
+            Identity                                = "admin@$Domain"
+            ImapEnabled                             = $True # Updated Property
             ImapForceICalForCalendarRetrievalOption = $False
             ImapMessagesRetrievalMimeFormat         = 'BestBodyFormat'
             ImapSuppressReadReceipt                 = $False
@@ -107,7 +109,7 @@ Configuration Example
             OutlookMobileEnabled                    = $True
             OWAEnabled                              = $True
             OWAforDevicesEnabled                    = $True
-            OwaMailboxPolicy                        = 'OwaMailboxPolicy-Default'
+            OwaMailboxPolicy                        = 'OwaMailboxPolicy-Integration'
             PopEnabled                              = $False
             PopForceICalForCalendarRetrievalOption  = $True
             PopMessagesRetrievalMimeFormat          = 'BestBodyFormat'
@@ -117,7 +119,7 @@ Configuration Example
             ShowGalAsDefaultView                    = $True
             UniversalOutlookEnabled                 = $True
             Ensure                                  = 'Present'
-            Credential                              = $credsGlobalAdmin
+            Credential                              = $Credscredential
         }
     }
 }

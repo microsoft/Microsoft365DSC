@@ -4,6 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
+| **Id** | Write | String | Key of the entity. Read-Only. | |
 | **DisplayName** | Key | String | Display name of the app configuration policy. | |
 | **Description** | Write | String | Description of the app configuration policy. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Assignments of the Intune Policy. | |
@@ -15,6 +16,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -26,6 +28,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_IntuneAppConfigurationPolicyCustomSetting
@@ -52,7 +55,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementApps.Read.All
+    - Group.Read.All, DeviceManagementApps.Read.All
 
 - **Update**
 
@@ -62,7 +65,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementApps.Read.All
+    - Group.Read.All, DeviceManagementApps.Read.All
 
 - **Update**
 
@@ -80,7 +83,87 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
+        {
+            DisplayName          = 'ContosoNew'
+            Description          = 'New Contoso Policy'
+            Credential           = $Credscredential;
+            CustomSettings       = @(
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'com.microsoft.intune.mam.managedbrowser.BlockListURLs'
+                    value = 'https://www.aol.com'
+                }
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'com.microsoft.intune.mam.managedbrowser.bookmarks'
+                    value = 'Outlook Web|https://outlook.office.com||Bing|https://www.bing.com'
+                }
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'Test'
+                    value = 'TestValue'
+                });
+            Ensure      = 'Present'
+        }
+    }
+}
+```
+
+### Example 2
+
+This example creates a new App Configuration Policy.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
+        {
+            DisplayName          = 'ContosoNew'
+            Description          = 'New Contoso Policy'
+            Credential           = $Credscredential;
+            CustomSettings       = @(
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'com.microsoft.intune.mam.managedbrowser.BlockListURLs'
+                    value = 'https://www.aol.com'
+                }
+                MSFT_IntuneAppConfigurationPolicyCustomSetting {
+                    name  = 'com.microsoft.intune.mam.managedbrowser.bookmarks'
+                    value = 'Outlook Web|https://outlook.office.com||Bing|https://www.bing.com'
+                }
+                MSFT_IntuneAppConfigurationPolicyCustomSetting { # Updated Property
+                    name  = 'Test2'
+                    value = 'TestValue2'
+                });
+            Ensure      = 'Present'
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new App Configuration Policy.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -90,35 +173,8 @@ Configuration Example
         {
             DisplayName = 'ContosoNew'
             Description = 'New Contoso Policy'
-            Ensure      = 'Present'
-            Credential  = $credsGlobalAdmin
-        }
-    }
-}
-```
-
-### Example 2
-
-This example removes an existing App Configuration Policy.
-
-```powershell
-Configuration Example
-{
-    param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsGlobalAdmin
-    )
-    Import-DscResource -ModuleName Microsoft365DSC
-
-    node localhost
-    {
-        IntuneAppConfigurationPolicy 'RemoveAppConfigPolicy'
-        {
-            DisplayName = 'ContosoOld'
-            Description = 'Old Contoso Policy'
+            Credential  = $Credscredential;
             Ensure      = 'Absent'
-            Credential  = $credsGlobalAdmin
         }
     }
 }

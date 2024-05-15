@@ -7,13 +7,14 @@
 | **IsSingleInstance** | Key | String | Only valid value is 'Yes'. | `Yes` |
 | **DisplayName** | Write | String | The name of the policy. | |
 | **AllowedCloudEndpoints** | Write | StringArray[] | Used to specify which Microsoft clouds an organization would like to collaborate with. By default, this value is empty. | `microsoftonline.com`, `microsoftonline.us`, `partner.microsoftonline.cn` |
-| **Ensure** | Write | String | Specify if the policy should exist or not. | `Present`, `Absent` |
+| **Ensure** | Write | String | Specify if the policy should exist or not. | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 ## Description

@@ -16,6 +16,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -49,7 +50,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -59,10 +60,72 @@ Configuration Example
         {
             Identity             = "ContosoPhone(DeviceOS)"
             Characteristic       = "DeviceOS"
+            QueryString          = "iOS 6.1 10B146"
+            AccessLevel          = "Allow"
+            Ensure               = "Present"
+            Credential           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOActiveSyncDeviceAccessRule 'ConfigureActiveSyncDeviceAccessRule'
+        {
+            Identity             = "ContosoPhone(DeviceOS)"
+            Characteristic       = "DeviceModel" # Updated Property
             QueryString          = "iOS 6.1 10B145"
             AccessLevel          = "Allow"
             Ensure               = "Present"
-            Credential           = $credsGlobalAdmin
+            Credential           = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOActiveSyncDeviceAccessRule 'ConfigureActiveSyncDeviceAccessRule'
+        {
+            Identity             = "ContosoPhone(DeviceOS)"
+            Characteristic       = "DeviceModel" # Updated Property
+            QueryString          = "iOS 6.1 10B145"
+            AccessLevel          = "Allow"
+            Ensure               = "Present"
+            Credential           = $Credscredential
         }
     }
 }

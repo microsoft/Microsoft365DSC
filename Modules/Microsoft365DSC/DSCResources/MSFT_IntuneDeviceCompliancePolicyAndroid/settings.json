@@ -1,10 +1,13 @@
 {
-    "resourceName": "IntuneAndroidDeviceCompliancePolicy",
+    "resourceName": "IntuneDeviceCompliancePolicyAndroid",
     "description": "This resource configures the settings of Android device compliance policies in your cloud-based organization.",
     "permissions": {
         "graph": {
             "delegated": {
                 "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
                     {
                         "name": "DeviceManagementConfiguration.Read.All"
                     }
@@ -17,6 +20,9 @@
             },
             "application": {
                 "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
                     {
                         "name": "DeviceManagementConfiguration.Read.All"
                     }

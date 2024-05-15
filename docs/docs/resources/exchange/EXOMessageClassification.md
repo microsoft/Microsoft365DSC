@@ -21,6 +21,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -54,7 +55,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -71,7 +72,72 @@ Configuration Example
             SenderDescription           = "Shown to senders"
             RetainClassificationEnabled = $True
             Ensure                      = "Present"
-            Credential                  = $credsGlobalAdmin
+            Credential                  = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOMessageClassification 'ConfigureMessageClassification'
+        {
+            Identity                    = "Contoso Message Classification"
+            Name                        = "Contoso Message Classification"
+            DisplayName                 = "Contoso Message Classification"
+            DisplayPrecedence           = "Highest"
+            PermissionMenuVisible       = $True
+            RecipientDescription        = "Shown to receipients"
+            SenderDescription           = "Shown to senders"
+            RetainClassificationEnabled = $False # Updated Property
+            Ensure                      = "Present"
+            Credential                  = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOMessageClassification 'ConfigureMessageClassification'
+        {
+            Identity                    = "Contoso Message Classification"
+            Name                        = "Contoso Message Classification"
+            DisplayName                 = "Contoso Message Classification"
+            Ensure                      = "Absent"
+            Credential                  = $Credscredential
         }
     }
 }

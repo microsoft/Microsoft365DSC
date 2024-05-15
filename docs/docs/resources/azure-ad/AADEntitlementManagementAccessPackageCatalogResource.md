@@ -23,6 +23,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_MicrosoftGraphaccesspackageresourceattribute
 
@@ -141,7 +142,77 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
+        {
+            DisplayName         = 'Human Resources'
+            CatalogId           = 'My Catalog'
+            Description         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+            IsPendingOnboarding = $true
+            OriginId            = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+            OriginSystem        = 'SharePointOnline'
+            ResourceType        = 'SharePoint Online Site'
+            Url                 = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+            Ensure              = 'Present'
+            Credential          = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
+        {
+            DisplayName         = 'Human Resources'
+            CatalogId           = 'My Catalog'
+            Description         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+            IsPendingOnboarding = $false # Updated Property
+            OriginId            = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+            OriginSystem        = 'SharePointOnline'
+            ResourceType        = 'SharePoint Online Site'
+            Url                 = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+            Ensure              = 'Present'
+            Credential          = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -149,19 +220,9 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
-            Id                  = 'a694d6c3-57cb-4cb1-b32b-07bf1325df8e'
             DisplayName         = 'Communication site'
-            AddedBy             = 'admin@contoso.onmicrosoft.com'
-            AddedOn             = '05/11/2022 16:21:15'
-            CatalogId           = 'f34c2d92-9e9d-4703-ba9b-955b6ac8dcb3'
-            Description         = 'https://contoso.sharepoint.com/'
-            IsPendingOnboarding = $False
-            OriginId            = 'https://contoso.sharepoint.com/'
-            OriginSystem        = 'SharePointOnline'
-            ResourceType        = 'SharePoint Online Site'
-            Url                 = 'https://contoso.sharepoint.com/'
-            Ensure              = 'Present'
-            Credential          = $credsGlobalAdmin
+            Ensure              = 'Absent'
+            Credential          = $Credscredential
         }
     }
 }

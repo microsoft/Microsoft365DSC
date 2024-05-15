@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString 'Pass@word1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             #Mock -CommandName Update-M365DSCExportAuthenticationResults -MockWith {
@@ -68,6 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                            = 'Present'
                     DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                     Credential                        = $Credential
+                    Priority                          = 1
                     IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
                             platformBlocked                 = $False
                             personalDeviceEnrollmentBlocked = $False
@@ -76,6 +77,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
                     return $null
+                }
+
+                Mock -CommandName New-MgBetaDeviceManagementDeviceEnrollmentConfiguration -MockWith {
+                    return @{
+                        AdditionalProperties              = @{
+                            '@odata.type'       = '#microsoft.graph.deviceEnrollmentPlatformRestrictionConfiguration'
+                            PlatformRestriction = @{
+                                PersonalDeviceEnrollmentBlocked = $False
+                                PlatformBlocked                 = $False
+                            }
+                            platformType        = 'ios'
+                        }
+                        id                                = '12345-12345-12345-12345-12345_SinglePlatformRestriction'
+                        DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
+                        Description                       = ''
+                        DisplayName                       = 'My DSC Restriction'
+                        Priority                          = 1
+                    }
                 }
             }
 
@@ -102,6 +121,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                            = 'Present'
                     DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                     Credential                        = $Credential
+                    Priority                          = 1
                     IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
                             platformBlocked                 = $False
                             personalDeviceEnrollmentBlocked = $False
@@ -122,6 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                         Description                       = ''
                         DisplayName                       = 'My DSC Restriction'
+                        Priority                          = 1
                     }
                 }
             }
@@ -140,7 +161,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                            = 'Present'
                     DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                     Credential                        = $Credential
-                    iOSRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                    Priority                          = 1
+                    IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
                             platformBlocked                 = $False
                             personalDeviceEnrollmentBlocked = $False
                         } -ClientOnly)
@@ -160,6 +182,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                         Description                       = ''
                         DisplayName                       = 'My DSC Restriction'
+                        Priority                          = 1
                     }
                 }
             }
@@ -178,7 +201,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Ensure                            = 'Absent'
                     DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                     Credential                        = $Credential
-                    iOSRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
+                    Priority                          = 1
+                    IosRestriction                    = (New-CimInstance -ClassName MSFT_DeviceEnrollmentPlatformRestriction -Property @{
                             platformBlocked                 = $False
                             personalDeviceEnrollmentBlocked = $False
                         } -ClientOnly)
@@ -198,6 +222,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                         Description                       = ''
                         DisplayName                       = 'My DSC Restriction'
+                        Priority                          = 1
                     }
                 }
             }
@@ -207,7 +232,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
+                Test-TargetResource @testParams| Should -Be $false
             }
 
             It 'Should remove the restriction from the Set method' {
@@ -238,6 +263,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DeviceEnrollmentConfigurationType = 'singlePlatformRestriction'
                         Description                       = ''
                         DisplayName                       = 'My DSC Restriction'
+                        Priority                          = 1
                     }
                 }
             }

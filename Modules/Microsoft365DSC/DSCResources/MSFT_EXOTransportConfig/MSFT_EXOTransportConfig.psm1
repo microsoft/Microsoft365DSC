@@ -139,7 +139,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting EXOTransportConfig'
@@ -214,6 +218,7 @@ function Get-TargetResource
             CertificatePassword                     = $CertificatePassword
             Managedidentity                         = $ManagedIdentity.IsPresent
             TenantId                                = $TenantId
+            AccessTokens                            = $AccessTokens
         }
 
         return $results
@@ -370,7 +375,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -400,6 +409,7 @@ function Set-TargetResource
     $SetValues.Remove('CertificatePath') | Out-Null
     $SetValues.Remove('CertificatePassword') | Out-Null
     $SetValues.Remove('ManagedIdentity') | Out-Null
+    $SetValues.Remove('AccessTokens') | Out-Null
 
     Set-TransportConfig @SetValues
 }
@@ -545,7 +555,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -618,7 +632,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -648,6 +666,7 @@ function Export-TargetResource
             CertificatePassword   = $CertificatePassword
             Managedidentity       = $ManagedIdentity.IsPresent
             CertificatePath       = $CertificatePath
+            AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params

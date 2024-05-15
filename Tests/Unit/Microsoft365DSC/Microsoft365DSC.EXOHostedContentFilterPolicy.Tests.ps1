@@ -20,7 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -48,6 +48,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
@@ -63,7 +65,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     RedirectToRecipients                 = @()
                     TestModeBccToRecipients              = @()
                     QuarantineRetentionPeriod            = 15
-                    EndUserSpamNotificationFrequency     = 1
                     TestModeAction                       = 'AddXHeader'
                     IncreaseScoreWithImageLinks          = 'Off'
                     IncreaseScoreWithNumericIps          = 'On'
@@ -177,16 +178,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-HostedContentFilterPolicy -MockWith {
                     return @{
-                        Ensure                               = 'Present'
                         Identity                             = 'TestPolicy'
-                        Credential                           = $Credential
                         AdminDisplayName                     = 'This ContentFilter policiy is a test'
                         AddXHeaderValue                      = 'MyCustomSpamHeader'
                         ModifySubjectValue                   = 'SPAM!'
                         RedirectToRecipients                 = @()
                         TestModeBccToRecipients              = @()
                         QuarantineRetentionPeriod            = 15
-                        EndUserSpamNotificationFrequency     = 1
                         TestModeAction                       = 'AddXHeader'
                         IncreaseScoreWithImageLinks          = 'Off'
                         IncreaseScoreWithNumericIps          = 'On'
@@ -209,12 +207,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         HighConfidencePhishAction            = 'Quarantine'
                         HighConfidenceSpamAction             = 'Quarantine'
                         SpamAction                           = 'MoveToJmf'
-                        EnableEndUserSpamNotifications       = $true
                         DownloadLink                         = $false
                         EnableRegionBlockList                = $true
                         EnableLanguageBlockList              = $true
-                        EndUserSpamNotificationCustomSubject = 'This is SPAM'
-                        EndUserSpamNotificationLanguage      = 'Default'
                         BulkThreshold                        = 5
                         AllowedSenders                       = @{
                             Sender = @(

@@ -59,7 +59,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting the Teams Online Voicemail Policy $($Identity)"
@@ -108,6 +116,8 @@ function Get-TargetResource
             ApplicationId                       = $ApplicationId
             TenantId                            = $TenantId
             CertificateThumbprint               = $CertificateThumbprint
+            ManagedIdentity                     = $ManagedIdentity.IsPresent
+            AccessTokens                        = $AccessTokens
         }
     }
     catch
@@ -182,7 +192,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting Teams Online Voicemail Policy'
@@ -210,6 +228,8 @@ function Set-TargetResource
     $SetParameters.Remove('ApplicationId') | Out-Null
     $SetParameters.Remove('TenantId') | Out-Null
     $SetParameters.Remove('CertificateThumbprint') | Out-Null
+    $SetParameters.Remove('ManagedIdentity') | Out-Null
+    $SetParameters.Remove('AccessTokens') | Out-Null
 
     # Convert the MaximumRecordingLength back to a timespan object.
     $timespan = [TimeSpan]$MaximumRecordingLength
@@ -295,7 +315,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -348,7 +376,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -380,6 +416,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

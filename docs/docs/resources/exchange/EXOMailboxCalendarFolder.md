@@ -19,6 +19,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -57,6 +58,7 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOMailboxCalendarFolder "JohnCalendarFolder"
@@ -64,10 +66,10 @@ Configuration Example
             Credential           = $credsCredential;
             DetailLevel          = "AvailabilityOnly";
             Ensure               = "Present";
-            Identity             = "john.smith:\Calendar";
+            Identity             = "AlexW@$Domain" + ":\Calendar";
             PublishDateRangeFrom = "ThreeMonths";
             PublishDateRangeTo   = "ThreeMonths";
-            PublishEnabled       = $False;
+            PublishEnabled       = $True; # Updated Property
             SearchableUrlEnabled = $False;
         }
     }

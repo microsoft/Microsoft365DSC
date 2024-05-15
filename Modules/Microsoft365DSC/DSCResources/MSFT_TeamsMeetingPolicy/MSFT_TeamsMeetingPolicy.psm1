@@ -215,7 +215,7 @@ function Get-TargetResource
         $MediaBitRateKb,
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledExceptAnonymous')]
         [System.String]
         $MeetingChatEnabledType = 'Enabled',
 
@@ -224,7 +224,7 @@ function Get-TargetResource
         $MeetingInviteLanguages,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Int32]
         [ValidateRange(-1, 99999)]
         $NewMeetingRecordingExpirationDays,
 
@@ -295,7 +295,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting the Teams Meeting Policy $($Identity)"
@@ -396,6 +404,8 @@ function Get-TargetResource
             ApplicationId                              = $ApplicationId
             TenantId                                   = $TenantId
             CertificateThumbprint                      = $CertificateThumbprint
+            ManagedIdentity                            = $ManagedIdentity.IsPresent
+            AccessTokens                               = $AccessTokens
         }
     }
     catch
@@ -626,7 +636,7 @@ function Set-TargetResource
         $MediaBitRateKb,
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledExceptAnonymous')]
         [System.String]
         $MeetingChatEnabledType = 'Enabled',
 
@@ -635,7 +645,7 @@ function Set-TargetResource
         $MeetingInviteLanguages,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Int32]
         [ValidateRange(-1, 99999)]
         $NewMeetingRecordingExpirationDays,
 
@@ -706,7 +716,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting Teams Meeting Policy'
@@ -734,7 +752,13 @@ function Set-TargetResource
     $SetParameters.Remove('ApplicationId') | Out-Null
     $SetParameters.Remove('TenantId') | Out-Null
     $SetParameters.Remove('CertificateThumbprint') | Out-Null
+    $SetParameters.Remove('ManagedIdentity') | Out-Null
     $SetParameters.Remove('Verbose') | Out-Null # Needs to be implicitly removed for the cmdlet to work
+    $SetParameters.Remove('AccessTokens') | Out-Null
+    if ($AllowCloudRecording -eq $false -and $SetParameters.Keys -contains 'AllowRecordingStorageOutsideRegion')
+    {
+        $SetParameters.Remove('AllowRecordingStorageOutsideRegion') | Out-Null
+    }
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -994,7 +1018,7 @@ function Test-TargetResource
         $MediaBitRateKb,
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledExceptAnonymous')]
         [System.String]
         $MeetingChatEnabledType = 'Enabled',
 
@@ -1003,7 +1027,7 @@ function Test-TargetResource
         $MeetingInviteLanguages,
 
         [Parameter()]
-        [System.UInt32]
+        [System.Int32]
         [ValidateRange(-1, 99999)]
         $NewMeetingRecordingExpirationDays,
 
@@ -1074,7 +1098,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1103,6 +1135,14 @@ function Test-TargetResource
 
     # The AllowIPVideo is temporarly not working, therefore we won't check the value.
     $ValuesToCheck.Remove('AllowIPVideo') | Out-Null
+
+    # The AllowUserToJoinExternalMeeting doesn't do anything based on official documentation
+    $ValuesToCheck.Remove('AllowUserToJoinExternalMeeting') | Out-Null
+
+    if ($AllowCloudRecording -eq $false -and $ValuesToCheck.Keys -contains 'AllowRecordingStorageOutsideRegion')
+    {
+        $ValuesToCheck.Remove('AllowRecordingStorageOutsideRegion') | Out-Null
+    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1134,7 +1174,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -1166,6 +1214,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

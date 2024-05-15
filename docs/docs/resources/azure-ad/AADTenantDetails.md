@@ -15,6 +15,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 # AAD Tenant Details
 
@@ -59,21 +60,19 @@ It is not meant to use as a production baseline.
 Configuration Example {
     param(
         [System.Management.Automation.PSCredential]
-        $GlobalAdmin
+        $credsCredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node Localhost
     {
-        AADTenantDetails 'Ã‡onfigureTenantDetails'
+        AADTenantDetails 'ConfigureTenantDetails'
         {
             IsSingleInstance                     = 'Yes'
             TechnicalNotificationMails           = "example@contoso.com"
-            SecurityComplianceNotificationPhones = "+1123456789"
-            SecurityComplianceNotificationMails  = "example@contoso.com"
             MarketingNotificationEmails          = "example@contoso.com"
-            Credential                           = $GlobalAdmin
+            Credential                           = $credsCredential
         }
     }
 }

@@ -12,13 +12,14 @@
 | **RegistrationEnforcement** | Write | MSFT_MicrosoftGraphregistrationEnforcement | Enforce registration at sign-in time. This property can be used to remind users to set up targeted authentication methods. | |
 | **SystemCredentialPreferences** | Write | MSFT_MicrosoftGraphsystemCredentialPreferences | Prompt users with their most-preferred credential for multifactor authentication. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_MicrosoftGraphRegistrationEnforcement
 
@@ -56,6 +57,15 @@
 | --- | --- | --- | --- | --- |
 | **Id** | Write | String | The ID of the entity targeted. | |
 | **TargetType** | Write | String | The kind of entity targeted. Possible values are: user, group. | `user`, `group`, `unknownFutureValue` |
+
+### MSFT_MicrosoftGraphExcludeTarget
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **Id** | Write | String | The object identifier of an Azure AD user or group. | |
+| **TargetType** | Write | String | The type of the authentication method target. Possible values are: user, group, unknownFutureValue. | `user`, `group`, `unknownFutureValue` |
 
 ### MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget
 
@@ -118,23 +128,26 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
     {
         AADAuthenticationMethodPolicy "AADAuthenticationMethodPolicy-Authentication Methods Policy"
         {
-            ApplicationId           = $ConfigurationData.NonNodeData.ApplicationId;
-            CertificateThumbprint   = $ConfigurationData.NonNodeData.CertificateThumbprint;
-            Description             = "The tenant-wide policy that controls which authentication methods are allowed in the tenant, authentication method registration requirements, and self-service password reset settings";
             DisplayName             = "Authentication Methods Policy";
             Ensure                  = "Present";
             Id                      = "authenticationMethodsPolicy";
-            PolicyMigrationState    = "preMigration";
-            PolicyVersion           = "1.4";
+            PolicyMigrationState    = "migrationInProgress";
+            PolicyVersion           = "1.5";
             RegistrationEnforcement = MSFT_MicrosoftGraphregistrationEnforcement{
                 AuthenticationMethodsRegistrationCampaign = MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaign{
-                    SnoozeDurationInDays = 1
+                    SnoozeDurationInDays = (Get-Random -Minimum 1 -Maximum 14)
                     IncludeTargets = @(
                         MSFT_MicrosoftGraphAuthenticationMethodsRegistrationCampaignIncludeTarget{
                             TargetedAuthenticationMethod = 'microsoftAuthenticator'
@@ -144,8 +157,8 @@ Configuration Example
                     )
                     State = 'default'
                 }
-                        };
-            TenantId                = $ConfigurationData.NonNodeData.TenantId;
+            };
+            Credential           = $credsCredential;
         }
     }
 }

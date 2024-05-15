@@ -4,7 +4,7 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **Displayname** | Key | String | RuleDefinition Displayname | |
+| **DisplayName** | Key | String | RuleDefinition DisplayName | |
 | **Id** | Write | String | Specifies the RoleId. | |
 | **ActivationMaxDuration** | Write | String | Activation maximum duration (hours). | |
 | **ActivationReqJustification** | Write | Boolean | Require justification on activation (True/False) | |
@@ -44,13 +44,17 @@
 | **EligibleAssignmentAssigneeNotificationDefaultRecipient** | Write | Boolean | Send notifications when eligible members activate this role: Notification to activated user (requestor), default recipient (True/False) | |
 | **EligibleAssignmentAssigneeNotificationAdditionalRecipient** | Write | StringArray[] | Send notifications when eligible members activate this role: Notification to activated user (requestor), additional recipient (UPN) | |
 | **EligibleAssignmentAssigneeNotificationOnlyCritical** | Write | Boolean | Send notifications when eligible members activate this role: Notification to activated user (requestor), only critical Email (True/False) | |
-| **Ensure** | Write | String | Specify if the Azure AD role setting should exist or not. | `Present`, `Absent` |
+| **AuthenticationContextRequired** | Write | Boolean | Authorization context is required (True/False) | |
+| **AuthenticationContextName** | Write | String | Descriptive name of associated authorization context | |
+| **AuthenticationContextId** | Write | String | Authorization context id | |
+| **Ensure** | Write | String | Specify if the Azure AD role setting should exist or not. | `Present` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -97,7 +101,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -107,7 +111,7 @@ Configuration Example
         {
             ActivateApprover                                          = @();
             ActivationMaxDuration                                     = "PT8H";
-            ActivationReqJustification                                = $True;
+            ActivationReqJustification                                = $False; # Updated Property
             ActivationReqMFA                                          = $False;
             ActivationReqTicket                                       = $False;
             ActiveAlertNotificationAdditionalRecipient                = @();
@@ -119,11 +123,9 @@ Configuration Example
             ActiveAssigneeNotificationAdditionalRecipient             = @();
             ActiveAssigneeNotificationDefaultRecipient                = $True;
             ActiveAssigneeNotificationOnlyCritical                    = $False;
-            ApplicationId                                             = $ConfigurationData.NonNodeData.ApplicationId;
             ApprovaltoActivate                                        = $False;
             AssignmentReqJustification                                = $True;
             AssignmentReqMFA                                          = $False;
-            CertificateThumbprint                                     = $ConfigurationData.NonNodeData.CertificateThumbprint;
             Displayname                                               = "Application Administrator";
             ElegibilityAssignmentReqJustification                     = $False;
             ElegibilityAssignmentReqMFA                               = $False;
@@ -144,10 +146,10 @@ Configuration Example
             EligibleAssignmentAssigneeNotificationOnlyCritical        = $False;
             ExpireActiveAssignment                                    = "P180D";
             ExpireEligibleAssignment                                  = "P365D";
-            Id                                                        = "9b895d92-2cd3-44c7-9d02-a6ac2d5ea5c3";
             PermanentActiveAssignmentisExpirationRequired             = $False;
             PermanentEligibleAssignmentisExpirationRequired           = $False;
-            TenantId                                                  = $ConfigurationData.NonNodeData.TenantId;
+            Credential                                                = $Credscredential
+            Ensure                                                    = 'Present'
         }
     }
 }

@@ -28,6 +28,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -39,6 +40,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 
@@ -56,7 +58,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -66,7 +68,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -107,11 +109,79 @@ Configuration Example
             EmailSyncSchedule     = "fifteenMinutes";
             Ensure                = "Present";
             HostName              = "outlook.office365.com";
-            Id                    = "776bcf45-35f7-4436-93fb-7a74828c6477";
             RequireSsl            = $True;
             SyncCalendar          = $True;
             SyncContacts          = $True;
             SyncTasks             = $True;
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationEmailProfilePolicyWindows10 'Example'
+        {
+            AccountName           = "Corp email2";
+            Assignments           = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            );
+            Credential            = $Credscredential;
+            DisplayName           = "email";
+            DurationOfEmailToSync = "unlimited";
+            EmailAddressSource    = "primarySmtpAddress";
+            EmailSyncSchedule     = "fifteenMinutes";
+            Ensure                = "Present";
+            HostName              = "outlook.office365.com";
+            RequireSsl            = $False; # Updated Property
+            SyncCalendar          = $True;
+            SyncContacts          = $True;
+            SyncTasks             = $True;
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationEmailProfilePolicyWindows10 'Example'
+        {
+            Credential            = $Credscredential;
+            DisplayName           = "email";
+            Ensure                = "Absent";
         }
     }
 }

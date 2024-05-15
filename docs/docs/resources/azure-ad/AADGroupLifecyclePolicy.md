@@ -15,6 +15,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -59,7 +60,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -72,7 +73,37 @@ Configuration Example
             GroupLifetimeInDays         = 99
             ManagedGroupTypes           = "Selected"
             Ensure                      = "Present"
-            Credential                  = $credsGlobalAdmin
+            Credential                  = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADGroupLifecyclePolicy 'GroupLifecyclePolicy'
+        {
+            IsSingleInstance            = "Yes"
+            AlternateNotificationEmails = @("john.smith@contoso.com")
+            GroupLifetimeInDays         = 99
+            ManagedGroupTypes           = "Selected"
+            Ensure                      = "Absent"
+            Credential                  = $Credscredential
         }
     }
 }

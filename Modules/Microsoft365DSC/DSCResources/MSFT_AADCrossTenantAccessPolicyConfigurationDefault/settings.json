@@ -1,5 +1,5 @@
 {
-    "resourceName": "AADAuthenticationMethodPolicyConfigurationDefault",
+    "resourceName": "AADCrossTenantAccessPolicyConfigurationDefault",
     "description": "This resource configures an Azure AD Authentication Method Policy Configuration Default.",
     "roles": {
         "read": [

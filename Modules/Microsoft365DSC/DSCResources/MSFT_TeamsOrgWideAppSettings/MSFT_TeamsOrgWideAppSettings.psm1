@@ -45,17 +45,25 @@ function Get-TargetResource
             IsSingleInstance      = 'Yes'
             IsSideloadedAppsInteractionEnabled = $settings.IsSideloadedAppsInteractionEnabled
             Credential                         = $Credential
+            AccessTokens                       = $AccessTokens
         }
     }
     catch
     {
-        Write-Host $Global:M365DSCEmojiRedX
+        if ($_.Exception.Message -like "*Resource not found.*")
+        {
+            Write-Warning -Message "The API doesn't exist for the selected environment."
+        }
+        else
+        {
+            Write-Host $Global:M365DSCEmojiRedX
 
-        New-M365DSCLogEntry -Message 'Error retrieving data:' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+            New-M365DSCLogEntry -Message 'Error retrieving data:' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
 
         return $nullReturn
     }
@@ -77,7 +85,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting Teams Upgrade Configuration'
@@ -100,6 +112,7 @@ function Set-TargetResource
     $SetParameters = $PSBoundParameters
     $SetParameters.Remove('IsSingleInstance') | Out-Null
     $SetParameters.Remove('Credential') | Out-Null
+    $SetParameters.Remove('AccessTokens') | Out-Null
 
     Set-CsTeamsSettingsCustomApp @SetParameters
 }
@@ -121,7 +134,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -162,7 +179,11 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.Management.Automation.PSCredential]
-        $Credential
+        $Credential,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -186,19 +207,23 @@ function Export-TargetResource
         $params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
+            AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 
-        $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                -Results $Results
-        $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-            -ConnectionMode $ConnectionMode `
-            -ModulePath $PSScriptRoot `
-            -Results $Results `
-            -Credential $Credential
-        $dscContent += $currentDSCBlock
-        Save-M365DSCPartialExport -Content $currentDSCBlock `
-            -FileName $Global:PartialExportFileName
+        if ($Results.Ensure -eq 'Present')
+        {
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                    -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+            $dscContent += $currentDSCBlock
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+        }
 
         Write-Host $Global:M365DSCEmojiGreenCheckMark
         return $dscContent

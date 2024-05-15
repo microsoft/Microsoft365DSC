@@ -22,8 +22,9 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
-### MSFT_AADRoleEligibilityScheduleRequestScheduleRange
+### MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange
 
 #### Parameters
 
@@ -112,7 +113,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - RoleEligibilitySchedule.ReadWrite.Directory
+    - RoleEligibilitySchedule.Read.Directory
 
 - **Update**
 
@@ -132,7 +133,91 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        AADRoleEligibilityScheduleRequest "MyRequest"
+        {
+            Action               = "AdminAssign";
+            Credential           = $Credscredential;
+            DirectoryScopeId     = "/";
+            Ensure               = "Present";
+            IsValidationOnly     = $False;
+            Principal            = "AdeleV@$Domain";
+            RoleDefinition       = "Teams Communications Administrator";
+            ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
+                startDateTime             = '2023-09-01T02:40:44Z'
+                expiration                = MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration
+                    {
+                        endDateTime = '2025-10-31T02:40:09Z'
+                        type        = 'afterDateTime'
+                    }
+            };
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        AADRoleEligibilityScheduleRequest "MyRequest"
+        {
+            Action               = "AdminUpdate";
+            Credential           = $Credscredential;
+            DirectoryScopeId     = "/";
+            Ensure               = "Present";
+            IsValidationOnly     = $False;
+            Principal            = "AdeleV@$Domain";
+            RoleDefinition       = "Teams Communications Administrator";
+            ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
+                startDateTime             = '2023-09-01T02:45:44Z' # Updated Property
+                expiration                = MSFT_AADRoleEligibilityScheduleRequestScheduleExpiration
+                    {
+                        endDateTime = '2025-10-31T02:40:09Z'
+                        type        = 'afterDateTime'
+                    }
+            };
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -142,10 +227,10 @@ Configuration Example
         AADRoleEligibilityScheduleRequest "MyRequest"
         {
             Action               = "AdminAssign";
-            Credential           = $credsGlobalAdmin;
+            Credential           = $Credscredential;
             DirectoryScopeId     = "/";
-            Ensure               = "Present";
-            IsValidationOnly     = $False;
+            Ensure               = "Absent";
+            IsValidationOnly     = $True; # Updated Property
             Principal            = "John.Smith@$OrganizationName";
             RoleDefinition       = "Teams Communications Administrator";
             ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {

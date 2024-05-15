@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -16,11 +16,13 @@ Configuration Example
     {
         TeamsGuestMeetingConfiguration 'TeamsGuestMeetingConfiguration'
         {
-            Identity           = "Global"
-            AllowIPVideo       = $True
-            AllowMeetNow       = $True
-            ScreenSharingMode  = "EntireScreen"
-            Credential         = $credsGlobalAdmin
+            Identity                = 'Global'
+            AllowIPVideo            = $true
+            LiveCaptionsEnabledType = 'Disabled'
+            ScreenSharingMode       = 'EntireScreen'
+            AllowMeetNow            = $true
+            AllowTranscription      = $true
+            Credential              = $Credscredential
         }
     }
 }

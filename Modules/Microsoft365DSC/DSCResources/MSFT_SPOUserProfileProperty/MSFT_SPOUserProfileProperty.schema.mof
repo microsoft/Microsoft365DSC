@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-Class MSFT_SPOUserProfilePropertyInstance
+class MSFT_SPOUserProfilePropertyInstance
 {
     [Write, Description("Name of the User Profile Property.")] String Key;
     [Write, Description("Value of the User Profile Property.")] String Value;
@@ -16,4 +16,5 @@ class MSFT_SPOUserProfileProperty : OMI_BaseResource
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

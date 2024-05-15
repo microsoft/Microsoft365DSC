@@ -86,7 +86,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -194,23 +198,16 @@ function Get-TargetResource
             TenantId                               = $TenantId
             ApplicationSecret                      = $ApplicationSecret
             CertificateThumbprint                  = $CertificateThumbprint
-            Managedidentity                        = $ManagedIdentity.IsPresent
+            ManagedIdentity                        = $ManagedIdentity.IsPresent
+            AccessTokens                           = $AccessTokens
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id
+        $rawAssignments = @()
+        $rawAssignments =  Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $Id -All
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        if($null -ne $rawAssignments -and $rawAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {
-                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
-                    })
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $rawAssignments -IncludeDeviceFilter $false
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -314,7 +311,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -330,15 +331,7 @@ function Set-TargetResource
     #endregion
 
     $currentInstance = Get-TargetResource @PSBoundParameters
-
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
-    $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
@@ -360,17 +353,18 @@ function Set-TargetResource
         #region resource generator code
         $CreateParameters.Add("@odata.type", "#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile")
         $policy = New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -BodyParameter $CreateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
+        #endregion
+        #region new Intune assignment management
+        $intuneAssignments = @()
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $intuneAssignments += ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
-
-        if ($policy.id)
+        foreach ($assignment in $intuneAssignments)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/windowsAutopilotDeploymentProfiles'
+            New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
+                -WindowsAutopilotDeploymentProfileId $policy.id `
+                -BodyParameter $assignment
         }
         #endregion
     }
@@ -397,20 +391,49 @@ function Set-TargetResource
         Update-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile  `
             -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
             -BodyParameter $UpdateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
+        #endregion
+        #region new Intune assignment management
+        $currentAssignments = @()
+        $currentAssignments += Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $currentInstance.id
+        $intuneAssignments = @()
+        if($null -ne $Assignments -and $Assignments.count -gt 0)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $intuneAssignments = ConvertTo-IntunePolicyAssignment -Assignments $Assignments
         }
-        Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentInstance.id `
-            -Targets $assignmentsHash `
-            -Repository 'deviceManagement/windowsAutopilotDeploymentProfiles'
+        foreach ($assignment in $intuneAssignments)
+        {
+            if ( $null -eq ($currentAssignments | Where-Object { $_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type' }))
+            {
+                New-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
+                    -WindowsAutopilotDeploymentProfileId $currentInstance.id `
+                    -BodyParameter $assignment
+            }
+            else
+            {
+                $currentAssignments = $currentAssignments | Where-Object { -not($_.Target.AdditionalProperties.groupId -eq $assignment.Target.groupId -and $_.Target.AdditionalProperties."@odata.type" -eq $assignment.Target.'@odata.type') }
+            }
+        }
+        if($currentAssignments.count -gt 0)
+        {
+            foreach ($assignment in $currentAssignments)
+            {
+                Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
+                    -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
+                    -WindowsAutopilotDeploymentProfileAssignmentId $assignment.Id
+            }
+        }
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the Intune Windows Autopilot Deployment Profile Azure AD Hybrid Joined with Id {$($currentInstance.Id)}"
+        $currentAssignments = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment -WindowsAutopilotDeploymentProfileId $currentInstance.Id -All
+        foreach ($assignment in $currentAssignments)
+        {
+            Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfileAssignment `
+                -WindowsAutopilotDeploymentProfileId $currentInstance.Id `
+                -WindowsAutopilotDeploymentProfileAssignmentId $assignment.Id
+        }
         #region resource generator code
         Remove-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -WindowsAutopilotDeploymentProfileId $currentInstance.Id
         #endregion
@@ -505,7 +528,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -524,8 +551,10 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+    $ValuesToCheck.Remove('Id') | Out-Null
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -555,10 +584,7 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -583,6 +609,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -604,7 +634,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -625,8 +659,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile `
-            -All `
+        [array]$getValue = Get-MgBetaDeviceManagementWindowsAutopilotDeploymentProfile -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.activeDirectoryWindowsAutopilotDeploymentProfile' `
@@ -661,6 +694,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -736,7 +770,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

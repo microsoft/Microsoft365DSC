@@ -23,6 +23,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -56,7 +57,70 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOAntiPhishRule 'ConfigureAntiPhishRule'
+        {
+            Identity                  = "Test Rule"
+            AntiPhishPolicy           = "Our Rule"
+            Enabled                   = $True
+            SentToMemberOf            = @("executives@$Domain")
+            Ensure                    = "Present"
+            Credential                = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOAntiPhishRule 'ConfigureAntiPhishRule'
+        {
+            Identity                  = "Test Rule"
+            Comments                  = "This is an updated comment." # Updated Property
+            AntiPhishPolicy           = "Our Rule"
+            Enabled                   = $True
+            SentToMemberOf            = @("executives@$Domain")
+            Ensure                    = "Present"
+            Credential                = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -65,18 +129,9 @@ Configuration Example
         EXOAntiPhishRule 'ConfigureAntiPhishRule'
         {
             Identity                  = "Test Rule"
-            ExceptIfSentToMemberOf    = $null
-            ExceptIfSentTo            = $null
-            SentTo                    = $null
-            ExceptIfRecipientDomainIs = $null
-            Comments                  = $null
             AntiPhishPolicy           = "Our Rule"
-            RecipientDomainIs         = $null
-            Enabled                   = $True
-            SentToMemberOf            = @("msteams_bb15d4@contoso.onmicrosoft.com")
-            Priority                  = 1
-            Ensure                    = "Present"
-            Credential                = $credsGlobalAdmin
+            Ensure                    = "Absent"
+            Credential                = $Credscredential
         }
     }
 }

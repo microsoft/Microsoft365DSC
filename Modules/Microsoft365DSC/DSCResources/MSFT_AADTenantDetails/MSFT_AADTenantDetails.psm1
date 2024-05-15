@@ -46,7 +46,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of AzureAD Tenant Details'
@@ -92,6 +96,7 @@ function Get-TargetResource
                 ApplicationSecret                    = $ApplicationSecret
                 CertificateThumbprint                = $CertificateThumbprint
                 Managedidentity                      = $ManagedIdentity.IsPresent
+                AccessTokens                         = $AccessTokens
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
             return $result
@@ -156,7 +161,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of AzureAD Tenant Details'
@@ -203,9 +212,12 @@ function Set-TargetResource
     {
         $currentParameters.Remove('ManagedIdentity') | Out-Null
     }
+    $currentParameters.Remove('AccessTokens') | Out-Null
     $currentParameters.Add('OrganizationId', $(Get-MgBetaOrganization).Id)
     try
     {
+        Write-Verbose -Message "Calling Update-MGBetaOrganization with parameters:"
+        Write-Verbose -Message "$(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
         Update-MgBetaOrganization @currentParameters
     }
     catch
@@ -262,7 +274,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -281,12 +297,10 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
 
-    Write-Verbose -Message "Target-Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -326,7 +340,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -360,6 +378,7 @@ function Export-TargetResource
             CertificateThumbprint                = $CertificateThumbprint
             ManagedIdentity                      = $ManagedIdentity.IsPresent
             IsSingleInstance                     = 'Yes'
+            AccessTokens                         = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 

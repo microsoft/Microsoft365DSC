@@ -65,6 +65,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -76,6 +77,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphapplistitem
@@ -134,7 +136,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -142,7 +144,6 @@ Configuration Example
     {
         IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator 'myAndroidDeviceAdmin'
         {
-            Id                                       = '4feff881-d635-4e9d-bd07-d1227d1ab230'
             DisplayName                              = 'Android device admin'
             AppsBlockClipboardSharing                = $True
             AppsBlockCopyPaste                       = $True
@@ -199,7 +200,115 @@ Configuration Example
             WebBrowserCookieSettings                 = 'allowAlways'
             WiFiBlocked                              = $False
             Ensure                                   = 'Present'
-            Credential                               = $credsGlobalAdmin
+            Credential                               = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator 'myAndroidDeviceAdmin'
+        {
+            DisplayName                              = 'Android device admin'
+            AppsBlockClipboardSharing                = $True
+            AppsBlockCopyPaste                       = $False # Updated Property
+            AppsBlockYouTube                         = $False
+            Assignments                              = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
+            BluetoothBlocked                         = $True
+            CameraBlocked                            = $True
+            CellularBlockDataRoaming                 = $False
+            CellularBlockMessaging                   = $False
+            CellularBlockVoiceRoaming                = $False
+            CellularBlockWiFiTethering               = $False
+            CompliantAppListType                     = 'appsInListCompliant'
+            CompliantAppsList                        = @(
+                MSFT_MicrosoftGraphAppListitem {
+                    name        = 'customApp'
+                    publisher   = 'google2'
+                    appStoreUrl = 'https://appUrl.com'
+                    appId       = 'com.custom.google.com'
+                }
+            )
+            DateAndTimeBlockChanges                  = $True
+            DeviceSharingAllowed                     = $False
+            DiagnosticDataBlockSubmission            = $False
+            FactoryResetBlocked                      = $False
+            GoogleAccountBlockAutoSync               = $False
+            GooglePlayStoreBlocked                   = $False
+            KioskModeBlockSleepButton                = $False
+            KioskModeBlockVolumeButtons              = $True
+            LocationServicesBlocked                  = $False
+            NfcBlocked                               = $False
+            PasswordBlockFingerprintUnlock           = $False
+            PasswordBlockTrustAgents                 = $False
+            PasswordRequired                         = $True
+            PasswordRequiredType                     = 'numeric'
+            PowerOffBlocked                          = $False
+            RequiredPasswordComplexity               = 'low'
+            ScreenCaptureBlocked                     = $False
+            SecurityRequireVerifyApps                = $False
+            StorageBlockGoogleBackup                 = $False
+            StorageBlockRemovableStorage             = $False
+            StorageRequireDeviceEncryption           = $False
+            StorageRequireRemovableStorageEncryption = $True
+            VoiceAssistantBlocked                    = $False
+            VoiceDialingBlocked                      = $False
+            WebBrowserBlockAutofill                  = $False
+            WebBrowserBlocked                        = $False
+            WebBrowserBlockJavaScript                = $False
+            WebBrowserBlockPopups                    = $False
+            WebBrowserCookieSettings                 = 'allowAlways'
+            WiFiBlocked                              = $False
+            Ensure                                   = 'Present'
+            Credential                               = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator 'myAndroidDeviceAdmin'
+        {
+            DisplayName                              = 'Android device admin'
+            Ensure                                   = 'Absent'
+            Credential                               = $Credscredential
         }
     }
 }

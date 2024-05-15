@@ -149,7 +149,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Checking for the Intune Endpoint Protection Policy {$DisplayName}"
@@ -176,8 +180,10 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
-
+        if (-not [System.String]::IsNullOrEmpty($Identity))
+        {
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
+        }
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Policy {id: '$Identity'} was found"
@@ -264,6 +270,7 @@ function Get-TargetResource
         $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
         $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
         $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        $returnHashtable.Add('AccessTokens', $AccessTokens)
 
         return $returnHashtable
     }
@@ -429,7 +436,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -452,6 +463,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $templateReferenceId = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
     $platforms = 'windows10'
@@ -664,7 +676,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -686,11 +702,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Identity') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Identity') | Out-Null
 
     $testResult = $true
@@ -789,7 +800,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -813,9 +828,7 @@ function Export-TargetResource
     try
     {
         $policyTemplateID = '5dd36540-eb22-4e7e-b19c-2a07772ba627_1'
-        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -All:$true `
-            -Filter $Filter `
+        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All:$true `
             -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateID } `
 
         if ($policies.Length -eq 0)
@@ -840,6 +853,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @params
@@ -891,7 +905,8 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
+            $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
+            $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -957,7 +972,10 @@ function Get-IntuneSettingCatalogPolicySetting
             -SettingValueName $settingValueName `
             -SettingValueType $settingValueType `
             -SettingValueTemplateId $settingValueTemplateId
-        $settingInstance += ($settingValue)
+        if ($null -ne $settingValue)
+        {
+            $settingInstance += [Hashtable]$settingValue
+        }
 
         $settingInstances += @{
             '@odata.type'     = '#microsoft.graph.deviceManagementConfigurationSetting'

@@ -8,6 +8,8 @@
 | **Id** | Write | String | Specifies the GUID for the Policy. | |
 | **State** | Write | String | Specifies the State of the Policy. | `disabled`, `enabled`, `enabledForReportingButNotEnforced` |
 | **IncludeApplications** | Write | StringArray[] | Cloud Apps in scope of the Policy. | |
+| **ApplicationsFilter** | Write | String | Rule syntax is similar to that used for membership rules for groups in Microsoft Entra ID. | |
+| **ApplicationsFilterMode** | Write | String | Mode to use for the filter. Possible values are include or exclude. | `include`, `exclude` |
 | **ExcludeApplications** | Write | StringArray[] | Cloud Apps out of scope of the Policy. | |
 | **IncludeUserActions** | Write | StringArray[] | User Actions in scope of the Policy. | |
 | **IncludeUsers** | Write | StringArray[] | Users in scope of the Policy. | |
@@ -41,9 +43,11 @@
 | **CustomAuthenticationFactors** | Write | StringArray[] | Custom Controls assigned to the grant property of this policy. | |
 | **SignInFrequencyType** | Write | String | Sign in frequency unit (days/hours) to be interpreted by the policy. | `Days`, `Hours`, `` |
 | **SignInFrequencyIsEnabled** | Write | Boolean | Specifies, whether sign-in frequency is enforced by the Policy. | |
+| **SignInFrequencyInterval** | Write | String | Sign in frequency interval. Possible values are: timeBased, everyTime and unknownFutureValue. | `timeBased`, `everyTime`, `unknownFutureValue` |
 | **PersistentBrowserIsEnabled** | Write | Boolean | Specifies, whether Browser Persistence is controlled by the Policy. | |
 | **PersistentBrowserMode** | Write | String | Specifies, what Browser Persistence control is enforced by the Policy. | `Always`, `Never`, `` |
 | **AuthenticationStrength** | Write | String | Name of the associated authentication strength policy. | |
+| **AuthenticationContexts** | Write | StringArray[] | Authentication context class references. | |
 | **Ensure** | Write | String | Specify if the Azure AD CA Policy should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -51,6 +55,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -76,11 +81,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Policy.Read.All
+    - Agreement.Read.All, Application.Read.All, Group.Read.All, Policy.Read.All, RoleManagement.Read.Directory, User.Read.All
 
 - **Update**
 
-    - Application.Read.All, Policy.ReadWrite.ConditionalAccess
+    - Agreement.Read.All, Application.Read.All, Group.Read.All, Policy.Read.All, Policy.ReadWrite.ConditionalAccess, RoleManagement.Read.Directory, User.Read.All
 
 ## Examples
 
@@ -96,50 +101,99 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        AADConditionalAccessPolicy 'Allin-example'
+        AADConditionalAccessPolicy 'ConditionalAccessPolicy'
         {
-            Id                                   = '4b0bb08f-85ab-4a12-a12c-06114b6ac6df'
-            DisplayName                          = 'Allin-example'
-            BuiltInControls                      = @('Mfa', 'CompliantDevice', 'DomainJoinedDevice', 'ApprovedApplication', 'CompliantApplication')
-            ClientAppTypes                       = @('ExchangeActiveSync', 'Browser', 'MobileAppsAndDesktopClients', 'Other')
-            CloudAppSecurityIsEnabled            = $True
-            CloudAppSecurityType                 = 'MonitorOnly'
-            ExcludeApplications                  = @('803ee9ca-3f7f-4824-bd6e-0b99d720c35c', '00000012-0000-0000-c000-000000000000', '00000007-0000-0000-c000-000000000000', 'Office365')
-            ExcludeGroups                        = @()
-            ExcludeLocations                     = @('Blocked Countries')
-            ExcludePlatforms                     = @('Windows', 'WindowsPhone', 'MacOS')
-            ExcludeRoles                         = @('Company Administrator', 'Application Administrator', 'Application Developer', 'Cloud Application Administrator', 'Cloud Device Administrator')
-            ExcludeUsers                         = @('admin@contoso.com', 'AAdmin@contoso.com', 'CAAdmin@contoso.com', 'AllanD@contoso.com', 'AlexW@contoso.com', 'GuestsOrExternalUsers')
-            ExcludeExternalTenantsMembers        = @()
-            ExcludeExternalTenantsMembershipKind = 'all'
-            ExcludeGuestOrExternalUserTypes      = @('internalGuest', 'b2bCollaborationMember')
-            GrantControlOperator                 = 'OR'
-            IncludeApplications                  = @('All')
-            IncludeGroups                        = @()
-            IncludeLocations                     = @('AllTrusted')
-            IncludePlatforms                     = @('Android', 'IOS')
-            IncludeRoles                         = @('Compliance Administrator')
-            IncludeUserActions                   = @()
-            IncludeUsers                         = @('Alexw@contoso.com')
-            IncludeExternalTenantsMembers        = @('11111111-1111-1111-1111-111111111111')
-            IncludeExternalTenantsMembershipKind = 'enumerated'
-            IncludeGuestOrExternalUserTypes      = @('b2bCollaborationGuest')
-            PersistentBrowserIsEnabled           = $false
-            PersistentBrowserMode                = ''
-            SignInFrequencyIsEnabled             = $true
-            SignInFrequencyType                  = 'Hours'
-            SignInFrequencyValue                 = 5
-            SignInRiskLevels                     = @('High', 'Medium')
-            State                                = 'disabled'
-            UserRiskLevels                       = @('High', 'Medium')
-            Ensure                               = 'Present'
-            Credential                           = $credsGlobalAdmin
+            BuiltInControls                          = @("mfa");
+            ClientAppTypes                           = @("all");
+            Credential                               = $Credscredential;
+            DeviceFilterMode                         = "exclude";
+            DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
+            DisplayName                              = "Example CAP";
+            Ensure                                   = "Present";
+            ExcludeUsers                             = @("admin@$Domain");
+            GrantControlOperator                     = "OR";
+            IncludeApplications                      = @("All");
+            IncludeRoles                             = @("Attack Payload Author");
+            SignInFrequencyInterval                  = "timeBased";
+            SignInFrequencyIsEnabled                 = $True;
+            SignInFrequencyType                      = "hours";
+            SignInFrequencyValue                     = 1;
+            State                                    = "disabled";
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADConditionalAccessPolicy 'ConditionalAccessPolicy'
+        {
+            BuiltInControls                          = @("mfa");
+            ClientAppTypes                           = @("all");
+            Credential                               = $Credscredential;
+            DeviceFilterMode                         = "exclude";
+            DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
+            DisplayName                              = "Example CAP";
+            Ensure                                   = "Present";
+            ExcludeUsers                             = @("admin@$Domain");
+            GrantControlOperator                     = "OR";
+            IncludeApplications                      = @("All");
+            IncludeRoles                             = @("Attack Payload Author");
+            SignInFrequencyInterval                  = "timeBased";
+            SignInFrequencyIsEnabled                 = $True;
+            SignInFrequencyType                      = "hours";
+            SignInFrequencyValue                     = 2; # Updated Porperty
+            State                                    = "disabled";
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADConditionalAccessPolicy 'ConditionalAccessPolicy'
+        {
+            DisplayName                          = 'Example CAP'
+            Ensure                               = 'Absent'
+            Credential                           = $Credscredential
         }
     }
 }

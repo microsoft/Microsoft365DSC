@@ -122,7 +122,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Checking for the Intune Device Compliance iOS Policy {$DisplayName}"
@@ -146,10 +150,13 @@ function Get-TargetResource
     try
     {
         $devicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
+            -ErrorAction SilentlyContinue | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName) }
-
+        if(([array]$devicePolicy).count -gt 1)
+        {
+            throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+        }
         if ($null -eq $devicePolicy)
         {
             Write-Verbose -Message "No iOS Device Compliance Policy with displayName {$DisplayName} was found"
@@ -186,22 +193,18 @@ function Get-TargetResource
             ApplicationSecret                              = $ApplicationSecret
             CertificateThumbprint                          = $CertificateThumbprint
             Managedidentity                                = $ManagedIdentity.IsPresent
+            AccessTokens                                   = $AccessTokens
         }
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $returnAssignments)
+        $graphAssignments = Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
+        if ($graphAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($graphAssignments)
         }
-        $results.Add('Assignments', $assignmentResult)
+        $results.Add('Assignments', $returnAssignments)
 
         return [System.Collections.Hashtable] $results
     }
@@ -213,6 +216,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -340,7 +344,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Intune Device Compliance iOS Policy {$DisplayName}"
@@ -367,6 +375,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationId') | Out-Null
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $scheduledActionsForRule = @{
         '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
@@ -583,7 +592,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -601,56 +614,39 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Intune Device Compliance iOS Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
-    #region Assignments
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
     $testResult = $true
-
-    #Compare Cim instances
-    foreach ($key in $PSBoundParameters.Keys)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
-        $source = $PSBoundParameters.$key
-        $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
-        {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-Not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-            $ValuesToCheck.Remove($key) | Out-Null
-        }
+        $testResult = $false
+    }
+    #region Assignments
+    if ($testResult)
+    {
+        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
+        $target = $CurrentValues.Assignments
+        $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+        $ValuesToCheck.Remove('Assignments') | Out-Null
     }
     #endregion
 
     if ($testResult)
     {
-        $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
             -ValuesToCheck $ValuesToCheck.Keys
     }
-
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
@@ -688,7 +684,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -733,8 +733,14 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
 
             if ($Results.RestrictedApps)
             {
@@ -802,7 +808,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

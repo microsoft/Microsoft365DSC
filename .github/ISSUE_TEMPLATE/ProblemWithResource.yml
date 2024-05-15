@@ -41,8 +41,9 @@ body:
       label: "Which workloads are affected"
       description: The workload of the resource you are having an issue with.
       options:
-        - "Azure Active Directory"
+        - "Azure Active Directory (Entra ID)"
         - "Exchange Online"
+        - "Intune"
         - "Office 365 Admin"
         - "OneDrive for Business"
         - "Planner"

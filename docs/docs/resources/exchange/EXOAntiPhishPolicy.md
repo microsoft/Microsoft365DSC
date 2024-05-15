@@ -26,12 +26,14 @@
 | **MakeDefault** | Write | Boolean | Make this the default antiphishing policy | |
 | **ExcludedDomains** | Write | StringArray[] | Theâ¯ExcludedDomainsâ¯parameter specifies trusted domains that are excluded from scanning by antiphishing protection. You can specify multiple domains separated by commas. | |
 | **ExcludedSenders** | Write | StringArray[] | Theâ¯ExcludedSendersâ¯parameter specifies a list of trusted sender email addresses that are excluded from scanning by antiphishing protection. You can specify multiple email addresses separated by commas. | |
+| **HonorDmarcPolicy** | Write | Boolean | The HonorDmarcPolicy enables or disables using the sender's DMARC policy to determine what to do to messages that fail DMARC checks. | |
 | **ImpersonationProtectionState** | Write | String | The ImpersonationProtectionState parameter specifies the configuration of impersonation protection. | |
 | **MailboxIntelligenceProtectionAction** | Write | String | The MailboxIntelligenceProtectionAction parameter specifies what to do with messages that fail mailbox intelligence protection. | |
 | **MailboxIntelligenceProtectionActionRecipients** | Write | StringArray[] | Theâ¯MailboxIntelligenceProtectionActionRecipients parameter specifies the recipients to add to detected messages when the MailboxIntelligenceProtectionAction parameter is set to the valueâ¯Redirect or BccMessage. | |
 | **MailboxIntelligenceQuarantineTag** | Write | String | The MailboxIntelligenceQuarantineTag specifies the quarantine policy that's used on messages that are quarantined by mailbox intelligence. | |
 | **SpoofQuarantineTag** | Write | String | The SpoofQuarantineTag specifies the quarantine policy that's used on messages that are quarantined by spoof intelligence. | |
 | **TargetedDomainActionRecipients** | Write | StringArray[] | Theâ¯TargetedDomainActionRecipients parameter specifies the recipients to add to detected domain impersonation messages when the TargetedDomainProtectionAction parameter is set to the valueâ¯Redirect or BccMessage. A valid value for this parameter is an email address. You can specify multiple email addresses separated by commas. | |
+| **TargetedDomainProtectionAction** | Write | String | The TargetedDomainProtectionAction parameter specifies the action to take on detected domain impersonation messages. | `BccMessage`, `Delete`, `MoveToJmf`, `NoAction`, `Quarantine`, `Redirect` |
 | **TargetedDomainsToProtect** | Write | StringArray[] | The TargetedDomainsToProtect parameter specifies the domains that are included in domain impersonation protection when the EnableTargetedDomainsProtection parameter is set to $true. | |
 | **TargetedDomainQuarantineTag** | Write | String | The TargetedDomainQuarantineTag specifies the quarantine policy that's used on messages that are quarantined by domain impersonation protection. | |
 | **TargetedUserActionRecipients** | Write | StringArray[] | Theâ¯TargetedUserActionRecipients parameter specifies the replacement or additional recipients for detected user impersonation messages when the TargetedUserProtectionAction parameter is set to the valueâ¯Redirect or BccMessage. A valid value for this parameter is an email address. You can specify multiple email addresses separated by commas. | |
@@ -44,6 +46,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -77,7 +80,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -106,7 +109,99 @@ Configuration Example
             EnableUnusualCharactersSafetyTips     = $null
             TargetedUserActionRecipients          = $null
             Ensure                                = "Present"
-            Credential                            = $credsGlobalAdmin
+            Credential                            = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAntiPhishPolicy 'ConfigureAntiphishPolicy'
+        {
+            Identity                              = "Our Rule"
+            MakeDefault                           = $null
+            PhishThresholdLevel                   = 2 # Updated Property
+            EnableTargetedDomainsProtection       = $null
+            Enabled                               = $null
+            TargetedDomainsToProtect              = $null
+            EnableSimilarUsersSafetyTips          = $null
+            ExcludedDomains                       = $null
+            TargetedDomainActionRecipients        = $null
+            EnableMailboxIntelligence             = $null
+            EnableSimilarDomainsSafetyTips        = $null
+            AdminDisplayName                      = ""
+            AuthenticationFailAction              = "MoveToJmf"
+            TargetedUserProtectionAction          = "NoAction"
+            TargetedUsersToProtect                = $null
+            EnableTargetedUserProtection          = $null
+            ExcludedSenders                       = $null
+            EnableOrganizationDomainsProtection   = $null
+            EnableUnusualCharactersSafetyTips     = $null
+            TargetedUserActionRecipients          = $null
+            Ensure                                = "Present"
+            Credential                            = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOAntiPhishPolicy 'ConfigureAntiphishPolicy'
+        {
+            Identity                              = "Our Rule"
+            MakeDefault                           = $null
+            PhishThresholdLevel                   = 2 # Updated Property
+            EnableTargetedDomainsProtection       = $null
+            Enabled                               = $null
+            TargetedDomainsToProtect              = $null
+            EnableSimilarUsersSafetyTips          = $null
+            ExcludedDomains                       = $null
+            TargetedDomainActionRecipients        = $null
+            EnableMailboxIntelligence             = $null
+            EnableSimilarDomainsSafetyTips        = $null
+            AdminDisplayName                      = ""
+            AuthenticationFailAction              = "MoveToJmf"
+            TargetedUserProtectionAction          = "NoAction"
+            TargetedUsersToProtect                = $null
+            EnableTargetedUserProtection          = $null
+            ExcludedSenders                       = $null
+            EnableOrganizationDomainsProtection   = $null
+            EnableUnusualCharactersSafetyTips     = $null
+            TargetedUserActionRecipients          = $null
+            Ensure                                = "Present"
+            Credential                            = $Credscredential
         }
     }
 }

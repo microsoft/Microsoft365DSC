@@ -229,7 +229,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Checking for the Intune Device Configuration Policy {$DisplayName}"
@@ -285,7 +289,7 @@ function Get-TargetResource
             RequiredPasswordComplexity                                = $policy.AdditionalProperties.requiredPasswordComplexity
             WorkProfileAllowAppInstallsFromUnknownSources             = $policy.AdditionalProperties.workProfileAllowAppInstallsFromUnknownSources
             WorkProfileDataSharingType                                = $policy.AdditionalProperties.workProfileDataSharingType
-            WorkProfileBlockNotificationsWhileDeviceLocked            = $policy.AdditionalProperties.WorkProfileBlockNotificationsWhileDeviceLocked
+            WorkProfileBlockNotificationsWhileDeviceLocked            = $policy.AdditionalProperties.workProfileBlockNotificationsWhileDeviceLocked
             WorkProfileBlockAddingAccounts                            = $policy.AdditionalProperties.workProfileBlockAddingAccounts
             WorkProfileBluetoothEnableContactSharing                  = $policy.AdditionalProperties.workProfileBluetoothEnableContactSharing
             WorkProfileBlockScreenCapture                             = $policy.AdditionalProperties.workProfileBlockScreenCapture
@@ -324,6 +328,7 @@ function Get-TargetResource
             ApplicationSecret                                         = $ApplicationSecret
             CertificateThumbprint                                     = $CertificateThumbprint
             Managedidentity                                           = $ManagedIdentity.IsPresent
+            AccessTokens                                              = $AccessTokens
         }
 
         $returnAssignments = @()
@@ -585,7 +590,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $M365DSCConnectionSplat = @{
@@ -644,8 +653,8 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating existing Device Configuration Policy {$DisplayName}"
         $configDevicePolicy = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { `
-                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' `
+            -FilterScript {
+                $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration'
             }
 
         $PSBoundParameters.Remove('DisplayName') | Out-Null
@@ -673,7 +682,7 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Removing Device Configuration Policy {$DisplayName}"
         $configDevicePolicy = Get-MgBetaDeviceManagementDeviceConfiguration -Filter "DisplayName eq '$Displayname'" -ErrorAction SilentlyContinue | Where-Object `
-            -FilterScript { `
+            -FilterScript {
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidWorkProfileGeneralDeviceConfiguration' `
             }
 
@@ -912,7 +921,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -929,24 +942,17 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Device Configuration Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    #region Assignments
     $testResult = $true
 
+    #region Assignments
     if ((-not $CurrentValues.Assignments) -xor (-not $ValuesToCheck.Assignments))
     {
         Write-Verbose -Message 'Configuration drift: one the assignment is null'
@@ -1004,10 +1010,16 @@ function Test-TargetResource
     $ValuesToCheck.Remove('Assignments') | Out-Null
     #endregion
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+
+    if ($TestResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -1046,7 +1058,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $M365DSCConnectionSplat = @{
@@ -1096,6 +1112,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
 
@@ -1142,7 +1159,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

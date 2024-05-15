@@ -7,7 +7,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -21,7 +21,7 @@ Configuration Example
             SdnProviderName                     = "hive"
             SdnLicenseId                        = "5c12d0-d52950-e03e66-92b587"
             SdnApiTemplateUrl                   = "https://api.hivestreaming.com/v1/eventadmin?partner_token={0}"
-            Credential                          = $credsGlobalAdmin
+            Credential                          = $Credscredential
         }
     }
 }

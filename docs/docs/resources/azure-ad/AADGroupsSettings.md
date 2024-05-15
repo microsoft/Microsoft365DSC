@@ -13,6 +13,7 @@
 | **GroupCreationAllowedGroupName** | Write | String | Name of the security group for which the members are allowed to create Office 365 groups even when EnableGroupCreation == false. | |
 | **AllowToAddGuests** | Write | Boolean | A boolean indicating whether or not is allowed to add guests to this directory. | |
 | **UsageGuidelinesUrl** | Write | String | A link to the Group Usage Guidelines. | |
+| **NewUnifiedGroupWritebackDefault** | Write | Boolean | Boolean, a tenant-wide setting that assigns the default value to the writebackConfiguration/isEnabled property of new groups, if the property isn't specified during group creation. This setting is applicable when group writeback is configured in Microsoft Entra Connect. | |
 | **Ensure** | Write | String | Specify if the Azure AD Groups Naming Policy should exist or not. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials for the Microsoft Graph delegated permissions. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -20,6 +21,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 # AADGroupsNamingPolicy
 
@@ -66,7 +68,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -83,7 +85,34 @@ Configuration Example
             GuestUsageGuidelinesUrl       = "https://contoso.com/guestusage"
             UsageGuidelinesUrl            = "https://contoso.com/usage"
             Ensure                        = "Present"
-            Credential                    = $credsGlobalAdmin
+            Credential                    = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADGroupsSettings 'GeneralGroupsSettings'
+        {
+            IsSingleInstance              = "Yes"
+            Ensure                        = "Absent"
+            Credential                    = $Credscredential
         }
     }
 }

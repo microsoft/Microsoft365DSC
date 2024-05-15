@@ -23,7 +23,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString 'Pass@word1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -46,6 +46,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
@@ -85,7 +87,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     DisplayName = 'Test App Configuration Policy'
                     Description = 'Test Definition'
-                    Assignments = (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                    Assignments = [CimInstance[]]@(New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                         groupId  = '123456789'
                         dataType = '#microsoft.graph.groupAssignmentTarget'
                         deviceAndAppManagementAssignmentFilterType = 'include'
@@ -104,13 +106,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     }
                 }
                 Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @{
-                        DisplayName  = 'Test App Configuration Policy'
-                        Description  = 'Different Value'
-                        Id           = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
+                    return @(@{
+                        #DisplayName  = 'Test App Configuration Policy'
+                        #Description  = 'Different Value'
+                        #Id           = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
                         DefinitionId = 'appLockerApplicationControl'
                         ValueJSON    = "'true'"
-                    }
+                    })
                 }
                 Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @(
@@ -167,13 +169,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-MgBetaDeviceManagementIntentSetting -MockWith {
-                    return @{
+                    return @(@{
                         DisplayName  = 'Test App Configuration Policy'
                         Description  = 'Test Definition'
                         Id           = 'A_19dbaff5-9aff-48b0-a60d-d0471ddaf141'
                         DefinitionId = 'appLockerApplicationControl'
                         ValueJSON    = "'true'"
-                    }
+                    })
                 }
                 Mock -CommandName Get-MgBetaDeviceManagementIntentAssignment -MockWith {
                     return @(

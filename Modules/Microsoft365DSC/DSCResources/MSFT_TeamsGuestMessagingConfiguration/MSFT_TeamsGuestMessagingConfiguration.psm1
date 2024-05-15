@@ -60,7 +60,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of Teams Guest Messaging settings'
@@ -103,6 +111,8 @@ function Get-TargetResource
             ApplicationId          = $ApplicationId
             TenantId               = $TenantId
             CertificateThumbprint  = $CertificateThumbprint
+            ManagedIdentity        = $ManagedIdentity.IsPresent
+            AccessTokens           = $AccessTokens
         }
     }
     catch
@@ -178,7 +188,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of Teams Guest Messaging settings'
@@ -191,6 +209,8 @@ function Set-TargetResource
     $inputValues.Remove('TenantId') | Out-Null
     $inputValues.Remove('CertificateThumbprint') | Out-Null
     $inputValues.Remove('Identity') | Out-Null
+    $inputValues.Remove('ManagedIdentity') | Out-Null
+    $inputValues.Remove('AccessTokens') | Out-Null
     foreach ($item in $inputValues)
     {
         if ([System.String]::IsNullOrEmpty($item.Value))
@@ -285,7 +305,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -338,7 +366,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
@@ -365,6 +401,8 @@ function Export-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 

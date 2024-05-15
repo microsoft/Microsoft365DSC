@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString "f@kepassword1" -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -40,6 +40,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
         # Test contexts
         Context -Name "The AADAuthenticationMethodPolicy should exist but it DOES NOT" -Fixture {
@@ -101,116 +103,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The AADAuthenticationMethodPolicy exists but it SHOULD NOT" -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    Description = "FakeStringValue"
-                    DisplayName = "FakeStringValue"
-                    Id = "FakeStringValue"
-                    PolicyMigrationState = "preMigration"
-                    PolicyVersion = "FakeStringValue"
-                    ReconfirmationInDays = 25
-                    RegistrationEnforcement = (New-CimInstance -ClassName MSFT_MicrosoftGraphregistrationEnforcement -Property @{
-                        AuthenticationMethodsRegistrationCampaign = (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodsRegistrationCampaign -Property @{
-                            IncludeTargets = [CimInstance[]]@(
-                                (New-CimInstance -ClassName MSFT_MicrosoftGraphauthenticationMethodsRegistrationCampaignIncludeTarget -Property @{
-                                    Id = "FakeStringValue"
-                                    TargetType = "user"
-                                    TargetedAuthenticationMethod = "FakeStringValue"
-                                } -ClientOnly)
-                            )
-                            State = "default"
-                            SnoozeDurationInDays = 25
-                            ExcludeTargets = [CimInstance[]]@(
-                                (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
-                                    TargetType = "user"
-                                    Id = "FakeStringValue"
-                                } -ClientOnly)
-                            )
-                        } -ClientOnly)
-                    } -ClientOnly)
-                    SystemCredentialPreferences = (New-CimInstance -ClassName MSFT_MicrosoftGraphsystemCredentialPreferences -Property @{
-                        State = "default"
-                        IncludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyIncludeTarget -Property @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
-                            } -ClientOnly)
-                        )
-                        ExcludeTargets = [CimInstance[]]@(
-                            (New-CimInstance -ClassName MSFT_AADAuthenticationMethodPolicyExcludeTarget -Property @{
-                                TargetType = "user"
-                                Id = "FakeStringValue"
-                            } -ClientOnly)
-                        )
-                    } -ClientOnly)
-                    Ensure = 'Absent'
-                    Credential = $Credential;
-                }
-
-                Mock -CommandName Get-MgBetaPolicyAuthenticationMethodPolicy -MockWith {
-                    return @{
-                        AdditionalProperties = @{
-                            '@odata.type' = "#microsoft.graph.AuthenticationMethodsPolicy"
-                        }
-                        Description = "FakeStringValue"
-                        DisplayName = "FakeStringValue"
-                        Id = "FakeStringValue"
-                        PolicyMigrationState = "preMigration"
-                        PolicyVersion = "FakeStringValue"
-                        ReconfirmationInDays = 25
-                        RegistrationEnforcement = @{
-                            AuthenticationMethodsRegistrationCampaign = @{
-                                IncludeTargets = @(
-                                    @{
-                                        Id = "FakeStringValue"
-                                        TargetType = "user"
-                                        TargetedAuthenticationMethod = "FakeStringValue"
-                                    }
-                                )
-                                State = "default"
-                                SnoozeDurationInDays = 25
-                                ExcludeTargets = @(
-                                    @{
-                                        TargetType = "user"
-                                        Id = "FakeStringValue"
-                                    }
-                                )
-                            }
-                        }
-                        SystemCredentialPreferences = @{
-                            State = "default"
-                            IncludeTargets = @(
-                                @{
-                                    TargetType = "user"
-                                    Id = "FakeStringValue"
-                                }
-                            )
-                            ExcludeTargets = @(
-                                @{
-                                    TargetType = "user"
-                                    Id = "FakeStringValue"
-                                }
-                            )
-                        }
-
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should Remove the group from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgBetaPolicyAuthenticationMethodPolicy -Exactly 1
-            }
-        }
         Context -Name "The AADAuthenticationMethodPolicy Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{

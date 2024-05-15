@@ -79,7 +79,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterRule for $Identity"
@@ -114,7 +118,7 @@ function Get-TargetResource
     {
         try
         {
-            $HostedContentFilterRules = Get-HostedContentFilterRule -ErrorAction Stop
+            $HostedContentFilterRule = Get-HostedContentFilterRule -Identity $Identity -ErrorAction Stop
         }
         catch
         {
@@ -123,8 +127,6 @@ function Get-TargetResource
                 -Exception $_ `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
-
-        $HostedContentFilterRule = $HostedContentFilterRules | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if (-not $HostedContentFilterRule)
         {
             Write-Verbose -Message "HostedContentFilterRule $($Identity) does not exist."
@@ -152,6 +154,7 @@ function Get-TargetResource
                 CertificatePassword       = $CertificatePassword
                 Managedidentity           = $ManagedIdentity.IsPresent
                 TenantId                  = $TenantId
+                AccessTokens              = $AccessTokens
             }
 
             if ('Enabled' -eq $HostedContentFilterRule.State)
@@ -261,7 +264,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of HostedContentFilterRule for $Identity"
@@ -308,6 +315,7 @@ function Set-TargetResource
         $CreationParams.Remove('CertificatePath') | Out-Null
         $CreationParams.Remove('CertificatePassword') | Out-Null
         $CreationParams.Remove('ManagedIdentity') | Out-Null
+        $CreationParams.Remove('AccessTokens') | Out-Null
         if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
@@ -316,6 +324,7 @@ function Set-TargetResource
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
         }
         Write-Verbose -Message "Creating new HostedContentFilterRule {$Identity}"
+        Write-Verbose -Message "With Parameters: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
         $CreationParams.Add('Name', $Identity)
         $CreationParams.Remove('Identity') | Out-Null
         New-HostedContentFilterRule @CreationParams
@@ -332,6 +341,8 @@ function Set-TargetResource
         $UpdateParams.Remove('CertificatePassword') | Out-Null
         $UpdateParams.Remove('ManagedIdentity') | Out-Null
         $UpdateParams.Remove('Enabled') | Out-Null
+        $UpdateParams.Remove('AccessTokens') | Out-Null
+        $UpdateParams.Identity = $HostedContentFilterPolicy
         if ($CurrentValues.HostedContentFilterPolicy -eq $UpdateParams.HostedContentFilterPolicy )
         {
             $UpdateParams.Remove('HostedContentFilterPolicy') | Out-Null
@@ -427,7 +438,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -449,13 +464,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -499,7 +507,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -544,6 +556,7 @@ function Export-TargetResource
                 CertificatePassword       = $CertificatePassword
                 Managedidentity           = $ManagedIdentity.IsPresent
                 CertificatePath           = $CertificatePath
+                AccessTokens              = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

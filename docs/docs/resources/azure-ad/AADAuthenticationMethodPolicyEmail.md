@@ -16,6 +16,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget
 
@@ -76,39 +77,39 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
     {
         AADAuthenticationMethodPolicyEmail "AADAuthenticationMethodPolicyEmail-Email"
         {
-            AllowExternalIdToUseEmailOtp = "default";
-            ApplicationId                = $ConfigurationData.NonNodeData.ApplicationId;
-            CertificateThumbprint        = $ConfigurationData.NonNodeData.CertificateThumbprint;
+            AllowExternalIdToUseEmailOtp = "enabled";
+            Credential                   = $Credscredential;
             Ensure                       = "Present";
             ExcludeTargets               = @(
                 MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyEmailExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'Paralegals'
                     TargetType = 'group'
                 }
             );
             Id                           = "Email";
             IncludeTargets               = @(
                 MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget{
-                    Id = 'fakegroup3'
+                    Id = 'Finance Team'
                     TargetType = 'group'
                 }
                 MSFT_AADAuthenticationMethodPolicyEmailIncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'Legal Team'
                     TargetType = 'group'
                 }
             );
-            State                        = "enabled";
-            TenantId                     = $ConfigurationData.NonNodeData.TenantId;
+            State                        = "enabled"; # Updated Property
         }
     }
 }

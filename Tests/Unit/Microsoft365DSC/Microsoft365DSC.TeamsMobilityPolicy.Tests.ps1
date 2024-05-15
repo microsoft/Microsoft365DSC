@@ -16,12 +16,12 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
     -DscResource 'TeamsMobilityPolicy' -GenericStubModule $GenericStubPath
+
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-
-            $secpasswd = ConvertTo-SecureString 'f@kepassword1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-GUID).ToString() -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -49,17 +49,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
         Context -Name 'The TeamsMobilityPolicy should exist but it DOES NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    MobileDialerPreference = 'FakeStringValue'
+                    MobileDialerPreference = 'Teams'
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
@@ -90,7 +94,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsMobilityPolicy exists but it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    MobileDialerPreference = 'FakeStringValue'
+                    MobileDialerPreference = 'Teams'
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
@@ -101,7 +105,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsTeamsMobilityPolicy -MockWith {
                     return @{
-                        MobileDialerPreference = 'FakeStringValue'
+                        MobileDialerPreference = 'Teams'
                         Description            = 'FakeStringValue'
                         IPVideoMobileMode      = 'AllNetworks'
                         IPAudioMobileMode      = 'AllNetworks'
@@ -127,7 +131,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsMobilityPolicy Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    MobileDialerPreference = 'FakeStringValue'
+                    MobileDialerPreference = 'Teams'
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
@@ -138,7 +142,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsTeamsMobilityPolicy -MockWith {
                     return @{
-                        MobileDialerPreference = 'FakeStringValue'
+                        MobileDialerPreference = 'Teams'
                         Description            = 'FakeStringValue'
                         IPVideoMobileMode      = 'AllNetworks'
                         IPAudioMobileMode      = 'AllNetworks'
@@ -155,7 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'The TeamsMobilityPolicy exists and values are NOT in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    MobileDialerPreference = 'FakeStringValue'
+                    MobileDialerPreference = 'Teams'
                     Description            = 'FakeStringValue'
                     IPVideoMobileMode      = 'AllNetworks'
                     IPAudioMobileMode      = 'AllNetworks'
@@ -166,7 +170,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsTeamsMobilityPolicy -MockWith {
                     return @{
-                        MobileDialerPreference = 'FakeStringValueDrift #Drift'
+                        MobileDialerPreference = 'Native'
                         Description            = 'FakeStringValueDrift #Drift'
                         IPVideoMobileMode      = 'AllNetworks'
                         IPAudioMobileMode      = 'AllNetworks'
@@ -199,7 +203,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-CsTeamsMobilityPolicy -MockWith {
                     return @{
-                        MobileDialerPreference = 'FakeStringValue'
+                        MobileDialerPreference = 'Teams'
                         Description            = 'FakeStringValue'
                         IPVideoMobileMode      = 'AllNetworks'
                         IPAudioMobileMode      = 'AllNetworks'

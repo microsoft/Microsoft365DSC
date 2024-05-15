@@ -14,6 +14,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 ## Description
@@ -58,7 +59,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -70,7 +71,61 @@ Configuration Example
             Description = 'My Restriction'
             Limit       = 12
             Ensure      = 'Present'
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example creates a new Device Enrollment Limit Restriction.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceEnrollmentLimitRestriction 'DeviceEnrollmentLimitRestriction'
+        {
+            DisplayName = 'My DSC Limit'
+            Description = 'My Restriction'
+            Limit       = 11 # Updated Property
+            Ensure      = 'Present'
+            Credential  = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Enrollment Limit Restriction.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceEnrollmentLimitRestriction 'DeviceEnrollmentLimitRestriction'
+        {
+            DisplayName = 'My DSC Limit'
+            Ensure      = 'Absent'
+            Credential  = $Credscredential
         }
     }
 }

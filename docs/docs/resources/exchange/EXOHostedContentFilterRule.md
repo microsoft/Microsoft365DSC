@@ -23,6 +23,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -57,7 +58,75 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
+        {
+            Identity                  = "Integration CFR"
+            Comments                  = "Applies to all users, except when member of HR group"
+            Enabled                   = $True
+            ExceptIfSentToMemberOf    = "LegalTeam@$Domain"
+            RecipientDomainIs         = @('contoso.com')
+            HostedContentFilterPolicy = "Integration CFP"
+            Ensure                    = "Present"
+            Credential                = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
+        {
+            Identity                  = "Integration CFR"
+            Comments                  = "Applies to all users, except when member of HR group"
+            Enabled                   = $False # Updated Property
+            ExceptIfSentToMemberOf    = "LegalTeam@$Domain"
+            RecipientDomainIs         = @('contoso.com')
+            HostedContentFilterPolicy = "Integration CFP"
+            Ensure                    = "Present"
+            Credential                = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -65,13 +134,10 @@ Configuration Example
     {
         EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
         {
-            Identity                  = "Contoso Recipients"
-            Comments                  = "Applies to all users, except when member of HR group"
-            Enabled                   = $True
-            ExceptIfSentToMemberOf    = "Contoso Human Resources"
-            HostedContentFilterPolicy = "Default"
-            Ensure                    = "Present"
-            Credential                = $credsGlobalAdmin
+            Identity                  = "Integration CFR"
+            HostedContentFilterPolicy = "Integration CFP"
+            Ensure                    = "Absent"
+            Credential                = $Credscredential
         }
     }
 }

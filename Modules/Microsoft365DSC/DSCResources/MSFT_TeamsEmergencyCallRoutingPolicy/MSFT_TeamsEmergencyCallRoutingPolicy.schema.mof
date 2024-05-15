@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-Class MSFT_TeamsEmergencyNumber
+class MSFT_TeamsEmergencyNumber
 {
     [Write, Description("Specifies the emergency phone number.")] String EmergencyDialString;
     [Write, Description("For each Teams emergency number, you can specify zero or more emergency dial masks. A dial mask is a number that you want to translate into the value of the emergency dial number value when it is dialed.")] String EmergencyDialMask;
@@ -17,4 +17,6 @@ class MSFT_TeamsEmergencyCallRoutingPolicy : OMI_BaseResource
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com")] String TenantId;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
+    [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

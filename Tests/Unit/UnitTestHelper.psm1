@@ -24,7 +24,7 @@ function New-M365DscUnitTestHelper
     )
 
     $repoRoot = Join-Path -Path $PSScriptRoot -ChildPath "..\..\" -Resolve
-    $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Microsoft365Dsc"
+    $moduleRoot = Join-Path -Path $repoRoot -ChildPath "Modules\Microsoft365DSC"
 
     $mainModule = Join-Path -Path $moduleRoot -ChildPath "Microsoft365DSC.psd1"
     Remove-Module -Name "AzureAD" -Force -ErrorAction SilentlyContinue

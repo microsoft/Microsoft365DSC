@@ -71,7 +71,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -103,7 +107,7 @@ function Get-TargetResource
         $getValue = $null
         if ($Id -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$')
         {
-            $getValue = Get-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $id -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $id -ErrorAction SilentlyContinue
             if ($null -ne $getValue)
             {
                 Write-Verbose -Message "Found something with id {$id}"
@@ -113,7 +117,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Nothing with id {$id} was found"
             $Filter = "displayName eq '$DisplayName'"
-            $getValue = Get-MgDeviceManagementRoleAssignment -Filter $Filter -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaDeviceManagementRoleAssignment -Filter $Filter -ErrorAction SilentlyContinue
             if ($null -ne $getValue)
             {
                 Write-Verbose -Message "Found something with displayname {$DisplayName}"
@@ -177,6 +181,7 @@ function Get-TargetResource
             ApplicationSecret          = $ApplicationSecret
             CertificateThumbprint      = $CertificateThumbprint
             ManagedIdentity            = $ManagedIdentity.IsPresent
+            AccessTokens               = $AccessTokens
         }
 
         return [System.Collections.Hashtable] $results
@@ -279,7 +284,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -313,6 +322,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('TenantId') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     if (!($RoleDefinition -match '^[0-9a-fA-F]{8}-([0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12}$'))
     {
@@ -386,7 +396,7 @@ function Set-TargetResource
             '@odata.type'               = '#microsoft.graph.deviceAndAppManagementRoleAssignment'
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
-        $policy = New-MgDeviceManagementRoleAssignment -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementRoleAssignment -BodyParameter $CreateParameters
 
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
@@ -403,14 +413,14 @@ function Set-TargetResource
             'roleDefinition@odata.bind' = "https://graph.microsoft.com/beta/deviceManagement/roleDefinitions('$roleDefinition')"
         }
 
-        Update-MgDeviceManagementRoleAssignment -BodyParameter $UpdateParameters `
+        Update-MgBetaDeviceManagementRoleAssignment -BodyParameter $UpdateParameters `
             -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
 
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing {$DisplayName}"
-        Remove-MgDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
+        Remove-MgBetaDeviceManagementRoleAssignment -DeviceAndAppManagementRoleAssignmentId $currentInstance.Id
     }
 }
 
@@ -487,7 +497,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -559,17 +573,13 @@ function Test-TargetResource
     }
     $PSBoundParameters.Set_Item('ResourceScopes', $ResourceScopes)
 
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
     $testResult = $true
 
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
     $ValuesToCheck.Remove('ResourceScopesDisplayNames') | Out-Null
     $ValuesToCheck.Remove('membersDisplayNames') | Out-Null
@@ -603,6 +613,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -624,7 +638,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -644,7 +662,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-MgDeviceManagementRoleAssignment `
+        [array]$getValue = Get-MgBetaDeviceManagementRoleAssignment -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.deviceAndAppManagementRoleAssignment'  `
@@ -652,7 +670,7 @@ function Export-TargetResource
 
         if (-not $getValue)
         {
-            [array]$getValue = Get-MgDeviceManagementRoleAssignment `
+            [array]$getValue = Get-MgBetaDeviceManagementRoleAssignment `
                 -ErrorAction Stop
         }
 
@@ -684,6 +702,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -706,7 +725,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-class MSFT_AADRoleEligibilityScheduleRequestScheduleRange
+class MSFT_AADRoleEligibilityScheduleRequestScheduleRecurrenceRange
 {
     [Required, Description("The date to stop applying the recurrence pattern. Depending on the recurrence pattern of the event, the last occurrence of the meeting may not be this date.")] String endDate;
     [Write, Description("The number of times to repeat the event. Required and must be positive if type is numbered.")] UInt32 numberOfOccurrences;
@@ -71,4 +71,5 @@ class MSFT_AADRoleEligibilityScheduleRequest : OMI_BaseResource
     [Write, Description("Secret of the Azure Active Directory application to authenticate with."), EmbeddedInstance("MSFT_Credential")] String ApplicationSecret;
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

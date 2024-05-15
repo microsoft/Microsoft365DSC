@@ -10,6 +10,10 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
         $AudioDeviceName,
 
         [Parameter()]
@@ -124,7 +128,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Getting configuration for Place for $($Identity)"
 
@@ -157,51 +165,57 @@ function Get-TargetResource
 
     try
     {
-        $place = Get-Place -Identity $Identity -ErrorAction Stop
+        $place = Get-Place -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $place)
         {
-            Write-Verbose -Message "Place $($Identity) does not exist."
-            return $nullReturn
-        }
-        else
-        {
-            $result = @{
-                Identity               = $place.Identity
-                AudioDeviceName        = $place.AudioDeviceName
-                Building               = $place.Building
-                Capacity               = $place.Capacity
-                City                   = $place.City
-                CountryOrRegion        = $place.CountryOrRegion
-                Desks                  = [Array] $place.Desks
-                DisplayDeviceName      = $place.DisplayDeviceName
-                Floor                  = $place.Floor
-                FloorLabel             = $place.FloorLabel
-                GeoCoordinates         = $place.GeoCoordinates
-                IsWheelChairAccessible = [Boolean] $place.IsWheelChairAccessible
-                Label                  = $place.Label
-                MTREnabled             = [Boolean] $place.MTREnabled
-                ParentId               = $place.ParentId
-                ParentType             = $place.ParentType
-                Phone                  = $place.Phone
-                PostalCode             = $place.PostalCode
-                State                  = $place.State
-                Street                 = $place.Street
-                Tags                   = [Array] $place.Tags
-                VideoDeviceName        = $place.VideoDeviceName
-                Credential             = $Credential
-                Ensure                 = 'Present'
-                ApplicationId          = $ApplicationId
-                CertificateThumbprint  = $CertificateThumbprint
-                CertificatePath        = $CertificatePath
-                CertificatePassword    = $CertificatePassword
-                Managedidentity        = $ManagedIdentity.IsPresent
-                TenantId               = $TenantId
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                Write-Verbose -Message "Couldn't retrieve place by Id {$($Identity)}. Trying by DisplayName"
+                $place = Get-Place -ResultSize 'Unlimited' | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
             }
 
-            Write-Verbose -Message "Found Place $($Identity)"
-            return $result
+            if ($null -eq $place)
+            {
+                return $nullReturn
+            }
         }
+
+        $result = @{
+            Identity               = $place.Identity
+            AudioDeviceName        = $place.AudioDeviceName
+            Building               = $place.Building
+            Capacity               = $place.Capacity
+            City                   = $place.City
+            CountryOrRegion        = $place.CountryOrRegion
+            Desks                  = [Array] $place.Desks
+            DisplayDeviceName      = $place.DisplayDeviceName
+            DisplayName            = $place.DisplayName
+            Floor                  = $place.Floor
+            FloorLabel             = $place.FloorLabel
+            GeoCoordinates         = $place.GeoCoordinates
+            IsWheelChairAccessible = [Boolean] $place.IsWheelChairAccessible
+            Label                  = $place.Label
+            MTREnabled             = [Boolean] $place.MTREnabled
+            ParentId               = $place.ParentId
+            ParentType             = $place.ParentType
+            Phone                  = $place.Phone
+            PostalCode             = $place.PostalCode
+            State                  = $place.State
+            Street                 = $place.Street
+            Tags                   = [Array] $place.Tags
+            VideoDeviceName        = $place.VideoDeviceName
+            Credential             = $Credential
+            Ensure                 = 'Present'
+            ApplicationId          = $ApplicationId
+            CertificateThumbprint  = $CertificateThumbprint
+            CertificatePath        = $CertificatePath
+            CertificatePassword    = $CertificatePassword
+            Managedidentity        = $ManagedIdentity.IsPresent
+            TenantId               = $TenantId
+            AccessTokens           = $AccessTokens
+        }
+        return $result
     }
     catch
     {
@@ -223,6 +237,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -340,7 +358,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -367,6 +389,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificatePath') | Out-Null
     $PSBoundParameters.Remove('CertificatePassword') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     if ([System.String]::IsNullOrEmpty($ParentId) -and $null -ne $ParentType)
     {
@@ -385,6 +408,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $DisplayName,
 
         [Parameter()]
         [System.String]
@@ -502,7 +529,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -567,7 +598,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -604,6 +639,7 @@ function Export-TargetResource
 
             $Params = @{
                 Identity              = $place.Identity
+                DisplayName           = $place.DisplayName
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -611,6 +647,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

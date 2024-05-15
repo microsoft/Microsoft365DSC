@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -42,10 +42,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef -MockWith {
+            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorDirectoryObjectByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef -MockWith {
+            Mock -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorDirectoryObjectByRef -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -58,8 +58,23 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
 
-            Mock -CommandName Write-Host -MockWith {
+            Mock -CommandName Get-MgUser -MockWith {
+                return @{
+                    Id = '12345678-1234-1234-1234-123456789012'
+                    UserPrincipalName = 'John.smith@contoso.com'
+                }
+            }
+
+            Mock -CommandName Get-MgBetaDirectoryObject -MockWith {
+                return @{
+                    Id                   = '12345678-1234-1234-1234-123456789012'
+                    AdditionalProperties = @{
+                        '@odata.type' = '#microsoft.graph.user'
+                    }
+                }
             }
         }
         # Test contexts
@@ -92,14 +107,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
                 Mock -CommandName Get-MgBetaEntitlementManagementConnectedOrganizationInternalSponsor -MockWith {
                     return @()
-                }
-                Mock -CommandName Get-MgBetaDirectoryObject -MockWith {
-                    return @{
-                        Id                   = '12345678-1234-1234-1234-123456789012'
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.user'
-                        }
-                    }
                 }
                 Mock -CommandName New-MgBetaEntitlementManagementConnectedOrganization -MockWith {
                     return @{
@@ -193,7 +200,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description      = 'ConnectedOrganization_Description'
                     DisplayName      = 'ConnectedOrganization_DisplayName'
-                    ExternalSponsors = @('12345678-1234-1234-1234-123456789012')
+                    ExternalSponsors = @('John.Smith@contoso.com')
                     Id               = '12345678-1234-1234-1234-123456789012'
                     IdentitySources  = @(
                         (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
@@ -202,7 +209,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             displayName      = 'IdentitySource_DisplayName'
                         } -ClientOnly)
                     )
-                    InternalSponsors = @('12345678-1234-1234-1234-123456789012')
+                    InternalSponsors = @('John.Smith@contoso.com')
                     State            = 'configured'
                     Ensure           = 'Present'
                     Credential       = $Credential
@@ -250,7 +257,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Description      = 'ConnectedOrganization_Description'
                     DisplayName      = 'ConnectedOrganization_DisplayName'
-                    ExternalSponsors = @('12345678-1234-1234-1234-123456789012')
+                    ExternalSponsors = @('John.Smith@contoso.com')
                     Id               = '12345678-1234-1234-1234-123456789012'
                     IdentitySources  = @(
                         (New-CimInstance -ClassName MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource -Property @{
@@ -259,7 +266,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             displayName      = 'IdentitySource_DisplayName'
                         } -ClientOnly)
                     )
-                    InternalSponsors = @('12345678-1234-1234-1234-123456789012')
+                    InternalSponsors = @('John.Smith@contoso.com')
                     State            = 'configured'
 
                     Ensure           = 'Present'
@@ -313,7 +320,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Update-MgBetaEntitlementManagementConnectedOrganization -Exactly 1
-                Should -Invoke -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorDirectoryObjectByRef -Exactly 1
             }
         }
 

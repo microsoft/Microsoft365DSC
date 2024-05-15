@@ -20,7 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             $Global:PartialExportFileName = 'c:\TestPath'
@@ -44,6 +44,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaRoleManagementDirectoryRoleDefinition -MockWith {
                 return @{
                     DisplayName = 'User administrator'
+                    Id          = 'fe930be7-5e62-47db-91af-98c3a49a38b1'
                 }
             }
 
@@ -504,6 +505,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
@@ -660,6 +663,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should reverse engineer resource from the export method' {
                 $result = Export-TargetResource @testParams
+                Should -Invoke -Scope It -CommandName 'Get-MgBetaRoleManagementDirectoryRoleDefinition' -ParameterFilter { $Filter -eq '' -and $Sort -eq 'DisplayName' } -Times 1
+                $result | Should -Not -BeNullOrEmpty
+            }
+
+            It 'Should reverse engineer resource from the export method with a filter' {
+                $testParams.Filter = "displayName eq 'Role1'"
+
+                $result = Export-TargetResource @testParams
+                Should -Invoke -Scope It -CommandName 'Get-MgBetaRoleManagementDirectoryRoleDefinition' -ParameterFilter { $Filter -eq "displayName eq 'Role1'" -and $Sort -eq 'DisplayName' } -Times 1
                 $result | Should -Not -BeNullOrEmpty
             }
         }

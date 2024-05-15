@@ -110,7 +110,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Checking for the Intune Android Work Profile Device Compliance Policy {$DisplayName}"
@@ -139,7 +143,10 @@ function Get-TargetResource
             $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidDeviceOwnerCompliancePolicy' -and `
                 $_.displayName -eq $($DisplayName)
         }
-
+        if(([array]$devicePolicy).count -gt 1)
+        {
+            throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+        }
         if ($null -eq $devicePolicy)
         {
             Write-Verbose -Message "No Intune Android Device Owner Device Compliance Policy with displayName {$DisplayName} was found"
@@ -173,22 +180,18 @@ function Get-TargetResource
             ApplicationSecret                                  = $ApplicationSecret
             CertificateThumbprint                              = $CertificateThumbprint
             Managedidentity                                    = $ManagedIdentity.IsPresent
+            AccessTokens                                       = $AccessTokens
         }
 
         $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $returnAssignments)
+        $graphAssignments = Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -DeviceCompliancePolicyId  $devicePolicy.Id
+        if ($graphAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($graphAssignments)
         }
-        $results.Add('Assignments', $assignmentResult)
+        $results.Add('Assignments', $returnAssignments)
 
         return [System.Collections.Hashtable] $results
     }
@@ -200,6 +203,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -315,7 +319,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Intune Android Device Owner Device Compliance Policy {$DisplayName}"
@@ -344,6 +352,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $scheduledActionsForRule = @{
         ruleName                      = 'PasswordRequired'
@@ -540,7 +549,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -558,88 +571,39 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Intune Android Work Profile Device Compliance Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    $testResult = $true
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
+        $testResult = $false
     }
     #region Assignments
-    $testResult = $true
-
-    if ((-not $CurrentValues.Assignments) -xor (-not $ValuesToCheck.Assignments))
+    if ($testResult)
     {
-        Write-Verbose -Message 'Configuration drift: one the assignment is null'
-        return $false
+        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
+        $target = $CurrentValues.Assignments
+        $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+        $ValuesToCheck.Remove('Assignments') | Out-Null
     }
-
-    if ($CurrentValues.Assignments)
-    {
-        if ($CurrentValues.Assignments.count -ne $ValuesToCheck.Assignments.count)
-        {
-            Write-Verbose -Message "Configuration drift: Number of assignment has changed - current {$($CurrentValues.Assignments.count)} target {$($ValuesToCheck.Assignments.count)}"
-            return $false
-        }
-        foreach ($assignment in $CurrentValues.Assignments)
-        {
-            #GroupId Assignment
-            if (-not [String]::IsNullOrEmpty($assignment.groupId))
-            {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
-                if (-not $source)
-                {
-                    Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                    $testResult = $false
-                    break
-                }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-            }
-            #AllDevices/AllUsers assignment
-            else
-            {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
-                if (-not $source)
-                {
-                    Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                    $testResult = $false
-                    break
-                }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-            }
-
-            if (-not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-        }
-    }
-    if (-not $testResult)
-    {
-        return $false
-    }
-    $ValuesToCheck.Remove('Assignments') | Out-Null
     #endregion
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
-
+    if ($testResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult
@@ -677,7 +641,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -724,8 +692,14 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
 
             if ($Results.Assignments)
             {
@@ -771,7 +745,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

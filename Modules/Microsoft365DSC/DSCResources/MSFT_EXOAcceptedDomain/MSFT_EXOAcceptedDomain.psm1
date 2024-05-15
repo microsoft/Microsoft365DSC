@@ -5,7 +5,7 @@ function Get-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
@@ -53,10 +53,16 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
 
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
+    Write-Verbose -Message "Access: $($AccessTokens | Out-String)"
+
+    Write-Verbose -Message "Tenant: $($TenantId | Out-String)"
 
     if ($Global:CurrentModeIsExport)
     {
@@ -87,14 +93,11 @@ function Get-TargetResource
     try
     {
         Write-Verbose -Message 'Getting all Accepted Domain'
-        $AllAcceptedDomains = Get-AcceptedDomain -ErrorAction Stop
-
-        Write-Verbose -Message 'Filtering Accepted Domain list by Identity'
-        $AcceptedDomain = $AllAcceptedDomains | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        $AcceptedDomain = Get-AcceptedDomain -Identity $Identity -ErrorAction SilentlyContinue
 
         if ($null -eq $AcceptedDomain)
         {
-            Write-Verbose -Message "AcceptedDomain configuration for $($Identity) does not exist."
+            Write-Verbose -Message "AcceptedDomain configuration for {$($Identity)} does not exist."
             return $nullReturn
         }
         else
@@ -112,6 +115,7 @@ function Get-TargetResource
                 CertificatePath       = $CertificatePath
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             Write-Verbose -Message "Found AcceptedDomain configuration for $($Identity)"
@@ -136,7 +140,7 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
@@ -151,12 +155,10 @@ function Set-TargetResource
         $Ensure = 'Present',
 
         [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $MatchSubDomains = $false,
 
         [Parameter()]
-        [ValidateScript( { $false -eq $_ })]
         [System.Boolean]
         $OutboundOnly = $false,
 
@@ -186,7 +188,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Accepted Domain for $Identity"
@@ -223,7 +229,7 @@ function Set-TargetResource
         OutboundOnly    = $OutboundOnly
     }
 
-    Write-Verbose -Message "Setting AcceptedDomain for $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $AcceptedDomainParams)"
+    Write-Verbose -Message "Setting AcceptedDomain for {$($Identity)} with values: $(Convert-M365DscHashtableToString -Hashtable $AcceptedDomainParams)"
     Set-AcceptedDomain @AcceptedDomainParams
 }
 
@@ -234,7 +240,7 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
-        [ValidatePattern( '(?=^.{1,254}$)(^(?:(?!\d+\.|-)[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
+        [ValidatePattern( '(?=^.{1,254}$)(^(?:[a-zA-Z0-9_\-]{1,63}(?<!-)\.?)+(?:[a-zA-Z]{2,})$)' )]
         [System.String]
         $Identity,
 
@@ -282,7 +288,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -304,7 +314,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -348,7 +357,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -393,6 +406,7 @@ function Export-TargetResource
                 CertificatePath       = $CertificatePath
                 Credential            = $Credential
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

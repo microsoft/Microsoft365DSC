@@ -17,6 +17,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_MicrosoftGraphX509CertificateAuthenticationModeConfiguration
 
@@ -63,6 +64,7 @@
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
 | **Id** | Write | String | The object identifier of an Azure AD group. | |
+| **isRegistrationRequired** | Write | Boolean | Determines if the user is enforced to register the authentication method. | |
 | **TargetType** | Write | String | The type of the authentication method target. Possible values are: group and unknownFutureValue. | `group`, `unknownFutureValue` |
 
 
@@ -106,28 +108,31 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
     {
         AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
         {
-            ApplicationId                   = $ConfigurationData.NonNodeData.ApplicationId;
             AuthenticationModeConfiguration = MSFT_MicrosoftGraphx509CertificateAuthenticationModeConfiguration{
-                Rules = @(@()
-                )
-                X509CertificateAuthenticationDefaultMode = 'x509CertificateMultiFactor'
+                X509CertificateAuthenticationDefaultMode = 'x509CertificateSingleFactor'
+                Rules = @()
             };
-            CertificateThumbprint           = $ConfigurationData.NonNodeData.CertificateThumbprint;
             CertificateUserBindings         = @(
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
                     Priority = 1
-                    UserProperty = 'onPremisesUserPrincipalName'
+                    UserProperty = 'userPrincipalName'
                     X509CertificateField = 'PrincipalName'
                 }
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
                     Priority = 2
-                    UserProperty = 'onPremisesUserPrincipalName'
+                    UserProperty = 'userPrincipalName'
                     X509CertificateField = 'RFC822Name'
                 }
                 MSFT_MicrosoftGraphx509CertificateUserBinding{
@@ -136,30 +141,50 @@ Configuration Example
                     X509CertificateField = 'SubjectKeyIdentifier'
                 }
             );
+            Credential                      = $Credscredential;
             Ensure                          = "Present";
             ExcludeTargets                  = @(
                 MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyX509ExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'DSCGroup'
                     TargetType = 'group'
                 }
             );
             Id                              = "X509Certificate";
             IncludeTargets                  = @(
                 MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyX509IncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'Finance Team'
                     TargetType = 'group'
                 }
             );
             State                           = "enabled";
-            TenantId                        = $ConfigurationData.NonNodeData.TenantId;
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
+        {
+            Credential                      = $credsCredential;
+            Ensure                          = "Absent";
+            Id                              = "X509Certificate";
         }
     }
 }

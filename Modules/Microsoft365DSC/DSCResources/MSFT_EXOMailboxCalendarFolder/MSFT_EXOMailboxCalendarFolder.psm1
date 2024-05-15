@@ -66,7 +66,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     if ($Global:CurrentModeIsExport)
@@ -122,6 +126,7 @@ function Get-TargetResource
             CertificatePassword         = $CertificatePassword
             Managedidentity             = $ManagedIdentity.IsPresent
             TenantId                    = $TenantId
+            AccessTokens                = $AccessTokens
         }
 
         Write-Verbose -Message "Found Calendar Folder for {$Identity}"
@@ -206,7 +211,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -238,6 +247,7 @@ function Set-TargetResource
     $UpdateParameters.Remove("CertificatePath") | Out-Null
     $UpdateParameters.Remove("CertificatePassword") | Out-Null
     $UpdateParameters.Remove("ManagedIdentity") | Out-Null
+    $UpdateParameters.Remove('AccessTokens') | Out-Null
 
     # The SharedCalendarSyncStartDate needs to be used by itself in a subsequent call.
     if ($PSBoundParameters.ContainsKey('SharedCalendarSyncStartDate'))
@@ -318,7 +328,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -384,7 +398,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -419,7 +437,9 @@ function Export-TargetResource
         $i = 1
         foreach ($mailbox in $mailboxes)
         {
-            $folderPath = $mailbox.UserPrincipalName + ':\Calendar'
+            # Name of calendar folder depends on the language of the mailbox
+            $calendarFolderName = (Get-MailboxFolderStatistics -Identity $($mailbox.UserPrincipalName) -FolderScope Calendar | Where-Object {$_.FolderType -eq 'Calendar'}).Name
+            $folderPath = $mailbox.UserPrincipalName + ':\' + $calendarFolderName
             Write-Host "    |---[$i/$($mailboxes.Count)] $($folderPath)" -NoNewline
             $Params = @{
                 Identity              = $folderPath
@@ -430,6 +450,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             if ($Results.SharedCalendarSyncStartDate -eq '01/02/0001 00:00:00')
@@ -451,7 +472,6 @@ function Export-TargetResource
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
-
 
         return $dscContent
     }

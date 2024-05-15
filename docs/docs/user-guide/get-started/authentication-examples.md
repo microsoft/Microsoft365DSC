@@ -13,7 +13,7 @@ Configuration CredentialsExample
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -27,7 +27,7 @@ Configuration CredentialsExample
             Template   = "STS#3"
             TimeZoneId = 13
             Ensure     = "Present"
-            Credential = $credsGlobalAdmin
+            Credential = $Credscredential
         }
     }
 }

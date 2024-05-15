@@ -15,17 +15,19 @@
 | **UserVoiceForFeedbackEnabled** | Write | Boolean | Allow feedback via UserVoice. | |
 | **PublicCdnEnabled** | Write | Boolean | Configure PublicCDN | |
 | **PublicCdnAllowedFileTypes** | Write | String | Configure filetypes allowed for PublicCDN | |
-| **UseFindPeopleInPeoplePicker** | Write | Boolean | When set to $true, users aren't able to share with security groups or SharePoint groups | |
-| **NotificationsInSharePointEnabled** | Write | Boolean | When set to $true, users aren't able to share with security groups or SharePoint groups | |
-| **OwnerAnonymousNotification** | Write | Boolean | | |
-| **ApplyAppEnforcedRestrictionsToAdHocRecipients** | Write | Boolean | | |
-| **FilePickerExternalImageSearchEnabled** | Write | Boolean | | |
+| **UseFindPeopleInPeoplePicker** | Write | Boolean | When set to $true, users aren't able to share with security groups or SharePoint groups. | |
+| **NotificationsInSharePointEnabled** | Write | Boolean | When set to $true, users aren't able to share with security groups or SharePoint groups. | |
+| **OwnerAnonymousNotification** | Write | Boolean | Specifies whether an email notification should be sent to the OneDrive for Business owners when an anonymous links are created or changed. | |
+| **ApplyAppEnforcedRestrictionsToAdHocRecipients** | Write | Boolean | When the feature is enabled, all guest users are subject to conditional access policy. By default guest users who are accessing SharePoint Online files with pass code are exempt from the conditional access policy. | |
+| **FilePickerExternalImageSearchEnabled** | Write | Boolean | Sets whether webparts that support inserting images, like for example Image or Hero webpart, the Web search (Powered by Bing) should allow choosing external images. | |
 | **HideDefaultThemes** | Write | Boolean | Defines if the default themes are visible or hidden | |
 | **HideSyncButtonOnTeamSite** | Write | Boolean | To enable or disable Sync button on Team sites | |
 | **MarkNewFilesSensitiveByDefault** | Write | String | Allow or block external sharing until at least one Office DLP policy scans the content of the file. | `AllowExternalSharing`, `BlockExternalSharing` |
-| **ConditionalAccessPolicy** | Write | String | Allow or Block Conditional Access Policy on the SharePoint Tenant | `AllowFullAccess`, `AllowLimitedAccess`, `BlockAccess` |
-| **DisabledWebPartIds** | Write | String | Provide GUID for the Web Parts that are to be disabled on the Sharepoint Site | |
+| **DisabledWebPartIds** | Write | StringArray[] | Provide GUID for the Web Parts that are to be disabled on the Sharepoint Site | |
+| **SocialBarOnSitePagesDisabled** | Write | Boolean | Disables or enables the Social Bar. It will give users the ability to like a page, see the number of views, likes, and comments on a page, and see the people who have liked a page. | |
 | **CommentsOnSitePagesDisabled** | Write | Boolean | Set to false to enable a comment section on all site pages, users who have access to the pages can leave comments. Set to true to disable this feature. | |
+| **EnableAIPIntegration** | Write | Boolean | Boolean indicating if Azure Information Protection (AIP) should be enabled on the tenant. | |
+| **TenantDefaultTimezone** | Write | String | The default timezone of a tenant for newly created sites. | |
 | **Ensure** | Write | String | Only accepted value is 'Present'. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the account to authenticate with. | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
@@ -35,6 +37,7 @@
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 # SPO Tenant Settings
@@ -54,21 +57,21 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Domain.Read.All
+    - Domain.Read.All, SharePointTenantSettings.Read.All
 
 - **Update**
 
-    - Domain.Read.All
+    - Domain.Read.All, SharePointTenantSettings.ReadWrite.All
 
 #### Application permissions
 
 - **Read**
 
-    - Domain.Read.All
+    - Domain.Read.All, SharePointTenantSettings.Read.All
 
 - **Update**
 
-    - Domain.Read.All
+    - Domain.Read.All, SharePointTenantSettings.ReadWrite.All
 
 ### Microsoft SharePoint
 
@@ -107,7 +110,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -115,26 +118,28 @@ Configuration Example
     {
         SPOTenantSettings 'ConfigureTenantSettings'
         {
-            IsSingleInstance                              = "Yes"
+            IsSingleInstance                              = 'Yes'
             MinCompatibilityLevel                         = 16
             MaxCompatibilityLevel                         = 16
             SearchResolveExactEmailOrUPN                  = $false
             OfficeClientADALDisabled                      = $false
             LegacyAuthProtocolsEnabled                    = $true
-            SignInAccelerationDomain                      = ""
+            SignInAccelerationDomain                      = ''
             UsePersistentCookiesForExplorerView           = $false
             UserVoiceForFeedbackEnabled                   = $true
             PublicCdnEnabled                              = $false
-            PublicCdnAllowedFileTypes                     = "CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF"
+            PublicCdnAllowedFileTypes                     = 'CSS,EOT,GIF,ICO,JPEG,JPG,JS,MAP,PNG,SVG,TTF,WOFF'
             UseFindPeopleInPeoplePicker                   = $false
             NotificationsInSharePointEnabled              = $true
             OwnerAnonymousNotification                    = $true
             ApplyAppEnforcedRestrictionsToAdHocRecipients = $true
             FilePickerExternalImageSearchEnabled          = $true
             HideDefaultThemes                             = $false
-            MarkNewFilesSensitiveByDefault                = "AllowExternalSharing"
-            Ensure                                        = "Present"
-            Credential                                    = $credsGlobalAdmin
+            MarkNewFilesSensitiveByDefault                = 'AllowExternalSharing'
+            CommentsOnSitePagesDisabled                   = $false
+            SocialBarOnSitePagesDisabled                  = $false
+            Ensure                                        = 'Present'
+            Credential                                    = $Credscredential
         }
     }
 }

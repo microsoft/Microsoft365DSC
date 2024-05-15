@@ -42,6 +42,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -53,6 +54,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphWindows10AssociatedApps
@@ -247,7 +249,6 @@ Configuration Example
             EnableSingleSignOnWithAlternateCertificate = $False;
             EnableSplitTunneling                       = $False;
             Ensure                                     = "Present";
-            Id                                         = "9f3734d4-eb1e-46dc-b668-2f13bfa572ee";
             ProfileTarget                              = "user";
             ProxyServer                                = MSFT_MicrosoftGraphwindows10VpnProxyServer{
                 Port = 8081
@@ -278,6 +279,114 @@ Configuration Example
                 }
             );
             TrustedNetworkDomains                      = @();
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationVpnPolicyWindows10 'Example'
+        {
+            Assignments                                = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            );
+            AuthenticationMethod                       = "usernameAndPassword";
+            ConnectionName                             = "Cisco VPN";
+            ConnectionType                             = "ciscoAnyConnect";
+            Credential                                 = $Credscredential;
+            CustomXml                                  = "";
+            DisplayName                                = "VPN";
+            DnsRules                                   = @(
+                MSFT_MicrosoftGraphvpnDnsRule{
+                    Servers = @('10.0.1.10')
+                    Name = 'NRPT rule'
+                    Persistent = $True
+                    AutoTrigger = $True
+                }
+            );
+            DnsSuffixes                                = @("mydomain.com");
+            EnableAlwaysOn                             = $True;
+            EnableConditionalAccess                    = $True;
+            EnableDnsRegistration                      = $True;
+            EnableSingleSignOnWithAlternateCertificate = $True; # Updated Property
+            EnableSplitTunneling                       = $False;
+            Ensure                                     = "Present";
+            ProfileTarget                              = "user";
+            ProxyServer                                = MSFT_MicrosoftGraphwindows10VpnProxyServer{
+                Port = 8081
+                BypassProxyServerForLocalAddress = $True
+                AutomaticConfigurationScriptUrl = ''
+                Address = '10.0.10.100'
+            };
+            RememberUserCredentials                    = $True;
+            ServerCollection                           = @(
+                MSFT_MicrosoftGraphvpnServer{
+                    IsDefaultServer = $True
+                    Description = 'gateway1'
+                    Address = '10.0.1.10'
+                }
+            );
+            TrafficRules                               = @(
+                MSFT_MicrosoftGraphvpnTrafficRule{
+                    Name = 'VPN rule'
+                    AppType = 'none'
+                    LocalAddressRanges = @(
+                        MSFT_MicrosoftGraphIPv4Range{
+                            UpperAddress = '10.0.2.240'
+                            LowerAddress = '10.0.2.0'
+                        }
+                    )
+                    RoutingPolicyType = 'forceTunnel'
+                    VpnTrafficDirection = 'outbound'
+                }
+            );
+            TrustedNetworkDomains                      = @();
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationVpnPolicyWindows10 'Example'
+        {
+            Credential                                 = $Credscredential;
+            DisplayName                                = "VPN";
+            Ensure                                     = "Absent";
         }
     }
 }

@@ -23,6 +23,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -34,6 +35,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 
@@ -103,9 +105,76 @@ Configuration Example
             Credential               = $Credscredential;
             DisplayName              = "Secure Assessment";
             Ensure                   = "Present";
-            Id                       = "b46822c4-48af-422a-960b-92473bee56e0";
             LaunchUri                = "https://assessment.domain.com";
             LocalGuestAccountName    = "";
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationSecureAssessmentPolicyWindows10 'Example'
+        {
+            AllowPrinting            = $True;
+            AllowScreenCapture       = $False; # Updated Property
+            AllowTextSuggestion      = $True;
+            AssessmentAppUserModelId = "";
+            Assignments              = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            );
+            ConfigurationAccount     = "user@domain.com";
+            ConfigurationAccountType = "azureADAccount";
+            Credential               = $Credscredential;
+            DisplayName              = "Secure Assessment";
+            Ensure                   = "Present";
+            LaunchUri                = "https://assessment.domain.com";
+            LocalGuestAccountName    = "";
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationSecureAssessmentPolicyWindows10 'Example'
+        {
+            Credential               = $Credscredential;
+            DisplayName              = "Secure Assessment";
+            Ensure                   = "Absent";
         }
     }
 }

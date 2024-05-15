@@ -10,7 +10,7 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBToken', 'OrgWideFBBasic', 'InternalProxy')]
         [System.String]
         $AccessMethod,
 
@@ -25,6 +25,14 @@ function Get-TargetResource
         [Parameter()]
         [System.String]
         $TargetAutodiscoverEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetServiceEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetTenantId,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -57,7 +65,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     if ($Global:CurrentModeIsExport)
     {
@@ -91,7 +103,10 @@ function Get-TargetResource
     {
         try
         {
-            $AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ErrorAction Stop
+            if (-not [System.String]::IsNullOrEmpty($ForestName))
+            {
+                $AvailabilityAddressSpace = Get-AvailabilityAddressSpace -Identity $ForestName -ErrorAction Stop
+            }
         }
         catch
         {
@@ -99,17 +114,13 @@ function Get-TargetResource
                 -Exception $_ `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
-
-        $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $AvailabilityAddressSpace)
         {
-            Write-Verbose -Message "AvailabilityAddressSpace $($Identity) does not exist."
+            Write-Verbose -Message "AvailabilityAddressSpace $($ForestName) does not exist."
             return $nullReturn
         }
         else
         {
-
-
             if ($Null -eq $AvailabilityAddressSpace.TargetAutodiscoverEpr -or $AvailabilityAddressSpace.TargetAutodiscoverEpr -eq '' )
             {
                 $TargetAutodiscoverEpr = ''
@@ -123,6 +134,8 @@ function Get-TargetResource
                 Identity              = $Identity
                 AccessMethod          = $AvailabilityAddressSpace.AccessMethod
                 Credentials           = $AvailabilityAddressSpace.Credentials
+                TargetServiceEpr      = $AvailabilityAddressSpace.TargetServiceEpr
+                TargetTenantId        = $AvailabilityAddressSpace.TargetTenantId
                 ForestName            = $AvailabilityAddressSpace.ForestName
                 TargetAutodiscoverEpr = $TargetAutodiscoverEpr
                 Credential            = $Credential
@@ -133,6 +146,7 @@ function Get-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 TenantId              = $TenantId
+                AccessTokens          = $AccessTokens
             }
 
             Write-Verbose -Message "Found AvailabilityAddressSpace $($Identity)"
@@ -163,7 +177,7 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBToken', 'OrgWideFBBasic', 'InternalProxy')]
         [System.String]
         $AccessMethod,
 
@@ -178,6 +192,14 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $TargetAutodiscoverEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetServiceEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetTenantId,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -210,7 +232,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -229,18 +255,8 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    try
-    {
-        $AvailabilityAddressSpaces = Get-AvailabilityAddressSpace -ea stop
-    }
-    catch
-    {
-        New-M365DSCLogEntry -Message "Couldn't get AvailabilityAddressSpaces" `
-            -Exception $_ `
-            -Source $MyInvocation.MyCommand.ModuleName
-    }
+    $currentInstance = Get-TargetResource @PSBoundParameters
 
-    $AvailabilityAddressSpace = $AvailabilityAddressSpaces | Where-Object -FilterScript { $_.Identity -eq $Identity }
     $AvailabilityAddressSpaceParams = [System.Collections.Hashtable]($PSBoundParameters)
     $AvailabilityAddressSpaceParams.Remove('Ensure') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('Credential') | Out-Null
@@ -250,8 +266,9 @@ function Set-TargetResource
     $AvailabilityAddressSpaceParams.Remove('CertificatePath') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('CertificatePassword') | Out-Null
     $AvailabilityAddressSpaceParams.Remove('ManagedIdentity') | Out-Null
+    $AvailabilityAddressSpaceParams.Remove('AccessTokens') | Out-Null
 
-    if (('Present' -eq $Ensure ) -and ($null -eq $AvailabilityAddressSpace))
+    if ('Present' -eq $Ensure -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating AvailabilityAddressSpace $($Identity)."
         # AvailabilityAddressSpace doe not have a new-AvailabilityAddressSpace cmdlet but instead uses an add-AvailabilityAddressSpace cmdlet
@@ -259,7 +276,7 @@ function Set-TargetResource
         {
             $AvailabilityAddressSpaceParams.Remove('Identity') | Out-Null
             $AvailabilityAddressSpaceParams.Remove('Credentials') | Out-Null
-            add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
+            Add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
         }
         catch
         {
@@ -268,7 +285,7 @@ function Set-TargetResource
                 -Source $MyInvocation.MyCommand.ModuleName
         }
     }
-    elseif (('Present' -eq $Ensure ) -and ($Null -ne $AvailabilityAddressSpace))
+    elseif ('Present' -eq $Ensure -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Setting AvailabilityAddressSpace $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $AvailabilityAddressSpaceParams)"
         # AvailabilityAddressSpace is a special case in that it does not have a "set-AvailabilityAddressSpace" cmdlet. To change values of an existing AvailabilityAddressSpace it must be removed and then added again with add-AvailabilityAddressSpace
@@ -287,7 +304,7 @@ function Set-TargetResource
         {
             $AvailabilityAddressSpaceParams.Remove('Identity') | Out-Null
             $AvailabilityAddressSpaceParams.Remove('Credentials') | Out-Null
-            add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
+            Add-AvailabilityAddressSpace @AvailabilityAddressSpaceParams -ea stop
         }
         catch
         {
@@ -296,7 +313,7 @@ function Set-TargetResource
                 -Source $MyInvocation.MyCommand.ModuleName
         }
     }
-    elseif (('Absent' -eq $Ensure ) -and ($null -ne $AvailabilityAddressSpace))
+    elseif ('Absent' -eq $Ensure -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing AvailabilityAddressSpace $($Identity)"
         try
@@ -323,7 +340,7 @@ function Test-TargetResource
         $Identity,
 
         [Parameter()]
-        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBBasic', 'InternalProxy')]
+        [ValidateSet('PerUserFB', 'OrgWideFB', 'OrgWideFBToken', 'OrgWideFBBasic', 'InternalProxy')]
         [System.String]
         $AccessMethod,
 
@@ -338,6 +355,14 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $TargetAutodiscoverEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetServiceEpr,
+
+        [Parameter()]
+        [System.String]
+        $TargetTenantId,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -370,7 +395,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -392,13 +421,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -442,7 +464,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -501,6 +527,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

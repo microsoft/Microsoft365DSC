@@ -9,6 +9,10 @@ function Get-TargetResource
         $Identity,
 
         [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
         [System.Boolean]
         $AutoDeclineFutureRequestsWhenOOF,
 
@@ -93,7 +97,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Mailbox AutoReply Configuration for $Identity"
@@ -135,8 +143,10 @@ function Get-TargetResource
         }
         else
         {
+            $ownerValue = Get-User -Identity $config.Identity
             $result = @{
                 Identity                         = $config.Identity
+                Owner                            = $ownerValue.UserPrincipalName
                 AutoDeclineFutureRequestsWhenOOF = [Boolean]$config.AutoDeclineFutureRequestsWhenOOF
                 AutoReplyState                   = $config.AutoReplyState
                 CreateOOFEvent                   = [Boolean]$config.CreateOOFEvent
@@ -150,14 +160,15 @@ function Get-TargetResource
                 InternalMessage                  = $config.InternalMessage
                 OOFEventSubject                  = $config.OOFEventSubject
                 StartTime                        = $config.StartTime
-                Credential                                    = $Credential
-                Ensure                                        = 'Present'
-                ApplicationId                                 = $ApplicationId
-                CertificateThumbprint                         = $CertificateThumbprint
-                CertificatePath                               = $CertificatePath
-                CertificatePassword                           = $CertificatePassword
-                Managedidentity                               = $ManagedIdentity.IsPresent
-                TenantId                                      = $TenantId
+                Credential                       = $Credential
+                Ensure                           = 'Present'
+                ApplicationId                    = $ApplicationId
+                CertificateThumbprint            = $CertificateThumbprint
+                CertificatePath                  = $CertificatePath
+                CertificatePassword              = $CertificatePassword
+                Managedidentity                  = $ManagedIdentity.IsPresent
+                TenantId                         = $TenantId
+                AccessTokens                     = $AccessTokens
             }
 
             Write-Verbose -Message "Found Mailbox $($Identity)"
@@ -187,6 +198,10 @@ function Set-TargetResource
         $Identity,
 
         [Parameter()]
+        [System.String]
+        $Owner,
+
+        [Parameter()]
         [System.Boolean]
         $AutoDeclineFutureRequestsWhenOOF,
 
@@ -271,7 +286,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of AntiPhishPolicy for $Identity"
@@ -299,6 +318,8 @@ function Set-TargetResource
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('CertificatePath') | Out-Null
     $PSBoundParameters.Remove('Credential') | Out-Null
+    $PSBoundParameters.Remove('Owner') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     Set-MailboxAutoReplyConfiguration @PSBoundParameters
 }
@@ -312,6 +333,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Owner,
 
         [Parameter()]
         [System.Boolean]
@@ -398,7 +423,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -464,7 +493,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -509,6 +542,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

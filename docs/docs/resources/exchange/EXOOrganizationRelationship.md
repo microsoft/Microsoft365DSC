@@ -33,6 +33,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -66,7 +67,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -88,7 +89,76 @@ Configuration Example
             TargetApplicationUri  = "mail.contoso.com"
             TargetAutodiscoverEpr = "https://mail.contoso.com/autodiscover/autodiscover.svc/wssecurity"
             Ensure                = "Present"
-            Credential            = $credsGlobalAdmin
+            Credential            = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOOrganizationRelationship 'ConfigureOrganizationRelationship'
+        {
+            Name                  = "Contoso"
+            ArchiveAccessEnabled  = $False # Updated Property
+            DeliveryReportEnabled = $True
+            DomainNames           = "mail.contoso.com"
+            Enabled               = $True
+            FreeBusyAccessEnabled = $True
+            FreeBusyAccessLevel   = "AvailabilityOnly"
+            MailboxMoveEnabled    = $True
+            MailTipsAccessEnabled = $True
+            MailTipsAccessLevel   = "None"
+            PhotosEnabled         = $True
+            TargetApplicationUri  = "mail.contoso.com"
+            TargetAutodiscoverEpr = "https://mail.contoso.com/autodiscover/autodiscover.svc/wssecurity"
+            Ensure                = "Present"
+            Credential            = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOOrganizationRelationship 'ConfigureOrganizationRelationship'
+        {
+            Name                  = "Contoso"
+            Enabled               = $True
+            Ensure                = "Absent"
+            Credential            = $Credscredential
         }
     }
 }

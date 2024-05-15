@@ -147,7 +147,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -192,11 +196,19 @@ function Get-TargetResource
         ApplicationSecret     = $ApplicationSecret
         CertificateThumbprint = $CertificateThumbprint
         Managedidentity       = $ManagedIdentity.IsPresent
+        AccessTokens          = $AccessTokens
     }
     try
     {
         $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
-        $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled'
+        $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled' -ErrorAction SilentlyContinue
+        if ($null -eq $M365WebEnableUsersToOpenFilesFrom3PStorageValue)
+        {
+            Write-Verbose -Message "Registering the Office on the web Service Principal"
+            New-MgServicePrincipal -AppId 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e' -ErrorAction Stop | Out-Null
+            $M365WebEnableUsersToOpenFilesFrom3PStorageValue = Get-MgServicePrincipal -Filter "appId eq '$OfficeOnlineId'" -Property 'AccountEnabled' -ErrorAction SilentlyContinue
+        }
+
         if ($null -ne $M365WebEnableUsersToOpenFilesFrom3PStorageValue)
         {
             $results += @{
@@ -223,7 +235,8 @@ function Get-TargetResource
             }
         }
 
-        # Microsoft Viva Briefing Email
+        # DEPRECATED - Microsoft Viva Briefing Email
+        <#
         $vivaBriefingEmailValue = $false
         try
         {
@@ -275,7 +288,7 @@ function Get-TargetResource
         }
         $results += @{
             MicrosoftVivaBriefingEmail = $vivaBriefingEmailValue
-        }
+        }#>
 
         # Viva Insights settings
         $currentVivaInsightsSettings = Get-DefaultTenantMyAnalyticsFeatureConfig -Verbose:$false
@@ -550,7 +563,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     if ($PSBoundParameters.ContainsKey('Ensure') -and $Ensure -eq 'Absent')
@@ -602,16 +619,18 @@ function Set-TargetResource
     }
 
     # Microsoft Viva Briefing Email
-    $briefingValue = 'opt-out'
-    if ($MicrosoftVivaBriefingEmail)
+    if ($null -ne $MicrosoftVivaBriefingEmail)
     {
-        $briefingValue = 'opt-in'
+        Write-Verbose -Message "DEPRECATED - The MicrosoftVivaBriefingEmail parameter is deprecated and will be ignored."
     }
+    #$briefingValue = 'opt-out'
+
+    <# DEPRECATED
     if ($currentValues.MicrosoftVivaBriefingEmail -and $MicrosoftVivaBriefingEmail -ne $currentValues.MicrosoftVivaBriefingEmail)
     {
         Write-Verbose -Message "Updating Microsoft Viva Briefing Email settings."
         Set-DefaultTenantBriefingConfig -IsEnabledByDefault $briefingValue -Verbose:$false | Out-Null
-    }
+    }#>
 
     # Viva Insights
     if ($currentValues.VivaInsightsWebExperience -ne $VivaInsightsWebExperience)
@@ -953,7 +972,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -971,6 +994,7 @@ function Test-TargetResource
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck.Remove("MicrosoftVivaBriefingEmail") | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
@@ -1013,7 +1037,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -1040,6 +1068,7 @@ function Export-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params
@@ -1083,20 +1112,29 @@ function Get-M365DSCO365OrgSettingsPlannerConfig
     try
     {
         $Uri = $Global:MSCloudLoginConnectionProfile.Tasks.HostUrl + "/taskAPI/tenantAdminSettings/Settings";
+        [Net.ServicePointManager]::SecurityProtocol = [Net.SecurityProtocolType]::Tls12
         $results = Invoke-RestMethod -ContentType "application/json;odata.metadata=full" `
             -Headers @{"Accept"="application/json"; "Authorization"=$Global:MSCloudLoginConnectionProfile.Tasks.AccessToken; "Accept-Charset"="UTF-8"; "OData-Version"="4.0;NetFx"; "OData-MaxVersion"="4.0;NetFx"} `
             -Method GET `
-            $Uri
+            $Uri -ErrorAction Stop
         return $results
     }
     catch
     {
-        Write-Verbose -Message "Not able to retrieve Office 365 Planner Settings. Please ensure correct permissions have been granted."
-        New-M365DSCLogEntry -Message 'Error updating Office 365 Planner Settings' `
-            -Exception $_ `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -TenantId $TenantId `
-            -Credential $Credential
+        if ($_.Exception.Message -eq 'The request was aborted: Could not create SSL/TLS secure channel.')
+        {
+            Write-Warning -Message "Could not create SSL/TLS secure channel. Skipping the Planner settings."
+        }
+        else
+        {
+            Write-Verbose -Message "Not able to retrieve Office 365 Planner Settings. Please ensure correct permissions have been granted."
+            New-M365DSCLogEntry -Message 'Error updating Office 365 Planner Settings' `
+                -Exception $_ `
+                -Source $($MyInvocation.MyCommand.Source) `
+                -TenantId $TenantId `
+                -Credential $Credential
+        }
+
         return $null
     }
 }

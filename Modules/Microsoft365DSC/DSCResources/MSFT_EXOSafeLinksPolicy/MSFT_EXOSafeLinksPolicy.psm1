@@ -95,7 +95,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of SafeLinksPolicy for $Identity"
@@ -127,12 +131,9 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        Write-Verbose -Message 'Global ExchangeOnlineSession status:'
-        Write-Verbose -Message "$( Get-PSSession -ErrorAction SilentlyContinue | Where-Object -FilterScript { $_.Name -eq 'ExchangeOnline' } | Out-String)"
-
         try
         {
-            $SafeLinksPolicies = Get-SafeLinksPolicy -ErrorAction Stop
+            $SafeLinksPolicy = Get-SafeLinksPolicy -Identity $Identity -ErrorAction Stop
         }
         catch
         {
@@ -141,8 +142,6 @@ function Get-TargetResource
                 -Exception $_ `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
-
-        $SafeLinksPolicy = $SafeLinksPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if (-not $SafeLinksPolicy)
         {
             Write-Verbose -Message "SafeLinksPolicy $($Identity) does not exist."
@@ -165,7 +164,8 @@ function Get-TargetResource
                 DisableUrlRewrite             = $SafeLinksPolicy.DisableUrlRewrite
                 ScanUrls                      = $SafeLinksPolicy.ScanUrls
                 TrackClicks                   = $SafeLinksPolicy.TrackClicks
-                UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
+                # The Get-SafeLinksPolicy no longer returns this property
+                # UseTranslatedNotificationText = $SafeLinksPolicy.UseTranslatedNotificationText
                 Ensure                        = 'Present'
                 Credential                    = $Credential
                 ApplicationId                 = $ApplicationId
@@ -174,6 +174,7 @@ function Get-TargetResource
                 CertificatePassword           = $CertificatePassword
                 Managedidentity               = $ManagedIdentity.IsPresent
                 TenantId                      = $TenantId
+                AccessTokens                  = $AccessTokens
             }
 
             Write-Verbose -Message "Found SafeLinksPolicy $($Identity)"
@@ -289,7 +290,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of SafeLinksPolicy for $Identity"
@@ -320,6 +325,7 @@ function Set-TargetResource
     $SafeLinksPolicyParams.Remove('CertificatePath') | Out-Null
     $SafeLinksPolicyParams.Remove('CertificatePassword') | Out-Null
     $SafeLinksPolicyParams.Remove('ManagedIdentity') | Out-Null
+    $SafeLinksPolicyParams.Remove('AccessTokens') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $SafeLinksPolicy))
     {
@@ -441,7 +447,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -463,15 +473,8 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
     $ValuesToCheck.Remove('IsSingleInstance') | Out-Null
-    $ValuesToCheck.Remove('Verbose') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('UseTranslatedNotificationText') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -515,7 +518,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -562,6 +569,7 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
+                    AccessTokens          = $AccessTokens
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

@@ -58,7 +58,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -94,14 +98,19 @@ function Get-TargetResource
                 $getValue = Get-MgBetaDeviceManagementGroupPolicyConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue
+                if ($null -eq $getValue)
+                {
+                    Write-Verbose -Message "Could not find an Intune Device Configuration Administrative Template Policy for Windows10 with DisplayName {$DisplayName}"
+                    return $nullResult
+                }
+                if(([array]$getValue).count -gt 1)
+                {
+                    throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+                }
             }
         }
         #endregion
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Could not find an Intune Device Configuration Administrative Template Policy for Windows10 with DisplayName {$DisplayName}"
-            return $nullResult
-        }
+
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Configuration Administrative Template Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
@@ -196,7 +205,7 @@ function Get-TargetResource
                     }
                     '*.groupPolicyPresentationValueMultiText'
                     {
-                        $complexPresentationValue.Add('StringValue', $presentationValue.AdditionalProperties.values)
+                        $complexPresentationValue.Add('StringValues', $presentationValue.AdditionalProperties.values)
                     }
                     '*.groupPolicyPresentationValueText'
                     {
@@ -225,23 +234,20 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment -GroupPolicyConfigurationId $Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        $returnAssignments = @()
+        $graphAssignments = Get-MgBetaDeviceManagementGroupPolicyConfigurationAssignment -GroupPolicyConfigurationId $Id
+        if ($graphAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($graphAssignments)
         }
-        $results.Add('Assignments', $assignmentResult)
+        $results.Add('Assignments', $returnAssignments)
 
-        return [System.Collections.Hashtable] $results
+        return $results
     }
     catch
     {
@@ -261,6 +267,7 @@ function Get-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
         }
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -324,7 +331,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -348,6 +359,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
     $keyToRename = @{
         'odataType'          = '@odata.type'
         'BooleanValue'       = 'value'
@@ -648,7 +660,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -665,10 +681,15 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Configuration Administrative Template Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
 
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -714,6 +735,11 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
+            if ($key -eq 'Assignments')
+            {
+                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+            }
+
             if (-Not $testResult)
             {
                 $testResult = $false
@@ -725,13 +751,6 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.Remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-    $ValuesToCheck.Remove('Verbose') | Out-Null
     $ValuesToCheck.Remove('Ensure') | Out-Null
     $ValuesToCheck.Remove('PolicyConfigurationIngestionType') | Out-Null
 
@@ -758,6 +777,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -779,7 +802,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -800,9 +827,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementGroupPolicyConfiguration `
-            -All `
-            -ErrorAction Stop
+        [array]$getValue = Get-MgBetaDeviceManagementGroupPolicyConfiguration -Filter $Filter -All -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -833,9 +858,15 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens`         = $AccessTokens
             }
 
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
 
@@ -926,7 +957,8 @@ function Export-TargetResource
     catch
     {
         if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
-                $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*")
+                $_.Exception -like "*Unable to perform redirect as Location Header is not set in response*" -or `
+                $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

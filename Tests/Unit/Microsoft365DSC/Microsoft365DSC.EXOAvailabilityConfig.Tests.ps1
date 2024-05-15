@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -40,6 +40,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
@@ -52,9 +54,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName Get-AvailabilityConfig -MockWith {
-                    return @{
-                        OrgWideAccount = 'meganb'
-                    }
+                    return $null
                 }
 
                 Mock -CommandName Set-AvailabilityConfig -MockWith {
@@ -87,10 +87,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential     = $Credential
                 }
 
-                Mock -CommandName Get-AvailabilityConfig -MockWith {
+                Mock -CommandName Get-MgUser -MockWith {
                     return @{
-                        OrgWideAccount = 'meganb'
+                        UserPrincipalName = 'johndoe'
                     }
+                }
+
+                Mock -CommandName Get-AvailabilityConfig -MockWith {
+                    return $null
                 }
             }
 
@@ -133,6 +137,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 $AvailabilityConfig = @{
                     OrgWideAccount = 'johndoe'
+
+                }
+                Mock -CommandName Get-User -MockWith {
+                    return @{
+                        UserPrincipalName = 'john.smith@contoso.com'
+                    }
                 }
                 Mock -CommandName Get-AvailabilityConfig -MockWith {
                     return $AvailabilityConfig

@@ -10,17 +10,17 @@ function Get-TargetResource
         $AccountName,
 
         [Parameter()]
-        [ValidateSet('userDefined','oneDay','threeDays','oneWeek','twoWeeks','oneMonth','unlimited')]
+        [ValidateSet('userDefined', 'oneDay', 'threeDays', 'oneWeek', 'twoWeeks', 'oneMonth', 'unlimited')]
         [System.String]
         $DurationOfEmailToSync,
 
         [Parameter()]
-        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
         [System.String]
         $EmailAddressSource,
 
         [Parameter()]
-        [ValidateSet('userDefined','asMessagesArrive','manual','fifteenMinutes','thirtyMinutes','sixtyMinutes','basedOnMyUsage')]
+        [ValidateSet('userDefined', 'asMessagesArrive', 'manual', 'fifteenMinutes', 'thirtyMinutes', 'sixtyMinutes', 'basedOnMyUsage')]
         [System.String]
         $EmailSyncSchedule,
 
@@ -49,17 +49,17 @@ function Get-TargetResource
         $CustomDomainName,
 
         [Parameter()]
-        [ValidateSet('fullDomainName','netBiosDomainName')]
+        [ValidateSet('fullDomainName', 'netBiosDomainName')]
         [System.String]
         $UserDomainNameSource,
 
         [Parameter()]
-        [ValidateSet('userPrincipalName','primarySmtpAddress','samAccountName')]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress', 'samAccountName')]
         [System.String]
         $UsernameAADSource,
 
         [Parameter()]
-        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
         [System.String]
         $UsernameSource,
 
@@ -107,7 +107,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -132,7 +136,7 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id  -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceConfiguration -DeviceConfigurationId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
@@ -144,16 +148,22 @@ function Get-TargetResource
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.AdditionalProperties.'@odata.type' -eq "#microsoft.graph.windows10EasEmailProfileConfiguration" `
-                    }
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EasEmailProfileConfiguration' `
+                }
+
+                if ($null -eq $getValue)
+                {
+                    Write-Verbose -Message "Could not find an Intune Device Configuration Email Profile Policy for Windows10 with DisplayName {$DisplayName}"
+                    return $nullResult
+                }
+                if (([array]$getValue).count -gt 1)
+                {
+                    throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
+                }
             }
         }
         #endregion
-        if ($null -eq $getValue)
-        {
-            Write-Verbose -Message "Could not find an Intune Device Configuration Email Profile Policy for Windows10 with DisplayName {$DisplayName}"
-            return $nullResult
-        }
+
         $Id = $getValue.Id
         Write-Verbose -Message "An Intune Device Configuration Email Profile Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
@@ -220,22 +230,19 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+
+        $returnAssignments = @()
+        $graphAssignments = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
+        if ($graphAssignments.count -gt 0)
         {
-            $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $returnAssignments += ConvertFrom-IntunePolicyAssignment `
+                -IncludeDeviceFilter:$true `
+                -Assignments ($graphAssignments)
         }
-        $results.Add('Assignments', $assignmentResult)
+        $results.Add('Assignments', $returnAssignments)
 
         return [System.Collections.Hashtable] $results
     }
@@ -247,6 +254,7 @@ function Get-TargetResource
             -TenantId $TenantId `
             -Credential $Credential
 
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -262,17 +270,17 @@ function Set-TargetResource
         $AccountName,
 
         [Parameter()]
-        [ValidateSet('userDefined','oneDay','threeDays','oneWeek','twoWeeks','oneMonth','unlimited')]
+        [ValidateSet('userDefined', 'oneDay', 'threeDays', 'oneWeek', 'twoWeeks', 'oneMonth', 'unlimited')]
         [System.String]
         $DurationOfEmailToSync,
 
         [Parameter()]
-        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
         [System.String]
         $EmailAddressSource,
 
         [Parameter()]
-        [ValidateSet('userDefined','asMessagesArrive','manual','fifteenMinutes','thirtyMinutes','sixtyMinutes','basedOnMyUsage')]
+        [ValidateSet('userDefined', 'asMessagesArrive', 'manual', 'fifteenMinutes', 'thirtyMinutes', 'sixtyMinutes', 'basedOnMyUsage')]
         [System.String]
         $EmailSyncSchedule,
 
@@ -301,17 +309,17 @@ function Set-TargetResource
         $CustomDomainName,
 
         [Parameter()]
-        [ValidateSet('fullDomainName','netBiosDomainName')]
+        [ValidateSet('fullDomainName', 'netBiosDomainName')]
         [System.String]
         $UserDomainNameSource,
 
         [Parameter()]
-        [ValidateSet('userPrincipalName','primarySmtpAddress','samAccountName')]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress', 'samAccountName')]
         [System.String]
         $UsernameAADSource,
 
         [Parameter()]
-        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
         [System.String]
         $UsernameSource,
 
@@ -358,7 +366,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -380,7 +392,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Configuration Email Profile Policy for Windows10 with DisplayName {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
@@ -395,7 +407,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.windows10EasEmailProfileConfiguration")
+        $CreateParameters.Add('@odata.type', '#microsoft.graph.windows10EasEmailProfileConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
@@ -405,7 +417,7 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceConfigurations'
         }
@@ -414,7 +426,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Device Configuration Email Profile Policy for Windows10 with Id {$($currentInstance.Id)}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Assignments') | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
@@ -430,7 +442,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.windows10EasEmailProfileConfiguration")
+        $UpdateParameters.Add('@odata.type', '#microsoft.graph.windows10EasEmailProfileConfiguration')
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -466,17 +478,17 @@ function Test-TargetResource
         $AccountName,
 
         [Parameter()]
-        [ValidateSet('userDefined','oneDay','threeDays','oneWeek','twoWeeks','oneMonth','unlimited')]
+        [ValidateSet('userDefined', 'oneDay', 'threeDays', 'oneWeek', 'twoWeeks', 'oneMonth', 'unlimited')]
         [System.String]
         $DurationOfEmailToSync,
 
         [Parameter()]
-        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
         [System.String]
         $EmailAddressSource,
 
         [Parameter()]
-        [ValidateSet('userDefined','asMessagesArrive','manual','fifteenMinutes','thirtyMinutes','sixtyMinutes','basedOnMyUsage')]
+        [ValidateSet('userDefined', 'asMessagesArrive', 'manual', 'fifteenMinutes', 'thirtyMinutes', 'sixtyMinutes', 'basedOnMyUsage')]
         [System.String]
         $EmailSyncSchedule,
 
@@ -505,17 +517,17 @@ function Test-TargetResource
         $CustomDomainName,
 
         [Parameter()]
-        [ValidateSet('fullDomainName','netBiosDomainName')]
+        [ValidateSet('fullDomainName', 'netBiosDomainName')]
         [System.String]
         $UserDomainNameSource,
 
         [Parameter()]
-        [ValidateSet('userPrincipalName','primarySmtpAddress','samAccountName')]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress', 'samAccountName')]
         [System.String]
         $UsernameAADSource,
 
         [Parameter()]
-        [ValidateSet('userPrincipalName','primarySmtpAddress')]
+        [ValidateSet('userPrincipalName', 'primarySmtpAddress')]
         [System.String]
         $UsernameSource,
 
@@ -563,7 +575,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -581,9 +597,14 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Configuration Email Profile Policy for Windows10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -603,6 +624,11 @@ function Test-TargetResource
                 -Source ($source) `
                 -Target ($target)
 
+            if ($key -eq 'Assignments')
+            {
+                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
+            }
+
             if (-Not $testResult)
             {
                 $testResult = $false
@@ -614,10 +640,6 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -642,6 +664,10 @@ function Export-TargetResource
     param
     (
         [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -663,7 +689,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -684,12 +714,11 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
-            -All `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceConfiguration -Filter $Filter -All `
             -ErrorAction Stop | Where-Object `
             -FilterScript { `
                 $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EasEmailProfileConfiguration' `
-            }
+        }
         #endregion
 
         $i = 1
@@ -711,18 +740,24 @@ function Export-TargetResource
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
-                Id = $config.Id
-                DisplayName           =  $config.DisplayName
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                ApplicationSecret = $ApplicationSecret
+                Id                    = $config.Id
+                DisplayName           = $config.DisplayName
+                Ensure                = 'Present'
+                Credential            = $Credential
+                ApplicationId         = $ApplicationId
+                TenantId              = $TenantId
+                ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity = $ManagedIdentity.IsPresent
+                Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             if ($Results.Assignments)
@@ -744,7 +779,7 @@ function Export-TargetResource
                 -Credential $Credential
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
 
             $dscContent += $currentDSCBlock
@@ -757,7 +792,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+                $_.Exception -like '*Request not applicable to target tenant*')
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

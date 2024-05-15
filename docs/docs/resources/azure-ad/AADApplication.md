@@ -8,9 +8,11 @@
 | **ObjectId** | Write | String | ObjectID of the app. | |
 | **AppId** | Write | String | AppId for the app. | |
 | **AvailableToOtherTenants** | Write | Boolean | Indicates whether this application is available in other tenants. | |
-| **GroupMembershipClaims** | Write | String | A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects. The bitmask values are: 0: None, 1: Security groups and Azure AD roles, 2: Reserved, and 4: Reserved. Setting the bitmask to 7 will get all of the security groups, distribution groups, and Azure AD directory roles that the signed-in user is a member of. | |
+| **Description** | Write | String | A free text field to provide a description of the application object to end users. The maximum allowed size is 1024 characters. | |
+| **GroupMembershipClaims** | Write | String | A bitmask that configures the groups claim issued in a user or OAuth 2.0 access token that the application expects. | |
 | **Homepage** | Write | String | The URL to the application's homepage. | |
 | **IdentifierUris** | Write | StringArray[] | User-defined URI(s) that uniquely identify a Web application within its Azure AD tenant, or within a verified custom domain. | |
+| **IsFallbackPublicClient** | Write | Boolean | Specifies the fallback application type as public client, such as an installed application running on a mobile device. The default value is false, which means the fallback application type is confidential client such as web app. There are certain scenarios where Microsoft Entra ID cannot determine the client application type (for example, ROPC flow where it is configured without specifying a redirect URI). In those cases, Microsoft Entra ID will interpret the application type based on the value of this property. | |
 | **KnownClientApplications** | Write | StringArray[] | Client applications that are tied to this resource application. | |
 | **LogoutURL** | Write | String | The logout url for this application. | |
 | **PublicClient** | Write | Boolean | Specifies whether this application is a public client (such as an installed application running on a mobile device). Default is false. | |
@@ -24,6 +26,7 @@
 | **Permissions** | Write | MSFT_AADApplicationPermission[] | API permissions for the Azure Active Directory Application. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_AADApplicationPermission
 
@@ -79,23 +82,25 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADApplication 'AADApp1'
         {
             DisplayName               = "AppDisplayName"
             AvailableToOtherTenants   = $false
-            GroupMembershipClaims     = "0"
-            Homepage                  = "https://app.contoso.com"
-            IdentifierUris            = "https://app.contoso.com"
+            Description               = "Application Description"
+            GroupMembershipClaims     = "None"
+            Homepage                  = "https://$Domain"
+            IdentifierUris            = "https://$Domain"
             KnownClientApplications   = ""
-            LogoutURL                 = "https://app.contoso.com/logout"
+            LogoutURL                 = "https://$Domain/logout"
             PublicClient              = $false
-            ReplyURLs                 = "https://app.contoso.com"
+            ReplyURLs                 = "https://$Domain"
             Permissions               = @(
                 MSFT_AADApplicationPermission
                 {
@@ -120,7 +125,94 @@ Configuration Example
                 }
             )
             Ensure                    = "Present"
-            Credential                = $credsGlobalAdmin
+            Credential                = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        AADApplication 'AADApp1'
+        {
+            DisplayName               = "AppDisplayName"
+            AvailableToOtherTenants   = $true # Updated Property
+            Description               = "Application Description"
+            GroupMembershipClaims     = "None"
+            Homepage                  = "https://$Domain"
+            IdentifierUris            = "https://$Domain"
+            KnownClientApplications   = ""
+            LogoutURL                 = "https://$Domain/logout"
+            PublicClient              = $false
+            ReplyURLs                 = "https://$Domain"
+            Permissions               = @(
+                MSFT_AADApplicationPermission
+                {
+                    Name                = 'User.Read'
+                    Type                = 'Delegated'
+                    SourceAPI           = 'Microsoft Graph'
+                    AdminConsentGranted = $false
+                }
+                MSFT_AADApplicationPermission
+                {
+                    Name                = 'User.ReadWrite.All'
+                    Type                = 'Delegated'
+                    SourceAPI           = 'Microsoft Graph'
+                    AdminConsentGranted = $True
+                }
+                MSFT_AADApplicationPermission
+                {
+                    Name                = 'User.Read.All'
+                    Type                = 'AppOnly'
+                    SourceAPI           = 'Microsoft Graph'
+                    AdminConsentGranted = $True
+                }
+            )
+            Ensure                    = "Present"
+            Credential                = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        AADApplication 'AADApp1'
+        {
+            DisplayName               = "AppDisplayName"
+            Ensure                    = "Absent"
+            Credential                = $Credscredential
         }
     }
 }

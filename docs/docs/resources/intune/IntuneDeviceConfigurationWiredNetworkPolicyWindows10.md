@@ -24,10 +24,15 @@
 | **SecondaryAuthenticationMethod** | Write | String | Specify the secondary authentication method. Possible values are: certificate, usernameAndPassword, derivedCredential. Possible values are: certificate, usernameAndPassword, derivedCredential, unknownFutureValue. | `certificate`, `usernameAndPassword`, `derivedCredential`, `unknownFutureValue` |
 | **TrustedServerCertificateNames** | Write | StringArray[] | Specify trusted server certificate names. | |
 | **RootCertificatesForServerValidationIds** | Write | StringArray[] | Specify root certificates for server validation. This collection can contain a maximum of 500 elements. | |
+| **RootCertificatesForServerValidationDisplayNames** | Write | StringArray[] | Specify root certificate display names for server validation. This collection can contain a maximum of 500 elements. | |
 | **IdentityCertificateForClientAuthenticationId** | Write | String | Specify identity certificate for client authentication. | |
+| **IdentityCertificateForClientAuthenticationDisplayName** | Write | String | Specify identity certificate display name for client authentication. | |
 | **SecondaryIdentityCertificateForClientAuthenticationId** | Write | String | Specify root certificate for client validation | |
+| **SecondaryIdentityCertificateForClientAuthenticationDisplayName** | Write | String | Specify root certificate display name for client validation | |
 | **RootCertificateForClientValidationId** | Write | String | Specify root certificate for client validation. | |
+| **RootCertificateForClientValidationDisplayName** | Write | String | Specify root certificate display name for client validation. | |
 | **SecondaryRootCertificateForClientValidationId** | Write | String | Specify secondary root certificate for client validation. | |
+| **SecondaryRootCertificateForClientValidationDisplayName** | Write | String | Specify secondary root certificate display name for client validation. | |
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
 | **DisplayName** | Key | String | Admin provided name of the device configuration. | |
 | **Id** | Write | String | The unique identifier for an entity. Read-only. | |
@@ -39,6 +44,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -50,6 +56,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 
@@ -123,13 +130,88 @@ Configuration Example
             EapType                                               = 'teap'
             Enforce8021X                                          = $True
             Ensure                                                = 'Present'
-            Id                                                    = 'ff8049cd-a1f8-4417-b937-d455a02cce2a'
             MaximumAuthenticationFailures                         = 5
             MaximumEAPOLStartMessages                             = 5
             SecondaryAuthenticationMethod                         = 'certificate'
             TrustedServerCertificateNames                         = @('srv.domain.com')
             RootCertificatesForServerValidationIds                = @('a485d322-13cd-43ef-beda-733f656f48ea', '169bf4fc-5914-40f4-ad33-48c225396183')
             SecondaryIdentityCertificateForClientAuthenticationId = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationWiredNetworkPolicyWindows10 'Example'
+        {
+            Assignments                                           = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments
+                {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            )
+            AuthenticationBlockPeriodInMinutes                    = 5
+            AuthenticationMethod                                  = 'usernameAndPassword'
+            AuthenticationPeriodInSeconds                         = 55 # Updated Property
+            AuthenticationRetryDelayPeriodInSeconds               = 5
+            AuthenticationType                                    = 'machine'
+            CacheCredentials                                      = $True
+            Credential                                            = $Credscredential
+            DisplayName                                           = 'Wired Network'
+            EapolStartPeriodInSeconds                             = 5
+            EapType                                               = 'teap'
+            Enforce8021X                                          = $True
+            Ensure                                                = 'Present'
+            MaximumAuthenticationFailures                         = 5
+            MaximumEAPOLStartMessages                             = 5
+            SecondaryAuthenticationMethod                         = 'certificate'
+            TrustedServerCertificateNames                         = @('srv.domain.com')
+            RootCertificatesForServerValidationIds                = @('a485d322-13cd-43ef-beda-733f656f48ea', '169bf4fc-5914-40f4-ad33-48c225396183')
+            SecondaryIdentityCertificateForClientAuthenticationId = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationWiredNetworkPolicyWindows10 'Example'
+        {
+            Credential                                            = $Credscredential
+            DisplayName                                           = 'Wired Network'
+            Ensure                                                = 'Present'
         }
     }
 }

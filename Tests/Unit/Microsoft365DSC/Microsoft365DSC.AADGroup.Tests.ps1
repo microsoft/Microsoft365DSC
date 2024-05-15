@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
 
@@ -35,6 +35,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
 
             Mock -CommandName Get-MgGroupMember -MockWith {
+            }
+
+            Mock -CommandName Restore-MgBetaDirectoryDeletedItem -MockWith {
+            }
+            Mock -CommandName Get-MgBetaDirectoryDeletedItemAsGroup -MockWith {
             }
 
             Mock -CommandName Get-MgGroupMemberOf -MockWith {
@@ -64,18 +69,20 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName New-MgBetaDirectoryRoleMemberByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgGroupOwnerByRef -MockWith {
+            Mock -CommandName Remove-MgGroupOwnerDirectoryObjectByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgGroupMemberByRef -MockWith {
+            Mock -CommandName Remove-MgGroupMemberDirectoryObjectByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaDirectoryRoleMemberByRef -MockWith {
+            Mock -CommandName Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
@@ -395,7 +402,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         MailNickname    = 'M365DSC'
                         GroupTypes      = @()
                     }
-                    
+
                     # Set-TargetResource expects object-type of answer to contain 'group'
                     $returnData.psobject.TypeNames.insert(0, 'Group')
                     return $returnData
@@ -463,6 +470,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
+                        AssignedToRole     = @()
                         Ensure             = 'Present'
                     }
                 }
@@ -556,7 +564,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
                 Should -Invoke -CommandName 'Get-MgBetaDirectoryRole' -Exactly 1
-                Should -Invoke -CommandName 'Remove-MgBetaDirectoryRoleMemberByRef' -Exactly 1
+                Should -Invoke -CommandName 'Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef' -Exactly 1
             }
         }
 

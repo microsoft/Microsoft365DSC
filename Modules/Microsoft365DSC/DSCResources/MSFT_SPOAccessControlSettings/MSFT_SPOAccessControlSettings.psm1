@@ -31,14 +31,6 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
         $DisallowInfectedFileDownload,
 
         [Parameter()]
@@ -88,7 +80,16 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess', 'ProtectionLevel')]
+        [System.String]
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of SharePoint Online Access Control Settings'
@@ -122,8 +123,6 @@ function Get-TargetResource
             IPAddressEnforcement         = $SPOAccessControlSettings.IPAddressEnforcement
             IPAddressAllowList           = $SPOAccessControlSettings.IPAddressAllowList
             IPAddressWACTokenLifetime    = $SPOAccessControlSettings.IPAddressWACTokenLifetime
-            CommentsOnSitePagesDisabled  = $SPOAccessControlSettings.CommentsOnSitePagesDisabled
-            SocialBarOnSitePagesDisabled = $SPOAccessControlSettings.SocialBarOnSitePagesDisabled
             DisallowInfectedFileDownload = $SPOAccessControlSettings.DisallowInfectedFileDownload
             ExternalServicesEnabled      = $SPOAccessControlSettings.ExternalServicesEnabled
             EmailAttestationRequired     = $SPOAccessControlSettings.EmailAttestationRequired
@@ -137,6 +136,8 @@ function Get-TargetResource
             CertificateThumbprint        = $CertificateThumbprint
             Managedidentity              = $ManagedIdentity.IsPresent
             Ensure                       = 'Present'
+            ConditionalAccessPolicy      = $SPOAccessControlSettings.ConditionalAccessPolicy
+            AccessTokens                 = $AccessTokens
         }
     }
     catch
@@ -188,14 +189,6 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
         $DisallowInfectedFileDownload,
 
         [Parameter()]
@@ -245,7 +238,16 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess', 'ProtectionLevel')]
+        [System.String]
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of SharePoint Online Access Control Settings'
@@ -265,7 +267,6 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
-
     $CurrentParameters = $PSBoundParameters
     $CurrentParameters.Remove('Ensure') | Out-Null
     $CurrentParameters.Remove('Credential') | Out-Null
@@ -277,6 +278,7 @@ function Set-TargetResource
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
     $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters.Remove('AccessTokens') | Out-Null
 
     if ($IPAddressAllowList -eq '')
     {
@@ -320,14 +322,6 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $CommentsOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SocialBarOnSitePagesDisabled,
-
-        [Parameter()]
-        [System.Boolean]
         $DisallowInfectedFileDownload,
 
         [Parameter()]
@@ -377,7 +371,16 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [ValidateSet('AllowFullAccess', 'AllowLimitedAccess', 'BlockAccess', 'ProtectionLevel')]
+        [System.String]
+        $ConditionalAccessPolicy,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -402,18 +405,16 @@ function Test-TargetResource
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck @('IsSingleInstance', `
-            'Credential', `
             'DisplayStartASiteOption', `
             'StartASiteFormUrl', `
             'IPAddressEnforcement', `
             'IPAddressAllowList', `
             'IPAddressWACTokenLifetime', `
-            'CommentsOnSitePagesDisabled', `
-            'SocialBarOnSitePagesDisabled', `
             'DisallowInfectedFileDownload', `
             'ExternalServicesEnabled', `
             'EmailAttestationRequired', `
-            'EmailAttestationReAuthDays')
+            'EmailAttestationReAuthDays',
+            'ConditionalAccessPolicy')
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -456,7 +457,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -486,6 +491,7 @@ function Export-TargetResource
             Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
             ApplicationSecret     = $ApplicationSecret
+            AccessTokens          = $AccessTokens
         }
 
         $dscContent = ''

@@ -4,21 +4,22 @@
 
 | Parameter | Attribute | DataType | Description | Allowed Values |
 | --- | --- | --- | --- | --- |
-| **ResourceName** | Key | String | | |
-| **RuleDefinition** | Required | String | | |
-| **AfterRuleCountQuery** | Write | String | | |
+| **ResourceName** | Key | String | Name of the resource to monitor | |
+| **RuleDefinition** | Required | String | Specify the rules to monitor the resource for. | |
+| **AfterRuleCountQuery** | Write | String | Query to check how many instances exist, using PowerShell format | |
 | **Credential** | Write | PSCredential | Credentials of the Azure Active Directory Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application to authenticate with. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 # AAD Tenant Details
 
 ## Description
 
-This resource configures the Azure AD Tenant Details
+This resource monitors Microsoft365DSC resources based on provided rules.
 
 ## Permissions
 

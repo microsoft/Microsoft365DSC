@@ -29,6 +29,10 @@ function Get-TargetResource
         $LicenseAssignment,
 
         [Parameter()]
+        [System.String[]]
+        $MemberOf,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Password,
 
@@ -124,7 +128,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Getting configuration of Office 365 User $UserPrincipalName"
 
@@ -150,6 +158,7 @@ function Get-TargetResource
         LastName              = $null
         UsageLocation         = $null
         LicenseAssignment     = $null
+        MemberOf              = $null
         Password              = $null
         Credential            = $Credential
         ApplicationId         = $ApplicationId
@@ -158,6 +167,7 @@ function Get-TargetResource
         Managedidentity       = $ManagedIdentity.IsPresent
         ApplicationSecret     = $ApplicationSecret
         Ensure                = 'Absent'
+        AccessTokens          = $AccessTokens
     }
 
     try
@@ -175,8 +185,8 @@ function Get-TargetResource
         }
         else
         {
-            Write-Verbose -Message "Retrieving user from the exported instances"
-            $user = $Script:M365DSCExportInstances | Where-Object -FilterScript {$_.UserPrincipalName -eq $UserPrincipalName}
+            Write-Verbose -Message 'Retrieving user from the exported instances'
+            $user = $Script:M365DSCExportInstances | Where-Object -FilterScript { $_.UserPrincipalName -eq $UserPrincipalName }
         }
 
         Write-Verbose -Message "Found User $($UserPrincipalName)"
@@ -187,6 +197,9 @@ function Get-TargetResource
             $currentLicenseAssignment += $sku.SkuPartNumber
         }
 
+        # return membership of static groups only
+        [array]$currentMemberOf = (Get-MgUserMemberOfAsGroup -UserId $UserPrincipalName -All | Where-Object -FilterScript { $_.GroupTypes -notcontains 'DynamicMembership' }).DisplayName
+
         $userPasswordPolicyInfo = $user | Select-Object UserprincipalName, @{
             N = 'PasswordNeverExpires'; E = { $_.PasswordPolicies -contains 'DisablePasswordExpiration' }
         }
@@ -196,7 +209,7 @@ function Get-TargetResource
         {
             $Script:allDirectoryRoleAssignment = Get-MgBetaRoleManagementDirectoryRoleAssignment -All
         }
-        $assignedRoles = $Script:allDirectoryRoleAssignment | Where-Object -FilterScript {$_.PrincipalId -eq $user.Id}
+        $assignedRoles = $Script:allDirectoryRoleAssignment | Where-Object -FilterScript { $_.PrincipalId -eq $user.Id }
 
         $rolesValue = @()
         if ($null -eq $Script:allAssignedRoles -and $assignedRoles.Length -gt 0)
@@ -205,7 +218,7 @@ function Get-TargetResource
         }
         foreach ($assignedRole in $assignedRoles)
         {
-            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript {$_.Id -eq $assignedRole.RoleDefinitionId}
+            $currentRoleInfo = $Script:allAssignedRoles | Where-Object -FilterScript { $_.Id -eq $assignedRole.RoleDefinitionId }
             $rolesValue += $currentRoleInfo.DisplayName
         }
 
@@ -216,6 +229,7 @@ function Get-TargetResource
             LastName              = $user.Surname
             UsageLocation         = $user.UsageLocation
             LicenseAssignment     = $currentLicenseAssignment
+            MemberOf              = $currentMemberOf
             Password              = $Password
             City                  = $user.City
             Country               = $user.Country
@@ -239,6 +253,7 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             Ensure                = 'Present'
+            AccessTokens          = $AccessTokens
         }
         return [System.Collections.Hashtable] $results
     }
@@ -284,6 +299,10 @@ function Set-TargetResource
         $LicenseAssignment,
 
         [Parameter()]
+        [System.String[]]
+        $MemberOf,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Password,
 
@@ -379,7 +398,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 User $UserPrincipalName"
@@ -405,7 +428,7 @@ function Set-TargetResource
         Write-Verbose -Message "Removing User {$UserPrincipalName}"
         Remove-MgUser -UserId $UserPrincipalName
     }
-    else
+    elseif ($Ensure -eq 'Present')
     {
         $PasswordPolicies = $null
         if ($PasswordNeverExpires)
@@ -485,7 +508,7 @@ function Set-TargetResource
 
             if ($null -ne $Password)
             {
-                Write-Verbose -Message "PasswordProfile property will not be updated"
+                Write-Verbose -Message 'PasswordProfile property will not be updated'
             }
 
             $CreationParams.Add('UserId', $UserPrincipalName)
@@ -556,6 +579,79 @@ function Set-TargetResource
                 -Credential $Credential
 
             return $nullReturn
+        }
+        #endregion
+
+        #region Update MemberOf groups - if specified
+        if ($null -ne $MemberOf)
+        {
+            if ($null -eq $user.MemberOf)
+            {
+                # user is not currently a member of any groups, add user to groups listed in MemberOf
+                foreach ($memberOfGroup in $MemberOf)
+                {
+                    $group = Get-MgGroup -Filter "DisplayName eq '$memberOfGroup'" -Property Id, GroupTypes
+                    if ($null -eq $group)
+                    {
+                        New-M365DSCLogEntry -Message 'Error updating data:' `
+                            -Exception "Attempting to add a user to a group that doesn't exist" `
+                            -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $TenantId `
+                            -Credential $Credential
+
+                        throw "Group '$memberOfGroup' does not exist in tenant"
+                    }
+                    if ($group.GroupTypes -contains 'DynamicMembership')
+                    {
+                        New-M365DSCLogEntry -Message 'Error updating data:' `
+                            -Exception 'Attempting to add a user to a dynamic group' `
+                            -Source $($MyInvocation.MyCommand.Source) `
+                            -TenantId $TenantId `
+                            -Credential $Credential
+
+                        throw "Cannot add user $UserPrincipalName to group '$memberOfGroup' because it is a dynamic group"
+                    }
+                    New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $user.Id
+                }
+            }
+            else
+            {
+                # user is a member of some groups, ensure that user is only a member of groups listed in MemberOf
+                Compare-Object -ReferenceObject $MemberOf -DifferenceObject $user.MemberOf | ForEach-Object {
+                    $group = Get-MgGroup -Filter "DisplayName eq '$($_.InputObject)" -Property Id, GroupTypes
+                    if ($_.SideIndicator -eq '<=')
+                    {
+                        # Group in MemberOf not present in groups that user is a member of, add user to group
+                        if ($null -eq $group)
+                        {
+                            New-M365DSCLogEntry -Message 'Error updating data:' `
+                                -Exception "Attempting to add a user to a group that doesn't exist" `
+                                -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $TenantId `
+                                -Credential $Credential
+
+                            throw "Group '$($_.InputObject)' does not exist in tenant"
+                        }
+                        if ($group.GroupTypes -contains 'DynamicMembership')
+                        {
+                            New-M365DSCLogEntry -Message 'Error updating data:' `
+                                -Exception 'Attempting to add a user to a dynamic group' `
+                                -Source $($MyInvocation.MyCommand.Source) `
+                                -TenantId $TenantId `
+                                -Credential $Credential
+
+                            throw "Cannot add user $UserPrincipalName to group '$($_.InputObject)' because it is a dynamic group"
+                        }
+                        New-MgGroupMember -GroupId $group.Id -DirectoryObjectId $user.Id
+                    }
+                    else
+                    {
+                        # Group that user is a member of is not present in MemberOf, remove user from group
+                        # (no need to test for dynamic groups as they are ignored in Get-TargetResource)
+                        Remove-MgGroupMemberDirectoryObjectByRef -GroupId $group.Id -DirectoryObjectId $user.Id
+                    }
+                }
+            }
         }
         #endregion
 
@@ -632,6 +728,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String[]]
         $LicenseAssignment,
+
+        [Parameter()]
+        [System.String[]]
+        $MemberOf,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -729,7 +829,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -748,6 +852,11 @@ function Test-TargetResource
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    if ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Absent')
+    {
+        return $true
+    }
 
     $ValuesToCheck = $PSBoundParameters
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -792,7 +901,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -819,7 +932,129 @@ function Export-TargetResource
             Property    = $propertiesToRetrieve
             ErrorAction = 'Stop'
         }
-        if ($Filter -like "*endsWith*") {
+        $queryTypes = @{
+                        'eq'        = @('assignedPlans/any(a:a/capabilityStatus)',
+                                        'assignedPlans/any(a:a/service)',
+                                        'assignedPlans/any(a:a/servicePlanId)',
+                                        'authorizationInfo/certificateUserIds/any(p:p)',
+                                        'businessPhones/any(p:p)',
+                                        'companyName',
+                                        'createdObjects/any(c:c/id)',
+                                        'employeeHireDate',
+                                        'employeeOrgData/costCenter',
+                                        'employeeOrgData/division',
+                                        'employeeType',
+                                        'faxNumber',
+                                        'mobilePhone',
+                                        'officeLocation',
+                                        'onPremisesExtensionAttributes/extensionAttribute1',
+                                        'onPremisesExtensionAttributes/extensionAttribute10',
+                                        'onPremisesExtensionAttributes/extensionAttribute11',
+                                        'onPremisesExtensionAttributes/extensionAttribute12',
+                                        'onPremisesExtensionAttributes/extensionAttribute13',
+                                        'onPremisesExtensionAttributes/extensionAttribute14',
+                                        'onPremisesExtensionAttributes/extensionAttribute15',
+                                        'onPremisesExtensionAttributes/extensionAttribute2',
+                                        'onPremisesExtensionAttributes/extensionAttribute3',
+                                        'onPremisesExtensionAttributes/extensionAttribute4',
+                                        'onPremisesExtensionAttributes/extensionAttribute5',
+                                        'onPremisesExtensionAttributes/extensionAttribute6',
+                                        'onPremisesExtensionAttributes/extensionAttribute7',
+                                        'onPremisesExtensionAttributes/extensionAttribute8',
+                                        'onPremisesExtensionAttributes/extensionAttribute9',
+                                        'onPremisesSamAccountName',
+                                        'passwordProfile/forceChangePasswordNextSignIn',
+                                        'passwordProfile/forceChangePasswordNextSignInWithMfa',
+                                        'postalCode',
+                                        'preferredLanguage',
+                                        'provisionedPlans/any(p:p/provisioningStatus)',
+                                        'provisionedPlans/any(p:p/service)',
+                                        'showInAddressList',
+                                        'streetAddress')
+
+                        'startsWith' = @(
+                            'assignedPlans/any(a:a/service)',
+                            'businessPhones/any(p:p)',
+                            'companyName',
+                            'faxNumber',
+                            'mobilePhone',
+                            'officeLocation',
+                            'onPremisesSamAccountName',
+                            'postalCode',
+                            'preferredLanguage',
+                            'provisionedPlans/any(p:p/service)',
+                            'streetAddress'
+                        )
+                        'ge'     = @('employeeHireDate')
+                        'le'     = @('employeeHireDate')
+                        'eq Null' = @(
+                            'city',
+                            'companyName',
+                            'country',
+                            'createdDateTime',
+                            'department',
+                            'displayName',
+                            'employeeId',
+                            'faxNumber',
+                            'givenName',
+                            'jobTitle',
+                            'mail',
+                            'mailNickname',
+                            'mobilePhone',
+                            'officeLocation',
+                            'onPremisesExtensionAttributes/extensionAttribute1',
+                            'onPremisesExtensionAttributes/extensionAttribute10',
+                            'onPremisesExtensionAttributes/extensionAttribute11',
+                            'onPremisesExtensionAttributes/extensionAttribute12',
+                            'onPremisesExtensionAttributes/extensionAttribute13',
+                            'onPremisesExtensionAttributes/extensionAttribute14',
+                            'onPremisesExtensionAttributes/extensionAttribute15',
+                            'onPremisesExtensionAttributes/extensionAttribute2',
+                            'onPremisesExtensionAttributes/extensionAttribute3',
+                            'onPremisesExtensionAttributes/extensionAttribute4',
+                            'onPremisesExtensionAttributes/extensionAttribute5',
+                            'onPremisesExtensionAttributes/extensionAttribute6',
+                            'onPremisesExtensionAttributes/extensionAttribute7',
+                            'onPremisesExtensionAttributes/extensionAttribute8',
+                            'onPremisesExtensionAttributes/extensionAttribute9',
+                            'onPremisesSecurityIdentifier',
+                            'onPremisesSyncEnabled',
+                            'passwordPolicies',
+                            'passwordProfile/forceChangePasswordNextSignIn',
+                            'passwordProfile/forceChangePasswordNextSignInWithMfa',
+                            'postalCode',
+                            'preferredLanguage',
+                            'state',
+                            'streetAddress',
+                            'surname',
+                            'usageLocation',
+                            'userType'
+                            )
+            }
+
+        # Initialize a flag to indicate whether the filter conditions match the attribute support
+        $allConditionsMatched = $true
+
+        # Check each condition in the filter against the support list
+        # Assuming the provided PowerShell script is part of a larger context and the variable $Filter is defined elsewhere
+
+        # Check if $Filter is not null
+        if ($Filter) {
+            # Check each condition in the filter against the support list
+            foreach ($condition in $Filter.Split(' ')) {
+                if ($condition -match '(\w+)/(\w+):(\w+)') {
+                    $attribute, $operation, $value = $matches[1], $matches[2], $matches[3]
+                    if (-not $queryTypes.ContainsKey($operation) -or -not $queryTypes[$operation].Contains($attribute)) {
+                        $allConditionsMatched = $false
+                        break
+                    }
+                }
+            }
+        }
+
+        # If all conditions match the support, add parameters to $ExportParameters
+        if ($allConditionsMatched -or $Filter -like '*endsWith*')
+        {
             $ExportParameters.Add('CountVariable', 'count')
             $ExportParameters.Add('ConsistencyLevel', 'eventual')
         }
@@ -842,10 +1077,11 @@ function Export-TargetResource
                     CertificateThumbprint = $CertificateThumbprint
                     Managedidentity       = $ManagedIdentity.IsPresent
                     ApplicationSecret     = $ApplicationSecret
+                    AccessTokens          = $AccessTokens
                 }
 
                 $Results = Get-TargetResource @Params
-                $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString 'Pass@word!11' -AsPlainText -Force));"
+                $Results.Password = "New-Object System.Management.Automation.PSCredential('Password', (ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force));"
                 if ($null -ne $Results.UserPrincipalName)
                 {
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

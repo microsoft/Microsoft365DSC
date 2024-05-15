@@ -2,6 +2,7 @@
 class MSFT_EXOCASMailboxPlan : OMI_BaseResource
 {
     [Key, Description("The Identity parameter specifies the CAS Mailbox Plan that you want to modify.")] String Identity;
+    [Write, Description("The display name of the CAS Mailbox Plan.")] String DisplayName;
     [Write, Description("CASMailboxPlans cannot be created/removed in O365.  This must be set to 'Present'"), ValueMap{"Present"}, Values{"Present"}] String Ensure;
     [Write, Description("The ActiveSyncEnabled parameter enables or disables access to the mailbox by using Exchange Active Sync. Default is $true.")] Boolean ActiveSyncEnabled;
     [Write, Description("The ImapEnabled parameter enables or disables access to the mailbox by using IMAP4 clients. The default value is $true for all CAS mailbox plans except ExchangeOnlineDeskless which is $false by default.")] Boolean ImapEnabled;
@@ -14,4 +15,5 @@ class MSFT_EXOCASMailboxPlan : OMI_BaseResource
     [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

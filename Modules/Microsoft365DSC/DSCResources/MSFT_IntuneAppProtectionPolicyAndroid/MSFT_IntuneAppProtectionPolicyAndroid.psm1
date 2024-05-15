@@ -209,7 +209,11 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $Id
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Checking for the Intune Android App Protection Policy {$DisplayName}"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -246,8 +250,9 @@ function Get-TargetResource
         if ($null -eq $policyInfo)
         {
             Write-Verbose -Message "Searching for Policy using DisplayName {$DisplayName}"
-            $policyInfo = Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -Filter "displayName eq '$DisplayName'" -ExpandProperty Apps, assignments `
-                -ErrorAction Stop
+            $policyInfoArray = Get-MgBetaDeviceAppManagementAndroidManagedAppProtection -ExpandProperty Apps, assignments `
+                -ErrorAction Stop -All:$true
+            $policyInfo = $policyInfoArray | Where-Object -FilterScript {$_.displayName -eq $DisplayName}
         }
         if ($null -eq $policyInfo)
         {
@@ -339,20 +344,19 @@ function Get-TargetResource
         $policy.add('ManagedBrowserToOpenLinksRequired', $policyInfo.ManagedBrowserToOpenLinksRequired)
         $policy.add('CustomBrowserDisplayName', $policyInfo.CustomBrowserDisplayName)
         $policy.add('CustomBrowserPackageId', $policyInfo.CustomBrowserPackageId)
+        $policy.add('AccessTokens', $AccessTokens)
 
         return $policy
     }
     catch
     {
-        Write-Verbose -Message "ERROR on get-targetresource for $displayName"
-        $nullResult.Ensure = 'ERROR'
-
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
             -TenantId $TenantId `
             -Credential $Credential
 
+        $nullResult = Clear-M365DSCAuthenticationParameter -BoundParameters $nullResult
         return $nullResult
     }
 }
@@ -567,7 +571,11 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $Id
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -627,10 +635,6 @@ function Set-TargetResource
                     $configstring += ($param + ':' + $setParams.$param + "`r`n")
                 }
             }
-        }
-        else
-        {
-            #write-host 'value' $param 'not specified'
         }
     }
 
@@ -919,7 +923,11 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $Id
+        $Id,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -935,6 +943,11 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Android App Protection Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
+    {
+        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
+        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
+    }
 
     if ($CurrentValues.Ensure -eq 'ERROR')
     {
@@ -992,29 +1005,22 @@ function Test-TargetResource
             Write-Verbose -Message ('Unspecified Parameter in Config: ' + $param + '  Current Value Will be retained: ' + $CurrentValues.$param)
         }
     }
-
+    Write-Verbose -Message "Starting Assignments Check"
     # handle complex parameters - manually for now
     if ($PSBoundParameters.keys -contains 'Assignments' )
     {
         $targetvalues.add('Assignments', $psboundparameters.Assignments)
     }
-    else
-    {
-        Write-Verbose -Message 'Unspecified Parameter in Config: Assignments - Current Value is:' $CurrentValues.Assignments `
-            "`r`nNOTE: Assignments interacts with other values - not specifying may lead to unexpected output"
-    }
 
+    Write-Verbose -Message "Starting Exluded Groups Check"
     if ($PSBoundParameters.keys -contains 'ExcludedGroups' )
     {
         $targetvalues.add('ExcludedGroups', $psboundparameters.ExcludedGroups)
     }
-    else
-    {
-        Write-Verbose -Message 'Unspecified Parameter in Config: ExcludedGroups - Current Value is:' $CurrentValues.ExcludedGroups `
-            "`r`nNOTE: ExcludedGroups interacts with other values - not specifying may lead to unexpected output"
-    }
 
     # set the apps values
+    Write-Verbose -Message "AppGroupType: $AppGroupType"
+    Write-Verbose -Message "apps: $apps"
     $AppsHash = set-AppsHash -AppGroupType $AppGroupType -apps $apps
     $targetvalues.add('Apps', $AppsHash.Apps)
     $targetvalues.add('AppGroupType', $AppsHash.AppGroupType)
@@ -1073,7 +1079,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
@@ -1116,8 +1126,14 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
-            $Results = Get-TargetResource @Params
+            $Results = Get-TargetResource @params
+            if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $Results))
+            {
+                Write-Verbose "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed"
+                throw "An error occured in Get-TargetResource, the policy {$($params.displayName)} will not be processed. Refer to the event viewer logs for more information."
+            }
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
@@ -1135,7 +1151,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }
@@ -1285,12 +1302,8 @@ function Set-ManagedBrowserValues
     # edge - edge, true, empty id strings
     # any app - not configured, false, empty strings
     # unmanaged browser not configured, true, strings must not be empty
-
-    Write-Host 'Setting Managed Browser Properties'
-
     if (!$ManagedBrowserToOpenLinksRequired)
     {
-        Write-Host 'Setting Managed Browser to Any App'
         $ManagedBrowser = 'notConfigured'
         $ManagedBrowserToOpenLinksRequired = $false
         $CustomBrowserDisplayName = ''
@@ -1301,7 +1314,6 @@ function Set-ManagedBrowserValues
     {
         if (($CustomBrowserDisplayName -ne '') -and ($CustomBrowserPackageId -ne ''))
         {
-            Write-Host 'Setting Managed Browser to Custom Browser'
             $ManagedBrowser = 'notConfigured'
             $ManagedBrowserToOpenLinksRequired = $true
             $CustomBrowserDisplayName = $CustomBrowserDisplayName
@@ -1309,7 +1321,6 @@ function Set-ManagedBrowserValues
         }
         else
         {
-            Write-Host 'Setting Managed Browser to Microsoft Edge'
             $ManagedBrowser = 'microsoftEdge'
             $ManagedBrowserToOpenLinksRequired = $true
             $CustomBrowserDisplayName = ''

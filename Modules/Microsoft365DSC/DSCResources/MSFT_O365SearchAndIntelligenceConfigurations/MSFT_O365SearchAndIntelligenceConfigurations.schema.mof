@@ -7,4 +7,5 @@ class MSFT_O365SearchAndIntelligenceConfigurations : OMI_BaseResource
     [Write, Description("Specifies whether or not Person Insights should be available for the organization.")] Boolean PersonInsightsIsEnabledInOrganization;
     [Write, Description("Specifies a single Azure AD Group for which Person Insights needs to be disabled.")] String PersonInsightsDisabledForGroup;
     [Write, Description("Credentials of the Global Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

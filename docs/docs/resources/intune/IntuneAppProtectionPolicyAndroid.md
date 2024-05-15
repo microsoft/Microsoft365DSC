@@ -55,6 +55,7 @@
 | **CustomBrowserDisplayName** | Write | String | The application name for browser associated with the 'Unmanaged Browser ID'. This name will be displayed to users if the specified browser is not installed. | |
 | **CustomBrowserPackageId** | Write | String | The application ID for a single browser. Web content (http/s) from policy managed applications will open in the specified browser. | |
 | **Id** | Write | String | Id of the Intune policy. To avoid creation of duplicate policies DisplayName will be searched for if the ID is not found | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 ## Description
@@ -71,7 +72,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementApps.Read.All
+    - Group.Read.All, DeviceManagementApps.Read.All
 
 - **Update**
 
@@ -81,7 +82,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementApps.Read.All
+    - Group.Read.All, DeviceManagementApps.Read.All
 
 - **Update**
 
@@ -101,7 +102,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -115,13 +116,11 @@ Configuration Example
             AllowedOutboundClipboardSharingLevel    = 'managedAppsWithPasteIn'
             AllowedOutboundDataTransferDestinations = 'managedApps'
             Apps                                    = @('com.cisco.jabberimintune.ios', 'com.pervasent.boardpapers.ios', 'com.sharefile.mobile.intune.ios')
-            Assignments                             = @('6ee86c9f-2b3c-471d-ad38-ff4673ed723e')
             ContactSyncBlocked                      = $false
             DataBackupBlocked                       = $false
             Description                             = ''
             DeviceComplianceRequired                = $True
             DisableAppPinIfDevicePinIsSet           = $True
-            ExcludedGroups                          = @('3eacc231-d77b-4efb-bb5f-310f68bd6198')
             FingerprintBlocked                      = $False
             ManagedBrowserToOpenLinksRequired       = $True
             MaximumPinRetries                       = 5
@@ -132,7 +131,84 @@ Configuration Example
             SaveAsBlocked                           = $True
             SimplePinBlocked                        = $True
             Ensure                                  = 'Present'
-            Credential                              = $credsGlobalAdmin
+            Credential                              = $Credscredential
+        }
+    }
+}
+
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAppProtectionPolicyAndroid 'ConfigureAppProtectionPolicyAndroid'
+        {
+            DisplayName                             = 'My DSC Android App Protection Policy'
+            AllowedDataStorageLocations             = @('sharePoint')
+            AllowedInboundDataTransferSources       = 'managedApps'
+            AllowedOutboundClipboardSharingLevel    = 'managedAppsWithPasteIn'
+            AllowedOutboundDataTransferDestinations = 'managedApps'
+            Apps                                    = @('com.cisco.jabberimintune.ios', 'com.pervasent.boardpapers.ios', 'com.sharefile.mobile.intune.ios')
+            ContactSyncBlocked                      = $true # Updated Property
+            DataBackupBlocked                       = $false
+            Description                             = ''
+            DeviceComplianceRequired                = $True
+            DisableAppPinIfDevicePinIsSet           = $True
+            FingerprintBlocked                      = $False
+            ManagedBrowserToOpenLinksRequired       = $True
+            MaximumPinRetries                       = 5
+            MinimumPinLength                        = 4
+            OrganizationalCredentialsRequired       = $false
+            PinRequired                             = $True
+            PrintBlocked                            = $True
+            SaveAsBlocked                           = $True
+            SimplePinBlocked                        = $True
+            Ensure                                  = 'Present'
+            Credential                              = $Credscredential
+        }
+    }
+}
+
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneAppProtectionPolicyAndroid 'ConfigureAppProtectionPolicyAndroid'
+        {
+            DisplayName                             = 'My DSC Android App Protection Policy'
+            Ensure                                  = 'Absent'
+            Credential                              = $Credscredential
         }
     }
 }

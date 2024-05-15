@@ -18,6 +18,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -54,15 +55,16 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOMailboxPermission "TestPermission"
         {
             AccessRights         = @("FullAccess","ReadPermission");
             Credential           = $credsCredential;
-            Deny                 = $False;
+            Deny                 = $True; # Updated Property
             Ensure               = "Present";
-            Identity             = "John.Smith";
+            Identity             = "AlexW@$Domain";
             InheritanceType      = "All";
             User                 = "NT AUTHORITY\SELF";
         }

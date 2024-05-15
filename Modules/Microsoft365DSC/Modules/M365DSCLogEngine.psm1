@@ -80,7 +80,6 @@ function New-M365DSCLogEntry
 
         #region Telemetry
         $driftedData = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-        $driftedData.Add('Event', 'Error')
         $driftedData.Add('CustomMessage', $Message)
         $driftedData.Add('Source', $Source)
 
@@ -252,7 +251,8 @@ function Add-M365DSCEvent
 
         $MessageText = "Could not write to event log Source {$Source} EntryType {$EntryType} Message {$Message}"
         # Check call stack to prevent indefinite loop between New-M365DSCLogEntry and this function
-        if ((Get-PSCallStack)[1].FunctionName -ne 'New-M365DSCLogEntry')
+        if ((Get-PSCallStack)[1].FunctionName -ne 'New-M365DSCLogEntry' -and `
+            -not $_.ToString().Contains('EventLog access is not supported on this platform.'))
         {
             New-M365DSCLogEntry -Exception $_ -Message $MessageText `
                 -Source '[M365DSCLogEngine]' `

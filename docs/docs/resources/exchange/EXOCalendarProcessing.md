@@ -51,6 +51,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -88,13 +89,14 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOCalendarProcessing "CalendarProcessing"
         {
             AddAdditionalResponse                = $False;
             AddNewRequestsTentatively            = $True;
-            AddOrganizerToSubject                = $True;
+            AddOrganizerToSubject                = $False; # Updated Property
             AllBookInPolicy                      = $True;
             AllowConflicts                       = $False;
             AllowRecurringMeetings               = $True;
@@ -116,7 +118,7 @@ Configuration Example
             EnforceSchedulingHorizon             = $True;
             Ensure                               = "Present";
             ForwardRequestsToDelegates           = $True;
-            Identity                             = "John.Smith";
+            Identity                             = "admin@$Domain";
             MaximumConflictInstances             = 0;
             MaximumDurationInMinutes             = 1440;
             MinimumDurationInMinutes             = 0;
@@ -127,7 +129,7 @@ Configuration Example
             RemoveForwardedMeetingNotifications  = $False;
             RemoveOldMeetingMessages             = $False;
             RemovePrivateProperty                = $True;
-            RequestInPolicy                      = @("Bob.Houle@$OrganizationName");
+            RequestInPolicy                      = @("AlexW@$Domain");
             ResourceDelegates                    = @();
             ScheduleOnlyDuringWorkHours          = $False;
             TentativePendingApproval             = $True;

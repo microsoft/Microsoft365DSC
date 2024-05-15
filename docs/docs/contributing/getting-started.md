@@ -10,7 +10,7 @@ The Microsoft365DSC project is open to contribution from the community. In order
 
 ![Infographic](../Images/CreateFork.jpg){ align=center width=500 }
 
-- A dialog box asking you to select the account to fork the repository will appear. Select you account from the list.
+- A dialog box asking you to select the account to fork the repository will appear. Select your account from the list.
 
 ![Select Account to fork under](../Images/ForkLocation.jpg){ width=500 }
 

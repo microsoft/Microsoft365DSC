@@ -221,7 +221,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Teams Call Queue {$Name}"
@@ -245,8 +253,18 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $queue = Get-CsCallQueue -NameFilter $Name `
-            -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.Name -eq $Name}
+        if (-not $Script:ExportMode)
+        {
+            Write-Host -Message "Getting Office 365 queue $Name"
+            $queue = Get-CsCallQueue -NameFilter $Name `
+                -ErrorAction SilentlyContinue | Where-Object -FilterScript {$_.Name -eq $Name}
+        }
+        else
+        {
+            Write-Host -Message "Retrieving queue $Name from the exported instances"
+            $queue = $Script:exportedInstances | Where-Object -FilterScript {$_.Name -eq $Name}
+        }
+
 
         if ($null -eq $queue)
         {
@@ -308,6 +326,8 @@ function Get-TargetResource
                 ApplicationId                                 = $ApplicationId
                 TenantId                                      = $TenantId
                 CertificateThumbprint                         = $CertificateThumbprint
+                ManagedIdentity                               = $ManagedIdentity.IsPresent
+                AccessTokens                                  = $AccessTokens
             }
         }
     }
@@ -545,7 +565,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Teams Call Queue {$Name}"
@@ -573,6 +601,8 @@ function Set-TargetResource
     $opsParameters.Remove('TenantId') | Out-Null
     $opsParameters.Remove('CertificateThumbprint') | Out-Null
     $opsParameters.Remove('Ensure') | Out-Null
+    $opsParameters.Remove('ManagedIdentity') | Out-Null
+    $opsParameters.Remove('AccessTokens') | Out-Null
 
     if ($currentValues.Ensure -eq 'Absent' -and 'Present' -eq $Ensure )
     {
@@ -817,7 +847,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -871,7 +909,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -892,7 +938,12 @@ function Export-TargetResource
     {
         $i = 1
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-CsCallQueue -ErrorAction Stop
+        $Script:MaxSize = 1000
+        [array] $Script:exportedInstances = Get-CsCallQueue -ErrorAction Stop -First $Script:MaxSize
+        if ($Script:exportedInstances.Count -eq $Script:MaxSize){
+            Write-Verbose -Message "WARNING: CsCallQueue isn't exporting all of them, you reach the max size."
+        }
+
         $dscContent = [System.Text.StringBuilder]::New()
         Write-Host "`r`n" -NoNewline
         foreach ($instance in $exportedInstances)
@@ -906,6 +957,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

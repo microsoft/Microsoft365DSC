@@ -1,0 +1,47 @@
+name: Describe Resources Schemas
+on: [push]
+
+jobs:
+  ParseSchemas:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+    permissions: write-all
+
+    # Only when run from the main repo
+    if: github.repository == 'microsoft/Microsoft365DSC'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - uses: actions/checkout@v3
+      - name: Install Microsoft365DSC
+        shell: powershell
+        run: |
+          winrm quickconfig -force
+          $source = "./Modules/Microsoft365DSC/"
+          $destination = "C:\Program Files\WindowsPowerShell\Modules"
+          Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
+          Update-M365DSCDependencies
+      - name: Configure Environment
+        shell: powershell
+        run: |
+          Set-ExecutionPolicy Unrestricted -Force
+          Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
+          Set-M365DSCTelemetryOption -Enabled $false
+          Set-Item -Path WSMan:\localhost\MaxEnvelopeSizekb -Value 99999
+      - name: Generate {Create} Integration Tests from Examples
+        shell: powershell
+        run: |
+          Import-Module './Modules/Microsoft365DSC/Modules/M365DSCSchemaHandler.psm1'
+          New-M365DSCSchemaDefinition
+      - name: Commit File
+        shell: powershell
+        run: |
+          git config --local user.email "nicharl@microsoft.com"
+          git config --local user.name "NikCharlebois"
+          git add D:/a/Microsoft365DSC/Microsoft365DSC/Modules/Microsoft365DSC/SchemaDefinition.json
+          git pull
+          git commit -m "Updated Schema Definition"
+          git push
+          $SHA = git rev-parse HEAD
+          echo "commitid=$SHA" >> $env:GITHUB_OUTPUT

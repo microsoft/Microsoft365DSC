@@ -20,7 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -46,6 +46,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
@@ -56,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName      = 'Security Defaults'
                     Description      = 'Security Defaults description'
                     IsEnabled        = $True
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {
@@ -88,7 +90,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     DisplayName      = 'Security Defaults'
                     Description      = 'Security Defaults description'
                     IsEnabled        = $True
-                    Credential       = $credsGlobalAdmin
+                    Credential       = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaPolicyIdentitySecurityDefaultEnforcementPolicy -MockWith {

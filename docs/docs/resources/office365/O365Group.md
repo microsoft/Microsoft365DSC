@@ -10,12 +10,13 @@
 | **Description** | Write | String | The group's description. | |
 | **Members** | Write | StringArray[] | Members of the group. | |
 | **Ensure** | Write | String | Present ensures the group exists, absent ensures it is removed. | `Present`, `Absent` |
-| **Credential** | Write | PSCredential | Credentials of the Exchange Global Admin | |
+| **Credential** | Write | PSCredential | Credentials of the Global Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory application used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -60,7 +61,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -74,7 +75,7 @@ Configuration Example
             ManagedBy          = "TenantAdmin@contoso.onmicrosoft.com"
             Members            = @("Bob.Houle", "John.Smith")
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }

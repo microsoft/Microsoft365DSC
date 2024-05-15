@@ -25,6 +25,7 @@
 | **CustomDisclaimer** | Write | String | This parameter is reserved for internal Microsoft use. | |
 | **EndUserSpamNotificationCustomFromAddress** | Write | String | The EndUserSpamNotificationCustomFromAddress specifies the email address of an existing internal sender to use as the sender for quarantine notifications. To set this parameter back to the default email address quarantine@messaging.microsoft.com, use the value $null. | |
 | **EsnCustomSubject** | Write | StringArray[] | The EsnCustomSubject parameter specifies the text to use in the Subject field of quarantine notifications.This setting is available only in the built-in quarantine policy named DefaultGlobalTag that controls global quarantine policy settings. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -57,20 +58,81 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
-    $OrganizationName = $credsGlobalAdmin.UserName.Split('@')[1]
+    $OrganizationName = $Credscredential.UserName.Split('@')[1]
     Import-DscResource -ModuleName Microsoft365DSC
 
+    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
         {
             EndUserQuarantinePermissionsValue = 87;
             ESNEnabled                        = $False;
-            Identity                          = "$OrganizationName\DefaultFullAccessPolicy";
+            Identity                          = "$Domain\IntegrationPolicy";
             Ensure                            = "Present"
-            Credential                        = $credsGlobalAdmin
+            Credential                        = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    $OrganizationName = $Credscredential.UserName.Split('@')[1]
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
+        {
+            EndUserQuarantinePermissionsValue = 87;
+            ESNEnabled                        = $True; # Updated Property
+            Identity                          = "$Domain\IntegrationPolicy";
+            Ensure                            = "Present"
+            Credential                        = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    $OrganizationName = $Credscredential.UserName.Split('@')[1]
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
+        {
+            Identity                          = "$Domain\IntegrationPolicy";
+            Ensure                            = "Absent"
+            Credential                        = $Credscredential
         }
     }
 }

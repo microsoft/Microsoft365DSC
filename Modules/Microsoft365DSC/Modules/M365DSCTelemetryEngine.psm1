@@ -5,25 +5,35 @@ This function gets the Application Insights key to be used for storing telemetry
 .Functionality
 Internal, Hidden
 #>
-function Get-ApplicationInsightsTelemetryClient
+function Get-M365DSCApplicationInsightsTelemetryClient
 {
     [CmdletBinding()]
     param()
 
     if ($null -eq $Global:M365DSCTelemetryEngine)
     {
-        $AI = "$PSScriptRoot\..\Dependencies\Microsoft.ApplicationInsights.dll"
+        $AI = "$PSScriptRoot/../Dependencies/Microsoft.ApplicationInsights.dll"
         [Reflection.Assembly]::LoadFile($AI) | Out-Null
 
-        $InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
-                [System.EnvironmentVariableTarget]::Machine)
-
-        if ($null -eq $InstrumentationKey)
-        {
-            $InstrumentationKey = 'bc5aa204-0b1e-4499-a955-d6a639bdb4fa'
-        }
         $TelClient = [Microsoft.ApplicationInsights.TelemetryClient]::new()
-        $TelClient.InstrumentationKey = $InstrumentationKey
+
+        $connectionString = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryConnectionString', `
+            [System.EnvironmentVariableTarget]::Machine)
+        if (-not [System.String]::IsNullOrEmpty($connectionString))
+        {
+            $TelClient.TelemetryConfiguration.ConnectionString = $connectionString
+        }
+        else
+        {
+            $InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
+                    [System.EnvironmentVariableTarget]::Machine)
+
+            if ($null -eq $InstrumentationKey)
+            {
+                $InstrumentationKey = 'e670af5d-fd30-4407-a796-8ad30491ea7a'
+            }
+            $TelClient.InstrumentationKey = $InstrumentationKey
+        }
 
         $Global:M365DSCTelemetryEngine = $TelClient
     }
@@ -43,7 +53,7 @@ function Add-M365DSCTelemetryEvent
     param(
         [Parameter()]
         [System.String]
-        $Type = 'Flow',
+        $Type,
 
         [Parameter()]
         [System.Collections.Generic.Dictionary[[System.String], [System.String]]]
@@ -53,13 +63,12 @@ function Add-M365DSCTelemetryEvent
         [System.Collections.Generic.Dictionary[[System.String], [System.Double]]]
         $Metrics
     )
-
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
             [System.EnvironmentVariableTarget]::Machine)
 
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
-        $TelemetryClient = Get-ApplicationInsightsTelemetryClient
+        $TelemetryClient = Get-M365DSCApplicationInsightsTelemetryClient
 
         try
         {
@@ -71,77 +80,89 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add('ProjectName', $ProjectName)
             }
 
-            if (-not [System.String]::IsNullOrEmpty($Data.Principal))
+            if (-not $Data.ContainsKey('Tenant'))
             {
-                if ($Data.Principal -like '*@*.*')
+                if (-not [System.String]::IsNullOrEmpty($Data.Principal))
                 {
-                    $principalValue = $Data.Principal.Split('@')[1]
+                    if ($Data.Principal -like '*@*.*')
+                    {
+                        $principalValue = $Data.Principal.Split('@')[1]
+                        $Data.Add('Tenant', $principalValue)
+                    }
+                }
+                elseif (-not [System.String]::IsNullOrEmpty($Data.TenantId))
+                {
+                    $principalValue = $Data.TenantId
                     $Data.Add('Tenant', $principalValue)
                 }
-            }
-            elseif (-not [System.String]::IsNullOrEmpty($Data.TenantId))
-            {
-                $principalValue = $Data.TenantId
-                $Data.Add('Tenant', $principalValue)
             }
 
             $Data.Remove('TenandId') | Out-Null
             $Data.Remove('Principal') | Out-Null
 
             # Capture PowerShell Version Info
-            $Data.Add('PSMainVersion', $PSVersionTable.PSVersion.Major.ToString() + '.' + $PSVersionTable.PSVersion.Minor.ToString())
-            $Data.Add('PSVersion', $PSVersionTable.PSVersion.ToString())
-            $Data.Add('PSEdition', $PSVersionTable.PSEdition.ToString())
+            if (-not $Data.Keys.Contains('PSMainVersion'))
+            {
+                $Data.Add('PSMainVersion', $PSVersionTable.PSVersion.Major.ToString() + '.' + $PSVersionTable.PSVersion.Minor.ToString())
+            }
+            if (-not $Data.Keys.Contains('PSVersion'))
+            {
+                $Data.Add('PSVersion', $PSVersionTable.PSVersion.ToString())
+            }
+            if (-not $Data.Keys.Contains('PSEdition'))
+            {
+                $Data.Add('PSEdition', $PSVersionTable.PSEdition.ToString())
+            }
 
-            if ($null -ne $PSVersionTable.BuildVersion)
+            if ($null -ne $PSVersionTable.BuildVersion -and -not $Data.Keys.Contains('PSBuildVersion'))
             {
                 $Data.Add('PSBuildVersion', $PSVersionTable.BuildVersion.ToString())
             }
 
-            if ($null -ne $PSVersionTable.CLRVersion)
+            if ($null -ne $PSVersionTable.CLRVersion -and -not $Data.Keys.Contains('PSCLRVersion'))
             {
                 $Data.Add('PSCLRVersion', $PSVersionTable.CLRVersion.ToString())
             }
 
             # Capture Console/Host Information
-            if ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION)
+            if ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Console')
             }
-            elseif ($host.Name -eq 'Windows PowerShell ISE Host')
+            elseif ($host.Name -eq 'Windows PowerShell ISE Host' -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'ISE')
             }
-            elseif ($host.Name -eq 'ConsoleHost' -and $null -ne $env:WT_SESSION)
+            elseif ($host.Name -eq 'ConsoleHost' -and $null -ne $env:WT_SESSION -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
-                $Data.Add('PowerShellAgent', 'Windows Terminal')
+                $Data.Add('PowerShellAgent', 'Windows Terminal' -and -not $Data.Keys.Contains('PowerShellAgent'))
             }
             elseif ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION -and `
-                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'build')
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'build' -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Azure DevOPS')
                 $Data.Add('AzureDevOPSPipelineType', 'Build')
                 $Data.Add('AzureDevOPSAgent', $env:POWERSHELL_DISTRIBUTION_CHANNEL)
             }
             elseif ($host.Name -eq 'ConsoleHost' -and $null -eq $env:WT_SESSION -and `
-                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'release')
+                    $null -ne $env:BUILD_BUILDID -and $env:SYSTEM -eq 'release' -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Azure DevOPS')
                 $Data.Add('AzureDevOPSPipelineType', 'Release')
                 $Data.Add('AzureDevOPSAgent', $env:POWERSHELL_DISTRIBUTION_CHANNEL)
             }
             elseif ($host.Name -eq 'Default Host' -and `
-                    $null -ne $env:APPSETTING_FUNCTIONS_EXTENSION_VERSION)
+                    $null -ne $env:APPSETTING_FUNCTIONS_EXTENSION_VERSION -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Azure Function')
                 $Data.Add('AzureFunctionWorkerVersion', $env:FUNCTIONS_WORKER_RUNTIME_VERSION)
             }
-            elseif ($host.Name -eq 'CloudShell')
+            elseif ($host.Name -eq 'CloudShell' -and -not $Data.Keys.Contains('PowerShellAgent'))
             {
                 $Data.Add('PowerShellAgent', 'Cloud Shell')
             }
 
-            if ($null -ne $Data.Resource)
+            if ($null -ne $Data.Resource -and -not $Data.Keys.Contains('Resource'))
             {
                 if ($Data.Resource.StartsWith('MSFT_AAD') -or $Data.Resource.StartsWith('AAD'))
                 {
@@ -189,31 +210,99 @@ function Add-M365DSCTelemetryEvent
             [array]$version = (Get-Module 'Microsoft365DSC').Version | Sort-Object -Descending
             $Data.Add('M365DSCVersion', $version[0].ToString())
 
-            # Get Dependencies loaded versions
+            # OS Version
             try
             {
-                $currentPath = Join-Path -Path $PSScriptRoot -ChildPath '..\' -Resolve
-                $manifest = Import-PowerShellDataFile "$currentPath/Microsoft365DSC.psd1"
-                $dependencies = $manifest.RequiredModules
-
-                $dependenciesContent = ''
-                foreach ($dependency in $dependencies)
+                if ($null -eq $Global:M365DSCOSInfo)
                 {
-                    $dependenciesContent += Get-Module $dependency.ModuleName | Out-String
+                    $Global:M365DSCOSInfo = (Get-CimInstance -ClassName Win32_OperatingSystem -Property Caption -ErrorAction SilentlyContinue).Caption
                 }
-                $Data.Add('DependenciesVersion', $dependenciesContent)
+                $Data.Add('M365DSCOSVersion', $Global:M365DSCOSInfo)
             }
             catch
             {
                 Write-Verbose -Message $_
             }
 
+            # LCM Metadata Information
+            try
+            {
+                $LCMInfo = Get-DscLocalConfigurationManager -ErrorAction Stop
+
+                $certificateConfigured = $false
+                if (-not [System.String]::IsNullOrEmpty($LCMInfo.CertificateID))
+                {
+                    $certificateConfigured = $true
+                }
+
+                $partialConfiguration = $false
+                if (-not [System.String]::IsNullOrEmpty($LCMInfo.PartialConfigurations))
+                {
+                    $partialConfiguration = $true
+                }
+                $Data.Add('LCMUsesPartialConfigurations', $partialConfiguration)
+                $Data.Add('LCMCertificateConfigured', $certificateConfigured)
+                $Data.Add('LCMConfigurationMode', $LCMInfo.ConfigurationMode)
+                $Data.Add('LCMConfigurationModeFrequencyMins', $LCMInfo.ConfigurationModeFrequencyMins)
+                $Data.Add('LCMRefreshMode', $LCMInfo.RefreshMode)
+                $Data.Add('LCMState', $LCMInfo.LCMState)
+                $Data.Add('LCMStateDetail', $LCMInfo.LCMStateDetail)
+
+                if ([System.String]::IsNullOrEmpty($Type))
+                {
+                    if ($Global:M365DSCExportInProgress)
+                    {
+                        $Type = 'Export'
+                    }
+                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is performing a consistency check.' -or `
+                            $LCMInfo.LCMStateDetail -eq 'LCM exécute une vérification de cohérence.' -or `
+                            $LCMInfo.LCMStateDetail -eq 'LCM führt gerade eine Konsistenzüberprüfung durch.')
+                    {
+                        $Type = 'MonitoringScheduled'
+                    }
+                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is testing node against the configuration.')
+                    {
+                        $Type = 'MonitoringManual'
+                    }
+                    elseif ($LCMInfo.LCMStateDetail -eq 'LCM is applying a new configuration.' -or `
+                            $LCMInfo.LCMStateDetail -eq 'LCM applique une nouvelle configuration.')
+                    {
+                        $Type = 'ApplyingConfiguration'
+                    }
+                    else
+                    {
+                        $Type = 'Undetermined'
+                    }
+                }
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
+
+            $M365DSCTelemetryEventId = (New-GUID).ToString()
+            $Data.Add('M365DSCTelemetryEventId', $M365DSCTelemetryEventId)
+
+            if ([System.String]::IsNullOrEMpty($Type))
+            {
+                if ((-not [System.String]::IsNullOrEmpty($Data.Method) -and $Data.Method -eq 'Export-TargetResource') -or $Global:M365DSCExportInProgress)
+                {
+                    $Type = 'Export'
+                }
+            }
+
             $TelemetryClient.TrackEvent($Type, $Data, $Metrics)
-            $TelemetryClient.Flush()
         }
         catch
         {
-            Write-Error $_
+            try
+            {
+                $TelemetryClient.TrackEvent('Error', $Data, $Metrics)
+            }
+            catch
+            {
+                Write-Error $_
+            }
         }
     }
 }
@@ -251,7 +340,11 @@ function Set-M365DSCTelemetryOption
 
         [Parameter()]
         [System.String]
-        $ProjectName
+        $ProjectName,
+
+        [Parameter()]
+        [System.String]
+        $ConnectionString
     )
 
     if ($null -ne $Enabled)
@@ -269,6 +362,12 @@ function Set-M365DSCTelemetryOption
     if ($null -ne $ProjectName)
     {
         [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryProjectName', $ProjectName, `
+                [System.EnvironmentVariableTarget]::Machine)
+    }
+
+    if ($null -ne $ConnectionString)
+    {
+        [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryConnectionString', $ConnectionString, `
                 [System.EnvironmentVariableTarget]::Machine)
     }
 }
@@ -336,15 +435,26 @@ function Format-M365DSCTelemetryParameters
     {
         $data.Add('Resource', $ResourceName)
         $data.Add('Method', $CommandName)
-        if (-not $Parameters.ApplicationId)
+        if ($Parameters.Credential)
         {
-            $data.Add('Principal', $Parameters.Credential.UserName)
-            $data.Add('TenantId', $Parameters.Credential.UserName.Split('@')[1])
+            try
+            {
+                $data.Add('Principal', $Parameters.Credential.UserName)
+                $data.Add('Tenant', $Parameters.Credential.UserName.Split('@')[1])
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
         }
-        else
+        elseif ($Parameters.ApplicationId)
         {
             $data.Add('Principal', $Parameters.ApplicationId)
-            $data.Add('TenantId', $Parameters.TenantId)
+            $data.Add('Tenant', $Parameters.TenantId)
+        }
+        elseif (-not [System.String]::IsNullOrEmpty($TenantId))
+        {
+            $data.Add('Tenant', $Parameters.TenantId)
         }
         $data.Add('ConnectionMode', (Get-M365DSCAuthenticationMode -Parameters $Parameters))
     }

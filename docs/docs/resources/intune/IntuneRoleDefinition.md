@@ -18,6 +18,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 ## Description
@@ -62,7 +63,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -70,7 +71,6 @@ Configuration Example
     {
         IntuneRoleDefinition 'IntuneRoleDefinition'
         {
-            Id                        = 'f84bc63b-a377-4d90-8f4a-1de84d36a429'
             DisplayName               = 'This is my role'
             allowedResourceActions    = @('Microsoft.Intune_Organization_Read', 'Microsoft.Intune_Roles_Create', 'Microsoft.Intune_Roles_Read', 'Microsoft.Intune_Roles_Update')
             Description               = 'My role defined by me.'
@@ -78,7 +78,64 @@ Configuration Example
             notallowedResourceActions = @()
             roleScopeTagIds           = @('0', '1')
             Ensure                    = 'Present'
-            Credential                = $credsGlobalAdmin
+            Credential                = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example creates a new Intune Role Definition.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        IntuneRoleDefinition 'IntuneRoleDefinition'
+        {
+            DisplayName               = 'This is my role'
+            allowedResourceActions    = @('Microsoft.Intune_Organization_Read', 'Microsoft.Intune_Roles_Create', 'Microsoft.Intune_Roles_Read', 'Microsoft.Intune_Roles_Update')
+            Description               = 'My role defined by me.'
+            IsBuiltIn                 = $True # Updated Property
+            notallowedResourceActions = @()
+            roleScopeTagIds           = @('0', '1')
+            Ensure                    = 'Present'
+            Credential                = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Intune Role Definition.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        IntuneRoleDefinition 'IntuneRoleDefinition'
+        {
+            DisplayName               = 'This is my role'
+            Ensure                    = 'Absent'
+            Credential                = $Credscredential
         }
     }
 }

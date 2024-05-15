@@ -33,6 +33,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -44,6 +45,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_appListItem
@@ -72,7 +74,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -82,7 +84,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -100,7 +102,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -125,7 +127,7 @@ Configuration Example
             DeviceThreatProtectionRequiredSecurityLevel = 'medium'
             ManagedEmailProfileRequired                 = $True
             Ensure                                      = 'Present'
-            Credential                                  = $credsGlobalAdmin
+            Credential                                  = $Credscredential
 
         }
     }
@@ -134,7 +136,7 @@ Configuration Example
 
 ### Example 2
 
-This example removes an existing Device Compliance Policy for iOs devices
+This example creates a new Device Compliance Policy for iOs devices
 
 ```powershell
 Configuration Example
@@ -142,17 +144,60 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyiOs 'RemoveDeviceCompliancePolicyiOS'
+        IntuneDeviceCompliancePolicyiOs 'ConfigureDeviceCompliancePolicyiOS'
         {
-            DisplayName          = 'Demo iOS Device Compliance Policy'
-            Ensure               = 'Absent'
-            Credential           = $credsGlobalAdmin
+            DisplayName                                 = 'Test iOS Device Compliance Policy'
+            Description                                 = 'Test iOS Device Compliance Policy Description'
+            PasscodeBlockSimple                         = $True
+            PasscodeExpirationDays                      = 365
+            PasscodeMinimumLength                       = 8 # Updated Property
+            PasscodeMinutesOfInactivityBeforeLock       = 5
+            PasscodePreviousPasscodeBlockCount          = 3
+            PasscodeMinimumCharacterSetCount            = 2
+            PasscodeRequiredType                        = 'numeric'
+            PasscodeRequired                            = $True
+            OsMinimumVersion                            = 10
+            OsMaximumVersion                            = 12
+            SecurityBlockJailbrokenDevices              = $True
+            DeviceThreatProtectionEnabled               = $True
+            DeviceThreatProtectionRequiredSecurityLevel = 'medium'
+            ManagedEmailProfileRequired                 = $True
+            Ensure                                      = 'Present'
+            Credential                                  = $Credscredential
+
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Compliance Policy for iOs devices
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceCompliancePolicyiOs 'ConfigureDeviceCompliancePolicyiOS'
+        {
+            DisplayName                                 = 'Test iOS Device Compliance Policy'
+            Ensure                                      = 'Absent'
+            Credential                                  = $Credscredential
+
         }
     }
 }

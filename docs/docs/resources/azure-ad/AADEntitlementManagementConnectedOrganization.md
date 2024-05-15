@@ -18,6 +18,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource
 
@@ -47,7 +48,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - EntitlementManagement.Read.All, EntitlementManagement.ReadWrite.All
+    - EntitlementManagement.Read.All
 
 - **Update**
 
@@ -57,7 +58,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - EntitlementManagement.Read.All, EntitlementManagement.ReadWrite.All
+    - EntitlementManagement.Read.All
 
 - **Update**
 
@@ -76,7 +77,85 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        AADEntitlementManagementConnectedOrganization 'MyConnectedOrganization'
+        {
+            Description           = "this is the tenant partner";
+            DisplayName           = "Test Tenant - DSC";
+            ExternalSponsors      = @("AdeleV@$Domain");
+            IdentitySources       = @(
+                MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
+                    ExternalTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"
+                    DisplayName = 'o365dsc'
+                    odataType = '#microsoft.graph.azureActiveDirectoryTenant'
+                }
+            );
+            InternalSponsors      = @("AdeleV@$Domain");
+            State                 = "configured";
+            Ensure                = "Present"
+            Credential            = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    $Domain = $Credscredential.Username.Split('@')[1]
+    node localhost
+    {
+        AADEntitlementManagementConnectedOrganization 'MyConnectedOrganization'
+        {
+            Description           = "This is the tenant partner - Updated"; # Updated Property
+            DisplayName           = "Test Tenant - DSC";
+            ExternalSponsors      = @("AdeleV@$Domain");
+            IdentitySources       = @(
+                MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
+                    ExternalTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"
+                    DisplayName = 'o365dsc'
+                    odataType = '#microsoft.graph.azureActiveDirectoryTenant'
+                }
+            );
+            InternalSponsors      = @("AdeleV@$Domain");
+            State                 = "configured";
+            Ensure                = "Present"
+            Credential            = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -84,21 +163,9 @@ Configuration Example
     {
         AADEntitlementManagementConnectedOrganization 'MyConnectedOrganization'
         {
-            Description           = "this is the tenant partner";
             DisplayName           = "Test Tenant - DSC";
-            ExternalSponsors      = @("12345678-1234-1234-1234-123456789012");
-            Id                    = "12345678-1234-1234-1234-123456789012";
-            IdentitySources       = @(
-                MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
-                    ExternalTenantId = "12345678-1234-1234-1234-123456789012"
-                    DisplayName = 'Contoso'
-                    odataType = '#microsoft.graph.azureActiveDirectoryTenant'
-                }
-            );
-            InternalSponsors      = @("12345678-1234-1234-1234-123456789012");
-            State                 = "configured";
-            Ensure                = "Present"
-            Credential            = $credsGlobalAdmin
+            Ensure                = "Absent"
+            Credential            = $Credscredential
         }
     }
 }

@@ -15,6 +15,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 ## Description
@@ -57,6 +58,12 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
@@ -67,6 +74,64 @@ Configuration Example
             Description          = "This is an example";
             DisplayName          = "Example";
             Ensure               = "Present";
+            Credential           = $Credscredential;
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationStrengthPolicy "AADAuthenticationStrengthPolicy-Example"
+        {
+            AllowedCombinations  = @("windowsHelloForBusiness","fido2","deviceBasedPush"); # Updated Property
+            Description          = "This is an example";
+            DisplayName          = "Example";
+            Ensure               = "Present";
+            Credential           = $Credscredential;
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationStrengthPolicy "AADAuthenticationStrengthPolicy-Example"
+        {
+            DisplayName          = "Example";
+            Ensure               = "Absent";
             Credential           = $Credscredential;
         }
     }

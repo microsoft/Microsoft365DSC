@@ -8,7 +8,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -21,14 +21,12 @@ Configuration Example
             StartASiteFormUrl            = "https://contoso.sharepoint.com"
             IPAddressEnforcement         = $false
             IPAddressWACTokenLifetime    = 15
-            CommentsOnSitePagesDisabled  = $false
-            SocialBarOnSitePagesDisabled = $false
             DisallowInfectedFileDownload = $false
             ExternalServicesEnabled      = $true
             EmailAttestationRequired     = $false
             EmailAttestationReAuthDays   = 30
             Ensure                       = "Present"
-            Credential                   = $credsGlobalAdmin
+            Credential                   = $Credscredential
         }
     }
 }

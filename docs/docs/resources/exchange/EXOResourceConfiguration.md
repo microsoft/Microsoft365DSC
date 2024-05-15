@@ -14,6 +14,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -47,7 +48,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -59,7 +60,7 @@ Configuration Example
             IsSingleInstance       = 'Yes'
             ResourcePropertySchema = @('Room/TV', 'Equipment/Laptop')
             Ensure                 = 'Present'
-            Credential             = $credsGlobalAdmin
+            Credential             = $Credscredential
         }
     }
 }

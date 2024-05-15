@@ -20,6 +20,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -53,7 +54,96 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
+        {
+            Identity          = 'Integration'
+            Comment           = 'Mail for Contoso'
+            HybridDomains     = 'o365dsc.onmicrosoft.com'
+            InboundConnector  = 'Integration Inbound Connector'
+            OrganizationGuid  = 'e7a80bcf-696e-40ca-8775-a7f85fbb3ebc'
+            OrganizationName  = 'O365DSC'
+            OutboundConnector = 'Contoso Outbound Connector'
+            Ensure            = 'Present'
+            Credential        = $Credscredential
+            DependsOn         = "[EXOOutboundConnector]OutboundDependency"
+        }
+        EXOOutboundConnector 'OutboundDependency'
+        {
+            Identity                      = "Contoso Outbound Connector"
+            AllAcceptedDomains            = $False
+            CloudServicesMailEnabled      = $False
+            Comment                       = "Outbound connector to Contoso"
+            ConnectorSource               = "Default"
+            ConnectorType                 = "Partner"
+            Enabled                       = $True
+            IsTransportRuleScoped         = $False
+            RecipientDomains              = "contoso.com"
+            RouteAllMessagesViaOnPremises = $False
+            TlsDomain                     = "*.contoso.com"
+            TlsSettings                   = "DomainValidation"
+            UseMxRecord                   = $True
+            Ensure                        = "Present"
+            Credential                    = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
+        {
+            Identity          = 'Integration'
+            Comment           = 'Mail for Contoso - Updated' #Updated Property
+            HybridDomains     = 'o365dsc.onmicrosoft.com'
+            InboundConnector  = 'Integration Inbound Connector'
+            OrganizationGuid  = 'e7a80bcf-696e-40ca-8775-a7f85fbb3ebc'
+            OrganizationName  = 'O365DSC'
+            OutboundConnector = 'Contoso Outbound Connector'
+            Ensure            = 'Present'
+            Credential        = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -63,14 +153,7 @@ Configuration Example
         EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
         {
             Identity          = 'Contoso'
-            Comment           = 'Mail for Contoso'
-            HybridDomains     = 'contoso.com', 'sales.contoso.com'
-            InboundConnector  = 'Inbound to Contoso'
-            OrganizationGuid  = 'a1bc23cb-3456-bcde-abcd-feb363cacc88'
-            OrganizationName  = 'Contoso'
-            OutboundConnector = 'Outbound to Contoso'
-            Ensure            = 'Present'
-            Credential        = $credsGlobalAdmin
+            Credential        = $Credscredential
         }
     }
 }

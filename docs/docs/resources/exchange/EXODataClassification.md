@@ -18,6 +18,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -50,7 +51,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -58,13 +59,13 @@ Configuration Example
     {
         EXODataClassification 'ConfigureDataClassification'
         {
-            Identity    = 'Contoso Confidential'
-            Name        = 'Contoso Confidentiel'
-            Description = 'Ce message contient des informations confidentielles.'
-            Locale      = 'fr'
-            IsDefault   = $true
-            Ensure      = "Present"
-            Credential  = $credsGlobalAdmin
+            Description          = "Detects formatted and unformatted Canadian social insurance number.";
+            Ensure               = "Present";
+            Identity             = "a2f29c85-ecb8-4514-a610-364790c0773e";
+            IsDefault            = $True;
+            Locale               = "en-US";
+            Name                 = "Canada Social Insurance Number";
+            Credential           = $Credscredential
         }
     }
 }

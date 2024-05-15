@@ -43,21 +43,16 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting Authentication Policy configuration for $Identity"
-    if ($Global:CurrentModeIsExport)
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters `
-            -SkipModuleReload $true
-    }
-    else
-    {
-        $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-            -InboundParameters $PSBoundParameters
-    }
+    $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -97,6 +92,7 @@ function Get-TargetResource
             CertificatePassword      = $CertificatePassword
             Managedidentity          = $ManagedIdentity.IsPresent
             TenantId                 = $TenantId
+            AccessTokens             = $AccessTokens
         }
 
         return $result
@@ -157,7 +153,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting Authentication Policy assignment for $UserName"
@@ -238,7 +238,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -302,11 +306,14 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
-        -InboundParameters $PSBoundParameters `
-        -SkipModuleReload $true
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -346,20 +353,15 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
         }
         $i = 1
-        $allUsers = $null
         foreach ($AuthenticationPolicy in $AllAuthenticationPolicies)
         {
             Write-Host "    |---[$i/$($AllAuthenticationPolicies.Count)] $($AuthenticationPolicy.Identity)" -NoNewline
-            if (-not $allUsers)
-            {
-                $allUsers = Get-User -ResultSize 'Unlimited'
-            }
-            $assignedUsers = $allUsers | Where-Object -FilterScript { $_.AuthenticationPolicy -eq $AuthenticationPolicy.Identity }
+            $assignedUsers = Get-User -Filter "AuthenticationPolicy -eq '$($AuthenticationPolicy.DistinguishedName)'"
 
             foreach ($user in $assignedUsers)
             {
                 $Params = @{
-                    UserName              = $user.Name
+                    UserName              = $user.UserPrincipalName
                     Credential            = $Credential
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -367,6 +369,7 @@ function Export-TargetResource
                     CertificatePassword   = $CertificatePassword
                     Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
+                    AccessTokens          = $AccessTokens
                 }
                 $Results = Get-TargetResource @Params
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

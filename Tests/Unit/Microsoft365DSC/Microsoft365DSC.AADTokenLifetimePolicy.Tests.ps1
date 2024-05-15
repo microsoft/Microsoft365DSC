@@ -20,7 +20,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -48,6 +48,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
@@ -59,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Definition            = @('{"TokenIssuancePolicy":{"Version": 1,"SigningAlgorithm": "http://www.w3.org/2000/09/xmldsig#rsa-sha1","TokenResponseSigningPolicy": "TokenOnly","SamlTokenVersion": "2.0"}}')
                     IsOrganizationDefault = $false
                     Ensure                = 'Present'
-                    Credential            = $credsGlobalAdmin
+                    Credential            = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaPolicyTokenLifetimePolicy -MockWith {
@@ -87,7 +89,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsOrganizationDefault = $false
                     Description           = 'My token'
                     Ensure                = 'Absent'
-                    Credential            = $credsGlobalAdmin
+                    Credential            = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaPolicyTokenLifetimePolicy -MockWith {
@@ -124,7 +126,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsOrganizationDefault = $false
                     Description           = 'My token'
                     Ensure                = 'Present'
-                    Credential            = $credsGlobalAdmin
+                    Credential            = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaPolicyTokenLifetimePolicy -MockWith {
@@ -157,7 +159,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     IsOrganizationDefault = $true
                     Description           = 'My token'
                     Ensure                = 'Present'
-                    Credential            = $credsGlobalAdmin
+                    Credential            = $Credscredential
                 }
 
                 Mock -CommandName Get-MgBetaPolicyTokenLifetimePolicy -MockWith {

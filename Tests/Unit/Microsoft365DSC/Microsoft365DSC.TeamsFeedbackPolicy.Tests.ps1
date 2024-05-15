@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString 'f@kepassword1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-GUID).ToString() -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -49,10 +49,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
 
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
@@ -60,7 +64,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     EnableFeatureSuggestions  = $True
-                    ReceiveSurveysMode        = 'FakeStringValue'
+                    ReceiveSurveysMode        = 'Enabled'
                     AllowEmailCollection      = $True
                     UserInitiatedMode         = 'FakeStringValue'
                     Identity                  = 'FakeStringValue'
@@ -93,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     EnableFeatureSuggestions  = $True
-                    ReceiveSurveysMode        = 'FakeStringValue'
+                    ReceiveSurveysMode        = 'Enabled'
                     AllowEmailCollection      = $True
                     UserInitiatedMode         = 'FakeStringValue'
                     Identity                  = 'FakeStringValue'
@@ -106,7 +110,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsFeedbackPolicy -MockWith {
                     return @{
                         EnableFeatureSuggestions  = $True
-                        ReceiveSurveysMode        = 'FakeStringValue'
+                        ReceiveSurveysMode        = 'Enabled'
                         AllowEmailCollection      = $True
                         UserInitiatedMode         = 'FakeStringValue'
                         Identity                  = 'FakeStringValue'
@@ -135,7 +139,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     EnableFeatureSuggestions  = $True
-                    ReceiveSurveysMode        = 'FakeStringValue'
+                    ReceiveSurveysMode        = 'Enabled'
                     AllowEmailCollection      = $True
                     UserInitiatedMode         = 'FakeStringValue'
                     Identity                  = 'FakeStringValue'
@@ -148,7 +152,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsFeedbackPolicy -MockWith {
                     return @{
                         EnableFeatureSuggestions  = $True
-                        ReceiveSurveysMode        = 'FakeStringValue'
+                        ReceiveSurveysMode        = 'Enabled'
                         AllowEmailCollection      = $True
                         UserInitiatedMode         = 'FakeStringValue'
                         Identity                  = 'FakeStringValue'
@@ -167,7 +171,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $testParams = @{
                     EnableFeatureSuggestions  = $True
-                    ReceiveSurveysMode        = 'FakeStringValue'
+                    ReceiveSurveysMode        = 'Enabled'
                     AllowEmailCollection      = $True
                     UserInitiatedMode         = 'FakeStringValue'
                     Identity                  = 'FakeStringValue'
@@ -180,7 +184,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsFeedbackPolicy -MockWith {
                     return @{
                         EnableFeatureSuggestions  = $False
-                        ReceiveSurveysMode        = 'FakeStringValueDrift #Drift'
+                        ReceiveSurveysMode        = 'Disabled'
                         AllowEmailCollection      = $False
                         UserInitiatedMode         = 'FakeStringValueDrift #Drift'
                         Identity                  = 'FakeStringValue'
@@ -215,7 +219,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Mock -CommandName Get-CsTeamsFeedbackPolicy -MockWith {
                     return @{
                         EnableFeatureSuggestions  = $True
-                        ReceiveSurveysMode        = 'FakeStringValue'
+                        ReceiveSurveysMode        = 'Enabled'
                         AllowEmailCollection      = $True
                         UserInitiatedMode         = 'FakeStringValue'
                         Identity                  = 'FakeStringValue'

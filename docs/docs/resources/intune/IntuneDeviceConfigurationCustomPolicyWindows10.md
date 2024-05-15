@@ -17,6 +17,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -28,6 +29,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphOmaSetting
@@ -61,7 +63,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -71,7 +73,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -107,7 +109,6 @@ Configuration Example
             Credential           = $Credscredential;
             DisplayName          = "custom";
             Ensure               = "Present";
-            Id                   = "e072d616-12bc-4ea3-9171-ab080e4c120d";
             OmaSettings          = @(
                 MSFT_MicrosoftGraphomaSetting{
                     Description = 'custom'
@@ -129,6 +130,87 @@ Configuration Example
                 }
             );
             SupportsScopeTags    = $True;
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationCustomPolicyWindows10 'Example'
+        {
+            Assignments          = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            );
+            Credential           = $Credscredential;
+            DisplayName          = "custom";
+            Ensure               = "Present";
+            OmaSettings          = @(
+                MSFT_MicrosoftGraphomaSetting{
+                    Description = 'custom'
+                    OmaUri = '/oma/custom'
+                    odataType = '#microsoft.graph.omaSettingString'
+                    SecretReferenceValueId = '5b0e1dba-4523-455e-9fdd-e36c833b57bf_e072d616-12bc-4ea3-9171-ab080e4c120d_1f958162-15d4-42ba-92c4-17c2544b2179'
+                    Value = '****'
+                    IsEncrypted = $True
+                    DisplayName = 'oma'
+                }
+                MSFT_MicrosoftGraphomaSetting{ # Updated Property
+                    Description = 'custom 3'
+                    OmaUri = '/oma/custom3'
+                    odataType = '#microsoft.graph.omaSettingInteger'
+                    Value = 2
+                    IsReadOnly = $False
+                    IsEncrypted = $False
+                    DisplayName = 'custom 3'
+                }
+            );
+            SupportsScopeTags    = $True;
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationCustomPolicyWindows10 'Example'
+        {
+            Credential           = $Credscredential;
+            DisplayName          = "custom";
+            Ensure               = "Absent";
         }
     }
 }

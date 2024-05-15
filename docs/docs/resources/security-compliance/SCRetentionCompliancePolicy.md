@@ -31,6 +31,7 @@
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -75,7 +76,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -87,7 +88,7 @@ Configuration Example
             Comment            = "Test Policy"
             SharePointLocation = "https://contoso.sharepoint.com/sites/demo"
             Ensure             = "Present"
-            Credential         = $credsGlobalAdmin
+            Credential         = $Credscredential
         }
     }
 }

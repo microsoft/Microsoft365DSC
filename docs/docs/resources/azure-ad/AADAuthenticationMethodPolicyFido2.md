@@ -18,6 +18,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_MicrosoftGraphFido2KeyRestrictions
 
@@ -88,45 +89,73 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
     {
         AADAuthenticationMethodPolicyFido2 "AADAuthenticationMethodPolicyFido2-Fido2"
         {
-            ApplicationId                    = $ConfigurationData.NonNodeData.ApplicationId;
-            CertificateThumbprint            = $ConfigurationData.NonNodeData.CertificateThumbprint;
+            Credential                       = $Credscredential;
             Ensure                           = "Present";
             ExcludeTargets                   = @(
                 MSFT_AADAuthenticationMethodPolicyFido2ExcludeTarget{
-                    Id = 'fakegroup1'
+                    Id = 'Paralegals'
                     TargetType = 'group'
                 }
                 MSFT_AADAuthenticationMethodPolicyFido2ExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'Executives'
                     TargetType = 'group'
                 }
             );
             Id                               = "Fido2";
             IncludeTargets                   = @(
                 MSFT_AADAuthenticationMethodPolicyFido2IncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicyFido2IncludeTarget{
-                    Id = 'fakegroup4'
+                    Id = 'all_users'
                     TargetType = 'group'
                 }
             );
-            IsAttestationEnforced            = $True;
+            IsAttestationEnforced            = $False;
             IsSelfServiceRegistrationAllowed = $True;
             KeyRestrictions                  = MSFT_MicrosoftGraphfido2KeyRestrictions{
                 IsEnforced = $False
                 EnforcementType = 'block'
                 AaGuids = @()
             };
-            State                            = "enabled";
-            TenantId                         = $ConfigurationData.NonNodeData.TenantId;
+            State                            = "enabled"; # Updated Property
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        param
+        (
+            [Parameter(Mandatory = $true)]
+            [PSCredential]
+            $credsCredential
+        )
+        AADAuthenticationMethodPolicyFido2 "AADAuthenticationMethodPolicyFido2-Fido2"
+        {
+            Ensure                           = "Absent";
+            Id                               = "Fido2";
+            Credential                       = $credsCredential;
         }
     }
 }

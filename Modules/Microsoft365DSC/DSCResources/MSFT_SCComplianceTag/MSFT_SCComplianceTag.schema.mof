@@ -1,5 +1,5 @@
 [ClassVersion("1.0.0")]
-Class MSFT_SCFilePlanProperty
+class MSFT_SCFilePlanProperty
 {
     [Write, Description("File plan department. Can get list by running Get-FilePlanPropertyDepartment.")] String FilePlanPropertyDepartment;
     [Write, Description("File plan Authority. Can get list by running Get-FilePlanPropertyAuthority.")] String FilePlanPropertyAuthority;
@@ -29,4 +29,5 @@ class MSFT_SCComplianceTag : OMI_BaseResource
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

@@ -15,6 +15,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_AADAuthenticationMethodPolicySmsExcludeTarget
 
@@ -75,38 +76,62 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
     Import-DscResource -ModuleName Microsoft365DSC
 
     Node localhost
     {
         AADAuthenticationMethodPolicySms "AADAuthenticationMethodPolicySms-Sms"
         {
-            ApplicationId         = $ConfigurationData.NonNodeData.ApplicationId;
-            CertificateThumbprint = $ConfigurationData.NonNodeData.CertificateThumbprint;
-            Ensure                = "Present";
-            ExcludeTargets        = @(
+            Credential           = $Credscredential;
+            Ensure               = "Present";
+            ExcludeTargets       = @(
                 MSFT_AADAuthenticationMethodPolicySmsExcludeTarget{
-                    Id = 'fakegroup1'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicySmsExcludeTarget{
-                    Id = 'fakegroup2'
+                    Id = 'All Employees'
                     TargetType = 'group'
                 }
             );
+            Id                   = "Sms";
+            IncludeTargets       = @(
+                MSFT_AADAuthenticationMethodPolicySmsIncludeTarget{
+                    Id = 'all_users'
+                    TargetType = 'group'
+                }
+            );
+            State                = "enabled"; # Updated Property
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $credsCredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    Node localhost
+    {
+        AADAuthenticationMethodPolicySms "AADAuthenticationMethodPolicySms-Sms"
+        {
+            Credential            = $credsCredential;
+            Ensure                = "Absent";
             Id                    = "Sms";
-            IncludeTargets        = @(
-                MSFT_AADAuthenticationMethodPolicySmsIncludeTarget{
-                    Id = 'fakegroup3'
-                    TargetType = 'group'
-                }
-                MSFT_AADAuthenticationMethodPolicySmsIncludeTarget{
-                    Id = 'fakegroup4'
-                    TargetType = 'group'
-                }
-            );
-            State                 = "enabled";
-            TenantId              = $ConfigurationData.NonNodeData.TenantId;
         }
     }
 }

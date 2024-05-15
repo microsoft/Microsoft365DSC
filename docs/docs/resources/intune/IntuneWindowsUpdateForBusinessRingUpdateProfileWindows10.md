@@ -38,8 +38,8 @@
 | **SkipChecksBeforeRestart** | Write | Boolean | When TRUE, skips all checks before restart: Battery level = 40%, User presence, Display Needed, Presentation mode, Full screen mode, phone call state, game mode etc. When FALSE, does not skip all checks before restart. Returned by default. Query parameters are not supported. | |
 | **UpdateNotificationLevel** | Write | String | Specifies what Windows Update notifications users see. Possible values are: NotConfigured, DefaultNotifications, RestartWarningsOnly, DisableAllNotifications. Returned by default. Query parameters are not supported. Possible values are: notConfigured, defaultNotifications, restartWarningsOnly, disableAllNotifications, unknownFutureValue. | `notConfigured`, `defaultNotifications`, `restartWarningsOnly`, `disableAllNotifications`, `unknownFutureValue` |
 | **UpdateWeeks** | Write | String | Schedule the update installation on the weeks of the month. Possible values are: UserDefined, FirstWeek, SecondWeek, ThirdWeek, FourthWeek, EveryWeek. Returned by default. Query parameters are not supported. Possible values are: userDefined, firstWeek, secondWeek, thirdWeek, fourthWeek, everyWeek, unknownFutureValue. | `userDefined`, `firstWeek`, `secondWeek`, `thirdWeek`, `fourthWeek`, `everyWeek`, `unknownFutureValue` |
-| **UserPauseAccess** | Write | String | Specifies whether to enable end userï¿½s access to pause software updates. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. Possible values are: notConfigured, enabled, disabled. | `notConfigured`, `enabled`, `disabled` |
-| **UserWindowsUpdateScanAccess** | Write | String | Specifies whether to disable userï¿½s access to scan Windows Update. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. Possible values are: notConfigured, enabled, disabled. | `notConfigured`, `enabled`, `disabled` |
+| **UserPauseAccess** | Write | String | Specifies whether to enable end user's access to pause software updates. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. Possible values are: notConfigured, enabled, disabled. | `notConfigured`, `enabled`, `disabled` |
+| **UserWindowsUpdateScanAccess** | Write | String | Specifies whether to disable user's access to scan Windows Update. Possible values are: NotConfigured, Enabled, Disabled. Returned by default. Query parameters are not supported. Possible values are: notConfigured, enabled, disabled. | `notConfigured`, `enabled`, `disabled` |
 | **Description** | Write | String | Admin provided description of the Device Configuration. | |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
@@ -49,6 +49,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -60,6 +61,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphWindowsUpdateInstallScheduleType
@@ -126,7 +128,6 @@ Configuration Example
     {
         IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
         {
-            Id                                  = 'f2a9a546-6087-45b9-81da-59994e79dfd2'
             DisplayName                         = 'WUfB Ring'
             AllowWindows11Upgrade               = $False
             Assignments                         = @(
@@ -167,6 +168,98 @@ Configuration Example
             UserPauseAccess                     = 'enabled'
             UserWindowsUpdateScanAccess         = 'enabled'
             Ensure                              = 'Present'
+            Credential                          = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
+        {
+            DisplayName                         = 'WUfB Ring'
+            AllowWindows11Upgrade               = $True # Updated Property
+            Assignments                         = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments
+                {
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType                                   = '#microsoft.graph.allLicensedUsersAssignmentTarget'
+                }
+            )
+            AutomaticUpdateMode                 = 'autoInstallAtMaintenanceTime'
+            AutoRestartNotificationDismissal    = 'notConfigured'
+            BusinessReadyUpdatesOnly            = 'userDefined'
+            DeadlineForFeatureUpdatesInDays     = 1
+            DeadlineForQualityUpdatesInDays     = 2
+            DeadlineGracePeriodInDays           = 3
+            DeliveryOptimizationMode            = 'userDefined'
+            Description                         = ''
+            DriversExcluded                     = $False
+            FeatureUpdatesDeferralPeriodInDays  = 0
+            FeatureUpdatesPaused                = $False
+            FeatureUpdatesPauseExpiryDateTime   = '0001-01-01T00:00:00.0000000+00:00'
+            FeatureUpdatesRollbackStartDateTime = '0001-01-01T00:00:00.0000000+00:00'
+            FeatureUpdatesRollbackWindowInDays  = 10
+            InstallationSchedule = MSFT_MicrosoftGraphwindowsUpdateInstallScheduleType {
+                ActiveHoursStart = '08:00:00'
+                ActiveHoursEnd   = '17:00:00'
+                odataType        = '#microsoft.graph.windowsUpdateActiveHoursInstall'
+            }
+            MicrosoftUpdateServiceAllowed       = $True
+            PostponeRebootUntilAfterDeadline    = $False
+            PrereleaseFeatures                  = 'userDefined'
+            QualityUpdatesDeferralPeriodInDays  = 0
+            QualityUpdatesPaused                = $False
+            QualityUpdatesPauseExpiryDateTime   = '0001-01-01T00:00:00.0000000+00:00'
+            QualityUpdatesRollbackStartDateTime = '0001-01-01T00:00:00.0000000+00:00'
+            SkipChecksBeforeRestart             = $False
+            UpdateNotificationLevel             = 'defaultNotifications'
+            UserPauseAccess                     = 'enabled'
+            UserWindowsUpdateScanAccess         = 'enabled'
+            Ensure                              = 'Present'
+            Credential                          = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
+        {
+            DisplayName                         = 'WUfB Ring'
+            Ensure                              = 'Absent'
             Credential                          = $Credscredential
         }
     }

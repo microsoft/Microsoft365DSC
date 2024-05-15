@@ -72,7 +72,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting Message Classification Configuration for $($Identity)"
@@ -105,40 +109,45 @@ function Get-TargetResource
 
     try
     {
-        $MessageClassifications = Get-MessageClassification -ErrorAction Stop
+        $MessageClassification = Get-MessageClassification -Identity $Identity -ErrorAction Stop
 
-        $MessageClassification = $MessageClassifications | Where-Object -FilterScript { $_.Identity -eq $Identity }
         if ($null -eq $MessageClassification)
         {
-            Write-Verbose -Message "Message Classification policy $($Identity) does not exist."
-            return $nullReturn
-        }
-        else
-        {
-            $result = @{
-                Identity                    = $Identity
-                ClassificationID            = $MessageClassification.ClassificationID
-                DisplayName                 = $MessageClassification.DisplayName
-                DisplayPrecedence           = $MessageClassification.DisplayPrecedence
-                Name                        = $MessageClassification.Name
-                PermissionMenuVisible       = $MessageClassification.PermissionMenuVisible
-                RecipientDescription        = $MessageClassification.RecipientDescription
-                RetainClassificationEnabled = $MessageClassification.RetainClassificationEnabled
-                SenderDescription           = $MessageClassification.SenderDescription
-                Credential                  = $Credential
-                Ensure                      = 'Present'
-                ApplicationId               = $ApplicationId
-                CertificateThumbprint       = $CertificateThumbprint
-                CertificatePath             = $CertificatePath
-                CertificatePassword         = $CertificatePassword
-                Managedidentity             = $ManagedIdentity.IsPresent
-                TenantId                    = $TenantId
+            if (-not [System.String]::IsNullOrEmpty($DisplayName))
+            {
+                Write-Verbose -Message "Couldn't retrieve Message Classification policy by Id {$($Identity)}. Trying by DisplayName."
+                $MessageClassification = Get-MessageClassification -Identity $DisplayName
             }
-
-            Write-Verbose -Message "Found Message Classification policy $($Identity)"
-            Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
-            return $result
+            if ($null -eq $MessageClassification)
+            {
+                return $nullReturn
+            }
         }
+
+        $result = @{
+            Identity                    = $Identity
+            ClassificationID            = $MessageClassification.ClassificationID
+            DisplayName                 = $MessageClassification.DisplayName
+            DisplayPrecedence           = $MessageClassification.DisplayPrecedence
+            Name                        = $MessageClassification.Name
+            PermissionMenuVisible       = $MessageClassification.PermissionMenuVisible
+            RecipientDescription        = $MessageClassification.RecipientDescription
+            RetainClassificationEnabled = $MessageClassification.RetainClassificationEnabled
+            SenderDescription           = $MessageClassification.SenderDescription
+            Credential                  = $Credential
+            Ensure                      = 'Present'
+            ApplicationId               = $ApplicationId
+            CertificateThumbprint       = $CertificateThumbprint
+            CertificatePath             = $CertificatePath
+            CertificatePassword         = $CertificatePassword
+            Managedidentity             = $ManagedIdentity.IsPresent
+            TenantId                    = $TenantId
+            AccessTokens                = $AccessTokens
+        }
+
+        Write-Verbose -Message "Found Message Classification policy $($Identity)"
+        Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
+        return $result
     }
     catch
     {
@@ -225,7 +234,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -255,6 +268,7 @@ function Set-TargetResource
     $MessageClassificationParams.Remove('CertificatePath') | Out-Null
     $MessageClassificationParams.Remove('CertificatePassword') | Out-Null
     $MessageClassificationParams.Remove('ManagedIdentity') | Out-Null
+    $MessageClassificationParams.Remove('AccessTokens') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $MessageClassification))
     {
@@ -348,7 +362,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -370,13 +388,6 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -459,7 +470,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' -InboundParameters $PSBoundParameters -SkipModuleReload $true
 
@@ -495,6 +510,7 @@ function Export-TargetResource
 
             $Params = @{
                 Identity              = $MessageClassification.Identity
+                DisplayName           = $MessageClassification.Name
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -502,6 +518,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

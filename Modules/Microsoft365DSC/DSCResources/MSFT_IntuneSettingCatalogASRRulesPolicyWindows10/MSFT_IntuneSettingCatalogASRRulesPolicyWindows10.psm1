@@ -154,7 +154,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Checking for the Intune Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
@@ -183,12 +187,24 @@ function Get-TargetResource
     try
     {
         #Retrieve policy general settings
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction silentlyContinue
+        try
+        {
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity -ErrorAction Stop
+        }
+        catch
+        {
+            $policy = $null
+        }
 
         if ($null -eq $policy)
         {
             Write-Verbose -Message "No Endpoint Protection Attack Surface Protection rules Policy {$Identity} was found"
-            $policy = Get-MgBetaDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" }  -ErrorAction silentlyContinue
+            $policy = Get-MgBetaDeviceManagementConfigurationPolicy | Where-Object -FilterScript { $_.Name -eq "$DisplayName" -and $_.templateReference.TemplateId -eq "$templateReferenceId" }
+
+            if ($policy.Count -gt 1)
+            {
+                throw "Multiple Endpoint Protection Attack Surface Protection rules Policies with DisplayName '{$DisplayName}' were found!"
+            }
         }
 
         if ($null -eq $policy)
@@ -239,18 +255,14 @@ function Get-TargetResource
             }
         }
 
-        $returnAssignments = @()
-        $returnAssignments += Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
-        $assignmentResult = @()
-        foreach ($assignmentEntry in $returnAssignments)
+        $returnAssignments = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
+        if ($returnAssignments.Count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.toString()
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult = ConvertFrom-IntunePolicyAssignment -Assignments $returnAssignments
+        }
+        else
+        {
+            $assignmentResult = @()
         }
         $returnHashtable.Add('Assignments', $assignmentResult)
 
@@ -263,6 +275,7 @@ function Get-TargetResource
         $returnHashtable.Add('ApplicationSecret', $ApplicationSecret)
         $returnHashtable.Add('CertificateThumbprint', $CertificateThumbprint)
         $returnHashtable.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        $returnHashtable.Add('AccessTokens', $AccessTokens)
 
         return $returnHashtable
     }
@@ -433,7 +446,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -452,13 +469,7 @@ function Set-TargetResource
     #endregion
 
     $currentPolicy = Get-TargetResource @PSBoundParameters
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
-    $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     $templateReferenceId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
 
@@ -490,8 +501,9 @@ function Set-TargetResource
         }
         if ($policy.id)
         {
+            $intuneAssignments = [Hashtable[]] (ConvertTo-IntunePolicyAssignment -Assignments $assignmentsHash)
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
-                -Targets $assignmentsHash
+                -Targets ([Array]($intuneAssignments.target))
         }
         #endregion
     }
@@ -509,7 +521,7 @@ function Set-TargetResource
         #write-verbose -message ($settings|convertto-json -Depth 20)
 
         Update-IntuneDeviceConfigurationPolicy `
-            -DeviceConfigurationPolicyId $Identity `
+            -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Name $DisplayName `
             -Description $Description `
             -TemplateReferenceId $templateReferenceId `
@@ -523,14 +535,15 @@ function Set-TargetResource
         {
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
-        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $Identity `
-            -Targets $assignmentsHash
+        $intuneAssignments = [Hashtable[]] (ConvertTo-IntunePolicyAssignment -Assignments $assignmentsHash)
+        Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentPolicy.Identity `
+            -Targets ([Array]($intuneAssignments.target))
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
-        Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $Identity
+        Remove-MgBetaDeviceManagementConfigurationPolicy -DeviceManagementConfigurationPolicyId $currentPolicy.Identity
     }
 }
 
@@ -690,7 +703,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -706,17 +723,14 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+    $ValuesToCheck.Remove('Identity') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
 
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
-
-    if ($CurrentValues.Ensure -eq 'Absent')
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message 'The policy was not found'
         return $false
@@ -746,6 +760,19 @@ function Test-TargetResource
                 if (-not $source)
                 {
                     Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
+                    $testResult = $false
+                    break
+                }
+                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
+                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
+            }
+            #GroupDisplayName Assignment
+            if (-not [String]::IsNullOrEmpty($assignment.groupDisplayName))
+            {
+                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupDisplayName -eq $assignment.groupDisplayName }
+                if (-not $source)
+                {
+                    Write-Verbose -Message "Configuration drift: groupDisplayName {$($assignment.groupDisplayName)} not found"
                     $testResult = $false
                     break
                 }
@@ -822,7 +849,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -846,9 +877,7 @@ function Export-TargetResource
     try
     {
         $policyTemplateID = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
-        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy `
-            -ErrorAction Stop `
-            -All:$true
+        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All -ErrorAction Stop
 
         $policies = $policies | Where-Object -FilterScript { $_.TemplateReference.TemplateId -eq $policyTemplateId }
 
@@ -874,6 +903,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @params
@@ -920,7 +950,8 @@ function Export-TargetResource
     }
     catch
     {
-        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*")
+        if ($_.Exception -like '*401*' -or $_.ErrorDetails.Message -like "*`"ErrorCode`":`"Forbidden`"*" -or `
+        $_.Exception -like "*Request not applicable to target tenant*")
         {
             Write-Host "`r`n    $($Global:M365DSCEmojiYellowCircle) The current tenant is not registered for Intune."
         }

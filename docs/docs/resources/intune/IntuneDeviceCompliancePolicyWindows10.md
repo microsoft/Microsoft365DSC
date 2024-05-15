@@ -46,6 +46,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -57,6 +58,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 
@@ -259,7 +261,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -269,7 +271,7 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - DeviceManagementConfiguration.Read.All
+    - Group.Read.All, DeviceManagementConfiguration.Read.All
 
 - **Update**
 
@@ -287,7 +289,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -330,7 +332,7 @@ Configuration Example
             deviceCompliancePolicyScript                = $null
             ValidOperatingSystemBuildRanges             = @()
             Ensure                                      = 'Present'
-            Credential                                  = $credsGlobalAdmin
+            Credential                                  = $Credscredential
         }
     }
 }
@@ -338,7 +340,7 @@ Configuration Example
 
 ### Example 2
 
-This example removes an existing Device Compliance Policy for MacOS devices
+This example creates a new Device Comliance Policy for Windows.
 
 ```powershell
 Configuration Example
@@ -346,17 +348,76 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
     {
-        IntuneDeviceCompliancePolicyWindows10 'RemoveDeviceCompliancePolicyWindows10'
+        IntuneDeviceCompliancePolicyWindows10 'ConfigureDeviceCompliancePolicyWindows10'
         {
-            DisplayName          = 'Demo Windows 10 Device Compliance Policy'
-            Ensure               = 'Absent'
-            Credential           = $credsGlobalAdmin
+            DisplayName                                 = 'Windows 10 DSC Policy'
+            Description                                 = 'Test policy'
+            PasswordRequired                            = $False
+            PasswordBlockSimple                         = $False
+            PasswordRequiredToUnlockFromIdle            = $True
+            PasswordMinutesOfInactivityBeforeLock       = 15
+            PasswordExpirationDays                      = 365
+            PasswordMinimumLength                       = 8 # Updated Property
+            PasswordPreviousPasswordBlockCount          = 13
+            PasswordMinimumCharacterSetCount            = 1
+            PasswordRequiredType                        = 'Devicedefault'
+            RequireHealthyDeviceReport                  = $True
+            OsMinimumVersion                            = 10
+            OsMaximumVersion                            = 10.19
+            MobileOsMinimumVersion                      = 10
+            MobileOsMaximumVersion                      = 10.19
+            EarlyLaunchAntiMalwareDriverEnabled         = $False
+            BitLockerEnabled                            = $False
+            SecureBootEnabled                           = $True
+            CodeIntegrityEnabled                        = $True
+            StorageRequireEncryption                    = $True
+            ActiveFirewallRequired                      = $True
+            DefenderEnabled                             = $True
+            DefenderVersion                             = ''
+            SignatureOutOfDate                          = $True
+            RtpEnabled                                  = $True
+            AntivirusRequired                           = $True
+            AntiSpywareRequired                         = $True
+            DeviceThreatProtectionEnabled               = $True
+            DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
+            ConfigurationManagerComplianceRequired      = $False
+            TPMRequired                                 = $False
+            deviceCompliancePolicyScript                = $null
+            ValidOperatingSystemBuildRanges             = @()
+            Ensure                                      = 'Present'
+            Credential                                  = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new Device Comliance Policy for Windows.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceCompliancePolicyWindows10 'ConfigureDeviceCompliancePolicyWindows10'
+        {
+            DisplayName                                 = 'Windows 10 DSC Policy'
+            Ensure                                      = 'Absent'
+            Credential                                  = $Credscredential
         }
     }
 }

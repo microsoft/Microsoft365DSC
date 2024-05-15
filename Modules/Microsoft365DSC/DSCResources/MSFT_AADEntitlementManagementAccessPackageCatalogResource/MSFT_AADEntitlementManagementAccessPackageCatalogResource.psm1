@@ -81,7 +81,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -111,18 +115,36 @@ function Get-TargetResource
     try
     {
         $getValue = $null
+        $CatalogIdValue = $catalogId
+        if (-not [System.String]::IsNullOrEmpty($CatalogId))
+        {
+            $resource = ([Hashtable]$PSBoundParameters).clone()
+            $ObjectGuid = [System.Guid]::empty
+            if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+            {
+                $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$catalogId'"
+                $CatalogId = $catalogInstance.Id
+                $CatalogIdValue = $catalogInstance.DisplayName
+            }
 
-        #region resource generator code
-        $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
-            -AccessPackageCatalogId  $CatalogId `
-            -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
+            $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
+                -AccessPackageCatalogId  $CatalogId `
+                -Filter "Id eq '$Id'" -ErrorAction SilentlyContinue
+
+            if ($null -eq $getValue)
+            {
+                Write-Verbose -Message "Retrieving Resource by Display Name {$DisplayName}"
+                $getValue = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource `
+                    -AccessPackageCatalogId  $CatalogId `
+                    -Filter "DisplayName eq '$DisplayName'" -ErrorAction SilentlyContinue
+            }
+        }
 
         if ($null -eq $getValue)
         {
             Write-Verbose -Message "The access package resource with id {$id} was NOT found in catalog {$CatalogId}."
             return $nullResult
         }
-        #endregion
 
         Write-Verbose -Message "The access package resource {$DisplayName} was found in catalog {$CatalogId}."
         $hashAttributes = @()
@@ -154,7 +176,7 @@ function Get-TargetResource
 
         $results = [ordered]@{
             Id                    = $Id
-            CatalogId             = $CatalogId
+            CatalogId             = $CatalogIdValue
             Attributes            = $hashAttributes
             AddedBy               = $getValue.addedBy #Read-Only
             AddedOn               = $getValue.addedOn #Read-Only
@@ -172,6 +194,7 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         return [System.Collections.Hashtable] $results
@@ -270,7 +293,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -307,12 +334,22 @@ function Set-TargetResource
     $PSBoundParameters.Remove('addedBy') | Out-Null
     $PSBoundParameters.Remove('addedOn') | Out-Null
     $PSBoundParameters.Remove('isPendingOnboarding') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Assigning resource {$DisplayName} to catalog {$CatalogId}"
-
         $resource = ([Hashtable]$PSBoundParameters).clone()
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            Write-Verbose -Message "Retrieving Catalog by Display Name"
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId)'"
+            if ($catalogInstance)
+            {
+                $CatalogId = $catalogInstance.Id
+            }
+        }
+        Write-Verbose -Message "Assigning resource {$DisplayName} to catalog {$CatalogId}"
 
         $resource.Remove('Id') | Out-Null
         $resource.Remove('CatalogId') | Out-Null
@@ -329,7 +366,6 @@ function Set-TargetResource
                 $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $resource.$key
                 $resource.$key = $keyValue
             }
-
         }
 
         $mapping = @{
@@ -346,6 +382,7 @@ function Set-TargetResource
             AccessPackageresource = $resource
         }
         #region resource generator code
+        Write-Verbose -Message "Creating with Values: $(Convert-M365DscHashtableToString -Hashtable $resourceRequest)"
         New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
 
         #endregion
@@ -355,7 +392,16 @@ function Set-TargetResource
         Write-Verbose -Message "Updating resource {$DisplayName} in catalog {$CatalogId}"
 
         $resource = ([Hashtable]$PSBoundParameters).clone()
-
+        $ObjectGuid = [System.Guid]::empty
+        if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
+        {
+            Write-Verbose -Message "Retrieving Catalog by Display Name"
+            $catalogInstance = Get-MgBetaEntitlementManagementAccessPackageCatalog -Filter "DisplayName eq '$($CatalogId)'"
+            if ($catalogInstance)
+            {
+                $CatalogId = $catalogInstance.Id
+            }
+        }
         #$resource.Remove('Id') | Out-Null
         $resource.Remove('CatalogId') | Out-Null
         $resource.Remove('Verbose') | Out-Null
@@ -422,16 +468,13 @@ function Set-TargetResource
         $resource = Rename-M365DSCCimInstanceParameter -Properties $resource `
             -KeyMapping $mapping
 
-        #region resource generator code
         $resourceRequest = @{
             CatalogId             = $CatalogId
             RequestType           = 'AdminRemove'
             AccessPackageresource = $resource
         }
-        #region resource generator code
         New-MgBetaEntitlementManagementAccessPackageResourceRequest @resourceRequest
 
-        #endregion
     }
 }
 
@@ -518,7 +561,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -538,7 +585,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -616,7 +663,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -692,6 +743,7 @@ function Export-TargetResource
                     ApplicationSecret     = $ApplicationSecret
                     CertificateThumbprint = $CertificateThumbprint
                     ManagedIdentity       = $ManagedIdentity.IsPresent
+                    AccessTokens          = $AccessTokens
                 }
 
                 $Results = Get-TargetResource @Params

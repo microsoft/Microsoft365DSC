@@ -79,7 +79,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -103,10 +107,13 @@ function Get-TargetResource
         $nullResult.Ensure = 'Absent'
 
         $getValue = $null
-        $getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
-            -AccessPackageAssignmentPolicyId $id `
-            -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
-            -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($id))
+        {
+            $getValue = Get-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
+                -AccessPackageAssignmentPolicyId $id `
+                -ExpandProperty "customExtensionHandlers(`$expand=customExtension)" `
+                -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
@@ -126,7 +133,7 @@ function Get-TargetResource
         Write-Verbose -Message "Found access package assignment policy with id {$($getValue.Id)} and DisplayName {$DisplayName}"
 
         #region Format AccessReviewSettings
-        $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings
+        $formattedAccessReviewSettings = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $getValue.AccessReviewSettings -Verbose
         if($null -ne $formattedAccessReviewSettings)
         {
             $formattedAccessReviewSettings.remove('additionalProperties') | Out-Null
@@ -139,6 +146,7 @@ function Get-TargetResource
                 if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                 {
                     $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
+
                     if ($null -ne $user)
                     {
                         $setting.add('Id', $user.UserPrincipalName)
@@ -148,7 +156,7 @@ function Get-TargetResource
                 {
                     $setting.add('ManagerLevel', $setting.AdditionalProperties.managerLevel)
                 }
-                $setting.remove('additionalProperties') | Out-Null
+                $setting.remove('AdditionalProperties') | Out-Null
             }
         }
         #endregion
@@ -170,7 +178,11 @@ function Get-TargetResource
                         $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
                         if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                         {
-                            $setting.add('Id', $setting.AdditionalProperties.id)
+                            $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
+                            if ($null -ne $user)
+                            {
+                                $setting.add('Id', $user.UserPrincipalName)
+                            }
                         }
                         if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                         {
@@ -187,7 +199,11 @@ function Get-TargetResource
                         $setting.add('odataType', $setting.AdditionalProperties.'@odata.type')
                         if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.id))
                         {
-                            $setting.add('Id', $setting.AdditionalProperties.id)
+                            $user = Get-MgUser -UserId $setting.AdditionalProperties.id -ErrorAction SilentlyContinue
+                            if ($null -ne $user)
+                            {
+                                $setting.add('Id', $user.UserPrincipalName)
+                            }
                         }
                         if (-not [String]::isNullOrEmpty($setting.AdditionalProperties.managerLevel))
                         {
@@ -279,9 +295,18 @@ function Get-TargetResource
         }
         #endregion
 
+        $AccessPackageIdValue = $getValue.AccessPackageId
+        $ObjectGuid = [System.Guid]::empty
+        $isGUID = [System.Guid]::TryParse($AccessPackageIdValue, [System.Management.Automation.PSReference]$ObjectGuid)
+        if ($isGUID)
+        {
+            $accesspackage = Get-MgBetaEntitlementManagementAccessPackage -AccessPackageId $AccessPackageIdValue
+            $AccessPackageIdValue = $accesspackage.DisplayName
+        }
+
         $results = @{
             Id                      = $getValue.Id
-            AccessPackageId         = $getValue.AccessPackageId
+            AccessPackageId         = $AccessPackageIdValue
             AccessReviewSettings    = $formattedAccessReviewSettings
             CanExtend               = $getValue.CanExtend
             CustomExtensionHandlers = $formattedCustomExtensionHandlers
@@ -299,6 +324,7 @@ function Get-TargetResource
             ApplicationSecret       = $ApplicationSecret
             CertificateThumbprint   = $CertificateThumbprint
             ManagedIdentity         = $ManagedIdentity.IsPresent
+            AccessTokens            = $AccessTokens
         }
 
         return [System.Collections.Hashtable] $results
@@ -395,7 +421,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -423,6 +453,7 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $keyToRename = @{
         'odataType'    = '@odata.type'
@@ -462,6 +493,36 @@ function Set-TargetResource
                 }
             }
         }
+        if ( $null -ne $CreateParameters.RequestApprovalSettings.ApprovalStages.PrimaryApprovers)
+        {
+            for ($i = 0; $i -lt $CreateParameters.RequestApprovalSettings.ApprovalStages.PrimaryApprovers.Length; $i++)
+            {
+                $primaryApprover = $CreateParameters.RequestApprovalSettings.ApprovalStages.PrimaryApprovers[$i]
+                if ($null -ne $primaryApprover.id)
+                {
+                    $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($primaryApprover.Id.Split('@')[0])')" -ErrorAction SilentlyContinue
+                    if ($null -ne $user)
+                    {
+                        $CreateParameters.RequestApprovalSettings.ApprovalStages.PrimaryApprovers[$i].Id = $user.Id
+                    }
+                }
+            }
+        }
+        if ( $null -ne $CreateParameters.RequestApprovalSettings.ApprovalStages.EscalationApprovers)
+        {
+            for ($i = 0; $i -lt $CreateParameters.RequestApprovalSettings.ApprovalStages.EscalationApprovers.Length; $i++)
+            {
+                $escalationApprover = $CreateParameters.RequestApprovalSettings.ApprovalStages.EscalationApprovers[$i]
+                if ($null -ne $escalationApprover.id)
+                {
+                    $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($escalationApprover.Id.Split('@')[0])')" -ErrorAction SilentlyContinue
+                    if ($null -ne $user)
+                    {
+                        $CreateParameters.RequestApprovalSettings.ApprovalStages.EscalationApprovers[$i].Id = $user.Id
+                    }
+                }
+            }
+        }
         if ($null -ne $CreateParameters.RequestorSettings -and $null -ne $CreateParameters.RequestorSettings.AllowedRequestors)
         {
             for ($i = 0; $i -lt $CreateParameters.RequestorSettings.AllowedRequestors.Length; $i++)
@@ -489,6 +550,30 @@ function Set-TargetResource
             }
             $CreateParameters.CustomExtensionHandlers = $formattedCustomExtensionHandlers
         }
+
+        # Check to see if the AccessPackageId is in GUID form. If not, resolve it by name.
+        if (-not [System.String]::IsNullOrEmpty($AccessPackageId))
+        {
+            $ObjectGuid = [System.Guid]::empty
+            $isGUID = [System.Guid]::TryParse($AccessPackageId, [System.Management.Automation.PSReference]$ObjectGuid)
+            if (-not $isGUID)
+            {
+                # Retrieve by name
+                Write-Verbose -Message "Retrieving Entitlement Management Access Package by Name {$AccessPackageId}"
+                $package = Get-MgBetaEntitlementManagementAccessPackage -Filter "displayName eq '$AccessPackageId'"
+                if ($null -ne $package)
+                {
+                    $AccessPackageId = $package.Id
+                }
+                else
+                {
+                    throw "Could not retrieve the Access Package using identifier {$AccessPackageId}"
+                }
+            }
+            $CreateParameters.AccessPackageId = $AccessPackageId
+        }
+
+        Write-Verbose -Message "Creating with Values: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
         New-MgBetaEntitlementManagementAccessPackageAssignmentPolicy `
             -BodyParameter $CreateParameters
     }
@@ -527,6 +612,36 @@ function Set-TargetResource
                 }
             }
         }
+        if ($null -ne $UpdateParameters.RequestApprovalSettings.ApprovalStages.PrimaryApprovers)
+        {
+            for ($i = 0; $i -lt $UpdateParameters.RequestApprovalSettings.ApprovalStages.PrimaryApprovers.Length; $i++)
+            {
+                $primaryApprover = $UpdateParameters.RequestApprovalSettings.ApprovalStages.PrimaryApprovers[$i]
+                if ($null -ne $primaryApprover.id)
+                {
+                    $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($primaryApprover.Id.Split('@')[0])')" -ErrorAction SilentlyContinue
+                    if ($null -ne $user)
+                    {
+                        $UpdateParameters.RequestApprovalSettings.ApprovalStages.PrimaryApprovers[$i].Id = $user.Id
+                    }
+                }
+            }
+        }
+        if ($null -ne $UpdateParameters.RequestApprovalSettings.ApprovalStages.EscalationApprovers)
+        {
+            for ($i = 0; $i -lt $UpdateParameters.RequestApprovalSettings.ApprovalStages.EscalationApprovers.Length; $i++)
+            {
+                $escalationApprover = $UpdateParameters.RequestApprovalSettings.ApprovalStages.EscalationApprovers[$i]
+                if ($null -ne $escalationApprover.id)
+                {
+                    $user = Get-MgUser -Filter "startswith(UserPrincipalName, '$($escalationApprover.Id.Split('@')[0])')" -ErrorAction SilentlyContinue
+                    if ($null -ne $user)
+                    {
+                        $UpdateParameters.RequestApprovalSettings.ApprovalStages.EscalationApprovers[$i].Id = $user.Id
+                    }
+                }
+            }
+        }
         if ($null -ne $UpdateParameters.RequestorSettings -and $null -ne $UpdateParameters.RequestorSettings.AllowedRequestors)
         {
             #Write-Verbose -Message "Updating Requestors' Id"
@@ -555,6 +670,27 @@ function Set-TargetResource
                 }
             }
             $UpdateParameters.CustomExtensionHandlers = $formattedCustomExtensionHandlers
+        }
+
+        if (-not [System.String]::IsNullOrEmpty($AccessPackageId))
+        {
+            $ObjectGuid = [System.Guid]::empty
+            $isGUID = [System.Guid]::TryParse($AccessPackageId, [System.Management.Automation.PSReference]$ObjectGuid)
+            if (-not $isGUID)
+            {
+                # Retrieve by name
+                Write-Verbose -Message "Retrieving Entitlement Management Access Package by Name {$AccessPackageId}"
+                $package = Get-MgBetaEntitlementManagementAccessPackage -Filter "displayName eq '$AccessPackageId'"
+                if ($null -ne $package)
+                {
+                    $AccessPackageId = $package.Id
+                }
+                else
+                {
+                    throw "Could not retrieve the Access Package using identifier {$AccessPackageId}"
+                }
+            }
+            $UpdateParameters.AccessPackageId = $AccessPackageId
         }
 
         #write-verbose ($UpdateParameters|convertto-json -Depth 100)
@@ -650,7 +786,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -670,7 +810,7 @@ function Test-TargetResource
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -699,11 +839,6 @@ function Test-TargetResource
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
-
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -750,7 +885,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -802,6 +941,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
@@ -810,7 +950,17 @@ function Export-TargetResource
 
             if ($null -ne $Results.AccessReviewSettings)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.AccessReviewSettings -CIMInstanceName MicrosoftGraphassignmentreviewsettings
+                $complexMapping = @(
+                    @{
+                        Name            = 'Reviewers'
+                        CimInstanceName = 'MicrosoftGraphuserset'
+                        IsRequired      = $false
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                                                -ComplexObject $Results.AccessReviewSettings `
+                                                -CIMInstanceName MicrosoftGraphassignmentreviewsettings `
+                                                -ComplexTypeMapping $complexMapping
                 if ($complexTypeStringResult)
                 {
                     $Results.AccessReviewSettings = $complexTypeStringResult
@@ -939,7 +1089,7 @@ function Export-TargetResource
             if ($null -ne $Results.AccessReviewSettings)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'AccessReviewSettings'
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Reviewers'
+                #$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Reviewers'
             }
             if ($null -ne $Results.Questions )
             {

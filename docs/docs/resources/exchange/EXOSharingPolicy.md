@@ -16,6 +16,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -48,7 +49,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -56,12 +57,72 @@ Configuration Example
     {
         EXOSharingPolicy 'ConfigureSharingPolicy'
         {
-            Name       = "Default Sharing Policy"
+            Name       = "Integration Sharing Policy"
             Default    = $True
             Domains    = @("Anonymous:CalendarSharingFreeBusyReviewer", "*:CalendarSharingFreeBusySimple")
             Enabled    = $True
             Ensure     = "Present"
-            Credential = $credsGlobalAdmin
+            Credential = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOSharingPolicy 'ConfigureSharingPolicy'
+        {
+            Name       = "Integration Sharing Policy"
+            Default    = $False # Updated Property
+            Domains    = @("Anonymous:CalendarSharingFreeBusyReviewer", "*:CalendarSharingFreeBusySimple")
+            Enabled    = $True
+            Ensure     = "Present"
+            Credential = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOSharingPolicy 'ConfigureSharingPolicy'
+        {
+            Name       = "Integration Sharing Policy"
+            Default    = $False # Updated Property
+            Domains    = @("Anonymous:CalendarSharingFreeBusyReviewer", "*:CalendarSharingFreeBusySimple")
+            Enabled    = $True
+            Ensure     = "Absent"
+            Credential = $Credscredential
         }
     }
 }

@@ -28,6 +28,10 @@ function Get-TargetResource
         $AllowMeetNow,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -41,7 +45,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration of Teams Guest Meeting settings'
@@ -75,10 +87,13 @@ function Get-TargetResource
             LiveCaptionsEnabledType = $config.LiveCaptionsEnabledType
             ScreenSharingMode       = $config.ScreenSharingMode
             AllowMeetNow            = $config.AllowMeetNow
+            AllowTranscription      = $config.AllowTranscription
             Credential              = $Credential
             ApplicationId           = $ApplicationId
             TenantId                = $TenantId
             CertificateThumbprint   = $CertificateThumbprint
+            ManagedIdentity         = $ManagedIdentity.IsPresent
+            AccessTokens            = $AccessTokens
         }
         return $result
     }
@@ -123,6 +138,10 @@ function Set-TargetResource
         $AllowMeetNow,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -136,7 +155,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration of Teams Guest Meeting settings'
@@ -161,6 +188,8 @@ function Set-TargetResource
     $SetParams.Remove('ApplicationId') | Out-Null
     $SetParams.Remove('TenantId') | Out-Null
     $SetParams.Remove('CertificateThumbprint') | Out-Null
+    $SetParams.Remove('ManagedIdentity') | Out-Null
+    $SetParams.Remove('AccessTokens') | Out-Null
 
     Set-CsTeamsGuestMeetingConfiguration @SetParams
 }
@@ -195,6 +224,10 @@ function Test-TargetResource
         $AllowMeetNow,
 
         [Parameter()]
+        [System.Boolean]
+        $AllowTranscription,
+
+        [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
 
@@ -208,7 +241,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -261,7 +302,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -287,6 +336,8 @@ function Export-TargetResource
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
         $Results = Get-TargetResource @Params
 

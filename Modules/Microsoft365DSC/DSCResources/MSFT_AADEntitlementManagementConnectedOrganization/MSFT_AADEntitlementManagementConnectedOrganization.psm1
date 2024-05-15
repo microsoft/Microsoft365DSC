@@ -60,7 +60,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -85,11 +89,18 @@ function Get-TargetResource
 
         $getValue = $null
 
-        $getValue = Get-MgBetaEntitlementManagementConnectedOrganization -ConnectedOrganizationId $id -ErrorAction SilentlyContinue
+        if (-not [System.String]::IsNullOrEmpty($id))
+        {
+            $getValue = Get-MgBetaEntitlementManagementConnectedOrganization -ConnectedOrganizationId $id `
+                -ErrorAction SilentlyContinue
+        }
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Entitlement Management Connected Organization with id {$id} was not found."
+            if (-not [System.String]::IsNullOrEmpty($id))
+            {
+                Write-Verbose -Message "Entitlement Management Connected Organization with id {$id} was not found."
+            }
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
@@ -169,13 +180,56 @@ function Get-TargetResource
             $getIdentitySources = $sources
         }
 
+        $ObjectGuid = [System.Guid]::empty
+        $ExternalSponsorsValues = @()
+        foreach ($sponsor in $getExternalSponsors)
+        {
+            if ([System.Guid]::TryParse($sponsor, [System.Management.Automation.PSReference]$ObjectGuid))
+            {
+                try
+                {
+                    $user = Get-MgUser -UserId $sponsor
+                    $ExternalSponsorsValues += $user.UserPrincipalName
+                }
+                catch
+                {
+                    Write-Verbose -Message "Couldn't find external sponsor with id {$sponsor}"
+                }
+            }
+            else
+            {
+                $ExternalSponsorsValues += $sponsor
+            }
+        }
+
+        $InternalSponsorsValues = @()
+        foreach ($sponsor in $getInternalSponsors)
+        {
+            if ([System.Guid]::TryParse($sponsor, [System.Management.Automation.PSReference]$ObjectGuid))
+            {
+                try
+                {
+                    $user = Get-MgUser -UserId $sponsor
+                    $InternalSponsorsValues += $user.UserPrincipalName
+                }
+                catch
+                {
+                    Write-Verbose -Message "Couldn't find inter sponsor with id {$sponsor}"
+                }
+            }
+            else
+            {
+                $InternalSponsorsValues += $sponsor
+            }
+        }
+
         $results = @{
             Id                    = $getValue.id
             Description           = $getValue.description
             DisplayName           = $getValue.displayName
-            ExternalSponsors      = $getExternalSponsors
+            ExternalSponsors      = $ExternalSponsorsValues
             IdentitySources       = $getIdentitySources
-            InternalSponsors      = $getInternalSponsors
+            InternalSponsors      = $InternalSponsorsValues
             State                 = $getValue.state
             Ensure                = 'Present'
             Credential            = $Credential
@@ -184,6 +238,7 @@ function Get-TargetResource
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
+            AccessTokens          = $AccessTokens
         }
 
         return [System.Collections.Hashtable] $results
@@ -261,7 +316,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Import-Module Microsoft.Graph.DirectoryObjects -Force
@@ -287,10 +346,73 @@ function Set-TargetResource
     $PSBoundParameters.Remove('CertificateThumbprint') | Out-Null
     $PSBoundParameters.Remove('ManagedIdentity') | Out-Null
     $PSBoundParameters.Remove('Verbose') | Out-Null
+    $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
     $keyToRename = @{
         'odataType'        = '@odata.type'
         'ExternalTenantId' = 'tenantId'
+    }
+
+    if ($Ensure -eq 'Present')
+    {
+        $ObjectGuid = [System.Guid]::empty
+        $ExternalSponsorsValues = @()
+        foreach ($sponsor in $ExternalSponsors)
+        {
+            if (-not [System.Guid]::TryParse($sponsor, [System.Management.Automation.PSReference]$ObjectGuid))
+            {
+                try
+                {
+                    $user = Get-MgUser -UserId $sponsor -ErrorAction SilentlyContinue
+                    if ($null -ne $user)
+                    {
+                        $ExternalSponsorsValues += $user.Id
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "Could not find External Sponsor {$sponsor}"
+                    }
+                }
+                catch
+                {
+                    Write-Verbose -Message "Could not find External Sponsor {$sponsor}"
+                }
+            }
+            else
+            {
+                $ExternalSponsorsValues += $sponsor
+            }
+        }
+        $ExternalSponsors = $ExternalSponsorsValues
+
+        $InternalSponsorsValues = @()
+        foreach ($sponsor in $InternalSponsors)
+        {
+            if (-not [System.Guid]::TryParse($sponsor, [System.Management.Automation.PSReference]$ObjectGuid))
+            {
+                try
+                {
+                    $user = Get-MgUser -UserId $sponsor -ErrorAction SilentlyContinue
+                    if ($null -ne $user)
+                    {
+                        $InternalSponsorsValues += $user.Id
+                    }
+                    else
+                    {
+                        Write-Verbose -Message "Could not find External Sponsor {$sponsor}"
+                    }
+                }
+                catch
+                {
+                    Write-Verbose -Message "Could not find External Sponsor {$sponsor}"
+                }
+            }
+            else
+            {
+                $InternalSponsorsValues += $sponsor
+            }
+        }
+        $InternalSponsors = $InternalSponsorsValues
     }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
@@ -304,7 +426,6 @@ function Set-TargetResource
         $CreateParameters.Remove('ExternalSponsors') | Out-Null
         $CreateParameters.Remove('InternalSponsors') | Out-Null
 
-
         $keys = (([Hashtable]$CreateParameters).clone()).Keys
         foreach ($key in $keys)
         {
@@ -313,8 +434,9 @@ function Set-TargetResource
                 $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
             }
         }
-        $TenantId = $CreateParameters.IdentitySources.ExternalTenantId
-        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$tenantid')"
+        Write-Verbose -Message "Create Parameters: $(Convert-M365DscHashtableToString -Hashtable $CreateParameters)"
+        $TenantIdValue = $CreateParameters.IdentitySources.TenantId
+        $url = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + "beta/tenantRelationships/microsoft.graph.findTenantInformationByTenantId(tenantId='$TenantIdValue')"
         $DomainName = (Invoke-MgGraphRequest -Method 'GET' -Uri $url).defaultDomainName
         $newConnectedOrganization = New-MgBetaEntitlementManagementConnectedOrganization -Description $CreateParameters.Description -DisplayName $CreateParameters.DisplayName -State $CreateParameters.State -DomainName $DomainName
 
@@ -371,6 +493,19 @@ function Set-TargetResource
             -ConnectedOrganizationId $currentInstance.Id
 
         #region External Sponsors
+        if ($currentInstance.ExternalSponsors)
+        {
+            $currentExternalSponsors = @()
+            foreach ($sponsor in $CurrentInstance.ExternalSponsors)
+            {
+                $user = Get-MgUser -UserId $sponsor -ErrorAction SilentlyContinue
+                if ($user)
+                {
+                    $currentExternalSponsors += $user.Id
+                }
+            }
+            $currentInstance.ExternalSponsors = $currentExternalSponsors
+        }
         $sponsorsDifferences = compare-object -ReferenceObject @($ExternalSponsors|select-object) -DifferenceObject @($currentInstance.ExternalSponsors|select-object)
         $sponsorsToAdd=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '<='}).InputObject
         $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
@@ -389,13 +524,26 @@ function Set-TargetResource
         }
         foreach ($sponsor in $sponsorsToRemove)
         {
-            Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorByRef `
+            Remove-MgBetaEntitlementManagementConnectedOrganizationExternalSponsorDirectoryObjectByRef `
                 -ConnectedOrganizationId $currentInstance.Id `
                 -DirectoryObjectId $sponsor
         }
         #endregion
 
         #region Internal Sponsors
+        if ($currentInstance.InternalSponsors)
+        {
+            $currentInternalSponsors = @()
+            foreach ($sponsor in $CurrentInstance.InternalSponsors)
+            {
+                $user = Get-MgUser -UserId $sponsor -ErrorAction SilentlyContinue
+                if ($user)
+                {
+                    $currentInternalSponsors += $user.Id
+                }
+            }
+            $currentInstance.InternalSponsors = $currentInternalSponsors
+        }
         $sponsorsDifferences = compare-object -ReferenceObject @($InternalSponsors|select-object) -DifferenceObject @($currentInstance.InternalSponsors|select-object)
         $sponsorsToAdd=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '<='}).InputObject
         $sponsorsToRemove=($sponsorsDifferences | where-object -filterScript {$_.SideIndicator -eq '=>'}).InputObject
@@ -414,7 +562,7 @@ function Set-TargetResource
         }
         foreach ($sponsor in $sponsorsToRemove)
         {
-            Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorByRef `
+            Remove-MgBetaEntitlementManagementConnectedOrganizationInternalSponsorDirectoryObjectByRef `
                 -ConnectedOrganizationId $currentInstance.Id `
                 -DirectoryObjectId $sponsor
         }
@@ -489,7 +637,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -504,12 +656,12 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of {$id}"
+    Write-Verbose -Message "Testing configuration of {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
-    if ($CurrentValues.Ensure -ne $PSBoundParameters.Ensure)
+    if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
@@ -539,11 +691,6 @@ function Test-TargetResource
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
-
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
     $ValuesToCheck.Remove('Id') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
@@ -590,7 +737,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
@@ -646,6 +797,7 @@ function Export-TargetResource
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
                 Managedidentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params

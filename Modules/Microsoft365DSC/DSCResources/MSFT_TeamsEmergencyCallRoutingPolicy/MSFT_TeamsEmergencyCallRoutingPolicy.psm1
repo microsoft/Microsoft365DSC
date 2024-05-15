@@ -39,7 +39,15 @@ function Get-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting the Teams Emergency Call Routing Policy $Identity"
@@ -82,6 +90,8 @@ function Get-TargetResource
             ApplicationId                  = $ApplicationId
             TenantId                       = $TenantId
             CertificateThumbprint          = $CertificateThumbprint
+            ManagedIdentity                = $ManagedIdentity.IsPresent
+            AccessTokens                   = $AccessTokens
         }
 
         if ($policy.EmergencyNumbers.Count -gt 0)
@@ -143,7 +153,15 @@ function Set-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting Teams Emergency Call Routing Policy {$Identity}"
@@ -188,6 +206,8 @@ function Set-TargetResource
     $SetParameters.Remove('ApplicationId') | Out-Null
     $SetParameters.Remove('TenantId') | Out-Null
     $SetParameters.Remove('CertificateThumbprint') | Out-Null
+    $SetParameters.Remove('ManagedIdentity') | Out-Null
+    $SetParameters.Remove('AccessTokens') | Out-Null
 
     if ($PSBoundParameters.ContainsKey('EmergencyNumbers'))
     {
@@ -230,7 +250,7 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing existing Teams Meeting Policy {$Identity}"
-        Remove-CsTeamsEmergencyCallRoutingPolicy -Identity $Identity -Confirm:$false
+        Remove-CsTeamsEmergencyCallRoutingPolicy -Identity $Identity
     }
 }
 
@@ -275,7 +295,15 @@ function Test-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -335,7 +363,15 @@ function Export-TargetResource
 
         [Parameter()]
         [System.String]
-        $CertificateThumbprint
+        $CertificateThumbprint,
+
+        [Parameter()]
+        [Switch]
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -367,6 +403,8 @@ function Export-TargetResource
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
+                ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             $result = Get-TargetResource @params
             $result = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

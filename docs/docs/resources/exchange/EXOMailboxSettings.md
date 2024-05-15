@@ -15,6 +15,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 # EXO MailboxSettings
 
@@ -51,7 +52,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -60,11 +61,11 @@ Configuration Example
     {
         EXOMailboxSettings 'OttawaTeamMailboxSettings'
         {
-            DisplayName = 'Ottawa Employees'
+            DisplayName = 'Conf Room Adams'
             TimeZone    = 'Eastern Standard Time'
-            Locale      = 'fr-CA'
+            Locale      = 'en-US' # Updated Property
             Ensure      = 'Present'
-            Credential  = $credsGlobalAdmin
+            Credential  = $Credscredential
         }
     }
 }

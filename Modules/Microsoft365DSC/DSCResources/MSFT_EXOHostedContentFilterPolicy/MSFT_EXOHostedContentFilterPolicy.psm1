@@ -50,6 +50,7 @@ function Get-TargetResource
         [System.Boolean]
         $DownloadLink = $false,
 
+        #DEPRECATED
         [Parameter()]
         [System.Boolean]
         $EnableEndUserSpamNotifications = $false,
@@ -97,6 +98,11 @@ function Get-TargetResource
         [Parameter()]
         [System.Boolean]
         $InlineSafetyTipsEnabled = $true,
+
+        [Parameter()]
+        [ValidateSet('Default', 'HighConfidencePhish', 'Phish', 'HighConfidenceSpam', 'Spam', 'Disabled')]
+        [System.String]
+        $IntraOrgFilterState = 'Default',
 
         [Parameter()]
         [ValidateSet('Off', 'On', 'Test')]
@@ -269,7 +275,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of HostedContentFilterPolicy for $Identity"
@@ -302,9 +312,7 @@ function Get-TargetResource
     $nullReturn.Ensure = 'Absent'
     try
     {
-        $HostedContentFilterPolicies = Get-HostedContentFilterPolicy -ErrorAction Stop
-
-        $HostedContentFilterPolicy = $HostedContentFilterPolicies | Where-Object -FilterScript { $_.Identity -eq $Identity }
+        $HostedContentFilterPolicy = Get-HostedContentFilterPolicy -Identity $Identity -ErrorAction Stop
         if ($null -eq $HostedContentFilterPolicy)
         {
             Write-Verbose -Message "HostedContentFilterPolicy $($Identity) does not exist."
@@ -312,32 +320,52 @@ function Get-TargetResource
         }
         else
         {
-            $AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
-            $BlockedSendersValues = $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
+            [System.String[]]$AllowedSendersValues = $HostedContentFilterPolicy.AllowedSenders.Sender | Select-Object Address -ExpandProperty Address
+            [System.String[]]$BlockedSendersValues = $HostedContentFilterPolicy.BlockedSenders.Sender | Select-Object Address -ExpandProperty Address
+            # Check if the values are null and assign them an empty string array if they are
+            if ($null -eq $AllowedSendersValues) {
+                $AllowedSendersValues = @()
+            }
+            if ($null -eq $BlockedSendersValues) {
+                $BlockedSendersValues = @()
+            }
+
+            [System.String[]]$AllowedSenderDomains = $HostedContentFilterPolicy.AllowedSenderDomains.Domain
+            [System.String[]]$BlockedSenderDomains = $HostedContentFilterPolicy.BlockedSenderDomains.Domain
+            # Check if the values are null and assign them an empty string array if they are
+            if ($null -eq $AllowedSenderDomains) {
+                $AllowedSenderDomains = @()
+            }
+            if ($null -eq $BlockedSenderDomains) {
+                $BlockedSenderDomains = @()
+            }
             $result = @{
                 Ensure                               = 'Present'
                 Identity                             = $Identity
                 AddXHeaderValue                      = $HostedContentFilterPolicy.AddXHeaderValue
                 AdminDisplayName                     = $HostedContentFilterPolicy.AdminDisplayName
-                AllowedSenderDomains                 = $HostedContentFilterPolicy.AllowedSenderDomains.Domain
+                AllowedSenderDomains                 = $AllowedSenderDomains
                 AllowedSenders                       = $AllowedSendersValues
-                BlockedSenderDomains                 = $HostedContentFilterPolicy.BlockedSenderDomains.Domain
+                BlockedSenderDomains                 = $BlockedSenderDomains
                 BlockedSenders                       = $BlockedSendersValues
                 BulkQuarantineTag                    = $HostedContentFilterPolicy.BulkQuarantineTag
                 BulkSpamAction                       = $HostedContentFilterPolicy.BulkSpamAction
                 BulkThreshold                        = $HostedContentFilterPolicy.BulkThreshold
                 DownloadLink                         = $HostedContentFilterPolicy.DownloadLink
-                EnableEndUserSpamNotifications       = $HostedContentFilterPolicy.EnableEndUserSpamNotifications
+                #Deprecated
+                #EnableEndUserSpamNotifications       = $HostedContentFilterPolicy.EnableEndUserSpamNotifications
                 EnableLanguageBlockList              = $HostedContentFilterPolicy.EnableLanguageBlockList
                 EnableRegionBlockList                = $HostedContentFilterPolicy.EnableRegionBlockList
-                EndUserSpamNotificationCustomSubject = $HostedContentFilterPolicy.EndUserSpamNotificationCustomSubject
-                EndUserSpamNotificationFrequency     = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
-                EndUserSpamNotificationLanguage      = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
+                #Deprecated
+                #EndUserSpamNotificationCustomSubject = $HostedContentFilterPolicy.EndUserSpamNotificationCustomSubject
+                #EndUserSpamNotificationFrequency     = $HostedContentFilterPolicy.EndUserSpamNotificationFrequency
+                #EndUserSpamNotificationLanguage      = $HostedContentFilterPolicy.EndUserSpamNotificationLanguage
                 HighConfidencePhishAction            = $HostedContentFilterPolicy.HighConfidencePhishAction
                 HighConfidencePhishQuarantineTag     = $HostedContentFilterPolicy.HighConfidencePhishQuarantineTag
                 HighConfidenceSpamAction             = $HostedContentFilterPolicy.HighConfidenceSpamAction
                 HighConfidenceSpamQuarantineTag      = $HostedContentFilterPolicy.HighConfidenceSpamQuarantineTag
                 InlineSafetyTipsEnabled              = $HostedContentFilterPolicy.InlineSafetyTipsEnabled
+                IntraOrgFilterState                  = $HostedContentFilterPolicy.IntraOrgFilterState
                 IncreaseScoreWithBizOrInfoUrls       = $HostedContentFilterPolicy.IncreaseScoreWithBizOrInfoUrls
                 IncreaseScoreWithImageLinks          = $HostedContentFilterPolicy.IncreaseScoreWithImageLinks
                 IncreaseScoreWithNumericIps          = $HostedContentFilterPolicy.IncreaseScoreWithNumericIps
@@ -375,6 +403,7 @@ function Get-TargetResource
                 CertificatePassword                  = $CertificatePassword
                 Managedidentity                      = $ManagedIdentity.IsPresent
                 TenantId                             = $TenantId
+                AccessTokens                         = $AccessTokens
             }
 
             if ($HostedContentFilterPolicy.IsDefault)
@@ -389,6 +418,7 @@ function Get-TargetResource
     }
     catch
     {
+        Write-Verbose -Message $_
         New-M365DSCLogEntry -Message 'Error retrieving data:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source) `
@@ -499,6 +529,11 @@ function Set-TargetResource
         $InlineSafetyTipsEnabled = $true,
 
         [Parameter()]
+        [ValidateSet('Default', 'HighConfidencePhish', 'Phish', 'HighConfidenceSpam', 'Spam', 'Disabled')]
+        [System.String]
+        $IntraOrgFilterState = 'Default',
+
+        [Parameter()]
         [ValidateSet('Off', 'On', 'Test')]
         [System.String]
         $IncreaseScoreWithBizOrInfoUrls = 'Off',
@@ -669,7 +704,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of HostedContentFilterPolicy for $Identity"
@@ -703,6 +742,7 @@ function Set-TargetResource
     $HostedContentFilterPolicyParams.Remove('CertificatePath') | Out-Null
     $HostedContentFilterPolicyParams.Remove('CertificatePassword') | Out-Null
     $HostedContentFilterPolicyParams.Remove('ManagedIdentity') | Out-Null
+    $HostedContentFilterPolicyParams.Remove('AccessTokens') | Out-Null
 
     if (('Present' -eq $Ensure ) -and ($null -eq $HostedContentFilterPolicy))
     {
@@ -839,6 +879,11 @@ function Test-TargetResource
         $InlineSafetyTipsEnabled = $true,
 
         [Parameter()]
+        [ValidateSet('Default', 'HighConfidencePhish', 'Phish', 'HighConfidenceSpam', 'Spam', 'Disabled')]
+        [System.String]
+        $IntraOrgFilterState = 'Default',
+
+        [Parameter()]
         [ValidateSet('Off', 'On', 'Test')]
         [System.String]
         $IncreaseScoreWithBizOrInfoUrls = 'Off',
@@ -1009,7 +1054,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -1031,33 +1080,10 @@ function Test-TargetResource
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
     $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
-    $ValuesToCheck.Remove('CertificatePath') | Out-Null
-    $ValuesToCheck.Remove('CertificatePassword') | Out-Null
-    $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
-
-    if ($null -ne $ValuesToCheck.AllowedSenders -and $ValuesToCheck.AllowedSenders.Length -eq 0)
-    {
-        $ValuesToCheck.AllowedSenders = $null
-    }
-
-    if ($null -ne $ValuesToCheck.AllowedSenderDomains -and $ValuesToCheck.AllowedSenderDomains.Length -eq 0)
-    {
-        $ValuesToCheck.AllowedSenderDomains = $null
-    }
-
-    if ($null -ne $ValuesToCheck.BlockedSenders -and $ValuesToCheck.BlockedSenders.Length -eq 0)
-    {
-        $ValuesToCheck.BlockedSenders = $null
-    }
-
-    if ($null -ne $ValuesToCheck.BlockedSenderDomains -and $ValuesToCheck.BlockedSenderDomains.Length -eq 0)
-    {
-        $ValuesToCheck.BlockedSenderDomains = $null
-    }
+    $ValuesToCheck.Remove('EnableEndUserSpamNotifications') | Out-Null
+    $ValuesToCheck.Remove('EndUserSpamNotificationLanguage') | Out-Null
+    $ValuesToCheck.Remove('EndUserSpamNotificationFrequency') | Out-Null
+    $ValuesToCheck.Remove('EndUserSpamNotificationCustomSubject') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
@@ -1101,7 +1127,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
@@ -1145,6 +1175,7 @@ function Export-TargetResource
                 CertificatePassword   = $CertificatePassword
                 Managedidentity       = $ManagedIdentity.IsPresent
                 CertificatePath       = $CertificatePath
+                AccessTokens          = $AccessTokens
             }
             Write-Host "    |---[$i/$($HostedContentFilterPolicies.Length)] $($HostedContentFilterPolicy.Identity)" -NoNewline
             $Results = Get-TargetResource @Params

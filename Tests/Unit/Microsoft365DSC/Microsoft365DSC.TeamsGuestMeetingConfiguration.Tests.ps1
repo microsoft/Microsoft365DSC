@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
 
         BeforeAll {
-            $secpasswd = ConvertTo-SecureString 'Pass@word1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString ((New-Guid).ToString()) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             $Global:PartialExportFileName = 'c:\TestPath'
@@ -37,11 +37,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             Mock -CommandName Get-CsTeamsGuestMeetingConfiguration -MockWith {
                 return @{
-                    Identity          = 'Global'
-                    AllowIPVideo      = $true
-                    ScreenSharingMode = 'Disabled'
-                    AllowMeetNow      = $false
-                    Credential        = $Credential
+                    Identity                = 'Global'
+                    AllowIPVideo            = $true
+                    LiveCaptionsEnabledType = 'Disabled'
+                    ScreenSharingMode       = 'Disabled'
+                    AllowMeetNow            = $false
+                    AllowTranscription      = $false
+                    Credential              = $Credential
                 }
             }
 
@@ -51,22 +53,26 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
 
         # Test contexts
         Context -Name 'When settings are correctly set' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity          = 'Global'
-                    AllowIPVideo      = $true
-                    ScreenSharingMode = 'Disabled'
-                    AllowMeetNow      = $false
-                    Credential        = $Credential
+                    Identity                = 'Global'
+                    AllowIPVideo            = $true
+                    LiveCaptionsEnabledType = 'Disabled'
+                    ScreenSharingMode       = 'Disabled'
+                    AllowMeetNow            = $false
+                    AllowTranscription      = $false
+                    Credential              = $Credential
                 }
             }
 
             It 'Should return true for the AllowIPVideo property from the Get method' {
-                (Get-TargetResource @testParams).AllowIPVideo | Should -Be $True
+                (Get-TargetResource @testParams).AllowIPVideo | Should -Be $true
             }
 
             It 'Should return true from the Test method' {
@@ -81,16 +87,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When settings are NOT correctly set' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Identity          = 'Global'
-                    AllowIPVideo      = $false # Drifted
-                    ScreenSharingMode = 'Disabled'
-                    AllowMeetNow      = $false
-                    Credential        = $Credential
+                    Identity                = 'Global'
+                    AllowIPVideo            = $false # Drifted
+                    LiveCaptionsEnabledType = 'Disabled'
+                    ScreenSharingMode       = 'Disabled'
+                    AllowMeetNow            = $false
+                    Credential              = $Credential
                 }
             }
 
             It 'Should return true for the AllowIPVideo property from the Get method' {
-                (Get-TargetResource @testParams).AllowIPVideo | Should -Be $True
+                (Get-TargetResource @testParams).AllowIPVideo | Should -Be $true
             }
 
             It 'Should return false from the Test method' {

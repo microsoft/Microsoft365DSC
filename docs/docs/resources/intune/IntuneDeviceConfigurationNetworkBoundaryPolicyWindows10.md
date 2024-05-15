@@ -17,6 +17,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -28,6 +29,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ### MSFT_MicrosoftGraphWindowsNetworkIsolationPolicy
@@ -126,7 +128,6 @@ Configuration Example
             Credential                    = $Credscredential;
             DisplayName                   = "network boundary";
             Ensure                        = "Present";
-            Id                            = "16c280a3-a04f-4847-b3bb-3cef06cb2be3";
             SupportsScopeTags             = $True;
             WindowsNetworkIsolationPolicy = MSFT_MicrosoftGraphwindowsNetworkIsolationPolicy{
                 EnterpriseProxyServers = @()
@@ -143,6 +144,82 @@ Configuration Example
                 )
                 NeutralDomainResources = @()
             };
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10 'Example'
+        {
+            Assignments                   = @(
+                MSFT_DeviceManagementConfigurationPolicyAssignments{
+                    deviceAndAppManagementAssignmentFilterType = 'none'
+                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                }
+            );
+            Credential                    = $Credscredential;
+            DisplayName                   = "network boundary";
+            Ensure                        = "Present";
+            SupportsScopeTags             = $False; # Updated Property
+            WindowsNetworkIsolationPolicy = MSFT_MicrosoftGraphwindowsNetworkIsolationPolicy{
+                EnterpriseProxyServers = @()
+                EnterpriseInternalProxyServers = @()
+                EnterpriseIPRangesAreAuthoritative = $True
+                EnterpriseProxyServersAreAuthoritative = $True
+                EnterpriseNetworkDomainNames = @('domain.com')
+                EnterpriseIPRanges = @(
+                    MSFT_MicrosoftGraphIpRange1{
+                        UpperAddress = '1.1.1.255'
+                        LowerAddress = '1.1.1.0'
+                        odataType = '#microsoft.graph.iPv4Range'
+                    }
+                )
+                NeutralDomainResources = @()
+            };
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationNetworkBoundaryPolicyWindows10 'Example'
+        {
+            Credential                    = $Credscredential;
+            DisplayName                   = "network boundary";
+            Ensure                        = "Absent";
         }
     }
 }

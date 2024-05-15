@@ -32,6 +32,7 @@
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -101,7 +102,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -129,7 +130,7 @@ Configuration Example
             Refinable                   = "Yes"
             TokenNormalization          = $True
             Ensure                      = "Present"
-            Credential                  = $credsGlobalAdmin
+            Credential                  = $Credscredential
         }
     }
 }

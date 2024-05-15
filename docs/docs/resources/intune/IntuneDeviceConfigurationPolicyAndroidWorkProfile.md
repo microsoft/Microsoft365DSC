@@ -59,6 +59,7 @@
 | **ApplicationSecret** | Write | PSCredential | Secret of the Azure Active Directory tenant used for authentication. | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ### MSFT_DeviceManagementConfigurationPolicyAssignments
 
@@ -70,6 +71,7 @@
 | **deviceAndAppManagementAssignmentFilterType** | Write | String | The type of filter of the target assignment i.e. Exclude or Include. Possible values are:none, include, exclude. | `none`, `include`, `exclude` |
 | **deviceAndAppManagementAssignmentFilterId** | Write | String | The Id of the filter for the target assignment. | |
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
+| **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
 
 ## Description
@@ -114,7 +116,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -144,7 +146,79 @@ Configuration Example
             WorkProfilePasswordRequiredType                = 'deviceDefault'
             WorkProfileRequirePassword                     = $False
             Ensure                                         = 'Present'
-            Credential                                     = $Credsglobaladmin
+            Credential                                     = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example creates a new General Device Configuration Policy for Android WorkProfile .
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationPolicyAndroidWorkProfile 97ed22e9-1429-40dc-ab3c-0055e538383b
+        {
+            DisplayName                                    = 'Android Work Profile - Device Restrictions - Standard'
+            PasswordBlockFingerprintUnlock                 = $False
+            PasswordBlockTrustAgents                       = $True # Updated Property
+            PasswordMinimumLength                          = 6
+            PasswordMinutesOfInactivityBeforeScreenTimeout = 15
+            PasswordRequiredType                           = 'atLeastNumeric'
+            SecurityRequireVerifyApps                      = $True
+            WorkProfileBlockAddingAccounts                 = $True
+            WorkProfileBlockCamera                         = $False
+            WorkProfileBlockCrossProfileCallerId           = $False
+            WorkProfileBlockCrossProfileContactsSearch     = $False
+            WorkProfileBlockCrossProfileCopyPaste          = $True
+            WorkProfileBlockNotificationsWhileDeviceLocked = $True
+            WorkProfileBlockScreenCapture                  = $True
+            WorkProfileBluetoothEnableContactSharing       = $False
+            WorkProfileDataSharingType                     = 'allowPersonalToWork'
+            WorkProfileDefaultAppPermissionPolicy          = 'deviceDefault'
+            WorkProfilePasswordBlockFingerprintUnlock      = $False
+            WorkProfilePasswordBlockTrustAgents            = $False
+            WorkProfilePasswordRequiredType                = 'deviceDefault'
+            WorkProfileRequirePassword                     = $False
+            Ensure                                         = 'Present'
+            Credential                                     = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example creates a new General Device Configuration Policy for Android WorkProfile .
+
+```powershell
+Configuration Example
+{
+    param(
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        IntuneDeviceConfigurationPolicyAndroidWorkProfile 97ed22e9-1429-40dc-ab3c-0055e538383b
+        {
+            DisplayName                                    = 'Android Work Profile - Device Restrictions - Standard'
+            Ensure                                         = 'Absent'
+            Credential                                     = $Credscredential
         }
     }
 }

@@ -9,6 +9,10 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
+        [System.String]
+        $Id,
+
+        [Parameter()]
         [System.String[]]
         $AcceptMessagesOnlyFromSendersOrMembers,
 
@@ -236,7 +240,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Getting configuration of Office 365 Group Settings for $DisplayName"
@@ -273,12 +281,20 @@ function Get-TargetResource
     {
         if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
         {
-            [Array]$group = $Script:exportedInstances | Where-Object -FilterScript {$_.DisplayName -eq $DisplayName}
+            [Array]$group = $Script:exportedInstances | Where-Object -FilterScript {$_.Id -eq $Id}
         }
         else
         {
-            [Array]$group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties -ErrorAction Stop
+            Write-Verbose -Message "Retrieving group by id {$Id}"
+            [Array]$group = Get-UnifiedGroup -Identity $Id -IncludeAllProperties -ErrorAction Stop
+
+            if ($group.Length -eq 0)
+            {
+                Write-Verbose -Message "Couldn't retrieve group by ID. Trying by DisplayName {$DisplayName}"
+                [Array]$group = Get-UnifiedGroup -Identity $DisplayName -IncludeAllProperties -ErrorAction Stop
+            }
         }
+
         if ($group.Length -gt 1)
         {
             Write-Warning -Message "Multiple instances of a group named {$DisplayName} was discovered which could result in inconsistencies retrieving its values."
@@ -298,6 +314,7 @@ function Get-TargetResource
 
     $result = @{
         DisplayName                            = $DisplayName
+        Id                                     = $group.Id
         AcceptMessagesOnlyFromSendersOrMembers = $group.AcceptMessagesOnlyFromSendersOrMembers
         AccessType                             = $group.AccessType
         AlwaysSubscribeMembersToCalendarEvents = $group.AlwaysSubscribeMembersToCalendarEvents
@@ -355,6 +372,7 @@ function Get-TargetResource
         CertificatePath                        = $CertificatePath
         CertificatePassword                    = $CertificatePassword
         ManagedIdentity                        = $ManagedIdentity
+        AccessTokens                           = $AccessTokens
     }
 
     Write-Verbose -Message "Found an existing instance of group '$($DisplayName)'"
@@ -369,6 +387,10 @@ function Set-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String[]]
@@ -598,7 +620,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message "Setting configuration of Office 365 group Settings for $DisplayName"
@@ -627,6 +653,7 @@ function Set-TargetResource
     $UpdateParameters.Remove('CertificatePath') | Out-Null
     $UpdateParameters.Remove('CertificatePassword') | Out-Null
     $UpdateParameters.Remove('ManagedIdentity') | Out-Null
+    $UpdateParameters.Remove('AccessTokens') | Out-Null
 
     # Cannot use PrimarySmtpAddress and EmailAddresses at the same time. If both are present, then give priority to PrimarySmtpAddress.
     if ($UpdateParameters.ContainsKey('PrimarySmtpAddress') -and $null -ne $UpdateParameters.PrimarySmtpAddress)
@@ -645,6 +672,10 @@ function Test-TargetResource
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Id,
 
         [Parameter()]
         [System.String[]]
@@ -874,7 +905,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -937,7 +972,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters `
@@ -979,12 +1018,14 @@ function Export-TargetResource
                 $Params = @{
                     Credential            = $Credential
                     DisplayName           = $groupName
+                    Id                    = $group.Id
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     CertificatePassword   = $CertificatePassword
                     Managedidentity       = $ManagedIdentity.IsPresent
                     CertificatePath       = $CertificatePath
+                    AccessTokens          = $AccessTokens
                 }
                 $Results = Get-TargetResource @Params
 

@@ -18,6 +18,7 @@
 | **CertificatePassword** | Write | PSCredential | Username can be made up to anything but password will be used for CertificatePassword | |
 | **CertificatePath** | Write | String | Path to certificate used in service principal usually a PFX file. | |
 | **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 ## Description
 
@@ -51,7 +52,7 @@ Configuration Example
     (
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -61,10 +62,70 @@ Configuration Example
         {
             Name                                = "HRApp"
             ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
-            AccountType                         = "OrganizationalAccount"
+            AcceptSecurityIdentifierInformation = $true
             Enabled                             = $True
             Ensure                              = "Present"
-            Credential                          = $credsGlobalAdmin
+            Credential                          = $Credscredential
+        }
+    }
+}
+```
+
+### Example 2
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOPartnerApplication 'ConfigurePartnerApplication'
+        {
+            Name                                = "HRApp"
+            ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
+            AcceptSecurityIdentifierInformation = $False # Updated Property
+            Enabled                             = $True
+            Ensure                              = "Present"
+            Credential                          = $Credscredential
+        }
+    }
+}
+```
+
+### Example 3
+
+This example is used to test new resources and showcase the usage of new resources being worked on.
+It is not meant to use as a production baseline.
+
+```powershell
+Configuration Example
+{
+    param
+    (
+        [Parameter(Mandatory = $true)]
+        [PSCredential]
+        $Credscredential
+    )
+    Import-DscResource -ModuleName Microsoft365DSC
+
+    node localhost
+    {
+        EXOPartnerApplication 'ConfigurePartnerApplication'
+        {
+            Name                                = "HRApp"
+            ApplicationIdentifier               = "00000006-0000-0dd1-ac00-000000000000"
+            Ensure                              = "Absent"
+            Credential                          = $Credscredential
         }
     }
 }

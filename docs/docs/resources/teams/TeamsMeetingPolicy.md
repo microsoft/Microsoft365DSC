@@ -9,7 +9,7 @@
 | **AllowChannelMeetingScheduling** | Write | Boolean | Determines whether a user can schedule channel meetings. Set this to TRUE to allow a user to schedule channel meetings. Set this to FALSE to prohibit the user from scheduling channel meetings. Note this only restricts from scheduling and not from joining a meeting scheduled by another user. | |
 | **AllowMeetNow** | Write | Boolean | Determines whether a user can start ad-hoc meetings. Set this to TRUE to allow a user to start ad-hoc meetings. Set this to FALSE to prohibit the user from starting ad-hoc meetings. | |
 | **AllowPrivateMeetNow** | Write | Boolean | Determines whether a user can start private ad-hoc meetings. Set this to TRUE to allow a user to start private ad-hoc meetings. Set this to FALSE to prohibit the user from starting private ad-hoc meetings. | |
-| **MeetingChatEnabledType** | Write | String | Determines whether or not Chat will be enabled or disabled for meetings. | `Disabled`, `Enabled` |
+| **MeetingChatEnabledType** | Write | String | Determines whether or not Chat will be enabled, enabled except anonymous or disabled for meetings. | `Disabled`, `Enabled`, `EnabledExceptAnonymous` |
 | **LiveCaptionsEnabledType** | Write | String | Determines whether a user should have the option to view live captions or not in a meeting. | `Disabled`, `DisabledUserOverride` |
 | **AllowIPAudio** | Write | Boolean | Determines whether audio is enabled in a user's meetings or calls. Set this to TRUE to allow the user to share their audioo. Set this to FALSE to prohibit the user from sharing their audio. | |
 | **AllowIPVideo** | Write | Boolean | Determines whether video is enabled in a user's meetings or calls. Set this to TRUE to allow the user to share their video. Set this to FALSE to prohibit the user from sharing their video. | |
@@ -52,7 +52,7 @@
 | **AllowNetworkConfigurationSettingsLookup** | Write | Boolean | Determines whether network configuration setting lookups can be made by users who are not Enterprise Voice enabled. It is used to enable Network Roaming policies. | |
 | **AllowWatermarkForCameraVideo** | Write | Boolean | N/A | |
 | **AllowWatermarkForScreenSharing** | Write | Boolean | N/A | |
-| **NewMeetingRecordingExpirationDays** | Write | UInt32 | Specifies the number of days before meeting recordings will expire and move to the recycle bin. Value can be from 1 to 99,999 days. NOTE: You may opt to set Meeting Recordings to never expire by entering the value -1. | |
+| **NewMeetingRecordingExpirationDays** | Write | SInt32 | Specifies the number of days before meeting recordings will expire and move to the recycle bin. Value can be from 1 to 99,999 days. NOTE: You may opt to set Meeting Recordings to never expire by entering the value -1. | |
 | **AllowCartCaptionsScheduling** | Write | String | Determines whether a user can add a URL for captions from a Communications Access Real-Time Translation (CART) captioner for providing real-time captions in meetings. | `EnabledUserOverride`, `DisabledUserOverride`, `Disabled` |
 | **AllowDocumentCollaboration** | Write | String | N/A | |
 | **AllowedStreamingMediaInput** | Write | String | N/A | |
@@ -72,6 +72,8 @@
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Name of the Azure Active Directory tenant used for authentication. Format contoso.onmicrosoft.com | |
 | **CertificateThumbprint** | Write | String | Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication. | |
+| **ManagedIdentity** | Write | Boolean | Managed ID being used for authentication. | |
+| **AccessTokens** | Write | StringArray[] | Access token used for authentication. | |
 
 
 ## Description
@@ -100,11 +102,11 @@ To authenticate with the Microsoft Graph API, this resource required the followi
 
 - **Read**
 
-    - Organization.Read.All, User.Read.All, Group.ReadWrite.All, AppCatalog.ReadWrite.All, TeamSettings.ReadWrite.All, Channel.Delete.All, ChannelSettings.ReadWrite.All, ChannelMember.ReadWrite.All
+    - Organization.Read.All
 
 - **Update**
 
-    - Organization.Read.All, User.Read.All, Group.ReadWrite.All, AppCatalog.ReadWrite.All, TeamSettings.ReadWrite.All, Channel.Delete.All, ChannelSettings.ReadWrite.All, ChannelMember.ReadWrite.All
+    - Organization.Read.All
 
 ## Examples
 
@@ -118,7 +120,7 @@ Configuration Example
     param(
         [Parameter(Mandatory = $true)]
         [PSCredential]
-        $credsGlobalAdmin
+        $Credscredential
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -145,7 +147,7 @@ Configuration Example
             MediaBitRateKb                             = 50000
             ScreenSharingMode                          = "EntireScreen"
             Ensure                                     = "Present"
-            Credential                                 = $credsglobaladmin
+            Credential                                 = $Credscredential
         }
     }
 }

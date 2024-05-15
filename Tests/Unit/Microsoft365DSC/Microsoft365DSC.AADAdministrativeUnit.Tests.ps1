@@ -22,7 +22,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString 'test@password1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-Guid | Out-String) -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Add-M365DSCTelemetryEvent -MockWith {
@@ -58,7 +58,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnit -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberByRef -MockWith {
+            Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef -MockWith {
             }
 
             Mock -CommandName Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
@@ -70,6 +70,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
+            $Script:exportedInstances =$null
+            $Script:ExportMode = $false
         }
         # Test contexts
         Context -Name 'The AU should exist but it DOES NOT' -Fixture {
@@ -113,7 +115,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the AU from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDirectoryAdministrativeUnit -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
             }
         }
 
@@ -158,9 +160,42 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the AU from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnit -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
             }
         }
+
+        Context -Name 'The AU exists and values are already in desired state - without ID/Ensure' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description = 'FakeStringValue2'
+                    DisplayName = 'FakeStringValue2'
+                    Credential  = $Credential
+                }
+
+                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnit -MockWith {
+                    return @{
+                        Description = 'FakeStringValue2'
+                        DisplayName = 'FakeStringValue2'
+                        Id          = 'FakeStringValue2'
+                    }
+                }
+                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitMember -MockWith {
+                    return $null
+                }
+                Mock -CommandName Get-MgBetaDirectoryAdministrativeUnitScopedRoleMember -MockWith {
+                    return $null
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            }
+
+            It 'Should return true from the Test method' {
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
         Context -Name 'The AU Exists and Values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
@@ -326,7 +361,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method without removing existing Members or ScopedRoleMembers' {
                 Set-TargetResource @testParams
-                Should -Not -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberByRef
+                Should -Not -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnitMemberDirectoryObjectByRef
                 Should -Not -Invoke -CommandName Remove-MgBetaDirectoryAdministrativeUnitScopedRoleMember
             }
 
