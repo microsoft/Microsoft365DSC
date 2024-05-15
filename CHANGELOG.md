@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* AADAdministrativeUnit
+  * Fix Properties for Dynamic Administrative Units in Graph have moved
+
 # 1.24.515.2
 
 * EXOManagementRoleEntry
