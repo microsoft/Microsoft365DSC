@@ -143,7 +143,11 @@ function Get-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Getting configuration for SPO Sharing settings'
@@ -168,7 +172,7 @@ function Get-TargetResource
     try
     {
         $SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
-        $MySite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.com/' -and $_.Template -notmatch '^RedirectSite#' }
+        $MySite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.' -and $_.Template -notmatch '^RedirectSite#' }
 
         if ($null -ne $MySite)
         {
@@ -226,6 +230,7 @@ function Get-TargetResource
             CertificateThumbprint                      = $CertificateThumbprint
             Managedidentity                            = $ManagedIdentity.IsPresent
             Ensure                                     = 'Present'
+            AccessTokens                               = $AccessTokens
         }
 
         if (-not [System.String]::IsNullOrEmpty($MySiteSharingCapability))
@@ -395,7 +400,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     Write-Verbose -Message 'Setting configuration for SPO Sharing settings'
@@ -427,6 +436,8 @@ function Set-TargetResource
     $CurrentParameters.Remove('CertificateThumbprint') | Out-Null
     $CurrentParameters.Remove('ManagedIdentity') | Out-Null
     $CurrentParameters.Remove('ApplicationSecret') | Out-Null
+    $CurrentParameters.Remove('AccessTokens') | Out-Null
+
     [bool]$SetMySharingCapability = $false
     if ($null -ne $CurrentParameters['MySiteSharingCapability'])
     {
@@ -669,7 +680,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -700,11 +715,65 @@ function Test-TargetResource
     $ValuesToCheck.Remove('CertificatePassword') | Out-Null
     $ValuesToCheck.Remove('CertificateThumbprint') | Out-Null
     $ValuesToCheck.Remove('ManagedIdentity') | Out-Null
+    $ValuesToCheck.Remove('AccessTokens') | Out-Null
 
     if ($DefaultLinkPermission -eq 'None')
     {
         Write-Verbose -Message 'Valid values to set are View and Edit. A value of None will be set to Edit as its the default value.'
         $ValuesToCheck['DefaultLinkPermission'] = 'Edit'
+    }
+
+    if ($null -eq $SharingAllowedDomainList -and $null -eq $SharingBlockedDomainList -and
+        ($null -ne $RequireAcceptingAccountMatchInvitedAccount -and $RequireAcceptingAccountMatchInvitedAccount -eq $false))
+    {
+        Write-Warning -Message 'If SharingAllowedDomainList / SharingBlockedDomainList are set to null RequireAcceptingAccountMatchInvitedAccount must be set to True '
+        $ValuesToCheck.Remove('RequireAcceptingAccountMatchInvitedAccount') | Out-Null
+    }
+
+    if ($null -eq $SignInAccelerationDomain)
+    {
+        $ValuesToCheck.Remove('SignInAccelerationDomain') | Out-Null
+        $ValuesToCheck.Remove('EnableGuestSignInAcceleration') | Out-Null #removing EnableGuestSignInAcceleration since it can only be configured with a configured SignINAccerlation domain
+    }
+    if ($SharingCapability -ne 'ExternalUserAndGuestSharing')
+    {
+        Write-Warning -Message 'The sharing capabilities for the tenant are not configured to be ExternalUserAndGuestSharing for that the RequireAnonymousLinksExpireInDays property cannot be configured'
+        $ValuesToCheck.Remove('RequireAnonymousLinksExpireInDays') | Out-Null
+    }
+    if ($ExternalUserExpireInDays -and $ExternalUserExpirationRequired -eq $false)
+    {
+        Write-Warning -Message 'ExternalUserExpirationRequired is set to be false. For that the ExternalUserExpireInDays property cannot be configured'
+        $ValuesToCheck.Remove('ExternalUserExpireInDays') | Out-Null
+    }
+    if ($RequireAcceptingAccountMatchInvitedAccount -eq $false)
+    {
+        Write-Warning -Message 'RequireAcceptingAccountMatchInvitedAccount is set to be false. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured'
+        $ValuesToCheck.Remove('SharingAllowedDomainList') | Out-Null
+        $ValuesToCheck.Remove('SharingBlockedDomainList') | Out-Null
+    }
+
+    if ($SharingCapability -ne 'ExternalUserAndGuestSharing' -and ($null -ne $FileAnonymousLinkType -or $null -ne $FolderAnonymousLinkType))
+    {
+        Write-Warning -Message 'If anonymous file or folder links are set, SharingCapability must be set to ExternalUserAndGuestSharing '
+        $ValuesToCheck.Remove('FolderAnonymousLinkType') | Out-Null
+        $ValuesToCheck.Remove('FileAnonymousLinkType') | Out-Null
+    }
+
+    if ($SharingDomainRestrictionMode -eq 'None')
+    {
+        Write-Warning -Message 'SharingDomainRestrictionMode is set to None. For that SharingAllowedDomainList / SharingBlockedDomainList cannot be configured'
+        $ValuesToCheck.Remove('SharingAllowedDomainList') | Out-Null
+        $ValuesToCheck.Remove('SharingBlockedDomainList') | Out-Null
+    }
+    elseif ($SharingDomainRestrictionMode -eq 'AllowList')
+    {
+        Write-Verbose -Message 'SharingDomainRestrictionMode is set to AllowList. For that SharingBlockedDomainList cannot be configured'
+        $ValuesToCheck.Remove('SharingBlockedDomainList') | Out-Null
+    }
+    elseif ($SharingDomainRestrictionMode -eq 'BlockList')
+    {
+        Write-Warning -Message 'SharingDomainRestrictionMode is set to BlockList. For that SharingAllowedDomainList cannot be configured'
+        $ValuesToCheck.Remove('SharingAllowedDomainList') | Out-Null
     }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
@@ -753,7 +822,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
 
     try
@@ -783,6 +856,7 @@ function Export-TargetResource
             CertificateThumbprint = $CertificateThumbprint
             Managedidentity       = $ManagedIdentity.IsPresent
             Credential            = $Credential
+            AccessTokens          = $AccessTokens
         }
 
         $Results = Get-TargetResource @Params

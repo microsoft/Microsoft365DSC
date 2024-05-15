@@ -15,4 +15,5 @@ class MSFT_SCCaseHoldPolicy : OMI_BaseResource
     [Write, Description("Thumbprint of the Azure Active Directory application's authentication certificate to use for authentication.")] String CertificateThumbprint;
     [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

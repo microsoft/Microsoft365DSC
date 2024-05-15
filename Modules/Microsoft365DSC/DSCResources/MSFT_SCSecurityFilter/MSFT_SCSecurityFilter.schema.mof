@@ -14,4 +14,5 @@ class MSFT_SCSecurityFilter : OMI_BaseResource
     [Write, Description("Path to certificate used in service principal usually a PFX file.")] String CertificatePath;
     [Write, Description("Username can be made up to anything but password will be used for CertificatePassword"), EmbeddedInstance("MSFT_Credential")] String CertificatePassword;
     [Write, Description("Specify if this label policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

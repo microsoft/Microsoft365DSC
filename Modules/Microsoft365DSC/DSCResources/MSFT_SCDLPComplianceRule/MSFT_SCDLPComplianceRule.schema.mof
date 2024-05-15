@@ -108,4 +108,5 @@ class MSFT_SCDLPComplianceRule : OMI_BaseResource
     [Write, Description("The SetHeader The SetHeader parameter specifies an action for the DLP rule that adds or modifies a header field and value in the message header. You can specify multiple header name and value pairs separated by commas")] String SetHeader[];
     [Write, Description("The ContentExtensionMatchesWords parameter specifies a condition for the DLP rule that looks for words in file name extensions. You can specify multiple words separated by commas.")] String ContentExtensionMatchesWords[];
     [Write, Description("The ExceptIfContentExtensionMatchesWords parameter specifies an exception for the DLP rule that looks for words in file name extensions. You can specify multiple words separated by commas.")] String ExceptIfContentExtensionMatchesWords[];
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

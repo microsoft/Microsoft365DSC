@@ -1,0 +1,38 @@
+{
+    "resourceName": "AADActivityBasedTimeoutPolicy",
+    "description": "This resource configures an Azure AD Activity Based Timeout Policy.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Policy.Read.All"
+                    },
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Policy.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}
