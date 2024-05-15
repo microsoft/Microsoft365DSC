@@ -160,7 +160,11 @@ function Set-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     Write-Verbose -Message "Setting configuration of Teams Meeting Broadcast Policy {$Identity}"
 
@@ -204,6 +208,7 @@ function Set-TargetResource
     $SetParams.Remove('CertificateThumbprint') | Out-Null
     $SetParams.Remove('Ensure') | Out-Null
     $SetParams.Remove('ManagedIdentity') | Out-Null
+    $SetParams.Remove('AccessTokens') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentValues.Ensure -eq 'Absent')
     {
@@ -270,7 +275,11 @@ function Test-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -327,7 +336,11 @@ function Export-TargetResource
 
         [Parameter()]
         [Switch]
-        $ManagedIdentity
+        $ManagedIdentity,
+
+        [Parameter()]
+        [System.String[]]
+        $AccessTokens
     )
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftTeams' `
         -InboundParameters $PSBoundParameters
@@ -360,6 +373,7 @@ function Export-TargetResource
                 TenantId              = $TenantId
                 CertificateThumbprint = $CertificateThumbprint
                 ManagedIdentity       = $ManagedIdentity.IsPresent
+                AccessTokens          = $AccessTokens
             }
             Write-Host "    |---[$i/$($policies.Length)] $($policy.Identity)" -NoNewline
             $Results = Get-TargetResource @Params
