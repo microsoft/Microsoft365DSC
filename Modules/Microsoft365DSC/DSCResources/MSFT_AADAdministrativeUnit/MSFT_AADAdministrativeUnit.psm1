@@ -1015,6 +1015,7 @@ function Export-TargetResource
             All         = [switch]$true
             ErrorAction = 'Stop'
         }
+
         $queryTypes = @{
                         'eq' = @('description')
                         'startsWith' = @('description')
@@ -1027,8 +1028,6 @@ function Export-TargetResource
         $allConditionsMatched = $true
 
         # Check each condition in the filter against the support list
-        # Assuming the provided PowerShell script is part of a larger context and the variable $Filter is defined elsewhere
-
         # Check if $Filter is not null
         if ($Filter) {
             # Check each condition in the filter against the support list
