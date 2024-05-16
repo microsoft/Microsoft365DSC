@@ -215,7 +215,7 @@ function Get-TargetResource
         $MediaBitRateKb,
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledExceptAnonymous')]
         [System.String]
         $MeetingChatEnabledType = 'Enabled',
 
@@ -636,7 +636,7 @@ function Set-TargetResource
         $MediaBitRateKb,
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledExceptAnonymous')]
         [System.String]
         $MeetingChatEnabledType = 'Enabled',
 
@@ -755,6 +755,10 @@ function Set-TargetResource
     $SetParameters.Remove('ManagedIdentity') | Out-Null
     $SetParameters.Remove('Verbose') | Out-Null # Needs to be implicitly removed for the cmdlet to work
     $SetParameters.Remove('AccessTokens') | Out-Null
+    if ($AllowCloudRecording -eq $false -and $SetParameters.Keys -contains 'AllowRecordingStorageOutsideRegion')
+    {
+        $SetParameters.Remove('AllowRecordingStorageOutsideRegion') | Out-Null
+    }
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
@@ -1014,7 +1018,7 @@ function Test-TargetResource
         $MediaBitRateKb,
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'Enabled', 'EnabledExceptAnonymous')]
         [System.String]
         $MeetingChatEnabledType = 'Enabled',
 
@@ -1134,6 +1138,11 @@ function Test-TargetResource
 
     # The AllowUserToJoinExternalMeeting doesn't do anything based on official documentation
     $ValuesToCheck.Remove('AllowUserToJoinExternalMeeting') | Out-Null
+
+    if ($AllowCloudRecording -eq $false -and $ValuesToCheck.Keys -contains 'AllowRecordingStorageOutsideRegion')
+    {
+        $ValuesToCheck.Remove('AllowRecordingStorageOutsideRegion') | Out-Null
+    }
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `

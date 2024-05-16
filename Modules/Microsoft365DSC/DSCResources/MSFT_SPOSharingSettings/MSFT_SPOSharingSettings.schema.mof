@@ -34,4 +34,5 @@ class MSFT_SPOSharingSettings : OMI_BaseResource
     [Write, Description("Managed ID being used for authentication.")] Boolean ManagedIdentity;
     [Write, Description("Enable Guest access to a site or Onedrive to expire after")] boolean ExternalUserExpirationRequired;
     [Write, Description("Specifies Number of days for Guest Access links to expire.")] uint32 ExternalUserExpireInDays;
+    [Write, Description("Access token used for authentication.")] String AccessTokens[];
 };

@@ -15,15 +15,25 @@ function Get-M365DSCApplicationInsightsTelemetryClient
         $AI = "$PSScriptRoot/../Dependencies/Microsoft.ApplicationInsights.dll"
         [Reflection.Assembly]::LoadFile($AI) | Out-Null
 
-        $InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
-                [System.EnvironmentVariableTarget]::Machine)
-
-        if ($null -eq $InstrumentationKey)
-        {
-            $InstrumentationKey = 'e670af5d-fd30-4407-a796-8ad30491ea7a'
-        }
         $TelClient = [Microsoft.ApplicationInsights.TelemetryClient]::new()
-        $TelClient.InstrumentationKey = $InstrumentationKey
+
+        $connectionString = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryConnectionString', `
+            [System.EnvironmentVariableTarget]::Machine)
+        if (-not [System.String]::IsNullOrEmpty($connectionString))
+        {
+            $TelClient.TelemetryConfiguration.ConnectionString = $connectionString
+        }
+        else
+        {
+            $InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
+                    [System.EnvironmentVariableTarget]::Machine)
+
+            if ($null -eq $InstrumentationKey)
+            {
+                $InstrumentationKey = 'e670af5d-fd30-4407-a796-8ad30491ea7a'
+            }
+            $TelClient.InstrumentationKey = $InstrumentationKey
+        }
 
         $Global:M365DSCTelemetryEngine = $TelClient
     }
@@ -330,7 +340,11 @@ function Set-M365DSCTelemetryOption
 
         [Parameter()]
         [System.String]
-        $ProjectName
+        $ProjectName,
+
+        [Parameter()]
+        [System.String]
+        $ConnectionString
     )
 
     if ($null -ne $Enabled)
@@ -348,6 +362,12 @@ function Set-M365DSCTelemetryOption
     if ($null -ne $ProjectName)
     {
         [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryProjectName', $ProjectName, `
+                [System.EnvironmentVariableTarget]::Machine)
+    }
+
+    if ($null -ne $ConnectionString)
+    {
+        [System.Environment]::SetEnvironmentVariable('M365DSCTelemetryConnectionString', $ConnectionString, `
                 [System.EnvironmentVariableTarget]::Machine)
     }
 }
@@ -376,6 +396,8 @@ function Get-M365DSCTelemetryOption
             InstrumentationKey = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryInstrumentationKey', `
                     [System.EnvironmentVariableTarget]::Machine)
             ProjectName        = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryProjectName', `
+                    [System.EnvironmentVariableTarget]::Machine)
+            ConnectionString   = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryConnectionString', `
                     [System.EnvironmentVariableTarget]::Machine)
         }
     }
