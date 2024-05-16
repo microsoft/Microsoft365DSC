@@ -1010,7 +1010,48 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
         #region resource generator code
-        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit -Filter $Filter -All:$true -ErrorAction Stop
+        $ExportParameters = @{
+            Filter      = $Filter
+            All         = [switch]$true
+            Property    = $propertiesToRetrieve
+            ErrorAction = 'Stop'
+        }
+        $queryTypes = @{
+                        'eq' = @('description')
+                        'startsWith' = @('description')
+                        'eq Null' = @(
+                            'description',
+                            'displayName'
+                            )
+        }
+
+        $allConditionsMatched = $true
+
+        # Check each condition in the filter against the support list
+        # Assuming the provided PowerShell script is part of a larger context and the variable $Filter is defined elsewhere
+
+        # Check if $Filter is not null
+        if ($Filter) {
+            # Check each condition in the filter against the support list
+            foreach ($condition in $Filter.Split(' ')) {
+                if ($condition -match '(\w+)/(\w+):(\w+)') {
+                    $attribute, $operation, $value = $matches[1], $matches[2], $matches[3]
+                    if (-not $queryTypes.ContainsKey($operation) -or -not $queryTypes[$operation].Contains($attribute)) {
+                        $allConditionsMatched = $false
+                        break
+                    }
+                }
+            }
+        }
+
+        # If all conditions match the support, add parameters to $ExportParameters
+        if ($allConditionsMatched -or $Filter -like '*endsWith*')
+        {
+            $ExportParameters.Add('CountVariable', 'count')
+            $ExportParameters.Add('headers', @{"ConsistencyLevel" = "Eventual"})
+        }
+
+        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit @ExportParameters
         #endregion
 
         $i = 1
