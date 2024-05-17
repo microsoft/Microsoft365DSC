@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource "IntuneDeviceConfigurationPlatformScriptWindows" -GenericStubModule $GenericStubPath
+    -DscResource "IntuneDeviceConfigurationPlatformScriptMacOS" -GenericStubModule $GenericStubPath
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
@@ -33,13 +33,13 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Update-MgBetaDeviceManagementScript -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagementDeviceShellScript -MockWith {
             }
 
-            Mock -CommandName New-MgBetaDeviceManagementScript -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementDeviceShellScript -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaDeviceManagementScript -MockWith {
+            Mock -CommandName Remove-MgBetaDeviceManagementDeviceShellScript -MockWith {
             }
 
             Mock -CommandName New-M365DSCConnection -MockWith {
@@ -55,28 +55,27 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Script:exportedInstances =$null
             $Script:ExportMode = $false
 
-            Mock -CommandName Get-MgBetaDeviceManagementScriptAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementDeviceShellScriptAssignment -MockWith {
             }
 
         }
         # Test contexts
-        Context -Name "The IntuneDeviceConfigurationPlatformScriptWindows should exist but it DOES NOT" -Fixture {
+        Context -Name "The IntuneDeviceConfigurationPlatformScriptMacOS should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    BlockExecutionNotifications = $True
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
-                    EnforceSignatureCheck = $True
                     FileName = "FakeStringValue"
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("FakeStringValue")
-                    RunAs32Bit = $True
                     RunAsAccount = "system"
                     ScriptContent = "AAAAAAA="
                     Ensure = "Present"
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceManagementScript -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceShellScript -MockWith {
                     return $null
                 }
             }
@@ -88,38 +87,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
             It 'Should Create the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaDeviceManagementScript -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceManagementDeviceShellScript -Exactly 1
             }
         }
 
-        Context -Name "The IntuneDeviceConfigurationPlatformScriptWindows exists but it SHOULD NOT" -Fixture {
+        Context -Name "The IntuneDeviceConfigurationPlatformScriptMacOS exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    BlockExecutionNotifications = $True
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
-                    EnforceSignatureCheck = $True
                     FileName = "FakeStringValue"
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("FakeStringValue")
-                    RunAs32Bit = $True
                     RunAsAccount = "system"
                     ScriptContent = "AAAAAAA="
                     Ensure = 'Absent'
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceManagementScript -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceShellScript -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type' = "#microsoft.graph.DeviceManagementScript"
+                            '@odata.type' = "#microsoft.graph.DeviceShellScript"
                         }
+                        BlockExecutionNotifications = $True
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
-                        EnforceSignatureCheck = $True
                         FileName = "FakeStringValue"
                         Id = "FakeStringValue"
                         RoleScopeTagIds = @("FakeStringValue")
-                        RunAs32Bit = $True
                         RunAsAccount = "system"
                         ScriptContent = [byte[]]::new(5)
                     }
@@ -136,37 +133,36 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgBetaDeviceManagementScript -Exactly 1
+                Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceShellScript -Exactly 1
             }
         }
-        Context -Name "The IntuneDeviceConfigurationPlatformScriptWindows Exists and Values are already in the desired state" -Fixture {
+        Context -Name "The IntuneDeviceConfigurationPlatformScriptMacOS Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    BlockExecutionNotifications = $True
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
-                    EnforceSignatureCheck = $True
                     FileName = "FakeStringValue"
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("FakeStringValue")
-                    RunAs32Bit = $True
                     RunAsAccount = "system"
                     ScriptContent = "AAAAAAA="
                     Ensure = 'Present'
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceManagementScript -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceShellScript -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type' = "#microsoft.graph.DeviceManagementScript"
+                            '@odata.type' = "#microsoft.graph.DeviceShellScript"
                         }
+                        BlockExecutionNotifications = $True
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
-                        EnforceSignatureCheck = $True
                         FileName = "FakeStringValue"
                         Id = "FakeStringValue"
+                        LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                         RoleScopeTagIds = @("FakeStringValue")
-                        RunAs32Bit = $True
                         RunAsAccount = "system"
                         ScriptContent = [byte[]]::new(5)
                     }
@@ -179,28 +175,30 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name "The IntuneDeviceConfigurationPlatformScriptWindows exists and values are NOT in the desired state" -Fixture {
+        Context -Name "The IntuneDeviceConfigurationPlatformScriptMacOS exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    BlockExecutionNotifications = $True
                     Description = "FakeStringValue"
                     DisplayName = "FakeStringValue"
-                    EnforceSignatureCheck = $True
                     FileName = "FakeStringValue"
                     Id = "FakeStringValue"
                     RoleScopeTagIds = @("FakeStringValue")
-                    RunAs32Bit = $True
                     RunAsAccount = "system"
                     ScriptContent = "AAAAAAA="
                     Ensure = 'Present'
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceManagementScript -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceShellScript -MockWith {
                     return @{
+                        CreatedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         FileName = "FakeStringValue"
                         Id = "FakeStringValue"
+                        LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
+                        RetryCount = 7
                         RoleScopeTagIds = @("FakeStringValue")
                         RunAsAccount = "system"
                         ScriptContent = [byte[]]::new(5)
@@ -218,7 +216,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should call the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDeviceManagementScript -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceShellScript -Exactly 1
             }
         }
 
@@ -230,20 +228,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceManagementScript -MockWith {
+                Mock -CommandName Get-MgBetaDeviceManagementDeviceShellScript -MockWith {
                     return @{
                         AdditionalProperties = @{
-                            '@odata.type' = "#microsoft.graph.DeviceManagementScript"
+                            '@odata.type' = "#microsoft.graph.DeviceShellScript"
                         }
-                        CreatedDateTime = "2023-01-01T00:00:00.0000000+01:00"
+                        BlockExecutionNotifications = $True
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
-                        EnforceSignatureCheck = $True
                         FileName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        LastModifiedDateTime = "2023-01-01T00:00:00.0000000+01:00"
                         RoleScopeTagIds = @("FakeStringValue")
-                        RunAs32Bit = $True
                         RunAsAccount = "system"
                         ScriptContent = [byte[]]::new(5)
                     }

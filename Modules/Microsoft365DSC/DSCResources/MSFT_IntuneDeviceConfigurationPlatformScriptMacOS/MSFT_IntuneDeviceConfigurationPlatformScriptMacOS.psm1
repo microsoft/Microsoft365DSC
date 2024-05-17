@@ -6,6 +6,10 @@ function Get-TargetResource
     (
         #region resource generator code
         [Parameter()]
+        [System.Boolean]
+        $BlockExecutionNotifications,
+
+        [Parameter()]
         [System.String]
         $Description,
 
@@ -14,20 +18,20 @@ function Get-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
-        $EnforceSignatureCheck,
+        [System.String]
+        $ExecutionFrequency,
 
         [Parameter()]
         [System.String]
         $FileName,
 
         [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
+        [System.Int32]
+        $RetryCount,
 
         [Parameter()]
-        [System.Boolean]
-        $RunAs32Bit,
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [ValidateSet('system','user')]
@@ -103,32 +107,35 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementScript -DeviceManagementScriptId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementDeviceShellScript `
+            -DeviceShellScriptId $Id `
+            -ExpandProperty "assignments" `
+            -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Device Configuration Platform Script Windows with Id {$Id}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Platform Script MacOS with Id {$Id}"
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgBetaDeviceManagementScript `
+                $getValue = Get-MgBetaDeviceManagementDeviceShellScript `
                     -Filter "DisplayName eq '$DisplayName'" `
+                    -ExpandProperty "assignments" `
                     -ErrorAction SilentlyContinue
                 if ($null -ne $getValue)
                 {
-                    $getValue = Get-MgBetaDeviceManagementScript -DeviceManagementScriptId $getValue.Id
+                    $getValue = Get-MgBetaDeviceManagementDeviceShellScript -DeviceShellScriptId $getValue.Id
                 }
             }
         }
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Device Configuration Platform Script Windows with DisplayName {$DisplayName}"
+            Write-Verbose -Message "Could not find an Intune Device Configuration Platform Script MacOS with DisplayName {$DisplayName}"
             return $nullResult
         }
         $Id = $getValue.Id
-
-        Write-Verbose -Message "An Intune Device Configuration Platform Script Windows with Id {$Id} and DisplayName {$DisplayName} was found."
+        Write-Verbose -Message "An Intune Device Configuration Platform Script MacOS with Id {$Id} and DisplayName {$DisplayName} was found."
 
         #region resource generator code
         $enumRunAsAccount = $null
@@ -140,26 +147,29 @@ function Get-TargetResource
 
         $results = @{
             #region resource generator code
-            Description           = $getValue.Description
-            DisplayName           = $getValue.DisplayName
-            EnforceSignatureCheck = $getValue.EnforceSignatureCheck
-            FileName              = $getValue.FileName
-            RoleScopeTagIds       = $getValue.RoleScopeTagIds
-            RunAs32Bit            = $getValue.RunAs32Bit
-            RunAsAccount          = $enumRunAsAccount
-            ScriptContent         = [System.Convert]::ToBase64String($getValue.ScriptContent)
-            Id                    = $getValue.Id
-            Ensure                = 'Present'
-            Credential            = $Credential
-            ApplicationId         = $ApplicationId
-            TenantId              = $TenantId
-            ApplicationSecret     = $ApplicationSecret
-            CertificateThumbprint = $CertificateThumbprint
-            ManagedIdentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            BlockExecutionNotifications = $getValue.BlockExecutionNotifications
+            Description                 = $getValue.Description
+            DisplayName                 = $getValue.DisplayName
+            ExecutionFrequency          = $getValue.ExecutionFrequency
+            FileName                    = $getValue.FileName
+            RetryCount                  = $getValue.RetryCount
+            RoleScopeTagIds             = $getValue.RoleScopeTagIds
+            RunAsAccount                = $enumRunAsAccount
+            ScriptContent               = [System.Convert]::ToBase64String($getValue.ScriptContent)
+            Id                          = $getValue.Id
+            Ensure                      = 'Present'
+            Credential                  = $Credential
+            ApplicationId               = $ApplicationId
+            TenantId                    = $TenantId
+            ApplicationSecret           = $ApplicationSecret
+            CertificateThumbprint       = $CertificateThumbprint
+            ManagedIdentity             = $ManagedIdentity.IsPresent
+            AccessTokens                = $AccessTokens
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementScriptAssignment -DeviceManagementScriptId $Id
+        # Get-MgBetaDeviceManagementDeviceShellScriptAssignment returns a 'No OData route exists that match template...' error
+        #$assignmentsValues = Get-MgBetaDeviceManagementDeviceShellScriptAssignment -DeviceShellScriptId $Id
+        $AssignmentsValues = $getValue.Assignments
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -195,6 +205,10 @@ function Set-TargetResource
     (
         #region resource generator code
         [Parameter()]
+        [System.Boolean]
+        $BlockExecutionNotifications,
+
+        [Parameter()]
         [System.String]
         $Description,
 
@@ -203,20 +217,20 @@ function Set-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
-        $EnforceSignatureCheck,
+        [System.String]
+        $ExecutionFrequency,
 
         [Parameter()]
         [System.String]
         $FileName,
 
         [Parameter()]
-        [System.String[]]
-        $RoleScopeTagIds,
+        [System.Int32]
+        $RetryCount,
 
         [Parameter()]
-        [System.Boolean]
-        $RunAs32Bit,
+        [System.String[]]
+        $RoleScopeTagIds,
 
         [Parameter()]
         [ValidateSet('system','user')]
@@ -287,12 +301,12 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Intune Device Configuration Platform Script Windows with DisplayName {$DisplayName}"
+        Write-Verbose -Message "Creating an Intune Device Configuration Platform Script MacOS with DisplayName {$DisplayName}"
         $BoundParameters.Remove("Assignments") | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.ScriptContent = [System.Convert]::FromBase64String($CreateParameters.ScriptContent)
+        $CreateParameters.ScriptContent = [System.Convert]::FromBase64String($ScriptContent)
 
         $CreateParameters.Remove('Id') | Out-Null
 
@@ -305,8 +319,8 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.DeviceManagementScript")
-        $policy = New-MgBetaDeviceManagementScript -BodyParameter $CreateParameters
+        $CreateParameters.Add("@odata.type", "#microsoft.graph.DeviceShellScript")
+        $policy = New-MgBetaDeviceManagementDeviceShellScript -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -317,19 +331,19 @@ function Set-TargetResource
         {
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.Id `
                 -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceManagementScripts' `
+                -Repository 'deviceManagement/deviceShellScripts' `
                 -RootIdentifier 'deviceManagementScriptAssignments'
         }
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Intune Device Configuration Platform Script Windows with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Updating the Intune Device Configuration Platform Script MacOS with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove("Assignments") | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $UpdateParameters.ScriptContent = [System.Convert]::FromBase64String($UpdateParameters.ScriptContent)
+        $UpdateParameters.ScriptContent = [System.Convert]::FromBase64String($ScriptContent)
 
         $UpdateParameters.Remove('Id') | Out-Null
 
@@ -342,9 +356,9 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.DeviceManagementScript")
-        Update-MgBetaDeviceManagementScript  `
-            -DeviceManagementScriptId $currentInstance.Id `
+        $UpdateParameters.Add("@odata.type", "#microsoft.graph.DeviceShellScript")
+        Update-MgBetaDeviceManagementDeviceShellScript  `
+            -DeviceShellScriptId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
@@ -354,15 +368,15 @@ function Set-TargetResource
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
-            -Repository 'deviceManagement/deviceManagementScripts' `
+            -Repository 'deviceManagement/deviceShellScripts' `
             -RootIdentifier 'deviceManagementScriptAssignments'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Configuration Platform Script Windows with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Device Configuration Platform Script MacOS with Id {$($currentInstance.Id)}" 
         #region resource generator code
-        Remove-MgBetaDeviceManagementScript -DeviceManagementScriptId $currentInstance.Id
+        Remove-MgBetaDeviceManagementDeviceShellScript -DeviceShellScriptId $currentInstance.Id
         #endregion
     }
 }
@@ -375,6 +389,10 @@ function Test-TargetResource
     (
         #region resource generator code
         [Parameter()]
+        [System.Boolean]
+        $BlockExecutionNotifications,
+
+        [Parameter()]
         [System.String]
         $Description,
 
@@ -383,20 +401,20 @@ function Test-TargetResource
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
-        $EnforceSignatureCheck,
+        [System.String]
+        $ExecutionFrequency,
 
         [Parameter()]
         [System.String]
         $FileName,
+        
+        [Parameter()]
+        [System.Int32]
+        $RetryCount,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
-
-        [Parameter()]
-        [System.Boolean]
-        $RunAs32Bit,
 
         [Parameter()]
         [ValidateSet('system','user')]
@@ -462,7 +480,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Device Configuration Platform Script Windows with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Device Configuration Platform Script MacOS with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -576,7 +594,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementScript `
+        [array]$getValue = Get-MgBetaDeviceManagementDeviceShellScript `
             -Filter $Filter `
             -All `
             -ErrorAction Stop
