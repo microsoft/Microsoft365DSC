@@ -4,7 +4,7 @@ class MSFT_EXOAntiPhishPolicy : OMI_BaseResource
     [Key, Description("The Identity parameter specifies the name of the antiphishing policy that you want to modify.")] String Identity;
     [Write, Description("Specify if this policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("The AdminDisplayName parameter specifies a description for the policy.")] String AdminDisplayName;
-    [Write, Description("The PhishThresholdLevel parameter specifies the tolerance level that's used by machine learning in the handling of phishing messages."), ValueMap{"1","2","3","4"}, Values{"1","2","3","4"}] String PhishThresholdLevel;
+    [Write, Description("The PhishThresholdLevel parameter specifies the tolerance level that's used by machine learning in the handling of phishing messages."), ValueMap{"1","2","3","4"}, Values{"1","2","3","4"}] UInt32 PhishThresholdLevel;
     [Write, Description("The AuthenticationFailAction parameter specifies the action to take when the message fails composite authentication."), ValueMap{"MoveToJmf","Quarantine"}, Values{"MoveToJmf","Quarantine"}] String AuthenticationFailAction;
     [Write, Description("The TargetedUserProtectionAction parameter specifies the action to take on detected user impersonation messages for the users specified by the TargetedUsersToProtect parameter."), ValueMap{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}, Values{"BccMessage","Delete","MoveToJmf","NoAction","Quarantine","Redirect"}] String TargetedUserProtectionAction;
     [Write, Description("Specify if this policy should be enabled. Default is $true.")] Boolean Enabled;

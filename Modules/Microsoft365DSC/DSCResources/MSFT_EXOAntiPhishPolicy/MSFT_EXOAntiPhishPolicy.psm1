@@ -113,9 +113,9 @@ function Get-TargetResource
         $MakeDefault = $false,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3', '4')]
-        [System.String]
-        $PhishThresholdLevel = '1',
+        [ValidateSet(1, 2, 3, 4)]
+        [System.Int32]
+        $PhishThresholdLevel = 1,
 
         [Parameter()]
         [System.String[]]
@@ -227,7 +227,7 @@ function Get-TargetResource
             $PhishThresholdLevelValue = $AntiPhishPolicy.PhishThresholdLevel
             if ([System.String]::IsNullOrEmpty($PhishThresholdLevelValue))
             {
-                $PhishThresholdLevelValue = '1'
+                $PhishThresholdLevelValue = 1
             }
 
             $TargetedUserProtectionActionValue = $AntiPhishPolicy.TargetedUserProtectionAction
@@ -419,9 +419,9 @@ function Set-TargetResource
         $MakeDefault = $false,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3', '4')]
-        [System.String]
-        $PhishThresholdLevel = '1',
+        [ValidateSet(1, 2, 3, 4)]
+        [System.Int32]
+        $PhishThresholdLevel = 1,
 
         [Parameter()]
         [System.String[]]
@@ -656,9 +656,9 @@ function Test-TargetResource
         $MakeDefault = $false,
 
         [Parameter()]
-        [ValidateSet('1', '2', '3', '4')]
-        [System.String]
-        $PhishThresholdLevel = '1',
+        [ValidateSet(1, 2, 3, 4)]
+        [System.Int32]
+        $PhishThresholdLevel = 1,
 
         [Parameter()]
         [System.String[]]

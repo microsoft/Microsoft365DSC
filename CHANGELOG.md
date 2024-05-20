@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAntiPhishPolicy
+  * Use correct type integer for variable PhishThresholdLevel
+
 # 1.24.515.2
 
 * EXOManagementRoleEntry
