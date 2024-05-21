@@ -11,6 +11,11 @@
   * Initial release, set the azure portal and default Timeout.
 * AADGroup
   * Fixes #4596
+* AADConditionalAccessPolicy
+  * Fix ExcludeGuestOrExternalUserTypes and IncludeGuestOrExternalUserTypes parameters
+    FIXES [#4630]
+  * Added support for Authentication Flow TransferMethod
+    FIXES [#4472]
 * AADGroupSettings
   * Added support for parameter NewUnifiedGroupWritebackDefault
 * EXOManagementRoleEntry
