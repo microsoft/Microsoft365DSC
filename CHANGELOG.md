@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceConfigurationPlatformScriptWindows
+  * Initial Release  
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+* IntuneDeviceConfigurationPlatformScriptMacOS
+  * Initial Release  
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+
 # 1.24.515.2
 
 * EXOManagementRoleEntry

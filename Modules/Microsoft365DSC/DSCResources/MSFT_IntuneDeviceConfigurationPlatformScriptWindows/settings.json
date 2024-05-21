@@ -1,0 +1,17 @@
+{
+    "resourceName": "IntuneDeviceConfigurationPlatformScriptWindows",
+    "description": "This resource configures an Intune Device Configuration Platform Script Windows.",
+    "permissions":    {
+  "graph": {
+    "delegated": {
+      "read": [],
+      "update": []
+    },
+    "application": {
+      "read": [],
+      "update": []
+    }
+  }
+}
+
+}
