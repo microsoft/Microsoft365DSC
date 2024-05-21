@@ -2028,6 +2028,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String",
+                               "Name":  "TransferMethods",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String[]",
                                "Name":  "AuthenticationContexts",
                                "Option":  "Write"

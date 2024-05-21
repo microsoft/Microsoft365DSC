@@ -4,6 +4,11 @@
 
 * EXOAntiPhishPolicy
   * Use correct type integer for variable PhishThresholdLevel
+* IntuneDeviceConfigurationPlatformScriptWindows
+  * Initial Release  
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+  * Initial Release  
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
 
 # 1.24.515.2
 
@@ -16,6 +21,11 @@
   * Initial release, set the azure portal and default Timeout.
 * AADGroup
   * Fixes #4596
+* AADConditionalAccessPolicy
+  * Fix ExcludeGuestOrExternalUserTypes and IncludeGuestOrExternalUserTypes parameters
+    FIXES [#4630]
+  * Added support for Authentication Flow TransferMethod
+    FIXES [#4472]
 * AADGroupSettings
   * Added support for parameter NewUnifiedGroupWritebackDefault
 * EXOManagementRoleEntry
