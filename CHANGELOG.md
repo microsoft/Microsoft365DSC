@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SPOTenantCdnPolicy
+  * If properties in the tenant are empty then export them as empty arrays
+    instead of null strings, missed while fixing #4658
+
 # 1.24.515.2
 
 * EXOManagementRoleEntry
