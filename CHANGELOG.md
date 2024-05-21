@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SPOTenantSettings
+  * Remove property UserVoiceForFeedbackEnabled when setting the resource since
+    it has been deprecated
+
 # 1.24.515.2
 
 * EXOManagementRoleEntry
