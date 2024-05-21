@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationPlatformScriptWindows
+  * Initial Release  
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+* IntuneDeviceConfigurationPlatformScriptMacOS
+  * Initial Release  
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
 * SPOTenantCdnPolicy
   * If properties in the tenant are empty then export them as empty arrays
     instead of null strings, missed while fixing #4658
@@ -17,6 +23,11 @@
   * Initial release, set the azure portal and default Timeout.
 * AADGroup
   * Fixes #4596
+* AADConditionalAccessPolicy
+  * Fix ExcludeGuestOrExternalUserTypes and IncludeGuestOrExternalUserTypes parameters
+    FIXES [#4630]
+  * Added support for Authentication Flow TransferMethod
+    FIXES [#4472]
 * AADGroupSettings
   * Added support for parameter NewUnifiedGroupWritebackDefault
 * EXOManagementRoleEntry
