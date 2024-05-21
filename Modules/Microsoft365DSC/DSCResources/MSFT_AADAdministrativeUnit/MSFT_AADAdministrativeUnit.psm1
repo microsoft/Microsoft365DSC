@@ -1013,34 +1013,39 @@ function Export-TargetResource
         $ExportParameters = @{
             Filter      = $Filter
             All         = [switch]$true
+            Property    = $propertiesToRetrieve
             ErrorAction = 'Stop'
         }
         $queryTypes = @{
                         'eq' = @('description')
                         'startsWith' = @('description')
-                        'eq Null' = @(
+                        'eq null' = @(
                             'description',
                             'displayName'
                             )
         }
 
-        $allConditionsMatched = $true
+        #extract arguments from the query
+        # Define the regex pattern to match all words in the query
+        $pattern = "([^\s,()]+)"
+        $query = $Filter
 
-        # Check each condition in the filter against the support list
-        # Assuming the provided PowerShell script is part of a larger context and the variable $Filter is defined elsewhere
+        # Match all words in the query
+        $matches = [regex]::matches($query, $pattern)
 
-        # Check if $Filter is not null
-        if ($Filter) {
-            # Check each condition in the filter against the support list
-            foreach ($condition in $Filter.Split(' ')) {
-                if ($condition -match '(\w+)/(\w+):(\w+)') {
-                    $attribute, $operation, $value = $matches[1], $matches[2], $matches[3]
-                    if (-not $queryTypes.ContainsKey($operation) -or -not $queryTypes[$operation].Contains($attribute)) {
-                        $allConditionsMatched = $false
-                        break
-                    }
-                }
-            }
+        # Extract the matched argument into an array
+        $arguments = @()
+        foreach ($match in $matches) {
+        $arguments += $match.Value
+        }
+
+        #extracting keys to check vs arguments in the filter
+        $Keys = $queryTypes.Keys
+
+        $matchedKey = $arguments | Where-Object { $_ -in $Keys }
+        $matchedProperty = $arguments | Where-Object { $_ -in $queryTypes[$matchedKey]}
+        if ($matchedProperty -and $matchedKey) {
+            $allConditionsMatched = $true
         }
 
         # If all conditions match the support, add parameters to $ExportParameters
