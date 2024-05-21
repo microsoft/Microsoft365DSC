@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCUtil
+  * Fixed an issue in `Assert-M365DSCBlueprint` where the clone and export
+    of a blueprint with a GUID could lead to configuration name starting
+    with a digit instead of a letter.  
+    Partially fixes [#4681](https://github.com/microsoft/Microsoft365DSC/issues/4681)
+
 # 1.24.515.2
 
 * EXOManagementRoleEntry
