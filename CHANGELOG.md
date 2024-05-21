@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* IntuneDeviceConfigurationPlatformScriptWindows
+  * Initial Release  
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+* IntuneDeviceConfigurationPlatformScriptMacOS
+  * Initial Release  
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
 * SPOTenantSettings
   * Remove property UserVoiceForFeedbackEnabled when setting the resource since
     it has been deprecated
