@@ -415,7 +415,7 @@ function Set-TargetResource
     $CurrentParameters.Remove('TenantDefaultTimezone') | Out-Null # this one is updated separately using Graph
     if ($CurrentParameters.Keys.Contains('UserVoiceForFeedbackEnabled'))
     {
-        Write-Verbose -Message 'Property UserVoiceForFeedbackEnabled is not supported, removing it'
+        Write-Verbose -Message 'Property UserVoiceForFeedbackEnabled is deprecated, removing it'
         $CurrentParameters.Remove('UserVoiceForFeedbackEnabled') | Out-Null
     }
 
