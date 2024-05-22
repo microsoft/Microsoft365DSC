@@ -17,6 +17,9 @@
 * IntuneDeviceRemediation
   * Initial Release  
     FIXES [#4159](https://github.com/microsoft/Microsoft365DSC/issues/4159)
+* IntuneWindowsUpdateForBusinessDriverUpdateProfileWindows10
+  * Initial Release  
+    FIXES [#3747](https://github.com/microsoft/Microsoft365DSC/issues/3747)
 * SPOTenantCdnPolicy
   * If properties in the tenant are empty then export them as empty arrays
     instead of null strings, missed while fixing #4658
