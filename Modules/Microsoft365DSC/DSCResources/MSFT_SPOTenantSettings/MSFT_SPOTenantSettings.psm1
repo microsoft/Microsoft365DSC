@@ -413,6 +413,11 @@ function Set-TargetResource
     $CurrentParameters.Remove('AccessTokens') | Out-Null
 
     $CurrentParameters.Remove('TenantDefaultTimezone') | Out-Null # this one is updated separately using Graph
+    if ($CurrentParameters.Keys.Contains('UserVoiceForFeedbackEnabled'))
+    {
+        Write-Verbose -Message 'Property UserVoiceForFeedbackEnabled is deprecated, removing it'
+        $CurrentParameters.Remove('UserVoiceForFeedbackEnabled') | Out-Null
+    }
 
     if ($PublicCdnEnabled -eq $false)
     {
