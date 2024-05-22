@@ -8,6 +8,9 @@
 * IntuneDeviceConfigurationPlatformScriptMacOS
   * Initial Release
   FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Fix missing export of the default policy  
+  FIXES [#4694](https://github.com/microsoft/Microsoft365DSC/issues/4694)
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Return all authentication methods when retrieving the policies otherwise
     it may fail deducing the OrganizationName via TenantId
