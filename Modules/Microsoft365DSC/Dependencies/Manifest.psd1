@@ -6,7 +6,7 @@
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
-            RequiredVersion = '3.4.0'
+            RequiredVersion = '3.5.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
@@ -86,7 +86,7 @@
         },
         @{
             ModuleName      = 'MicrosoftTeams'
-            RequiredVersion = '6.1.0'
+            RequiredVersion = '6.2.0'
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
