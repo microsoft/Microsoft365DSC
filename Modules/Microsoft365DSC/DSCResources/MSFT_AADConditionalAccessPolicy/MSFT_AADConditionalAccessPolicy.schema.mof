@@ -44,6 +44,7 @@ class MSFT_AADConditionalAccessPolicy : OMI_BaseResource
     [Write, Description("Specifies, whether Browser Persistence is controlled by the Policy.")] Boolean PersistentBrowserIsEnabled;
     [Write, Description("Specifies, what Browser Persistence control is enforced by the Policy."), ValueMap{"Always","Never",""}, Values{"Always","Never",""}] String PersistentBrowserMode;
     [Write, Description("Name of the associated authentication strength policy.")] String AuthenticationStrength;
+    [Write, Description("Names of the associated authentication flow transfer methods")] String TransferMethods;
     [Write, Description("Authentication context class references.")] String AuthenticationContexts[];
     [Write, Description("Specify if the Azure AD CA Policy should exist or not."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] String Ensure;
     [Write, Description("Credentials for the Microsoft Graph delegated permissions."), EmbeddedInstance("MSFT_Credential")] string Credential;

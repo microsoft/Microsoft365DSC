@@ -33,10 +33,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName New-MgBetaIdentityConditionalAccessPolicy -MockWith {
-            }
-
-            Mock -CommandName Update-MgBetaIdentityConditionalAccessPolicy -MockWith {
+            Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
 
             Mock -CommandName Remove-MgBetaIdentityConditionalAccessPolicy -MockWith {
@@ -140,7 +137,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the policy in the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-MgBetaIdentityConditionalAccessPolicy -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
             }
         }
 
@@ -294,7 +291,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the settings from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaIdentityConditionalAccessPolicy -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
             }
         }
 
@@ -412,7 +409,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the settings from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaIdentityConditionalAccessPolicy -Exactly 1
+                Should -Invoke -CommandName Invoke-MgGraphRequest -Exactly 1
             }
         }
 
