@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.522.1
 
 * IntuneDeviceConfigurationPlatformScriptWindows
   * Initial Release
@@ -31,6 +31,9 @@
     of a blueprint with a GUID could lead to configuration name starting
     with a digit instead of a letter.
     Partially fixes [#4681](https://github.com/microsoft/Microsoft365DSC/issues/4681)
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.5.0
+  * Updated MicrosoftTeams to version 6.2.0
 
 # 1.24.515.2
 

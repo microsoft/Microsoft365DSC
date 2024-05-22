@@ -11,7 +11,7 @@
   # RootModule = ''
 
   # Version number of this module.
-  ModuleVersion     = '1.24.515.2'
+  ModuleVersion     = '1.24.522.1'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -142,71 +142,26 @@
       IconUri      = 'https://github.com/microsoft/Microsoft365DSC/blob/Dev/Modules/Microsoft365DSC/Dependencies/Images/Logo.png?raw=true'
 
       # ReleaseNotes of this module
-      ReleaseNotes = '* AADActivityBasedTimeoutPolicy
-      * Initial release, set the azure portal and default Timeout.
-    * AADGroup
-      * Fixes #4596
-    * AADGroupSettings
-      * Added support for parameter NewUnifiedGroupWritebackDefault
-    * EXOManagementRoleEntry
+      ReleaseNotes = '* IntuneDeviceConfigurationPlatformScriptWindows
       * Initial Release
-      * Added support for the WebSite type.
-    * IntuneAntivirusPolicyWindows10SettingCatalog
-      * Add missing properties from templates
-      * Update setting handling so that the value is reverted to default when unset
-    * IntuneDeviceConfigurationCustomPolicyWindows10
-      * Fixed an issue where the payload of xml files was not encoded as base64.
-    * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
-      * Fixed a creation and update issue when the exported policy contains a
-        onboarding blob and the tenant is connected to Defender for Endpoint Service.
-    * SCAutoSensitivityLabelPolicy
-      * Fix incorrect mandatory Credential parameter in Set and Test methods
-        FIXES [#4283](https://github.com/microsoft/Microsoft365DSC/issues/4283)
-    * SPOSharingSettings
-      * Remove properties from being tested in certain conditions
-        FIXES [#4649](https://github.com/microsoft/Microsoft365DSC/issues/4649)
-      * Changed logic to retrieve my site for sovereign clouds.
+      FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+    * IntuneDeviceConfigurationPlatformScriptMacOS
+      * Initial Release
+      FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
     * SPOTenantCdnPolicy
-      * Fixed an issue when both IncludeFileExtensions and
-        ExcludeRestrictedSiteClassifications needed to be changed but the latter got
-        the value of the former instead of the correct one
-        FIXES [#4658](https://github.com/microsoft/Microsoft365DSC/issues/4658)
-    * TeamsAudioConferencingPolicy
-      * Fix export and creation/set of this resource by converting a string array
-        into a comma-separated string and a comma-separated string into a string
-        array respectively
-        FIXES [#4655](https://github.com/microsoft/Microsoft365DSC/issues/4655)
-    * TeamsMeetingPolicy
-      * Fix creation and set of resource when cloud recording is set to false (off)
-        FIXES [#4653](https://github.com/microsoft/Microsoft365DSC/issues/4653)
-      * Fixed issue with property MeetingChatEnabledType by allowing the value
-        EnabledExceptAnonymous to be selected
-        FIXES [#4667](https://github.com/microsoft/Microsoft365DSC/issues/4667)
-    * TeamsGroupPolicyAssignment
-      * Add missing policy type TeamsVerticalPackagePolicy
-        FIXES [#4647](https://github.com/microsoft/Microsoft365DSC/issues/4647)
-    * TeamsUpdateManagementPolicy
-      * Remove unnecessary parameters from PSBoundParameters such as authentication
-        methods, Ensure and Verbose by calling Remove-M365DSCAuthenticationParameter
-        FIXES [#4651](https://github.com/microsoft/Microsoft365DSC/issues/4651)
+      * If properties in the tenant are empty then export them as empty arrays
+        instead of null strings, missed while fixing #4658
+    * SPOTenantSettings
+      * Remove property UserVoiceForFeedbackEnabled when setting the resource since
+        it has been deprecated
     * M365DSCUtil
-      * Fixed an issue where one could not pass empty arrays to the
-        `Compare-PSCustomObjectArrays` function.
-      * Fixed an issue with how the ResourceInstanceName was being assigned for
-        resource SPOTenantCdnPolicy by adding its primary key CDNType to the
-        heuristics
-        FIXES [#4658](https://github.com/microsoft/Microsoft365DSC/issues/4658)
+      * Fixed an issue in `Assert-M365DSCBlueprint` where the clone and export
+        of a blueprint with a GUID could lead to configuration name starting
+        with a digit instead of a letter.
+        Partially fixes [#4681](https://github.com/microsoft/Microsoft365DSC/issues/4681)
     * DEPENDENCIES
-      * Updated DSCParser to version 2.0.0.4.
-      * Updated Microsoft.Graph to version 2.19.0.
-      * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.187.
-    * MISC
-      * Added support for Access Tokens across AAD resources.
-      * Added support for Access Tokens across SC resources.
-      * Added support for Access Tokens across SPO resources.
-      * Added support for Access Tokens across Teams resources.
-      * Fixing fake passwords in Unit Tests.
-      * Added ability to configure Telemetry client by ConnectionString.'
+      * Updated ExchangeOnlineManagement to version 3.5.0
+      * Updated MicrosoftTeams to version 6.2.0'
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update
       # RequireLicenseAcceptance = $false
