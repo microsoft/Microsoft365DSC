@@ -14,6 +14,9 @@
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Return all authentication methods when retrieving the policies otherwise
     it may fail deducing the OrganizationName via TenantId
+* IntuneDeviceRemediation
+  * Initial Release  
+    FIXES [#4159](https://github.com/microsoft/Microsoft365DSC/issues/4159)
 * SPOTenantCdnPolicy
   * If properties in the tenant are empty then export them as empty arrays
     instead of null strings, missed while fixing #4658
