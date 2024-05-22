@@ -2579,6 +2579,15 @@
                     Ensure                                 = 'Present'
                     Credential                             = $Credscredential
                 }
+                IntuneWindowsUpdateForBusinessDriverUpdateProfileWindows10 'Example'
+                {
+                    DisplayName  = 'Driver Update Example'
+                    Assignments  = @()
+                    Description  = 'test 2'
+                    approvalType = 'manual'
+                    Ensure       = 'Present'
+                    Credential   = $Credscredential
+                }
                 IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 'Example'
                 {
                     DisplayName          = 'WUfB Feature -dsc'
