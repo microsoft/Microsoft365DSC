@@ -8,9 +8,17 @@
 * IntuneDeviceConfigurationPlatformScriptMacOS
   * Initial Release  
   FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+* SPOTenantCdnPolicy
+  * If properties in the tenant are empty then export them as empty arrays
+    instead of null strings, missed while fixing #4658
 * SPOTenantSettings
   * Remove property UserVoiceForFeedbackEnabled when setting the resource since
     it has been deprecated
+* M365DSCUtil
+  * Fixed an issue in `Assert-M365DSCBlueprint` where the clone and export
+    of a blueprint with a GUID could lead to configuration name starting
+    with a digit instead of a letter.  
+    Partially fixes [#4681](https://github.com/microsoft/Microsoft365DSC/issues/4681)
 
 # 1.24.515.2
 

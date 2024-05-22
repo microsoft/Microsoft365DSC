@@ -2720,7 +2720,7 @@ function Assert-M365DSCBlueprint
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $TempBluePrintName = (New-Guid).ToString() + '.M365'
+    $TempBluePrintName = 'TempBlueprint_' + (New-Guid).ToString() + '.M365'
     $LocalBluePrintPath = Join-Path -Path $env:Temp -ChildPath $TempBluePrintName
     try
     {
@@ -2793,7 +2793,7 @@ function Assert-M365DSCBlueprint
         # Call the Export-M365DSCConfiguration cmdlet to extract only the resource
         # types contained within the BluePrint;
         Write-Host "Initiating the Export of those ($($ResourcesInBluePrint.Length)) components from the tenant..."
-        $TempExportName = (New-Guid).ToString() + '.ps1'
+        $TempExportName = 'TempExport_' + (New-Guid).ToString() + '.ps1'
         Export-M365DSCConfiguration -Components $ResourcesInBluePrint `
             -Path $env:temp `
             -FileName $TempExportName `
