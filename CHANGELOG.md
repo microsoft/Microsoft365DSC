@@ -3,14 +3,17 @@
 # UNRELEASED
 
 * IntuneDeviceConfigurationPlatformScriptWindows
-  * Initial Release  
+  * Initial Release
   FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
 * IntuneDeviceConfigurationPlatformScriptMacOS
-  * Initial Release  
+  * Initial Release
   FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
 * IntuneDeviceEnrollmentPlatformRestriction
   * Fix missing export of the default policy  
   FIXES [#4694](https://github.com/microsoft/Microsoft365DSC/issues/4694)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Return all authentication methods when retrieving the policies otherwise
+    it may fail deducing the OrganizationName via TenantId
 * SPOTenantCdnPolicy
   * If properties in the tenant are empty then export them as empty arrays
     instead of null strings, missed while fixing #4658
@@ -20,7 +23,7 @@
 * M365DSCUtil
   * Fixed an issue in `Assert-M365DSCBlueprint` where the clone and export
     of a blueprint with a GUID could lead to configuration name starting
-    with a digit instead of a letter.  
+    with a digit instead of a letter.
     Partially fixes [#4681](https://github.com/microsoft/Microsoft365DSC/issues/4681)
 
 # 1.24.515.2
