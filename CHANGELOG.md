@@ -8,6 +8,15 @@
 * IntuneDeviceConfigurationPlatformScriptMacOS
   * Initial Release
   FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Fix missing export of the default policy  
+  FIXES [#4694](https://github.com/microsoft/Microsoft365DSC/issues/4694)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Return all authentication methods when retrieving the policies otherwise
+    it may fail deducing the OrganizationName via TenantId
+* IntuneDeviceRemediation
+  * Initial Release  
+    FIXES [#4159](https://github.com/microsoft/Microsoft365DSC/issues/4159)
 * SPOTenantCdnPolicy
   * If properties in the tenant are empty then export them as empty arrays
     instead of null strings, missed while fixing #4658

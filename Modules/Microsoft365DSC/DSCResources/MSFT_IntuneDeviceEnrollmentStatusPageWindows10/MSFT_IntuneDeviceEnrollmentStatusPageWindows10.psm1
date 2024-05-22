@@ -192,6 +192,12 @@ function Get-TargetResource
             DisplayName                             = $getValue.DisplayName
             Id                                      = $getValue.Id
             Ensure                                  = 'Present'
+            Credential                              = $Credential
+            ApplicationId                           = $ApplicationId
+            TenantId                                = $TenantId
+            ApplicationSecret                       = $ApplicationSecret
+            CertificateThumbprint                   = $CertificateThumbprint
+            ManagedIdentity                         = $ManagedIdentity.IsPresent
             AccessTokens                            = $AccessTokens
             #endregion
         }

@@ -712,7 +712,7 @@ function Export-TargetResource
     try
     {
         [array]$configs = Get-MgBetaDeviceManagementDeviceEnrollmentConfiguration -Filter $Filter -All `
-            -ErrorAction Stop | Where-Object -FilterScript { $_.DeviceEnrollmentConfigurationType -eq 'singlePlatformRestriction' }
+            -ErrorAction Stop | Where-Object -FilterScript { $_.DeviceEnrollmentConfigurationType -like '*platformRestriction*' }
 
         $i = 1
         $dscContent = ''
@@ -792,6 +792,7 @@ function Export-TargetResource
                     $Results.Remove('WindowsHomeSkuRestriction') | Out-Null
                 }
             }
+
             if ($null -ne $Results.WindowsMobileRestriction)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject ($Results.WindowsMobileRestriction) -CIMInstanceName DeviceEnrollmentPlatformRestriction
