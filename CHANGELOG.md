@@ -19,6 +19,8 @@
     of a blueprint with a GUID could lead to configuration name starting
     with a digit instead of a letter.  
     Partially fixes [#4681](https://github.com/microsoft/Microsoft365DSC/issues/4681)
+*AADAdministrativeUnit
+  * Implemented advanced query based on https://learn.microsoft.com/en-us/graph/aad-advanced-queries?tabs=http#administrative-unit-properties
 
 # 1.24.515.2
 
