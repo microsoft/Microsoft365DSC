@@ -1055,6 +1055,47 @@
                     SubjectNameFormat              = "custom";
                     SubjectNameFormatString        = "CN={{UserName}},E={{EmailAddress}}";
                 }
+                IntuneDeviceConfigurationPlatformScriptMacOS 'Example'
+                {
+                    Assignments          = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Credential           = $Credscredential;
+                    DisplayName          = "custom";
+                    Ensure               = "Present";
+                    BlockExecutionNotifications = $False;
+                    Description                 = "";
+                    ExecutionFrequency          = "00:00:00";
+                    FileName                    = "shellscript.sh";
+                    Id                          = "00000000-0000-0000-0000-000000000000";
+                    RetryCount                  = 0;
+                    RoleScopeTagIds             = @("0");
+                    RunAsAccount                = "user";
+                    ScriptContent               = "Base64 encoded script content";
+                    TenantId                    = $OrganizationName;
+                }
+                IntuneDeviceConfigurationPlatformScriptWindows 'Example'
+                {
+                    Assignments          = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Credential            = $Credscredential;
+                    DisplayName           = "custom";
+                    Ensure                = "Present";
+                    EnforceSignatureCheck = $False;
+                    FileName              = "script.ps1";
+                    Id                    = "00000000-0000-0000-0000-000000000000";
+                    RunAs32Bit            = $True;
+                    RunAsAccount          = "system";
+                    ScriptContent         = "Base64 encoded script content";
+                    TenantId              = $OrganizationName;
+                }
                 IntuneDeviceConfigurationPolicyAndroidDeviceAdministrator 'myAndroidDeviceAdmin'
                 {
                     DisplayName                              = 'Android device admin'
@@ -1965,6 +2006,29 @@
                     ShowInstallationProgress                = $True;
                     TrackInstallProgressForAutopilotOnly    = $True;
                     Credential                              = $Credscredential
+                }
+                IntuneDeviceRemediation 'ConfigureDeviceRemediation'
+                {
+                    Assignments              = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                        }
+                    );
+                    Credential               = $Credscredential
+                    Description              = 'Description'
+                    DetectionScriptContent   = "Base64 encoded script content";
+                    DeviceHealthScriptType   = "deviceHealthScript";
+                    DisplayName              = "Device remediation";
+                    EnforceSignatureCheck    = $False;
+                    Ensure                   = "Present";
+                    Id                       = '00000000-0000-0000-0000-000000000000'
+                    Publisher                = "Some Publisher";
+                    RemediationScriptContent = "Base64 encoded script content";
+                    RoleScopeTagIds          = @("0");
+                    RunAs32Bit               = $True;
+                    RunAsAccount             = "system";
+                    TenantId                 = $OrganizationName;
                 }
                 IntuneEndpointDetectionAndResponsePolicyWindows10 'myEDRPolicy'
                 {

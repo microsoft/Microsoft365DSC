@@ -1,0 +1,45 @@
+{
+    "resourceName": "IntuneDeviceConfigurationPlatformScriptMacOS",
+    "description": "This resource configures an Intune Device Configuration Platform Script MacOS.",
+    "permissions":    {
+  "graph": {
+    "delegated": {
+      "read": [
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        },
+        {
+          "name": "DeviceManagementManagedDevices.Read.All"
+        }
+      ],
+      "update": [
+        {
+          "name": "DeviceManagementConfiguration.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementManagedDevices.ReadWrite.All"
+        }
+      ]
+    },
+    "application": {
+      "read": [
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        },
+        {
+          "name": "DeviceManagementManagedDevices.Read.All"
+        }
+      ],
+      "update": [
+        {
+          "name": "DeviceManagementConfiguration.ReadWrite.All"
+        },
+        {
+          "name": "DeviceManagementManagedDevices.ReadWrite.All"
+        }
+      ]
+    }
+  }
+}
+
+}
