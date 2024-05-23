@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceRemediation
+  * Added support for Access Tokens
+* ResourceGenerator
+  * Added `AccessTokens` parameter to PS1 and MOF template
+
 # 1.24.522.1
 
 * IntuneDeviceConfigurationPlatformScriptWindows
