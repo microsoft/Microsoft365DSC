@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneAppConfigurationDevicePolicy
+  * Initial release
+
 # 1.24.522.1
 
 * IntuneDeviceConfigurationPlatformScriptWindows
