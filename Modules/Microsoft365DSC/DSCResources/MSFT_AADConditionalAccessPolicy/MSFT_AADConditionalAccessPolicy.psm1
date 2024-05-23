@@ -661,20 +661,20 @@ function Get-TargetResource
         BuiltInControls                          = [System.String[]](@() + $Policy.GrantControls.BuiltInControls)
         CustomAuthenticationFactors              = [System.String[]](@() + $Policy.GrantControls.CustomAuthenticationFactors)
         #no translation needed, return empty string array if undefined
-        ApplicationEnforcedRestrictionsIsEnabled = $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
+        ApplicationEnforcedRestrictionsIsEnabled = $false -or $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
         #make false if undefined, true if true
-        CloudAppSecurityIsEnabled                = $Policy.SessionControls.CloudAppSecurity.IsEnabled
+        CloudAppSecurityIsEnabled                = $false -or $Policy.SessionControls.CloudAppSecurity.IsEnabled
         #make false if undefined, true if true
         CloudAppSecurityType                     = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
         #no translation needed, return empty string array if undefined
-        SignInFrequencyIsEnabled                 = $Policy.SessionControls.SignInFrequency.IsEnabled
+        SignInFrequencyIsEnabled                 = $false -or $Policy.SessionControls.SignInFrequency.IsEnabled
         #make false if undefined, true if true
         SignInFrequencyValue                     = $Policy.SessionControls.SignInFrequency.Value
         #no translation or conversion needed, $null returned if undefined
         SignInFrequencyType                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
         SignInFrequencyInterval                  = $SignInFrequencyIntervalValue
         #no translation needed
-        PersistentBrowserIsEnabled               = $Policy.SessionControls.PersistentBrowser.IsEnabled
+        PersistentBrowserIsEnabled               = $false -or $Policy.SessionControls.PersistentBrowser.IsEnabled
         #make false if undefined, true if true
         PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
         #no translation needed
