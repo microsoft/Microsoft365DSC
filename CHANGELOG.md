@@ -2,9 +2,50 @@
 
 # UNRELEASED
 
+<<<<<<< fix4645
 * O365AdminAuditLogConfig
   * Fix logging of exception if Set-AdminAuditLogConfig fails
     FIXES [#4645](https://github.com/microsoft/Microsoft365DSC/issues/4645)
+=======
+* AADAuthenticationMethodPolicy*
+  * Add support for disabled policies
+
+
+# 1.24.522.1
+
+* IntuneDeviceConfigurationPlatformScriptWindows
+  * Initial Release
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+* IntuneDeviceConfigurationPlatformScriptMacOS
+  * Initial Release
+  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+* IntuneDeviceEnrollmentPlatformRestriction
+  * Fix missing export of the default policy
+  FIXES [#4694](https://github.com/microsoft/Microsoft365DSC/issues/4694)
+* IntuneDeviceEnrollmentStatusPageWindows10
+  * Return all authentication methods when retrieving the policies otherwise
+    it may fail deducing the OrganizationName via TenantId
+* IntuneDeviceRemediation
+  * Initial Release
+    FIXES [#4159](https://github.com/microsoft/Microsoft365DSC/issues/4159)
+* IntuneWindowsUpdateForBusinessDriverUpdateProfileWindows10
+  * Initial Release
+    FIXES [#3747](https://github.com/microsoft/Microsoft365DSC/issues/3747)
+* SPOTenantCdnPolicy
+  * If properties in the tenant are empty then export them as empty arrays
+    instead of null strings, missed while fixing #4658
+* SPOTenantSettings
+  * Remove property UserVoiceForFeedbackEnabled when setting the resource since
+    it has been deprecated
+* M365DSCUtil
+  * Fixed an issue in `Assert-M365DSCBlueprint` where the clone and export
+    of a blueprint with a GUID could lead to configuration name starting
+    with a digit instead of a letter.
+    Partially fixes [#4681](https://github.com/microsoft/Microsoft365DSC/issues/4681)
+* DEPENDENCIES
+  * Updated ExchangeOnlineManagement to version 3.5.0
+  * Updated MicrosoftTeams to version 6.2.0
+>>>>>>> Dev
 
 # 1.24.515.2
 
@@ -17,6 +58,11 @@
   * Initial release, set the azure portal and default Timeout.
 * AADGroup
   * Fixes #4596
+* AADConditionalAccessPolicy
+  * Fix ExcludeGuestOrExternalUserTypes and IncludeGuestOrExternalUserTypes parameters
+    FIXES [#4630]
+  * Added support for Authentication Flow TransferMethod
+    FIXES [#4472]
 * AADGroupSettings
   * Added support for parameter NewUnifiedGroupWritebackDefault
 * EXOManagementRoleEntry
