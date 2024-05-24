@@ -1,0 +1,29 @@
+{
+    "resourceName": "IntuneDiskEncryptionWindows10",
+    "description": "This resource configures an Intune Disk Encryption for Windows10.",
+    "permissions":    {
+    "graph":  {
+                  "delegated":  {
+                                    "read":  [
+                                                 {
+                                                     "name":  "DeviceManagementConfiguration.Read.All"
+                                                 }
+                                             ],
+                                    "update":  [
+
+                                               ]
+                                },
+                  "application":  {
+                                      "read":  [
+                                                   {
+                                                       "name":  "DeviceManagementConfiguration.ReadWrite.All"
+                                                   }
+                                               ],
+                                      "update":  [
+
+                                                 ]
+                                  }
+              }
+}
+
+}

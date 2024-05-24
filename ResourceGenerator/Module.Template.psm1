@@ -370,6 +370,10 @@ function Export-TargetResource
             {
                 $displayedKey = $config.displayName
             }
+            elseif (-not [string]::IsNullOrEmpty($config.name))
+            {
+                $displayedKey = $config.name
+            }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 <PrimaryKey> = $config.<PrimaryKey><RequiredKey>

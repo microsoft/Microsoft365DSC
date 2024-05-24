@@ -1,5 +1,15 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDiskEncryptionWindows10
+  * Initial Release  
+    FIXES [#4050](https://github.com/microsoft/Microsoft365DSC/issues/4050)
+* M365DSCDRGUtil
+  * Fixes an issue with nested and duplicate settings in the settings catalog
+* M365DSCResourceGenerator
+  * Update Intune resource generation.
+
 # 1.24.710.3
 
 * MISC
