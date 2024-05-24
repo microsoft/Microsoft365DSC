@@ -2,11 +2,11 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicy*
+  * Add support for disabled policies
 * O365AdminAuditLogConfig
   * Fix logging of exception if Set-AdminAuditLogConfig fails
     FIXES [#4645](https://github.com/microsoft/Microsoft365DSC/issues/4645)
-* AADAuthenticationMethodPolicy*
-  * Add support for disabled policies
 
 # 1.24.522.1
 
