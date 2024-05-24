@@ -2,7 +2,7 @@
 
 # UNRELEASED
 
-* AADAuthenticationMethodPolicy*
+* AADAuthenticationMethodPolicy
   * Add support for disabled policies
 * O365AdminAuditLogConfig
   * Fix logging of exception if Set-AdminAuditLogConfig fails
