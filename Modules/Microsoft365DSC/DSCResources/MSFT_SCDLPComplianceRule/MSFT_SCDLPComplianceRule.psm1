@@ -31,6 +31,10 @@ function Get-TargetResource
         $Comment,
 
         [Parameter()]
+        [System.String]
+        $AdvancedRule,
+
+        [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
         $ContentContainsSensitiveInformation,
 
@@ -402,6 +406,7 @@ function Get-TargetResource
                 BlockAccess                                  = $PolicyRule.BlockAccess
                 BlockAccessScope                             = $PolicyRule.BlockAccessScope
                 Comment                                      = $PolicyRule.Comment
+                AdvancedRule                                 = $PolicyRule.AdvancedRule | ConvertTo-Json -Compress
                 ContentContainsSensitiveInformation          = $PolicyRule.ContentContainsSensitiveInformation
                 ExceptIfContentContainsSensitiveInformation  = $PolicyRule.ExceptIfContentContainsSensitiveInformation
                 ContentPropertyContainsWords                 = $PolicyRule.ContentPropertyContainsWords
@@ -528,6 +533,10 @@ function Set-TargetResource
         [Parameter()]
         [System.String]
         $Comment,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedRule,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -870,6 +879,15 @@ function Set-TargetResource
             $CreationParams.ExceptIfContentContainsSensitiveInformation = $value
         }
 
+        if ($null -eq $CreationParams.ContentContainsSensitiveInformation -and $null -ne $CreationParams.AdvancedRule)
+        {
+            $CreationParams.AdvancedRule = $CreationParams.AdvancedRule | ConvertFrom-Json
+        }
+        elseif($null -ne $CreationParams.ContentContainsSensitiveInformation)
+        {
+            $CreationParams.Remove('AdvancedRule')
+        }
+
         $CreationParams.Remove('Ensure')
 
         # Remove authentication parameters
@@ -923,6 +941,15 @@ function Set-TargetResource
                 }
             }
             $UpdateParams.ExceptIfContentContainsSensitiveInformation = $value
+        }
+
+        if ($null -eq $UpdateParams.ContentContainsSensitiveInformation -and $null -ne $UpdateParams.AdvancedRule)
+        {
+            $UpdateParams.AdvancedRule = $UpdateParams.AdvancedRule | ConvertFrom-Json
+        }
+        elseif($null -ne $UpdateParams.ContentContainsSensitiveInformation)
+        {
+            $UpdateParams.Remove('AdvancedRule')
         }
 
         $UpdateParams.Remove('Ensure') | Out-Null
@@ -982,6 +1009,10 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $Comment,
+
+        [Parameter()]
+        [System.String]
+        $AdvancedRule,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -1728,6 +1759,43 @@ function Get-SCDLPSensitiveInformationGroups
         }
         $sits = @()
         foreach ($item in $group.SensitiveInformation)
+        {
+            $sit = @{
+                name = $item.name
+            }
+
+            if ($null -ne $item.id)
+            {
+                $sit.Add('id', $item.id)
+            }
+
+            if ($null -ne $item.maxconfidence)
+            {
+                $sit.Add('maxconfidence', $item.maxconfidence)
+            }
+
+            if ($null -ne $item.minconfidence)
+            {
+                $sit.Add('minconfidence', $item.minconfidence)
+            }
+
+            if ($null -ne $item.classifiertype)
+            {
+                $sit.Add('classifiertype', $item.classifiertype)
+            }
+
+            if ($null -ne $item.mincount)
+            {
+                $sit.Add('mincount', $item.mincount)
+            }
+
+            if ($null -ne $item.maxcount)
+            {
+                $sit.Add('maxcount', $item.maxcount)
+            }
+            $sits += $sit
+        }
+        foreach ($item in $group.SensitiveTypes)
         {
             $sit = @{
                 name = $item.name
