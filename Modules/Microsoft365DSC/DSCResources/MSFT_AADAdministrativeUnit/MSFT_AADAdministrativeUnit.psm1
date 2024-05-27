@@ -1013,7 +1013,6 @@ function Export-TargetResource
         $ExportParameters = @{
             Filter      = $Filter
             All         = [switch]$true
-            Property    = $propertiesToRetrieve
             ErrorAction = 'Stop'
         }
         $queryTypes = @{
