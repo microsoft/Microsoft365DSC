@@ -4,6 +4,8 @@
 
 * AADAuthenticationMethodPolicy
   * Add support for disabled policies
+* IntuneAppConfigurationDevicePolicy
+  * Initial release
 * IntuneDeviceRemediation
   * Added support for Access Tokens
 * ResourceGenerator
