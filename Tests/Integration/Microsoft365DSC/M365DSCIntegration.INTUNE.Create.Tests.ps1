@@ -2047,6 +2047,21 @@
                     RunAsAccount             = "system";
                     TenantId                 = $OrganizationName;
                 }
+                IntuneDiskEncryptionMacOS 'IntuneDiskEncryptionMacOS'
+                {
+                    AllowDeferralUntilSignOut           = $True;
+                    Assignments                         = @();
+                    Description                         = "test";
+                    DisplayName                         = "test";
+                    Enabled                             = $True;
+                    Ensure                              = "Present";
+                    NumberOfTimesUserCanIgnore          = -1;
+                    PersonalRecoveryKeyHelpMessage      = "eeee";
+                    PersonalRecoveryKeyRotationInMonths = 2;
+                    RoleScopeTagIds                     = @("0");
+                    SelectedRecoveryKeyTypes            = @("personalRecoveryKey");
+                    Credential                          = $Credscredential
+                }
                 IntuneEndpointDetectionAndResponsePolicyWindows10 'myEDRPolicy'
                 {
                     DisplayName = 'Edr Policy'
