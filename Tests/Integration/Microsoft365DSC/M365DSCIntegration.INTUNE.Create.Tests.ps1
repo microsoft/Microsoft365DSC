@@ -82,6 +82,23 @@
                     Ensure             = 'Present'
                     Credential         = $Credscredential
                 }
+                IntuneAppConfigurationDevicePolicy 'IntuneAppConfigurationDevicePolicy-Example'
+                {
+                    Credential            = $Credscredential;
+                    Assignments           = @();
+                    Description           = "";
+                    DisplayName           = "Example";
+                    Ensure                = "Present";
+                    Id                    = "0000000-0000-0000-0000-000000000000";
+                    ConnectedAppsEnabled  = $true;
+                    PackageId             = "app:com.microsoft.office.outlook"
+                    PayloadJson           = "Base64 encoded settings"
+                    PermissionActions     = @()
+                    ProfileApplicability  = "default"
+                    RoleScopeTagIds       = @("0");
+                    TargetedMobileApps    = @("<Mobile App Id>");
+                    TenantId              = $OrganizationName;
+                }
                 IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
                 {
                     DisplayName          = 'ContosoNew'
