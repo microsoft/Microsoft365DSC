@@ -4,6 +4,8 @@
 
 * AADAuthenticationMethodPolicy
   * Add support for disabled policies
+* AADConditionalAccessPolicy
+  * Fix get method if value is null instead of false
 * IntuneAppConfigurationDevicePolicy
   * Initial release
 * IntuneDeviceRemediation
