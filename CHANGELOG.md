@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Implemented advanced query based on 
+    https://learn.microsoft.com/en-us/graph/aad-advanced-queries?tabs=http#administrative-unit-properties
 * AADAuthenticationMethodPolicy
   * Add support for disabled policies
 * AADConditionalAccessPolicy
