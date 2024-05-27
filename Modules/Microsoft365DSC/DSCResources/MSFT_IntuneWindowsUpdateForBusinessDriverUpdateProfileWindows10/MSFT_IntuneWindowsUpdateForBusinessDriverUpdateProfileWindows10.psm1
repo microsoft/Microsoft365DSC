@@ -6,43 +6,34 @@ function Get-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [System.Int32]
-        $DefaultLength,
-
-        [Parameter()]
-        [System.Int32]
-        $DefaultLifetimeInMinutes,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsUsableOnce,
-
-        [Parameter()]
-        [System.Int32]
-        $MaximumLifetimeInMinutes,
-
-        [Parameter()]
-        [System.Int32]
-        $MinimumLifetimeInMinutes,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ExcludeTargets,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $IncludeTargets,
-
-        [Parameter()]
-        [ValidateSet('enabled', 'disabled')]
-        [System.String]
-        $State,
-
-        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
-        #endregion
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('manual', 'automatic')]
+        $ApprovalType,
+
+        [Parameter()]
+        [System.Int32]
+        $DeploymentDeferralInDays,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
+        #endregion 
 
         [Parameter()]
         [System.String]
@@ -100,92 +91,71 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id -ErrorAction SilentlyContinue
+        $uri = "/beta/deviceManagement/windowsDriverUpdateProfiles/$Id"
+        $getValue = (Invoke-MgGraphRequest -Method GET -Uri $uri -SkipHttpErrorCheck).value
 
+        if ($null -eq $getValue)
+        {
+            Write-Verbose -Message "Could not find an Intune Windows Update For Business Driver Update Profile for Windows 10 with Id {$Id}"
+
+            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            {
+                $uri = '/beta/deviceManagement/windowsDriverUpdateProfiles'
+                $getValue = (Invoke-MgGraphRequest -Method GET -Uri $uri).value | Where-Object -FilterScript {
+                    $_.displayName -eq $DisplayName
+                }
+            }
+        }
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Temporary"
+            Write-Verbose -Message "Could not find an Intune Windows Update For Business Driver Update Profie for Windows 10 with DisplayName {$DisplayName}"
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Azure AD Authentication Method Policy Temporary with Id {$($currentExcludeTargets.id))} was found."
+        Write-Verbose -Message "An Intune Windows Update For Business Driver Update Profile for Windows 10 with Id {$Id} and DisplayName {$DisplayName} was found."
 
-        #region resource generator code
-        $complexExcludeTargets = @()
-        foreach ($currentExcludeTargets in $getValue.excludeTargets)
+        $enumApprovalType = $null
+        if ($null -ne $getValue.approvalType)
         {
-            Write-Verbose -Message "Retrieving ExcludeTarget {$currentExcludeTargets}"
-            $myExcludeTargets = @{}
-            if ($currentExcludeTargets.id -ne 'all_users'){
-                $myExcludeTargetsDisplayName = get-MgGroup -GroupId $currentExcludeTargets.id
-                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
-            }
-            else{
-                $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
-            }
-            if ($null -ne $currentExcludeTargets.targetType)
-            {
-                $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
-            }
-            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
-            {
-                $complexExcludeTargets += $myExcludeTargets
-            }
+            $enumApprovalType = $getValue.approvalType.ToString()
         }
-        #endregion
 
-        $complexincludeTargets = @()
-        foreach ($currentincludeTargets in $getValue.AdditionalProperties.includeTargets)
-        {
-            Write-Verbose -Message "Retrieving IncludeTarget {$($currentincludeTargets.id)}"
-            $myincludeTargets = @{}
-            if ($currentIncludeTargets.id -ne 'all_users'){
-                $myIncludeTargetsDisplayName = get-MgGroup -GroupId $currentIncludeTargets.id
-                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
-            }
-            else{
-                $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
-            }
-            if ($null -ne $currentincludeTargets.targetType)
-            {
-                $myincludeTargets.Add('TargetType', $currentincludeTargets.targetType.toString())
-            }
-            if ($myincludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
-            {
-                $complexincludeTargets += $myincludeTargets
-            }
-        }
-        #region resource generator code
-        $enumState = $null
-        if ($null -ne $getValue.State)
-        {
-            $enumState = $getValue.State.ToString()
-        }
-        #endregion
-
-        Write-Verbose -Message "Get-TargetResource returned values"
         $results = @{
             #region resource generator code
-            DefaultLength            = $getValue.AdditionalProperties.defaultLength
-            DefaultLifetimeInMinutes = $getValue.AdditionalProperties.defaultLifetimeInMinutes
-            IsUsableOnce             = $getValue.AdditionalProperties.isUsableOnce
-            MaximumLifetimeInMinutes = $getValue.AdditionalProperties.maximumLifetimeInMinutes
-            MinimumLifetimeInMinutes = $getValue.AdditionalProperties.minimumLifetimeInMinutes
-            ExcludeTargets           = $complexExcludeTargets
-            IncludeTargets           = $complexincludeTargets
-            State                    = $enumState
-            Id                       = $getValue.Id
+            ApprovalType             = $enumApprovalType
+            DeploymentDeferralInDays = $getValue.deploymentDeferralInDays
+            RoleScopeTagIds          = $getValue.roleScopeTagIds
+            Description              = $getValue.description
+            DisplayName              = $getValue.displayName
+            Id                       = $Id
             Ensure                   = 'Present'
             Credential               = $Credential
             ApplicationId            = $ApplicationId
             TenantId                 = $TenantId
             ApplicationSecret        = $ApplicationSecret
             CertificateThumbprint    = $CertificateThumbprint
-            Managedidentity          = $ManagedIdentity.IsPresent
+            ManagedIdentity          = $ManagedIdentity.IsPresent
             AccessTokens             = $AccessTokens
             #endregion
         }
+        $uri = "/beta/deviceManagement/windowsDriverUpdateProfiles/$($Id)/assignments"
+        $assignmentsValues = (Invoke-MgGraphRequest -Method GET -Uri $uri).value
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType                                   = $assignmentEntry.Target.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {
+                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType
+                    })
+                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId                                    = $assignmentEntry.Target.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
 
         return [System.Collections.Hashtable] $results
     }
@@ -208,43 +178,35 @@ function Set-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [System.Int32]
-        $DefaultLength,
-
-        [Parameter()]
-        [System.Int32]
-        $DefaultLifetimeInMinutes,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsUsableOnce,
-
-        [Parameter()]
-        [System.Int32]
-        $MaximumLifetimeInMinutes,
-
-        [Parameter()]
-        [System.Int32]
-        $MinimumLifetimeInMinutes,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ExcludeTargets,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $IncludeTargets,
-
-        [Parameter()]
-        [ValidateSet('enabled', 'disabled')]
-        [System.String]
-        $State,
-
-        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('manual', 'automatic')]
+        $ApprovalType,
+
+        [Parameter()]
+        [System.Int32]
+        $DeploymentDeferralInDays,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -295,13 +257,47 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    if ($Ensure -eq 'Present')
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Updating the Azure AD Authentication Method Policy Temporary with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Creating an Intune Windows Update For Business Driver Update Profile for Windows 10 with DisplayName {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+        $CreateParameters = ([Hashtable]$BoundParameters).clone()
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+        $CreateParameters.Remove('Id') | Out-Null
 
+        $keys = (([Hashtable]$CreateParameters).clone()).Keys
+        foreach ($key in $keys)
+        {
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            {
+                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
+            }
+        }
+
+        #region resource generator code
+        $uri = '/beta/deviceManagement/windowsDriverUpdateProfiles'
+        $policy = Invoke-MgGraphRequest -Method POST -Uri $uri -Body $($CreateParameters | ConvertTo-Json)
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+
+        if ($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceManagement/windowsDriverUpdateProfiles'
+        }
+        #endregion
+    }
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating the Intune Windows Update For Business Driver Update Profile for Windows 10 with Id {$($currentInstance.Id)}"
+        $BoundParameters.Remove('Assignments') | Out-Null
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
+        $UpdateParameters.Remove('ApprovalType') | Out-Null
         $UpdateParameters.Remove('Id') | Out-Null
 
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
@@ -311,43 +307,27 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
-            if ($key -eq 'IncludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
         }
         #region resource generator code
-        $UpdateParameters.Add('@odata.type', '#microsoft.graph.temporaryAccessPassAuthenticationMethodConfiguration')
-        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
-            -AuthenticationMethodConfigurationId $currentInstance.Id `
-            -BodyParameter $UpdateParameters
+        $uri = "/beta/deviceManagement/windowsDriverUpdateProfiles/$($currentInstance.Id)"
+        Invoke-MgGraphRequest -Method PATCH -Uri $uri -Body $($UpdateParameters | ConvertTo-Json)
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
+        }
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.Id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceManagement/windowsDriverUpdateProfiles'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Azure AD Authentication Method Policy Temporary with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Removing the Intune Windows Update For Business Driver Update Profile for Windows 10 with Id {$($currentInstance.Id)}"
         #region resource generator code
-        Remove-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $currentInstance.Id
+        $uri = "/beta/deviceManagement/windowsDriverUpdateProfiles/$($currentInstance.Id)"
+        Invoke-MgGraphRequest -Method DELETE -Uri $uri
         #endregion
     }
 }
@@ -360,42 +340,33 @@ function Test-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [System.Int32]
-        $DefaultLength,
-
-        [Parameter()]
-        [System.Int32]
-        $DefaultLifetimeInMinutes,
-
-        [Parameter()]
-        [System.Boolean]
-        $IsUsableOnce,
-
-        [Parameter()]
-        [System.Int32]
-        $MaximumLifetimeInMinutes,
-
-        [Parameter()]
-        [System.Int32]
-        $MinimumLifetimeInMinutes,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ExcludeTargets,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $IncludeTargets,
-
-        [Parameter()]
-        [ValidateSet('enabled', 'disabled')]
-        [System.String]
-        $State,
-
-        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('manual', 'automatic')]
+        $ApprovalType,
+
+        [Parameter()]
+        [System.Int32]
+        $DeploymentDeferralInDays,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
 
         [Parameter()]
@@ -444,7 +415,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Authentication Method Policy Temporary with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Windows Update For Business Driver Update Profile for Windows 10 with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -457,7 +428,6 @@ function Test-TargetResource
     $testResult = $true
 
     #Compare Cim instances
-    Write-Verbose -Message "Evaluating keys"
     foreach ($key in $PSBoundParameters.Keys)
     {
         $source = $PSBoundParameters.$key
@@ -481,6 +451,10 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.remove('Id') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -504,6 +478,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -551,9 +529,8 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
-            -AuthenticationMethodConfigurationId TemporaryAccessPass `
-            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
+        # Filter is currently not supported
+        [array]$getValue = (Invoke-MgGraphRequest -Method GET -Uri '/beta/deviceManagement/windowsDriverUpdateProfiles').value
         #endregion
 
         $i = 1
@@ -576,62 +553,42 @@ function Export-TargetResource
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
+                DisplayName           = $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            if ($null -ne $Results.ExcludeTargets)
+            if ($Results.Assignments)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.ExcludeTargets `
-                    -CIMInstanceName 'AADAuthenticationMethodPolicyTemporaryExcludeTarget'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
                 {
-                    $Results.ExcludeTargets = $complexTypeStringResult
+                    $Results.Assignments = $complexTypeStringResult
                 }
                 else
                 {
-                    $Results.Remove('ExcludeTargets') | Out-Null
+                    $Results.Remove('Assignments') | Out-Null
                 }
             }
-
-            if ($null -ne $Results.IncludeTargets)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.IncludeTargets `
-                    -CIMInstanceName 'AADAuthenticationMethodPolicyTemporaryIncludeTarget'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                {
-                    $Results.IncludeTargets = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('IncludeTargets') | Out-Null
-                }
-            }
-
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            if ($Results.ExcludeTargets)
+            if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludeTargets' -IsCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'Assignments' -IsCIMArray:$true
             }
-            if ($Results.IncludeTargets)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IncludeTargets' -IsCIMArray:$True
-            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName

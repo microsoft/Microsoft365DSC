@@ -2,11 +2,11 @@
     Dependencies = @(
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.4'
+            RequiredVersion = '2.0.0.5'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
-            RequiredVersion = '3.4.0'
+            RequiredVersion = '3.5.0'
         },
         @{
             ModuleName      = 'Microsoft.Graph.Applications'
@@ -82,11 +82,11 @@
         },
         @{
             ModuleName      = 'Microsoft.PowerApps.Administration.PowerShell'
-            RequiredVersion = '2.0.187'
+            RequiredVersion = '2.0.188'
         },
         @{
             ModuleName      = 'MicrosoftTeams'
-            RequiredVersion = '6.1.0'
+            RequiredVersion = '6.2.0'
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
