@@ -60,9 +60,6 @@ function Get-TargetResource
         $AccessTokens
     )
     Write-Verbose -Message "Getting configuration of Accepted Domain for $Identity"
-    Write-Verbose -Message "Access: $($AccessTokens | Out-String)"
-
-    Write-Verbose -Message "Tenant: $($TenantId | Out-String)"
 
     if ($Global:CurrentModeIsExport)
     {

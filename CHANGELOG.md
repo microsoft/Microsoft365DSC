@@ -8,6 +8,9 @@
   * Added support for Access Tokens
 * ResourceGenerator
   * Added `AccessTokens` parameter to PS1 and MOF template
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.5.
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.188.
 
 # 1.24.522.1
 
