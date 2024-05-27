@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicy
+  * Add support for disabled policies
 * IntuneDeviceRemediation
   * Added support for Access Tokens
 * ResourceGenerator
@@ -16,16 +18,16 @@
   * Initial Release
   FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
 * IntuneDeviceEnrollmentPlatformRestriction
-  * Fix missing export of the default policy  
+  * Fix missing export of the default policy
   FIXES [#4694](https://github.com/microsoft/Microsoft365DSC/issues/4694)
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Return all authentication methods when retrieving the policies otherwise
     it may fail deducing the OrganizationName via TenantId
 * IntuneDeviceRemediation
-  * Initial Release  
+  * Initial Release
     FIXES [#4159](https://github.com/microsoft/Microsoft365DSC/issues/4159)
 * IntuneWindowsUpdateForBusinessDriverUpdateProfileWindows10
-  * Initial Release  
+  * Initial Release
     FIXES [#3747](https://github.com/microsoft/Microsoft365DSC/issues/3747)
 * SPOTenantCdnPolicy
   * If properties in the tenant are empty then export them as empty arrays
