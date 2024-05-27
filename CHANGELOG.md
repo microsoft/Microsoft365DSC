@@ -10,6 +10,8 @@
   * Initial release
 * IntuneDeviceRemediation
   * Added support for Access Tokens
+* IntuneDiskEncryptionMacOS
+  * Initial Release
 * ResourceGenerator
   * Added `AccessTokens` parameter to PS1 and MOF template
 * DEPENDENCIES
