@@ -2,9 +2,12 @@
 
 # UNRELEASED
 
-* AADAuthenticationMethodPolicy*
+* AADAuthenticationMethodPolicy
   * Add support for disabled policies
-
+* IntuneDeviceRemediation
+  * Added support for Access Tokens
+* ResourceGenerator
+  * Added `AccessTokens` parameter to PS1 and MOF template
 
 # 1.24.522.1
 
