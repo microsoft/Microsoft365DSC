@@ -6,22 +6,59 @@ function Get-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ExcludeTargets,
+        [System.Boolean]
+        $ConnectedAppsEnabled,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $IncludeTargets,
-
-        [Parameter()]
-        [ValidateSet('enabled', 'disabled')]
         [System.String]
-        $State,
+        $PackageId,
+
+        [Parameter()]
+        [System.String]
+        $PayloadJson,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PermissionActions,
+
+        [Parameter()]
+        [ValidateSet('default','androidWorkProfile','androidDeviceOwner')]
+        [System.String]
+        $ProfileApplicability,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String]
+        $EncodedSettingXml,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedMobileApps,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
 
         [Parameter()]
@@ -80,73 +117,82 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration -ManagedDeviceMobileAppConfigurationId $Id  -ErrorAction SilentlyContinue
 
+        if ($null -eq $getValue)
+        {
+            Write-Verbose -Message "Could not find an Intune App Configuration Device Policy with Id {$Id}"
+
+            if (-Not [string]::IsNullOrEmpty($DisplayName))
+            {
+                $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
+                    -Filter "DisplayName eq '$DisplayName'" `
+                    -ErrorAction SilentlyContinue
+            }
+        }
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Sms with id {$id}"
+            Write-Verbose -Message "Could not find an Intune App Configuration Device Policy with DisplayName {$DisplayName}"
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Azure AD Authentication Method Policy Sms with Id {$Id} was found."
+        Write-Verbose -Message "An Intune App Configuration Device Policy with Id {$Id} and DisplayName {$DisplayName} was found."
 
         #region resource generator code
-        $complexExcludeTargets = @()
-        foreach ($currentExcludeTargets in $getValue.excludeTargets)
+        $complexPermissionActions = @()
+        foreach ($currentpermissionActions in $getValue.AdditionalProperties.permissionActions)
         {
-            $myExcludeTargets = @{}
-            if ($currentExcludeTargets.id -ne 'all_users'){
-                $myExcludeTargetsDisplayName = get-MgGroup -GroupId $currentExcludeTargets.id
-                $myExcludeTargets.Add('Id', $myExcludeTargetsDisplayName.DisplayName)
-            }
-            else{
-                $myExcludeTargets.Add('Id', $currentExcludeTargets.id)
-            }
-            if ($null -ne $currentExcludeTargets.targetType)
+            $mypermissionActions = @{}
+            if ($null -ne $currentpermissionActions.action)
             {
-                $myExcludeTargets.Add('TargetType', $currentExcludeTargets.targetType.toString())
+                $mypermissionActions.Add('Action', $currentpermissionActions.action.toString())
             }
-            if ($myExcludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
+            $mypermissionActions.Add('Permission', $currentpermissionActions.permission)
+            if ($mypermissionActions.values.Where({$null -ne $_}).count -gt 0)
             {
-                $complexExcludeTargets += $myExcludeTargets
+                $complexPermissionActions += $mypermissionActions
+            }
+        }
+
+        $complexSettings = @()
+        foreach ($currentsettings in $getValue.AdditionalProperties.settings)
+        {
+            $mysettings = @{}
+            $mysettings.Add('AppConfigKey', $currentsettings.appConfigKey)
+            if ($null -ne $currentsettings.appConfigKeyType)
+            {
+                $mysettings.Add('AppConfigKeyType', $currentsettings.appConfigKeyType.toString())
+            }
+            $mysettings.Add('AppConfigKeyValue', $currentsettings.appConfigKeyValue)
+            if ($mysettings.values.Where({$null -ne $_}).count -gt 0)
+            {
+                $complexSettings += $mysettings
             }
         }
         #endregion
 
-        $complexincludeTargets = @()
-        foreach ($currentincludeTargets in $getValue.AdditionalProperties.includeTargets)
-        {
-            $myincludeTargets = @{}
-            if ($currentIncludeTargets.id -ne 'all_users'){
-                $myIncludeTargetsDisplayName = get-MgGroup -GroupId $currentIncludeTargets.id
-                $myIncludeTargets.Add('Id', $myIncludeTargetsDisplayName.DisplayName)
-            }
-            else{
-                $myIncludeTargets.Add('Id', $currentIncludeTargets.id)
-            }
-            if ($null -ne $currentincludeTargets.targetType)
-            {
-                $myincludeTargets.Add('TargetType', $currentincludeTargets.targetType.toString())
-            }
-            if ($myincludeTargets.values.Where({ $null -ne $_ }).count -gt 0)
-            {
-                $complexincludeTargets += $myincludeTargets
-            }
-        }
         #region resource generator code
-        $enumState = $null
-        if ($null -ne $getValue.State)
+        $enumProfileApplicability = $null
+        if ($null -ne $getValue.AdditionalProperties.profileApplicability)
         {
-            $enumState = $getValue.State.ToString()
+            $enumProfileApplicability = $getValue.AdditionalProperties.profileApplicability.ToString()
         }
         #endregion
 
         $results = @{
             #region resource generator code
-            ExcludeTargets        = $complexExcludeTargets
-            IncludeTargets        = $complexincludeTargets
-            State                 = $enumState
+            ConnectedAppsEnabled  = $getValue.AdditionalProperties.connectedAppsEnabled
+            PackageId             = $getValue.AdditionalProperties.packageId
+            PayloadJson           = $getValue.AdditionalProperties.payloadJson
+            PermissionActions     = $complexPermissionActions
+            ProfileApplicability  = $enumProfileApplicability
+            EncodedSettingXml     = $getValue.AdditionalProperties.encodedSettingXml
+            Settings              = $complexSettings
+            Description           = $getValue.Description
+            DisplayName           = $getValue.DisplayName
+            RoleScopeTagIds       = $getValue.RoleScopeTagIds
+            TargetedMobileApps    = $getValue.TargetedMobileApps
             Id                    = $getValue.Id
             Ensure                = 'Present'
             Credential            = $Credential
@@ -154,10 +200,23 @@ function Get-TargetResource
             TenantId              = $TenantId
             ApplicationSecret     = $ApplicationSecret
             CertificateThumbprint = $CertificateThumbprint
-            Managedidentity       = $ManagedIdentity.IsPresent
-            AccessTokens          = $AccessTokens
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
+        $assignmentsValues = Get-MgBetaDeviceAppManagementMobileAppConfigurationAssignment -ManagedDeviceMobileAppConfigurationId $Id
+        $assignmentResult = @()
+        foreach ($assignmentEntry in $AssignmentsValues)
+        {
+            $assignmentValue = @{
+                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
+                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
+                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
+                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
+                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            }
+            $assignmentResult += $assignmentValue
+        }
+        $results.Add('Assignments', $assignmentResult)
 
         return [System.Collections.Hashtable] $results
     }
@@ -180,22 +239,59 @@ function Set-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ExcludeTargets,
+        [System.Boolean]
+        $ConnectedAppsEnabled,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $IncludeTargets,
-
-        [Parameter()]
-        [ValidateSet('enabled', 'disabled')]
         [System.String]
-        $State,
+        $PackageId,
+
+        [Parameter()]
+        [System.String]
+        $PayloadJson,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PermissionActions,
+
+        [Parameter()]
+        [ValidateSet('default','androidWorkProfile','androidDeviceOwner')]
+        [System.String]
+        $ProfileApplicability,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String]
+        $EncodedSettingXml,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedMobileApps,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
         [Parameter()]
         [System.String]
@@ -246,15 +342,71 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
-
-    if ($Ensure -eq 'Present')
+    $platform = 'android'
+    if ($BoundParameters.ContainsKey('EncodedSettingXml') -or $BoundParameters.ContainsKey('Settings'))
     {
-        Write-Verbose -Message "Updating the Azure AD Authentication Method Policy Sms with Id {$($currentInstance.Id)}"
+        $platform = 'ios'
+    }
+
+    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    {
+        Write-Verbose -Message "Creating an Intune App Configuration Device Policy with DisplayName {$DisplayName}"
+        $BoundParameters.Remove("Assignments") | Out-Null
+
+        $CreateParameters = ([Hashtable]$BoundParameters).clone()
+        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
+        $CreateParameters.Remove('Id') | Out-Null
+        if ($platform -eq 'android')
+        {
+            $CreateParameters.Add('@odata.type', '#microsoft.graph.androidManagedStoreAppConfiguration')
+            $CreateParameters.Add('appSupportsOemConfig', $false)
+        }
+        else
+        {
+            $CreateParameters.Add('@odata.type', '#microsoft.graph.iosMobileAppConfiguration')
+        }
+
+        $keys = (([Hashtable]$CreateParameters).clone()).Keys
+        foreach ($key in $keys)
+        {
+            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
+            {
+                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
+            }
+        }
+        #region resource generator code
+        $policy = New-MgBetaDeviceAppManagementMobileAppConfiguration -BodyParameter $CreateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+
+        if ($policy.id)
+        {
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+                -Targets $assignmentsHash `
+                -Repository 'deviceAppManagement/mobileAppConfigurations'
+        }
+        #endregion
+    }
+    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    {
+        Write-Verbose -Message "Updating the Intune App Configuration Device Policy with Id {$($currentInstance.Id)}"
+        $BoundParameters.Remove("Assignments") | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
         $UpdateParameters.Remove('Id') | Out-Null
+
+        if ($platform -eq 'android')
+        {
+            $UpdateParameters.Add('@odata.type', '#microsoft.graph.androidManagedStoreAppConfiguration')
+        }
+        else
+        {
+            $UpdateParameters.Add('@odata.type', '#microsoft.graph.iosMobileAppConfiguration')
+        }
 
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
@@ -263,43 +415,27 @@ function Set-TargetResource
             {
                 $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
             }
-            if ($key -eq 'IncludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
-            if ($key -eq 'ExcludeTargets')
-            {
-                $i = 0
-                foreach ($entry in $UpdateParameters.$key){
-                    if ($entry.id -notmatch '^[0-9a-f]{8}-([0-9a-f]{4}-){3}[0-9a-f]{12}$|all_users')
-                    {
-                        $Filter = "Displayname eq '$($entry.id)'" | Out-String
-                        $UpdateParameters.$key[$i].foreach('id',(Get-MgGroup -Filter $Filter).id.ToString())
-                    }
-                    $i++
-                }
-            }
         }
         #region resource generator code
-        $UpdateParameters.Add('@odata.type', '#microsoft.graph.smsAuthenticationMethodConfiguration')
-        Update-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration  `
-            -AuthenticationMethodConfigurationId $currentInstance.Id `
+        Update-MgBetaDeviceAppManagementMobileAppConfiguration  `
+            -ManagedDeviceMobileAppConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
+        $assignmentsHash = @()
+        foreach ($assignment in $Assignments)
+        {
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+        }
+        Update-DeviceConfigurationPolicyAssignment `
+            -DeviceConfigurationPolicyId $currentInstance.id `
+            -Targets $assignmentsHash `
+            -Repository 'deviceAppManagement/mobileAppConfigurations'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Azure AD Authentication Method Policy Sms with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Removing the Intune App Configuration Device Policy with Id {$($currentInstance.Id)}" 
         #region resource generator code
-        Remove-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $currentInstance.Id
+        Remove-MgBetaDeviceAppManagementMobileAppConfiguration -ManagedDeviceMobileAppConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -312,22 +448,59 @@ function Test-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $ExcludeTargets,
+        [System.Boolean]
+        $ConnectedAppsEnabled,
 
         [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $IncludeTargets,
-
-        [Parameter()]
-        [ValidateSet('enabled', 'disabled')]
         [System.String]
-        $State,
+        $PackageId,
+
+        [Parameter()]
+        [System.String]
+        $PayloadJson,
+
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $PermissionActions,
+
+        [Parameter()]
+        [ValidateSet('default','androidWorkProfile','androidDeviceOwner')]
+        [System.String]
+        $ProfileApplicability,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String]
+        $EncodedSettingXml,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $Description,
+
+        [Parameter(Mandatory = $true)]
+        [System.String]
+        $DisplayName,
+
+        [Parameter()]
+        [System.String[]]
+        $RoleScopeTagIds,
+
+        [Parameter()]
+        [System.String[]]
+        $TargetedMobileApps,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
 
+        [Parameter()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Assignments,
         #endregion
 
         [Parameter()]
@@ -376,7 +549,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Authentication Method Policy Sms with Id {$Id}"
+    Write-Verbose -Message "Testing configuration of the Intune App Configuration Device Policy with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -412,6 +585,10 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.remove('Id') | Out-Null
+    $ValuesToCheck.Remove('Credential') | Out-Null
+    $ValuesToCheck.Remove('ApplicationId') | Out-Null
+    $ValuesToCheck.Remove('TenantId') | Out-Null
+    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -435,6 +612,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter, 
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,
@@ -482,9 +663,10 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration `
-            -AuthenticationMethodConfigurationId sms `
-            -ErrorAction Stop | Where-Object -FilterScript {$null -ne $_.Id}
+        [array]$getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
+            -Filter $Filter `
+            -All `
+            -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -500,65 +682,85 @@ function Export-TargetResource
         foreach ($config in $getValue)
         {
             $displayedKey = $config.Id
+            if (-not [String]::IsNullOrEmpty($config.displayName))
+            {
+                $displayedKey = $config.displayName
+            }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{
                 Id                    = $config.Id
+                DisplayName           =  $config.DisplayName
                 Ensure                = 'Present'
                 Credential            = $Credential
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
                 ApplicationSecret     = $ApplicationSecret
                 CertificateThumbprint = $CertificateThumbprint
-                Managedidentity       = $ManagedIdentity.IsPresent
+                ManagedIdentity       = $ManagedIdentity.IsPresent
                 AccessTokens          = $AccessTokens
             }
 
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            if ($null -ne $Results.ExcludeTargets)
+            if ($null -ne $Results.PermissionActions)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.ExcludeTargets `
-                    -CIMInstanceName 'AADAuthenticationMethodPolicySmsExcludeTarget'
+                    -ComplexObject $Results.PermissionActions `
+                    -CIMInstanceName 'MicrosoftGraphandroidPermissionAction'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
-                    $Results.ExcludeTargets = $complexTypeStringResult
+                    $Results.PermissionActions = $complexTypeStringResult
                 }
                 else
                 {
-                    $Results.Remove('ExcludeTargets') | Out-Null
+                    $Results.Remove('PermissionActions') | Out-Null
                 }
             }
-
-            if($null -ne $Results.IncludeTargets)
+            if ($null -ne $Results.Settings)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.IncludeTargets `
-                    -CIMInstanceName 'AADAuthenticationMethodPolicySmsIncludeTarget'
+                    -ComplexObject $Results.Settings `
+                    -CIMInstanceName 'MicrosoftGraphappConfigurationSettingItem1'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
-                    $Results.IncludeTargets = $complexTypeStringResult
+                    $Results.Settings = $complexTypeStringResult
                 }
                 else
                 {
-                    $Results.Remove('IncludeTargets') | Out-Null
+                    $Results.Remove('Settings') | Out-Null
                 }
             }
-
+            if ($Results.Assignments)
+            {
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
+                if ($complexTypeStringResult)
+                {
+                    $Results.Assignments = $complexTypeStringResult
+                }
+                else
+                {
+                    $Results.Remove('Assignments') | Out-Null
+                }
+            }
             $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
                 -ConnectionMode $ConnectionMode `
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            if ($Results.ExcludeTargets)
+            if ($Results.PermissionActions)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExcludeTargets' -IsCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "PermissionActions" -isCIMArray:$True
             }
-            if ($Results.IncludeTargets)
+            if ($Results.Settings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'IncludeTargets' -IsCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Settings" -isCIMArray:$True
             }
+            if ($Results.Assignments)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+            }
+
             $dscContent += $currentDSCBlock
             Save-M365DSCPartialExport -Content $currentDSCBlock `
                 -FileName $Global:PartialExportFileName
