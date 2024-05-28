@@ -69,7 +69,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
 
-            if (-Not [string]::IsNullOrEmpty($<FilterKey>))
+            if (-not [string]::IsNullOrEmpty($<FilterKey>))
             {
                 $getValue = <GetCmdLetName> `
 <AlternativeFilter>
@@ -83,12 +83,12 @@ function Get-TargetResource
         }
         $<PrimaryKey> = $getValue.<PrimaryKey>
         Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
-<ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
+<SettingsCatalogGetSettings><ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
         $results = @{<#ResourceGenerator
             #region resource generator code
 <HashTableMapping>            #endregionResourceGenerator#>
         }
-<#ComplexTypeContent#><#AssignmentsGet#>
+<#ComplexTypeContent#><#SettingsCatalogAddSettings#><#AssignmentsGet#>
         return [System.Collections.Hashtable] $results
     }
     catch
@@ -160,22 +160,12 @@ function Set-TargetResource
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
+<#SettingsCatalogProperties#>
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an <ResourceDescription> with <FilterKey> {$DisplayName}"
 <#AssignmentsRemove#>
-        $CreateParameters = ([Hashtable]$BoundParameters).clone()
-        $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Remove('Id') | Out-Null
-
-        $keys = (([Hashtable]$CreateParameters).clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-        }<#ResourceGenerator
+<#DefaultCreateParameters#><#ResourceGenerator
         #region resource generator code
 <NewDataType>        $policy = <NewCmdLetName> <#NewKeyIdentifier#>
 <#AssignmentsNew#>        #endregionResourceGenerator#>
@@ -184,28 +174,16 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Updating the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"
 <#AssignmentsRemove#>
-        $UpdateParameters = ([Hashtable]$BoundParameters).clone()
-        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-
-        $UpdateParameters.Remove('Id') | Out-Null
-
-        $keys = (([Hashtable]$UpdateParameters).clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-        }<#ResourceGenerator
+<#DefaultUpdateParameters#><#ResourceGenerator
         #region resource generator code
-<UpdateDataType>        <UpdateCmdLetName> <#UpdateKeyIdentifier#>
+<UpdateDataType><UpdateCmdLetName> <#UpdateKeyIdentifier#>
 <#AssignmentsUpdate#>        #endregionResourceGenerator#>
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
         #region resource generator code
-<RemoveCmdLetName> <#removeKeyIdentifier#>
+        <RemoveCmdLetName> <#removeKeyIdentifier#>
         #endregionResourceGenerator#>
     }
 }
@@ -268,7 +246,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+<#DefaultTestValuesToCheck#>
 
     if ($CurrentValues.Ensure -ne $Ensure)
     {
@@ -282,17 +260,25 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($source.GetType().Name -like '*CimInstance*')
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-Not $testResult)
+            if ($key -eq "Assignments")
             {
-                $testResult = $false
+                $testResult = Compare-M365DSCIntunePolicyAssignment `
+                    -Source $source `
+                    -Target $target
+            }
+            else
+            {
+                $testResult = Compare-M365DSCComplexObject `
+                    -Source ($source) `
+                    -Target ($target)
+            }
+
+            if (-not $testResult)
+            {
                 break
             }
 
@@ -300,11 +286,8 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -328,6 +311,10 @@ function Export-TargetResource
     [OutputType([System.String])]
     param
     (
+        [Parameter()]
+        [System.String]
+        $Filter,
+
         [Parameter()]
         [System.Management.Automation.PSCredential]
         $Credential,

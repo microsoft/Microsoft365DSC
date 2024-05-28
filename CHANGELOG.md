@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCResourceGenerator
+  * Add support for generating Intune settings catalog policies
+
 # 1.24.529.1
 
 * AADAdministrativeUnit
