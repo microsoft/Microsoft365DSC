@@ -29954,7 +29954,17 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "BlockRebootingMachineInSafeMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
                                "Name":  "BlockUntrustedUnsignedProcessesThatRunFromUSB",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "BlockUseOfCopiedOrImpersonatedSystemTools",
                                "Option":  "Write"
                            },
                            {
