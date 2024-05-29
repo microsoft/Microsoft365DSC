@@ -397,6 +397,23 @@ function Get-TargetResource
                 $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
             }
 
+            $ruleobject = $PolicyRule.AdvancedRule | ConvertFrom-Json
+            $index = $ruleobject.Condition.SubConditions.ConditionName.IndexOf("ContentContainsSensitiveInformation")
+            if ($index -ne -1)
+            {
+                if($null -eq $ruleobject.Condition.SubConditions[$index].value.groups)
+                {
+                    $ruleobject.Condition.SubConditions[$index].Value = $ruleobject.Condition.SubConditions[$index].Value | Select-Object * -ExcludeProperty Id
+                }
+                else
+                {
+                    $ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes = @($ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes | Select-Object * -ExcludeProperty Id)
+                }
+            }
+
+            $newAdvancedRule = $ruleobject | ConvertTo-Json -Depth 32 | Format-Json
+            $newAdvancedRule = $newAdvancedRule | ConvertTo-Json -compress
+
             $fancyDoubleQuotes = "[\u201C\u201D]"
             $result = @{
                 Ensure                                       = 'Present'
@@ -406,7 +423,7 @@ function Get-TargetResource
                 BlockAccess                                  = $PolicyRule.BlockAccess
                 BlockAccessScope                             = $PolicyRule.BlockAccessScope
                 Comment                                      = $PolicyRule.Comment
-                AdvancedRule                                 = $PolicyRule.AdvancedRule | ConvertTo-Json -Compress
+                AdvancedRule                                 = $newAdvancedRule
                 ContentContainsSensitiveInformation          = $PolicyRule.ContentContainsSensitiveInformation
                 ExceptIfContentContainsSensitiveInformation  = $PolicyRule.ExceptIfContentContainsSensitiveInformation
                 ContentPropertyContainsWords                 = $PolicyRule.ContentPropertyContainsWords
@@ -901,8 +918,13 @@ function Set-TargetResource
         $CreationParams.Remove('ApplicationSecret') | Out-Null
         $CreationParams.Remove('AccessTokens') | Out-Null
 
+        $NewruleParam = @{
+            Name = $CreationParams.Name
+            Policy = $CreationParams.Policy
+            AdvancedRule = $CreationParams.AdvancedRule
+        }
         Write-Verbose -Message "Calling New-DLPComplianceRule with Values: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-        New-DLPComplianceRule @CreationParams
+        New-DLPComplianceRule @NewruleParam
     }
     elseif (('Present' -eq $Ensure) -and ('Present' -eq $CurrentRule.Ensure))
     {
@@ -2041,6 +2063,22 @@ function Test-ContainsSensitiveInformationGroups
             }
         }
     }
+}
+
+function Format-Json([Parameter(Mandatory, ValueFromPipeline)][String] $json) {
+    $indent = 0;
+    ($json -Split "`n" | % {
+        if ($_ -match '[\}\]]\s*,?\s*$') {
+            # This line ends with ] or }, decrement the indentation level
+            $indent--
+        }
+        $line = ('  ' * $indent) + $($_.TrimStart() -replace '":  (["{[])', '": $1' -replace ':  ', ': ')
+        if ($_ -match '[\{\[]\s*$') {
+            # This line ends with [ or {, increment the indentation level
+            $indent++
+        }
+        $line
+    }) -Join "`n"
 }
 
 Export-ModuleMember -Function *-TargetResource
