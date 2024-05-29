@@ -18,12 +18,14 @@
 * IntuneSettingCatalogASRRulesPolicyWindows10
   * Add missing properties
     FIXES [#4713](https://github.com/microsoft/Microsoft365DSC/issues/4713)
+* O365AdminAuditLogConfig
+  * Fix logging of exception if Set-AdminAuditLogConfig fails
+    FIXES [#4645](https://github.com/microsoft/Microsoft365DSC/issues/4645)
 * ResourceGenerator
   * Added `AccessTokens` parameter to PS1 and MOF template
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.5.
   * Rolling back ExchangeOnlineManagement to version 3.4.0.
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.188.
 
 # 1.24.522.1
 

@@ -202,7 +202,6 @@ function Set-TargetResource
             $Message = "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
             New-M365DSCLogEntry -Message $Message `
                 -Exception $_ `
-                -Message $Message `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
     }
