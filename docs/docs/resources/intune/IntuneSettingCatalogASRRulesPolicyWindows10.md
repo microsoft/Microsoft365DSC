@@ -22,7 +22,9 @@
 | **BlockOfficeCommunicationAppFromCreatingChildProcesses** | Write | String | This rule prevents Outlook from creating child processes, while still allowing legitimate Outlook functions. | `off`, `block`, `audit`, `warn` |
 | **BlockPersistenceThroughWMIEventSubscription** | Write | String | This rule prevents malware from abusing WMI to attain persistence on a device. | `off`, `block`, `audit`, `warn` |
 | **BlockProcessCreationsFromPSExecAndWMICommands** | Write | String | This rule blocks processes created through PsExec and WMI from running. | `off`, `block`, `audit`, `warn` |
+| **BlockRebootingMachineInSafeMode** | Write | String | This rule prevents the execution of commands to restart machines in Safe Mode. | `off`, `block`, `audit`, `warn` |
 | **BlockUntrustedUnsignedProcessesThatRunFromUSB** | Write | String | With this rule, admins can prevent unsigned or untrusted executable files from running from USB removable drives, including SD cards. | `off`, `block`, `audit`, `warn` |
+| **BlockUseOfCopiedOrImpersonatedSystemTools** | Write | String | This rule blocks the use of executable files that are identified as copies of Windows system tools. These files are either duplicates or impostors of the original system tools. | `off`, `block`, `audit`, `warn` |
 | **BlockWebShellCreationForServers** | Write | String | This rule blocks webshell creation for servers. | `off`, `block`, `audit`, `warn` |
 | **BlockWin32APICallsFromOfficeMacros** | Write | String | This rule prevents VBA macros from calling Win32 APIs. | `off`, `block`, `audit`, `warn` |
 | **UseAdvancedProtectionAgainstRansomware** | Write | String | This rule provides an extra layer of protection against ransomware. | `off`, `block`, `audit`, `warn` |

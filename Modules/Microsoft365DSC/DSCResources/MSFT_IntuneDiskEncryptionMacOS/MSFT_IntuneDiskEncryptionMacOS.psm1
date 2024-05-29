@@ -9,55 +9,52 @@ function Get-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
-        [System.String]
-        $DetectionScriptContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $DetectionScriptParameters,
-
-        [Parameter()]
-        [ValidateSet('deviceHealthScript','managedInstallerScript')]
-        [System.String]
-        $DeviceHealthScriptType,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnforceSignatureCheck,
-
-        [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
-        [System.String]
-        $RemediationScriptContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $RemediationScriptParameters,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.Boolean]
-        $RunAs32Bit,
-
-        [Parameter()]
-        [ValidateSet('system','user')]
-        [System.String]
-        $RunAsAccount,
-
-        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [ValidateRange(1, 12)]
+        [System.Int32]
+        $PersonalRecoveryKeyRotationInMonths,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePromptAtSignOut,
+
+        [Parameter()]
+        [ValidateSet('personalRecoveryKey')]
+        [System.String[]]
+        $SelectedRecoveryKeyTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeferralUntilSignOut,
+
+        [Parameter()]
+        [ValidateRange(-1, 11)]
+        [System.Int32]
+        $NumberOfTimesUserCanIgnore,
+
+        [Parameter()]
+        [System.Boolean]
+        $HidePersonalRecoveryKey,
+
+        [Parameter()]
+        [System.String]
+        $PersonalRecoveryKeyHelpMessage,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -120,115 +117,61 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceHealthScript -DeviceHealthScriptId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceManagementIntent -DeviceManagementIntentId $Id -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Device Remediation with Id {$Id}"
+            Write-Verbose -Message "Could not find an Intune Disk Encryption for macOS with Id {$Id}"
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceHealthScript `
+                $getValue = Get-MgBetaDeviceManagementIntent `
                     -Filter "DisplayName eq '$DisplayName'" `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript { `
-                        $_.DeviceHealthScriptType -eq "deviceHealthScript" `
+                        $_.TemplateId -eq 'a239407c-698d-4ef8-b314-e3ae409204b8' `
                     }
-                if ($null -ne $getValue)
-                {
-                    $getValue = Get-MgBetaDeviceManagementDeviceHealthScript -DeviceHealthScriptId $getValue.Id
-                }
             }
         }
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Device Remediation with DisplayName {$DisplayName}"
+            Write-Verbose -Message "Could not find an Intune Disk Encryption for macOS with DisplayName {$DisplayName}"
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Intune Device Remediation with Id {$Id} and DisplayName {$DisplayName} was found."
+        Write-Verbose -Message "An Intune Disk Encryption for macOS with Id {$Id} and DisplayName {$DisplayName} was found."
 
-        #region resource generator code
-        $complexDetectionScriptParameters = @()
-        foreach ($currentDetectionScriptParameters in $getValue.detectionScriptParameters)
-        {
-            $myDetectionScriptParameters = @{}
-            $myDetectionScriptParameters.Add('ApplyDefaultValueWhenNotAssigned', $currentDetectionScriptParameters.applyDefaultValueWhenNotAssigned)
-            $myDetectionScriptParameters.Add('Description', $currentDetectionScriptParameters.description)
-            $myDetectionScriptParameters.Add('IsRequired', $currentDetectionScriptParameters.isRequired)
-            $myDetectionScriptParameters.Add('Name', $currentDetectionScriptParameters.name)
-            $myDetectionScriptParameters.Add('DefaultValue', $currentDetectionScriptParameters.defaultValue)
-            if ($null -ne $currentDetectionScriptParameters.'@odata.type')
-            {
-                $myDetectionScriptParameters.Add('odataType', $currentDetectionScriptParameters.'@odata.type'.toString())
-            }
-            if ($myDetectionScriptParameters.values.Where({$null -ne $_}).count -gt 0)
-            {
-                $complexDetectionScriptParameters += $myDetectionScriptParameters
-            }
-        }
-
-        $complexRemediationScriptParameters = @()
-        foreach ($currentRemediationScriptParameters in $getValue.remediationScriptParameters)
-        {
-            $myRemediationScriptParameters = @{}
-            $myRemediationScriptParameters.Add('ApplyDefaultValueWhenNotAssigned', $currentRemediationScriptParameters.applyDefaultValueWhenNotAssigned)
-            $myRemediationScriptParameters.Add('Description', $currentRemediationScriptParameters.description)
-            $myRemediationScriptParameters.Add('IsRequired', $currentRemediationScriptParameters.isRequired)
-            $myRemediationScriptParameters.Add('Name', $currentRemediationScriptParameters.name)
-            $myRemediationScriptParameters.Add('DefaultValue', $currentRemediationScriptParameters.defaultValue)
-            if ($null -ne $currentRemediationScriptParameters.'@odata.type')
-            {
-                $myRemediationScriptParameters.Add('odataType', $currentRemediationScriptParameters.'@odata.type'.toString())
-            }
-            if ($myRemediationScriptParameters.values.Where({$null -ne $_}).count -gt 0)
-            {
-                $complexRemediationScriptParameters += $myRemediationScriptParameters
-            }
-        }
-        #endregion
-
-        #region resource generator code
-        $enumDeviceHealthScriptType = $null
-        if ($null -ne $getValue.DeviceHealthScriptType)
-        {
-            $enumDeviceHealthScriptType = $getValue.DeviceHealthScriptType.ToString()
-        }
-
-        $enumRunAsAccount = $null
-        if ($null -ne $getValue.RunAsAccount)
-        {
-            $enumRunAsAccount = $getValue.RunAsAccount.ToString()
-        }
-        #endregion
+        #Retrieve policy specific settings
+        [array]$settings = Get-MgBetaDeviceManagementIntentSetting `
+            -DeviceManagementIntentId $getValue.Id `
+            -ErrorAction Stop
 
         $results = @{
-            #region resource generator code
-            Description                 = $getValue.Description
-            DetectionScriptContent      = [System.Convert]::ToBase64String($getValue.DetectionScriptContent)
-            DetectionScriptParameters   = $complexDetectionScriptParameters
-            DeviceHealthScriptType      = $enumDeviceHealthScriptType
-            DisplayName                 = $getValue.DisplayName
-            EnforceSignatureCheck       = $getValue.EnforceSignatureCheck
-            Publisher                   = $getValue.Publisher
-            RemediationScriptContent    = [System.Convert]::ToBase64String($getValue.RemediationScriptContent)
-            RemediationScriptParameters = $complexRemediationScriptParameters
-            RoleScopeTagIds             = $getValue.RoleScopeTagIds
-            RunAs32Bit                  = $getValue.RunAs32Bit
-            RunAsAccount                = $enumRunAsAccount
-            Id                          = $getValue.Id
-            Ensure                      = 'Present'
-            Credential                  = $Credential
-            ApplicationId               = $ApplicationId
-            TenantId                    = $TenantId
-            ApplicationSecret           = $ApplicationSecret
-            CertificateThumbprint       = $CertificateThumbprint
-            ManagedIdentity             = $ManagedIdentity.IsPresent
-            AccessTokens                = $AccessTokens
-            #endregion
+            Description                      = $getValue.Description
+            DisplayName                      = $getValue.DisplayName
+            RoleScopeTagIds                  = $getValue.RoleScopeTagIds
+            Id                               = $getValue.Id
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceHealthScriptAssignment -DeviceHealthScriptId $Id
+
+        foreach ($setting in $settings)
+        {
+            $settingName = $setting.definitionId.replace('deviceConfiguration--macOSEndpointProtectionConfiguration_fileVault', '')
+            $settingValue = $setting.ValueJson | ConvertFrom-Json
+
+            $results.Add($settingName, $settingValue)
+        }
+
+        $results.Add('Ensure', 'Present')
+        $results.Add('Credential', $Credential)
+        $results.Add('ApplicationId', $ApplicationId)
+        $results.Add('TenantId', $TenantId)
+        $results.Add('ApplicationSecret', $ApplicationSecret)
+        $results.Add('CertificateThumbprint', $CertificateThumbprint)
+        $results.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
+        $results.Add('AccessTokens', $AccessTokens)
+        
+        $assignmentsValues = Get-MgBetaDeviceManagementIntentAssignment -DeviceManagementIntentId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -267,60 +210,58 @@ function Set-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
-        [System.String]
-        $DetectionScriptContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $DetectionScriptParameters,
-
-        [Parameter()]
-        [ValidateSet('deviceHealthScript','managedInstallerScript')]
-        [System.String]
-        $DeviceHealthScriptType,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnforceSignatureCheck,
-
-        [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
-        [System.String]
-        $RemediationScriptContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $RemediationScriptParameters,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.Boolean]
-        $RunAs32Bit,
-
-        [Parameter()]
-        [ValidateSet('system','user')]
-        [System.String]
-        $RunAsAccount,
-
-        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [ValidateRange(1, 12)]
+        [System.Int32]
+        $PersonalRecoveryKeyRotationInMonths,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePromptAtSignOut,
+
+        [Parameter()]
+        [ValidateSet('personalRecoveryKey')]
+        [System.String[]]
+        $SelectedRecoveryKeyTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeferralUntilSignOut,
+
+        [Parameter()]
+        [ValidateRange(-1, 11)]
+        [System.Int32]
+        $NumberOfTimesUserCanIgnore,
+
+        [Parameter()]
+        [System.Boolean]
+        $HidePersonalRecoveryKey,
+
+        [Parameter()]
+        [System.String]
+        $PersonalRecoveryKeyHelpMessage,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
         #endregion
+
         [Parameter()]
         [System.String]
         [ValidateSet('Absent', 'Present')]
@@ -367,33 +308,44 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
+    if ($Enabled -and ($null -eq $SelectedRecoveryKeyTypes -or $null -eq $PersonalRecoveryKeyHelpMessage))
+    {
+        throw 'SelectedRecoveryKeyTypes and PersonalRecoveryKeyHelpMessage must be specified when Enabled is $true'
+    }
+
+    if (-not $AllowDeferralUntilSignOut)
+    {
+        throw 'AllowDeferralUntilSignOut must be $true'
+    }
+
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $policyTemplateId = 'a239407c-698d-4ef8-b314-e3ae409204b8'
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Intune Device Remediation with DisplayName {$DisplayName}"
-        $BoundParameters.Remove("Assignments") | Out-Null
+        Write-Verbose -Message "Creating an Intune Disk Encryption for macOS with DisplayName {$DisplayName}"
+        $BoundParameters.Remove('Assignments') | Out-Null
+        $BoundParameters.Remove('Id') | Out-Null
+        $BoundParameters.Remove('DisplayName') | Out-Null
+        $BoundParameters.Remove('Description') | Out-Null
+        $BoundParameters.Remove('RoleScopeTagIds') | Out-Null
+
+        $settings = Get-M365DSCIntuneDeviceConfigurationSettings `
+            -Properties ([System.Collections.Hashtable]$BoundParameters) `
+            -TemplateId $policyTemplateId
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Add('IsGlobalScript', $false) | Out-Null
-        $CreateParameters.DetectionScriptContent = [System.Convert]::FromBase64String($CreateParameters.DetectionScriptContent)
-        $CreateParameters.RemediationScriptContent = [System.Convert]::FromBase64String($CreateParameters.RemediationScriptContent)
-        $CreateParameters.Remove('Id') | Out-Null
+        $CreateParameters.Add('DisplayName', $DisplayName)
+        $CreateParameters.Add('Description', $Description)
+        $CreateParameters.Add('RoleScopeTagIds', $RoleScopeTagIds)
+        $CreateParameters.Add('Settings', $settings)
+        $CreateParameters.Add('TemplateId', $policyTemplateId)
 
-        $keys = (([Hashtable]$CreateParameters).clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
-            {
-                $CreateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $CreateParameters.$key
-            }
-        }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.DeviceHealthScript")
-        $policy = New-MgBetaDeviceManagementDeviceHealthScript -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceManagementIntent -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -402,37 +354,35 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
                 -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceHealthScripts'
+                -Repository 'deviceManagement/intents'
         }
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Intune Device Remediation with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Updating the Intune Disk Encryption for macOS with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove("Assignments") | Out-Null
+        $BoundParameters.Remove('Id') | Out-Null
+        $BoundParameters.Remove('DisplayName') | Out-Null
+        $BoundParameters.Remove('Description') | Out-Null
+        $BoundParameters.Remove('RoleScopeTagIds') | Out-Null
 
-        $UpdateParameters = ([Hashtable]$BoundParameters).clone()
-        $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $UpdateParameters.DetectionScriptContent = [System.Convert]::FromBase64String($UpdateParameters.DetectionScriptContent)
-        $UpdateParameters.RemediationScriptContent = [System.Convert]::FromBase64String($UpdateParameters.RemediationScriptContent)
-        $UpdateParameters.Remove('DeviceHealthScriptType') | Out-Null
-        $UpdateParameters.Remove('Id') | Out-Null
+        $settings = Get-M365DSCIntuneDeviceConfigurationSettings `
+            -Properties ([System.Collections.Hashtable]$BoundParameters) `
+            -TemplateId $policyTemplateId
 
-        $keys = (([Hashtable]$UpdateParameters).clone()).Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
-            {
-                $UpdateParameters.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-            }
-        }
+        $UpdateParameters = @{}
+        $UpdateParameters.Add('DisplayName', $DisplayName)
+        $UpdateParameters.Add('Description', $Description)
+        Update-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentInstance.Id -BodyParameter $UpdateParameters
+
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.DeviceHealthScript")
-        Update-MgBetaDeviceManagementDeviceHealthScript  `
-            -DeviceHealthScriptId $currentInstance.Id `
-            -BodyParameter $UpdateParameters
+        $Uri = "https://graph.microsoft.com/beta/deviceManagement/intents/$($currentInstance.Id)/updateSettings"
+        $body = @{'settings' = $settings }
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> Out-Null
+
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -441,14 +391,14 @@ function Set-TargetResource
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
-            -Repository 'deviceManagement/deviceHealthScripts'
+            -Repository 'deviceManagement/intents'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Remediation with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Disk Encryption for macOS with Id {$($currentInstance.Id)}" 
         #region resource generator code
-        Remove-MgBetaDeviceManagementDeviceHealthScript -DeviceHealthScriptId $currentInstance.Id
+        Remove-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentInstance.Id
         #endregion
     }
 }
@@ -464,55 +414,52 @@ function Test-TargetResource
         [System.String]
         $Description,
 
-        [Parameter()]
-        [System.String]
-        $DetectionScriptContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $DetectionScriptParameters,
-
-        [Parameter()]
-        [ValidateSet('deviceHealthScript','managedInstallerScript')]
-        [System.String]
-        $DeviceHealthScriptType,
-
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
-
-        [Parameter()]
-        [System.Boolean]
-        $EnforceSignatureCheck,
-
-        [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
-        [System.String]
-        $RemediationScriptContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $RemediationScriptParameters,
 
         [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.Boolean]
-        $RunAs32Bit,
-
-        [Parameter()]
-        [ValidateSet('system','user')]
-        [System.String]
-        $RunAsAccount,
-
-        [Parameter(Mandatory = $true)]
         [System.String]
         $Id,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled,
+
+        [Parameter()]
+        [ValidateRange(1, 12)]
+        [System.Int32]
+        $PersonalRecoveryKeyRotationInMonths,
+
+        [Parameter()]
+        [System.Boolean]
+        $DisablePromptAtSignOut,
+
+        [Parameter()]
+        [ValidateSet('personalRecoveryKey')]
+        [System.String[]]
+        $SelectedRecoveryKeyTypes,
+
+        [Parameter()]
+        [System.Boolean]
+        $AllowDeferralUntilSignOut,
+
+        [Parameter()]
+        [ValidateRange(-1, 11)]
+        [System.Int32]
+        $NumberOfTimesUserCanIgnore,
+
+        [Parameter()]
+        [System.Boolean]
+        $HidePersonalRecoveryKey,
+
+        [Parameter()]
+        [System.String]
+        $PersonalRecoveryKeyHelpMessage,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
@@ -565,17 +512,53 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Device Remediation with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune Disk Encryption for macOS with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
 
     if ($CurrentValues.Ensure -ne $Ensure)
     {
         Write-Verbose -Message "Test-TargetResource returned $false"
         return $false
     }
-    $testResult = $true
+
+    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+
+    $ValuesToCheck = @{}
+    $MyInvocation.MyCommand.Parameters.GetEnumerator() | ForEach-Object {
+        if ($_.Key -notlike '*Variable' -or $_.Key -notin @('Verbose', 'Debug', 'ErrorAction', 'WarningAction', 'InformationAction'))
+        {
+            if ($null -ne $CurrentValues[$_.Key] -or $null -ne $PSBoundParameters[$_.Key])
+            {
+                $ValuesToCheck.Add($_.Key, $null)
+                if (-not $PSBoundParameters.ContainsKey($_.Key))
+                {
+                    $value = $null
+                    switch -Regex ($CurrentValues[$_.Key].GetType().Name)
+                    {
+                        '^String$'
+                        {
+                            $value = ''
+                        }
+                        '^Int32$'
+                        {
+                            $value = 0
+                        }
+                        '^Boolean$'
+                        {
+                            $value = $false
+                        }
+                        '^.*\[\]$'
+                        {
+                            $value = @()
+                        }
+                    }
+                    $PSBoundParameters.Add($_.Key, $value)
+                }
+            }
+        }
+    }
 
     #Compare Cim instances
     foreach ($key in $PSBoundParameters.Keys)
@@ -600,21 +583,16 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
-    Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
-
+    $testResult = $true
     if ($testResult)
     {
         $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
             -Source $($MyInvocation.MyCommand.Source) `
             -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
+            -ValuesToCheck $ValuesToCheck.Keys -Verbose
     }
 
     Write-Verbose -Message "Test-TargetResource returned $testResult"
@@ -679,12 +657,11 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        # Only export scripts that are not from Microsoft
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceHealthScript `
-            -Filter $Filter `
+        [array]$getValue = Get-MgBetaDeviceManagementIntent -Filter $Filter `
             -All `
-            -ErrorAction Stop | Where-Object -FilterScript {
-                $_.IsGlobalScript -eq $false
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { `
+                $_.TemplateId -eq 'a239407c-698d-4ef8-b314-e3ae409204b8' `
             }
         #endregion
 
@@ -722,34 +699,6 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            if ($null -ne $Results.DetectionScriptParameters)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.DetectionScriptParameters `
-                    -CIMInstanceName 'MicrosoftGraphdeviceHealthScriptParameter'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                {
-                    $Results.DetectionScriptParameters = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('DetectionScriptParameters') | Out-Null
-                }
-            }
-            if ($null -ne $Results.RemediationScriptParameters)
-            {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.RemediationScriptParameters `
-                    -CIMInstanceName 'MicrosoftGraphdeviceHealthScriptParameter'
-                if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
-                {
-                    $Results.RemediationScriptParameters = $complexTypeStringResult
-                }
-                else
-                {
-                    $Results.Remove('RemediationScriptParameters') | Out-Null
-                }
-            }
             if ($Results.Assignments)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
@@ -767,14 +716,6 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            if ($Results.DetectionScriptParameters)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DetectionScriptParameters" -isCIMArray:$True
-            }
-            if ($Results.RemediationScriptParameters)
-            {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RemediationScriptParameters" -isCIMArray:$True
-            }
             if ($Results.Assignments)
             {
                 $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
@@ -800,6 +741,88 @@ function Export-TargetResource
 
         return ''
     }
+}
+
+function Get-M365DSCIntuneDeviceConfigurationSettings
+{
+    [CmdletBinding()]
+    [OutputType([System.Collections.Hashtable])]
+    param
+    (
+        [Parameter(Mandatory = 'true')]
+        [System.Collections.Hashtable]
+        $Properties,
+
+        [Parameter()]
+        [System.String]
+        $TemplateId
+    )
+
+    $templateCategoryId = (Get-MgBetaDeviceManagementTemplateCategory -DeviceManagementTemplateId $TemplateId).Id
+    $templateSettings = Get-MgBetaDeviceManagementTemplateCategoryRecommendedSetting `
+        -DeviceManagementTemplateId $TemplateId `
+        -DeviceManagementTemplateSettingCategoryId $templateCategoryId
+
+    $results = @()
+    foreach ($setting in $templateSettings)
+    {
+        $result = @{}
+        $settingType = $setting.AdditionalProperties.'@odata.type'
+        $settingValue = $null
+        $currentValueKey = $Properties.keys | Where-Object -FilterScript { $setting.DefinitionId -like "*$_" }
+        if ($null -ne $currentValueKey)
+        {
+            $settingValue = $Properties.$currentValueKey
+        }
+
+        $requiresValueJson = $false
+        switch ($settingType)
+        {
+            {
+                ( $_ -eq '#microsoft.graph.deviceManagementStringSettingInstance' ) -or
+                ( $_ -eq '#microsoft.graph.deviceManagementBooleanSettingInstance' )
+            }
+            {
+                if ([String]::IsNullOrEmpty($settingValue))
+                {
+                    $settingValue = $setting.ValueJson | ConvertFrom-Json
+                }
+            }
+            '#microsoft.graph.deviceManagementCollectionSettingInstance'
+            {
+                $requiresValueJson = $true
+                if ($null -eq $settingValue)
+                {
+                    $settingValue = ConvertTo-Json -InputObject @() -Compress
+                }
+                else
+                {
+                    $settingValue = ConvertTo-Json -InputObject ([Array]$settingValue) -Compress
+                }
+            }
+            Default
+            {
+                if ($null -eq $settingValue)
+                {
+                    $settingValue = $setting.ValueJson | ConvertFrom-Json
+                }
+            }
+        }
+        $result.Add('@odata.type', $settingType)
+        $result.Add('Id', $setting.Id)
+        $result.Add('definitionId', $setting.DefinitionId)
+        if ($requiresValueJson)
+        {
+            $result.Add('valueJson', ($settingValue))
+        }
+        else
+        {
+            $result.Add('value', ($settingValue))
+        }
+
+        $results += $result
+    }
+    return $results
 }
 
 Export-ModuleMember -Function *-TargetResource

@@ -82,6 +82,23 @@
                     Ensure             = 'Present'
                     Credential         = $Credscredential
                 }
+                IntuneAppConfigurationDevicePolicy 'IntuneAppConfigurationDevicePolicy-Example'
+                {
+                    Credential            = $Credscredential;
+                    Assignments           = @();
+                    Description           = "";
+                    DisplayName           = "Example";
+                    Ensure                = "Present";
+                    Id                    = "0000000-0000-0000-0000-000000000000";
+                    ConnectedAppsEnabled  = $true;
+                    PackageId             = "app:com.microsoft.office.outlook"
+                    PayloadJson           = "Base64 encoded settings"
+                    PermissionActions     = @()
+                    ProfileApplicability  = "default"
+                    RoleScopeTagIds       = @("0");
+                    TargetedMobileApps    = @("<Mobile App Id>");
+                    TenantId              = $OrganizationName;
+                }
                 IntuneAppConfigurationPolicy 'AddAppConfigPolicy'
                 {
                     DisplayName          = 'ContosoNew'
@@ -2030,6 +2047,21 @@
                     RunAsAccount             = "system";
                     TenantId                 = $OrganizationName;
                 }
+                IntuneDiskEncryptionMacOS 'IntuneDiskEncryptionMacOS'
+                {
+                    AllowDeferralUntilSignOut           = $True;
+                    Assignments                         = @();
+                    Description                         = "test";
+                    DisplayName                         = "test";
+                    Enabled                             = $True;
+                    Ensure                              = "Present";
+                    NumberOfTimesUserCanIgnore          = -1;
+                    PersonalRecoveryKeyHelpMessage      = "eeee";
+                    PersonalRecoveryKeyRotationInMonths = 2;
+                    RoleScopeTagIds                     = @("0");
+                    SelectedRecoveryKeyTypes            = @("personalRecoveryKey");
+                    Credential                          = $Credscredential
+                }
                 IntuneEndpointDetectionAndResponsePolicyWindows10 'myEDRPolicy'
                 {
                     DisplayName = 'Edr Policy'
@@ -2578,6 +2610,15 @@
                     RevokeOnUnenrollDisabled               = $False
                     Ensure                                 = 'Present'
                     Credential                             = $Credscredential
+                }
+                IntuneWindowsUpdateForBusinessDriverUpdateProfileWindows10 'Example'
+                {
+                    DisplayName  = 'Driver Update Example'
+                    Assignments  = @()
+                    Description  = 'test 2'
+                    approvalType = 'manual'
+                    Ensure       = 'Present'
+                    Credential   = $Credscredential
                 }
                 IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 'Example'
                 {
