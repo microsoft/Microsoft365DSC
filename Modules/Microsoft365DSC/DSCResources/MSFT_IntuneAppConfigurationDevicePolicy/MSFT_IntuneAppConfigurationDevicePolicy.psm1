@@ -6,54 +6,51 @@ function Get-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.Boolean]
+        $ConnectedAppsEnabled,
 
         [Parameter()]
         [System.String]
-        $DetectionScriptContent,
+        $PackageId,
+
+        [Parameter()]
+        [System.String]
+        $PayloadJson,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $DetectionScriptParameters,
+        $PermissionActions,
 
         [Parameter()]
-        [ValidateSet('deviceHealthScript','managedInstallerScript')]
+        [ValidateSet('default','androidWorkProfile','androidDeviceOwner')]
         [System.String]
-        $DeviceHealthScriptType,
+        $ProfileApplicability,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String]
+        $EncodedSettingXml,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
-        $EnforceSignatureCheck,
-
-        [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
-        [System.String]
-        $RemediationScriptContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $RemediationScriptParameters,
-
-        [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.Boolean]
-        $RunAs32Bit,
-
-        [Parameter()]
-        [ValidateSet('system','user')]
-        [System.String]
-        $RunAsAccount,
+        [System.String[]]
+        $TargetedMobileApps,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -120,115 +117,93 @@ function Get-TargetResource
 
         $getValue = $null
         #region resource generator code
-        $getValue = Get-MgBetaDeviceManagementDeviceHealthScript -DeviceHealthScriptId $Id -ErrorAction SilentlyContinue
+        $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration -ManagedDeviceMobileAppConfigurationId $Id  -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Device Remediation with Id {$Id}"
+            Write-Verbose -Message "Could not find an Intune App Configuration Device Policy with Id {$Id}"
 
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
-                $getValue = Get-MgBetaDeviceManagementDeviceHealthScript `
+                $getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue | Where-Object `
-                    -FilterScript { `
-                        $_.DeviceHealthScriptType -eq "deviceHealthScript" `
-                    }
-                if ($null -ne $getValue)
-                {
-                    $getValue = Get-MgBetaDeviceManagementDeviceHealthScript -DeviceHealthScriptId $getValue.Id
-                }
+                    -ErrorAction SilentlyContinue
             }
         }
         #endregion
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Intune Device Remediation with DisplayName {$DisplayName}"
+            Write-Verbose -Message "Could not find an Intune App Configuration Device Policy with DisplayName {$DisplayName}"
             return $nullResult
         }
         $Id = $getValue.Id
-        Write-Verbose -Message "An Intune Device Remediation with Id {$Id} and DisplayName {$DisplayName} was found."
+        Write-Verbose -Message "An Intune App Configuration Device Policy with Id {$Id} and DisplayName {$DisplayName} was found."
 
         #region resource generator code
-        $complexDetectionScriptParameters = @()
-        foreach ($currentDetectionScriptParameters in $getValue.detectionScriptParameters)
+        $complexPermissionActions = @()
+        foreach ($currentpermissionActions in $getValue.AdditionalProperties.permissionActions)
         {
-            $myDetectionScriptParameters = @{}
-            $myDetectionScriptParameters.Add('ApplyDefaultValueWhenNotAssigned', $currentDetectionScriptParameters.applyDefaultValueWhenNotAssigned)
-            $myDetectionScriptParameters.Add('Description', $currentDetectionScriptParameters.description)
-            $myDetectionScriptParameters.Add('IsRequired', $currentDetectionScriptParameters.isRequired)
-            $myDetectionScriptParameters.Add('Name', $currentDetectionScriptParameters.name)
-            $myDetectionScriptParameters.Add('DefaultValue', $currentDetectionScriptParameters.defaultValue)
-            if ($null -ne $currentDetectionScriptParameters.'@odata.type')
+            $mypermissionActions = @{}
+            if ($null -ne $currentpermissionActions.action)
             {
-                $myDetectionScriptParameters.Add('odataType', $currentDetectionScriptParameters.'@odata.type'.toString())
+                $mypermissionActions.Add('Action', $currentpermissionActions.action.toString())
             }
-            if ($myDetectionScriptParameters.values.Where({$null -ne $_}).count -gt 0)
+            $mypermissionActions.Add('Permission', $currentpermissionActions.permission)
+            if ($mypermissionActions.values.Where({$null -ne $_}).count -gt 0)
             {
-                $complexDetectionScriptParameters += $myDetectionScriptParameters
+                $complexPermissionActions += $mypermissionActions
             }
         }
 
-        $complexRemediationScriptParameters = @()
-        foreach ($currentRemediationScriptParameters in $getValue.remediationScriptParameters)
+        $complexSettings = @()
+        foreach ($currentsettings in $getValue.AdditionalProperties.settings)
         {
-            $myRemediationScriptParameters = @{}
-            $myRemediationScriptParameters.Add('ApplyDefaultValueWhenNotAssigned', $currentRemediationScriptParameters.applyDefaultValueWhenNotAssigned)
-            $myRemediationScriptParameters.Add('Description', $currentRemediationScriptParameters.description)
-            $myRemediationScriptParameters.Add('IsRequired', $currentRemediationScriptParameters.isRequired)
-            $myRemediationScriptParameters.Add('Name', $currentRemediationScriptParameters.name)
-            $myRemediationScriptParameters.Add('DefaultValue', $currentRemediationScriptParameters.defaultValue)
-            if ($null -ne $currentRemediationScriptParameters.'@odata.type')
+            $mysettings = @{}
+            $mysettings.Add('AppConfigKey', $currentsettings.appConfigKey)
+            if ($null -ne $currentsettings.appConfigKeyType)
             {
-                $myRemediationScriptParameters.Add('odataType', $currentRemediationScriptParameters.'@odata.type'.toString())
+                $mysettings.Add('AppConfigKeyType', $currentsettings.appConfigKeyType.toString())
             }
-            if ($myRemediationScriptParameters.values.Where({$null -ne $_}).count -gt 0)
+            $mysettings.Add('AppConfigKeyValue', $currentsettings.appConfigKeyValue)
+            if ($mysettings.values.Where({$null -ne $_}).count -gt 0)
             {
-                $complexRemediationScriptParameters += $myRemediationScriptParameters
+                $complexSettings += $mysettings
             }
         }
         #endregion
 
         #region resource generator code
-        $enumDeviceHealthScriptType = $null
-        if ($null -ne $getValue.DeviceHealthScriptType)
+        $enumProfileApplicability = $null
+        if ($null -ne $getValue.AdditionalProperties.profileApplicability)
         {
-            $enumDeviceHealthScriptType = $getValue.DeviceHealthScriptType.ToString()
-        }
-
-        $enumRunAsAccount = $null
-        if ($null -ne $getValue.RunAsAccount)
-        {
-            $enumRunAsAccount = $getValue.RunAsAccount.ToString()
+            $enumProfileApplicability = $getValue.AdditionalProperties.profileApplicability.ToString()
         }
         #endregion
 
         $results = @{
             #region resource generator code
-            Description                 = $getValue.Description
-            DetectionScriptContent      = [System.Convert]::ToBase64String($getValue.DetectionScriptContent)
-            DetectionScriptParameters   = $complexDetectionScriptParameters
-            DeviceHealthScriptType      = $enumDeviceHealthScriptType
-            DisplayName                 = $getValue.DisplayName
-            EnforceSignatureCheck       = $getValue.EnforceSignatureCheck
-            Publisher                   = $getValue.Publisher
-            RemediationScriptContent    = [System.Convert]::ToBase64String($getValue.RemediationScriptContent)
-            RemediationScriptParameters = $complexRemediationScriptParameters
-            RoleScopeTagIds             = $getValue.RoleScopeTagIds
-            RunAs32Bit                  = $getValue.RunAs32Bit
-            RunAsAccount                = $enumRunAsAccount
-            Id                          = $getValue.Id
-            Ensure                      = 'Present'
-            Credential                  = $Credential
-            ApplicationId               = $ApplicationId
-            TenantId                    = $TenantId
-            ApplicationSecret           = $ApplicationSecret
-            CertificateThumbprint       = $CertificateThumbprint
-            ManagedIdentity             = $ManagedIdentity.IsPresent
-            AccessTokens                = $AccessTokens
+            ConnectedAppsEnabled  = $getValue.AdditionalProperties.connectedAppsEnabled
+            PackageId             = $getValue.AdditionalProperties.packageId
+            PayloadJson           = $getValue.AdditionalProperties.payloadJson
+            PermissionActions     = $complexPermissionActions
+            ProfileApplicability  = $enumProfileApplicability
+            EncodedSettingXml     = $getValue.AdditionalProperties.encodedSettingXml
+            Settings              = $complexSettings
+            Description           = $getValue.Description
+            DisplayName           = $getValue.DisplayName
+            RoleScopeTagIds       = $getValue.RoleScopeTagIds
+            TargetedMobileApps    = $getValue.TargetedMobileApps
+            Id                    = $getValue.Id
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            ApplicationSecret     = $ApplicationSecret
+            CertificateThumbprint = $CertificateThumbprint
+            ManagedIdentity       = $ManagedIdentity.IsPresent
             #endregion
         }
-        $assignmentsValues = Get-MgBetaDeviceManagementDeviceHealthScriptAssignment -DeviceHealthScriptId $Id
+        $assignmentsValues = Get-MgBetaDeviceAppManagementMobileAppConfigurationAssignment -ManagedDeviceMobileAppConfigurationId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
         {
@@ -264,54 +239,51 @@ function Set-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.Boolean]
+        $ConnectedAppsEnabled,
 
         [Parameter()]
         [System.String]
-        $DetectionScriptContent,
+        $PackageId,
+
+        [Parameter()]
+        [System.String]
+        $PayloadJson,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $DetectionScriptParameters,
+        $PermissionActions,
 
         [Parameter()]
-        [ValidateSet('deviceHealthScript','managedInstallerScript')]
+        [ValidateSet('default','androidWorkProfile','androidDeviceOwner')]
         [System.String]
-        $DeviceHealthScriptType,
+        $ProfileApplicability,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String]
+        $EncodedSettingXml,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
-        $EnforceSignatureCheck,
-
-        [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
-        [System.String]
-        $RemediationScriptContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $RemediationScriptParameters,
-
-        [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.Boolean]
-        $RunAs32Bit,
-
-        [Parameter()]
-        [ValidateSet('system','user')]
-        [System.String]
-        $RunAsAccount,
+        [System.String[]]
+        $TargetedMobileApps,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -370,18 +342,29 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $platform = 'android'
+    if ($BoundParameters.ContainsKey('EncodedSettingXml') -or $BoundParameters.ContainsKey('Settings'))
+    {
+        $platform = 'ios'
+    }
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating an Intune Device Remediation with DisplayName {$DisplayName}"
+        Write-Verbose -Message "Creating an Intune App Configuration Device Policy with DisplayName {$DisplayName}"
         $BoundParameters.Remove("Assignments") | Out-Null
 
         $CreateParameters = ([Hashtable]$BoundParameters).clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Add('IsGlobalScript', $false) | Out-Null
-        $CreateParameters.DetectionScriptContent = [System.Convert]::FromBase64String($CreateParameters.DetectionScriptContent)
-        $CreateParameters.RemediationScriptContent = [System.Convert]::FromBase64String($CreateParameters.RemediationScriptContent)
         $CreateParameters.Remove('Id') | Out-Null
+        if ($platform -eq 'android')
+        {
+            $CreateParameters.Add('@odata.type', '#microsoft.graph.androidManagedStoreAppConfiguration')
+            $CreateParameters.Add('appSupportsOemConfig', $false)
+        }
+        else
+        {
+            $CreateParameters.Add('@odata.type', '#microsoft.graph.iosMobileAppConfiguration')
+        }
 
         $keys = (([Hashtable]$CreateParameters).clone()).Keys
         foreach ($key in $keys)
@@ -392,8 +375,7 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.DeviceHealthScript")
-        $policy = New-MgBetaDeviceManagementDeviceHealthScript -BodyParameter $CreateParameters
+        $policy = New-MgBetaDeviceAppManagementMobileAppConfiguration -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -402,23 +384,29 @@ function Set-TargetResource
 
         if ($policy.id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
                 -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceHealthScripts'
+                -Repository 'deviceAppManagement/mobileAppConfigurations'
         }
         #endregion
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating the Intune Device Remediation with Id {$($currentInstance.Id)}"
+        Write-Verbose -Message "Updating the Intune App Configuration Device Policy with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove("Assignments") | Out-Null
 
         $UpdateParameters = ([Hashtable]$BoundParameters).clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
-        $UpdateParameters.DetectionScriptContent = [System.Convert]::FromBase64String($UpdateParameters.DetectionScriptContent)
-        $UpdateParameters.RemediationScriptContent = [System.Convert]::FromBase64String($UpdateParameters.RemediationScriptContent)
-        $UpdateParameters.Remove('DeviceHealthScriptType') | Out-Null
         $UpdateParameters.Remove('Id') | Out-Null
+
+        if ($platform -eq 'android')
+        {
+            $UpdateParameters.Add('@odata.type', '#microsoft.graph.androidManagedStoreAppConfiguration')
+        }
+        else
+        {
+            $UpdateParameters.Add('@odata.type', '#microsoft.graph.iosMobileAppConfiguration')
+        }
 
         $keys = (([Hashtable]$UpdateParameters).clone()).Keys
         foreach ($key in $keys)
@@ -429,9 +417,8 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.DeviceHealthScript")
-        Update-MgBetaDeviceManagementDeviceHealthScript  `
-            -DeviceHealthScriptId $currentInstance.Id `
+        Update-MgBetaDeviceAppManagementMobileAppConfiguration  `
+            -ManagedDeviceMobileAppConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
@@ -441,14 +428,14 @@ function Set-TargetResource
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
-            -Repository 'deviceManagement/deviceHealthScripts'
+            -Repository 'deviceAppManagement/mobileAppConfigurations'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Remediation with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune App Configuration Device Policy with Id {$($currentInstance.Id)}" 
         #region resource generator code
-        Remove-MgBetaDeviceManagementDeviceHealthScript -DeviceHealthScriptId $currentInstance.Id
+        Remove-MgBetaDeviceAppManagementMobileAppConfiguration -ManagedDeviceMobileAppConfigurationId $currentInstance.Id
         #endregion
     }
 }
@@ -461,54 +448,51 @@ function Test-TargetResource
     (
         #region resource generator code
         [Parameter()]
-        [System.String]
-        $Description,
+        [System.Boolean]
+        $ConnectedAppsEnabled,
 
         [Parameter()]
         [System.String]
-        $DetectionScriptContent,
+        $PackageId,
+
+        [Parameter()]
+        [System.String]
+        $PayloadJson,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
-        $DetectionScriptParameters,
+        $PermissionActions,
 
         [Parameter()]
-        [ValidateSet('deviceHealthScript','managedInstallerScript')]
+        [ValidateSet('default','androidWorkProfile','androidDeviceOwner')]
         [System.String]
-        $DeviceHealthScriptType,
+        $ProfileApplicability,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [System.String]
+        $EncodedSettingXml,
+
+        [Parameter()]
+        [ValidateNotNullOrEmpty()]
+        [Microsoft.Management.Infrastructure.CimInstance[]]
+        $Settings,
+
+        [Parameter()]
+        [System.String]
+        $Description,
 
         [Parameter(Mandatory = $true)]
         [System.String]
         $DisplayName,
 
         [Parameter()]
-        [System.Boolean]
-        $EnforceSignatureCheck,
-
-        [Parameter()]
-        [System.String]
-        $Publisher,
-
-        [Parameter()]
-        [System.String]
-        $RemediationScriptContent,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $RemediationScriptParameters,
-
-        [Parameter()]
         [System.String[]]
         $RoleScopeTagIds,
 
         [Parameter()]
-        [System.Boolean]
-        $RunAs32Bit,
-
-        [Parameter()]
-        [ValidateSet('system','user')]
-        [System.String]
-        $RunAsAccount,
+        [System.String[]]
+        $TargetedMobileApps,
 
         [Parameter(Mandatory = $true)]
         [System.String]
@@ -565,7 +549,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Intune Device Remediation with Id {$Id} and DisplayName {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of the Intune App Configuration Device Policy with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -630,7 +614,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.String]
-        $Filter,
+        $Filter, 
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -679,13 +663,10 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        # Only export scripts that are not from Microsoft
-        [array]$getValue = Get-MgBetaDeviceManagementDeviceHealthScript `
+        [array]$getValue = Get-MgBetaDeviceAppManagementMobileAppConfiguration `
             -Filter $Filter `
             -All `
-            -ErrorAction Stop | Where-Object -FilterScript {
-                $_.IsGlobalScript -eq $false
-            }
+            -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -722,32 +703,32 @@ function Export-TargetResource
             $Results = Get-TargetResource @Params
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
-            if ($null -ne $Results.DetectionScriptParameters)
+            if ($null -ne $Results.PermissionActions)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.DetectionScriptParameters `
-                    -CIMInstanceName 'MicrosoftGraphdeviceHealthScriptParameter'
+                    -ComplexObject $Results.PermissionActions `
+                    -CIMInstanceName 'MicrosoftGraphandroidPermissionAction'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
-                    $Results.DetectionScriptParameters = $complexTypeStringResult
+                    $Results.PermissionActions = $complexTypeStringResult
                 }
                 else
                 {
-                    $Results.Remove('DetectionScriptParameters') | Out-Null
+                    $Results.Remove('PermissionActions') | Out-Null
                 }
             }
-            if ($null -ne $Results.RemediationScriptParameters)
+            if ($null -ne $Results.Settings)
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
-                    -ComplexObject $Results.RemediationScriptParameters `
-                    -CIMInstanceName 'MicrosoftGraphdeviceHealthScriptParameter'
+                    -ComplexObject $Results.Settings `
+                    -CIMInstanceName 'MicrosoftGraphappConfigurationSettingItem1'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
-                    $Results.RemediationScriptParameters = $complexTypeStringResult
+                    $Results.Settings = $complexTypeStringResult
                 }
                 else
                 {
-                    $Results.Remove('RemediationScriptParameters') | Out-Null
+                    $Results.Remove('Settings') | Out-Null
                 }
             }
             if ($Results.Assignments)
@@ -767,13 +748,13 @@ function Export-TargetResource
                 -ModulePath $PSScriptRoot `
                 -Results $Results `
                 -Credential $Credential
-            if ($Results.DetectionScriptParameters)
+            if ($Results.PermissionActions)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "DetectionScriptParameters" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "PermissionActions" -isCIMArray:$True
             }
-            if ($Results.RemediationScriptParameters)
+            if ($Results.Settings)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "RemediationScriptParameters" -isCIMArray:$True
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Settings" -isCIMArray:$True
             }
             if ($Results.Assignments)
             {

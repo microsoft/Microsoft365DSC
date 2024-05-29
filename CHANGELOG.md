@@ -2,11 +2,30 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Implemented advanced query based on
+    https://learn.microsoft.com/en-us/graph/aad-advanced-queries?tabs=http#administrative-unit-properties
 * AADAuthenticationMethodPolicy
   * Add support for disabled policies
+* AADConditionalAccessPolicy
+  * Fix get method if value is null instead of false
+* IntuneAppConfigurationDevicePolicy
+  * Initial release
+* IntuneDeviceRemediation
+  * Added support for Access Tokens
+* IntuneDiskEncryptionMacOS
+  * Initial Release
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Add missing properties
+    FIXES [#4713](https://github.com/microsoft/Microsoft365DSC/issues/4713)
 * O365AdminAuditLogConfig
   * Fix logging of exception if Set-AdminAuditLogConfig fails
     FIXES [#4645](https://github.com/microsoft/Microsoft365DSC/issues/4645)
+* ResourceGenerator
+  * Added `AccessTokens` parameter to PS1 and MOF template
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.5.
+  * Rolling back ExchangeOnlineManagement to version 3.4.0.
 
 # 1.24.522.1
 
@@ -42,7 +61,6 @@
 * DEPENDENCIES
   * Updated ExchangeOnlineManagement to version 3.5.0
   * Updated MicrosoftTeams to version 6.2.0
->>>>>>> Dev
 
 # 1.24.515.2
 
