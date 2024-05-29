@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.529.1
 
 * AADAdministrativeUnit
   * Implemented advanced query based on
