@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCDRGUtil
+  * Add multiple commands for Intune policies that use the settings catalog
+
 # 1.24.529.1
 
 * AADAdministrativeUnit
