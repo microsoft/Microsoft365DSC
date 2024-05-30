@@ -397,22 +397,29 @@ function Get-TargetResource
                 $ExceptIfContentExtensionMatchesWords = $PolicyRule.ExceptIfContentExtensionMatchesWords.Replace(' ', '').Split(',')
             }
 
-            $ruleobject = $PolicyRule.AdvancedRule | ConvertFrom-Json
-            $index = $ruleobject.Condition.SubConditions.ConditionName.IndexOf("ContentContainsSensitiveInformation")
-            if ($index -ne -1)
+            if($null -ne $PolicyRule.AdvancedRule -and $PolicyRule.AdvancedRule.Count -gt 0)
             {
-                if($null -eq $ruleobject.Condition.SubConditions[$index].value.groups)
+                $ruleobject = $PolicyRule.AdvancedRule | ConvertFrom-Json
+                $index = $ruleobject.Condition.SubConditions.ConditionName.IndexOf("ContentContainsSensitiveInformation")
+                if ($index -ne -1)
                 {
-                    $ruleobject.Condition.SubConditions[$index].Value = $ruleobject.Condition.SubConditions[$index].Value | Select-Object * -ExcludeProperty Id
+                    if($null -eq $ruleobject.Condition.SubConditions[$index].value.groups)
+                    {
+                        $ruleobject.Condition.SubConditions[$index].Value = $ruleobject.Condition.SubConditions[$index].Value | Select-Object * -ExcludeProperty Id
+                    }
+                    else
+                    {
+                        $ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes = @($ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes | Select-Object * -ExcludeProperty Id)
+                    }
                 }
-                else
-                {
-                    $ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes = @($ruleobject.Condition.SubConditions[$index].Value.Groups.Sensitivetypes | Select-Object * -ExcludeProperty Id)
-                }
-            }
 
-            $newAdvancedRule = $ruleobject | ConvertTo-Json -Depth 32 | Format-Json
-            $newAdvancedRule = $newAdvancedRule | ConvertTo-Json -compress
+                $newAdvancedRule = $ruleobject | ConvertTo-Json -Depth 32 | Format-Json
+                $newAdvancedRule = $newAdvancedRule | ConvertTo-Json -compress
+            }
+            else
+            {
+                $newAdvancedRule = $null
+            }
 
             $fancyDoubleQuotes = "[\u201C\u201D]"
             $result = @{
