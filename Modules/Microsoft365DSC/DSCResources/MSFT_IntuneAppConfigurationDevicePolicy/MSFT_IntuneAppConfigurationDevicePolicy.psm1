@@ -204,17 +204,11 @@ function Get-TargetResource
             #endregion
         }
         $assignmentsValues = Get-MgBetaDeviceAppManagementMobileAppConfigurationAssignment -ManagedDeviceMobileAppConfigurationId $Id
+
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        if ($assignmentsValues.Count -gt 0)
         {
-            $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult = ConvertFrom-IntunePolicyAssignment -Assignments $assignmentsValues -IncludeDeviceFilter $true
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -382,9 +376,9 @@ function Set-TargetResource
             $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
         }
 
-        if ($policy.id)
+        if ($policy.Id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
+            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.Id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceAppManagement/mobileAppConfigurations'
         }
@@ -420,6 +414,7 @@ function Set-TargetResource
         Update-MgBetaDeviceAppManagementMobileAppConfiguration  `
             -ManagedDeviceMobileAppConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
+
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
@@ -552,7 +547,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune App Configuration Device Policy with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     if ($CurrentValues.Ensure -ne $Ensure)
     {
@@ -566,29 +561,27 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($source.GetType().Name -like '*CimInstance*')
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
-            $testResult = Compare-M365DSCComplexObject `
-                -Source ($source) `
-                -Target ($target)
-
-            if (-Not $testResult)
+            if ($key -eq "Assignments")
             {
-                $testResult = $false
-                break
+                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
             }
+            else
+            {
+                $testResult = Compare-M365DSCComplexObject -Source ($source) -Target ($target)
+            }
+            
+            if (-not $testResult) { break }
 
             $ValuesToCheck.Remove($key) | Out-Null
         }
     }
 
-    $ValuesToCheck.remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -721,7 +714,7 @@ function Export-TargetResource
             {
                 $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
                     -ComplexObject $Results.Settings `
-                    -CIMInstanceName 'MicrosoftGraphappConfigurationSettingItem1'
+                    -CIMInstanceName 'MicrosoftGraphappConfigurationSettingItem'
                 if (-Not [String]::IsNullOrWhiteSpace($complexTypeStringResult))
                 {
                     $Results.Settings = $complexTypeStringResult

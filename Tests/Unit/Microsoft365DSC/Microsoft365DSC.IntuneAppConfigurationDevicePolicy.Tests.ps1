@@ -219,6 +219,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The IntuneAppConfigurationDevicePolicy exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    Assignments = @()
                     ConnectedAppsEnabled = $True
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
