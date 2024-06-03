@@ -24,3 +24,4 @@ Configuration Example
             RoleDefinition  = "Catalog creator";
         }
     }
+}
