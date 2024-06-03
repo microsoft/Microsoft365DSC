@@ -17,12 +17,20 @@ Describe -Name 'Successfully import Settings.json files' {
 
 Describe -Name 'Successfully validate all used permissions in Settings.json files ' {
     BeforeAll {
-        $data = Invoke-WebRequest -Uri 'https://graphpermissions.azurewebsites.net/api/GetPermissionList'
-        $roles = $data.Content.Split('|')[0].Split(',')
-
-        # Fix for the Tasks name not matching the UI.
-        $roles += @('Tasks.Read.All', 'Tasks.ReadWrite.All')
-        $delegated = $data.Content.Split('|')[1].Split(',')
+        $allModules = Get-module Microsoft.graph.* -ListAvailable
+        $allPermissions = @()
+        foreach ($module in $allModules)
+        {
+            $cmds = Get-Command -Module $module.Name
+            foreach ($cmd in $cmds)
+            {
+                Write-Host $cmd.Name
+                $graphInfo = Find-MgGraphCommand -Command $cmd.Name
+                $permissions = $graphInfo.Permissions | Where-Object -FilterScript {$_.PermissionType -eq 'Application'}
+                $allPermissions += $permissions.Name
+            }
+        }
+        $roles = $allPermissions | Select-Object -Unique | Sort-Object -Descending:$false
     }
 
     It "Permissions used in settings.json file for '<ResourceName>' should exist" -TestCases $settingsFiles {
