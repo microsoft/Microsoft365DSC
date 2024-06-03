@@ -24,12 +24,15 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
             $cmds = Get-Command -Module $module.Name
             foreach ($cmd in $cmds)
             {
-                Write-Host $cmd.Name
-                $graphInfo = Find-MgGraphCommand -Command $cmd.Name
-                $permissions = $graphInfo.Permissions | Where-Object -FilterScript {$_.PermissionType -eq 'Application'}
-                $allPermissions += $permissions.Name
+                $graphInfo = Find-MgGraphCommand -Command $cmd.Name -ErrorAction SilentlyContinue
+                if ($null -ne $graphInfo)
+                {
+                    $permissions = $graphInfo.Permissions | Where-Object -FilterScript {$_.PermissionType -eq 'Application'}
+                    $allPermissions += $permissions.Name
+                }
             }
         }
+
         $roles = $allPermissions | Select-Object -Unique | Sort-Object -Descending:$false
     }
 
