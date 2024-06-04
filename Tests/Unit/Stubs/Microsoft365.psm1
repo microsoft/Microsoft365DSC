@@ -1189,6 +1189,24 @@ function Get-MgBetaRoleManagementEntitlementManagementRoleAssignment
     )
 }
 
+function Get-MgBetaRoleManagementEntitlementManagementRoleDefinition
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.String]
+        $RoleDefinitionId,
+
+        [Parameter()]
+        [System.String]
+        $Filter,
+
+        [Parameter()]
+        [Switch]
+        $All
+    )
+}
+
 function New-MgBetaRoleManagementEntitlementManagementRoleAssignment
 {
     [CmdletBinding()]
