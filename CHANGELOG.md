@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementRoleAssignment
+  * Initial Release.
 * M365DSCResourceGenerator
   * Add support for generating Intune settings catalog policies
 
