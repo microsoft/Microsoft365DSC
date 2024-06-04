@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementRoleAssignment
+  * Initial Release.
 * IntuneAppConfigurationDevicePolicy
   * Add assignment group display name and fix compilation
     FIXES [#4724](https://github.com/microsoft/Microsoft365DSC/issues/4724)
