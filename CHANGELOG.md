@@ -4,6 +4,8 @@
 
 * AADEntitlementManagementRoleAssignment
   * Initial Release.
+* EXOAntiPhishPolicy
+  * Use correct type integer for variable PhishThresholdLevel
 
 # 1.24.529.1
 
