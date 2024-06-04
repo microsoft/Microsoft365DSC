@@ -33,11 +33,11 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
             }
         }
 
-        $allPermissions.Add('OrgSettings-Microsoft365Install.Read.All')
-        $allPermissions.Add('OrgSettings-Forms.Read.All')
-        $allPermissions.Add('OrgSettings-Todo.Read.All')
-        $allPermissions.Add('OrgSettings-AppsAndServices.Read.All')
-        $allPermissions.Add('OrgSettings-DynamicsVoice.Read.All')
+        $allPermissions+= @('OrgSettings-Microsoft365Install.Read.All', `
+                            'OrgSettings-Forms.Read.All', `
+                            'OrgSettings-Todo.Read.All', `
+                            'OrgSettings-AppsAndServices.Read.All', `
+                            'OrgSettings-DynamicsVoice.Read.All')
         $roles = $allPermissions | Select-Object -Unique | Sort-Object -Descending:$false
     }
 
