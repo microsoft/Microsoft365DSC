@@ -208,6 +208,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         (New-CimInstance -ClassName MSFT_IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
                             groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
                         } -ClientOnly)
                     )
                     BackupDirectory = '1'

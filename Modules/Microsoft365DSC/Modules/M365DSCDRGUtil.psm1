@@ -1297,8 +1297,9 @@ function Compare-M365DSCIntunePolicyAssignment
 
                 if ($testResult)
                 {
+                    $isFilterIdSpecified = $assignment.deviceAndAppManagementAssignmentFilterType -ne 'none'
                     $testResult = $assignment.deviceAndAppManagementAssignmentFilterType -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterType
-                    if ($testResult)
+                    if ($testResult -and $isFilterIdSpecified)
                     {
                         $testResult = $assignment.deviceAndAppManagementAssignmentFilterId -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterId
                     }
