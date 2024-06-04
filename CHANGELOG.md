@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADEntitlementManagementRoleAssignment
+  * Initial Release.
+
 # 1.24.529.1
 
 * AADAdministrativeUnit
