@@ -1,5 +1,9 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+* SCDLPComplianceRule
+  * Fix #4259 and #3845
+
 # 1.24.529.1
 
 * AADAdministrativeUnit
