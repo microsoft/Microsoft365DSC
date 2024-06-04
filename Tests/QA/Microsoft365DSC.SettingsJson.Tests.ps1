@@ -33,12 +33,12 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
             }
         }
 
+        $allPermissions.Add('OrgSettings-Microsoft365Install.Read.All')
+        $allPermissions.Add('OrgSettings-Forms.Read.All')
+        $allPermissions.Add('OrgSettings-Todo.Read.All')
+        $allPermissions.Add('OrgSettings-AppsAndServices.Read.All')
+        $allPermissions.Add('OrgSettings-DynamicsVoice.Read.All')
         $roles = $allPermissions | Select-Object -Unique | Sort-Object -Descending:$false
-        $roles.Add('OrgSettings-Microsoft365Install.Read.All')
-        $roles.Add('OrgSettings-Forms.Read.All')
-        $roles.Add('OrgSettings-Todo.Read.All')
-        $roles.Add('OrgSettings-AppsAndServices.Read.All')
-        $roles.Add('OrgSettings-DynamicsVoice.Read.All')
     }
 
     It "Permissions used in settings.json file for '<ResourceName>' should exist" -TestCases $settingsFiles {
