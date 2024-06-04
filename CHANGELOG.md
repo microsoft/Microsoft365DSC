@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADEntitlementManagementRoleAssignment
+  * Initial Release.
 * M365DSCDRGUtil
   * Add multiple commands for Intune policies that use the settings catalog
 
