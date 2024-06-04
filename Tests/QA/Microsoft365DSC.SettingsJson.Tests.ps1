@@ -37,7 +37,11 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
                             'OrgSettings-Forms.Read.All', `
                             'OrgSettings-Todo.Read.All', `
                             'OrgSettings-AppsAndServices.Read.All', `
-                            'OrgSettings-DynamicsVoice.Read.All')
+                            'OrgSettings-DynamicsVoice.Read.All', `
+                            'ReportSettings.Read.All', `
+                            'RoleManagementPolicy.Read.Directory', `
+                            'RoleEligibilitySchedule.Read.Directory', `
+                            'Agreement.Read.All')
         $roles = $allPermissions | Select-Object -Unique | Sort-Object -Descending:$false
     }
 
