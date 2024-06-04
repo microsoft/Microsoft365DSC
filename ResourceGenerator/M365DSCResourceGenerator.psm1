@@ -724,7 +724,7 @@ function New-M365DSCResource
             $AssignmentsGet += "        `$assignmentResult = @()`r`n"
             $AssignmentsGet += "        if (`$assignmentsValues.Count -gt 0)`r`n"
             $AssignmentsGet += "        {`r`n"
-            $AssignmentsGet += "            `$assignmentResult = ConvertFrom-IntunePolicyAssignment -Assignments `$assignmentsValues -IncludeDeviceFilter `$true`r`n"
+            $AssignmentsGet += "            `$assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments `$assignmentsValues -IncludeDeviceFilter `$true`r`n"
             $AssignmentsGet += "        }`r`n"
             $AssignmentsGet += "        `$results.Add('Assignments', `$assignmentResult)`r`n"
 
