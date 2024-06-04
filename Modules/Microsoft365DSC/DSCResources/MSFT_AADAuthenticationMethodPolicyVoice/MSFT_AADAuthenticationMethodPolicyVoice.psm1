@@ -87,7 +87,7 @@ function Get-TargetResource
         $getValue = Get-MgBetaPolicyAuthenticationMethodPolicyAuthenticationMethodConfiguration -AuthenticationMethodConfigurationId $Id -ErrorAction SilentlyContinue
 
         #endregion
-        if ($null -eq $getValue -or $getValue.State -eq 'disabled')
+        if ($null -eq $getValue)
         {
             Write-Verbose -Message "Could not find an Azure AD Authentication Method Policy Voice with id {$id}"
             return $nullResult

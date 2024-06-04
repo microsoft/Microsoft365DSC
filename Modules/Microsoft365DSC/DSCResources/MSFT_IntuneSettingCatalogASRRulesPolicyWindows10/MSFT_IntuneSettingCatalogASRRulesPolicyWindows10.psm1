@@ -93,7 +93,17 @@ function Get-TargetResource
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
+        $BlockRebootingMachineInSafeMode,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockUseOfCopiedOrImpersonatedSystemTools,
 
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
@@ -380,12 +390,22 @@ function Set-TargetResource
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
+        $BlockRebootingMachineInSafeMode,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
         $BlockProcessCreationsFromPSExecAndWMICommands,
 
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockUseOfCopiedOrImpersonatedSystemTools,
 
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
@@ -642,7 +662,17 @@ function Test-TargetResource
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
         [System.String]
+        $BlockRebootingMachineInSafeMode,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
         $BlockUntrustedUnsignedProcessesThatRunFromUSB,
+
+        [Parameter()]
+        [ValidateSet('off', 'block', 'audit', 'warn')]
+        [System.String]
+        $BlockUseOfCopiedOrImpersonatedSystemTools,
 
         [Parameter()]
         [ValidateSet('off', 'block', 'audit', 'warn')]
