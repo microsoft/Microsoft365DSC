@@ -1195,7 +1195,7 @@ function Get-MgBetaRoleManagementEntitlementManagementRoleDefinition
     param(
         [Parameter()]
         [System.String]
-        $RoleDefinitionId,
+        $UnifiedRoleDefinitionId,
 
         [Parameter()]
         [System.String]
