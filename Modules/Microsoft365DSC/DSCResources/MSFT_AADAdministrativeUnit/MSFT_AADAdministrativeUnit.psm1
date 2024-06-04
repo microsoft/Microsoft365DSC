@@ -1010,7 +1010,51 @@ function Export-TargetResource
     {
         $Script:ExportMode = $true
         #region resource generator code
-        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit -Filter $Filter -All:$true -ErrorAction Stop
+        $ExportParameters = @{
+            Filter      = $Filter
+            All         = [switch]$true
+            ErrorAction = 'Stop'
+        }
+        $queryTypes = @{
+                        'eq' = @('description')
+                        'startsWith' = @('description')
+                        'eq null' = @(
+                            'description',
+                            'displayName'
+                            )
+        }
+
+        #extract arguments from the query
+        # Define the regex pattern to match all words in the query
+        $pattern = "([^\s,()]+)"
+        $query = $Filter
+
+        # Match all words in the query
+        $matches = [regex]::matches($query, $pattern)
+
+        # Extract the matched argument into an array
+        $arguments = @()
+        foreach ($match in $matches) {
+        $arguments += $match.Value
+        }
+
+        #extracting keys to check vs arguments in the filter
+        $Keys = $queryTypes.Keys
+
+        $matchedKey = $arguments | Where-Object { $_ -in $Keys }
+        $matchedProperty = $arguments | Where-Object { $_ -in $queryTypes[$matchedKey]}
+        if ($matchedProperty -and $matchedKey) {
+            $allConditionsMatched = $true
+        }
+
+        # If all conditions match the support, add parameters to $ExportParameters
+        if ($allConditionsMatched -or $Filter -like '*endsWith*')
+        {
+            $ExportParameters.Add('CountVariable', 'count')
+            $ExportParameters.Add('headers', @{"ConsistencyLevel" = "Eventual"})
+        }
+
+        [array] $Script:exportedInstances = Get-MgBetaDirectoryAdministrativeUnit @ExportParameters
         #endregion
 
         $i = 1
