@@ -180,6 +180,26 @@ function Get-TargetResource
         }
         #endregion
 
+        $platform = 'android'
+        if ($null -ne $getValue.AdditionalProperties.encodedSettingXml -or $null -ne $getValue.AdditionalProperties.settings)
+        {
+            $platform = 'ios'
+        }
+
+        $targetedApps = @()
+        foreach ($targetedApp in $getValue.TargetedMobileApps)
+        {
+            $app = Get-MgBetaDeviceAppManagementMobileApp -MobileAppId $targetedApp
+            if ($platform -eq 'android')
+            {
+                $targetedApps += $app.AdditionalProperties.packageId
+            }
+            else
+            {
+                $targetedApps += $app.AdditionalProperties.bundleId
+            }
+        }
+
         $results = @{
             #region resource generator code
             ConnectedAppsEnabled  = $getValue.AdditionalProperties.connectedAppsEnabled
@@ -192,7 +212,7 @@ function Get-TargetResource
             Description           = $getValue.Description
             DisplayName           = $getValue.DisplayName
             RoleScopeTagIds       = $getValue.RoleScopeTagIds
-            TargetedMobileApps    = $getValue.TargetedMobileApps
+            TargetedMobileApps    = $targetedApps
             Id                    = $getValue.Id
             Ensure                = 'Present'
             Credential            = $Credential
@@ -208,7 +228,7 @@ function Get-TargetResource
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
         {
-            $assignmentResult = ConvertFrom-IntunePolicyAssignment -Assignments $assignmentsValues -IncludeDeviceFilter $true
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment -Assignments $assignmentsValues -IncludeDeviceFilter $true
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -342,6 +362,23 @@ function Set-TargetResource
         $platform = 'ios'
     }
 
+    $mobileApps = Get-MgBetaDeviceAppManagementMobileApp -All
+    $targetedApps = @()
+    foreach ($targetedApp in $TargetedMobileApps)
+    {
+        $app = $mobileApps | Where-Object -FilterScript {
+            ($platform -eq 'android' -and $_.AdditionalProperties.packageId -eq $targetedApp -and $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.androidManagedStoreApp') -or `
+            ($platform -eq 'ios' -and $_.AdditionalProperties.bundleId -eq $targetedApp)
+        }
+
+        if ($null -eq $app)
+        {
+            throw "Could not find a mobile app with packageId or bundleId {$targetedApp}"
+        }
+        $targetedApps += $app.Id
+    }
+    $BoundParameters.TargetedMobileApps = $targetedApps
+
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune App Configuration Device Policy with DisplayName {$DisplayName}"
@@ -378,7 +415,8 @@ function Set-TargetResource
 
         if ($policy.Id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.Id `
+            Update-DeviceConfigurationPolicyAssignment `
+                -DeviceConfigurationPolicyId "$($policy.Id)/microsoft.graph.managedDeviceMobileAppConfiguration" `
                 -Targets $assignmentsHash `
                 -Repository 'deviceAppManagement/mobileAppConfigurations'
         }
@@ -418,17 +456,17 @@ function Set-TargetResource
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
         }
         Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentInstance.id `
+            -DeviceConfigurationPolicyId "$($currentInstance.Id)/microsoft.graph.managedDeviceMobileAppConfiguration" `
             -Targets $assignmentsHash `
             -Repository 'deviceAppManagement/mobileAppConfigurations'
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune App Configuration Device Policy with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune App Configuration Device Policy with Id {$($currentInstance.Id)}"
         #region resource generator code
         Remove-MgBetaDeviceAppManagementMobileAppConfiguration -ManagedDeviceMobileAppConfigurationId $currentInstance.Id
         #endregion
@@ -573,7 +611,7 @@ function Test-TargetResource
             {
                 $testResult = Compare-M365DSCComplexObject -Source ($source) -Target ($target)
             }
-            
+
             if (-not $testResult) { break }
 
             $ValuesToCheck.Remove($key) | Out-Null
@@ -607,7 +645,7 @@ function Export-TargetResource
     (
         [Parameter()]
         [System.String]
-        $Filter, 
+        $Filter,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

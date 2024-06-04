@@ -1275,29 +1275,45 @@ function Compare-M365DSCIntunePolicyAssignment
         $Target
     )
 
-    $testResult = $source.count -eq $target.count
+    $testResult = $Source.Count -eq $Target.Count
     if ($testResult)
     {
-        foreach ($assignment in $source)
+        foreach ($assignment in $Source)
         {
-            if ($assignment.dataType -like '*GroupAssignmentTarget')
+            if ($assignment.dataType -like '*groupAssignmentTarget')
             {
-                $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId})
-                #Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
+                $assignmentTarget = $Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId }
+                $testResult = $null -ne $assignmentTarget
+                # Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
                 if (-not $testResult)
                 {
                     $groupNotFound =  $null -eq (Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue)
                 }
                 if (-not $testResult -and $groupNotFound)
                 {
-                    $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName})
+                    $assignmentTarget = $Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName }
+                    $testResult = $null -ne $assignmentTarget
+                }
+
+                if ($testResult)
+                {
+                    $testResult = $assignment.deviceAndAppManagementAssignmentFilterType -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterType
+                    if ($testResult)
+                    {
+                        $testResult = $assignment.deviceAndAppManagementAssignmentFilterId -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterId
+                    }
+                }
+
+                if ($testResult)
+                {
+                    $testResult = $assignment.collectionId -eq $assignmentTarget.collectionId
                 }
             }
             else
             {
-                $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType})
+                $testResult = $null -ne ($Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType })
             }
-            if (-Not $testResult) { break }
+            if (-not $testResult) { break }
         }
     }
 
