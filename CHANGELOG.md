@@ -1,6 +1,17 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
+
+* AADEntitlementManagementRoleAssignment
+  * Initial Release.
+* IntuneAppConfigurationDevicePolicy
+  * Add assignment group display name and fix compilation
+    FIXES [#4724](https://github.com/microsoft/Microsoft365DSC/issues/4724)
+* M365DSCResourceGenerator
+  * Add support for generating Intune settings catalog policies
+* M365DSCDRGUtil
+  * Add multiple commands for Intune policies that use the settings catalog
+  * Improve comparison of Intune assignments in `Compare-M365DSCIntunePolicyAssignment`
 * SCDLPComplianceRule
   * Fix #4259 and #3845
 

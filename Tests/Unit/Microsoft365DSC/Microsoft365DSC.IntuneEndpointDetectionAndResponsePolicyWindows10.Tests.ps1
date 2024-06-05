@@ -61,7 +61,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             AdditionalProperties                       = @(
                                 @{
                                     "@odata.type"     = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                                    collectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                                    groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                                 }
                             )
                         }
@@ -97,7 +97,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Assignments = @(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                     Credential    = $Credential
@@ -133,7 +133,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                     Credential    = $Credential
@@ -202,7 +202,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            DeviceAndAppManagementAssignmentFilterType = 'none'
                         } -ClientOnly)
                     )
                 }
@@ -232,27 +233,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         }
                     }
                 }
-
-                <#Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return @{
-                        Id                   = 0
-                        SettingDefinitions   = $null
-                        SettingInstance      = @{
-                            SettingDefinitionId              = 'device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing'
-                            SettingInstanceTemplateReference = @{
-                                SettingInstanceTemplateId = '6998c81e-2814-4f5e-b492-a6159128a97b'
-                            }
-                            AdditionalProperties             = @{
-                                '@odata.type'      = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                choiceSettingValue = @{
-                                    children = @()
-                                    value = "device_vendor_msft_windowsadvancedthreatprotection_configuration_samplesharing_0"
-                                }
-                            }
-                        }
-                        AdditionalProperties = $null
-                    }
-                }#>
             }
 
             It 'Should return true from the Test method' {
@@ -266,7 +246,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Assignments = @(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
                             DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            GroupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                     Credential  = $Credential

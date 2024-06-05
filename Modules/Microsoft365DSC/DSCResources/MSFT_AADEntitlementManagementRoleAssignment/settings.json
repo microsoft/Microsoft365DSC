@@ -1,0 +1,49 @@
+﻿{
+    "resourceName": "AADEntitlementManagementRoleAssignment",
+    "description": "This resource configures an Azure AD Entitlement Management Role Assignments.",
+    "roles": {
+        "read": [
+            "Security Reader"
+        ],
+        "update": [
+            "Identity Governance Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    },
+                    {
+                        "name": "EntitlementManagement.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "EntitlementManagement.Read.All"
+                    },
+                    {
+                        "name": "EntitlementManagement.ReadWrite.All"
+                    },
+                    {
+                        "name" : "RoleManagement.ReadWrite.Directory"
+                    }
+                ]
+            }
+        }
+    }
+}

@@ -58,6 +58,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppConfigurationAssignment -MockWith {
             }
 
+            Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
+            }
+
         }
         # Test contexts
         Context -Name "The IntuneAppConfigurationDevicePolicy should exist but it DOES NOT" -Fixture {
@@ -80,6 +83,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     targetedMobileApps = @("FakeStringValue")
                     Ensure = "Present"
                     Credential = $Credential;
+                }
+
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
+                    return @{
+                        Id = "FakeStringValue"
+                        AdditionalProperties = @{
+                            packageId = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
+                        }
+                    }
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppConfiguration -MockWith {
@@ -118,6 +131,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     targetedMobileApps = @("FakeStringValue")
                     Ensure = 'Absent'
                     Credential = $Credential;
+                }
+
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
+                    return @{
+                        Id = "FakeStringValue"
+                        AdditionalProperties = @{
+                            packageId = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
+                        }
+                    }
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppConfiguration -MockWith {
@@ -183,6 +206,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Credential = $Credential;
                 }
 
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
+                    return @{
+                        Id = "FakeStringValue"
+                        AdditionalProperties = @{
+                            packageId = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
+                        }
+                    }
+                }
+
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppConfiguration -MockWith {
                     return @{
                         AdditionalProperties = @{
@@ -219,6 +252,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The IntuneAppConfigurationDevicePolicy exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    Assignments = @()
                     ConnectedAppsEnabled = $True
                     description = "FakeStringValue"
                     displayName = "FakeStringValue"
@@ -236,6 +270,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     targetedMobileApps = @("FakeStringValue")
                     Ensure = 'Present'
                     Credential = $Credential;
+                }
+
+                Mock -CommandName Get-MgBetaDeviceAppManagementMobileApp -MockWith {
+                    return @{
+                        Id = "FakeStringValue"
+                        AdditionalProperties = @{
+                            packageId = "FakeStringValue"
+                            '@odata.type' = "#microsoft.graph.androidManagedStoreApp"
+                        }
+                    }
                 }
 
                 Mock -CommandName Get-MgBetaDeviceAppManagementMobileAppConfiguration -MockWith {
