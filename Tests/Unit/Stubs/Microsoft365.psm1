@@ -1207,6 +1207,22 @@ function Get-MgBetaRoleManagementEntitlementManagementRoleDefinition
     )
 }
 
+function Get-MgBetaPolicyAuthenticationFlowPolicy
+{
+    [CmdletBinding()]
+    param()
+}
+
+function Update-MgBetaPolicyAuthenticationFlowPolicy
+{
+    [CmdletBinding()]
+    param(
+        [Parameter()]
+        [System.Boolean]
+        $SelfServiceSignUp
+    )
+}
+
 function New-MgBetaRoleManagementEntitlementManagementRoleAssignment
 {
     [CmdletBinding()]
