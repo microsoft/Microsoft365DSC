@@ -229,6 +229,14 @@
                     Ensure                = "Present"
                     Credential            = $Credscredential
                 }
+                AADEntitlementManagementRoleAssignment 'AADEntitlementManagementRoleAssignment-Create'
+                {
+                    AppScopeId      = "/";
+                    Credential      = $Credscredential
+                    Ensure          = "Present";
+                    Principal       = "John.Smith@$Domain";
+                    RoleDefinition  = "Catalog creator";
+                }
                 AADGroup 'MyGroups'
                 {
                     DisplayName     = "DSCGroup"
