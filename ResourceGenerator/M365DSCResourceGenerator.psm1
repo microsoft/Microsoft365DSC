@@ -393,16 +393,16 @@ function New-M365DSCResource
         {
             $getAlternativeFilterString.AppendLine("                    -Filter `"$alternativeKey eq '`$$alternativeKey'`" ``") | Out-Null
             $getAlternativeFilterString.AppendLine("                    -ErrorAction SilentlyContinue | Where-Object ``") | Out-Null
-            $getAlternativeFilterString.AppendLine("                    -FilterScript { ``") | Out-Null
-            $getAlternativeFilterString.AppendLine("                        `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`" ``") | Out-Null
+            $getAlternativeFilterString.AppendLine("                    -FilterScript {") | Out-Null
+            $getAlternativeFilterString.AppendLine("                        `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`"") | Out-Null
             $getAlternativeFilterString.Append("                    }") | Out-Null
         }
         else
         {
             $getAlternativeFilterString.AppendLine("                    -ErrorAction SilentlyContinue | Where-Object ``") | Out-Null
-            $getAlternativeFilterString.AppendLine("                    -FilterScript { ``") | Out-Null
+            $getAlternativeFilterString.AppendLine("                    -FilterScript {") | Out-Null
             $getAlternativeFilterString.AppendLine("                        `$_.$alternativeKey -eq `"`$(`$$alternativeKey)`" ``") | Out-Null
-            $getAlternativeFilterString.AppendLine("                        -and `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`" ``") | Out-Null
+            $getAlternativeFilterString.AppendLine("                        -and `$_.AdditionalProperties.'@odata.type' -eq `"`#microsoft.graph.$SelectedODataType`"") | Out-Null
             $getAlternativeFilterString.Append("                    }") | Out-Null
         }
         Write-TokenReplacement -Token '<AlternativeFilter>' -Value $getAlternativeFilterString.ToString() -FilePath $moduleFilePath
@@ -477,16 +477,16 @@ function New-M365DSCResource
         $newDefaultParameterSet = $newCmdlet.ParameterSets | Where-Object -FilterScript { $_.Name -eq 'Create' }
         [Array]$newKeyIdentifier = ($newDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }).Name
         $defaultCreateParameters = @"
-        `$CreateParameters = ([Hashtable]`$BoundParameters).clone()
-        `$CreateParameters = Rename-M365DSCCimInstanceParameter -Properties `$CreateParameters
-        `$CreateParameters.Remove('Id') | Out-Null
+        `$createParameters = ([Hashtable]`$BoundParameters).clone()
+        `$createParameters = Rename-M365DSCCimInstanceParameter -Properties `$createParameters
+        `$createParameters.Remove('Id') | Out-Null
 
-        `$keys = (([Hashtable]`$CreateParameters).clone()).Keys
+        `$keys = (([Hashtable]`$createParameters).clone()).Keys
         foreach (`$key in `$keys)
         {
-            if (`$null -ne `$CreateParameters.`$key -and `$CreateParameters.`$key.getType().Name -like '*cimInstance*')
+            if (`$null -ne `$createParameters.`$key -and `$createParameters.`$key.GetType().Name -like '*CimInstance*')
             {
-                `$CreateParameters.`$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject `$CreateParameters.`$key
+                `$createParameters.`$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject `$createParameters.`$key
             }
         }
 "@
@@ -499,7 +499,7 @@ function New-M365DSCResource
         `$keys = (([Hashtable]`$UpdateParameters).clone()).Keys
         foreach (`$key in `$keys)
         {
-            if (`$null -ne `$UpdateParameters.`$key -and `$UpdateParameters.`$key.getType().Name -like '*cimInstance*')
+            if (`$null -ne `$UpdateParameters.`$key -and `$UpdateParameters.`$key.GetType().Name -like '*CimInstance*')
             {
                 `$UpdateParameters.`$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject `$UpdateParameters.$key
             }
@@ -520,16 +520,17 @@ function New-M365DSCResource
                 $keyValue = $key
                 if ($key -eq 'BodyParameter')
                 {
-                    $keyValue = 'CreateParameters'
+                    $keyValue = 'createParameters'
                 }
                 $newParameterString.Append("-$key `$$keyValue") | Out-Null
             }
             [String]$newKeyIdentifier = $newParameterString.ToString()
         }
+
         $odataType = $null
         if ($true)#$isAdditionalProperty)
         {
-            $odataType = "        `$CreateParameters.Add(`"@odata.type`", `"#microsoft.graph.$SelectedODataType`")`r`n"
+            $odataType = "        `$createParameters.Add(`"@odata.type`", `"#microsoft.graph.$SelectedODataType`")`r`n"
         }
 
         $settingsCatalogProperties = ""
@@ -544,14 +545,14 @@ function New-M365DSCResource
 "@
 
             $defaultCreateParameters = @"
-        `$settings = Get-IntuneSettingCatalogPolicySetting `
-            -DSCParams ([System.Collections.Hashtable]`$BoundParameters) `
+        `$settings = Get-IntuneSettingCatalogPolicySetting ``
+            -DSCParams ([System.Collections.Hashtable]`$BoundParameters) ``
             -TemplateId `$templateReferenceId
 
-        `$CreateParameters = @{
+        `$createParameters = @{
             Name              = `$DisplayName
             Description       = `$Description
-            TemplateReference = @{templateId = `$templateReferenceId }
+            TemplateReference = @{ templateId = `$templateReferenceId }
             Platforms         = `$platforms
             Technologies      = `$technologies
             Settings          = `$settings
@@ -586,15 +587,15 @@ function New-M365DSCResource
         if ($isAdditionalProperty -and $CmdletNoun -notlike "*DeviceManagementConfigurationPolicy")
         {
             $exportGetCommand.AppendLine("            -ErrorAction Stop | Where-Object ``") | Out-Null
-            $exportGetCommand.AppendLine("            -FilterScript { ``") | Out-Null
-            $exportGetCommand.AppendLine("                `$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType)' ``") | Out-Null
+            $exportGetCommand.AppendLine("            -FilterScript {") | Out-Null
+            $exportGetCommand.AppendLine("                `$_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.$($selectedODataType)'") | Out-Null
             $exportGetCommand.AppendLine("            }") | Out-Null
         }
         elseif ($CmdletNoun -like "*DeviceManagementConfigurationPolicy")
         {
             $exportGetCommand.AppendLine("            -ErrorAction Stop | Where-Object ``") | Out-Null
-            $exportGetCommand.AppendLine("            -FilterScript { ``") | Out-Null
-            $exportGetCommand.AppendLine("                `$_.TemplateReference.TemplateId -eq `$policyTemplateID ``") | Out-Null
+            $exportGetCommand.AppendLine("            -FilterScript {") | Out-Null
+            $exportGetCommand.AppendLine("                `$_.TemplateReference.TemplateId -eq `$policyTemplateID") | Out-Null
             $exportGetCommand.AppendLine("            }") | Out-Null
         }
         else
@@ -668,17 +669,17 @@ function New-M365DSCResource
             $updateKeyIdentifier = ""
             $updateCmdletName = ""
             $defaultUpdateParameters = @"
-        `$settings = Get-IntuneSettingCatalogPolicySetting `
-            -DSCParams ([System.Collections.Hashtable]`$BoundParameters) `
+        `$settings = Get-IntuneSettingCatalogPolicySetting ``
+            -DSCParams ([System.Collections.Hashtable]`$BoundParameters) ``
             -TemplateId `$templateReferenceId
 
-        Update-DeviceManagementConfigurationPolicy `
-            -DeviceManagementConfigurationPolicyId `$currentInstance.Id `
-            -DisplayName `$DisplayName `
-            -Description `$Description `
-            -TemplateReference `$templateReferenceId `
-            -Platforms `$platforms `
-            -Technologies `$technologies `
+        Update-IntuneDeviceConfigurationPolicy ``
+            -DeviceConfigurationPolicyId `$currentInstance.Id ``
+            -Name `$DisplayName ``
+            -Description `$Description ``
+            -TemplateReferenceId `$templateReferenceId ``
+            -Platforms `$platforms ``
+            -Technologies `$technologies ``
             -Settings `$settings`r`n
 "@
         }
@@ -733,12 +734,13 @@ function New-M365DSCResource
             $AssignmentsNew += "        `$assignmentsHash = @()`r`n"
             $AssignmentsNew += "        foreach (`$assignment in `$Assignments)`r`n"
             $AssignmentsNew += "        {`r`n"
-            $AssignmentsNew += "            `$assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$Assignment`r`n"
+            $AssignmentsNew += "            `$assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$assignment`r`n"
             $AssignmentsNew += "        }`r`n"
             $AssignmentsNew += "`r`n"
             $AssignmentsNew += "        if (`$policy.Id)`r`n"
             $AssignmentsNew += "        {`r`n"
-            $AssignmentsNew += "            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  `$policy.Id ```r`n"
+            $AssignmentsNew += "            Update-DeviceConfigurationPolicyAssignment ```r`n"
+            $AssignmentsNew += "                -DeviceConfigurationPolicyId `$policy.Id ```r`n"
             $AssignmentsNew += "                -Targets `$assignmentsHash ```r`n"
             $AssignmentsNew += "                -Repository '$repository'`r`n"
             $AssignmentsNew += "        }`r`n"
@@ -746,12 +748,12 @@ function New-M365DSCResource
             $AssignmentsUpdate += "        `$assignmentsHash = @()`r`n"
             $AssignmentsUpdate += "        foreach (`$assignment in `$Assignments)`r`n"
             $AssignmentsUpdate += "        {`r`n"
-            $AssignmentsUpdate += "            `$assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$Assignment`r`n"
+            $AssignmentsUpdate += "            `$assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$assignment`r`n"
             $AssignmentsUpdate += "        }`r`n"
             $AssignmentsUpdate += "        Update-DeviceConfigurationPolicyAssignment ```r`n"
             $AssignmentsUpdate += "            -DeviceConfigurationPolicyId `$currentInstance.Id ```r`n"
             $AssignmentsUpdate += "            -Targets `$assignmentsHash ```r`n"
-            $AssignmentsUpdate += "            -Repository '$repository'`r`n"
+            $AssignmentsUpdate += "            -Repository '$repository'"
 
             $AssignmentsCIM = @'
 [ClassVersion("1.0.0.0")]
@@ -766,9 +768,9 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 };
 
 '@
-            $AssignmentsProperty = "    [Write, Description(`"Represents the assignment to the Intune policy.`"), EmbeddedInstance(`"MSFT_DeviceManagementConfigurationPolicyAssignments`")] String Assignments[];`r`n"
+            $AssignmentsProperty = "`r`n    [Write, Description(`"Represents the assignment to the Intune policy.`"), EmbeddedInstance(`"MSFT_DeviceManagementConfigurationPolicyAssignments`")] String Assignments[];`r`n"
             $AssignmentsConvertComplexToString = @"
-            if (`$Results.Assignments)
+`r`n            if (`$Results.Assignments)
             {
                 `$complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject `$Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
                 if (`$complexTypeStringResult)
@@ -779,14 +781,13 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                 {
                     `$Results.Remove('Assignments') | Out-Null
                 }
-            }
+            }`r`n
 "@
             $AssignmentsConvertComplexToVariable = @"
-            if (`$Results.Assignments)
+`r`n            if (`$Results.Assignments)
             {
-                `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName "Assignments" -isCIMArray:`$true
-            }
-
+                `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName "Assignments" -IsCIMArray:`$true
+            }`r`n
 "@
         }
         Write-TokenReplacement -Token '<AssignmentsParam>' -Value $AssignmentsParam -FilePath $moduleFilePath
@@ -811,27 +812,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
                 `$ValuesToCheck.Add(`$_.Key, `$null)
                 if (-not `$PSBoundParameters.ContainsKey(`$_.Key))
                 {
-                    `$value = `$null
-                    switch (`$CurrentValues[`$_.Key].GetType().Name)
-                    {
-                        'Boolean'
-                        {
-                            `$value = `$false
-                        }
-                        'String'
-                        {
-                            `$value = ''
-                        }
-                        'Int32'
-                        {
-                            `$value = 0
-                        }
-                        'String[]'
-                        {
-                            `$value = @()
-                        }
-                    }
-                    `$PSBoundParameters.Add(`$_.Key, `$value)
+                    `$PSBoundParameters.Add(`$_.Key, `$null)
                 }
             }
         }
@@ -3310,7 +3291,7 @@ function New-M365HashTableMapping
 
                 $convertToVariable += "            if (`$Results.$parameterName)`r`n"
                 $convertToVariable += "            {`r`n"
-                $convertToVariable += "                `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName `"$parameterName`" -isCIMArray:`$$($property.IsArray)`r`n"
+                $convertToVariable += "                `$currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock `$currentDSCBlock -ParameterName `"$parameterName`" -IsCIMArray:`$$($property.IsArray)`r`n"
                 $convertToVariable += "            }`r`n"
             }
             if ($property.IsEnumType)
@@ -3782,8 +3763,9 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
 
     $childSettings = @()
     $childSettings += $SettingTemplate.SettingDefinitions | Where-Object -FilterScript {
-        ($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId.Contains($SettingDefinition.Id)) -or
-        ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($SettingDefinition.Id))
+        $_.visibility -notlike "*none*" -and
+        (($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId.Contains($SettingDefinition.Id)) -or
+        ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($SettingDefinition.Id)))
     }
 
     $setting = [ordered]@{
@@ -3830,7 +3812,7 @@ function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {
         "SimpleIntegerCollection" = "System.Int32[]"
     }
 
-    $mofParameterTemplate = "    [Write, Description(""<DisplayName> <Options>"")<ValueMap>] <Type> <Name><Collection>;"
+    $mofParameterTemplate = "    [Write, Description(""<DisplayName><Options>"")<ValueMap>] <Type> <Name><Collection>;"
     $powerShellParameterTemplate = @"
         [Parameter()]<Restriction>
         [<Type>]
@@ -3838,6 +3820,8 @@ function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {
 "@
 
     $mofDefinition = $mofParameterTemplate.Replace("<DisplayName>", $TemplateSetting.DisplayName)
+    $optionsString = ""
+    $valueMapString = ""
     if ($TemplateSetting.Options) {
         $options = @()
         $values = @()
@@ -3845,11 +3829,11 @@ function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {
             $options += "$($_.Id)" + ": " + $_.Name.Replace("""", "'")
             $values += """$($_.Id)"""
         }
-        $optionsString = "(" + ($options -join ", ") + ")"
-        $ValueMapString = ", ValueMap{$($values -join ", ")}, Values{$($values -join ", ")}"
+        $optionsString = " (" + ($options -join ", ") + ")"
+        $valueMapString = ", ValueMap{$($values -join ", ")}, Values{$($values -join ", ")}"
     }
     $mofDefinition = $mofDefinition.Replace("<Options>", $optionsString)
-    $mofDefinition = $mofDefinition.Replace("<ValueMap>", $ValueMapString)
+    $mofDefinition = $mofDefinition.Replace("<ValueMap>", $valueMapString)
     $mofDefinition = $mofDefinition.Replace("<Type>", $mofTypeMapping[$TemplateSetting.Type])
     $mofDefinition = $mofDefinition.Replace("<Name>", $TemplateSetting.Name)
     $isCollection = $TemplateSetting.Type -like "*Collection"
