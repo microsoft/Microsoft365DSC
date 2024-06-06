@@ -1,7 +1,9 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.605.1
 
+* AADAuthenticationFlowPolicy
+  * Initial Release.
 * AADEntitlementManagementRoleAssignment
   * Initial Release.
 * IntuneAppConfigurationDevicePolicy
@@ -12,6 +14,9 @@
 * M365DSCDRGUtil
   * Add multiple commands for Intune policies that use the settings catalog
   * Improve comparison of Intune assignments in `Compare-M365DSCIntunePolicyAssignment`
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.17.
+  * Updated ReverseDSC to version 2.0.0.20.
 
 # 1.24.529.1
 

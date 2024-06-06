@@ -90,7 +90,7 @@
         },
         @{
             ModuleName      = "MSCloudLoginAssistant"
-            RequiredVersion = "1.1.16"
+            RequiredVersion = "1.1.17"
         },
         @{
             ModuleName      = 'PnP.PowerShell'
@@ -98,7 +98,7 @@
         },
         @{
             ModuleName      = 'ReverseDSC'
-            RequiredVersion = '2.0.0.19'
+            RequiredVersion = '2.0.0.20'
         }
     )
 }
