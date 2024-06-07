@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Migrate to new settings catalog cmdlets
+* M365DSCDRGUtil
+  * Fixes an issue with the settings catalog property generation
+* M365DSCUtil
+  * Fixes an issue where the comparison with null-valued desired value throws an error
+
 # 1.24.605.1
 
 * AADAuthenticationFlowPolicy
