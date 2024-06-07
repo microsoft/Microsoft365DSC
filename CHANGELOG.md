@@ -4,8 +4,11 @@
 
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Migrate to new settings catalog cmdlets.
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
+  * Migrate to new settings catalog cmdlets.
 * M365DSCDRGUtil
   * Fixes an issue with the settings catalog property generation.
+  * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
 * M365DSCUtil
   * Fixes an issue where the comparison with null-valued desired value throws an error.
 
