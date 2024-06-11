@@ -69,7 +69,7 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Could not find an <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>}"
 
-            if (-not [string]::IsNullOrEmpty($<FilterKey>))
+            if (-not [System.String]::IsNullOrEmpty($<FilterKey>))
             {
                 $getValue = <GetCmdLetName> `
 <AlternativeFilter>
@@ -78,11 +78,11 @@ function Get-TargetResource
         #endregionResourceGenerator#>
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}"
+            Write-Verbose -Message "Could not find an <ResourceDescription> with <FilterKey> {$<FilterKey>}."
             return $nullResult
         }
         $<PrimaryKey> = $getValue.<PrimaryKey>
-        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found."<#ResourceGenerator
+        Write-Verbose -Message "An <ResourceDescription> with <PrimaryKey> {$<PrimaryKey>} and <FilterKey> {$<FilterKey>} was found"<#ResourceGenerator
 <SettingsCatalogGetSettings><ComplexTypeConstructor><EnumTypeConstructor><DateTypeConstructor><TimeTypeConstructor>ResourceGenerator#>
         $results = @{<#ResourceGenerator
             #region resource generator code
@@ -176,12 +176,12 @@ function Set-TargetResource
 <#AssignmentsRemove#>
 <#DefaultUpdateParameters#><#ResourceGenerator
         #region resource generator code
-<UpdateDataType><UpdateCmdLetName> <#UpdateKeyIdentifier#>
-<#AssignmentsUpdate#>        #endregionResourceGenerator#>
+<UpdateDataType><UpdateCmdLetName><#UpdateKeyIdentifier#><#AssignmentsUpdate#>
+        #endregionResourceGenerator#>
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}" <#ResourceGenerator
+        Write-Verbose -Message "Removing the <ResourceDescription> with <PrimaryKey> {$($currentInstance.<PrimaryKey>)}"<#ResourceGenerator
         #region resource generator code
         <RemoveCmdLetName> <#removeKeyIdentifier#>
         #endregionResourceGenerator#>
@@ -260,7 +260,7 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.GetType().Name -like '*CimInstance*')
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
             $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
 
