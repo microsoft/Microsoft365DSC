@@ -15,6 +15,7 @@
 * IntuneAppConfigurationDevicePolicy
   * Add assignment group display name and fix compilation
     FIXES [#4724](https://github.com/microsoft/Microsoft365DSC/issues/4724)
+  * Add conversion from `payloadJson` to actual JSON.
 * M365DSCResourceGenerator
   * Add support for generating Intune settings catalog policies.
 * M365DSCDRGUtil
