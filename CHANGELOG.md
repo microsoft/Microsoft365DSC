@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* SPOTenantSettings
+  * Connect to Graph before Sharepoint Online
+    FIXES [#4746](https://github.com/microsoft/Microsoft365DSC/issues/4746)
+
 # 1.24.605.1
 
 * AADAuthenticationFlowPolicy
