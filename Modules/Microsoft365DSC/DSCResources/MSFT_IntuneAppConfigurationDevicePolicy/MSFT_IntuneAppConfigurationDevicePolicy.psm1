@@ -200,11 +200,17 @@ function Get-TargetResource
             }
         }
 
+        $payloadJson = $null
+        if (-not [System.String]::IsNullOrEmpty($getValue.AdditionalProperties.payloadJson))
+        {
+            $payloadJson = [System.Text.Encoding]::ASCII.GetString([System.Convert]::FromBase64String($getValue.AdditionalProperties.payloadJson))
+        }
+
         $results = @{
             #region resource generator code
             ConnectedAppsEnabled  = $getValue.AdditionalProperties.connectedAppsEnabled
             PackageId             = $getValue.AdditionalProperties.packageId
-            PayloadJson           = $getValue.AdditionalProperties.payloadJson
+            PayloadJson           = $payloadJson
             PermissionActions     = $complexPermissionActions
             ProfileApplicability  = $enumProfileApplicability
             EncodedSettingXml     = $getValue.AdditionalProperties.encodedSettingXml
@@ -360,6 +366,11 @@ function Set-TargetResource
     if ($BoundParameters.ContainsKey('EncodedSettingXml') -or $BoundParameters.ContainsKey('Settings'))
     {
         $platform = 'ios'
+    }
+
+    if (-not [System.String]::IsNullOrEmpty($BoundParameters.PayloadJson))
+    {
+        $BoundParameters.PayloadJson = [System.Convert]::ToBase64String([System.Text.Encoding]::ASCII.GetBytes($BoundParameters.PayloadJson))
     }
 
     $mobileApps = Get-MgBetaDeviceAppManagementMobileApp -All
