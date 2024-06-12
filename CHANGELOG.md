@@ -10,7 +10,7 @@
 * TeamsMeetingPolicy
   * Updated the allowed values for the TeamsCameraFarEndTPTXZmode property.
 * M365DSCResourceGenerator
-  * Fix formatting and missing escape character in Resource Generato
+  * Fix formatting and missing escape character in Resource Generator
 
 # 1.24.605.1
 

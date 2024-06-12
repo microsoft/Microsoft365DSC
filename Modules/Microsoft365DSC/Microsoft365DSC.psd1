@@ -150,7 +150,7 @@
 * TeamsMeetingPolicy
   * Updated the allowed values for the TeamsCameraFarEndTPTXZmode property.
 * M365DSCResourceGenerator
-  * Fix formatting and missing escape character in Resource Generato'
+  * Fix formatting and missing escape character in Resource Generator'
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update
       # RequireLicenseAcceptance = $false
