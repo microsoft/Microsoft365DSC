@@ -3,7 +3,7 @@ on: [push]
 
 jobs:
   build:
-    if: github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/master'
+    if: github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/Master'
     runs-on: ubuntu-latest
     environment:
       name: PROD
@@ -36,7 +36,7 @@ jobs:
           path: ${{ github.workspace }}/generator/build
 
   deploy_prod:
-    if: github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/master'
+    if: github.repository == 'microsoft/Microsoft365DSC' && github.event.ref == 'refs/heads/Master'
     runs-on: ubuntu-latest
     environment:
       name: PROD

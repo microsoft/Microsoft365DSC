@@ -42,7 +42,7 @@
 | **RoomAttributeUserOverride** | Write | String | Determines whether or not biometric data will be used to distinguish and or attribute in the transcript. | `Off`, `Distinguish`, `Attribute` |
 | **StreamingAttendeeMode** | Write | String | Determines whether or not meetings created by users with this policy are able to utilize the meeting overflow capability. | `Disabled`, `Enabled` |
 | **AllowBreakoutRooms** | Write | Boolean | Determines whether or not meetings created by users with this policy are able to utilize the Breakout Rooms feature. | |
-| **TeamsCameraFarEndPTZMode** | Write | String | Determines whether or not meetings created by users with this policy are able to utilize the Camera Far-End PTZ Mode. | `Disabled`, `Enabled` |
+| **TeamsCameraFarEndPTZMode** | Write | String | Determines whether or not meetings created by users with this policy are able to utilize the Camera Far-End PTZ Mode. | `Disabled`, `AutoAcceptInTenant`, `AutoAcceptAll` |
 | **AllowMeetingReactions** | Write | Boolean | Determines whether or not meetings created by users with this policy are able to utilize the Meeting Reactions feature. | |
 | **WhoCanRegister** | Write | String | Specifies who can attend and register for webinars. | `Everyone`, `EveryoneInCompany` |
 | **AllowAnnotations** | Write | Boolean | N/A | |
