@@ -1,5 +1,13 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
+  * Introduces new properties and updates the handling of the  
+    start and end dates.  
+    FIXES [#4614](https://github.com/microsoft/Microsoft365DSC/issues/4614)  
+    FIXES [#3438](https://github.com/microsoft/Microsoft365DSC/issues/3438)
+
 # 1.24.717.1
 
 * AADConditionalAccessPolicy
