@@ -5,7 +5,7 @@
 * IntuneAppConfigurationDevicePolicy
   * Add conversion from `payloadJson` to actual JSON.
 * SPOTenantSettings
-  * Connect to Graph before Sharepoint Online
+  * Connect to Graph before Sharepoint Online.
     FIXES [#4746](https://github.com/microsoft/Microsoft365DSC/issues/4746)
 * TeamsMeetingPolicy
   * Updated the allowed values for the TeamsCameraFarEndTPTXZmode property.
