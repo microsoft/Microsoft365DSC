@@ -24,6 +24,8 @@
 * M365DSCDRGUtil
   * Add multiple commands for Intune policies that use the settings catalog.
   * Improve comparison of Intune assignments in `Compare-M365DSCIntunePolicyAssignment`
+* TeamsMeetingPolicy
+  * Updated the allowed values for the TeamsCameraFarEndTPTXZmode property.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.17.
   * Updated ReverseDSC to version 2.0.0.20.
