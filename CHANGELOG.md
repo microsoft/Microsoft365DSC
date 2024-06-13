@@ -4,6 +4,17 @@
 
 * SCDLPComplianceRule
   * Fix #4259 and #3845
+# 1.24.612.1
+
+* IntuneAppConfigurationDevicePolicy
+  * Add conversion from `payloadJson` to actual JSON.
+* SPOTenantSettings
+  * Connect to Graph before Sharepoint Online.
+    FIXES [#4746](https://github.com/microsoft/Microsoft365DSC/issues/4746)
+* TeamsMeetingPolicy
+  * Updated the allowed values for the TeamsCameraFarEndTPTXZmode property.
+* M365DSCResourceGenerator
+  * Fix formatting and missing escape character in Resource Generator
 
 # 1.24.605.1
 
@@ -19,6 +30,8 @@
 * M365DSCDRGUtil
   * Add multiple commands for Intune policies that use the settings catalog.
   * Improve comparison of Intune assignments in `Compare-M365DSCIntunePolicyAssignment`
+* TeamsMeetingPolicy
+  * Updated the allowed values for the TeamsCameraFarEndTPTXZmode property.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.17.
   * Updated ReverseDSC to version 2.0.0.20.
@@ -54,13 +67,13 @@
 
 * IntuneDeviceConfigurationPlatformScriptWindows
   * Initial Release
-  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+    FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
 * IntuneDeviceConfigurationPlatformScriptMacOS
   * Initial Release
-  FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
+    FIXES [#4157](https://github.com/microsoft/Microsoft365DSC/issues/4157)
 * IntuneDeviceEnrollmentPlatformRestriction
   * Fix missing export of the default policy
-  FIXES [#4694](https://github.com/microsoft/Microsoft365DSC/issues/4694)
+    FIXES [#4694](https://github.com/microsoft/Microsoft365DSC/issues/4694)
 * IntuneDeviceEnrollmentStatusPageWindows10
   * Return all authentication methods when retrieving the policies otherwise
     it may fail deducing the OrganizationName via TenantId

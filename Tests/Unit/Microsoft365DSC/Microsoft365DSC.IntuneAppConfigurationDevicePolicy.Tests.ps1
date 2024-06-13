@@ -71,7 +71,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     displayName = "FakeStringValue"
                     id = "FakeStringValue"
                     PackageId = "FakeStringValue"
-                    PayloadJson = "FakeStringValue"
+                    PayloadJson = "{`"test`":`"value`"}"
                     permissionActions = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphandroidPermissionAction -Property @{
                             permission = "FakeStringValue"
@@ -119,7 +119,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     displayName = "FakeStringValue"
                     id = "FakeStringValue"
                     PackageId = "FakeStringValue"
-                    PayloadJson = "FakeStringValue"
+                    PayloadJson = "{`"test`":`"value`"}"
                     permissionActions = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphandroidPermissionAction -Property @{
                             permission = "FakeStringValue"
@@ -148,7 +148,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdditionalProperties = @{
                             appSupportsOemConfig = $True
                             '@odata.type' = "#microsoft.graph.androidManagedStoreAppConfiguration"
-                            payloadJson = "FakeStringValue"
+                            payloadJson = "eyJ0ZXN0IjoidmFsdWUifQ=="
                             profileApplicability = "default"
                             permissionActions = @(
                                 @{
@@ -192,7 +192,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     displayName = "FakeStringValue"
                     id = "FakeStringValue"
                     PackageId = "FakeStringValue"
-                    PayloadJson = "FakeStringValue"
+                    PayloadJson = "{`"test`":`"value`"}"
                     permissionActions = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphandroidPermissionAction -Property @{
                             permission = "FakeStringValue"
@@ -221,7 +221,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdditionalProperties = @{
                             appSupportsOemConfig = $True
                             '@odata.type' = "#microsoft.graph.androidManagedStoreAppConfiguration"
-                            payloadJson = "FakeStringValue"
+                            payloadJson = "eyJ0ZXN0IjoidmFsdWUifQ=="
                             profileApplicability = "default"
                             permissionActions = @(
                                 @{
@@ -258,7 +258,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     displayName = "FakeStringValue"
                     id = "FakeStringValue"
                     PackageId = "FakeStringValue"
-                    PayloadJson = "FakeStringValue"
+                    PayloadJson = "{`"test`":`"value`"}"
                     permissionActions = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_MicrosoftGraphandroidPermissionAction -Property @{
                             permission = "FakeStringValue"
@@ -293,7 +293,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     action = "prompt"
                                 }
                             )
-                            payloadJson = "FakeStringValue"
+                            payloadJson = "eyJ0ZXN0IjoidmFsdWUifQ=="
                         }
                         createdDateTime = "2023-01-01T00:00:00.0000000+01:00"
                         description = "FakeStringValue"
@@ -334,7 +334,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         AdditionalProperties = @{
                             appSupportsOemConfig = $True
                             '@odata.type' = "#microsoft.graph.androidManagedStoreAppConfiguration"
-                            payloadJson = "FakeStringValue"
+                            payloadJson = "{`"test`":`"value`"}"
                             profileApplicability = "default"
                             permissionActions = @(
                                 @{
