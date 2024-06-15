@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneDeviceRemediation
+  * Fix invalid assignment export and import.  
+    FIXES [#4726](https://github.com/microsoft/Microsoft365DSC/issues/4726)
+
 # 1.24.612.1
 
 * IntuneAppConfigurationDevicePolicy
