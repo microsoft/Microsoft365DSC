@@ -334,7 +334,7 @@ function Set-TargetResource
         $assignmentsHash = @()
         if ($null -ne $Assignments -and $Assignments.count -gt 0 )
         {
-            $assignmentsHash +=  Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            $assignmentsHash +=  ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         }
 
         Update-DeviceConfigurationPolicyAssignment `
@@ -371,7 +371,7 @@ function Set-TargetResource
         $assignmentsHash = @()
         if ($null -ne $Assignments -and $Assignments.count -gt 0 )
         {
-            $assignmentsHash +=  Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            $assignmentsHash += ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         }
 
         Update-DeviceConfigurationPolicyAssignment `

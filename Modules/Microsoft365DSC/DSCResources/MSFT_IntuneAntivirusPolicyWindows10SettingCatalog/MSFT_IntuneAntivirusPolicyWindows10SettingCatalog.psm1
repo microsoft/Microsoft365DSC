@@ -990,7 +990,7 @@ function Set-TargetResource
             -Technologies $technologies `
             -Settings $settings
 
-        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id -Targets $assignmentsHash
 
     }
@@ -1015,7 +1015,7 @@ function Set-TargetResource
             -Technologies $technologies `
             -Settings $settings
 
-        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentPolicy.Identity -Targets $assignmentsHash
 
     }

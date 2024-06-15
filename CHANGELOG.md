@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCDRGUtil
+  * Add `collectionId` export to `ConvertFrom-IntunePolicyAssignment`
+* MISC
+  * Add group display name export across Intune resources
+
 # 1.24.612.1
 
 * IntuneAppConfigurationDevicePolicy

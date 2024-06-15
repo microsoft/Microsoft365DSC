@@ -50,12 +50,21 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
             }
 
-            Mock -CommandName Get-DeviceManagementConfigurationPolicyAssignment -MockWith {
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
                 return @(@{
-
-                        dataType = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                        collectionId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
-                    })
+                    Id       = '12345-12345-12345-12345-12345'
+                    Source   = 'direct'
+                    SourceId = '12345-12345-12345-12345-12345'
+                    Target   = @{
+                        DeviceAndAppManagementAssignmentFilterType = 'none'
+                        AdditionalProperties                       = @(
+                            @{
+                                '@odata.type' = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                                collectionId  = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            }
+                        )
+                    }
+                })
             }
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
             }
@@ -98,8 +107,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = @(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            DataType     = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                     Credential  = $Credential
@@ -133,8 +142,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            DataType     = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                     Credential  = $Credential
@@ -177,12 +186,11 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     )
                                 })
                             }
-
                         }
                         AdditionalProperties = $null
                     }
                 }
-                Mock -CommandName Update-DeviceManagementConfigurationPolicy -MockWith {
+                Mock -CommandName Update-IntuneDeviceConfigurationPolicy -MockWith {
                 }
             }
 
@@ -196,7 +204,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should update the instance from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-DeviceManagementConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName Update-IntuneDeviceConfigurationPolicy -Exactly 1
             }
         }
 
@@ -210,8 +218,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     Identity    = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
                     Assignments = [CimInstance[]]@(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            DataType     = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                 }
@@ -248,7 +256,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     )
                                 })
                             }
-
                         }
                         AdditionalProperties = $null
                     }
@@ -265,8 +272,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 $testParams = @{
                     Assignments = @(
                         (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
-                            DataType                                   = '#microsoft.graph.exclusionGroupAssignmentTarget'
-                            CollectionId                               = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            DataType     = '#microsoft.graph.configurationManagerCollectionAssignmentTarget'
+                            CollectionId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
                         } -ClientOnly)
                     )
                     Credential  = $Credential
@@ -308,7 +315,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     )
                                 })
                             }
-
                         }
                         AdditionalProperties = $null
                     }
@@ -372,7 +378,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                     )
                                 })
                             }
-
                         }
                         AdditionalProperties = $null
                     }
@@ -381,6 +386,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }
