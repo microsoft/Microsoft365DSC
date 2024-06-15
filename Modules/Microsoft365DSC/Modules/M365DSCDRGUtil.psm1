@@ -1200,11 +1200,17 @@ function ConvertTo-IntunePolicyAssignment
     [OutputType([Hashtable[]])]
     param (
         [Parameter(Mandatory = $true)]
+        [AllowNull()]
         $Assignments,
         [Parameter()]
         [System.Boolean]
         $IncludeDeviceFilter = $true
     )
+
+    if ($null -eq $Assignments)
+    {
+        return ,@()
+    }
 
     $assignmentResult = @()
     foreach ($assignment in $Assignments)
