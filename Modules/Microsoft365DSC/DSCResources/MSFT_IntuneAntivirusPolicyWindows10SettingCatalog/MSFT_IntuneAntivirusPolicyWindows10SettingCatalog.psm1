@@ -1830,7 +1830,7 @@ function Update-IntuneDeviceConfigurationPolicy
         }
         $body = $policy | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
-        Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body $body -ErrorAction Stop 4> Out-Null
+        Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body $body -ErrorAction Stop 4> $null
 
     }
     catch

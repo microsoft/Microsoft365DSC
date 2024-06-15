@@ -1154,7 +1154,7 @@ function Update-DeviceManagementConfigurationPolicy
     Invoke-MgGraphRequest -Method PUT `
         -Uri $Uri `
         -ContentType 'application/json' `
-        -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
+        -Body ($policy | ConvertTo-Json -Depth 20) 4> $null
 }
 
 function Get-DeviceManagementConfigurationPolicyAssignment
@@ -1172,7 +1172,7 @@ function Get-DeviceManagementConfigurationPolicyAssignment
         $configurationPolicyAssignments = @()
 
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/configurationPolicies/$DeviceManagementConfigurationPolicyId/assignments"
-        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop 4> out-null
+        $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop 4> $null
         foreach ($result in $results.value.target)
         {
             $configurationPolicyAssignments += @{
@@ -1187,7 +1187,7 @@ function Get-DeviceManagementConfigurationPolicyAssignment
         while ($results.'@odata.nextLink')
         {
             $Uri = $results.'@odata.nextLink'
-            $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop 4> out-null
+            $results = Invoke-MgGraphRequest -Method GET -Uri $Uri -ErrorAction Stop 4> $null
             foreach ($result in $results.value.target)
             {
                 $configurationPolicyAssignments += @{

@@ -830,7 +830,7 @@ function Update-DeviceEnrollmentConfigurationPriority
             -Method POST `
             -Body $body `
             -Uri $Uri  `
-            -ErrorAction Stop 4> Out-Null
+            -ErrorAction Stop 4> $null
     }
     catch
     {

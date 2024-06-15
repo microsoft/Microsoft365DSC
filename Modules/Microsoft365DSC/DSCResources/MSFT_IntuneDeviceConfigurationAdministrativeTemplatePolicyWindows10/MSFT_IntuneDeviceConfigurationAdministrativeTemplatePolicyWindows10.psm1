@@ -1006,7 +1006,7 @@ function Update-DeviceConfigurationGroupPolicyDefinitionValue
             'deletedIds' = $DefinitionValueToRemoveIds
         }
         #Write-Verbose -Message ($body | ConvertTo-Json -Depth 100)
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ErrorAction Stop 4> Out-Null
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ErrorAction Stop 4> $null
     }
     catch
     {
