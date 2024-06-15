@@ -1186,7 +1186,7 @@ function ConvertFrom-IntunePolicyAssignment
         $assignmentResult += $hashAssignment
     }
 
-    return $assignmentResult
+    return ,$assignmentResult
 }
 
 function ConvertTo-IntunePolicyAssignment
@@ -1261,7 +1261,7 @@ function ConvertTo-IntunePolicyAssignment
         }
     }
 
-    return $assignmentResult
+    return ,$assignmentResult
 }
 
 function Compare-M365DSCIntunePolicyAssignment

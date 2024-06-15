@@ -233,16 +233,27 @@ function Get-TargetResource
         $assignmentResult = @()
         foreach ($assignment in $assignmentsValues)
         {
+            if (-not [System.String]::IsNullOrEmpty($assignment.RunSchedule.AdditionalProperties.time))
+            {
+                $time = Get-Date -Format 'HH:mm:ss' -Date $assignment.RunSchedule.AdditionalProperties.time
+            }
+            else
+            {
+                $time = $null
+            }
+
             $assignmentResult += @{
                 RunRemediationScript = $assignment.RunRemediationScript
                 RunSchedule = @{
                     DataType = $assignment.RunSchedule.AdditionalProperties.'@odata.type'
                     Date = $assignment.RunSchedule.AdditionalProperties.date
                     Interval = $assignment.RunSchedule.Interval
-                    Time = Get-Date -Format 'HH:mm:ss' -Date $assignment.RunSchedule.AdditionalProperties.time
+                    Time = $time
                     UseUtc = $assignment.RunSchedule.AdditionalProperties.useUtc
                 }
-                Assignment = ConvertFrom-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignment $assignment
+                Assignment = (ConvertFrom-IntunePolicyAssignment `
+                    -IncludeDeviceFilter:$true `
+                    -Assignments $assignment) | Select-Object -First 1
             }
         }
         $results.Add('Assignments', $assignmentResult)
@@ -833,16 +844,24 @@ function Export-TargetResource
             }
             if ($Results.Assignments)
             {
-                foreach ($assignment in $Results.Assignments)
-                {
-                    $runSchedule = Get-M365DSCDRGComplexTypeToString -ComplexObject $assignment.RunSchedule -CIMInstanceName MSFT_IntuneDeviceRemediationRunSchedule
-                    $assignment.RunSchedule = $runSchedule
-                    $target = Get-M365DSCDRGComplexTypeToString -ComplexObject $assignment.Assignment -CIMInstanceName MSFT_DeviceManagementConfigurationPolicyAssignments
-                    $assignment.Assignment = $target | Select-Object -First 1
-                    $assignment = Get-M365DSCDRGComplexTypeToString -ComplexObject $assignment -CIMInstanceName MSFT_IntuneDeviceRemediationPolicyAssignments
-                }
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName MSFT_IntuneDeviceRemediationPolicyAssignments
-                if ($complexTypeStringResult)
+                $complexMapping = @(
+                    @{
+                        Name = 'RunSchedule'
+                        CimInstanceName = 'IntuneDeviceRemediationRunSchedule'
+                        IsRequired = $false
+                    }
+                    @{
+                        Name = 'Assignment'
+                        CimInstanceName = 'DeviceManagementConfigurationPolicyAssignments'
+                        IsRequired = $true
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Assignments `
+                    -CIMInstanceName 'MSFT_IntuneDeviceRemediationPolicyAssignments' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [string]::IsNullOrEmpty($complexTypeStringResult))
                 {
                     $Results.Assignments = $complexTypeStringResult
                 }
