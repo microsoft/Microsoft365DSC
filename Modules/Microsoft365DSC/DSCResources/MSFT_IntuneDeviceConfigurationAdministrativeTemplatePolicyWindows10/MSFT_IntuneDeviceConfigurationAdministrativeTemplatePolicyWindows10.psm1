@@ -695,10 +695,10 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
             #Removing Key Definition because it is Read-Only and ID as random
             if ($key -eq 'DefinitionValues')
             {
+                $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 foreach ($definitionValue in $source)
                 {
                     $definitionValue.remove('Definition')
@@ -726,11 +726,6 @@ function Test-TargetResource
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
-
-            if ($key -eq 'Assignments')
-            {
-                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-            }
 
             if (-Not $testResult)
             {

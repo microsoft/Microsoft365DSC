@@ -948,48 +948,11 @@ function Test-TargetResource
 
     if ($CurrentValues.Assignments)
     {
-        if ($CurrentValues.Assignments.count -ne $ValuesToCheck.Assignments.count)
-        {
-            Write-Verbose -Message "Configuration drift: Number of assignment has changed - current {$($CurrentValues.Assignments.count)} target {$($ValuesToCheck.Assignments.count)}"
-            return $false
-        }
-        foreach ($assignment in $CurrentValues.Assignments)
-        {
-            #GroupId Assignment
-            if (-not [String]::IsNullOrEmpty($assignment.groupId))
-            {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.groupId -eq $assignment.groupId }
-                if (-not $source)
-                {
-                    Write-Verbose -Message "Configuration drift: groupId {$($assignment.groupId)} not found"
-                    $testResult = $false
-                    break
-                }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-            }
-            #AllDevices/AllUsers assignment
-            else
-            {
-                $source = [Array]$ValuesToCheck.Assignments | Where-Object -FilterScript { $_.dataType -eq $assignment.dataType }
-                if (-not $source)
-                {
-                    Write-Verbose -Message "Configuration drift: {$($assignment.dataType)} not found"
-                    $testResult = $false
-                    break
-                }
-                $sourceHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-                $testResult = Compare-M365DSCComplexObject -Source $sourceHash -Target $assignment
-            }
-
-            if (-not $testResult)
-            {
-                $testResult = $false
-                break
-            }
-
-        }
+        $testResult = Compare-M365DSCIntunePolicyAssignment `
+            -Source $CurrentValues.Assignments `
+            -Target $ValuesToCheck.Assignments
     }
+
     if (-not $testResult)
     {
         return $false

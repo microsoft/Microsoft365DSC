@@ -308,11 +308,6 @@ function Set-TargetResource
         throw 'SelectedRecoveryKeyTypes and PersonalRecoveryKeyHelpMessage must be specified when Enabled is $true'
     }
 
-    if (-not $AllowDeferralUntilSignOut)
-    {
-        throw 'AllowDeferralUntilSignOut must be $true'
-    }
-
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
@@ -321,6 +316,12 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Disk Encryption for macOS with DisplayName {$DisplayName}"
+
+        if (-not $AllowDeferralUntilSignOut)
+        {
+            throw 'AllowDeferralUntilSignOut must be $true'
+        }
+
         $BoundParameters.Remove('Assignments') | Out-Null
         $BoundParameters.Remove('Id') | Out-Null
         $BoundParameters.Remove('DisplayName') | Out-Null
@@ -354,6 +355,12 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Disk Encryption for macOS with Id {$($currentInstance.Id)}"
+
+        if (-not $AllowDeferralUntilSignOut)
+        {
+            throw 'AllowDeferralUntilSignOut must be $true'
+        }
+
         $BoundParameters.Remove("Assignments") | Out-Null
         $BoundParameters.Remove('Id') | Out-Null
         $BoundParameters.Remove('DisplayName') | Out-Null
@@ -554,8 +561,6 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)

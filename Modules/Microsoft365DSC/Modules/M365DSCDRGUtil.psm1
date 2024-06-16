@@ -598,25 +598,24 @@ function Compare-M365DSCComplexObject
         return $false
     }
 
-    if ($Source.getType().FullName -like '*CimInstance[[\]]' -or $Source.getType().FullName -like '*Hashtable[[\]]')
+    if ($Source.GetType().FullName -like '*CimInstance[[\]]' -or $Source.GetType().FullName -like '*Hashtable[[\]]')
     {
-        if ($source.count -ne $target.count)
+        if ($source.Count -ne $target.Count)
         {
-            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
+            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.Count)} Target {$($target.Count)}"
             return $false
         }
-        if ($source.count -eq 0)
+        if ($source.Count -eq 0)
         {
             return $true
         }
 
         foreach ($item in $Source)
         {
-            $hashSource = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
             foreach ($targetItem in $Target)
             {
                 $compareResult = Compare-M365DSCComplexObject `
-                    -Source $hashSource `
+                    -Source $item `
                     -Target $targetItem
 
                 if ($compareResult)
@@ -634,7 +633,15 @@ function Compare-M365DSCComplexObject
         return $true
     }
 
-    $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+    if ($Source.GetType().FullName -like "*CimInstance")
+    {
+        $keys = $Source.CimInstanceProperties.Name | Where-Object -FilterScript { $_ -notin @('PSComputerName', 'CimClass', 'CmiInstanceProperties', 'CimSystemProperties') }
+    }
+    else
+    {
+        $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+    }
+
     foreach ($key in $keys)
     {
         #Matching possible key names between Source and Target
@@ -664,12 +671,21 @@ function Compare-M365DSCComplexObject
         #Both keys aren't null or empty
         if (($null -ne $Source.$key) -and ($null -ne $Target.$tkey))
         {
-            if ($Source.$key.getType().FullName -like '*CimInstance*' -or $Source.$key.getType().FullName -like '*hashtable*')
+            if ($Source.$key.GetType().FullName -like '*CimInstance*' -or $Source.$key.GetType().FullName -like '*hashtable*')
             {
-                #Recursive call for complex object
-                $compareResult = Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source.$key) `
-                    -Target $Target.$tkey
+                if ($Source.$key.GetType().FullName -like '*CimInstance' -and $Source.$key.CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments')
+                {
+                    $compareResult = Compare-M365DSCIntunePolicyAssignment `
+                        -Source @($Source.$key) `
+                        -Target @($Target.$tkey)
+                }
+                else
+                {
+                    #Recursive call for complex object
+                    $compareResult = Compare-M365DSCComplexObject `
+                        -Source $Source.$key `
+                        -Target $Target.$tkey
+                }
 
                 if (-not $compareResult)
                 {
@@ -684,7 +700,7 @@ function Compare-M365DSCComplexObject
                 $differenceObject = $Source.$key
 
                 #Identifying date from the current values
-                $targetType = ($Target.$tkey.getType()).Name
+                $targetType = ($Target.$tkey.GetType()).Name
                 if ($targetType -like '*Date*')
                 {
                     $compareResult = $true
