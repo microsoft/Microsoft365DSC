@@ -673,7 +673,9 @@ function Compare-M365DSCComplexObject
         {
             if ($Source.$key.GetType().FullName -like '*CimInstance*' -or $Source.$key.GetType().FullName -like '*hashtable*')
             {
-                if ($Source.$key.GetType().FullName -like '*CimInstance' -and $Source.$key.CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments')
+                if ($Source.$key.GetType().FullName -like '*CimInstance' -and (
+                        $Source.$key.CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
+                        $Source.$key.CimClass.CimClassName -like 'MSFT_Intune*Assignments'))
                 {
                     $compareResult = Compare-M365DSCIntunePolicyAssignment `
                         -Source @($Source.$key) `
