@@ -657,34 +657,9 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
-            if ($key -eq "Assignments")
-            {
-                [hashtable[]]$sourcesWithoutAssignment = @()
-                foreach ($sourceObject in $source)
-                {
-                    $sourceWithoutAssignment = $sourceObject.Clone()
-                    $sourcesWithoutAssignment += $sourceWithoutAssignment
-                }
-
-                [hashtable[]]$targetsWithoutAssignment = @()
-                foreach ($targetObject in $target)
-                {
-                    $targetWithoutAssignment = $targetObject.Clone()
-                    $targetsWithoutAssignment += $targetWithoutAssignment
-                }
-
-                $testResult = Compare-M365DSCComplexObject `
-                    -Source ($sourcesWithoutAssignment) `
-                    -Target ($targetsWithoutAssignment)
-            }
-            else
-            {
-                $testResult = Compare-M365DSCComplexObject `
-                    -Source ($source) `
-                    -Target ($target)
-            }
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
 
             if (-not $testResult)
             {
