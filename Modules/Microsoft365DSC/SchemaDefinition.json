@@ -34988,6 +34988,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String",
+                               "Name":  "AdvancedRule",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "MSFT_SCDLPContainsSensitiveInformation",
                                "Name":  "ContentContainsSensitiveInformation",
                                "Option":  "Write"
