@@ -104,7 +104,6 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-
         $getValue = $null
         #region resource generator code
         if (-not [string]::IsNullOrEmpty($Id))
