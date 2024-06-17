@@ -981,19 +981,18 @@ function Get-TargetResource
             Write-Verbose -Message "Found Transport Rule $($Name)"
             return $result
         }
-        catch
-        {
-            New-M365DSCLogEntry -Message 'Error retrieving data:' `
-                -Exception $_ `
-                -Source $($MyInvocation.MyCommand.Source) `
-                -TenantId $TenantId `
-                -Credential $Credential
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
 
-            return $nullReturn
-        }
+        return $nullReturn
     }
 }
-
 function Set-TargetResource
 {
     [CmdletBinding()]
