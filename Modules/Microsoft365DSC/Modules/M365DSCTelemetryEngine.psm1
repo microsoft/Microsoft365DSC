@@ -162,7 +162,7 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add('PowerShellAgent', 'Cloud Shell')
             }
 
-            if ($null -ne $Data.Resource -and -not $Data.Keys.Contains('Resource'))
+            if ($null -ne $Data.Resource -and $Data.Keys.Contains('Resource'))
             {
                 if ($Data.Resource.StartsWith('MSFT_AAD') -or $Data.Resource.StartsWith('AAD'))
                 {
