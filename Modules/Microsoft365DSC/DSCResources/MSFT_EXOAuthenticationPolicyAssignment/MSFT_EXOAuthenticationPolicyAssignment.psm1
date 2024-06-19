@@ -360,6 +360,11 @@ function Export-TargetResource
 
             foreach ($user in $assignedUsers)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 $Params = @{
                     UserName              = $user.UserPrincipalName
                     Credential            = $Credential

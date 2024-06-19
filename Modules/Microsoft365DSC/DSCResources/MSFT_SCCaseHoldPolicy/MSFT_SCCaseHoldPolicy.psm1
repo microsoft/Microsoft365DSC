@@ -510,6 +510,11 @@ function Export-TargetResource
             $j = 1
             foreach ($policy in $policies)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "        |---[$j/$($policies.Count)] $($policy.Name)" -NoNewline
 
                 $Results = Get-TargetResource @PSBoundParameters `

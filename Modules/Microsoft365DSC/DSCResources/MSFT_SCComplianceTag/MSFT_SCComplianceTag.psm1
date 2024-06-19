@@ -558,6 +558,11 @@ function Export-TargetResource
         $dscContent = ''
         foreach ($tag in $tags)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($totalTags)] $($tag.Name)" -NoNewline
             $Results = Get-TargetResource @PSBoundParameters -Name $tag.Name
             $Results.FilePlanProperty = Get-SCFilePlanPropertyAsString $Results.FilePlanProperty

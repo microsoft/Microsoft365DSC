@@ -398,6 +398,11 @@ function Export-TargetResource
         }
         foreach ($AADPolicy in $AADPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AADPolicies.Count)] $($AADPolicy.DisplayName)" -NoNewline
             $Params = @{
                 Credential            = $Credential

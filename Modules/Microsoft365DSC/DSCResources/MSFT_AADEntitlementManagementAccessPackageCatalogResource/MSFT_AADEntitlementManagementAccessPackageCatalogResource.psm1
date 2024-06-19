@@ -730,6 +730,11 @@ function Export-TargetResource
 
             foreach ($resource in $resources)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "        |---[$j/$($resources.Count)] $($resource.DisplayName)" -NoNewline
 
                 $params = @{

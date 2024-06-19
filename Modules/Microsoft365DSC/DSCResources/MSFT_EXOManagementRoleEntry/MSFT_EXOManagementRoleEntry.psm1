@@ -373,6 +373,11 @@ function Export-TargetResource
         $i = 1
         foreach ($roleEntry in $Script:exportedInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($roleEntry.Identity + "\" + $roleEntry.Name)" -NoNewline
 
             $Params = @{

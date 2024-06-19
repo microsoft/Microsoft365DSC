@@ -346,6 +346,11 @@ function Export-TargetResource
             {
                 if ($Results.Properties)
                 {
+                    if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                    {
+                        $Global:M365DSCExportResourceInstancesCount++
+                    }
+
                     $Results.Properties = ConvertTo-M365DSCSPOUserProfilePropertyInstanceString -Properties $Results.Properties
                     $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                         -Results $Results
