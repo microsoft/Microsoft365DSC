@@ -431,6 +431,11 @@ function Export-TargetResource
         }
         foreach ($siteDesign in $siteDesigns)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($siteDesigns.Count)] $($siteDesign.Title)" -NoNewline
 
             $Params = @{

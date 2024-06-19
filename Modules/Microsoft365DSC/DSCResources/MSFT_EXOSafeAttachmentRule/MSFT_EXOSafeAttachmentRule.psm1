@@ -527,6 +527,11 @@ function Export-TargetResource
 
             foreach ($SafeAttachmentRule in $SafeAttachmentRules)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($SafeAttachmentRules.Length)] $($SafeAttachmentRule.Identity)" -NoNewline
                 $Params = @{
                     Identity              = $SafeAttachmentRule.Identity

@@ -520,6 +520,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($site in $sites)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($sites.Length)] SPOSite groups for {$($site.Url)}"
             $siteGroups = $null
             try

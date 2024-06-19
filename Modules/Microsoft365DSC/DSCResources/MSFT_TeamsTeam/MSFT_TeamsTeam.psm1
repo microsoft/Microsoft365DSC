@@ -734,6 +734,11 @@ function Export-TargetResource
             # Skip Teams without DisplayName (orphaned/deleted Teams) because the Get method cannot be called without a display name
             if ($null -ne $team.DisplayName -and $team.DisplayName -ne '')
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($teams.Length)] $($team.DisplayName)" -NoNewline
                 $params = @{
                     DisplayName           = $team.DisplayName

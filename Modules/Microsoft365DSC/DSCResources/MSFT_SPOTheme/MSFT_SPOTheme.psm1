@@ -408,6 +408,11 @@ function Export-TargetResource
         }
         foreach ($theme in $themes)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($themes.Length)] $($theme.Name)" -NoNewline
             $Params = @{
                 Name                  = $theme.Name

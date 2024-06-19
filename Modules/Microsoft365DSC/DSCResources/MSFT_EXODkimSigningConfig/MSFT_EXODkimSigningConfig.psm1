@@ -441,6 +441,11 @@ function Export-TargetResource
         $dscContent = ''
         foreach ($DkimSigningConfig in $DkimSigningConfigs)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($DkimSigningConfigs.Length)] $($DkimSigningConfig.Identity)" -NoNewline
             $Params = @{
                 Identity              = $DkimSigningConfig.Identity

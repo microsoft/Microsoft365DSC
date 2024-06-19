@@ -422,6 +422,11 @@ function Export-TargetResource
         $i = 1
         foreach ($IntraOrganizationConnector in $IntraOrganizationConnectors)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($IntraOrganizationConnectors.length)] $($IntraOrganizationConnector.Identity)" -NoNewline
 
             $Params = @{

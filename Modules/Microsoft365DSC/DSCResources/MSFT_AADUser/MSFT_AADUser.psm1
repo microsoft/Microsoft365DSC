@@ -1065,6 +1065,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($user in $Script:M365DSCExportInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Script:M365DSCExportInstances.Length)] $($user.UserPrincipalName)" -NoNewline
             $userUPN = $user.UserPrincipalName
             if (-not [System.String]::IsNullOrEmpty($userUPN))

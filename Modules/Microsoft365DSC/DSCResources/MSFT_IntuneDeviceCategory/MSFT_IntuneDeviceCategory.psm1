@@ -334,6 +334,11 @@ function Export-TargetResource
 
         foreach ($category in $categories)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($categories.Count)] $($category.displayName)" -NoNewline
             $params = @{
                 DisplayName           = $category.displayName

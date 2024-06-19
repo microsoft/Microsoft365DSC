@@ -467,6 +467,11 @@ function Export-TargetResource
         $i = 1
         foreach ($HostedConnectionFilterPolicy in $HostedConnectionFilterPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $Params = @{
                 Credential            = $Credential
                 Identity              = $HostedConnectionFilterPolicy.Identity

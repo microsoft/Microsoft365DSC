@@ -536,6 +536,11 @@ function Export-TargetResource
         $partialContent = ''
         foreach ($search in $searches)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "        |---[$i/$($searches.Name.Count)] $($search.Name)" -NoNewline
 
             $Results = Get-TargetResource @PSBoundParameters -Name $search.Name
