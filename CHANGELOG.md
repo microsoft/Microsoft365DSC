@@ -4,6 +4,9 @@
 
 * SCDLPComplianceRule
   * Fix #4259 and #3845
+* MISC
+  * Imrpoved telemetry around Export sizes.
+
 # 1.24.612.1
 
 * IntuneAppConfigurationDevicePolicy
