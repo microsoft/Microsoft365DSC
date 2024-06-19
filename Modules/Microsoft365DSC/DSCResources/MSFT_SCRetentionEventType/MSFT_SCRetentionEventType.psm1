@@ -373,6 +373,11 @@ function Export-TargetResource
 
         foreach ($eventType in $EventTypes)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "        |---[$i/$($EventTypes.Length)] $($eventType.Name)" -NoNewline
 
             $Results = Get-TargetResource @PSBoundParameters -Name $eventType.Name

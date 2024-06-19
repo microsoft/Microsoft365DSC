@@ -364,6 +364,11 @@ function Export-TargetResource
     $dscContent = ''
     try
     {
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $AADTenantDetails = Get-MgBetaOrganization -ErrorAction Stop
 
         $Params = @{

@@ -485,6 +485,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($entry in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($getValue.Count)] $($entry.TenantId)" -NoNewline
             $Params = @{
                 PartnerTenantId       = $entry.TenantId

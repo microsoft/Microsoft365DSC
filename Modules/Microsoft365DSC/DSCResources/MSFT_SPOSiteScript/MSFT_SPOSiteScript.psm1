@@ -489,6 +489,11 @@ function Export-TargetResource
         }
         foreach ($script in $siteScripts)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    [$i/$($siteScripts.Length)] $($script.Title)" -NoNewline
             $params = @{
                 Identity              = $script.Id

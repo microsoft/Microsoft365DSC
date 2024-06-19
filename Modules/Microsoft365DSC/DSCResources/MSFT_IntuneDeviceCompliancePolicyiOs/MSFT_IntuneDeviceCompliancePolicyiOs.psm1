@@ -723,6 +723,11 @@ function Export-TargetResource
         }
         foreach ($configDeviceiOsPolicy in $configDeviceiOsPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($configDeviceiOsPolicies.Count)] $($configDeviceiOsPolicy.displayName)" -NoNewline
             $params = @{
                 DisplayName           = $configDeviceiOsPolicy.displayName

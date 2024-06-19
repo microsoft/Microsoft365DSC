@@ -544,6 +544,11 @@ function Export-TargetResource
         $i = 1
         foreach ($AuthenticationPolicy in $AllAuthenticationPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllAuthenticationPolicies.Count)] $($AuthenticationPolicy.Identity)" -NoNewline
 
             $Params = @{

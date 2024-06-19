@@ -439,6 +439,11 @@ function Export-TargetResource
         $i = 1
         foreach ($DataEncryptionPolicy in $DataEncryptionPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($DataEncryptionPolicies.Length)] $($DataEncryptionPolicy.Identity)" -NoNewline
 
             $Params = @{

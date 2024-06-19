@@ -2647,6 +2647,11 @@ function Export-TargetResource
         }
         foreach ($TransportRule in $AllTransportRules)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllTransportRules.Count)] $($TransportRule.Name)" -NoNewline
             $Params = @{
                 Name                  = $TransportRule.Name

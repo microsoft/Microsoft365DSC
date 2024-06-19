@@ -419,6 +419,11 @@ function Export-TargetResource
                 }
                 if ($null -ne $app)
                 {
+                    if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                    {
+                        $Global:M365DSCExportResourceInstancesCount++
+                    }
+
                     $Params = @{
                         Identity              = $identity
                         Path                  = ("`$PSScriptRoot\" + $file.Name)
