@@ -10,6 +10,7 @@
 | **BlockAccess** | Write | Boolean | The BlockAccess parameter specifies an action for the DLP rule that blocks access to the source item when the conditions of the rule are met. $true: Blocks further access to the source item that matched the rule. The owner, author, and site owner can still access the item. $false: Allows access to the source item that matched the rule. This is the default value. | |
 | **BlockAccessScope** | Write | String | The BlockAccessScope parameter specifies the scope of the block access action. | `All`, `PerUser`, `None` |
 | **Comment** | Write | String | The Comment parameter specifies an optional comment. If you specify a value that contains spaces, enclose the value in quotation marks. | |
+| **AdvancedRule** | Write | String | The AdvancedRule parameter uses complex rule syntax that supports multiple AND, OR, and NOT operators and nested groups | |
 | **ContentContainsSensitiveInformation** | Write | MSFT_SCDLPContainsSensitiveInformation | The ContentContainsSensitiveInformation parameter specifies a condition for the rule that's based on a sensitive information type match in content. The rule is applied to content that contains the specified sensitive information type. | |
 | **ExceptIfContentContainsSensitiveInformation** | Write | MSFT_SCDLPContainsSensitiveInformation | The ExceptIfContentContainsSensitiveInformation parameter specifies an exception for the rule that's based on a sensitive information type match in content. The rule isn't applied to content that contains the specified sensitive information type. | |
 | **ContentPropertyContainsWords** | Write | StringArray[] | The ContentPropertyContainsWords parameter specifies a condition for the DLP rule that's based on a property match in content. The rule is applied to content that contains the specified property. | |
@@ -184,6 +185,7 @@ Configuration Example
             AccessScope                         = 'InOrganization'
             BlockAccess                         = $True
             BlockAccessScope                    = 'All'
+            AdvancedRule                        = "`"{\r\n  \`"Version\`": \`"1.0\`",\r\n  \`"Condition\`": {\r\n    \`"Operator\`": \`"And\`",\r\n    \`"SubConditions\`": [\r\n      {\r\n        \`"ConditionName\`": \`"AccessScope\`",\r\n        \`"Value\`": \`"InOrganization\`"\r\n      },\r\n      {\r\n        \`"ConditionName\`": \`"ContentContainsSensitiveInformation\`",\r\n        \`"Value\`": {\r\n          \`"maxconfidence\`": \`"100\`",\r\n          \`"name\`": \`"EU Debit Card Number\`",\r\n          \`"maxcount\`": \`"9\`",\r\n          \`"minconfidence\`": \`"75\`",\r\n          \`"classifiertype\`": \`"Content\`",\r\n          \`"mincount\`": \`"1\`",\r\n          \`"confidencelevel\`": \`"Medium\`"\r\n        }\r\n      }\r\n    ]\r\n  }\r\n}`"";
             ContentContainsSensitiveInformation = MSFT_SCDLPContainsSensitiveInformation
             {
                 SensitiveInformation = @(

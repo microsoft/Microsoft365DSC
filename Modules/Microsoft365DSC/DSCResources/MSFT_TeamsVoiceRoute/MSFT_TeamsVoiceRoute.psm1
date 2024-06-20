@@ -419,6 +419,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($route in $routes)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($routes.Count)] $($route.Identity)" -NoNewline
             $params = @{
                 Identity              = $route.Identity

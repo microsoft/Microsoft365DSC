@@ -437,6 +437,11 @@ function Export-TargetResource
         $i = 1
         foreach ($mailbox in $mailboxes)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             # Name of calendar folder depends on the language of the mailbox
             $calendarFolderName = (Get-MailboxFolderStatistics -Identity $($mailbox.UserPrincipalName) -FolderScope Calendar | Where-Object {$_.FolderType -eq 'Calendar'}).Name
             $folderPath = $mailbox.UserPrincipalName + ':\' + $calendarFolderName

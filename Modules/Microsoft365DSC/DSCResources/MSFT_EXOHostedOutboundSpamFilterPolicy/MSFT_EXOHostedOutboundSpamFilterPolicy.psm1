@@ -494,6 +494,11 @@ function Export-TargetResource
         $i = 1
         foreach ($HostedOutboundSpamFilterPolicy in $HostedOutboundSpamFilterPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $Params = @{
                 Credential            = $Credential
                 Identity              = $HostedOutboundSpamFilterPolicy.Identity

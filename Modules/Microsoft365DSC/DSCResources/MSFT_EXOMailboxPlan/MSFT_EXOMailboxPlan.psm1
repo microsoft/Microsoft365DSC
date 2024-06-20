@@ -480,6 +480,11 @@ function Export-TargetResource
         $i = 1
         foreach ($MailboxPlan in $MailboxPlans)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($MailboxPlans.Count)] $($MailboxPlan.Identity.Split('-')[0])" -NoNewline
             $Params = @{
                 Identity              = $MailboxPlan.Identity

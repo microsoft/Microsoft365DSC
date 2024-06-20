@@ -1015,6 +1015,11 @@ function Export-TargetResource
             $groupName = $group.DisplayName
             if (-not [System.String]::IsNullOrEmpty($groupName))
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 $Params = @{
                     Credential            = $Credential
                     DisplayName           = $groupName

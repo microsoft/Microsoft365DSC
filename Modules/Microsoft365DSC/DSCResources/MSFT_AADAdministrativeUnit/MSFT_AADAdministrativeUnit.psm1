@@ -104,7 +104,6 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-
         $getValue = $null
         #region resource generator code
         if (-not [string]::IsNullOrEmpty($Id))
@@ -1069,6 +1068,11 @@ function Export-TargetResource
         }
         foreach ($config in $Script:exportedInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {

@@ -162,7 +162,7 @@ function Add-M365DSCTelemetryEvent
                 $Data.Add('PowerShellAgent', 'Cloud Shell')
             }
 
-            if ($null -ne $Data.Resource -and -not $Data.Keys.Contains('Resource'))
+            if ($null -ne $Data.Resource -and $Data.Keys.Contains('Resource'))
             {
                 if ($Data.Resource.StartsWith('MSFT_AAD') -or $Data.Resource.StartsWith('AAD'))
                 {
@@ -205,6 +205,23 @@ function Add-M365DSCTelemetryEvent
                     $Data.Add('Workload', 'Teams')
                 }
                 $Data.Resource = $Data.Resource.Replace('MSFT_', '')
+            }
+
+            if ($Type -eq "ExportCompleted")
+            {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Data.Add("ExportedResourceInstancesCount", $Global:M365DSCExportResourceInstancesCount)
+                }
+                if ($null -ne $Global:M365DSCExportResourceTypes)
+                {
+                    $Data.Add("ExportedResourceTypes", $Global:M365DSCExportResourceTypes)
+                    $Data.Add("ExportedResourceTypesCount", $Global:M365DSCExportResourceTypes.Length)
+                }
+                if($null -ne $Global:M365DSCExportContentSize)
+                {
+                    $Data.Add("ExportedContentSize", $Global:M365DSCExportContentSize)
+                }
             }
 
             [array]$version = (Get-Module 'Microsoft365DSC').Version | Sort-Object -Descending

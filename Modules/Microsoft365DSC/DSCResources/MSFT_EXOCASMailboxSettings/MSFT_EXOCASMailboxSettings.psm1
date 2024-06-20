@@ -791,6 +791,11 @@ function Export-TargetResource
             $mailboxName = $mailbox.Identity
             if (![System.String]::IsNullOrEmpty($mailboxName))
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 $Params = @{
                     Credential            = $Credential
                     Identity              = $mailboxName

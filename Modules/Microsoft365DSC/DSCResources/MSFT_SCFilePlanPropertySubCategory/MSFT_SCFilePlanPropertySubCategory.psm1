@@ -383,6 +383,11 @@ function Export-TargetResource
         }
         foreach ($Property in $Properties)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $parent = Get-FilePlanPropertyCategory | Where-Object -FilterScript { $_.Guid -like "*$($property.ParentId)*" }
             Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewline
 

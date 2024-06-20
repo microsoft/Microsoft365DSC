@@ -792,6 +792,11 @@ function Export-TargetResource
         }
         foreach ($configDeviceAndroidPolicy in $configDeviceAndroidPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($configDeviceAndroidPolicies.Count)] $($configDeviceAndroidPolicy.displayName)" -NoNewline
             $params = @{
                 DisplayName           = $configDeviceAndroidPolicy.displayName
