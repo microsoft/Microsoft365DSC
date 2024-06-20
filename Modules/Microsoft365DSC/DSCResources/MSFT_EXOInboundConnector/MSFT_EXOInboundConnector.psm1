@@ -595,6 +595,11 @@ function Export-TargetResource
         $i = 1
         foreach ($InboundConnector in $InboundConnectors)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($InboundConnectors.Length)] $($InboundConnector.Identity)" -NoNewline
 
             $Params = @{

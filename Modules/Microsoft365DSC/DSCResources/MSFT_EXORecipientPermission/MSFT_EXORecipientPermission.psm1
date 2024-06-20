@@ -448,6 +448,11 @@ function Export-TargetResource
         $ObjectGuid = [System.Guid]::empty
         foreach ($recipientPermission in $recipientPermissions)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $IdentityValue = $recipientPermission.Identity
             if ([System.Guid]::TryParse($IdentityValue,[System.Management.Automation.PSReference]$ObjectGuid))
             {

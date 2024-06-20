@@ -439,6 +439,11 @@ function Export-TargetResource
                 $j = 1
                 foreach ($property in $properties)
                 {
+                    if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                    {
+                        $Global:M365DSCExportResourceInstancesCount++
+                    }
+
                     Write-Host "        |---  [$j/$($properties.Length)] $($property.Key)" -NoNewline
                     $Params = @{
                         Url                   = $siteUrl

@@ -1499,6 +1499,11 @@ function Export-TargetResource
         $i = 1
         foreach ($OwaMailboxPolicy in $AllOwaMailboxPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllOwaMailboxPolicies.Length)] $($OwaMailboxPolicy.Name)" -NoNewline
 
             $Params = @{

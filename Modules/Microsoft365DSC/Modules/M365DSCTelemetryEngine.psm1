@@ -207,6 +207,23 @@ function Add-M365DSCTelemetryEvent
                 $Data.Resource = $Data.Resource.Replace('MSFT_', '')
             }
 
+            if ($Type -eq "ExportCompleted")
+            {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Data.Add("ExportedResourceInstancesCount", $Global:M365DSCExportResourceInstancesCount)
+                }
+                if ($null -ne $Global:M365DSCExportResourceTypes)
+                {
+                    $Data.Add("ExportedResourceTypes", $Global:M365DSCExportResourceTypes)
+                    $Data.Add("ExportedResourceTypesCount", $Global:M365DSCExportResourceTypes.Length)
+                }
+                if($null -ne $Global:M365DSCExportContentSize)
+                {
+                    $Data.Add("ExportedContentSize", $Global:M365DSCExportContentSize)
+                }
+            }
+
             [array]$version = (Get-Module 'Microsoft365DSC').Version | Sort-Object -Descending
             $Data.Add('M365DSCVersion', $version[0].ToString())
 

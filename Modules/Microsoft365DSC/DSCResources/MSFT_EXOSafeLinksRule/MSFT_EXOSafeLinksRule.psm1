@@ -518,6 +518,11 @@ function Export-TargetResource
             $i = 1
             foreach ($SafeLinksRule in $SafeLinksRules)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($SafeLinksRules.Length)] $($SafeLinksRule.Identity)" -NoNewline
                 $Params = @{
                     Identity              = $SafeLinksRule.Identity

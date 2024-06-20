@@ -530,6 +530,11 @@ function Export-TargetResource
     #endregion
     try
     {
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $IRMConfiguration = Get-IRMConfiguration -ErrorAction Stop
         $dscContent = ''
         Write-Host "`r`n" -NoNewline

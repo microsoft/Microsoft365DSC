@@ -388,6 +388,11 @@ function Export-TargetResource
             }
             foreach ($PolicyTipConfig in $AllPolicyTips)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($AllPolicyTips.Length)] $($PolicyTipConfig.Name)" -NoNewline
 
                 $Params = @{

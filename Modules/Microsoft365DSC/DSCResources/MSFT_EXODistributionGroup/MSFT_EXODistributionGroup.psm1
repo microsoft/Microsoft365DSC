@@ -1057,6 +1057,11 @@ function Export-TargetResource
 
         foreach ($distributionGroup in $Script:exportedInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($distributionGroup.Identity)" -NoNewline
             $params = @{
                 Identity              = $distributionGroup.Identity

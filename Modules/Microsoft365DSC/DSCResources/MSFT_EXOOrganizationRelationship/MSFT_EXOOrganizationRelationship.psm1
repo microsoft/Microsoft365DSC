@@ -711,6 +711,11 @@ function Export-TargetResource
         $i = 1
         foreach ($relationship in $AllOrgRelationships)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllOrgRelationships.Length)] $($relationship.Name)" -NoNewline
 
             $Params = @{

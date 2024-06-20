@@ -483,6 +483,11 @@ function Export-TargetResource
         {
             foreach ($orgAssetLib in $orgAssets)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    [$i/$($orgAssets.Length)] $($orgAssetLib.libraryurl.DecodedUrl)" -NoNewline
                 $Params = @{
                     Credential            = $Credential
