@@ -79382,6 +79382,10 @@ function Set-CsOnlineVoicemailUserSettings
         $OofGreetingEnabled,
 
         [Parameter()]
+        [System.Boolean]
+        $OofGreetingFollowCalendarEnabled,
+
+        [Parameter()]
         [System.Management.Automation.SwitchParameter]
         $Force,
 
