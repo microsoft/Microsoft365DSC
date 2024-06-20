@@ -41125,6 +41125,66 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_TeamsM365App",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Id",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsBlocked",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "AssignmentType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "Users",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "Groups",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "ManagedIdentity",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AccessTokens",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_TeamsMeetingBroadcastConfiguration",
         "Parameters":  [
                            {
