@@ -503,6 +503,11 @@ function Export-TargetResource
         $i = 1
         foreach ($OMEConfiguration in $OMEConfigurations)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($OMEConfigurations.Length)] $($OMEConfiguration.Identity)" -NoNewline
 
             $Params = @{

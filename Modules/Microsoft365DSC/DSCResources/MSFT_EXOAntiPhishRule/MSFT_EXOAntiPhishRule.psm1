@@ -557,6 +557,11 @@ function Export-TargetResource
         $i = 1
         foreach ($Rule in $AntiPhishRules)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AntiPhishRules.Length)] $($Rule.Identity)" -NoNewline
 
             $Params = @{

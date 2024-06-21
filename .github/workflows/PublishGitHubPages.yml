@@ -2,7 +2,7 @@ name: Generate Resources & Deploy GitHub Pages
 on:
   push:
     branches:
-      - master
+      - Master
       - Dev
 jobs:
   GenerateResource:
@@ -38,7 +38,7 @@ jobs:
     needs: GenerateResource
     runs-on: ubuntu-latest
 
-    permissions:    
+    permissions:
       contents: write
       pages: write
 

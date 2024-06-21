@@ -535,6 +535,11 @@ function Export-TargetResource
             $i = 1
             foreach ($SafeAttachmentPolicy in $SafeAttachmentPolicies)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($SafeAttachmentPolicies.Length)] $($SafeAttachmentPolicy.Identity)" -NoNewline
                 $Params = @{
                     Credential            = $Credential

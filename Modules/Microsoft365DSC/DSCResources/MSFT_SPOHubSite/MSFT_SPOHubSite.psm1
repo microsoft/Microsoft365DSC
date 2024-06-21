@@ -658,6 +658,11 @@ function Export-TargetResource
         $dscContent = ''
         foreach ($hub in $hubSites)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    [$i/$($hubSites.Length)] $($hub.SiteUrl)" -NoNewline
 
             $Params = @{

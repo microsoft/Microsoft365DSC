@@ -508,6 +508,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($plan in $tenantDialPlans)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($tenantDialPlans.Count)] $($plan.Identity)" -NoNewline
             $params = @{
                 Identity              = $plan.Identity

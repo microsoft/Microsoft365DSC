@@ -364,6 +364,11 @@ function Export-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $Params = @{
             IsSingleInstance      = 'Yes'
             Enabled               = $false

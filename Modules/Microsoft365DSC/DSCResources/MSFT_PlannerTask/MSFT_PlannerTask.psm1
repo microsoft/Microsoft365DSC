@@ -731,6 +731,11 @@ function Export-TargetResource
                     $k = 1
                     foreach ($task in $tasks)
                     {
+                        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                        {
+                            $Global:M365DSCExportResourceInstancesCount++
+                        }
+
                         Write-Host "            |---[$k/$($tasks.Length)] $($task.Title)" -NoNewline
                         $currentDSCBlock = ''
 
