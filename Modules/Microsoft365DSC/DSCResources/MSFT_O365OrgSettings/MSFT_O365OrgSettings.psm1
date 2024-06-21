@@ -591,7 +591,8 @@ function Set-TargetResource
         -InboundParameters $PSBoundParameters
     $currentValues = Get-TargetResource @PSBoundParameters
 
-    if ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $currentValues.M365WebEnableUsersToOpenFilesFrom3PStorage)
+    if ($PSBoundParameters.ContainsKey('M365WebEnableUsersToOpenFilesFrom3PStorage') -and `
+        ($M365WebEnableUsersToOpenFilesFrom3PStorage -ne $currentValues.M365WebEnableUsersToOpenFilesFrom3PStorage))
     {
         Write-Verbose -Message "Updating the Microsoft 365 On the Web setting to {$M365WebEnableUsersToOpenFilesFrom3PStorage}"
         $OfficeOnlineId = 'c1f33bc0-bdb4-4248-ba9b-096807ddb43e'
@@ -599,18 +600,20 @@ function Set-TargetResource
         Update-MgservicePrincipal -ServicePrincipalId $($M365WebEnableUsersToOpenFilesFrom3PStorageValue.Id) `
             -AccountEnabled:$M365WebEnableUsersToOpenFilesFrom3PStorage
     }
-    if ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing)
+    if ($PSBoundParameters.ContainsKey('PlannerAllowCalendarSharing') -and `
+        ($PlannerAllowCalendarSharing -ne $currentValues.PlannerAllowCalendarSharing))
     {
         Write-Verbose -Message "Updating the Planner Allow Calendar Sharing setting to {$PlannerAllowCalendarSharing}"
         Set-M365DSCO365OrgSettingsPlannerConfig -AllowCalendarSharing $PlannerAllowCalendarSharing
     }
 
-    if ($currentValues.CortanaEnabled -and $CortanaEnabled -ne $currentValues.CortanaEnabled)
+    if ($PSBoundParameters.ContainsKey('CortanaEnabled') -and `
+        ($CortanaEnabled -ne $currentValues.CortanaEnabled))
     {
         $CortanaId = '0a0a29f9-0a25-49c7-94bf-c53c3f8fa69d'
         $CortanaEnabledValue = Get-MgServicePrincipal -Filter "appId eq '$CortanaId'" -Property 'AccountEnabled, Id'
 
-        if ($null -ne $CortanaEnabledValue.Id -and $CortanaEnabledValue.AccountEnabled)
+        if ($null -ne $CortanaEnabledValue.Id)
         {
             Write-Verbose -Message "Updating the Cortana setting to {$CortanaEnabled}"
             Update-MgServicePrincipal -ServicePrincipalId $($CortanaEnabledValue.Id) `
@@ -633,25 +636,29 @@ function Set-TargetResource
     }#>
 
     # Viva Insights
-    if ($currentValues.VivaInsightsWebExperience -ne $VivaInsightsWebExperience)
+    if ($PSBoundParameters.ContainsKey('VivaInsightsWebExperience') -and `
+        ($currentValues.VivaInsightsWebExperience -ne $VivaInsightsWebExperience))
     {
         Write-Verbose -Message "Updating Viva Insights settings for Web Experience"
         Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Dashboard" -IsEnabled $VivaInsightsWebExperience -Verbose:$false | Out-Null
     }
 
-    if ($currentValues.VivaInsightsDigestEmail -ne $VivaInsightsDigestEmail)
+    if ($PSBoundParameters.ContainsKey('VivaInsightsDigestEmail') -and `
+        ($currentValues.VivaInsightsDigestEmail -ne $VivaInsightsDigestEmail))
     {
         Write-Verbose -Message "Updating Viva Insights settings for Digest Email"
         Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Digest-email" -IsEnabled $VivaInsightsDigestEmail -Verbose:$false | Out-Null
     }
 
-    if ($currentValues.VivaInsightsOutlookAddInAndInlineSuggestions -ne $VivaInsightsOutlookAddInAndInlineSuggestions)
+    if ($PSBoundParameters.ContainsKey('VivaInsightsOutlookAddInAndInlineSuggestions') -and `
+        ($currentValues.VivaInsightsOutlookAddInAndInlineSuggestions -ne $VivaInsightsOutlookAddInAndInlineSuggestions))
     {
         Write-Verbose -Message "Updating Viva Insights settings for Addin and Inline Suggestions"
         Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Add-In" -IsEnabled $VivaInsightsOutlookAddInAndInlineSuggestions -Verbose:$false | Out-Null
     }
 
-    if ($currentValues.VivaInsightsScheduleSendSuggestions -ne $VivaInsightsScheduleSendSuggestions)
+    if ($PSBoundParameters.ContainsKey('VivaInsightsScheduleSendSuggestions') -and `
+        ($currentValues.VivaInsightsScheduleSendSuggestions -ne $VivaInsightsScheduleSendSuggestions))
     {
         Write-Verbose -Message "Updating Viva Insights settings for ScheduleSendSuggestions"
         Set-DefaultTenantMyAnalyticsFeatureConfig -Feature "Scheduled-send" -IsEnabled $VivaInsightsScheduleSendSuggestions -Verbose:$false | Out-Null
@@ -659,7 +666,8 @@ function Set-TargetResource
 
     # Reports Display Names
     $AdminCenterReportDisplayConcealedNamesEnabled = Get-M365DSCOrgSettingsAdminCenterReport
-    if ($AdminCenterReportDisplayConcealedNames -ne $AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames)
+    if ($PSBoundParameters.ContainsKey('AdminCenterReportDisplayConcealedNames') -and `
+        ($AdminCenterReportDisplayConcealedNames -ne $AdminCenterReportDisplayConcealedNamesEnabled.displayConcealedNames))
     {
         Write-Verbose -Message "Updating the Admin Center Report Display Concealed Names setting to {$AdminCenterReportDisplayConcealedNames}"
         Update-M365DSCOrgSettingsAdminCenterReport -DisplayConcealedNames $AdminCenterReportDisplayConcealedNames
@@ -732,31 +740,38 @@ function Set-TargetResource
 
     # Forms
     $FormsParametersToUpdate = @{}
-    if ($FormsIsExternalSendFormEnabled -ne $currentValues.FormsIsExternalSendFormEnabled)
+    if ($PSBoundParameters.ContainsKey('FormsIsExternalSendFormEnabled') -and `
+        ($FormsIsExternalSendFormEnabled -ne $currentValues.FormsIsExternalSendFormEnabled))
     {
         $FormsParametersToUpdate.Add('isExternalSendFormEnabled', $FormsIsExternalSendFormEnabled)
     }
-    if ($FormsIsExternalShareCollaborationEnabled -ne $currentValues.FormsIsExternalShareCollaborationEnabled)
+    if ($PSBoundParameters.ContainsKey('FormsIsExternalShareCollaborationEnabled') -and `
+        ($FormsIsExternalShareCollaborationEnabled -ne $currentValues.FormsIsExternalShareCollaborationEnabled))
     {
         $FormsParametersToUpdate.Add('isExternalShareCollaborationEnabled', $FormsIsExternalShareCollaborationEnabled)
     }
-    if ($FormsIsExternalShareResultEnabled -ne $currentValues.FormsIsExternalShareResultEnabled)
+    if ($PSBoundParameters.ContainsKey('FormsIsExternalShareResultEnabled') -and `
+        ($FormsIsExternalShareResultEnabled -ne $currentValues.FormsIsExternalShareResultEnabled))
     {
         $FormsParametersToUpdate.Add('isExternalShareResultEnabled', $FormsIsExternalShareResultEnabled)
     }
-    if ($FormsIsExternalShareTemplateEnabled -ne $currentValues.FormsIsExternalShareTemplateEnabled)
+    if ($PSBoundParameters.ContainsKey('FormsIsExternalShareTemplateEnabled') -and `
+        ($FormsIsExternalShareTemplateEnabled -ne $currentValues.FormsIsExternalShareTemplateEnabled))
     {
         $FormsParametersToUpdate.Add('isExternalShareTemplateEnabled', $FormsIsExternalShareTemplateEnabled)
     }
-    if ($FormsIsRecordIdentityByDefaultEnabled -ne $currentValues.FormsIsRecordIdentityByDefaultEnabled)
+    if ($PSBoundParameters.ContainsKey('FormsIsRecordIdentityByDefaultEnabled') -and `
+        ($FormsIsRecordIdentityByDefaultEnabled -ne $currentValues.FormsIsRecordIdentityByDefaultEnabled))
     {
         $FormsParametersToUpdate.Add('isRecordIdentityByDefaultEnabled', $FormsIsRecordIdentityByDefaultEnabled)
     }
-    if ($FormsIsBingImageSearchEnabled -ne $currentValues.FormsIsBingImageSearchEnabled)
+    if ($PSBoundParameters.ContainsKey('FormsIsBingImageSearchEnabled') -and `
+        ($FormsIsBingImageSearchEnabled -ne $currentValues.FormsIsBingImageSearchEnabled))
     {
         $FormsParametersToUpdate.Add('isBingImageSearchEnabled', $FormsIsBingImageSearchEnabled)
     }
-    if ($FormsIsInOrgFormsPhishingScanEnabled -ne $currentValues.FormsIsInOrgFormsPhishingScanEnabled)
+    if ($PSBoundParameters.ContainsKey('FormsIsInOrgFormsPhishingScanEnabled') -and `
+        ($FormsIsInOrgFormsPhishingScanEnabled -ne $currentValues.FormsIsInOrgFormsPhishingScanEnabled))
     {
         $FormsParametersToUpdate.Add('isInOrgFormsPhishingScanEnabled', $FormsIsInOrgFormsPhishingScanEnabled)
     }
@@ -768,15 +783,18 @@ function Set-TargetResource
 
     # Dynamics Customer Voice Settings
     $DynamicsCustomerVoiceParametersToUpdate = @{}
-    if ($DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled -ne $currentValues.DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled)
+    if ($PSBoundParameters.ContainsKey('DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled') -and `
+        ($DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled -ne $currentValues.DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled))
     {
         $DynamicsCustomerVoiceParametersToUpdate.Add('isRestrictedSurveyAccessEnabled', $DynamicsCustomerVoiceIsRestrictedSurveyAccessEnabled)
     }
-    if ($DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled -ne $currentValues.DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled)
+    if ($PSBoundParameters.ContainsKey('DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled') -and `
+        ($DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled -ne $currentValues.DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled))
     {
         $DynamicsCustomerVoiceParametersToUpdate.Add('isRecordIdentityByDefaultEnabled', $DynamicsCustomerVoiceIsRecordIdentityByDefaultEnabled)
     }
-    if ($DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled -ne $currentValues.DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled)
+    if ($PSBoundParameters.ContainsKey('DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled') -and `
+        ($DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled -ne $currentValues.DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled))
     {
         $DynamicsCustomerVoiceParametersToUpdate.Add('isInOrgFormsPhishingScanEnabled', $DynamicsCustomerVoiceIsInOrgFormsPhishingScanEnabled)
     }
@@ -788,11 +806,13 @@ function Set-TargetResource
 
     # Apps And Services
     $AppsAndServicesParametersToUpdate = @{}
-    if ($AppsAndServicesIsOfficeStoreEnabled -ne $currentValues.AppsAndServicesIsOfficeStoreEnabled)
+    if ($PSBoundParameters.ContainsKey('AppsAndServicesIsOfficeStoreEnabled') -and `
+        ($AppsAndServicesIsOfficeStoreEnabled -ne $currentValues.AppsAndServicesIsOfficeStoreEnabled))
     {
         $AppsAndServicesParametersToUpdate.Add('isOfficeStoreEnabled', $AppsAndServicesIsOfficeStoreEnabled)
     }
-    if ($AppsAndServicesIsAppAndServicesTrialEnabled -ne $currentValues.AppsAndServicesIsAppAndServicesTrialEnabled)
+    if ($PSBoundParameters.ContainsKey('AppsAndServicesIsAppAndServicesTrialEnabled') -and `
+        ($AppsAndServicesIsAppAndServicesTrialEnabled -ne $currentValues.AppsAndServicesIsAppAndServicesTrialEnabled))
     {
         $AppsAndServicesParametersToUpdate.Add('isAppAndServicesTrialEnabled', $AppsAndServicesIsAppAndServicesTrialEnabled)
     }
@@ -804,15 +824,18 @@ function Set-TargetResource
 
     # To Do
     $ToDoParametersToUpdate = @{}
-    if ($ToDoIsPushNotificationEnabled -ne $currentValues.ToDoIsPushNotificationEnabled)
+    if ($PSBoundParameters.ContainsKey('ToDoIsPushNotificationEnabled') -and `
+        ($ToDoIsPushNotificationEnabled -ne $currentValues.ToDoIsPushNotificationEnabled))
     {
         $ToDoParametersToUpdate.Add('isPushNotificationEnabled', $ToDoIsPushNotificationEnabled)
     }
-    if ($ToDoIsExternalJoinEnabled -ne $currentValues.ToDoIsExternalJoinEnabled)
+    if ($PSBoundParameters.ContainsKey('ToDoIsExternalJoinEnabled') -and `
+        ($ToDoIsExternalJoinEnabled -ne $currentValues.ToDoIsExternalJoinEnabled))
     {
         $ToDoParametersToUpdate.Add('isExternalJoinEnabled', $ToDoIsExternalJoinEnabled)
     }
-    if ($ToDoIsExternalShareEnabled -ne $currentValues.ToDoIsExternalShareEnabled)
+    if ($PSBoundParameters.ContainsKey('ToDoIsExternalShareEnabled') -and `
+        ($ToDoIsExternalShareEnabled -ne $currentValues.ToDoIsExternalShareEnabled))
     {
         $ToDoParametersToUpdate.Add('isExternalShareEnabled', $ToDoIsExternalShareEnabled)
     }
