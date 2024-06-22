@@ -440,6 +440,11 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
             foreach ($permission in $permissions)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "        |---[$j/$($permissions.Count)] $($permission.Identity)" -NoNewline
                 $Params = @{
                     Identity              = $mailbox.UserPrincipalName

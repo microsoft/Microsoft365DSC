@@ -363,6 +363,11 @@ function Export-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $Params = @{
             CdnType               = 'Public'
             ApplicationId         = $ApplicationId
@@ -397,6 +402,11 @@ function Export-TargetResource
         else
         {
             Write-Host $Global:M365DSCEmojiRedX
+        }
+
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
         }
 
         $Params = @{

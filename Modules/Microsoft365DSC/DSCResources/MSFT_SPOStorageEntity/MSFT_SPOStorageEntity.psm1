@@ -472,6 +472,11 @@ function Export-TargetResource
 
         foreach ($storageEntity in $storageEntities)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $Params = @{
                 Credential            = $Credential
                 Key                   = $storageEntity.Key

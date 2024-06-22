@@ -328,6 +328,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($user in $users)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($users.Count)] $($user.UserPrincipalName)" -NoNewline
             $params = @{
                 Identity              = $user.UserPrincipalName

@@ -33,7 +33,7 @@ function Get-TargetResource
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance[]]
         $Assignments,
-        #endregion 
+        #endregion
 
         [Parameter()]
         [System.String]
@@ -545,6 +545,11 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {

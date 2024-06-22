@@ -109,6 +109,11 @@ function Start-M365DSCConfigurationExtract
     try
     {
         $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
+
+        # Telemetry parameters initialization
+        $Global:M365DSCExportResourceTypes = @()
+        $Global:M365DSCExportResourceInstancesCount = 0
+
         $M365DSCExportStartTime = [System.DateTime]::Now
         $InformationPreference = 'Continue'
         $VerbosePreference = 'SilentlyContinue'
@@ -673,7 +678,7 @@ function Start-M365DSCConfigurationExtract
                         Write-Host "    `r`n$($Global:M365DSCEmojiYellowCircle) You specified a filter for resource {$resourceName} but it doesn't support filters. Filter will be ignored and all instances of the resource will be captured."
                     }
                 }
-
+                $Global:M365DSCExportResourceTypes += $resourceName
                 $exportString.Append((Export-TargetResource @parameters)) | Out-Null
                 $i++
             }
@@ -740,6 +745,8 @@ function Start-M365DSCConfigurationExtract
             -End ($M365DSCExportEndTime.ToString())
         Write-Host "$($Global:M365DSCEmojiHourglass) Export took {" -NoNewline
         Write-Host "$($timeTaken.TotalSeconds) seconds" -NoNewline -ForegroundColor Cyan
+        Write-Host '} for {' -NoNewline
+        Write-Host "$($Global:M365DSCExportResourceInstancesCount) instances" -NoNewline -ForegroundColor Magenta
         Write-Host '}'
         #endregion
 
@@ -862,6 +869,15 @@ function Start-M365DSCConfigurationExtract
         # Clean empty lines with semi-colons, normally generated from CIMInstances convertions to String.
         $DSCContent = $DSCContent.Replace("`r`n;`r`n", ";`r`n")
         $DSCContent.ToString() | Out-File $outputDSCFile
+
+        try
+        {
+            $Global:M365DSCExportContentSize = ((Get-Item -Path $outputDSCFile).Length/1KB).ToString().Split('.')[0] + " kb"
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
 
         if (!$AzureAutomation -and !$ManagedIdentity.IsPresent)
         {

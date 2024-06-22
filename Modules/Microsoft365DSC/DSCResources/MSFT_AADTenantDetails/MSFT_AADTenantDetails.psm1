@@ -95,7 +95,7 @@ function Get-TargetResource
                 TenantId                             = $TenantId
                 ApplicationSecret                    = $ApplicationSecret
                 CertificateThumbprint                = $CertificateThumbprint
-                Managedidentity                      = $ManagedIdentity.IsPresent
+                ManagedIdentity                      = $ManagedIdentity.IsPresent
                 AccessTokens                         = $AccessTokens
             }
             Write-Verbose -Message "Get-TargetResource Result: `n $(Convert-M365DscHashtableToString -Hashtable $result)"
@@ -364,6 +364,11 @@ function Export-TargetResource
     $dscContent = ''
     try
     {
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $AADTenantDetails = Get-MgBetaOrganization -ErrorAction Stop
 
         $Params = @{

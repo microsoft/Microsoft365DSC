@@ -516,6 +516,11 @@ function Export-TargetResource
         $i = 1
         foreach ($AvailabilityAddressSpace in $AvailabilityAddressSpaces)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AvailabilityAddressSpaces.length)] $($AvailabilityAddressSpace.Identity)" -NoNewline
 
             $Params = @{

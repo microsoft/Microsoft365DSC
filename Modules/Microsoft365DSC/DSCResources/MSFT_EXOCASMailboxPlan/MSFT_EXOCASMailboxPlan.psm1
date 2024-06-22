@@ -431,6 +431,11 @@ function Export-TargetResource
         $i = 1
         foreach ($CASMailboxPlan in $CASMailboxPlans)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($CASMailboxPlans.Count)] $($CASMailboxPlan.Identity.Split('-')[0])" -NoNewline
             $Params = @{
                 Identity              = $CASMailboxPlan.Identity

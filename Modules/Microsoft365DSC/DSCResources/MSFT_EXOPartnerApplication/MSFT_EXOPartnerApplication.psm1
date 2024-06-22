@@ -450,6 +450,11 @@ function Export-TargetResource
         $i = 1
         foreach ($PartnerApplication in $AllPartnerApplications)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllPartnerApplications.Length)] $($PartnerApplication.Name)" -NoNewline
 
             $Params = @{
