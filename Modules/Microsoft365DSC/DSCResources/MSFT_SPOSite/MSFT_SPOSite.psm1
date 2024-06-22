@@ -939,6 +939,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($site in $sites)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    [$i/$($sites.Length)] $($site.Url)" -NoNewline
             $site = Get-PnPTenantSite -Identity $site.Url
             $siteTitle = 'Null'

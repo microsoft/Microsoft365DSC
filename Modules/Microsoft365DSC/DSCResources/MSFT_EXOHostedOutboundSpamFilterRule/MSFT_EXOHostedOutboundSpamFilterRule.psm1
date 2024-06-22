@@ -536,6 +536,11 @@ function Export-TargetResource
         }
         foreach ($HostedOutboundSpamFilterRule in $HostedOutboundSpamFilterRules)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($HostedOutboundSpamFilterRules.Count)] $($HostedOutboundSpamFilterRule.Identity)" -NoNewline
             $Params = @{
                 Credential                     = $Credential

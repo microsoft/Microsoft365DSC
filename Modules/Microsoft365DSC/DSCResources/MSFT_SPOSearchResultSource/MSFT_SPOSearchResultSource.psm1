@@ -629,6 +629,11 @@ function Export-TargetResource
         }
         foreach ($source in $sources)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $mapping = $InfoMapping | Where-Object -FilterScript { $_.ProviderID -eq $source.ProviderId }
             Write-Host "    |---[$i/$($sourcesLength)] $($source.Name)" -NoNewline
 

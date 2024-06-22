@@ -679,6 +679,11 @@ function Export-TargetResource
 
             if ($null -ne $results)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                     -Results $Results
                 $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `

@@ -354,6 +354,11 @@ function Export-TargetResource
 
         foreach ($cleanupRule in $cleanupRules)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($cleanupRules.Count)] Cleanup Rule" -NoNewline
             $params = @{
                 Enabled                                = $cleanupRule.deviceInactivityBeforeRetirementInDays -gt 0

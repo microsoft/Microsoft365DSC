@@ -667,6 +667,11 @@ function Export-TargetResource
         $dscContent = ''
         foreach ($alert in $Alerts)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($totalAlerts)] $($alert.Name)" -NoNewline
             $Results = Get-TargetResource @PSBoundParameters -Name $Alert.Name
             $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `

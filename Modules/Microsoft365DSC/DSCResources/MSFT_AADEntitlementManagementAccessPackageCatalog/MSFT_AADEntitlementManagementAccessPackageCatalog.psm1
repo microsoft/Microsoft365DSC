@@ -465,6 +465,11 @@ function Export-TargetResource
 
         foreach ($catalogId in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $config = Get-MgBetaEntitlementManagementAccessPackageCatalog -AccessPackageCatalogId $catalogId
             $displayedKey = $config.id
             if (-not [String]::IsNullOrEmpty($config.displayName))

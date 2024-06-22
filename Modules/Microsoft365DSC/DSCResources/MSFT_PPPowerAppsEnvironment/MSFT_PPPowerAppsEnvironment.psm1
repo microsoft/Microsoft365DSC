@@ -329,6 +329,11 @@ function Export-TargetResource
         {
             if ($environment.EnvironmentType -ne 'Default')
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($environments.Count)] $($environment.DisplayName)" -NoNewline
                 $environmentType = $environment.EnvironmentType
                 if ($environmentType -eq 'Notspecified')

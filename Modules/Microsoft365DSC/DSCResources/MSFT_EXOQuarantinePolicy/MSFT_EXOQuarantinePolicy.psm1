@@ -641,6 +641,11 @@ function Export-TargetResource
         $i = 1
         foreach ($QuarantinePolicy in $QuarantinePolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($QuarantinePolicies.length)] $($QuarantinePolicy.Identity)" -NoNewline
 
             $Params = @{

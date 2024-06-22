@@ -170,7 +170,7 @@ function Get-TargetResource
         $results.Add('CertificateThumbprint', $CertificateThumbprint)
         $results.Add('ManagedIdentity', $ManagedIdentity.IsPresent)
         $results.Add('AccessTokens', $AccessTokens)
-        
+
         $assignmentsValues = Get-MgBetaDeviceManagementIntentAssignment -DeviceManagementIntentId $Id
         $assignmentResult = @()
         foreach ($assignmentEntry in $AssignmentsValues)
@@ -396,7 +396,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Disk Encryption for macOS with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Disk Encryption for macOS with Id {$($currentInstance.Id)}"
         #region resource generator code
         Remove-MgBetaDeviceManagementIntent -DeviceManagementIntentId $currentInstance.Id
         #endregion
@@ -677,6 +677,11 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {

@@ -568,6 +568,11 @@ function Export-TargetResource
             }
             foreach ($ClientAccessRule in $ClientAccessRules)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($ClientAccessRules.Length)] $($ClientAccessRule.Identity)" -NoNewline
                 $Params = @{
                     Identity              = $ClientAccessRule.Identity

@@ -450,6 +450,11 @@ function Export-TargetResource
 
     try
     {
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $dscContent = ''
         $Params = @{
             IsSingleInstance      = 'Yes'

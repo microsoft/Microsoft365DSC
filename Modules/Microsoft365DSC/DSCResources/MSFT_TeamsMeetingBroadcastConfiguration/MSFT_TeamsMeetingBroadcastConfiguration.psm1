@@ -358,6 +358,11 @@ function Export-TargetResource
 
         if ($Results -is [System.Collections.Hashtable] -and $Results.Count -gt 1)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
                 -Results $Results
             $results.SdnApiToken = '$ConfigurationData.Settings.SdnApiToken'

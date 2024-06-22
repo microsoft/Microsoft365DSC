@@ -398,6 +398,11 @@ function Export-TargetResource
         }
         foreach ($Case in $Cases)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    eDiscovery: [$i/$($Cases.Count)] $($Case.Name)" -NoNewline
 
             $Results = Get-TargetResource @PSBoundParameters -Name $Case.Name

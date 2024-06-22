@@ -1352,9 +1352,11 @@ function Export-M365DSCConfiguration
     }
 
     $Tenant = Get-M365DSCTenantNameFromParameterSet -ParameterSet $PSBoundParameters
+    $ConnectionMode = Get-M365DSCAuthenticationMode $PSBoundParameters
     $data.Add('Tenant', $Tenant)
     $currentExportID = (New-Guid).ToString()
     $data.Add('M365DSCExportId', $currentExportID)
+    $data.Add('ConnectionMode', $ConnectionMode)
 
     Add-M365DSCTelemetryEvent -Type 'ExportInitiated' -Data $data
     if ($null -ne $Workloads)
@@ -1425,8 +1427,16 @@ function Export-M365DSCConfiguration
     $Global:M365DSCExportInProgress = $false
 
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Tenant', $Tenant)
+    if ([System.String]::IsNullOrEmpty($data.Tenant) -and -not [System.String]::IsNullOrEmpty($TenantId))
+    {
+        $data.Add('Tenant', $TenantId)
+    }
+    else
+    {
+        $data.Add('Tenant', $Tenant)
+    }
     $data.Add('M365DSCExportId', $currentExportID)
+    $data.Add('ConnectionMode', $ConnectionMode)
     $timeTaken = [System.DateTime]::Now.Subtract($currentStartDateTime)
     $data.Add('TotalSeconds',$timeTaken.TotalSeconds)
     Add-M365DSCTelemetryEvent -Type 'ExportCompleted' -Data $data

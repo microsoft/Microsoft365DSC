@@ -402,6 +402,11 @@ function Export-TargetResource
         }
         foreach ($Rule in $Rules)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Rules.Count)] $($Rule.Name)" -NoNewline
             try
             {
