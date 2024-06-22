@@ -322,6 +322,11 @@ function Export-TargetResource
 
     try
     {
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $params = @{
             IsSingleInstance               = 'Yes'
             AllowExternalIdentitiesToLeave = $true

@@ -355,6 +355,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($cType in $cdnTypes)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/2] $cType" -NoNewline
             $Params = @{
                 Credential            = $Credential

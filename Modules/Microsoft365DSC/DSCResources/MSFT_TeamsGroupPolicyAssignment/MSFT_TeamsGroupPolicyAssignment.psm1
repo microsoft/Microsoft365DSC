@@ -416,6 +416,11 @@ function Export-TargetResource
                 continue
             }
 
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$j/$($instances.Length)] GroupPolicyAssignment {$($Group.DisplayName)-$($item.PolicyType)}" -NoNewline
             $results = @{
                 GroupDisplayName      = $Group.DisplayName

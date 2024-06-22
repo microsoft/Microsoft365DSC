@@ -350,6 +350,11 @@ function Export-TargetResource
                     $k = 1
                     foreach ($bucket in $buckets)
                     {
+                        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                        {
+                            $Global:M365DSCExportResourceInstancesCount++
+                        }
+
                         Write-Host "            |---[$k/$($buckets.Length)] $($bucket.Name)" -NoNewline
                         $params = @{
                             Name                  = $bucket.Name

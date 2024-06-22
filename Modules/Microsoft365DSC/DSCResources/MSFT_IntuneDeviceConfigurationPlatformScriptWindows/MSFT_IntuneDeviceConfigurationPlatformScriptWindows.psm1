@@ -348,7 +348,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Configuration Platform Script Windows with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Device Configuration Platform Script Windows with Id {$($currentInstance.Id)}"
         #region resource generator code
         Remove-MgBetaDeviceManagementScript -DeviceManagementScriptId $currentInstance.Id
         #endregion
@@ -580,6 +580,11 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {

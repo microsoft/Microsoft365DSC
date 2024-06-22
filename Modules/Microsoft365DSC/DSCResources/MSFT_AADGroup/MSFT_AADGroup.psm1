@@ -1153,6 +1153,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($group in $Script:exportedGroups)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Script:exportedGroups.Count)] $($group.DisplayName)" -NoNewline
             $Params = @{
                 ApplicationSecret     = $ApplicationSecret

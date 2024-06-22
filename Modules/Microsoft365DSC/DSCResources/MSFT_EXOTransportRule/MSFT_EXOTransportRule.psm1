@@ -767,220 +767,232 @@ function Get-TargetResource
 
     $TransportRule = Get-TransportRule -Identity $Name -ErrorAction 'SilentlyContinue'
 
-    if ($null -eq $TransportRule)
+    try
     {
-        Write-Verbose -Message "Transport Rule $($Name) does not exist."
-        $nullReturn = $PSBoundParameters
-        $nullReturn.Ensure = 'Absent'
-        return $nullReturn
-    }
-    else
-    {
-        $MessageContainsDataClassificationsValue = $null
-        if ($null -ne $TransportRule.MessageContainsDataClassifications)
+        if ($null -eq $TransportRule)
         {
-            $MessageContainsDataClassificationsValue = $TransportRule.MessageContainsDataClassifications.Replace('"', "'")
-        }
-
-        if ($TransportRule.State -eq "Enabled")
-        {
-            $enabled = $true
+            Write-Verbose -Message "Transport Rule $($Name) does not exist."
+            $nullReturn = $PSBoundParameters
+            $nullReturn.Ensure = 'Absent'
+            return $nullReturn
         }
         else
         {
-            $enabled = $false
-        }
+            $MessageContainsDataClassificationsValue = $null
+            if ($null -ne $TransportRule.MessageContainsDataClassifications)
+            {
+                $MessageContainsDataClassificationsValue = $TransportRule.MessageContainsDataClassifications.Replace('"', "'")
+            }
 
-        $result = @{
-            Name                                         = $TransportRule.Name
-            ADComparisonAttribute                        = $TransportRule.ADComparisonAttribute
-            ADComparisonOperator                         = $TransportRule.ADComparisonOperator
-            ActivationDate                               = $TransportRule.ActivationDate
-            AddManagerAsRecipientType                    = $TransportRule.AddManagerAsRecipientType
-            AddToRecipients                              = $TransportRule.AddToRecipients
-            AnyOfCcHeader                                = $TransportRule.AnyOfCcHeader
-            AnyOfCcHeaderMemberOf                        = $TransportRule.AnyOfCcHeaderMemberOf
-            AnyOfRecipientAddressContainsWords           = $TransportRule.AnyOfRecipientAddressContainsWords
-            AnyOfRecipientAddressMatchesPatterns         = $TransportRule.AnyOfRecipientAddressMatchesPatterns
-            AnyOfToCcHeader                              = $TransportRule.AnyOfToCcHeader
-            AnyOfToCcHeaderMemberOf                      = $TransportRule.AnyOfToCcHeaderMemberOf
-            AnyOfToHeader                                = $TransportRule.AnyOfToHeader
-            AnyOfToHeaderMemberOf                        = $TransportRule.AnyOfToHeaderMemberOf
-            ApplyClassification                          = $TransportRule.ApplyClassification
-            ApplyHtmlDisclaimerFallbackAction            = $TransportRule.ApplyHtmlDisclaimerFallbackAction
-            ApplyHtmlDisclaimerLocation                  = $TransportRule.ApplyHtmlDisclaimerLocation
-            ApplyHtmlDisclaimerText                      = $TransportRule.ApplyHtmlDisclaimerText
-            ApplyOME                                     = $TransportRule.ApplyOME
-            ApplyRightsProtectionCustomizationTemplate   = $TransportRule.ApplyRightsProtectionCustomizationTemplate
-            ApplyRightsProtectionTemplate                = $TransportRule.ApplyRightsProtectionTemplate
-            AttachmentContainsWords                      = $TransportRule.AttachmentContainsWords
-            AttachmentExtensionMatchesWords              = $TransportRule.AttachmentExtensionMatchesWords
-            AttachmentHasExecutableContent               = $TransportRule.AttachmentHasExecutableContent
-            AttachmentIsPasswordProtected                = $TransportRule.AttachmentIsPasswordProtected
-            AttachmentIsUnsupported                      = $TransportRule.AttachmentIsUnsupported
-            AttachmentMatchesPatterns                    = $TransportRule.AttachmentMatchesPatterns
-            AttachmentNameMatchesPatterns                = $TransportRule.AttachmentNameMatchesPatterns
-            AttachmentPropertyContainsWords              = $TransportRule.AttachmentPropertyContainsWords
-            AttachmentProcessingLimitExceeded            = $TransportRule.AttachmentProcessingLimitExceeded
-            AttachmentSizeOver                           = $TransportRule.AttachmentSizeOver
-            BetweenMemberOf1                             = $TransportRule.BetweenMemberOf1
-            BetweenMemberOf2                             = $TransportRule.BetweenMemberOf2
-            BlindCopyTo                                  = $TransportRule.BlindCopyTo
-            Comments                                     = $TransportRule.Comments
-            ContentCharacterSetContainsWords             = $TransportRule.ContentCharacterSetContainsWords
-            CopyTo                                       = $TransportRule.CopyTo
-            DeleteMessage                                = $TransportRule.DeleteMessage
-            DlpPolicy                                    = $TransportRule.DlpPolicy
-            Enabled                                      = $enabled
-            ExceptIfADComparisonAttribute                = $TransportRule.ExceptIfADComparisonAttribute
-            ExceptIfADComparisonOperator                 = $TransportRule.ExceptIfADComparisonOperator
-            ExceptIfAnyOfCcHeader                        = $TransportRule.ExceptIfAnyOfCcHeader
-            ExceptIfAnyOfCcHeaderMemberOf                = $TransportRule.ExceptIfAnyOfCcHeaderMemberOf
-            ExceptIfAnyOfRecipientAddressContainsWords   = $TransportRule.ExceptIfAnyOfRecipientAddressContainsWords
-            ExceptIfAnyOfRecipientAddressMatchesPatterns = $TransportRule.ExceptIfAnyOfRecipientAddressMatchesPatterns
-            ExceptIfAnyOfToCcHeader                      = $TransportRule.ExceptIfAnyOfToCcHeader
-            ExceptIfAnyOfToCcHeaderMemberOf              = $TransportRule.ExceptIfAnyOfToCcHeaderMemberOf
-            ExceptIfAnyOfToHeader                        = $TransportRule.ExceptIfAnyOfToHeader
-            ExceptIfAnyOfToHeaderMemberOf                = $TransportRule.ExceptIfAnyOfToHeaderMemberOf
-            ExceptIfAttachmentContainsWords              = $TransportRule.ExceptIfAttachmentContainsWords
-            ExceptIfAttachmentExtensionMatchesWords      = $TransportRule.ExceptIfAttachmentExtensionMatchesWords
-            ExceptIfAttachmentHasExecutableContent       = $TransportRule.ExceptIfAttachmentHasExecutableContent
-            ExceptIfAttachmentIsPasswordProtected        = $TransportRule.ExceptIfAttachmentIsPasswordProtected
-            ExceptIfAttachmentIsUnsupported              = $TransportRule.ExceptIfAttachmentIsUnsupported
-            ExceptIfAttachmentMatchesPatterns            = $TransportRule.ExceptIfAttachmentMatchesPatterns
-            ExceptIfAttachmentNameMatchesPatterns        = $TransportRule.ExceptIfAttachmentNameMatchesPatterns
-            ExceptIfAttachmentPropertyContainsWords      = $TransportRule.ExceptIfAttachmentPropertyContainsWords
-            ExceptIfAttachmentProcessingLimitExceeded    = $TransportRule.ExceptIfAttachmentProcessingLimitExceeded
-            ExceptIfAttachmentSizeOver                   = $TransportRule.ExceptIfAttachmentSizeOver
-            ExceptIfBetweenMemberOf1                     = $TransportRule.ExceptIfBetweenMemberOf1
-            ExceptIfBetweenMemberOf2                     = $TransportRule.ExceptIfBetweenMemberOf2
-            ExceptIfContentCharacterSetContainsWords     = $TransportRule.ExceptIfContentCharacterSetContainsWords
-            ExceptIfFrom                                 = $TransportRule.ExceptIfFrom
-            ExceptIfFromAddressContainsWords             = $TransportRule.ExceptIfFromAddressContainsWords
-            ExceptIfFromAddressMatchesPatterns           = $TransportRule.ExceptIfFromAddressMatchesPatterns
-            ExceptIfFromMemberOf                         = $TransportRule.ExceptIfFromMemberOf
-            ExceptIfFromScope                            = $TransportRule.ExceptIfFromScope
-            ExceptIfHasClassification                    = $TransportRule.ExceptIfHasClassification
-            ExceptIfHasNoClassification                  = $TransportRule.ExceptIfHasNoClassification
-            ExceptIfHeaderContainsMessageHeader          = $TransportRule.ExceptIfHeaderContainsMessageHeader
-            ExceptIfHeaderContainsWords                  = $TransportRule.ExceptIfHeaderContainsWords
-            ExceptIfHeaderMatchesMessageHeader           = $TransportRule.ExceptIfHeaderMatchesMessageHeader
-            ExceptIfHeaderMatchesPatterns                = $TransportRule.ExceptIfHeaderMatchesPatterns
-            ExceptIfManagerAddresses                     = $TransportRule.ExceptIfManagerAddresses
-            ExceptIfManagerForEvaluatedUser              = $TransportRule.ExceptIfManagerForEvaluatedUser
-            ExceptIfMessageTypeMatches                   = $TransportRule.ExceptIfMessageTypeMatches
-            ExceptIfMessageSizeOver                      = $TransportRule.ExceptIfMessageSizeOver
-            ExceptIfRecipientADAttributeContainsWords    = $TransportRule.ExceptIfRecipientADAttributeContainsWords
-            ExceptIfRecipientADAttributeMatchesPatterns  = $TransportRule.ExceptIfRecipientADAttributeMatchesPatterns
-            ExceptIfRecipientAddressContainsWords        = $TransportRule.ExceptIfRecipientAddressContainsWords
-            ExceptIfRecipientAddressMatchesPatterns      = $TransportRule.ExceptIfRecipientAddressMatchesPatterns
-            ExceptIfRecipientDomainIs                    = $TransportRule.ExceptIfRecipientDomainIs
-            ExceptIfRecipientInSenderList                = $TransportRule.ExceptIfRecipientInSenderList
-            ExceptIfSCLOver                              = $TransportRule.ExceptIfSCLOver
-            ExceptIfSenderADAttributeContainsWords       = $TransportRule.ExceptIfSenderADAttributeContainsWords
-            ExceptIfSenderADAttributeMatchesPatterns     = $TransportRule.ExceptIfSenderADAttributeMatchesPatterns
-            ExceptIfSenderDomainIs                       = $TransportRule.ExceptIfSenderDomainIs
-            ExceptIfSenderInRecipientList                = $TransportRule.ExceptIfSenderInRecipientList
-            ExceptIfSenderIpRanges                       = $TransportRule.ExceptIfSenderIpRanges
-            ExceptIfSenderManagementRelationship         = $TransportRule.ExceptIfSenderManagementRelationship
-            ExceptIfSentTo                               = $TransportRule.ExceptIfSentTo
-            ExceptIfSentToMemberOf                       = $TransportRule.ExceptIfSentToMemberOf
-            ExceptIfSentToScope                          = $TransportRule.ExceptIfSentToScope
-            ExceptIfSubjectContainsWords                 = $TransportRule.ExceptIfSubjectContainsWords
-            ExceptIfSubjectMatchesPatterns               = $TransportRule.ExceptIfSubjectMatchesPatterns
-            ExceptIfSubjectOrBodyContainsWords           = $TransportRule.ExceptIfSubjectOrBodyContainsWords
-            ExceptIfSubjectOrBodyMatchesPatterns         = $TransportRule.ExceptIfSubjectOrBodyMatchesPatterns
-            ExceptIfWithImportance                       = $TransportRule.ExceptIfWithImportance
-            ExpiryDate                                   = $TransportRule.ExpiryDate
-            From                                         = $TransportRule.From
-            FromAddressContainsWords                     = $TransportRule.FromAddressContainsWords
-            FromAddressMatchesPatterns                   = $TransportRule.FromAddressMatchesPatterns
-            FromMemberOf                                 = $TransportRule.FromMemberOf
-            FromScope                                    = $TransportRule.FromScope
-            GenerateIncidentReport                       = $TransportRule.GenerateIncidentReport
-            GenerateNotification                         = $TransportRule.GenerateNotification
-            HasClassification                            = $TransportRule.HasClassification
-            HasNoClassification                          = $TransportRule.HasNoClassification
-            HeaderContainsMessageHeader                  = $TransportRule.HeaderContainsMessageHeader
-            HeaderContainsWords                          = $TransportRule.HeaderContainsWords
-            HeaderMatchesMessageHeader                   = $TransportRule.HeaderMatchesMessageHeader
-            HeaderMatchesPatterns                        = $TransportRule.HeaderMatchesPatterns
-            IncidentReportContent                        = $TransportRule.IncidentReportContent
-            ManagerAddresses                             = $TransportRule.ManagerAddresses
-            ManagerForEvaluatedUser                      = $TransportRule.ManagerForEvaluatedUser
-            MessageSizeOver                              = $TransportRule.MessageSizeOver
-            MessageTypeMatches                           = $TransportRule.MessageTypeMatches
-            Mode                                         = $TransportRule.Mode
-            ModerateMessageByManager                     = $TransportRule.ModerateMessageByManager
-            ModerateMessageByUser                        = $TransportRule.ModerateMessageByUser
-            PrependSubject                               = $TransportRule.PrependSubject
-            Priority                                     = $TransportRule.Priority
-            Quarantine                                   = $TransportRule.Quarantine
-            RecipientADAttributeContainsWords            = $TransportRule.RecipientADAttributeContainsWords
-            RecipientADAttributeMatchesPatterns          = $TransportRule.RecipientADAttributeMatchesPatterns
-            RecipientAddressContainsWords                = $TransportRule.RecipientAddressContainsWords
-            RecipientAddressMatchesPatterns              = $TransportRule.RecipientAddressMatchesPatterns
-            RecipientAddressType                         = $TransportRule.RecipientAddressType
-            RecipientDomainIs                            = $TransportRule.RecipientDomainIs
-            RecipientInSenderList                        = $TransportRule.RecipientInSenderList
-            RedirectMessageTo                            = $TransportRule.RedirectMessageTo
-            RejectMessageEnhancedStatusCode              = $TransportRule.RejectMessageEnhancedStatusCode
-            RejectMessageReasonText                      = $TransportRule.RejectMessageReasonText
-            RemoveHeader                                 = $TransportRule.RemoveHeader
-            RemoveOME                                    = $TransportRule.RemoveOME
-            RemoveOMEv2                                  = $TransportRule.RemoveOMEv2
-            RemoveRMSAttachmentEncryption                = $TransportRule.RemoveRMSAttachmentEncryption
-            RouteMessageOutboundConnector                = $TransportRule.RouteMessageOutboundConnector
-            RouteMessageOutboundRequireTls               = $TransportRule.RouteMessageOutboundRequireTls
-            RuleErrorAction                              = $TransportRule.RuleErrorAction
-            RuleSubType                                  = $TransportRule.RuleSubType
-            SCLOver                                      = $TransportRule.SCLOver
-            SenderADAttributeContainsWords               = $TransportRule.SenderADAttributeContainsWords
-            SenderADAttributeMatchesPatterns             = $TransportRule.SenderADAttributeMatchesPatterns
-            SenderAddressLocation                        = $TransportRule.SenderAddressLocation
-            SenderDomainIs                               = $TransportRule.SenderDomainIs
-            SenderInRecipientList                        = $TransportRule.SenderInRecipientList
-            SenderIpRanges                               = $TransportRule.SenderIpRanges
-            SenderManagementRelationship                 = $TransportRule.SenderManagementRelationship
-            SentTo                                       = $TransportRule.SentTo
-            SentToMemberOf                               = $TransportRule.SentToMemberOf
-            SentToScope                                  = $TransportRule.SentToScope
-            SetAuditSeverity                             = $TransportRule.SetAuditSeverity
-            SetHeaderName                                = $TransportRule.SetHeaderName
-            SetHeaderValue                               = $TransportRule.SetHeaderValue
-            SetSCL                                       = $TransportRule.SetSCL
-            StopRuleProcessing                           = $TransportRule.StopRuleProcessing
-            SubjectContainsWords                         = $TransportRule.SubjectContainsWords
-            SubjectMatchesPatterns                       = $TransportRule.SubjectMatchesPatterns
-            SubjectOrBodyContainsWords                   = $TransportRule.SubjectOrBodyContainsWords
-            SubjectOrBodyMatchesPatterns                 = $TransportRule.SubjectOrBodyMatchesPatterns
-            WithImportance                               = $TransportRule.WithImportance
-            Ensure                                       = 'Present'
-            Credential                                   = $Credential
-            ApplicationId                                = $ApplicationId
-            CertificateThumbprint                        = $CertificateThumbprint
-            CertificatePath                              = $CertificatePath
-            CertificatePassword                          = $CertificatePassword
-            Managedidentity                              = $ManagedIdentity.IsPresent
-            TenantId                                     = $TenantId
-            AccessTokens                                 = $AccessTokens
-        }
+            if ($TransportRule.State -eq "Enabled")
+            {
+                $enabled = $true
+            }
+            else
+            {
+                $enabled = $false
+            }
 
-        # Formats DateTime as String
-        if ($null -ne $result.ActivationDate)
-        {
-            $result.ActivationDate = $TransportRule.ActivationDate.ToUniversalTime().ToString()
-        }
-        if ($null -ne $result.ExpiryDate)
-        {
-            $result.ExpiryDate = $TransportRule.ExpiryDate.ToUniversalTime().ToString()
-        }
+            $result = @{
+                Name                                         = $TransportRule.Name
+                ADComparisonAttribute                        = $TransportRule.ADComparisonAttribute
+                ADComparisonOperator                         = $TransportRule.ADComparisonOperator
+                ActivationDate                               = $TransportRule.ActivationDate
+                AddManagerAsRecipientType                    = $TransportRule.AddManagerAsRecipientType
+                AddToRecipients                              = $TransportRule.AddToRecipients
+                AnyOfCcHeader                                = $TransportRule.AnyOfCcHeader
+                AnyOfCcHeaderMemberOf                        = $TransportRule.AnyOfCcHeaderMemberOf
+                AnyOfRecipientAddressContainsWords           = $TransportRule.AnyOfRecipientAddressContainsWords
+                AnyOfRecipientAddressMatchesPatterns         = $TransportRule.AnyOfRecipientAddressMatchesPatterns
+                AnyOfToCcHeader                              = $TransportRule.AnyOfToCcHeader
+                AnyOfToCcHeaderMemberOf                      = $TransportRule.AnyOfToCcHeaderMemberOf
+                AnyOfToHeader                                = $TransportRule.AnyOfToHeader
+                AnyOfToHeaderMemberOf                        = $TransportRule.AnyOfToHeaderMemberOf
+                ApplyClassification                          = $TransportRule.ApplyClassification
+                ApplyHtmlDisclaimerFallbackAction            = $TransportRule.ApplyHtmlDisclaimerFallbackAction
+                ApplyHtmlDisclaimerLocation                  = $TransportRule.ApplyHtmlDisclaimerLocation
+                ApplyHtmlDisclaimerText                      = $TransportRule.ApplyHtmlDisclaimerText
+                ApplyOME                                     = $TransportRule.ApplyOME
+                ApplyRightsProtectionCustomizationTemplate   = $TransportRule.ApplyRightsProtectionCustomizationTemplate
+                ApplyRightsProtectionTemplate                = $TransportRule.ApplyRightsProtectionTemplate
+                AttachmentContainsWords                      = $TransportRule.AttachmentContainsWords
+                AttachmentExtensionMatchesWords              = $TransportRule.AttachmentExtensionMatchesWords
+                AttachmentHasExecutableContent               = $TransportRule.AttachmentHasExecutableContent
+                AttachmentIsPasswordProtected                = $TransportRule.AttachmentIsPasswordProtected
+                AttachmentIsUnsupported                      = $TransportRule.AttachmentIsUnsupported
+                AttachmentMatchesPatterns                    = $TransportRule.AttachmentMatchesPatterns
+                AttachmentNameMatchesPatterns                = $TransportRule.AttachmentNameMatchesPatterns
+                AttachmentPropertyContainsWords              = $TransportRule.AttachmentPropertyContainsWords
+                AttachmentProcessingLimitExceeded            = $TransportRule.AttachmentProcessingLimitExceeded
+                AttachmentSizeOver                           = $TransportRule.AttachmentSizeOver
+                BetweenMemberOf1                             = $TransportRule.BetweenMemberOf1
+                BetweenMemberOf2                             = $TransportRule.BetweenMemberOf2
+                BlindCopyTo                                  = $TransportRule.BlindCopyTo
+                Comments                                     = $TransportRule.Comments
+                ContentCharacterSetContainsWords             = $TransportRule.ContentCharacterSetContainsWords
+                CopyTo                                       = $TransportRule.CopyTo
+                DeleteMessage                                = $TransportRule.DeleteMessage
+                DlpPolicy                                    = $TransportRule.DlpPolicy
+                Enabled                                      = $enabled
+                ExceptIfADComparisonAttribute                = $TransportRule.ExceptIfADComparisonAttribute
+                ExceptIfADComparisonOperator                 = $TransportRule.ExceptIfADComparisonOperator
+                ExceptIfAnyOfCcHeader                        = $TransportRule.ExceptIfAnyOfCcHeader
+                ExceptIfAnyOfCcHeaderMemberOf                = $TransportRule.ExceptIfAnyOfCcHeaderMemberOf
+                ExceptIfAnyOfRecipientAddressContainsWords   = $TransportRule.ExceptIfAnyOfRecipientAddressContainsWords
+                ExceptIfAnyOfRecipientAddressMatchesPatterns = $TransportRule.ExceptIfAnyOfRecipientAddressMatchesPatterns
+                ExceptIfAnyOfToCcHeader                      = $TransportRule.ExceptIfAnyOfToCcHeader
+                ExceptIfAnyOfToCcHeaderMemberOf              = $TransportRule.ExceptIfAnyOfToCcHeaderMemberOf
+                ExceptIfAnyOfToHeader                        = $TransportRule.ExceptIfAnyOfToHeader
+                ExceptIfAnyOfToHeaderMemberOf                = $TransportRule.ExceptIfAnyOfToHeaderMemberOf
+                ExceptIfAttachmentContainsWords              = $TransportRule.ExceptIfAttachmentContainsWords
+                ExceptIfAttachmentExtensionMatchesWords      = $TransportRule.ExceptIfAttachmentExtensionMatchesWords
+                ExceptIfAttachmentHasExecutableContent       = $TransportRule.ExceptIfAttachmentHasExecutableContent
+                ExceptIfAttachmentIsPasswordProtected        = $TransportRule.ExceptIfAttachmentIsPasswordProtected
+                ExceptIfAttachmentIsUnsupported              = $TransportRule.ExceptIfAttachmentIsUnsupported
+                ExceptIfAttachmentMatchesPatterns            = $TransportRule.ExceptIfAttachmentMatchesPatterns
+                ExceptIfAttachmentNameMatchesPatterns        = $TransportRule.ExceptIfAttachmentNameMatchesPatterns
+                ExceptIfAttachmentPropertyContainsWords      = $TransportRule.ExceptIfAttachmentPropertyContainsWords
+                ExceptIfAttachmentProcessingLimitExceeded    = $TransportRule.ExceptIfAttachmentProcessingLimitExceeded
+                ExceptIfAttachmentSizeOver                   = $TransportRule.ExceptIfAttachmentSizeOver
+                ExceptIfBetweenMemberOf1                     = $TransportRule.ExceptIfBetweenMemberOf1
+                ExceptIfBetweenMemberOf2                     = $TransportRule.ExceptIfBetweenMemberOf2
+                ExceptIfContentCharacterSetContainsWords     = $TransportRule.ExceptIfContentCharacterSetContainsWords
+                ExceptIfFrom                                 = $TransportRule.ExceptIfFrom
+                ExceptIfFromAddressContainsWords             = $TransportRule.ExceptIfFromAddressContainsWords
+                ExceptIfFromAddressMatchesPatterns           = $TransportRule.ExceptIfFromAddressMatchesPatterns
+                ExceptIfFromMemberOf                         = $TransportRule.ExceptIfFromMemberOf
+                ExceptIfFromScope                            = $TransportRule.ExceptIfFromScope
+                ExceptIfHasClassification                    = $TransportRule.ExceptIfHasClassification
+                ExceptIfHasNoClassification                  = $TransportRule.ExceptIfHasNoClassification
+                ExceptIfHeaderContainsMessageHeader          = $TransportRule.ExceptIfHeaderContainsMessageHeader
+                ExceptIfHeaderContainsWords                  = $TransportRule.ExceptIfHeaderContainsWords
+                ExceptIfHeaderMatchesMessageHeader           = $TransportRule.ExceptIfHeaderMatchesMessageHeader
+                ExceptIfHeaderMatchesPatterns                = $TransportRule.ExceptIfHeaderMatchesPatterns
+                ExceptIfManagerAddresses                     = $TransportRule.ExceptIfManagerAddresses
+                ExceptIfManagerForEvaluatedUser              = $TransportRule.ExceptIfManagerForEvaluatedUser
+                ExceptIfMessageTypeMatches                   = $TransportRule.ExceptIfMessageTypeMatches
+                ExceptIfMessageSizeOver                      = $TransportRule.ExceptIfMessageSizeOver
+                ExceptIfRecipientADAttributeContainsWords    = $TransportRule.ExceptIfRecipientADAttributeContainsWords
+                ExceptIfRecipientADAttributeMatchesPatterns  = $TransportRule.ExceptIfRecipientADAttributeMatchesPatterns
+                ExceptIfRecipientAddressContainsWords        = $TransportRule.ExceptIfRecipientAddressContainsWords
+                ExceptIfRecipientAddressMatchesPatterns      = $TransportRule.ExceptIfRecipientAddressMatchesPatterns
+                ExceptIfRecipientDomainIs                    = $TransportRule.ExceptIfRecipientDomainIs
+                ExceptIfRecipientInSenderList                = $TransportRule.ExceptIfRecipientInSenderList
+                ExceptIfSCLOver                              = $TransportRule.ExceptIfSCLOver
+                ExceptIfSenderADAttributeContainsWords       = $TransportRule.ExceptIfSenderADAttributeContainsWords
+                ExceptIfSenderADAttributeMatchesPatterns     = $TransportRule.ExceptIfSenderADAttributeMatchesPatterns
+                ExceptIfSenderDomainIs                       = $TransportRule.ExceptIfSenderDomainIs
+                ExceptIfSenderInRecipientList                = $TransportRule.ExceptIfSenderInRecipientList
+                ExceptIfSenderIpRanges                       = $TransportRule.ExceptIfSenderIpRanges
+                ExceptIfSenderManagementRelationship         = $TransportRule.ExceptIfSenderManagementRelationship
+                ExceptIfSentTo                               = $TransportRule.ExceptIfSentTo
+                ExceptIfSentToMemberOf                       = $TransportRule.ExceptIfSentToMemberOf
+                ExceptIfSentToScope                          = $TransportRule.ExceptIfSentToScope
+                ExceptIfSubjectContainsWords                 = $TransportRule.ExceptIfSubjectContainsWords
+                ExceptIfSubjectMatchesPatterns               = $TransportRule.ExceptIfSubjectMatchesPatterns
+                ExceptIfSubjectOrBodyContainsWords           = $TransportRule.ExceptIfSubjectOrBodyContainsWords
+                ExceptIfSubjectOrBodyMatchesPatterns         = $TransportRule.ExceptIfSubjectOrBodyMatchesPatterns
+                ExceptIfWithImportance                       = $TransportRule.ExceptIfWithImportance
+                ExpiryDate                                   = $TransportRule.ExpiryDate
+                From                                         = $TransportRule.From
+                FromAddressContainsWords                     = $TransportRule.FromAddressContainsWords
+                FromAddressMatchesPatterns                   = $TransportRule.FromAddressMatchesPatterns
+                FromMemberOf                                 = $TransportRule.FromMemberOf
+                FromScope                                    = $TransportRule.FromScope
+                GenerateIncidentReport                       = $TransportRule.GenerateIncidentReport
+                GenerateNotification                         = $TransportRule.GenerateNotification
+                HasClassification                            = $TransportRule.HasClassification
+                HasNoClassification                          = $TransportRule.HasNoClassification
+                HeaderContainsMessageHeader                  = $TransportRule.HeaderContainsMessageHeader
+                HeaderContainsWords                          = $TransportRule.HeaderContainsWords
+                HeaderMatchesMessageHeader                   = $TransportRule.HeaderMatchesMessageHeader
+                HeaderMatchesPatterns                        = $TransportRule.HeaderMatchesPatterns
+                IncidentReportContent                        = $TransportRule.IncidentReportContent
+                ManagerAddresses                             = $TransportRule.ManagerAddresses
+                ManagerForEvaluatedUser                      = $TransportRule.ManagerForEvaluatedUser
+                MessageSizeOver                              = $TransportRule.MessageSizeOver
+                MessageTypeMatches                           = $TransportRule.MessageTypeMatches
+                Mode                                         = $TransportRule.Mode
+                ModerateMessageByManager                     = $TransportRule.ModerateMessageByManager
+                ModerateMessageByUser                        = $TransportRule.ModerateMessageByUser
+                PrependSubject                               = $TransportRule.PrependSubject
+                Priority                                     = $TransportRule.Priority
+                Quarantine                                   = $TransportRule.Quarantine
+                RecipientADAttributeContainsWords            = $TransportRule.RecipientADAttributeContainsWords
+                RecipientADAttributeMatchesPatterns          = $TransportRule.RecipientADAttributeMatchesPatterns
+                RecipientAddressContainsWords                = $TransportRule.RecipientAddressContainsWords
+                RecipientAddressMatchesPatterns              = $TransportRule.RecipientAddressMatchesPatterns
+                RecipientAddressType                         = $TransportRule.RecipientAddressType
+                RecipientDomainIs                            = $TransportRule.RecipientDomainIs
+                RecipientInSenderList                        = $TransportRule.RecipientInSenderList
+                RedirectMessageTo                            = $TransportRule.RedirectMessageTo
+                RejectMessageEnhancedStatusCode              = $TransportRule.RejectMessageEnhancedStatusCode
+                RejectMessageReasonText                      = $TransportRule.RejectMessageReasonText
+                RemoveHeader                                 = $TransportRule.RemoveHeader
+                RemoveOME                                    = $TransportRule.RemoveOME
+                RemoveOMEv2                                  = $TransportRule.RemoveOMEv2
+                RemoveRMSAttachmentEncryption                = $TransportRule.RemoveRMSAttachmentEncryption
+                RouteMessageOutboundConnector                = $TransportRule.RouteMessageOutboundConnector
+                RouteMessageOutboundRequireTls               = $TransportRule.RouteMessageOutboundRequireTls
+                RuleErrorAction                              = $TransportRule.RuleErrorAction
+                RuleSubType                                  = $TransportRule.RuleSubType
+                SCLOver                                      = $TransportRule.SCLOver
+                SenderADAttributeContainsWords               = $TransportRule.SenderADAttributeContainsWords
+                SenderADAttributeMatchesPatterns             = $TransportRule.SenderADAttributeMatchesPatterns
+                SenderAddressLocation                        = $TransportRule.SenderAddressLocation
+                SenderDomainIs                               = $TransportRule.SenderDomainIs
+                SenderInRecipientList                        = $TransportRule.SenderInRecipientList
+                SenderIpRanges                               = $TransportRule.SenderIpRanges
+                SenderManagementRelationship                 = $TransportRule.SenderManagementRelationship
+                SentTo                                       = $TransportRule.SentTo
+                SentToMemberOf                               = $TransportRule.SentToMemberOf
+                SentToScope                                  = $TransportRule.SentToScope
+                SetAuditSeverity                             = $TransportRule.SetAuditSeverity
+                SetHeaderName                                = $TransportRule.SetHeaderName
+                SetHeaderValue                               = $TransportRule.SetHeaderValue
+                SetSCL                                       = $TransportRule.SetSCL
+                StopRuleProcessing                           = $TransportRule.StopRuleProcessing
+                SubjectContainsWords                         = $TransportRule.SubjectContainsWords
+                SubjectMatchesPatterns                       = $TransportRule.SubjectMatchesPatterns
+                SubjectOrBodyContainsWords                   = $TransportRule.SubjectOrBodyContainsWords
+                SubjectOrBodyMatchesPatterns                 = $TransportRule.SubjectOrBodyMatchesPatterns
+                WithImportance                               = $TransportRule.WithImportance
+                Ensure                                       = 'Present'
+                Credential                                   = $Credential
+                ApplicationId                                = $ApplicationId
+                CertificateThumbprint                        = $CertificateThumbprint
+                CertificatePath                              = $CertificatePath
+                CertificatePassword                          = $CertificatePassword
+                Managedidentity                              = $ManagedIdentity.IsPresent
+                TenantId                                     = $TenantId
+                AccessTokens                                 = $AccessTokens
+            }
 
-        Write-Verbose -Message "Found Transport Rule $($Name)"
-        return $result
+            # Formats DateTime as String
+            if ($null -ne $result.ActivationDate)
+            {
+                $result.ActivationDate = $TransportRule.ActivationDate.ToUniversalTime().ToString()
+            }
+            if ($null -ne $result.ExpiryDate)
+            {
+                $result.ExpiryDate = $TransportRule.ExpiryDate.ToUniversalTime().ToString()
+            }
+
+            Write-Verbose -Message "Found Transport Rule $($Name)"
+            return $result
+        }
+    }
+    catch
+    {
+        New-M365DSCLogEntry -Message 'Error retrieving data:' `
+            -Exception $_ `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -TenantId $TenantId `
+            -Credential $Credential
+
+        return $nullReturn
     }
 }
-
 function Set-TargetResource
 {
     [CmdletBinding()]
@@ -2635,6 +2647,11 @@ function Export-TargetResource
         }
         foreach ($TransportRule in $AllTransportRules)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllTransportRules.Count)] $($TransportRule.Name)" -NoNewline
             $Params = @{
                 Name                  = $TransportRule.Name

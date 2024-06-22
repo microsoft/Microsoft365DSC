@@ -356,6 +356,11 @@ function Export-TargetResource
         }
         foreach ($Property in $Properties)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Properties.Length)] $($Property.Name)" -NoNewline
 
             $Results = Get-TargetResource @PSBoundParameters -Name $Property.DisplayName

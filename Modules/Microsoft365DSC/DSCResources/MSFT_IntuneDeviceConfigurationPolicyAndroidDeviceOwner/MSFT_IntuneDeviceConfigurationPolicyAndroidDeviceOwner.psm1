@@ -2477,6 +2477,11 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($getValue.Count)] $($config.displayName)" -NoNewline
             $params = @{
                 Id                    = $config.id

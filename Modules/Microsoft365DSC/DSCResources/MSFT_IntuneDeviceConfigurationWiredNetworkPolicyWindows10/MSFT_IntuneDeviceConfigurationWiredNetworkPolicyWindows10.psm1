@@ -1094,6 +1094,11 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
@@ -1225,12 +1230,12 @@ function Update-DeviceConfigurationPolicyCertificateId
     )
 
     $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windowsWiredNetworkConfiguration/$CertificateName/`$ref"
-    
+
     if ($CertificateName -eq 'rootCertificatesForServerValidation')
     {
         $method = 'POST'
     }
-    else 
+    else
     {
         $method = 'PUT'
     }

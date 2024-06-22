@@ -593,6 +593,11 @@ function Export-TargetResource
                 $k = 1
                 foreach ($tab in $tabs)
                 {
+                    if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                    {
+                        $Global:M365DSCExportResourceInstancesCount++
+                    }
+
                     Write-Host "            |---[$k/$($tabs.Length)] $($tab.DisplayName)" -NoNewline
                     $params = @{
                         TeamName              = $team.DisplayName

@@ -472,6 +472,11 @@ function Export-TargetResource
         $i = 1
         foreach ($OnPremisesOrganization in $AllOnPremisesOrganizations)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllOnPremisesOrganizations.Count)] $($OnPremisesOrganization.Identity)" -NoNewline
 
             $Params = @{

@@ -2051,6 +2051,11 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
             foreach ($Policy in $Policies)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($Policies.Count)] $($Policy.DisplayName)" -NoNewline
                 $Params = @{
                     DisplayName           = $Policy.DisplayName

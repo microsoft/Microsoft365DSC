@@ -10,6 +10,17 @@
 * MISC
   * Add group display name export and update assignment comparison across Intune resources
 
+# 1.24.619.1
+
+* SCDLPComplianceRule
+  * Fix #4259 and #3845
+* TeamsM365App
+  * Initial release.
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 6.4.0.
+* MISC
+  * Improved telemetry around Export sizes.
+
 # 1.24.612.1
 
 * IntuneAppConfigurationDevicePolicy

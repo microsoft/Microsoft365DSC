@@ -412,6 +412,11 @@ function Export-TargetResource
         $i = 1
         foreach ($SharingPolicy in $AllSharingPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllSharingPolicies.Length)] $($SharingPolicy.Name)" -NoNewline
 
             $Params = @{

@@ -361,7 +361,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Configuration Platform Script MacOS with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Device Configuration Platform Script MacOS with Id {$($currentInstance.Id)}"
         #region resource generator code
         Remove-MgBetaDeviceManagementDeviceShellScript -DeviceShellScriptId $currentInstance.Id
         #endregion
@@ -394,7 +394,7 @@ function Test-TargetResource
         [Parameter()]
         [System.String]
         $FileName,
-        
+
         [Parameter()]
         [System.Int32]
         $RetryCount,
@@ -597,6 +597,11 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
