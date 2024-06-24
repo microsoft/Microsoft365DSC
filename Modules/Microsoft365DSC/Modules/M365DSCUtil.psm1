@@ -514,11 +514,11 @@ function Get-M365DSCTenantNameFromParameterSet
         [System.Collections.HashTable]
         $ParameterSet
     )
-    if ($ParameterSet.TenantId)
+    if ($ParameterSet.ContainsKey('TenantId'))
     {
         return $ParameterSet.TenantId
     }
-    elseif ($ParameterSet.Credential)
+    elseif ($ParameterSet.ContainsKey('Credential'))
     {
         try
         {
@@ -584,6 +584,10 @@ function Test-M365DSCParameterState
     $dataEvaluation.Add('Resource', "$Source")
     $dataEvaluation.Add('Method', 'Test-TargetResource')
     $dataEvaluation.Add('Tenant', $TenantName)
+
+    $ConnectionMode = Get-M365DSCAuthenticationMode $DesiredValues
+    $dataEvaluation.Add('ConnectionMode', $ConnectionMode)
+
     $ValuesToCheckData = $ValuesToCheck | Where-Object -FilterScript {$_ -ne 'Verbose'}
     $dataEvaluation.Add('Parameters', $ValuesToCheckData -join "`r`n")
     $dataEvaluation.Add('ParametersCount', $ValuesToCheckData.Length)
@@ -983,6 +987,9 @@ function Test-M365DSCParameterState
         }
 
         $driftedData.Add('Parameters', $telemetryDriftedParameters)
+        $ConnectionMode = Get-M365DSCAuthenticationMode $DesiredValues
+        $driftedData.Add('ConnectionMode', $ConnectionMode)
+
         Add-M365DSCTelemetryEvent -Type 'DriftInfo' -Data $driftedData
         $EventMessage.Append("        </ParametersNotInDesiredState>`r`n") | Out-Null
         $EventMessage.Append("    </ConfigurationDrift>`r`n") | Out-Null
@@ -3439,13 +3446,20 @@ function Get-M365DSCExportContentForResource
         $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
         $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
             Select-Object -ExpandProperty Name
+
+        if ($null -eq $keys)
+        {
+            Import-Module $Resource.Path -Force
+            $moduleInfo = Get-Command -Module $ModuleFullName -ErrorAction SilentlyContinue
+            $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
+            $Keys = $cmdInfo.Parameters.Keys
+        }
     }
     else
     {
         $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
         $Keys = $cmdInfo.Parameters.Keys
     }
-
     if ($Keys.Contains('IsSingleInstance'))
     {
         $primaryKey = ''

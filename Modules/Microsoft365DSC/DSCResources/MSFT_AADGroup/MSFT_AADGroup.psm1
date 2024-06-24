@@ -437,7 +437,7 @@ function Set-TargetResource
     $currentParameters.Remove('Owners') | Out-Null
     $currentParameters.Remove('Members') | Out-Null
     $currentParameters.Remove('MemberOf') | Out-Null
-    #$currentParameters.Remove('AssignedToRole') | Out-Null
+    $currentParameters.Remove('AssignedToRole') | Out-Null
 
     if ($Ensure -eq 'Present' -and `
         ($null -ne $GroupTypes -and $GroupTypes.Contains('Unified')) -and `
@@ -533,7 +533,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Checking to see if an existing deleted group exists with DisplayName {$DisplayName}"
-        $restorinExisting = $false
+        $restoringExisting = $false
         [Array]$groups = Get-MgBetaDirectoryDeletedItemAsGroup -Filter "DisplayName eq '$DisplayName'"
         if ($groups.Length -gt 1)
         {
@@ -552,7 +552,6 @@ function Set-TargetResource
         {
             Write-Verbose -Message "Creating new group {$DisplayName}"
             $currentParameters.Remove('Id') | Out-Null
-
             try
             {
                 Write-Verbose -Message "Creating Group with Values: $(Convert-M365DscHashtableToString -Hashtable $currentParameters)"
@@ -794,7 +793,8 @@ function Set-TargetResource
             }
         }
 
-        if ($currentGroup.IsAssignableToRole -eq $true -and $currentParameters.ContainsKey('AssignedToRole'))
+        Write-Verbose -Message "Current Group IsAssignableToRole: $($currentGroup.IsAssignableToRole)"
+        if ($currentGroup.IsAssignableToRole -eq $true -and $AssignedToRole.Length -gt 0)
         {
             #AssignedToRole
             $currentAssignedToRoleValue = @()
