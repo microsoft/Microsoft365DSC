@@ -55,6 +55,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPOTenantCdnPolicy {$CDNType}"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters
 

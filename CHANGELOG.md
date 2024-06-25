@@ -1,5 +1,7 @@
 # Change log for Microsoft365DSC
 
+# Unreleased
+
 # 1.24.619.1
 
 * SCDLPComplianceRule
