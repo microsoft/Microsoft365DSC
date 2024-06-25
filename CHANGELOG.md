@@ -4,6 +4,8 @@
 
 * AADGroup
   * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
+* IntuneDeviceManagementComplianceSettings
+  * Initial Release.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.18
 
