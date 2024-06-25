@@ -2,9 +2,6 @@
 
 # Unreleased
 
-* OD and SPO resources
-  * Implemented PnP/Graph conflict issue workaround (Issue 4746)
-
 # 1.24.619.1
 
 * SCDLPComplianceRule
