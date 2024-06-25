@@ -102,150 +102,16 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordRequired,
+        [System.UInt32]
+        $DeviceComplianceCheckinThresholdDays,
 
         [Parameter()]
         [System.Boolean]
-        $PasswordBlockSimple,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordRequiredToUnlockFromIdle,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordExpirationDays,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumLength,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordPreviousPasswordBlockCount,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumCharacterSetCount,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('DeviceDefault', 'Alphanumeric', 'Numeric')]
-        $PasswordRequiredType,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireHealthyDeviceReport,
-
-        [Parameter()]
-        [System.String]
-        $OsMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $OsMaximumVersion,
-
-        [Parameter()]
-        [System.String]
-        $MobileOsMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $MobileOsMaximumVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $EarlyLaunchAntiMalwareDriverEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $BitLockerEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecureBootEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $CodeIntegrityEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $StorageRequireEncryption,
-
-        [Parameter()]
-        [System.Boolean]
-        $ActiveFirewallRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $DefenderEnabled,
-
-        [Parameter()]
-        [System.String]
-        $DefenderVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $SignatureOutOfDate,
-
-        [Parameter()]
-        [System.Boolean]
-        $RtpEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $AntivirusRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $AntiSpywareRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $DeviceThreatProtectionEnabled,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
-        $DeviceThreatProtectionRequiredSecurityLevel,
-
-        [Parameter()]
-        [System.Boolean]
-        $ConfigurationManagerComplianceRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $TPMRequired,
-
-        [Parameter()]
-        [System.String]
-        $DeviceCompliancePolicyScript,
-
-        [Parameter()]
-        [System.Array]
-        $ValidOperatingSystemBuildRanges,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Assignments,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('Absent', 'Present')]
-        $Ensure = 'Present',
+        $SecureByDefault,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -276,7 +142,7 @@ function Set-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Intune Device Compliance Windows 10 Policy {$DisplayName}"
+    Write-Verbose -Message "Updating the Intune Device Management Compliance Settings"
     $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
@@ -292,82 +158,11 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentDeviceWindows10Policy = Get-TargetResource @PSBoundParameters
-
-    $PSBoundParameters.Remove('Ensure') | Out-Null
-    $PSBoundParameters.Remove('Credential') | Out-Null
-    $PSBoundParameters.Remove('ApplicationId') | Out-Null
-    $PSBoundParameters.Remove('TenantId') | Out-Null
-    $PSBoundParameters.Remove('ApplicationSecret') | Out-Null
-    $PSBoundParameters.Remove('AccessTokens') | Out-Null
-
-    $scheduledActionsForRule = @{
-        '@odata.type'                 = '#microsoft.graph.deviceComplianceScheduledActionForRule'
-        ruleName                      = 'PasswordRequired'
-        scheduledActionConfigurations = @(
-            @{
-                '@odata.type' = '#microsoft.graph.deviceComplianceActionItem'
-                actionType    = 'block'
-            }
-        )
+    $settings = @{
+        deviceComplianceCheckinThresholdDays = $DeviceComplianceCheckinThresholdDays
+        secureByDefault                      = $SecureByDefault
     }
-
-    if ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Creating new Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $PSBoundParameters.Remove('DisplayName') | Out-Null
-        $PSBoundParameters.Remove('Description') | Out-Null
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-
-        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        $policy = New-MgBetaDeviceManagementDeviceCompliancePolicy -DisplayName $DisplayName `
-            -Description $Description `
-            -AdditionalProperties $AdditionalProperties `
-            -ScheduledActionsForRule $scheduledActionsForRule
-
-        if ($Assignments.Count -gt 0)
-        {
-            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceCompliancePolicies'
-        }
-    }
-    elseif ($Ensure -eq 'Present' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Updating Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
-
-        $PSBoundParameters.Remove('DisplayName') | Out-Null
-        $PSBoundParameters.Remove('Description') | Out-Null
-        $PSBoundParameters.Remove('Assignments') | Out-Null
-
-        $AdditionalProperties = Get-M365DSCIntuneDeviceCompliancePolicyWindows10AdditionalProperties -Properties ([System.Collections.Hashtable]$PSBoundParameters)
-        Update-MgBetaDeviceManagementDeviceCompliancePolicy -AdditionalProperties $AdditionalProperties `
-            -Description $Description `
-            -DeviceCompliancePolicyId $configDevicePolicy.Id
-
-        if ($Assignments.Count -gt 0)
-        {
-            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $configDevicePolicy.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceCompliancePolicies'
-        }
-    }
-    elseif ($Ensure -eq 'Absent' -and $currentDeviceWindows10Policy.Ensure -eq 'Present')
-    {
-        Write-Verbose -Message "Removing Intune Device Compliance Windows 10 Policy {$DisplayName}"
-        $configDevicePolicy = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
-            -ErrorAction Stop | Where-Object `
-            -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' -and `
-                $_.displayName -eq $($DisplayName) }
-
-        Remove-MgBetaDeviceManagementDeviceCompliancePolicy -DeviceCompliancePolicyId $configDevicePolicy.Id
-    }
+    Update-MgBetaDeviceManagement -Settings $settings
 }
 
 function Test-TargetResource
@@ -378,150 +173,16 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $DisplayName,
+        [ValidateSet('Yes')]
+        $IsSingleInstance,
 
         [Parameter()]
-        [System.String]
-        $Description,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordRequired,
+        [System.UInt32]
+        $DeviceComplianceCheckinThresholdDays,
 
         [Parameter()]
         [System.Boolean]
-        $PasswordBlockSimple,
-
-        [Parameter()]
-        [System.Boolean]
-        $PasswordRequiredToUnlockFromIdle,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinutesOfInactivityBeforeLock,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordExpirationDays,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumLength,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordPreviousPasswordBlockCount,
-
-        [Parameter()]
-        [System.Int32]
-        $PasswordMinimumCharacterSetCount,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('DeviceDefault', 'Alphanumeric', 'Numeric')]
-        $PasswordRequiredType,
-
-        [Parameter()]
-        [System.Boolean]
-        $RequireHealthyDeviceReport,
-
-        [Parameter()]
-        [System.String]
-        $OsMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $OsMaximumVersion,
-
-        [Parameter()]
-        [System.String]
-        $MobileOsMinimumVersion,
-
-        [Parameter()]
-        [System.String]
-        $MobileOsMaximumVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $EarlyLaunchAntiMalwareDriverEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $BitLockerEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $SecureBootEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $CodeIntegrityEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $StorageRequireEncryption,
-
-        [Parameter()]
-        [System.Boolean]
-        $ActiveFirewallRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $DefenderEnabled,
-
-        [Parameter()]
-        [System.String]
-        $DefenderVersion,
-
-        [Parameter()]
-        [System.Boolean]
-        $SignatureOutOfDate,
-
-        [Parameter()]
-        [System.Boolean]
-        $RtpEnabled,
-
-        [Parameter()]
-        [System.Boolean]
-        $AntivirusRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $AntiSpywareRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $DeviceThreatProtectionEnabled,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('Unavailable', 'Secured', 'Low', 'Medium', 'High', 'NotSet')]
-        $DeviceThreatProtectionRequiredSecurityLevel,
-
-        [Parameter()]
-        [System.Boolean]
-        $ConfigurationManagerComplianceRequired,
-
-        [Parameter()]
-        [System.Boolean]
-        $TPMRequired,
-
-        [Parameter()]
-        [System.String]
-        $DeviceCompliancePolicyScript,
-
-        [Parameter()]
-        [System.Array]
-        $ValidOperatingSystemBuildRanges,
-
-        [Parameter()]
-        [Microsoft.Management.Infrastructure.CimInstance[]]
-        $Assignments,
-
-        [Parameter()]
-        [System.String]
-        [ValidateSet('Absent', 'Present')]
-        $Ensure = 'Present',
+        $SecureByDefault,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -564,42 +225,16 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of Intune Device Compliance Windows 10 Policy {$DisplayName}"
+    Write-Verbose -Message "Testing configuration of Intune Device Management Compliance Settings"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    if (-not (Test-M365DSCAuthenticationParameter -BoundParameters $CurrentValues))
-    {
-        Write-Verbose "An error occured in Get-TargetResource, the policy {$displayName} will not be processed"
-        throw "An error occured in Get-TargetResource, the policy {$displayName} will not be processed. Refer to the event viewer logs for more information."
-    }
-
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    $ValuesToCheck = $PSBoundParameters
-
-    $testResult = $true
-    if ($CurrentValues.Ensure -ne $Ensure)
-    {
-        $testResult = $false
-    }
-    #region Assignments
-    if ($testResult)
-    {
-        $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $PSBoundParameters.Assignments
-        $target = $CurrentValues.Assignments
-        $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-        $ValuesToCheck.Remove('Assignments') | Out-Null
-    }
-    #endregion
-
-    if ($testResult)
-    {
-        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-            -Source $($MyInvocation.MyCommand.Source) `
-            -DesiredValues $PSBoundParameters `
-            -ValuesToCheck $ValuesToCheck.Keys
-    }
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+        -Source $($MyInvocation.MyCommand.Source) `
+        -DesiredValues $PSBoundParameters `
+        -ValuesToCheck $ValuesToCheck.Keys
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
     return $TestResult

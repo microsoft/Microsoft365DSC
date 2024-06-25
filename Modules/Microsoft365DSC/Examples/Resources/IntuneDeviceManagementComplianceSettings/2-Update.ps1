@@ -1,5 +1,5 @@
 <#
-This example updates a new Device Remediation.
+This example updates the Device Management Compliance Settings
 #>
 
 Configuration Example
@@ -13,28 +13,12 @@ Configuration Example
 
     node localhost
     {
-        IntuneDeviceRemediation 'ConfigureDeviceRemediation'
+        IntuneDeviceManagementComplianceSettings 'DeviceManagementComplianceSettings'
         {
-            Assignments              = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments{
-                    deviceAndAppManagementAssignmentFilterType = 'none'
-                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
-                }
-            );
-            Credential               = $Credscredential
-            Description              = 'Description'
-            DetectionScriptContent   = "Base64 encoded script content 2"; # Updated property
-            DeviceHealthScriptType   = "deviceHealthScript";
-            DisplayName              = "Device remediation";
-            EnforceSignatureCheck    = $False;
-            Ensure                   = "Present";
-            Id                       = '00000000-0000-0000-0000-000000000000'
-            Publisher                = "Some Publisher";
-            RemediationScriptContent = "Base64 encoded script content 2"; # Updated property
-            RoleScopeTagIds          = @("0");
-            RunAs32Bit               = $True;
-            RunAsAccount             = "system";
-            TenantId                 = $OrganizationName;
+            Credential                           = $Credscredential
+            DeviceComplianceCheckinThresholdDays = 22;
+            IsSingleInstance                     = "Yes";
+            SecureByDefault                      = $True;
         }
     }
 }

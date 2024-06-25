@@ -15,7 +15,7 @@ Import-Module -Name (Join-Path -Path $M365DSCTestFolder `
         -Resolve)
 
 $Global:DscHelper = New-M365DscUnitTestHelper -StubModule $CmdletModule `
-    -DscResource 'IntuneDeviceCompliancePolicyWindows10' -GenericStubModule $GenericStubPath
+    -DscResource 'IntuneDeviceManagementComplianceSettings' -GenericStubModule $GenericStubPath
 
 Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
     InModuleScope -ModuleName $Global:DscHelper.ModuleName -ScriptBlock {
@@ -32,27 +32,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 return 'Credentials'
             }
 
-            Mock -CommandName Invoke-MgGraphRequest -MockWith {
+            Mock -CommandName Update-MgBetaDeviceManagement -MockWith {
             }
 
-            Mock -CommandName Update-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
-            }
-
-            Mock -CommandName New-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
-                return @{
-                    Id = '12345-12345-12345-12345-12345'
-                }
-            }
-
-            Mock -CommandName Remove-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
-            }
-
-            Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicyAssignment -MockWith {
-
-                return @()
-            }
-            Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
-            }
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
@@ -61,250 +43,25 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         }
 
         # Test contexts
-        Context -Name "When the Windows 10  Device Compliance Policy doesn't already exist" -Fixture {
+        Context -Name "The settings are already in the desired state." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                                 = 'Windows 10 DSC Policy'
-                    Description                                 = 'Test policy'
-                    PasswordRequired                            = $False
-                    PasswordBlockSimple                         = $False
-                    PasswordRequiredToUnlockFromIdle            = $True
-                    PasswordMinutesOfInactivityBeforeLock       = 15
-                    PasswordExpirationDays                      = 365
-                    PasswordMinimumLength                       = 6
-                    PasswordPreviousPasswordBlockCount          = 13
-                    PasswordMinimumCharacterSetCount            = 1
-                    PasswordRequiredType                        = 'Devicedefault'
-                    RequireHealthyDeviceReport                  = $True
-                    OsMinimumVersion                            = 10
-                    OsMaximumVersion                            = 10.19
-                    MobileOsMinimumVersion                      = 10
-                    MobileOsMaximumVersion                      = 10.19
-                    EarlyLaunchAntiMalwareDriverEnabled         = $False
-                    BitLockerEnabled                            = $False
-                    SecureBootEnabled                           = $True
-                    CodeIntegrityEnabled                        = $True
-                    StorageRequireEncryption                    = $True
-                    ActiveFirewallRequired                      = $True
-                    DefenderEnabled                             = $True
-                    DefenderVersion                             = ''
-                    SignatureOutOfDate                          = $True
-                    RtpEnabled                                  = $True
-                    AntivirusRequired                           = $True
-                    AntiSpywareRequired                         = $True
-                    DeviceThreatProtectionEnabled               = $True
-                    DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
-                    ConfigurationManagerComplianceRequired      = $False
-                    TPMRequired                                 = $False
-                    DeviceCompliancePolicyScript                = $null
-                    ValidOperatingSystemBuildRanges             = @()
-                    Ensure                                      = 'Present'
-                    Credential                                  = $Credential
+                    DeviceComplianceCheckinThresholdDays = 22;
+                    IsSingleInstance                     = "Yes";
+                    SecureByDefault                      = $True;
+                    Credential                           = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
-                    return $null
-                }
-            }
-
-            It 'Should return absent from the Get method' {
-                    (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should create the Windows 10 Device Compliance Policy from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName 'New-MgBetaDeviceManagementDeviceCompliancePolicy' -Exactly 1
-            }
-        }
-
-        Context -Name 'When the Windows 10 Device Compliance Policy already exists and is NOT in the Desired State' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DisplayName                                 = 'Windows 10 DSC Policy'
-                    Description                                 = 'Test policy'
-                    PasswordRequired                            = $False
-                    PasswordBlockSimple                         = $False
-                    PasswordRequiredToUnlockFromIdle            = $True
-                    PasswordMinutesOfInactivityBeforeLock       = 15
-                    PasswordExpirationDays                      = 365
-                    PasswordMinimumLength                       = 6
-                    PasswordPreviousPasswordBlockCount          = 13
-                    PasswordMinimumCharacterSetCount            = 1
-                    PasswordRequiredType                        = 'Devicedefault'
-                    RequireHealthyDeviceReport                  = $True
-                    OsMinimumVersion                            = 10
-                    OsMaximumVersion                            = 10.19
-                    MobileOsMinimumVersion                      = 10
-                    MobileOsMaximumVersion                      = 10.19
-                    EarlyLaunchAntiMalwareDriverEnabled         = $False
-                    BitLockerEnabled                            = $False
-                    SecureBootEnabled                           = $True
-                    CodeIntegrityEnabled                        = $True
-                    StorageRequireEncryption                    = $True
-                    ActiveFirewallRequired                      = $True
-                    DefenderEnabled                             = $True
-                    DefenderVersion                             = ''
-                    SignatureOutOfDate                          = $True
-                    RtpEnabled                                  = $True
-                    AntivirusRequired                           = $True
-                    AntiSpywareRequired                         = $True
-                    DeviceThreatProtectionEnabled               = $True
-                    DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
-                    ConfigurationManagerComplianceRequired      = $False
-                    TPMRequired                                 = $False
-                    DeviceCompliancePolicyScript                = $null
-                    ValidOperatingSystemBuildRanges             = @()
-                    Ensure                                      = 'Present'
-                    Credential                                  = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return @{
-                        DisplayName          = 'Windows 10 DSC Policy'
-                        Description          = 'Test policy'
-                        Id                   = 'f38b283d-d893-4c33-b6d2-d3bcb5f2dcc2'
-                        AdditionalProperties = @{
-                            '@odata.type'                               = '#microsoft.graph.windows10CompliancePolicy'
-                            PasswordRequired                            = $False
-                            PasswordBlockSimple                         = $True; #Drift
-                            PasswordRequiredToUnlockFromIdle            = $True
-                            PasswordMinutesOfInactivityBeforeLock       = 15
-                            PasswordExpirationDays                      = 365
-                            PasswordMinimumLength                       = 6
-                            PasswordPreviousPasswordBlockCount          = 13
-                            PasswordMinimumCharacterSetCount            = 1
-                            PasswordRequiredType                        = 'Devicedefault'
-                            RequireHealthyDeviceReport                  = $True
-                            OsMinimumVersion                            = 10
-                            OsMaximumVersion                            = 10.19
-                            MobileOsMinimumVersion                      = 10
-                            MobileOsMaximumVersion                      = 10.19
-                            EarlyLaunchAntiMalwareDriverEnabled         = $False
-                            BitLockerEnabled                            = $False
-                            SecureBootEnabled                           = $True
-                            CodeIntegrityEnabled                        = $True
-                            StorageRequireEncryption                    = $True
-                            ActiveFirewallRequired                      = $True
-                            DefenderEnabled                             = $True
-                            DefenderVersion                             = ''
-                            SignatureOutOfDate                          = $True
-                            RtpEnabled                                  = $True
-                            AntivirusRequired                           = $True
-                            AntiSpywareRequired                         = $True
-                            DeviceThreatProtectionEnabled               = $True
-                            DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
-                            ConfigurationManagerComplianceRequired      = $False
-                            TPMRequired                                 = $False
-                            DeviceCompliancePolicyScript                = $null
-                            ValidOperatingSystemBuildRanges             = @()
-                            RoleScopeTagIds                             = '0'
-                        }
+                        deviceComplianceCheckinThresholdDays = 22
+                        secureByDefault = $true
                     }
                 }
             }
 
-            It 'Should return Present from the Get method' {
-                    (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should update the iOS Device Compliance Policy from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Update-MgBetaDeviceManagementDeviceCompliancePolicy -Exactly 1
-            }
-        }
-
-        Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
-            BeforeAll {
-                $testParams = @{
-                    DisplayName                                 = 'Windows 10 DSC Policy'
-                    Description                                 = 'Test policy'
-                    PasswordRequired                            = $False
-                    PasswordBlockSimple                         = $False
-                    PasswordRequiredToUnlockFromIdle            = $True
-                    PasswordMinutesOfInactivityBeforeLock       = 15
-                    PasswordExpirationDays                      = 365
-                    PasswordMinimumLength                       = 6
-                    PasswordPreviousPasswordBlockCount          = 13
-                    PasswordMinimumCharacterSetCount            = 1
-                    PasswordRequiredType                        = 'Devicedefault'
-                    RequireHealthyDeviceReport                  = $True
-                    OsMinimumVersion                            = 10
-                    OsMaximumVersion                            = 10.19
-                    MobileOsMinimumVersion                      = 10
-                    MobileOsMaximumVersion                      = 10.19
-                    EarlyLaunchAntiMalwareDriverEnabled         = $False
-                    BitLockerEnabled                            = $False
-                    SecureBootEnabled                           = $True
-                    CodeIntegrityEnabled                        = $True
-                    StorageRequireEncryption                    = $True
-                    ActiveFirewallRequired                      = $True
-                    DefenderEnabled                             = $True
-                    DefenderVersion                             = ''
-                    SignatureOutOfDate                          = $True
-                    RtpEnabled                                  = $True
-                    AntivirusRequired                           = $True
-                    AntiSpywareRequired                         = $True
-                    DeviceThreatProtectionEnabled               = $True
-                    DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
-                    ConfigurationManagerComplianceRequired      = $False
-                    TPMRequired                                 = $False
-                    DeviceCompliancePolicyScript                = $null
-                    ValidOperatingSystemBuildRanges             = @()
-                    Ensure                                      = 'Present'
-                    Credential                                  = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
-                    return @{
-                        DisplayName          = 'Windows 10 DSC Policy'
-                        Description          = 'Test policy'
-                        Id                   = 'f38b283d-d893-4c33-b6d2-d3bcb5f2dcc2'
-                        AdditionalProperties = @{
-                            '@odata.type'                               = '#microsoft.graph.windows10CompliancePolicy'
-                            PasswordRequired                            = $False
-                            PasswordBlockSimple                         = $False
-                            PasswordRequiredToUnlockFromIdle            = $True
-                            PasswordMinutesOfInactivityBeforeLock       = 15
-                            PasswordExpirationDays                      = 365
-                            PasswordMinimumLength                       = 6
-                            PasswordPreviousPasswordBlockCount          = 13
-                            PasswordMinimumCharacterSetCount            = 1
-                            PasswordRequiredType                        = 'Devicedefault'
-                            RequireHealthyDeviceReport                  = $True
-                            OsMinimumVersion                            = 10
-                            OsMaximumVersion                            = 10.19
-                            MobileOsMinimumVersion                      = 10
-                            MobileOsMaximumVersion                      = 10.19
-                            EarlyLaunchAntiMalwareDriverEnabled         = $False
-                            BitLockerEnabled                            = $False
-                            SecureBootEnabled                           = $True
-                            CodeIntegrityEnabled                        = $True
-                            StorageRequireEncryption                    = $True
-                            ActiveFirewallRequired                      = $True
-                            DefenderEnabled                             = $True
-                            DefenderVersion                             = ''
-                            SignatureOutOfDate                          = $True
-                            RtpEnabled                                  = $True
-                            AntivirusRequired                           = $True
-                            AntiSpywareRequired                         = $True
-                            DeviceThreatProtectionEnabled               = $True
-                            DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
-                            ConfigurationManagerComplianceRequired      = $False
-                            TPMRequired                                 = $False
-                            DeviceCompliancePolicyScript                = $null
-                            ValidOperatingSystemBuildRanges             = @()
-                            RoleScopeTagIds                             = '0'
-                        }
-                    }
-                }
+            It 'Should return Yes from the Get method' {
+                    (Get-TargetResource @testParams).IsSingleInstance | Should -Be 'Yes'
             }
 
             It 'Should return true from the Test method' {
@@ -312,103 +69,34 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
-        Context -Name 'When the policy exists and it SHOULD NOT' -Fixture {
+        Context -Name "The settings are NOT in the desired state." -Fixture {
             BeforeAll {
                 $testParams = @{
-                    DisplayName                                 = 'Windows 10 DSC Policy'
-                    Description                                 = 'Test policy'
-                    PasswordRequired                            = $False
-                    PasswordBlockSimple                         = $False
-                    PasswordRequiredToUnlockFromIdle            = $True
-                    PasswordMinutesOfInactivityBeforeLock       = 15
-                    PasswordExpirationDays                      = 365
-                    PasswordMinimumLength                       = 6
-                    PasswordPreviousPasswordBlockCount          = 13
-                    PasswordMinimumCharacterSetCount            = 1
-                    PasswordRequiredType                        = 'Devicedefault'
-                    RequireHealthyDeviceReport                  = $True
-                    OsMinimumVersion                            = 10
-                    OsMaximumVersion                            = 10.19
-                    MobileOsMinimumVersion                      = 10
-                    MobileOsMaximumVersion                      = 10.19
-                    EarlyLaunchAntiMalwareDriverEnabled         = $False
-                    BitLockerEnabled                            = $False
-                    SecureBootEnabled                           = $True
-                    CodeIntegrityEnabled                        = $True
-                    StorageRequireEncryption                    = $True
-                    ActiveFirewallRequired                      = $True
-                    DefenderEnabled                             = $True
-                    DefenderVersion                             = ''
-                    SignatureOutOfDate                          = $True
-                    RtpEnabled                                  = $True
-                    AntivirusRequired                           = $True
-                    AntiSpywareRequired                         = $True
-                    DeviceThreatProtectionEnabled               = $True
-                    DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
-                    ConfigurationManagerComplianceRequired      = $False
-                    TPMRequired                                 = $False
-                    DeviceCompliancePolicyScript                = $null
-                    ValidOperatingSystemBuildRanges             = @()
-                    Ensure                                      = 'Absent'
-                    Credential                                  = $Credential
+                    DeviceComplianceCheckinThresholdDays = 40; #Drift
+                    IsSingleInstance                     = "Yes";
+                    SecureByDefault                      = $True;
+                    Credential                           = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return @{
-                        DisplayName          = 'Windows 10 DSC Policy'
-                        Description          = 'Test policy'
-                        Id                   = 'f38b283d-d893-4c33-b6d2-d3bcb5f2dcc2'
-                        AdditionalProperties = @{
-                            '@odata.type'                               = '#microsoft.graph.windows10CompliancePolicy'
-                            PasswordRequired                            = $False
-                            PasswordBlockSimple                         = $False
-                            PasswordRequiredToUnlockFromIdle            = $True
-                            PasswordMinutesOfInactivityBeforeLock       = 15
-                            PasswordExpirationDays                      = 365
-                            PasswordMinimumLength                       = 6
-                            PasswordPreviousPasswordBlockCount          = 13
-                            PasswordMinimumCharacterSetCount            = 1
-                            PasswordRequiredType                        = 'Devicedefault'
-                            RequireHealthyDeviceReport                  = $True
-                            OsMinimumVersion                            = 10
-                            OsMaximumVersion                            = 10.19
-                            MobileOsMinimumVersion                      = 10
-                            MobileOsMaximumVersion                      = 10.19
-                            EarlyLaunchAntiMalwareDriverEnabled         = $False
-                            BitLockerEnabled                            = $False
-                            SecureBootEnabled                           = $True
-                            CodeIntegrityEnabled                        = $True
-                            StorageRequireEncryption                    = $True
-                            ActiveFirewallRequired                      = $True
-                            DefenderEnabled                             = $True
-                            DefenderVersion                             = ''
-                            SignatureOutOfDate                          = $True
-                            RtpEnabled                                  = $True
-                            AntivirusRequired                           = $True
-                            AntiSpywareRequired                         = $True
-                            DeviceThreatProtectionEnabled               = $True
-                            DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
-                            ConfigurationManagerComplianceRequired      = $False
-                            TPMRequired                                 = $False
-                            DeviceCompliancePolicyScript                = $null
-                            ValidOperatingSystemBuildRanges             = @()
-                            RoleScopeTagIds                             = '0'
-                        }
+                        deviceComplianceCheckinThresholdDays = 22
+                        secureByDefault = $true
                     }
                 }
             }
 
-            It 'Should return Present from the Get method' {
-                    (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
+            It 'Should return Yes from the Get method' {
+                    (Get-TargetResource @testParams).IsSingleInstance | Should -Be 'Yes'
             }
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should remove the iOS Device Compliance Policy from the Set method' {
+            It 'Should call the Update cmdlet from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-MgBetaDeviceManagementDeviceCompliancePolicy -Exactly 1
+                Should -Invoke -CommandName Update-MgBetaDeviceManagement -Exactly 1
             }
         }
 
@@ -416,51 +104,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
+
                 $testParams = @{
-                    Credential = $Credential
+                    Credential                           = $Credential
                 }
 
-                Mock -CommandName Get-MgBetaDeviceManagementDeviceCompliancePolicy -MockWith {
+                Mock -CommandName Invoke-MgGraphRequest -MockWith {
                     return @{
-                        DisplayName          = 'Windows 10 DSC Policy'
-                        Description          = 'Test policy'
-                        Id                   = 'f38b283d-d893-4c33-b6d2-d3bcb5f2dcc2'
-                        AdditionalProperties = @{
-                            '@odata.type'                               = '#microsoft.graph.windows10CompliancePolicy'
-                            PasswordRequired                            = $False
-                            PasswordBlockSimple                         = $False
-                            PasswordRequiredToUnlockFromIdle            = $True
-                            PasswordMinutesOfInactivityBeforeLock       = 15
-                            PasswordExpirationDays                      = 365
-                            PasswordMinimumLength                       = 6
-                            PasswordPreviousPasswordBlockCount          = 13
-                            PasswordMinimumCharacterSetCount            = 1
-                            PasswordRequiredType                        = 'Devicedefault'
-                            RequireHealthyDeviceReport                  = $True
-                            OsMinimumVersion                            = 10
-                            OsMaximumVersion                            = 10.19
-                            MobileOsMinimumVersion                      = 10
-                            MobileOsMaximumVersion                      = 10.19
-                            EarlyLaunchAntiMalwareDriverEnabled         = $False
-                            BitLockerEnabled                            = $False
-                            SecureBootEnabled                           = $True
-                            CodeIntegrityEnabled                        = $True
-                            StorageRequireEncryption                    = $True
-                            ActiveFirewallRequired                      = $True
-                            DefenderEnabled                             = $True
-                            DefenderVersion                             = ''
-                            SignatureOutOfDate                          = $True
-                            RtpEnabled                                  = $True
-                            AntivirusRequired                           = $True
-                            AntiSpywareRequired                         = $True
-                            DeviceThreatProtectionEnabled               = $True
-                            DeviceThreatProtectionRequiredSecurityLevel = 'Medium'
-                            ConfigurationManagerComplianceRequired      = $False
-                            TPMRequired                                 = $False
-                            DeviceCompliancePolicyScript                = $null
-                            ValidOperatingSystemBuildRanges             = @()
-                            RoleScopeTagIds                             = '0'
-                        }
+                        deviceComplianceCheckinThresholdDays = 22
+                        secureByDefault = $true
                     }
                 }
             }
