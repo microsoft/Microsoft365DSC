@@ -872,7 +872,7 @@ function Start-M365DSCConfigurationExtract
 
         try
         {
-            $Global:M365DSCExportContentSize = ((Get-Item -Path $outputDSCFile).Length/1KB).ToString().Split('.')[0] + " kb"
+            $Global:M365DSCExportContentSize = $DSCContent.Length
         }
         catch
         {
