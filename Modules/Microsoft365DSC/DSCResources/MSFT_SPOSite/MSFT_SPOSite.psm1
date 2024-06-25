@@ -159,10 +159,6 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration for site collection $Url"
 
-    # Temp workaround for Graph connection issue. Make sure connecting to Graph first (#xxxx)
-    $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -456,10 +452,6 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    # Temp workaround for Graph connection issue. Make sure connecting to Graph first (#xxxx)
-    $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
@@ -913,10 +905,6 @@ function Export-TargetResource
 
     try
     {
-        # Temp workaround for Graph connection issue. Make sure connecting to Graph first (#xxxx)
-        $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters
 

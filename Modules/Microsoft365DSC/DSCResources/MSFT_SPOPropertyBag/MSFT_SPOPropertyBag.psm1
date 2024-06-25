@@ -60,10 +60,6 @@ function Get-TargetResource
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
 
-    # Temp workaround for Graph connection issue. Make sure connecting to Graph first (#xxxx)
-    $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url
@@ -232,10 +228,6 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    # Temp workaround for Graph connection issue. Make sure connecting to Graph first (#xxxx)
-    $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-        -InboundParameters $PSBoundParameters
-
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url
@@ -389,10 +381,6 @@ function Export-TargetResource
 
     try
     {
-        # Temp workaround for Graph connection issue. Make sure connecting to Graph first (#xxxx)
-        $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-            -InboundParameters $PSBoundParameters
-
         $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
             -InboundParameters $PSBoundParameters
 
