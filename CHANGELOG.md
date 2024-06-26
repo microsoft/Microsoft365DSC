@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.626.1
 
 * AADGroup
   * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
@@ -9,7 +9,7 @@
 * IntuneDeviceManagementComplianceSettings
   * Initial Release.
 * IntuneDeviceRemediation
-  * Fix invalid assignment export and import.  
+  * Fix invalid assignment export and import.
     FIXES [#4726](https://github.com/microsoft/Microsoft365DSC/issues/4726)
 * M365DSCDRGUtil
   * Fixes an issue with the settings catalog property generation.
@@ -23,7 +23,8 @@
 * M365DSCResourceGenerator
   * Update CimInstance comparison template
 * MISC
-  * Add group display name export and update assignment comparison across Intune resources
+  * Add group display name export and update assignment comparison across Intune
+    resources.
 
 # 1.24.619.1
 
