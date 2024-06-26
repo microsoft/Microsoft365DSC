@@ -29350,6 +29350,56 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_IntuneDeviceRemediationRunSchedule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "dataType",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Date",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "Interval",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Time",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "UseUtc",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_IntuneDeviceRemediationPolicyAssignments",
+        "Parameters":  [
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "RunRemediationScript",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_IntuneDeviceRemediationRunSchedule",
+                               "Name":  "RunSchedule",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_DeviceManagementConfigurationPolicyAssignments",
+                               "Name":  "Assignment",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_MicrosoftGraphDeviceHealthScriptParameter",
         "Parameters":  [
                            {
@@ -29453,7 +29503,7 @@
                                "Option":  "Key"
                            },
                            {
-                               "CIMType":  "MSFT_DeviceManagementConfigurationPolicyAssignments[]",
+                               "CIMType":  "MSFT_IntuneDeviceRemediationPolicyAssignments[]",
                                "Name":  "Assignments",
                                "Option":  "Write"
                            },
