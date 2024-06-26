@@ -50,6 +50,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPOSiteAuditSettings for {$Url}"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters `
         -Url $Url -ErrorAction SilentlyContinue

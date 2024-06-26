@@ -2,6 +2,12 @@
 
 # UNRELEASED
 
+* AADGroup
+  * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
+* IntuneDeviceManagementComplianceSettings
+  * Initial Release.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.18
 * M365DSCDRGUtil
   * Add `collectionId` export to `ConvertFrom-IntunePolicyAssignment`
   * Add handling for Intune assignments in `Compare-M365DSCComplexObject`

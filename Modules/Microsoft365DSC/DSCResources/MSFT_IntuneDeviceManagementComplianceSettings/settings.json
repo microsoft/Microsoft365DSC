@@ -1,0 +1,38 @@
+{
+    "resourceName": "IntuneDeviceCompliancePolicyWindows10",
+    "description": "This resource configures the settings of Windows 10 compliance policies in your cloud-based organization.",
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Group.Read.All"
+                    },
+                    {
+                        "name": "DeviceManagementConfiguration.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "DeviceManagementConfiguration.ReadWrite.All"
+                    }
+                ]
+            }
+        }
+    }
+}
