@@ -652,7 +652,16 @@ function Test-M365DSCParameterState
 
                 if ($CheckDesiredValue)
                 {
-                    $desiredType = $DesiredValues.$_.GetType()
+                    $desiredValue = $DesiredValues.$_
+                    if ($null -eq $desiredValue)
+                    {
+                        $desiredType = $CurrentValues.$_.GetType()
+                    }
+                    else
+                    {
+                        $desiredType = $DesiredValues.$_.GetType()
+                    }
+
                     $fieldName = $_
                     if ($desiredType.IsArray -eq $true)
                     {
