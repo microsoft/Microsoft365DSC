@@ -80,6 +80,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesign for $Title"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters
 

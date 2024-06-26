@@ -2,12 +2,18 @@
 
 # UNRELEASED
 
+* AADGroup
+  * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Migrate to new settings catalog cmdlets.
+* IntuneDeviceManagementComplianceSettings
+  * Initial Release.
 * M365DSCDRGUtil
   * Fixes an issue with the settings catalog property generation.
 * M365DSCUtil
   * Fixes an issue where the comparison with null-valued desired value throws an error.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.18
 
 # 1.24.619.1
 

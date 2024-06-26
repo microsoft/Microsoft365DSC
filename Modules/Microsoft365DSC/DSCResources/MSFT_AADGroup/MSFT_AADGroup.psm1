@@ -437,7 +437,7 @@ function Set-TargetResource
     $currentParameters.Remove('Owners') | Out-Null
     $currentParameters.Remove('Members') | Out-Null
     $currentParameters.Remove('MemberOf') | Out-Null
-    #$currentParameters.Remove('AssignedToRole') | Out-Null
+    $currentParameters.Remove('AssignedToRole') | Out-Null
 
     if ($Ensure -eq 'Present' -and `
         ($null -ne $GroupTypes -and $GroupTypes.Contains('Unified')) -and `
@@ -533,7 +533,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentGroup.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Checking to see if an existing deleted group exists with DisplayName {$DisplayName}"
-        $restorinExisting = $false
+        $restoringExisting = $false
         [Array]$groups = Get-MgBetaDirectoryDeletedItemAsGroup -Filter "DisplayName eq '$DisplayName'"
         if ($groups.Length -gt 1)
         {
@@ -794,7 +794,7 @@ function Set-TargetResource
             }
         }
 
-        if ($currentGroup.IsAssignableToRole -eq $true -and $currentParameters.ContainsKey('AssignedToRole'))
+        if ($currentGroup.IsAssignableToRole -eq $true -and $PSBoundParameters.ContainsKey('AssignedToRole'))
         {
             #AssignedToRole
             $currentAssignedToRoleValue = @()

@@ -114,6 +114,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Setting configuration for Result Source instance $Name"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 

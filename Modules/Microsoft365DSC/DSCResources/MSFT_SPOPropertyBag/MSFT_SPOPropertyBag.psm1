@@ -59,7 +59,6 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration of SPOPropertyBag for $Key"
-    Write-Verbose -Message 'Connecting to PnP from the Get method'
 
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters `

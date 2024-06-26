@@ -61,6 +61,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting configuration for SPO Browser Idle Signout settings'
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
