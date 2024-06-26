@@ -1167,7 +1167,7 @@ function ConvertTo-IntunePolicyAssignment
         }
     }
 
-    return $assignmentResult
+    return ,$assignmentResult
 }
 
 function Compare-M365DSCIntunePolicyAssignment
