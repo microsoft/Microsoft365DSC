@@ -8,6 +8,13 @@
   * Initial Release.
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.18
+* M365DSCDRGUtil
+  * Add `collectionId` export to `ConvertFrom-IntunePolicyAssignment`
+  * Add handling for Intune assignments in `Compare-M365DSCComplexObject`
+* M365DSCResourceGenerator
+  * Update CimInstance comparison template
+* MISC
+  * Add group display name export and update assignment comparison across Intune resources
 
 # 1.24.619.1
 

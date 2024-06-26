@@ -173,16 +173,11 @@ function Get-TargetResource
 
         $assignmentsValues = Get-MgBetaDeviceManagementIntentAssignment -DeviceManagementIntentId $Id
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        if ($assignmentsValues.Count -gt 0)
         {
-            $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -313,11 +308,6 @@ function Set-TargetResource
         throw 'SelectedRecoveryKeyTypes and PersonalRecoveryKeyHelpMessage must be specified when Enabled is $true'
     }
 
-    if (-not $AllowDeferralUntilSignOut)
-    {
-        throw 'AllowDeferralUntilSignOut must be $true'
-    }
-
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
@@ -326,6 +316,12 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Disk Encryption for macOS with DisplayName {$DisplayName}"
+
+        if (-not $AllowDeferralUntilSignOut)
+        {
+            throw 'AllowDeferralUntilSignOut must be $true'
+        }
+
         $BoundParameters.Remove('Assignments') | Out-Null
         $BoundParameters.Remove('Id') | Out-Null
         $BoundParameters.Remove('DisplayName') | Out-Null
@@ -346,11 +342,7 @@ function Set-TargetResource
 
         #region resource generator code
         $policy = New-MgBetaDeviceManagementIntent -BodyParameter $CreateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
         {
@@ -363,6 +355,12 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
         Write-Verbose -Message "Updating the Intune Disk Encryption for macOS with Id {$($currentInstance.Id)}"
+
+        if (-not $AllowDeferralUntilSignOut)
+        {
+            throw 'AllowDeferralUntilSignOut must be $true'
+        }
+
         $BoundParameters.Remove("Assignments") | Out-Null
         $BoundParameters.Remove('Id') | Out-Null
         $BoundParameters.Remove('DisplayName') | Out-Null
@@ -381,13 +379,9 @@ function Set-TargetResource
         #region resource generator code
         $Uri = "https://graph.microsoft.com/beta/deviceManagement/intents/$($currentInstance.Id)/updateSettings"
         $body = @{'settings' = $settings }
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> Out-Null
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ContentType 'application/json' 4> $null
 
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
@@ -567,8 +561,6 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
