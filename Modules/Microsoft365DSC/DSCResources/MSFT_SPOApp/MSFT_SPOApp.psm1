@@ -63,6 +63,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for app $Identity"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 

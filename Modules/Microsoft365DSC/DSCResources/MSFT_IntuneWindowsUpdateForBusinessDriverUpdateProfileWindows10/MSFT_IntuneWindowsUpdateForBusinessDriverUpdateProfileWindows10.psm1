@@ -142,18 +142,11 @@ function Get-TargetResource
         $uri = "/beta/deviceManagement/windowsDriverUpdateProfiles/$($Id)/assignments"
         $assignmentsValues = (Invoke-MgGraphRequest -Method GET -Uri $uri).value
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        if ($assignmentsValues.Count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {
-                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType
-                    })
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -277,11 +270,7 @@ function Set-TargetResource
         #region resource generator code
         $uri = '/beta/deviceManagement/windowsDriverUpdateProfiles'
         $policy = Invoke-MgGraphRequest -Method POST -Uri $uri -Body $($CreateParameters | ConvertTo-Json)
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
         {
@@ -311,11 +300,7 @@ function Set-TargetResource
         #region resource generator code
         $uri = "/beta/deviceManagement/windowsDriverUpdateProfiles/$($currentInstance.Id)"
         Invoke-MgGraphRequest -Method PATCH -Uri $uri -Body $($UpdateParameters | ConvertTo-Json)
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.Id `
             -Targets $assignmentsHash `
@@ -434,8 +419,6 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)

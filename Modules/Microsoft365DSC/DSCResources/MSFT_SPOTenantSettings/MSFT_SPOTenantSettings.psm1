@@ -149,8 +149,12 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting configuration for SPO Tenant'
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
+
+    $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+        -InboundParameters $PSBoundParameters
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -395,7 +399,8 @@ function Set-TargetResource
 
     if (-not [string]::IsNullOrEmpty($TenantDefaultTimezone))
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' -InboundParameters $PSBoundParameters
+        $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+            -InboundParameters $PSBoundParameters
     }
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
 
@@ -672,8 +677,9 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters
+
         $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
             -InboundParameters $PSBoundParameters
 

@@ -531,7 +531,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
-                        Ensure             = 'Present'
                     }
                 }
                 Mock -CommandName Get-MgGroupMemberOf -MockWith {
