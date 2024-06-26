@@ -418,11 +418,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $policy = New-MgBetaDeviceAppManagementMobileAppConfiguration -BodyParameter $CreateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.Id)
         {
@@ -464,11 +460,7 @@ function Set-TargetResource
             -ManagedDeviceMobileAppConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
 
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId "$($currentInstance.Id)/microsoft.graph.managedDeviceMobileAppConfiguration" `
             -Targets $assignmentsHash `
@@ -612,16 +604,9 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.GetType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
-            if ($key -eq "Assignments")
-            {
-                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-            }
-            else
-            {
-                $testResult = Compare-M365DSCComplexObject -Source ($source) -Target ($target)
-            }
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
 
             if (-not $testResult) { break }
 

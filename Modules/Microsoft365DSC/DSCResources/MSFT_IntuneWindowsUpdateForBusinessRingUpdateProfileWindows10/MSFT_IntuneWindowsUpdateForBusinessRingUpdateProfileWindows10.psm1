@@ -999,39 +999,10 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if( $key -eq "Assignments")
-            {
-                $testResult = $source.count -eq $target.count
-                if (-Not $testResult) { break }
-                foreach ($assignment in $source)
-                {
-                    if ($assignment.dataType -like '*GroupAssignmentTarget')
-                    {
-                        $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId})
-                        #Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
-                        if (-not $testResult)
-                        {
-                            $groupNotFound =  $null -eq (Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue)
-                        }
-                        if (-not $testResult -and $groupNotFound)
-                        {
-                            $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName})
-                        }
-                    }
-                    else
-                    {
-                        $testResult = $null -ne ($target | Where-Object {$_.dataType -eq $assignment.DataType})
-                    }
-                    if (-Not $testResult) { break }
-                }
-                if (-Not $testResult) { break }
-            }
             if (-Not $testResult) { break }
 
             $ValuesToCheck.Remove($key) | Out-Null

@@ -356,14 +356,10 @@ function Set-TargetResource
             Settings          = $settings
         }
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
-        }
 
         if ($policy.Id)
         {
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
             Update-DeviceConfigurationPolicyAssignment `
                 -DeviceConfigurationPolicyId $policy.Id `
                 -Targets $assignmentsHash `
@@ -391,11 +387,7 @@ function Set-TargetResource
             -Settings $settings
 
         #region update policy assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Targets $assignmentsHash `

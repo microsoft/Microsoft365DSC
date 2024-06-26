@@ -598,25 +598,24 @@ function Compare-M365DSCComplexObject
         return $false
     }
 
-    if ($Source.getType().FullName -like '*CimInstance[[\]]' -or $Source.getType().FullName -like '*Hashtable[[\]]')
+    if ($Source.GetType().FullName -like '*CimInstance[[\]]' -or $Source.GetType().FullName -like '*Hashtable[[\]]')
     {
-        if ($source.count -ne $target.count)
+        if ($source.Count -ne $target.Count)
         {
-            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.count)} Target {$($target.count)}"
+            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.Count)} Target {$($target.Count)}"
             return $false
         }
-        if ($source.count -eq 0)
+        if ($source.Count -eq 0)
         {
             return $true
         }
 
         foreach ($item in $Source)
         {
-            $hashSource = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $item
             foreach ($targetItem in $Target)
             {
                 $compareResult = Compare-M365DSCComplexObject `
-                    -Source $hashSource `
+                    -Source $item `
                     -Target $targetItem
 
                 if ($compareResult)
@@ -634,7 +633,15 @@ function Compare-M365DSCComplexObject
         return $true
     }
 
-    $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+    if ($Source.GetType().FullName -like "*CimInstance")
+    {
+        $keys = $Source.CimInstanceProperties.Name | Where-Object -FilterScript { $_ -notin @('PSComputerName', 'CimClass', 'CmiInstanceProperties', 'CimSystemProperties') }
+    }
+    else
+    {
+        $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+    }
+
     foreach ($key in $keys)
     {
         #Matching possible key names between Source and Target
@@ -664,12 +671,23 @@ function Compare-M365DSCComplexObject
         #Both keys aren't null or empty
         if (($null -ne $Source.$key) -and ($null -ne $Target.$tkey))
         {
-            if ($Source.$key.getType().FullName -like '*CimInstance*' -or $Source.$key.getType().FullName -like '*hashtable*')
+            if ($Source.$key.GetType().FullName -like '*CimInstance*' -or $Source.$key.GetType().FullName -like '*hashtable*')
             {
-                #Recursive call for complex object
-                $compareResult = Compare-M365DSCComplexObject `
-                    -Source (Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Source.$key) `
-                    -Target $Target.$tkey
+                if ($Source.$key.GetType().FullName -like '*CimInstance' -and (
+                        $Source.$key.CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
+                        $Source.$key.CimClass.CimClassName -like 'MSFT_Intune*Assignments'))
+                {
+                    $compareResult = Compare-M365DSCIntunePolicyAssignment `
+                        -Source @($Source.$key) `
+                        -Target @($Target.$tkey)
+                }
+                else
+                {
+                    #Recursive call for complex object
+                    $compareResult = Compare-M365DSCComplexObject `
+                        -Source $Source.$key `
+                        -Target $Target.$tkey
+                }
 
                 if (-not $compareResult)
                 {
@@ -684,7 +702,7 @@ function Compare-M365DSCComplexObject
                 $differenceObject = $Source.$key
 
                 #Identifying date from the current values
-                $targetType = ($Target.$tkey.getType()).Name
+                $targetType = ($Target.$tkey.GetType()).Name
                 if ($targetType -like '*Date*')
                 {
                     $compareResult = $true
@@ -1023,17 +1041,22 @@ function ConvertFrom-IntunePolicyAssignment
         $hashAssignment = @{}
         $dataType = $assignment.Target.AdditionalProperties."@odata.type"
         $groupId = $assignment.Target.AdditionalProperties.groupId
+        $collectionId = $assignment.Target.AdditionalProperties.collectionId
 
-        $hashAssignment.add('dataType',$dataType)
+        $hashAssignment.Add('dataType',$dataType)
         if (-not [string]::IsNullOrEmpty($groupId))
         {
-            $hashAssignment.add('groupId', $groupId)
+            $hashAssignment.Add('groupId', $groupId)
 
             $group = Get-MgGroup -GroupId ($groupId) -ErrorAction SilentlyContinue
             if ($null -ne $group)
             {
                 $groupDisplayName = $group.DisplayName
             }
+        }
+        if (-not [string]::IsNullOrEmpty($collectionId))
+        {
+            $hashAssignment.Add('collectionId', $collectionId)
         }
         if ($dataType -eq '#microsoft.graph.allLicensedUsersAssignmentTarget')
         {
@@ -1045,24 +1068,24 @@ function ConvertFrom-IntunePolicyAssignment
         }
         if ($null -ne $groupDisplayName)
         {
-            $hashAssignment.add('groupDisplayName', $groupDisplayName)
+            $hashAssignment.Add('groupDisplayName', $groupDisplayName)
         }
         if ($IncludeDeviceFilter)
         {
             if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterType)
             {
-                $hashAssignment.add('deviceAndAppManagementAssignmentFilterType', $assignment.Target.DeviceAndAppManagementAssignmentFilterType.ToString())
+                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterType', $assignment.Target.DeviceAndAppManagementAssignmentFilterType.ToString())
             }
             if ($null -ne $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
             {
-                $hashAssignment.add('deviceAndAppManagementAssignmentFilterId', $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
+                $hashAssignment.Add('deviceAndAppManagementAssignmentFilterId', $assignment.Target.DeviceAndAppManagementAssignmentFilterId)
             }
         }
 
         $assignmentResult += $hashAssignment
     }
 
-    return $assignmentResult
+    return ,$assignmentResult
 }
 
 function ConvertTo-IntunePolicyAssignment
@@ -1071,11 +1094,17 @@ function ConvertTo-IntunePolicyAssignment
     [OutputType([Hashtable[]])]
     param (
         [Parameter(Mandatory = $true)]
+        [AllowNull()]
         $Assignments,
         [Parameter()]
         [System.Boolean]
         $IncludeDeviceFilter = $true
     )
+
+    if ($null -eq $Assignments)
+    {
+        return ,@()
+    }
 
     $assignmentResult = @()
     foreach ($assignment in $Assignments)
@@ -1083,16 +1112,17 @@ function ConvertTo-IntunePolicyAssignment
         $target = @{"@odata.type" = $assignment.dataType}
         if ($IncludeDeviceFilter)
         {
-            if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterId)
-            {
-                $target.add('deviceAndAppManagementAssignmentFilterId', $assignment.DeviceAndAppManagementAssignmentFilterId)
-            }
             if ($null -ne $assignment.DeviceAndAppManagementAssignmentFilterType)
             {
-                $target.add('deviceAndAppManagementAssignmentFilterType',$assignment.DeviceAndAppManagementAssignmentFilterType)
+                $target.Add('deviceAndAppManagementAssignmentFilterType', $assignment.DeviceAndAppManagementAssignmentFilterType)
+                $target.Add('deviceAndAppManagementAssignmentFilterId', $assignment.DeviceAndAppManagementAssignmentFilterId)
             }
         }
-        if ($assignment.dataType -like '*GroupAssignmentTarget')
+        if ($assignment.dataType -like '*CollectionAssignmentTarget')
+        {
+            $target.add('collectionId', $assignment.collectionId)
+        }
+        elseif ($assignment.dataType -like '*GroupAssignmentTarget')
         {
             $group = Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue
             if ($null -eq $group)
@@ -1104,14 +1134,14 @@ function ConvertTo-IntunePolicyAssignment
                     {
                         $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it could not be found in the directory.`r`n"
                         $message += "Please update your DSC resource extract with the correct groupId or groupDisplayName."
-                        write-verbose -Message $message
+                        Write-Verbose -Message $message
                         $target = $null
                     }
-                    if ($group -and $group.count -gt 1)
+                    if ($group -and $group.Count -gt 1)
                     {
                         $message = "Skipping assignment for the group with DisplayName {$($assignment.groupDisplayName)} as it is not unique in the directory.`r`n"
                         $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
-                        write-verbose -Message $message
+                        Write-Verbose -Message $message
                         $group = $null
                         $target = $null
                     }
@@ -1120,14 +1150,14 @@ function ConvertTo-IntunePolicyAssignment
                 {
                     $message = "Skipping assignment for the group with Id {$($assignment.groupId)} as it could not be found in the directory.`r`n"
                     $message += "Please update your DSC resource extract with the correct groupId or a unique group DisplayName."
-                    write-verbose -Message $message
+                    Write-Verbose -Message $message
                     $target = $null
                 }
             }
             #Skipping assignment if group not found from either groupId or groupDisplayName
             if ($null -ne $group)
             {
-                $target.add('groupId',$group.Id)
+                $target.Add('groupId', $group.Id)
             }
         }
 
@@ -1156,7 +1186,7 @@ function Compare-M365DSCIntunePolicyAssignment
     {
         foreach ($assignment in $Source)
         {
-            if ($assignment.dataType -like '*groupAssignmentTarget')
+            if ($assignment.dataType -like '*AssignmentTarget')
             {
                 $assignmentTarget = $Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType -and $_.groupId -eq $assignment.groupId }
                 $testResult = $null -ne $assignmentTarget
