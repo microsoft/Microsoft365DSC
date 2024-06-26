@@ -6,6 +6,9 @@
   * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
 * IntuneDeviceManagementComplianceSettings
   * Initial Release.
+* IntuneDeviceRemediation
+  * Fix invalid assignment export and import.  
+    FIXES [#4726](https://github.com/microsoft/Microsoft365DSC/issues/4726)
 * DEPENDENCIES
   * Updated MSCloudLoginAssistant to version 1.1.18
 * M365DSCDRGUtil
