@@ -1261,6 +1261,11 @@ function Update-DeviceConfigurationPolicyAssignment
 
         foreach ($target in $targets)
         {
+            if ($target.target -is [hashtable])
+            {
+                $target = $target.target
+            }
+            
             $formattedTarget = @{"@odata.type" = $target.dataType}
             if(-not $formattedTarget."@odata.type" -and $target."@odata.type")
             {

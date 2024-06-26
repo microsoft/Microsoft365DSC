@@ -32,8 +32,7 @@ function Get-TargetResource
         $PasswordAgeDays,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $PasswordExpirationProtectionEnabled,
 
         [Parameter()]
@@ -42,8 +41,7 @@ function Get-TargetResource
         $AdEncryptedPasswordHistorySize,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $AdPasswordEncryptionEnabled,
 
         [Parameter()]
@@ -172,6 +170,16 @@ function Get-TargetResource
 
         $returnHashtable = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $returnHashtable
 
+        if ($null -ne $returnHashtable.PasswordExpirationProtectionEnabled)
+        {
+            $returnHashtable.PasswordExpirationProtectionEnabled = [bool]::Parse($returnHashtable.PasswordExpirationProtectionEnabled)
+        }
+
+        if ($null -ne $returnHashtable.AdPasswordEncryptionEnabled)
+        {
+            $returnHashtable.AdPasswordEncryptionEnabled = [bool]::Parse($returnHashtable.AdPasswordEncryptionEnabled)
+        }
+
         $assignmentsValues = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
@@ -237,8 +245,7 @@ function Set-TargetResource
         $PasswordAgeDays,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $PasswordExpirationProtectionEnabled,
 
         [Parameter()]
@@ -247,8 +254,7 @@ function Set-TargetResource
         $AdEncryptedPasswordHistorySize,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $AdPasswordEncryptionEnabled,
 
         [Parameter()]
@@ -435,8 +441,7 @@ function Test-TargetResource
         $PasswordAgeDays,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $PasswordExpirationProtectionEnabled,
 
         [Parameter()]
@@ -445,8 +450,7 @@ function Test-TargetResource
         $AdEncryptedPasswordHistorySize,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $AdPasswordEncryptionEnabled,
 
         [Parameter()]

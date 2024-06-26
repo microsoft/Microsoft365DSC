@@ -17,6 +17,7 @@
 * M365DSCDRGUtil
   * Add `collectionId` export to `ConvertFrom-IntunePolicyAssignment`
   * Add handling for Intune assignments in `Compare-M365DSCComplexObject`
+  * Fix issue with target handling in `Update-DeviceConfigurationPolicyAssignment`
 * M365DSCResourceGenerator
   * Update CimInstance comparison template
 * MISC
