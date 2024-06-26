@@ -103,6 +103,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting configuration of OneDrive Settings'
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -445,7 +446,6 @@ function Set-TargetResource
     Write-Verbose -Message ($Options | Out-String)
 
     Set-PnPTenantSyncClientRestriction @Options
-
 }
 
 function Test-TargetResource

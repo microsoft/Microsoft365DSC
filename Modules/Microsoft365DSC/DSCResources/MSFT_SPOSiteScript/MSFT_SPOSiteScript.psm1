@@ -61,6 +61,9 @@ function Get-TargetResource
         [System.String[]]
         $AccessTokens
     )
+
+    Write-Verbose -Message "Getting Site Script: $Title"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
