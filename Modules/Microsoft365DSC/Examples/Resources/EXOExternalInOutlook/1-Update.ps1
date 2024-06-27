@@ -12,11 +12,11 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOExternalInOutlook "EXOExternalInOutlook"
         {
+            Identity              = "ExternalInOutlook";
             AllowList             = @("mobile01@contoso.onmicrosoft.com","*contoso.onmicrosoft.com","contoso.com");
             Enabled               = $False;
             Ensure                = "Present";

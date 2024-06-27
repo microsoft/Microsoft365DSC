@@ -33,70 +33,41 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-PSSession -MockWith {
             }
 
-            Mock -CommandName Set-EOPProtectionPolicyRule -MockWith {
-            }
-
-            Mock -CommandName New-EOPProtectionPolicyRule -MockWith {
-            }
-
-            Mock -CommandName Remove-EOPProtectionPolicyRule -MockWith {
-            }
-
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
-
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
             }
             $Script:exportedInstances =$null
-            $Script:ExportMode = $false<AssignmentMock>
+            $Script:ExportMode = $false
         }
         # Test contexts
-        Context -Name "The EXOEOPProtectionPolicyRule should exist but it DOES NOT" -Fixture {
-            BeforeAll {
-                $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
-                    Credential = $Credential;
-                }
-
-                Mock -CommandName Get-EOPProtectionPolicyRule -MockWith {
-                    return $null
-                }
-            }
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-            It 'Should Create the group from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName New-EOPProtectionPolicyRule -Exactly 1
-            }
-        }
 
         Context -Name "The EXOEOPProtectionPolicyRule exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Absent'
-                    Credential = $Credential;
+                    Ensure                    = 'Absent'
+                    Credential                = $Credential;
+                    ExceptIfRecipientDomainIs = @("contoso.onmicrosoft.com");
+                    Identity                  = "Strict Preset Security Policy";
+                    Name                      = "Strict Preset Security Policy";
+                    Priority                  = 0;
+                    State                     = "Disabled";
                 }
 
                 Mock -CommandName Get-EOPProtectionPolicyRule -MockWith {
                     return @{
-                    Identity                  = 
-                    SentTo                    = 
-                    SentToMemberOf            = 
-                    ExceptIfSentTo            = 
-                    RecipientDomainIs         = 
-                    Name                      = "FakeStringValue"
-                    ExceptIfRecipientDomainIs = 
+                    Identity                  = "Strict Preset Security Policy"
+                    Name                      = "Strict Preset Security Policy"
+                    ExceptIfRecipientDomainIs = @("contoso.onmicrosoft.com")
                     Comments                  = "FakeStringValue"
-                    ExceptIfSentToMemberOf    = 
-                    Priority                  = 3
-
+                    Priority                  = 0
                     }
+                }
+
+                Mock -CommandName Disable-EOPProtectionPolicyRule -MockWith {
+                    return $null
                 }
             }
 
@@ -110,29 +81,29 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Remove the group from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-EOPProtectionPolicyRule -Exactly 1
+                Should -Invoke -CommandName Disable-EOPProtectionPolicyRule -Exactly 1
             }
         }
         Context -Name "The EXOEOPProtectionPolicyRule Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Present'
-                    Credential = $Credential;
+                    Ensure                    = 'Present'
+                    Credential                = $Credential;
+                    ExceptIfRecipientDomainIs = @("contoso.onmicrosoft.com");
+                    Identity                  = "Strict Preset Security Policy";
+                    Name                      = "Strict Preset Security Policy";
+                    Priority                  = 0;
+                    State                     = "Disabled";
                 }
 
                 Mock -CommandName Get-EOPProtectionPolicyRule -MockWith {
                     return @{
-                    Identity                  = 
-                    SentTo                    = 
-                    SentToMemberOf            = 
-                    ExceptIfSentTo            = 
-                    RecipientDomainIs         = 
-                    Name                      = "FakeStringValue"
-                    ExceptIfRecipientDomainIs = 
+                    Identity                  = "Strict Preset Security Policy"
+                    Name                      = "Strict Preset Security Policy"
+                    ExceptIfRecipientDomainIs = @("contoso.onmicrosoft.com")
                     Comments                  = "FakeStringValue"
-                    ExceptIfSentToMemberOf    = 
-                    Priority                  = 3
-
+                    Priority                  = 0
+                    State                     = "Disabled";
                     }
                 }
             }
@@ -146,23 +117,28 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The EXOEOPProtectionPolicyRule exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Present'
-                    Credential = $Credential;
+                    Ensure                    = 'Present'
+                    Credential                = $Credential;
+                    ExceptIfRecipientDomainIs = @("contoso1.onmicrosoft.com");
+                    Identity                  = "Strict Preset Security Policy 2";
+                    Name                      = "Strict Preset Security Policy";
+                    Priority                  = 0;
+                    State                     = "Disabled";
                 }
 
                 Mock -CommandName Get-EOPProtectionPolicyRule -MockWith {
                     return @{
-                    Identity                  = 
-                    SentTo                    = 
-                    SentToMemberOf            = 
-                    ExceptIfSentTo            = 
-                    RecipientDomainIs         = 
-                    Name                      = "FakeStringValueDrift #Drift"
-                    ExceptIfRecipientDomainIs = 
-                    Comments                  = "FakeStringValueDrift #Drift"
-                    ExceptIfSentToMemberOf    = 
-                    Priority                  = 2
+                    Identity                  = "Strict Preset Security Policy"
+                    Name                      = "Strict Preset Security Policy"
+                    ExceptIfRecipientDomainIs = @("contoso.onmicrosoft.com")
+                    Comments                  = "FakeStringValue"
+                    Priority                  = 0
+                    State                     = "Disabled"
                     }
+                }
+
+                Mock -CommandName Set-EOPProtectionPolicyRule -MockWith {
+                    return $null
                 }
             }
 
@@ -190,18 +166,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-EOPProtectionPolicyRule -MockWith {
                     return @{
-                    Identity                  = 
-                    SentTo                    = 
-                    SentToMemberOf            = 
-                    ExceptIfSentTo            = 
-                    RecipientDomainIs         = 
-                    Name                      = "FakeStringValue"
-                    ExceptIfRecipientDomainIs = 
-                    Comments                  = "FakeStringValue"
-                    ExceptIfSentToMemberOf    = 
-                    Priority                  = 3
-
-                    }
+                        Identity                  = "Strict Preset Security Policy"
+                        Name                      = "Strict Preset Security Policy"
+                        ExceptIfRecipientDomainIs = @("contoso.onmicrosoft.com")
+                        Comments                  = "FakeStringValue"
+                        Priority                  = 0
+                        }
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {

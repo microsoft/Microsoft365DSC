@@ -230,8 +230,7 @@ function Set-TargetResource
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         #following Microsoft recommendation, we will not create new EOPProtectionPolicyRule, instead we will enable the rule if not already done
-        Write-Verbose -Message "We not create new EOPProtectionPolicyRule, we try to enable the rule if not already done"
-        Enable-EOPProtectionPolicyRule
+        Write-Verbose -Message "We not create new EOPProtectionPolicyRule if it is not present"
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
