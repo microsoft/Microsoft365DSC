@@ -4,49 +4,17 @@ function Get-TargetResource
     [OutputType([System.Collections.Hashtable])]
     param
     (
-        [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf,
-
         [Parameter(Mandatory = $true)]
-        [System.Object]
+        [System.String]
         $Identity,
 
-        [Parameter()]
-        [System.String]
-        $State,
-
-        [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [System.Int32]
-        $Priority,
+        [Parameter]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.String[]]
-        $RecipientDomainIs,
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo,
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf,
+        $AllowList,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -93,31 +61,23 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-EOPProtectionPolicyRule -Identity $Identity -ErrorAction SilentlyContinue
+        $instance = Get-ExternalInOutlook
         if ($null -eq $instance)
         {
             return $nullResult
         }
 
-        Write-Verbose -Message "Found an instance with Identity {$Identity}"
+        Write-Verbose -Message "Found the settings for ExternalInOutlook: $($instance.Identity)"
         $results = @{
-            Comments                  = $instance.Comments
-            ExceptIfRecipientDomainIs = $instance.ExceptIfRecipientDomainIs
-            ExceptIfSentTo            = $instance.ExceptIfSentTo
-            ExceptIfSentToMemberOf    = $instance.ExceptIfSentToMemberOf
-            Identity                  = $instance.Identity
-            State                     = $instance.State
-            Name                      = $instance.Name
-            Priority                  = $instance.Priority
-            RecipientDomainIs         = $instance.RecipientDomainIs
-            SentTo                    = $instance.SentTo
-            SentToMemberOf            = $instance.SentToMemberOf
-            Ensure                    = 'Present'
-            Credential                = $Credential
-            ApplicationId             = $ApplicationId
-            TenantId                  = $TenantId
-            CertificateThumbprint     = $CertificateThumbprint
-            ApplicationSecret         = $ApplicationSecret
+            Identity              = $instance.Identity
+            Enabled               = [String]$instance.Enabled
+            AllowList             = $instance.AllowList
+            Ensure                = 'Present'
+            Credential            = $Credential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+            ApplicationSecret     = $ApplicationSecret
         }
         return [System.Collections.Hashtable] $results
     }
@@ -138,49 +98,17 @@ function Set-TargetResource
     [CmdletBinding()]
     param
     (
-        [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf,
-
         [Parameter(Mandatory = $true)]
-        [System.Object]
+        [System.String]
         $Identity,
 
-        [Parameter()]
-        [System.String]
-        $State,
-
-        [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [System.Int32]
-        $Priority,
+        [Parameter]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.String[]]
-        $RecipientDomainIs,
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo,
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf,
+        $AllowList,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -229,29 +157,14 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        #following Microsoft recommendation, we will not create new EOPProtectionPolicyRule, instead we will enable the rule if not already done
-        Write-Verbose -Message "We not create new EOPProtectionPolicyRule, we try to enable the rule if not already done"
-        Enable-EOPProtectionPolicyRule
+        Write-Verbose -Message "The setting cannot be cvreated, it can only be enabled or disabled."
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating {$Identity}"
+        Write-Verbose -Message "Updating the settings for ExternalInOutlook."
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters.Remove('Verbose') | Out-Null
-        $UpdateParameters.Remove('State') | Out-Null
-
-        if($currentInstance.State -ne $State)
-        {
-            if($State -eq 'Enabled')
-            {
-                Enable-EOPProtectionPolicyRule -Identity $Identity
-            }
-            else
-            {
-                Disable-EOPProtectionPolicyRule -Identity $Identity
-            }
-        }
 
         $keys = $UpdateParameters.Keys
         foreach ($key in $keys)
@@ -264,13 +177,16 @@ function Set-TargetResource
             }
         }
 
-        Set-EOPProtectionPolicyRule @UpdateParameters | Out-Null
+        if($null -ne $UpdateParameters.AllowList)
+        {
+            $UpdateParameters.AllowList = $UpdateParameters.AllowList -join ','
+        }
+
+        Set-ExternalInOutlook @UpdateParameters | Out-Null
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        #following Microsoft recommendation, we will not remove EOPProtectionPolicyRules, instead we will disable the rule if not already done
-        Write-Verbose -Message "We will not remove EOPProtectionPolicyRules, we will disable the rule if not already done"
-        Disable-EOPProtectionPolicyRule -Identity $currentInstance.Identity
+        Write-Verbose -Message "The setting cannot be removed, it can only be enabled or disabled."
     }
 }
 
@@ -280,49 +196,17 @@ function Test-TargetResource
     [OutputType([System.Boolean])]
     param
     (
-        [Parameter()]
-        [System.String]
-        $Comments,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfRecipientDomainIs,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentTo,
-
-        [Parameter()]
-        [System.String[]]
-        $ExceptIfSentToMemberOf,
-
         [Parameter(Mandatory = $true)]
-        [System.Object]
+        [System.String]
         $Identity,
 
-        [Parameter()]
-        [System.String]
-        $State,
-
-        [Parameter()]
-        [System.String]
-        $Name,
-
-        [Parameter()]
-        [System.Int32]
-        $Priority,
+        [Parameter]
+        [System.Boolean]
+        $Enabled,
 
         [Parameter()]
         [System.String[]]
-        $RecipientDomainIs,
-
-        [Parameter()]
-        [System.String[]]
-        $SentTo,
-
-        [Parameter()]
-        [System.String[]]
-        $SentToMemberOf,
+        $AllowList,
 
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -354,47 +238,30 @@ function Test-TargetResource
     Confirm-M365DSCDependencies
 
     #region Telemetry
-    $ResourceName = $MyInvocation.MyCommand.ModuleName.Replace('MSFT_', '')
+    $ResourceName = $MyInvocation.MyCommand.ModuleName -replace 'MSFT_', ''
     $CommandName = $MyInvocation.MyCommand
     $data = Format-M365DSCTelemetryParameters -ResourceName $ResourceName `
         -CommandName $CommandName `
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-
-    Write-Verbose -Message "Testing configuration of {$Identity}"
+    Write-Verbose -Message "Testing ExternalInOutlook {$Identity}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
-    $ValuesToCheck.Remove('Identity') | Out-Null
-
-    if ($CurrentValues.Ensure -eq 'Absent')
-    {
-        Write-Verbose -Message "Test-TargetResource returned $false"
-        return $false
-    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
-    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
+    Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
 
-    #Convert any DateTime to String
-    foreach ($key in $ValuesToCheck.Keys)
-    {
-        if (($null -ne $CurrentValues[$key]) `
-                -and ($CurrentValues[$key].GetType().Name -eq 'DateTime'))
-        {
-            $CurrentValues[$key] = $CurrentValues[$key].toString()
-        }
-    }
+    $ValuesToCheck = $PSBoundParameters
 
-    $testResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
         -DesiredValues $PSBoundParameters `
         -ValuesToCheck $ValuesToCheck.Keys
 
-    Write-Verbose -Message "Test-TargetResource returned $testResult"
+    Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
-    return $testResult
+    return $TestResult
 }
 
 function Export-TargetResource
@@ -445,7 +312,7 @@ function Export-TargetResource
 
     try
     {
-        [array]$getValue = Get-EOPProtectionPolicyRule -ErrorAction Stop
+        [array]$getValue = Get-ExternalInOutlook
 
         $i = 1
         $dscContent = ''
@@ -464,20 +331,15 @@ function Export-TargetResource
                 $Global:M365DSCExportResourceInstancesCount++
             }
 
-            $displayedKey = $config.Identity
-            if (-not [String]::IsNullOrEmpty($config.displayName))
-            {
-                $displayedKey = $config.displayName
-            }
-            Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
+            Write-Host "    |---[$i/$($getValue.Count)] $($config.Identity)" -NoNewline
             $params = @{
-                Identity = $config.Identity
-                Ensure = 'Present'
-                Credential = $Credential
-                ApplicationId = $ApplicationId
-                TenantId = $TenantId
-                CertificateThumbprint = $CertificateThumbprint
-                ApplicationSecret = $ApplicationSecret
+                Identity                = $config.Identity
+                Ensure                  = 'Present'
+                Credential              = $Credential
+                ApplicationId           = $ApplicationId
+                TenantId                = $TenantId
+                CertificateThumbprint   = $CertificateThumbprint
+                ApplicationSecret       = $ApplicationSecret
 
             }
 
