@@ -237,8 +237,18 @@ function Set-TargetResource
         Write-Verbose -Message "Updating {$Identity}"
 
         $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
-        $UpdateParameters.Remove('Verbose') | Out-Null
         $UpdateParameters.Remove('State') | Out-Null
+
+        $keys = $UpdateParameters.Keys
+        foreach ($key in $keys)
+        {
+            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
+            {
+                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
+                $UpdateParameters.Remove($key) | Out-Null
+                $UpdateParameters.Add($keyName, $keyValue)
+            }
+        }
 
         if($currentInstance.State -ne $State)
         {
@@ -249,17 +259,6 @@ function Set-TargetResource
             else
             {
                 Disable-EOPProtectionPolicyRule -Identity $Identity
-            }
-        }
-
-        $keys = $UpdateParameters.Keys
-        foreach ($key in $keys)
-        {
-            if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.GetType().Name -like '*cimInstance*')
-            {
-                $keyValue = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $UpdateParameters.$key
-                $UpdateParameters.Remove($key) | Out-Null
-                $UpdateParameters.Add($keyName, $keyValue)
             }
         }
 

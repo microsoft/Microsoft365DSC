@@ -36,12 +36,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Set-ExternalInOutlook -MockWith {
             }
 
-            Mock -CommandName New-ExternalInOutlook -MockWith {
-            }
-
-            Mock -CommandName Remove-ExternalInOutlook -MockWith {
-            }
-
             Mock -CommandName New-M365DSCConnection -MockWith {
                 return "Credentials"
             }
@@ -50,69 +44,22 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Write-Host -MockWith {
             }
             $Script:exportedInstances =$null
-            $Script:ExportMode = $false<AssignmentMock>
+            $Script:ExportMode = $false
         }
         # Test contexts
-        Context -Name "The EXOExternalInOutlook should exist but it DOES NOT" -Fixture {
-            BeforeAll {
-                $testParams = @{
-<TargetResourceFakeValues>                    Ensure = "Present"
-                    Credential = $Credential;
-                }
 
-                Mock -CommandName Get-ExternalInOutlook -MockWith {
-                    return $null
-                }
-            }
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Absent'
-            }
-            It 'Should return false from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-            It 'Should Create the group from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName New-ExternalInOutlook -Exactly 1
-            }
-        }
-
-        Context -Name "The EXOExternalInOutlook exists but it SHOULD NOT" -Fixture {
-            BeforeAll {
-                $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Absent'
-                    Credential = $Credential;
-                }
-
-                Mock -CommandName Get-ExternalInOutlook -MockWith {
-                    return @{
-
-                    }
-                }
-            }
-
-            It 'Should return Values from the Get method' {
-                (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
-            }
-
-            It 'Should return true from the Test method' {
-                Test-TargetResource @testParams | Should -Be $false
-            }
-
-            It 'Should Remove the group from the Set method' {
-                Set-TargetResource @testParams
-                Should -Invoke -CommandName Remove-ExternalInOutlook -Exactly 1
-            }
-        }
         Context -Name "The EXOExternalInOutlook Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Present'
+                    identity = "ExternalInOutlook"
+                    AllowList = @("test@contoso.com")
+                    Ensure = 'Present'
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-ExternalInOutlook -MockWith {
                     return @{
-
+                        AllowList = @("test@contoso.com")
                     }
                 }
             }
@@ -126,12 +73,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The EXOExternalInOutlook exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
-<TargetResourceFakeValues>                    Ensure = 'Present'
+                    identity = "ExternalInOutlook"
+                    AllowList = @("test@contoso.com","test2@contoso.com")
+                    Ensure = 'Present'
                     Credential = $Credential;
                 }
 
                 Mock -CommandName Get-ExternalInOutlook -MockWith {
                     return @{
+                        identity = "ExternalInOutlook"
+                        AllowList = @("test@contoso.com")
                     }
                 }
             }
@@ -154,13 +105,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
+
                 $testParams = @{
                     Credential = $Credential
                 }
 
                 Mock -CommandName Get-ExternalInOutlook -MockWith {
                     return @{
-
+                        identity = "ExternalInOutlook"
+                        AllowList = @("test@contoso.com","test2@contoso.com")
                     }
                 }
             }
