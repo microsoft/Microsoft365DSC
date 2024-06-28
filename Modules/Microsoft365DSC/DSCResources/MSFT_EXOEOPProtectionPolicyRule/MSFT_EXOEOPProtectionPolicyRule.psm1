@@ -266,9 +266,8 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        #following Microsoft recommendation, we will not remove EOPProtectionPolicyRules, instead we will disable the rule if not already done
-        Write-Verbose -Message "We will not remove EOPProtectionPolicyRules, we will disable the rule if not already done"
-        Disable-EOPProtectionPolicyRule -Identity $currentInstance.Identity
+        #following Microsoft recommendation, we will not remove EOPProtectionPolicyRules.
+        Write-Verbose -Message "We will not remove EOPProtectionPolicyRules"
     }
 }
 

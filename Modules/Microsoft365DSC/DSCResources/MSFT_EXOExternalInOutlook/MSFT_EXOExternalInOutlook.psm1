@@ -157,7 +157,7 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "The setting cannot be cvreated, it can only be enabled or disabled."
+        Write-Verbose -Message "The setting cannot be created, it can only be enabled or disabled."
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
@@ -175,11 +175,6 @@ function Set-TargetResource
                 $UpdateParameters.Remove($key) | Out-Null
                 $UpdateParameters.Add($keyName, $keyValue)
             }
-        }
-
-        if($null -ne $UpdateParameters.AllowList)
-        {
-            $UpdateParameters.AllowList = $UpdateParameters.AllowList -join ','
         }
 
         Set-ExternalInOutlook @UpdateParameters | Out-Null
