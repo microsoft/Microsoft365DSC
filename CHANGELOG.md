@@ -1,13 +1,30 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.626.1
 
 * AADGroup
   * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Migrate to new settings catalog cmdlets.
 * IntuneDeviceManagementComplianceSettings
   * Initial Release.
+* IntuneDeviceRemediation
+  * Fix invalid assignment export and import.
+    FIXES [#4726](https://github.com/microsoft/Microsoft365DSC/issues/4726)
+* M365DSCDRGUtil
+  * Fixes an issue with the settings catalog property generation.
+  * Add `collectionId` export to `ConvertFrom-IntunePolicyAssignment`
+  * Add handling for Intune assignments in `Compare-M365DSCComplexObject`
+  * Fix issue with target handling in `Update-DeviceConfigurationPolicyAssignment`
+* M365DSCUtil
+  * Fixes an issue where the comparison with null-valued desired value throws an error.
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.1.18
+  * Updated MSCloudLoginAssistant to version 1.1.18 
+* M365DSCResourceGenerator
+  * Update CimInstance comparison template
+* MISC
+  * Add group display name export and update assignment comparison across Intune
+    resources.
 
 # 1.24.619.1
 
@@ -30,7 +47,7 @@
 * TeamsMeetingPolicy
   * Updated the allowed values for the TeamsCameraFarEndTPTXZmode property.
 * M365DSCResourceGenerator
-  * Fix formatting and missing escape character in Resource Generator
+  * Fix formatting and missing escape character in Resource Generator.
 
 # 1.24.605.1
 

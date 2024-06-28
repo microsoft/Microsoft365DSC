@@ -396,11 +396,7 @@ function Set-TargetResource
         }
         #region resource generator code
         $policy = New-MgBetaDeviceManagementGroupPolicyConfiguration -BodyParameter $CreateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
         {
@@ -474,11 +470,7 @@ function Set-TargetResource
             -BodyParameter $UpdateParameters
 
         #Update Assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/groupPolicyConfigurations'
@@ -703,10 +695,10 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
             #Removing Key Definition because it is Read-Only and ID as random
             if ($key -eq 'DefinitionValues')
             {
+                $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
                 foreach ($definitionValue in $source)
                 {
                     $definitionValue.remove('Definition')
@@ -734,11 +726,6 @@ function Test-TargetResource
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
-
-            if ($key -eq 'Assignments')
-            {
-                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-            }
 
             if (-Not $testResult)
             {
@@ -1019,7 +1006,7 @@ function Update-DeviceConfigurationGroupPolicyDefinitionValue
             'deletedIds' = $DefinitionValueToRemoveIds
         }
         #Write-Verbose -Message ($body | ConvertTo-Json -Depth 100)
-        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ErrorAction Stop 4> Out-Null
+        Invoke-MgGraphRequest -Method POST -Uri $Uri -Body ($body | ConvertTo-Json -Depth 20) -ErrorAction Stop 4> $null
     }
     catch
     {

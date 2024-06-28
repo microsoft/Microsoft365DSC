@@ -17,8 +17,8 @@
 | **RunAs32Bit** | Write | Boolean | Indicate whether PowerShell script(s) should run as 32-bit | |
 | **RunAsAccount** | Write | String | Indicates the type of execution context. Possible values are: system, user. | `system`, `user` |
 | **Id** | Key | String | The unique identifier for an entity. Read-only. | |
-| **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
-| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | |
+| **Assignments** | Write | MSFT_IntuneDeviceRemediationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
+| **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
 | **TenantId** | Write | String | Id of the Azure Active Directory tenant used for authentication. | |
@@ -39,6 +39,28 @@
 | **groupId** | Write | String | The group Id that is the target of the assignment. | |
 | **groupDisplayName** | Write | String | The group Display Name that is the target of the assignment. | |
 | **collectionId** | Write | String | The collection Id that is the target of the assignment.(ConfigMgr) | |
+
+### MSFT_IntuneDeviceRemediationRunSchedule
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **dataType** | Write | String | The type of the schedule. | `#microsoft.graph.deviceHealthScriptRunOnceSchedule`, `#microsoft.graph.deviceHealthScriptHourlySchedule`, `#microsoft.graph.deviceHealthScriptDailySchedule` |
+| **Date** | Write | String | The date when to run the schedule. Only applicable when the odataType is a run once schedule. Format: 2024-01-01 | |
+| **Interval** | Write | UInt32 | The interval of the schedule. Must be 1 in case of a run once schedule. | |
+| **Time** | Write | String | The time when to run the schedule. Only applicable when the dataType is not an hourly schedule. Format: 01:00:00 | |
+| **UseUtc** | Write | Boolean | If to use UTC as the time source. Only applicable when the dataType is not an hourly schedule. | |
+
+### MSFT_IntuneDeviceRemediationPolicyAssignments
+
+#### Parameters
+
+| Parameter | Attribute | DataType | Description | Allowed Values |
+| --- | --- | --- | --- | --- |
+| **RunRemediationScript** | Write | Boolean | If the remediation script should be run. | |
+| **RunSchedule** | Write | MSFT_IntuneDeviceRemediationRunSchedule | The run schedule of the remediation. | |
+| **Assignment** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments | Represents the assignment of the schedule. | |
 
 ### MSFT_MicrosoftGraphDeviceHealthScriptParameter
 
@@ -105,9 +127,20 @@ Configuration Example
         IntuneDeviceRemediation 'ConfigureDeviceRemediation'
         {
             Assignments              = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments{
-                    deviceAndAppManagementAssignmentFilterType = 'none'
-                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                MSFT_IntuneDeviceRemediationPolicyAssignments{
+                    RunSchedule = MSFT_IntuneDeviceRemediationRunSchedule{
+                        Date = '2024-01-01'
+                        Time = '01:00:00'
+                        Interval = 1
+                        DataType = '#microsoft.graph.deviceHealthScriptRunOnceSchedule'
+                        UseUtc = $False
+                    }
+                    RunRemediationScript = $False
+                    Assignment = MSFT_DeviceManagementConfigurationPolicyAssignments{
+                        deviceAndAppManagementAssignmentFilterType = 'none'
+                        dataType = '#microsoft.graph.groupAssignmentTarget'
+                        groupId = '11111111-1111-1111-1111-111111111111'
+                    }
                 }
             );
             Credential               = $Credscredential
@@ -148,9 +181,20 @@ Configuration Example
         IntuneDeviceRemediation 'ConfigureDeviceRemediation'
         {
             Assignments              = @(
-                MSFT_DeviceManagementConfigurationPolicyAssignments{
-                    deviceAndAppManagementAssignmentFilterType = 'none'
-                    dataType = '#microsoft.graph.allDevicesAssignmentTarget'
+                MSFT_IntuneDeviceRemediationPolicyAssignments{
+                    RunSchedule = MSFT_IntuneDeviceRemediationRunSchedule{
+                        Date = '2024-01-01'
+                        Time = '01:00:00'
+                        Interval = 1
+                        DataType = '#microsoft.graph.deviceHealthScriptRunOnceSchedule'
+                        UseUtc = $False
+                    }
+                    RunRemediationScript = $False
+                    Assignment = MSFT_DeviceManagementConfigurationPolicyAssignments{
+                        deviceAndAppManagementAssignmentFilterType = 'none'
+                        dataType = '#microsoft.graph.groupAssignmentTarget'
+                        groupId = '11111111-1111-1111-1111-111111111111'
+                    }
                 }
             );
             Credential               = $Credscredential

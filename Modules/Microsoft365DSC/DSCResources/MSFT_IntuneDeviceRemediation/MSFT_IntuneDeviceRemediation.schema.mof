@@ -8,7 +8,26 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
     [Write, Description("The group Display Name that is the target of the assignment.")] String groupDisplayName;
     [Write, Description("The collection Id that is the target of the assignment.(ConfigMgr)")] String collectionId;
 };
-[ClassVersion("1.0.0")]
+
+[ClassVersion("1.0.0.0")]
+class MSFT_IntuneDeviceRemediationRunSchedule
+{
+    [Write, Description("The type of the schedule."), ValueMap{"#microsoft.graph.deviceHealthScriptRunOnceSchedule","#microsoft.graph.deviceHealthScriptHourlySchedule","#microsoft.graph.deviceHealthScriptDailySchedule"}, Values{"#microsoft.graph.deviceHealthScriptRunOnceSchedule","#microsoft.graph.deviceHealthScriptHourlySchedule","#microsoft.graph.deviceHealthScriptDailySchedule"}] String dataType;
+    [Write, Description("The date when to run the schedule. Only applicable when the odataType is a run once schedule. Format: 2024-01-01")] String Date;
+    [Write, Description("The interval of the schedule. Must be 1 in case of a run once schedule.")] UInt32 Interval;
+    [Write, Description("The time when to run the schedule. Only applicable when the dataType is not an hourly schedule. Format: 01:00:00")] String Time;
+    [Write, Description("If to use UTC as the time source. Only applicable when the dataType is not an hourly schedule.")] Boolean UseUtc;
+};
+
+[ClassVersion("1.0.0.0")]
+class MSFT_IntuneDeviceRemediationPolicyAssignments
+{
+    [Write, Description("If the remediation script should be run.")] Boolean RunRemediationScript;
+    [Write, Description("The run schedule of the remediation."), EmbeddedInstance("MSFT_IntuneDeviceRemediationRunSchedule")] String RunSchedule;
+    [Write, Description("Represents the assignment of the schedule."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignment;
+};
+
+[ClassVersion("1.0.0.0")]
 class MSFT_MicrosoftGraphDeviceHealthScriptParameter
 {
     [Write, Description("Whether Apply DefaultValue When Not Assigned")] Boolean ApplyDefaultValueWhenNotAssigned;
@@ -35,8 +54,8 @@ class MSFT_IntuneDeviceRemediation : OMI_BaseResource
     [Write, Description("Indicate whether PowerShell script(s) should run as 32-bit")] Boolean RunAs32Bit;
     [Write, Description("Indicates the type of execution context. Possible values are: system, user."), ValueMap{"system","user"}, Values{"system","user"}] String RunAsAccount;
     [Key, Description("The unique identifier for an entity. Read-only.")] String Id;
-    [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_DeviceManagementConfigurationPolicyAssignments")] String Assignments[];
-    [Write, Description("Present ensures the policy exists, absent ensures it is removed.")] string Ensure;
+    [Write, Description("Represents the assignment to the Intune policy."), EmbeddedInstance("MSFT_IntuneDeviceRemediationPolicyAssignments")] String Assignments[];
+    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

@@ -228,18 +228,33 @@ function Get-TargetResource
             AccessTokens                = $AccessTokens
             #endregion
         }
+
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceHealthScriptAssignment -DeviceHealthScriptId $Id
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        foreach ($assignment in $assignmentsValues)
         {
-            $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
+            if (-not [System.String]::IsNullOrEmpty($assignment.RunSchedule.AdditionalProperties.time))
+            {
+                $time = Get-Date -Format 'HH:mm:ss' -Date $assignment.RunSchedule.AdditionalProperties.time
             }
-            $assignmentResult += $assignmentValue
+            else
+            {
+                $time = $null
+            }
+
+            $assignmentResult += @{
+                RunRemediationScript = $assignment.RunRemediationScript
+                RunSchedule = @{
+                    DataType = $assignment.RunSchedule.AdditionalProperties.'@odata.type'
+                    Date = $assignment.RunSchedule.AdditionalProperties.date
+                    Interval = $assignment.RunSchedule.Interval
+                    Time = $time
+                    UseUtc = $assignment.RunSchedule.AdditionalProperties.useUtc
+                }
+                Assignment = (ConvertFrom-IntunePolicyAssignment `
+                    -IncludeDeviceFilter:$true `
+                    -Assignments $assignment) | Select-Object -First 1
+            }
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -397,14 +412,43 @@ function Set-TargetResource
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentTarget = ConvertTo-IntunePolicyAssignment -Assignments $assignment.Assignment
+            $runSchedule = $null
+            if ($null -ne $assignment.RunSchedule.DataType) {
+                $runSchedule = @{
+                    '@odata.type' = $assignment.RunSchedule.DataType
+                }
+                if (-not [string]::IsNullOrEmpty($assignment.RunSchedule.Date))
+                {
+                    $runSchedule.Add('date', $assignment.RunSchedule.Date)
+                }
+                if (-not [string]::IsNullOrEmpty($assignment.RunSchedule.Interval))
+                {
+                    $runSchedule.Add('interval', $assignment.RunSchedule.Interval)
+                }
+                if (-not [string]::IsNullOrEmpty($assignment.RunSchedule.Time))
+                {
+                    $runSchedule.Add('time', $assignment.RunSchedule.Time)
+                }
+                if (-not [string]::IsNullOrEmpty($assignment.RunSchedule.UseUtc))
+                {
+                    $runSchedule.Add('useUtc', $assignment.RunSchedule.UseUtc)
+                }
+            }
+            $assignmentsHash += @{
+                runRemediationScript = $assignment.RunRemediationScript
+                runSchedule = $runSchedule
+                target = $assignmentTarget.target
+            }
         }
 
-        if ($policy.id)
+        if ($policy.Id)
         {
-            Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
-                -Targets $assignmentsHash `
-                -Repository 'deviceManagement/deviceHealthScripts'
+            $uri = "/beta/deviceManagement/deviceHealthScripts/$($policy.Id)/assign"
+            $body = @{
+                deviceHealthScriptAssignments = $assignmentsHash
+            } | ConvertTo-Json -Depth 20
+            Invoke-MgGraphRequest -Method POST -Uri $uri -Body $body -ErrorAction Stop 4> $null
         }
         #endregion
     }
@@ -433,15 +477,44 @@ function Set-TargetResource
         Update-MgBetaDeviceManagementDeviceHealthScript  `
             -DeviceHealthScriptId $currentInstance.Id `
             -BodyParameter $UpdateParameters
+
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
         {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
+            $assignmentTarget = ConvertTo-IntunePolicyAssignment -Assignments $assignment.Assignment
+            $runSchedule = $null
+            if ($null -ne $assignment.RunSchedule.DataType) {
+                $runSchedule = @{
+                    '@odata.type' = $assignment.RunSchedule.DataType
+                }
+                if (-not [string]::IsNullOrEmpty($assignment.RunSchedule.Date))
+                {
+                    $runSchedule.Add('date', $assignment.RunSchedule.Date)
+                }
+                if (-not [string]::IsNullOrEmpty($assignment.RunSchedule.Interval))
+                {
+                    $runSchedule.Add('interval', $assignment.RunSchedule.Interval)
+                }
+                if (-not [string]::IsNullOrEmpty($assignment.RunSchedule.Time))
+                {
+                    $runSchedule.Add('time', $assignment.RunSchedule.Time)
+                }
+                if (-not [string]::IsNullOrEmpty($assignment.RunSchedule.UseUtc))
+                {
+                    $runSchedule.Add('useUtc', $assignment.RunSchedule.UseUtc)
+                }
+            }
+            $assignmentsHash += @{
+                runRemediationScript = $assignment.RunRemediationScript
+                runSchedule = $runSchedule
+                target = $assignmentTarget.target
+            }
         }
-        Update-DeviceConfigurationPolicyAssignment `
-            -DeviceConfigurationPolicyId $currentInstance.id `
-            -Targets $assignmentsHash `
-            -Repository 'deviceManagement/deviceHealthScripts'
+        $uri = "/beta/deviceManagement/deviceHealthScripts/$($currentInstance.Id)/assign"
+        $body = @{
+            deviceHealthScriptAssignments = $assignmentsHash
+        } | ConvertTo-Json -Depth 20
+        Invoke-MgGraphRequest -Method POST -Uri $uri -Body $body -ErrorAction Stop 4> $null
         #endregion
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
@@ -582,17 +655,14 @@ function Test-TargetResource
     {
         $source = $PSBoundParameters.$key
         $target = $CurrentValues.$key
-        if ($source.getType().Name -like '*CimInstance*')
+        if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
 
-            if (-Not $testResult)
+            if (-not $testResult)
             {
-                $testResult = $false
                 break
             }
 
@@ -600,11 +670,8 @@ function Test-TargetResource
         }
     }
 
-    $ValuesToCheck.remove('Id') | Out-Null
-    $ValuesToCheck.Remove('Credential') | Out-Null
-    $ValuesToCheck.Remove('ApplicationId') | Out-Null
-    $ValuesToCheck.Remove('TenantId') | Out-Null
-    $ValuesToCheck.Remove('ApplicationSecret') | Out-Null
+    $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -757,8 +824,24 @@ function Export-TargetResource
             }
             if ($Results.Assignments)
             {
-                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString -ComplexObject $Results.Assignments -CIMInstanceName DeviceManagementConfigurationPolicyAssignments
-                if ($complexTypeStringResult)
+                $complexMapping = @(
+                    @{
+                        Name = 'RunSchedule'
+                        CimInstanceName = 'IntuneDeviceRemediationRunSchedule'
+                        IsRequired = $false
+                    }
+                    @{
+                        Name = 'Assignment'
+                        CimInstanceName = 'DeviceManagementConfigurationPolicyAssignments'
+                        IsRequired = $true
+                    }
+                )
+                $complexTypeStringResult = Get-M365DSCDRGComplexTypeToString `
+                    -ComplexObject $Results.Assignments `
+                    -CIMInstanceName 'MSFT_IntuneDeviceRemediationPolicyAssignments' `
+                    -ComplexTypeMapping $complexMapping
+
+                if (-not [string]::IsNullOrEmpty($complexTypeStringResult))
                 {
                     $Results.Assignments = $complexTypeStringResult
                 }
@@ -782,7 +865,10 @@ function Export-TargetResource
             }
             if ($Results.Assignments)
             {
-                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true
+                $currentDSCBlock = (Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName "Assignments" -isCIMArray:$true).Replace("''", "'")
+                $currentDSCBlock = [Regex]::Replace($currentDSCBlock, "Assignment = '\r\n                ", "Assignment = ")
+                $currentDSCBlock = $currentDSCBlock.Replace("RunSchedule = '", "RunSchedule = ").Replace("}'", "}")
+                $currentDSCBlock = [Regex]::Replace($currentDSCBlock, "\r\n            '", "")
             }
 
             $dscContent += $currentDSCBlock

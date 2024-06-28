@@ -178,16 +178,11 @@ function Get-TargetResource
 
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceEnrollmentConfigurationAssignment -DeviceEnrollmentConfigurationId $config.Id
         $assignmentResult = @()
-        foreach ($assignmentEntry in $assignmentsValues)
+        if ($assignmentsValues.Count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                                                                 { $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString() })
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -379,14 +374,7 @@ function Set-TargetResource
         # Assignments from DefaultPolicy are not editable and will raise an alert
         if ($policy.Id -notlike '*_DefaultPlatformRestrictions')
         {
-            $assignmentsHash = @()
-            if ($null -ne $Assignments -and $Assignments.Length -gt 0)
-            {
-                foreach ($assignment in $Assignments)
-                {
-                    $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
-                }
-            }
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
             Update-DeviceConfigurationPolicyAssignment `
                 -DeviceConfigurationPolicyId $policy.Id `
                 -Targets $assignmentsHash `
@@ -451,14 +439,7 @@ function Set-TargetResource
         # Assignments from DefaultPolicy are not editable and will raise an alert
         if ($currentInstance.Identity -notlike '*_DefaultPlatformRestrictions')
         {
-            $assignmentsHash = @()
-            if ($null -ne $Assignments -and $Assignments.Length -gt 0)
-            {
-                foreach ($assignment in $Assignments)
-                {
-                    $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
-                }
-            }
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
             Update-DeviceConfigurationPolicyAssignment `
                 -DeviceConfigurationPolicyId $currentInstance.Identity `
                 -Targets $assignmentsHash `
@@ -608,8 +589,6 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*' -and $key -ne 'WindowsMobileRestriction')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)

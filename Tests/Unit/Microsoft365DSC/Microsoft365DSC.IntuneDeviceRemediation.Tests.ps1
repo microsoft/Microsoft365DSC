@@ -56,12 +56,56 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             $Script:ExportMode = $false
 
             Mock -CommandName Get-MgBetaDeviceManagementDeviceHealthScriptAssignment -MockWith {
+                return @(
+                    @{
+                        Id = "FakeStringValue"
+                        RunRemediationScript = $False
+                        RunSchedule = @{
+                            Interval = 1
+                            AdditionalProperties = @{
+                                '@odata.type' = "#microsoft.graph.deviceHealthScriptRunOnceSchedule"
+                                useUtc = $false
+                                time = "01:00:00.0000000"
+                                date = "2024-01-01"
+                            }
+                        }
+                        Target = @{
+                            AdditionalProperties = @{
+                                '@odata.type' = "#microsoft.graph.groupAssignmentTarget"
+                                groupId = "FakeStringValue"
+                            }
+                            "DeviceAndAppManagementAssignmentFilterId" = "FakeStringValue"
+                            "DeviceAndAppManagementAssignmentFilterType" = "none"
+                        }
+                        DeviceHealthScriptId = "FakeStringValue"
+                        RoleScopeTagIds = @("FakeStringValue")
+                        Ensure = "Present"
+                    }
+                )
             }
         }
         # Test contexts
         Context -Name "The IntuneDeviceRemediation should exist but it DOES NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_IntuneDeviceRemediationPolicyAssignments -Property @{
+                            RunSchedule = New-CimInstance -ClassName MSFT_IntuneDeviceRemediationRunSchedule -Property @{
+                                Date = '2024-01-01'
+                                Time = '01:00:00'
+                                Interval = 1
+                                DataType = '#microsoft.graph.deviceHealthScriptRunOnceSchedule'
+                                UseUtc = $False
+                            } -ClientOnly
+                            RunRemediationScript = $False
+                            Assignment = New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                                deviceAndAppManagementAssignmentFilterId = 'FakeStringValue'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                                dataType = '#microsoft.graph.groupAssignmentTarget'
+                                groupId = 'FakeStringValue'
+                            } -ClientOnly
+                        } -ClientOnly)
+                    )
                     Description = "FakeStringValue"
                     DetectionScriptContent = "VGVzdA==" # "Test"
                     DetectionScriptParameters = [CimInstance[]]@(
@@ -116,6 +160,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The IntuneDeviceRemediation exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_IntuneDeviceRemediationPolicyAssignments -Property @{
+                            RunSchedule = New-CimInstance -ClassName MSFT_IntuneDeviceRemediationRunSchedule -Property @{
+                                Date = '2024-01-01'
+                                Time = '01:00:00'
+                                Interval = 1
+                                DataType = '#microsoft.graph.deviceHealthScriptRunOnceSchedule'
+                                UseUtc = $False
+                            } -ClientOnly
+                            RunRemediationScript = $False
+                            Assignment = New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                                deviceAndAppManagementAssignmentFilterId = 'FakeStringValue'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                                dataType = '#microsoft.graph.groupAssignmentTarget'
+                                groupId = 'FakeStringValue'
+                            } -ClientOnly
+                        } -ClientOnly)
+                    )
                     Description = "FakeStringValue"
                     DetectionScriptContent = "VGVzdA==" # "Test"
                     DetectionScriptParameters = [CimInstance[]]@(
@@ -153,6 +215,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceHealthScript -MockWith {
                     return @{
+                        Assignments = [CimInstance[]]@(
+                            (New-CimInstance -ClassName MSFT_IntuneDeviceRemediationPolicyAssignments -Property @{
+                                RunSchedule = New-CimInstance -ClassName MSFT_IntuneDeviceRemediationRunSchedule -Property @{
+                                    Date = '2024-01-01'
+                                    Time = '01:00:00'
+                                    Interval = 1
+                                    DataType = '#microsoft.graph.deviceHealthScriptRunOnceSchedule'
+                                    UseUtc = $False
+                                } -ClientOnly
+                                RunRemediationScript = $False
+                                Assignment = New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                                    deviceAndAppManagementAssignmentFilterId = 'FakeStringValue'
+                                    deviceAndAppManagementAssignmentFilterType = 'none'
+                                    dataType = '#microsoft.graph.groupAssignmentTarget'
+                                    groupId = 'FakeStringValue'
+                                } -ClientOnly
+                            } -ClientOnly)
+                        )
                         Description = "FakeStringValue"
                         DetectionScriptContent = [byte[]] @(84, 101, 115, 116)
                         DetectionScriptParameters = @(
@@ -205,6 +285,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The IntuneDeviceRemediation Exists and Values are already in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_IntuneDeviceRemediationPolicyAssignments -Property @{
+                            RunSchedule = New-CimInstance -ClassName MSFT_IntuneDeviceRemediationRunSchedule -Property @{
+                                Date = '2024-01-01'
+                                Time = '01:00:00'
+                                Interval = 1
+                                DataType = '#microsoft.graph.deviceHealthScriptRunOnceSchedule'
+                                UseUtc = $False
+                            } -ClientOnly
+                            RunRemediationScript = $False
+                            Assignment = New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                                deviceAndAppManagementAssignmentFilterId = 'FakeStringValue'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                                dataType = '#microsoft.graph.groupAssignmentTarget'
+                                groupId = 'FakeStringValue'
+                            } -ClientOnly
+                        } -ClientOnly)
+                    )
                     Description = "FakeStringValue"
                     DetectionScriptContent = "VGVzdA==" # "Test"
                     DetectionScriptParameters = [CimInstance[]]@(
@@ -286,6 +384,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The IntuneDeviceRemediation exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
                 $testParams = @{
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_IntuneDeviceRemediationPolicyAssignments -Property @{
+                            RunSchedule = New-CimInstance -ClassName MSFT_IntuneDeviceRemediationRunSchedule -Property @{
+                                Date = '2024-01-01'
+                                Time = '01:00:00'
+                                Interval = 1
+                                DataType = '#microsoft.graph.deviceHealthScriptRunOnceSchedule'
+                                UseUtc = $False
+                            } -ClientOnly
+                            RunRemediationScript = $False
+                            Assignment = New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                                deviceAndAppManagementAssignmentFilterId = 'FakeStringValue'
+                                deviceAndAppManagementAssignmentFilterType = 'none'
+                                dataType = '#microsoft.graph.groupAssignmentTarget'
+                                groupId = 'FakeStringValue'
+                            } -ClientOnly
+                        } -ClientOnly)
+                    )
                     Description = "FakeStringValue"
                     DetectionScriptContent = "VGVzdA==" # "Test"
                     DetectionScriptParameters = [CimInstance[]]@(
@@ -375,6 +491,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementDeviceHealthScript -MockWith {
                     return @{
+                        Assignments = [CimInstance[]]@(
+                            (New-CimInstance -ClassName MSFT_IntuneDeviceRemediationPolicyAssignments -Property @{
+                                RunSchedule = New-CimInstance -ClassName MSFT_IntuneDeviceRemediationRunSchedule -Property @{
+                                    Date = '2024-01-01'
+                                    Time = '01:00:00'
+                                    Interval = 1
+                                    DataType = '#microsoft.graph.deviceHealthScriptRunOnceSchedule'
+                                    UseUtc = $False
+                                } -ClientOnly
+                                RunRemediationScript = $False
+                                Assignment = New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                                    deviceAndAppManagementAssignmentFilterId = 'FakeStringValue'
+                                    deviceAndAppManagementAssignmentFilterType = 'none'
+                                    dataType = '#microsoft.graph.groupAssignmentTarget'
+                                    groupId = 'FakeStringValue'
+                                } -ClientOnly
+                            } -ClientOnly)
+                        )
                         Description = "FakeStringValue"
                         DetectionScriptContent = [byte[]] @(84, 101, 115, 116)
                         DetectionScriptParameters = @(

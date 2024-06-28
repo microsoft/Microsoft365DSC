@@ -156,20 +156,13 @@ function Get-TargetResource
         }
 
         $assignmentsValues = $getValue.Assignments
-
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        if ($assignmentsValues.Count -gt 0)
         {
-            $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($assignmentsValues)
         }
-
         $results.Add('Assignments', $assignmentResult)
 
         $itemsValues = $getValue.Items
@@ -309,16 +302,7 @@ function Set-TargetResource
         }
 
         # set assignments and items to work with New-MgbetaDeviceAppManagementPolicySet command
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += @{
-                                    target = @{
-                                                '@odata.type' = $assignment.dataType
-                                                groupId = $assignment.groupId
-                                            }
-                                    }
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         $CreateParameters.Add("Assignments", $assignmentsHash)
 
         $itemsHash = @()
@@ -359,29 +343,15 @@ function Set-TargetResource
         #region resource generator code
         $UpdateParameters.Add("PolicySetId", $currentInstance.Id)
 
-        write-verbose -Message ($UpdateParameters | out-string)
         Update-MgbetaDeviceAppManagementPolicySet  @UpdateParameters
 
-        if (($itemamendments = Get-ItemsAmendmentsObject -currentObjectItems $currentInstance.Items -targetObjectItems $items) -ne $null )
+        if ($null -ne ($itemamendments = Get-ItemsAmendmentsObject -currentObjectItems $currentInstance.Items -targetObjectItems $items))
         {
-
-            write-verbose -message ($itemamendments | out-string)
             $url = ('https://graph.microsoft.com/beta/deviceAppManagement/policySets/' + $currentInstance.Id + '/update' )
             Invoke-MgGraphRequest -Method POST -Uri $url -Body $itemamendments
         }
 
-        $assignmentsHash = @{ assignments = @()}
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash.assignments += @{
-                                    target = @{
-                                                '@odata.type' = $assignment.dataType
-                                                groupId = $assignment.groupId
-                                            }
-                                    }
-        }
-
-        write-verbose -message ($assignmentsHash | out-string)
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         $url = ('https://graph.microsoft.com/beta/deviceAppManagement/policySets/' + $currentInstance.Id + '/update' )
         Invoke-MgGraphRequest -Method POST -Uri $url -Body $assignmentsHash
         #endregion
@@ -496,8 +466,6 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)

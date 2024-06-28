@@ -306,7 +306,7 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
 
         #region Assignments
-        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $policy.Id `
             -Targets $assignmentsHash
@@ -333,7 +333,7 @@ function Set-TargetResource
             -Settings $settings
 
         #region Assignments
-        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Targets $assignmentsHash
@@ -833,7 +833,7 @@ function Update-DeviceManagementConfigurationPolicy
     Invoke-MgGraphRequest -Method PUT `
         -Uri $Uri `
         -ContentType 'application/json' `
-        -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
+        -Body ($policy | ConvertTo-Json -Depth 20) 4> $null
 }
 
 Export-ModuleMember -Function *-TargetResource
