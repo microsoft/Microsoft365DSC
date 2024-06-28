@@ -1176,9 +1176,9 @@ function Compare-M365DSCIntunePolicyAssignment
     [OutputType([System.Boolean])]
     param (
         [Parameter()]
-        $Source,
+        [array]$Source,
         [Parameter()]
-        $Target
+        [array]$Target
     )
 
     $testResult = $Source.Count -eq $Target.Count
