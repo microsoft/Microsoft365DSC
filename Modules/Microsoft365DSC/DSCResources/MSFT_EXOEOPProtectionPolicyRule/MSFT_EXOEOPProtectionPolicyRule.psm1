@@ -262,7 +262,7 @@ function Set-TargetResource
             }
         }
 
-        Set-EOPProtectionPolicyRule @UpdateParameters | Out-Null
+        Set-EOPProtectionPolicyRule @UpdateParameters
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {

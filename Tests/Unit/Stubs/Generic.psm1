@@ -1241,20 +1241,6 @@ function Get-EOPProtectionPolicyRule
     )
 }
 
-function Set-EOPProtectionPolicyRule
-{
-    [CmdletBinding()]
-    Param(
-        [Parameter()]
-        [System.String]
-        $Identity,
-
-        [Parameter()]
-        [System.String]
-        $State
-    )
-}
-
 function Enable-EOPProtectionPolicyRule
 {
     [CmdletBinding()]

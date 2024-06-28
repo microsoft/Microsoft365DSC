@@ -52,7 +52,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "The EXOEOPProtectionPolicyRule exists but it SHOULD NOT" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    Ensure                    = 'Absent'
+                    Ensure                    = 'Present'
                     Credential                = $Credential;
                     ExceptIfRecipientDomainIs = @("contoso.onmicrosoft.com");
                     Identity                  = "Strict Preset Security Policy";
@@ -68,6 +68,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     ExceptIfRecipientDomainIs = @("contoso.onmicrosoft.com")
                     Comments                  = "FakeStringValue"
                     Priority                  = 0
+                    State                     = "Enabled";
                     }
                 }
 
