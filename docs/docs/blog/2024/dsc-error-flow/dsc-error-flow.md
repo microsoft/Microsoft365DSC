@@ -504,6 +504,7 @@ In this example, we’ve defined a configuration that defines 5 resource instanc
         Id           = 'Fail1'
         MethodToFail = "Test"
         Ensure       = 'Present'
+        DependsOn    = '[WorkingResource]Work2'
     }
 
     WorkingResource 'Work3'
