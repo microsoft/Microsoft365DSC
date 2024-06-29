@@ -334,7 +334,7 @@ Based on the above screenshot, we would <strong>assume</strong> that the overall
     </ul>
     <li>Fail1</li>
     <ul>
-        <li><span style ='color:red'>Test</span> (Error thrown)</li>
+        <li><span style ='color:green'>Test</span> (Error thrown)</li>
         <li><span style ='color:red'>Set</span></li>
     </ul>
     <li>Work2</li>
