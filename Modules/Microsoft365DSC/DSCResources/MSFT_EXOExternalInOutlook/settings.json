@@ -1,0 +1,33 @@
+{
+    "resourceName": "EXOExternalInOutlook",
+    "description": "This resource configures an .",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Exchange Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [],
+                "update": []
+            }
+        },
+        "exchange": {
+            "requiredroles": [
+                "O365SupportViewConfig",
+                "OrganizationConfiguration",
+                "ViewOnlyConfiguration"
+            ],
+            "requiredrolegroups": []
+        }
+    }
+
+}
