@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOMailTips
+  * Remove property `Ensure` since this resource is of type `IsSingleInstance`
+
 # 1.24.626.1
 
 * AADGroup
@@ -19,7 +24,7 @@
 * M365DSCUtil
   * Fixes an issue where the comparison with null-valued desired value throws an error.
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.1.18 
+  * Updated MSCloudLoginAssistant to version 1.1.18
 * M365DSCResourceGenerator
   * Update CimInstance comparison template
 * MISC
