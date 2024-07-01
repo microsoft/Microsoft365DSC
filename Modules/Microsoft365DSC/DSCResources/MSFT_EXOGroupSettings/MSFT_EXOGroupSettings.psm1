@@ -997,7 +997,7 @@ function Export-TargetResource
     try
     {
         $Script:ExportMode = $true
-        [array] $Script:exportedInstances = Get-UnifiedGroup -ErrorAction SilentlyContinue
+        [array] $Script:exportedInstances = Get-UnifiedGroup -ResultSize Unlimited -ErrorAction SilentlyContinue
 
         $i = 1
         if ($Script:exportedInstances.Length -eq 0)
