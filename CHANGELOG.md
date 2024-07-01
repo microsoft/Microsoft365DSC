@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXODkimSigningConfig
+  * Remove authentication parameters before changing the resources
+    FIXES [#4821](https://github.com/microsoft/Microsoft365DSC/issues/4821)
+
 # 1.24.626.1
 
 * AADGroup
@@ -19,7 +25,7 @@
 * M365DSCUtil
   * Fixes an issue where the comparison with null-valued desired value throws an error.
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.1.18 
+  * Updated MSCloudLoginAssistant to version 1.1.18
 * M365DSCResourceGenerator
   * Update CimInstance comparison template
 * MISC
