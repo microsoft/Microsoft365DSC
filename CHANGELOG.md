@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAuthenticationPolicy
+  * If policy needs changes then recreate it to avoid issue with
+    `Set-AuthenticationPolicy` cmdlet
+    FIXES [#4819](https://github.com/microsoft/Microsoft365DSC/issues/4819)
+
 # 1.24.626.1
 
 * AADGroup
@@ -19,7 +26,7 @@
 * M365DSCUtil
   * Fixes an issue where the comparison with null-valued desired value throws an error.
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.1.18 
+  * Updated MSCloudLoginAssistant to version 1.1.18
 * M365DSCResourceGenerator
   * Update CimInstance comparison template
 * MISC
