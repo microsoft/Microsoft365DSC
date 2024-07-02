@@ -271,23 +271,15 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $MailboxPlanParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $MailboxPlanParams.Remove('Ensure') | Out-Null
-    $MailboxPlanParams.Remove('Credential') | Out-Null
-    $MailboxPlanParams.Remove('ApplicationId') | Out-Null
-    $MailboxPlanParams.Remove('TenantId') | Out-Null
-    $MailboxPlanParams.Remove('CertificateThumbprint') | Out-Null
-    $MailboxPlanParams.Remove('CertificatePath') | Out-Null
-    $MailboxPlanParams.Remove('CertificatePassword') | Out-Null
-    $MailboxPlanParams.Remove('ManagedIdentity') | Out-Null
-    $MailboxPlanParams.Remove('AccessTokens') | Out-Null
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $PSBoundParameters.Remove('DisplayName') | Out-Null
 
     $MailboxPlan = Get-MailboxPlan -Identity $Identity
 
     if ($null -ne $MailboxPlan)
     {
-        Write-Verbose -Message "Setting MailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $MailboxPlanParams)"
-        Set-MailboxPlan @MailboxPlanParams
+        Write-Verbose -Message "Setting MailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+        Set-MailboxPlan @PSBoundParameters
     }
     else
     {
@@ -393,12 +385,11 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of MailboxPlan for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Ensure') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
