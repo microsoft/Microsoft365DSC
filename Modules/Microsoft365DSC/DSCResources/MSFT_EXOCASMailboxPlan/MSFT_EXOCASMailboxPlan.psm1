@@ -237,24 +237,16 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $CASMailboxPlanParams = [System.Collections.Hashtable]($PSBoundParameters)
-    $CASMailboxPlanParams.Remove('Ensure') | Out-Null
-    $CASMailboxPlanParams.Remove('Credential') | Out-Null
-    $CASMailboxPlanParams.Remove('ApplicationId') | Out-Null
-    $CASMailboxPlanParams.Remove('TenantId') | Out-Null
-    $CASMailboxPlanParams.Remove('CertificateThumbprint') | Out-Null
-    $CASMailboxPlanParams.Remove('CertificatePath') | Out-Null
-    $CASMailboxPlanParams.Remove('CertificatePassword') | Out-Null
-    $CASMailboxPlanParams.Remove('ManagedIdentity') | Out-Null
-    $CASMailboxPlanParams.Remove('AccessTokens') | Out-Null
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $PSBoundParameters.Remove('DisplayName') | Out-Null
 
     $CASMailboxPlan = Get-CASMailboxPlan -Filter "Name -like '$($Identity.Split('-')[0])-*'"
 
     if ($null -ne $CASMailboxPlan)
     {
-        $CasMailboxPlanParams.Identity = $CASMailboxPlan.Identity
-        Write-Verbose -Message "Setting CASMailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $CASMailboxPlanParams)"
-        Set-CASMailboxPlan @CASMailboxPlanParams
+        $PSBoundParameters.Identity = $CASMailboxPlan.Identity
+        Write-Verbose -Message "Setting CASMailboxPlan $Identity with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+        Set-CASMailboxPlan @PSBoundParameters
     }
     else
     {
@@ -344,12 +336,11 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of CASMailboxPlan for $Identity"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
+    $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
-
-    $ValuesToCheck = $PSBoundParameters
-    $ValuesToCheck.Remove('Ensure') | Out-Null
 
     $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
         -Source $($MyInvocation.MyCommand.Source) `
