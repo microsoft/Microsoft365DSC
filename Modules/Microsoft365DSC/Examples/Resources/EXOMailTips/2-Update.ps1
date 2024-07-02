@@ -19,11 +19,10 @@ Configuration Example
         {
             IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
-            MailTipsGroupMetricsEnabled           = $False # Updated Property
-            MailTipsLargeAudienceThreshold        = 100
+            MailTipsGroupMetricsEnabled           = $True
+            MailTipsLargeAudienceThreshold        = 13 # Updated Property
             MailTipsMailboxSourcedTipsEnabled     = $True
             MailTipsExternalRecipientsTipsEnabled = $True
-            Ensure                                = "Present"
             Credential                            = $Credscredential
         }
     }
