@@ -1,8 +1,9 @@
 <h1>Deep-Dive into the Local Configuration Manager (LCM) Error Flow</h1>
-<strong>by Nik Charlebois</strong>
-<p>June 28th, 2024</p>
-
-How to handle the error flow when an error is thrown during a deployment of a configuration baseline is an ongoing debate within the config-as-code community. Should you stop the entire deployment flow the moment an error is encountered, or should you allow the process to continue past the error to attempt and deploy other components? This article aims to shed light on how the current Local Configuration Manager (LCM) service handles the error flow in configuration deployment and describes what options are available users to have some control over it.
+<img src="../../../images/NikCharlebois.jpg" style="width:75px;border-radius:50%;border:3px solid black;float:left;" />
+<div style="position:inherit;padding-top:15px;"><span style="float:left;padding-left:15px;"><p><strong>by Nik Charlebois</strong><br />
+June 28th, 2024</p></span></div>
+<br /><br /><br />
+<p>How to handle the error flow when an error is thrown during a deployment of a configuration baseline is an ongoing debate within the config-as-code community. Should you stop the entire deployment flow the moment an error is encountered, or should you allow the process to continue past the error to attempt and deploy other components? This article aims to shed light on how the current Local Configuration Manager (LCM) service handles the error flow in configuration deployment and describes what options are available users to have some control over it.</p>
 
 To better illustrate the options that are available to the users, I’ve created a bogus Desired State Configuration (DSC) module named BlogDSC which contains 2 resources: 1 that will always succeed its execution without errors (WorkingResource), and 1 that will always fail its execution and throw an error (FailingResource). The FailingResource will accept a parameter that will specify in what method the error should be thrown (Get/Set/Test). Both resources will return $false from their Test-TargetResource method in order to allow the LCM flow to call into the Set-TargetResource. Upon entering a method, the module's logic will log an entry in Event Viewer. We will use these event logs to confirm the execution flow of our resources and their methods.
 
