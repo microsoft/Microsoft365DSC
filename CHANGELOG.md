@@ -7,9 +7,12 @@
   FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * EXOGroupSettings
  * Export unlimited number of groups
- FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+   FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
+* TeamsFederationConfiguration
+  * Add missing property `ExternalAccessWithTrialTenants`
+    FIXES [#4829](https://github.com/microsoft/Microsoft365DSC/issues/4829)
 * M365DSCDRGUtil
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
 * DEPENDENCIES
