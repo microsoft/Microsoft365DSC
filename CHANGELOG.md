@@ -10,7 +10,10 @@
   FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * EXOGroupSettings
  * Export unlimited number of groups
- FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+   FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+* EXOMailboxPlan
+  * Remove `DisplayName` from set parameters
+    FIXES [#4817](https://github.com/microsoft/Microsoft365DSC/issues/4817)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
 * M365DSCDRGUtil
