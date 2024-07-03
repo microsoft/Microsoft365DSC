@@ -342,8 +342,7 @@ function Set-TargetResource
         $UpdateParams.Remove('ManagedIdentity') | Out-Null
         $UpdateParams.Remove('Enabled') | Out-Null
         $UpdateParams.Remove('AccessTokens') | Out-Null
-        $UpdateParams.Identity = $HostedContentFilterPolicy
-        if ($CurrentValues.HostedContentFilterPolicy -eq $UpdateParams.HostedContentFilterPolicy )
+        if ($CurrentValues.HostedContentFilterPolicy -eq $UpdateParams.HostedContentFilterPolicy)
         {
             $UpdateParams.Remove('HostedContentFilterPolicy') | Out-Null
         }
