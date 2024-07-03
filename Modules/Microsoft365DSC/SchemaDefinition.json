@@ -40853,6 +40853,11 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String",
+                               "Name":  "ExternalAccessWithTrialTenants",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "Boolean",
                                "Name":  "TreatDiscoveredPartnersAsUnverified",
                                "Option":  "Write"
