@@ -9,8 +9,14 @@
   * Add support for 2048 key size
   FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * EXOGroupSettings
- * Export unlimited number of groups
-   FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+  * Export unlimited number of groups
+    FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+* EXOHostedOutboundSpamFilterRule
+  * Fix `if` clause on update scenario, remove property `Enabled` from being set
+    while updating the resource and ensure that also while updating the resource
+    the property `HostedOutboundSpamFilterPolicy` is only sent if it differs
+    from what the resource already has currently assigned
+    FIXES [#4838](https://github.com/microsoft/Microsoft365DSC/issues/4838)
 * EXOMailboxPlan
   * Remove `DisplayName` from set parameters
     FIXES [#4817](https://github.com/microsoft/Microsoft365DSC/issues/4817)
