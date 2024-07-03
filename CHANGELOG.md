@@ -2,9 +2,18 @@
 
 # UNRELEASED
 
+* EXODkimSigningConfig
+  * Add support for 2048 key size
+  FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * EXOGroupSettings
  * Export unlimited number of groups
  FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
+  * Migrate to new settings catalog cmdlets.
+* M365DSCDRGUtil
+  * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.6
 
 # 1.24.626.1
 
@@ -12,11 +21,6 @@
   * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Migrate to new settings catalog cmdlets.
-* IntuneDeviceManagementComplianceSettings
-  * Initial Release.
-* IntuneDeviceRemediation
-  * Fix invalid assignment export and import.
-    FIXES [#4726](https://github.com/microsoft/Microsoft365DSC/issues/4726)
 * M365DSCDRGUtil
   * Fixes an issue with the settings catalog property generation.
   * Add `collectionId` export to `ConvertFrom-IntunePolicyAssignment`

@@ -32,9 +32,9 @@ function Get-TargetResource
         $HeaderCanonicalization = 'Relaxed',
 
         [Parameter()]
-        [ValidateSet(1024)]
+        [ValidateSet(1024, 2048)]
         [uint16]
-        $KeySize = 1024,
+        $KeySize,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -126,7 +126,7 @@ function Get-TargetResource
             BodyCanonicalization   = $DkimSigningConfig.BodyCanonicalization
             Enabled                = $DkimSigningConfig.Enabled
             HeaderCanonicalization = $DkimSigningConfig.HeaderCanonicalization
-            KeySize                = 1024
+            KeySize                = $DkimSigningConfig.Selector1KeySize
             Credential             = $Credential
             ApplicationId          = $ApplicationId
             CertificateThumbprint  = $CertificateThumbprint
@@ -176,9 +176,9 @@ function Set-TargetResource
         $HeaderCanonicalization = 'Relaxed',
 
         [Parameter()]
-        [ValidateSet(1024)]
+        [ValidateSet(1024, 2048)]
         [uint16]
-        $KeySize = 1024,
+        $KeySize,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -304,9 +304,9 @@ function Test-TargetResource
         $HeaderCanonicalization = 'Relaxed',
 
         [Parameter()]
-        [ValidateSet(1024)]
+        [ValidateSet(1024, 2048)]
         [uint16]
-        $KeySize = 1024,
+        $KeySize,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
