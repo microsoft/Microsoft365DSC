@@ -7490,6 +7490,146 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_EXOEOPProtectionPolicyRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Comments",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ExceptIfRecipientDomainIs",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ExceptIfSentTo",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ExceptIfSentToMemberOf",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "State",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "Priority",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RecipientDomainIs",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "SentTo",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "SentToMemberOf",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXOExternalInOutlook",
+        "Parameters":  [
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "Enabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AllowList",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_EXOGlobalAddressList",
         "Parameters":  [
                            {
@@ -29764,7 +29904,7 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Name":  "disallowexploitprotectionoverride",
+                               "Name":  "DisallowExploitProtectionOverride",
                                "Option":  "Write"
                            },
                            {
