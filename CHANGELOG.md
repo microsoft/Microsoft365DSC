@@ -2,12 +2,20 @@
 
 # UNRELEASED
 
+* EXOCASMailboxPlan
+  * Remove `DisplayName` from set parameters
+    FIXES [#4814](https://github.com/microsoft/Microsoft365DSC/issues/4814)
 * EXODkimSigningConfig
-  * Add support for 2048 key size
+  * Add support for 2048 key size;
+  * Remove authentication parameters before changing the resources
+    FIXES [#4821](https://github.com/microsoft/Microsoft365DSC/issues/4821)
   FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * EXOGroupSettings
  * Export unlimited number of groups
    FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+* EXOMailboxPlan
+  * Remove `DisplayName` from set parameters
+    FIXES [#4817](https://github.com/microsoft/Microsoft365DSC/issues/4817)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
 * TeamsFederationConfiguration
