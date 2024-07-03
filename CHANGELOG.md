@@ -6,7 +6,9 @@
   * Remove `DisplayName` from set parameters
     FIXES [#4814](https://github.com/microsoft/Microsoft365DSC/issues/4814)
 * EXODkimSigningConfig
-  * Add support for 2048 key size
+  * Add support for 2048 key size;
+  * Remove authentication parameters before changing the resources
+    FIXES [#4821](https://github.com/microsoft/Microsoft365DSC/issues/4821)
   FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * EXOGroupSettings
   * Export unlimited number of groups
@@ -14,8 +16,14 @@
 * EXOHostedContentFilterRule
   * When updating the resource assign property `Identity` to the correct value
     FIXES [#4836](https://github.com/microsoft/Microsoft365DSC/issues/4836)
+* EXOMailboxPlan
+  * Remove `DisplayName` from set parameters
+    FIXES [#4817](https://github.com/microsoft/Microsoft365DSC/issues/4817)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
+* TeamsFederationConfiguration
+  * Add missing property `ExternalAccessWithTrialTenants`
+    FIXES [#4829](https://github.com/microsoft/Microsoft365DSC/issues/4829)
 * M365DSCDRGUtil
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
 * DEPENDENCIES

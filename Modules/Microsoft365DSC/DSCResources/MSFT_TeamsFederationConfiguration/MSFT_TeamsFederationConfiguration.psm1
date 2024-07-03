@@ -34,6 +34,11 @@ function Get-TargetResource
         $AllowTeamsConsumerInbound,
 
         [Parameter()]
+        [System.String]
+        [ValidateSet('Allowed', 'Blocked')]
+        $ExternalAccessWithTrialTenants,
+
+        [Parameter()]
         [System.Boolean]
         $TreatDiscoveredPartnersAsUnverified,
 
@@ -125,6 +130,7 @@ function Get-TargetResource
             AllowPublicUsers                            = $config.AllowPublicUsers
             AllowTeamsConsumer                          = $config.AllowTeamsConsumer
             AllowTeamsConsumerInbound                   = $config.AllowTeamsConsumerInbound
+            ExternalAccessWithTrialTenants              = $config.ExternalAccessWithTrialTenants
             TreatDiscoveredPartnersAsUnverified         = $config.TreatDiscoveredPartnersAsUnverified
             SharedSipAddressSpace                       = $config.SharedSipAddressSpace
             RestrictTeamsConsumerToExternalUserProfiles = $config.RestrictTeamsConsumerToExternalUserProfiles
@@ -181,6 +187,11 @@ function Set-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Allowed', 'Blocked')]
+        $ExternalAccessWithTrialTenants,
 
         [Parameter()]
         [System.Boolean]
@@ -292,6 +303,11 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $AllowTeamsConsumerInbound,
+
+        [Parameter()]
+        [System.String]
+        [ValidateSet('Allowed', 'Blocked')]
+        $ExternalAccessWithTrialTenants,
 
         [Parameter()]
         [System.Boolean]
