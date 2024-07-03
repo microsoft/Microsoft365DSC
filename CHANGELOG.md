@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXODkimSigningConfig
+  * Add support for 2048 key size
+  FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
 * M365DSCDRGUtil
