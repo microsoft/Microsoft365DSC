@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOCASMailboxPlan
+  * Remove `DisplayName` from set parameters
+    FIXES [#4814](https://github.com/microsoft/Microsoft365DSC/issues/4814)
 * EXODkimSigningConfig
   * Add support for 2048 key size
   FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
