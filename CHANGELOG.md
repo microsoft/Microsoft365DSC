@@ -6,7 +6,9 @@
   * Remove `DisplayName` from set parameters
     FIXES [#4814](https://github.com/microsoft/Microsoft365DSC/issues/4814)
 * EXODkimSigningConfig
-  * Add support for 2048 key size
+  * Add support for 2048 key size;
+  * Remove authentication parameters before changing the resources
+    FIXES [#4821](https://github.com/microsoft/Microsoft365DSC/issues/4821)
   FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * EXOGroupSettings
  * Export unlimited number of groups
