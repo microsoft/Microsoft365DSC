@@ -1,5 +1,14 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCDRGUtil
+  * Added Microsoft Graph filter functions.
+* MISC
+  * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources  
+    that did not support it previously.  
+    FIXES [#4597](https://github.com/microsoft/Microsoft365DSC/issues/4597)
+
 # 1.24.626.1
 
 * AADGroup
