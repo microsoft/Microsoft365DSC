@@ -9,8 +9,11 @@
   * Add support for 2048 key size
   FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * EXOGroupSettings
- * Export unlimited number of groups
- FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+  * Export unlimited number of groups
+    FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+* EXOHostedContentFilterRule
+  * When updating the resource assign property `Identity` to the correct value
+    FIXES [#4836](https://github.com/microsoft/Microsoft365DSC/issues/4836)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
 * M365DSCDRGUtil
