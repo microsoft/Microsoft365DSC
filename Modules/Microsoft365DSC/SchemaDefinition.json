@@ -7494,11 +7494,6 @@
         "Parameters":  [
                            {
                                "CIMType":  "String",
-                               "Name":  "Identity",
-                               "Option":  "Key"
-                           },
-                           {
-                               "CIMType":  "String",
                                "Name":  "Comments",
                                "Option":  "Write"
                            },
@@ -7520,8 +7515,7 @@
                            {
                                "CIMType":  "String",
                                "Name":  "Identity",
-                               "Option":  "Write",
-                               "Mandatory": true
+                               "Option":  "Key"
                            },
                            {
                                "CIMType":  "String",
@@ -7534,7 +7528,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "Int32",
+                               "CIMType":  "UInt32",
                                "Name":  "Priority",
                                "Option":  "Write"
                            },
@@ -7551,6 +7545,86 @@
                            {
                                "CIMType":  "String[]",
                                "Name":  "SentToMemberOf",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXOExternalInOutlook",
+        "Parameters":  [
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "Enabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AllowList",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
                                "Option":  "Write"
                            }
                        ]
