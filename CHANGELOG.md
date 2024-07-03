@@ -18,6 +18,9 @@
     FIXES [#4817](https://github.com/microsoft/Microsoft365DSC/issues/4817)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
+* TeamsFederationConfiguration
+  * Add missing property `ExternalAccessWithTrialTenants`
+    FIXES [#4829](https://github.com/microsoft/Microsoft365DSC/issues/4829)
 * M365DSCDRGUtil
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
 * DEPENDENCIES
