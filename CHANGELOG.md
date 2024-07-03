@@ -6,6 +6,8 @@
   * Migrate to new settings catalog cmdlets.
 * M365DSCDRGUtil
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.6
 
 # 1.24.626.1
 

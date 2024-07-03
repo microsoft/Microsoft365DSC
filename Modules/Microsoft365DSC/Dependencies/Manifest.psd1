@@ -2,7 +2,7 @@
     Dependencies = @(
         @{
             ModuleName      = 'DSCParser'
-            RequiredVersion = '2.0.0.5'
+            RequiredVersion = '2.0.0.6'
         },
         @{
             ModuleName      = 'ExchangeOnlineManagement'
