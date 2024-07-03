@@ -336,6 +336,7 @@ function Set-TargetResource
         $UpdateParams.Remove('CertificatePassword') | Out-Null
         $UpdateParams.Remove('ManagedIdentity') | Out-Null
         $UpdateParams.Remove('AccessTokens') | Out-Null
+        $UpdateParams.Remove('Enabled') | Out-Null
         Write-Verbose -Message "Updating HostedOutboundSpamFilterRule {$Identity}"
         Set-HostedOutboundSpamFilterRule @UpdateParams
     }
