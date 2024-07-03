@@ -29764,7 +29764,7 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Name":  "disallowexploitprotectionoverride",
+                               "Name":  "DisallowExploitProtectionOverride",
                                "Option":  "Write"
                            },
                            {

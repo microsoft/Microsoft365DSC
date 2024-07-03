@@ -2,12 +2,17 @@
 
 # UNRELEASED
 
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
+  * Migrate to new settings catalog cmdlets.
 * M365DSCDRGUtil
   * Added Microsoft Graph filter functions.
+  * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
 * MISC
   * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources  
     that did not support it previously.  
     FIXES [#4597](https://github.com/microsoft/Microsoft365DSC/issues/4597)
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.6
 
 # 1.24.626.1
 
@@ -15,11 +20,6 @@
   * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Migrate to new settings catalog cmdlets.
-* IntuneDeviceManagementComplianceSettings
-  * Initial Release.
-* IntuneDeviceRemediation
-  * Fix invalid assignment export and import.
-    FIXES [#4726](https://github.com/microsoft/Microsoft365DSC/issues/4726)
 * M365DSCDRGUtil
   * Fixes an issue with the settings catalog property generation.
   * Add `collectionId` export to `ConvertFrom-IntunePolicyAssignment`
@@ -28,7 +28,7 @@
 * M365DSCUtil
   * Fixes an issue where the comparison with null-valued desired value throws an error.
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.1.18 
+  * Updated MSCloudLoginAssistant to version 1.1.18
 * M365DSCResourceGenerator
   * Update CimInstance comparison template
 * MISC
