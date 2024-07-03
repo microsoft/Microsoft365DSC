@@ -568,8 +568,6 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
@@ -678,6 +676,11 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {

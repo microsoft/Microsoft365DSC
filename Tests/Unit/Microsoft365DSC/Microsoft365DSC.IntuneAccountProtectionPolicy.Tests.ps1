@@ -92,6 +92,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                                             value = $true
                                         }
                                     })
+                    TemplateId  = '0f2b5d70-d4e9-4156-8c16-1397eb6c54a5'
                 }
             }
 
@@ -248,6 +249,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should Reverse Engineer resource from the Export method' {
                 $result = Export-TargetResource @testParams
+                $result | Should -Not -BeNullOrEmpty
             }
         }
     }

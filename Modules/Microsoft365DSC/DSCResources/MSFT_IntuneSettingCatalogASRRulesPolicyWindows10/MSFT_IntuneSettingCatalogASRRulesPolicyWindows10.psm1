@@ -240,7 +240,8 @@ function Get-TargetResource
 
     try
     {
-
+        Write-Verbose -Message "Checking for the Intune Endpoint Protection Attack Surface Protection rules Policy {$DisplayName}"
+        
         $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
             -InboundParameters $PSBoundParameters `
             -ErrorAction Stop
@@ -609,16 +610,12 @@ function Set-TargetResource
             Technologies      = $technologies
             Settings          = $settings
         }
-
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
-        }
 
+        #region Assignments
         if ($policy.Id)
         {
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
             Update-DeviceConfigurationPolicyAssignment `
                 -DeviceConfigurationPolicyId $policy.Id `
                 -Targets $assignmentsHash `
@@ -645,11 +642,7 @@ function Set-TargetResource
             -Settings $settings
 
         #region Assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Targets $assignmentsHash `
@@ -947,20 +940,9 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
-            if ($key -eq "Assignments")
-            {
-                $testResult = Compare-M365DSCIntunePolicyAssignment `
-                    -Source $source `
-                    -Target $target
-            }
-            else
-            {
-                $testResult = Compare-M365DSCComplexObject `
-                    -Source ($source) `
-                    -Target ($target)
-            }
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
 
             if (-not $testResult)
             {
@@ -1066,7 +1048,13 @@ function Export-TargetResource
         }
         foreach ($policy in $policies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
+
             $params = @{
                 Identity              = $policy.Id
                 DisplayName           = $policy.Name

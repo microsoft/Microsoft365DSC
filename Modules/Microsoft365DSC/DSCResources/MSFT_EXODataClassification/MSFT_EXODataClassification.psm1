@@ -456,6 +456,11 @@ function Export-TargetResource
         $i = 1
         foreach ($DataClassification in $Script:exportedInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Script:exportedInstances.Length)] $($DataClassification.Name)" -NoNewline
 
             $Params = @{

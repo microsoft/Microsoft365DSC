@@ -545,6 +545,11 @@ function Export-TargetResource
         }
         foreach ($HostedContentFilterRule in $HostedContentFilterRules)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($HostedContentFilterRules.Count)] $($HostedContentFilterRule.Identity)" -NoNewline
             $Params = @{
                 Credential                = $Credential

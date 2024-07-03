@@ -32,8 +32,7 @@ function Get-TargetResource
         $PasswordAgeDays,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $PasswordExpirationProtectionEnabled,
 
         [Parameter()]
@@ -42,8 +41,7 @@ function Get-TargetResource
         $AdEncryptedPasswordHistorySize,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $AdPasswordEncryptionEnabled,
 
         [Parameter()]
@@ -172,6 +170,16 @@ function Get-TargetResource
 
         $returnHashtable = Export-IntuneSettingCatalogPolicySettings -Settings $settings -ReturnHashtable $returnHashtable
 
+        if ($null -ne $returnHashtable.PasswordExpirationProtectionEnabled)
+        {
+            $returnHashtable.PasswordExpirationProtectionEnabled = [bool]::Parse($returnHashtable.PasswordExpirationProtectionEnabled)
+        }
+
+        if ($null -ne $returnHashtable.AdPasswordEncryptionEnabled)
+        {
+            $returnHashtable.AdPasswordEncryptionEnabled = [bool]::Parse($returnHashtable.AdPasswordEncryptionEnabled)
+        }
+
         $assignmentsValues = Get-MgBetaDeviceManagementConfigurationPolicyAssignment -DeviceManagementConfigurationPolicyId $policy.Id
         $assignmentResult = @()
         if ($assignmentsValues.Count -gt 0)
@@ -237,8 +245,7 @@ function Set-TargetResource
         $PasswordAgeDays,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $PasswordExpirationProtectionEnabled,
 
         [Parameter()]
@@ -247,8 +254,7 @@ function Set-TargetResource
         $AdEncryptedPasswordHistorySize,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $AdPasswordEncryptionEnabled,
 
         [Parameter()]
@@ -356,14 +362,10 @@ function Set-TargetResource
             Settings          = $settings
         }
         $policy = New-MgBetaDeviceManagementConfigurationPolicy -BodyParameter $createParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
-        }
 
         if ($policy.Id)
         {
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
             Update-DeviceConfigurationPolicyAssignment `
                 -DeviceConfigurationPolicyId $policy.Id `
                 -Targets $assignmentsHash `
@@ -391,11 +393,7 @@ function Set-TargetResource
             -Settings $settings
 
         #region update policy assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentPolicy.Identity `
             -Targets $assignmentsHash `
@@ -443,8 +441,7 @@ function Test-TargetResource
         $PasswordAgeDays,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $PasswordExpirationProtectionEnabled,
 
         [Parameter()]
@@ -453,8 +450,7 @@ function Test-TargetResource
         $AdEncryptedPasswordHistorySize,
 
         [Parameter()]
-        [ValidateSet('true', 'false')]
-        [System.String]
+        [System.Boolean]
         $AdPasswordEncryptionEnabled,
 
         [Parameter()]
@@ -684,6 +680,11 @@ function Export-TargetResource
         }
         foreach ($policy in $policies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
 
             $params = @{

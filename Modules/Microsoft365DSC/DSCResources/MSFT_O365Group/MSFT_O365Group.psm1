@@ -593,6 +593,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($group in $groups)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($groups.Length)] $($group.DisplayName)" -NoNewline
             $Params = @{
                 Credential            = $Credential

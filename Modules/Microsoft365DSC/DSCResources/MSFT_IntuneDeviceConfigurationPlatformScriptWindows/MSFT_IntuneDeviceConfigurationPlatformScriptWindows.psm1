@@ -159,18 +159,14 @@ function Get-TargetResource
             AccessTokens          = $AccessTokens
             #endregion
         }
+        
         $assignmentsValues = Get-MgBetaDeviceManagementScriptAssignment -DeviceManagementScriptId $Id
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        if ($assignmentsValues.Count -gt 0)
         {
-            $assignmentValue = @{
-                dataType = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {$assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()})
-                deviceAndAppManagementAssignmentFilterId = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -307,11 +303,7 @@ function Set-TargetResource
         #region resource generator code
         $CreateParameters.Add("@odata.type", "#microsoft.graph.DeviceManagementScript")
         $policy = New-MgBetaDeviceManagementScript -BodyParameter $CreateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.Id)
         {
@@ -346,11 +338,7 @@ function Set-TargetResource
         Update-MgBetaDeviceManagementScript  `
             -DeviceManagementScriptId $currentInstance.Id `
             -BodyParameter $UpdateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.id `
             -Targets $assignmentsHash `
@@ -360,7 +348,7 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing the Intune Device Configuration Platform Script Windows with Id {$($currentInstance.Id)}" 
+        Write-Verbose -Message "Removing the Intune Device Configuration Platform Script Windows with Id {$($currentInstance.Id)}"
         #region resource generator code
         Remove-MgBetaDeviceManagementScript -DeviceManagementScriptId $currentInstance.Id
         #endregion
@@ -481,8 +469,6 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
@@ -594,6 +580,11 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {

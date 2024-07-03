@@ -517,7 +517,7 @@ function Set-TargetResource
 
         if ($Assignments.Count -gt 0)
         {
-            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceCompliancePolicies'
@@ -542,7 +542,7 @@ function Set-TargetResource
 
         if ($Assignments.Count -gt 0)
         {
-            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $configDevicePolicy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceCompliancePolicies'
@@ -866,6 +866,11 @@ function Export-TargetResource
 
         foreach ($configDeviceWindowsPolicy in $configDeviceWindowsPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($configDeviceWindowsPolicies.Count)] $($configDeviceWindowsPolicy.displayName)" -NoNewline
             $params = @{
                 DisplayName           = $configDeviceWindowsPolicy.displayName

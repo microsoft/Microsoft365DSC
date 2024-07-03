@@ -461,6 +461,11 @@ function Export-TargetResource
         }
         foreach ($AADRoleDefinition in $Script:exportedInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADRoleDefinition.DisplayName)" -NoNewline
             $Params = @{
                 Credential            = $Credential

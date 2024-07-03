@@ -514,11 +514,11 @@ function Get-M365DSCTenantNameFromParameterSet
         [System.Collections.HashTable]
         $ParameterSet
     )
-    if ($ParameterSet.TenantId)
+    if ($ParameterSet.ContainsKey('TenantId'))
     {
         return $ParameterSet.TenantId
     }
-    elseif ($ParameterSet.Credential)
+    elseif ($ParameterSet.ContainsKey('Credential'))
     {
         try
         {
@@ -584,6 +584,9 @@ function Test-M365DSCParameterState
     $dataEvaluation.Add('Resource', "$Source")
     $dataEvaluation.Add('Method', 'Test-TargetResource')
     $dataEvaluation.Add('Tenant', $TenantName)
+
+    $ConnectionMode = Get-M365DSCAuthenticationMode $DesiredValues
+    $dataEvaluation.Add('ConnectionMode', $ConnectionMode)
     $ValuesToCheckData = $ValuesToCheck | Where-Object -FilterScript {$_ -ne 'Verbose'}
     $dataEvaluation.Add('Parameters', $ValuesToCheckData -join "`r`n")
     $dataEvaluation.Add('ParametersCount', $ValuesToCheckData.Length)
@@ -1357,9 +1360,11 @@ function Export-M365DSCConfiguration
     }
 
     $Tenant = Get-M365DSCTenantNameFromParameterSet -ParameterSet $PSBoundParameters
+    $ConnectionMode = Get-M365DSCAuthenticationMode $PSBoundParameters
     $data.Add('Tenant', $Tenant)
     $currentExportID = (New-Guid).ToString()
     $data.Add('M365DSCExportId', $currentExportID)
+    $data.Add('ConnectionMode', $ConnectionMode)
 
     Add-M365DSCTelemetryEvent -Type 'ExportInitiated' -Data $data
     if ($null -ne $Workloads)
@@ -1430,8 +1435,16 @@ function Export-M365DSCConfiguration
     $Global:M365DSCExportInProgress = $false
 
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
-    $data.Add('Tenant', $Tenant)
+    if ([System.String]::IsNullOrEmpty($data.Tenant) -and -not [System.String]::IsNullOrEmpty($TenantId))
+    {
+        $data.Add('Tenant', $TenantId)
+    }
+    else
+    {
+        $data.Add('Tenant', $Tenant)
+    }
     $data.Add('M365DSCExportId', $currentExportID)
+    $data.Add('ConnectionMode', $ConnectionMode)
     $timeTaken = [System.DateTime]::Now.Subtract($currentStartDateTime)
     $data.Add('TotalSeconds',$timeTaken.TotalSeconds)
     Add-M365DSCTelemetryEvent -Type 'ExportCompleted' -Data $data
@@ -3443,6 +3456,13 @@ function Get-M365DSCExportContentForResource
         $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
         $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
             Select-Object -ExpandProperty Name
+        if ($null -eq $keys)
+        {
+            Import-Module $Resource.Path -Force
+            $moduleInfo = Get-Command -Module $ModuleFullName -ErrorAction SilentlyContinue
+            $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
+            $Keys = $cmdInfo.Parameters.Keys
+        }
     }
     else
     {

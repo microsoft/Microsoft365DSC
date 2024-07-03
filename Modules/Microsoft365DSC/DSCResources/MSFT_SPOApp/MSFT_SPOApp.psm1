@@ -63,6 +63,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for app $Identity"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -419,6 +420,11 @@ function Export-TargetResource
                 }
                 if ($null -ne $app)
                 {
+                    if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                    {
+                        $Global:M365DSCExportResourceInstancesCount++
+                    }
+
                     $Params = @{
                         Identity              = $identity
                         Path                  = ("`$PSScriptRoot\" + $file.Name)

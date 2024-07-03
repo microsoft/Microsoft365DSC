@@ -306,20 +306,14 @@ function Get-TargetResource
             AccessTokens                                                   = $AccessTokens
             #endregion
         }
+
         $assignmentsValues = Get-MgBetaDeviceManagementDeviceConfigurationAssignment -DeviceConfigurationId $Id
         $assignmentResult = @()
-        foreach ($assignmentEntry in $AssignmentsValues)
+        if ($assignmentsValues.Count -gt 0)
         {
-            $assignmentValue = @{
-                dataType                                   = $assignmentEntry.Target.AdditionalProperties.'@odata.type'
-                deviceAndAppManagementAssignmentFilterType = $(if ($null -ne $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType)
-                    {
-                        $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterType.ToString()
-                    })
-                deviceAndAppManagementAssignmentFilterId   = $assignmentEntry.Target.DeviceAndAppManagementAssignmentFilterId
-                groupId                                    = $assignmentEntry.Target.AdditionalProperties.groupId
-            }
-            $assignmentResult += $assignmentValue
+            $assignmentResult += ConvertFrom-IntunePolicyAssignment `
+                                -IncludeDeviceFilter:$true `
+                                -Assignments ($assignmentsValues)
         }
         $results.Add('Assignments', $assignmentResult)
 
@@ -624,11 +618,7 @@ function Set-TargetResource
 
         $CreateParameters.Add('@odata.type', '#microsoft.graph.windowsWiredNetworkConfiguration')
         $policy = New-MgBetaDeviceManagementDeviceConfiguration -BodyParameter $CreateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
         {
@@ -671,11 +661,7 @@ function Set-TargetResource
         Update-MgBetaDeviceManagementDeviceConfiguration  `
             -DeviceConfigurationId $currentInstance.Id `
             -BodyParameter $UpdateParameters
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment `
             -DeviceConfigurationPolicyId $currentInstance.Id `
             -Targets $assignmentsHash `
@@ -1108,6 +1094,11 @@ function Export-TargetResource
         }
         foreach ($config in $getValue)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $displayedKey = $config.Id
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
@@ -1239,12 +1230,12 @@ function Update-DeviceConfigurationPolicyCertificateId
     )
 
     $Uri = "https://graph.microsoft.com/beta/deviceManagement/deviceConfigurations('$DeviceConfigurationPolicyId')/microsoft.graph.windowsWiredNetworkConfiguration/$CertificateName/`$ref"
-    
+
     if ($CertificateName -eq 'rootCertificatesForServerValidation')
     {
         $method = 'POST'
     }
-    else 
+    else
     {
         $method = 'PUT'
     }

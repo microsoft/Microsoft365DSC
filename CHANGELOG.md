@@ -2,19 +2,48 @@
 
 # UNRELEASED
 
-* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
 * IntuneSettingCatalogASRRulesPolicyWindows10
   * Migrate to new settings catalog cmdlets.
-* IntuneExploitProtectionPolicyWindows10SettingCatalog
-  * Migrate to new settings catalog cmdlets.
 * M365DSCDRGUtil
-  * Fixes an issue with the settings catalog property generation.
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
   * Fixes issues with values of type `groupSettingCollection` and `choiceSetting`  
     when creating the settings catalog policy settings body.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.6
+
+# 1.24.626.1
+
+* AADGroup
+  * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Migrate to new settings catalog cmdlets.
+* M365DSCDRGUtil
+  * Fixes an issue with the settings catalog property generation.
+  * Add `collectionId` export to `ConvertFrom-IntunePolicyAssignment`
+  * Add handling for Intune assignments in `Compare-M365DSCComplexObject`
+  * Fix issue with target handling in `Update-DeviceConfigurationPolicyAssignment`
 * M365DSCUtil
   * Fixes an issue where the comparison with null-valued desired value throws an error.
+* DEPENDENCIES
+  * Updated MSCloudLoginAssistant to version 1.1.18
+* M365DSCResourceGenerator
+  * Update CimInstance comparison template
+* MISC
+  * Add group display name export and update assignment comparison across Intune
+    resources.
+
+# 1.24.619.1
+
+* SCDLPComplianceRule
+  * Fix #4259 and #3845
+* TeamsM365App
+  * Initial release.
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 6.4.0.
+* MISC
+  * Improved telemetry around Export sizes.
 
 # 1.24.612.1
 

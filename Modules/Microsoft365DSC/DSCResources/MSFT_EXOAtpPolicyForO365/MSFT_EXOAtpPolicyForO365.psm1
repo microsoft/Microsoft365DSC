@@ -408,6 +408,11 @@ function Export-TargetResource
             $i = 1
             foreach ($atpPolicy in $ATPPolicies)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($ATPPolicies.Length)] $($atpPolicy.Identity)" -NoNewline
 
                 $Params = @{

@@ -75,6 +75,10 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for hub site collection $Url"
+
+    $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+        -InboundParameters $PSBoundParameters
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -111,8 +115,6 @@ function Get-TargetResource
         else
         {
             $hubSite = Get-PnPHubSite -Identity $Url
-            $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
-                -InboundParameters $PSBoundParameters
             $principals = @()
             foreach ($permission in $hubSite.Permissions.PrincipalName)
             {
@@ -269,10 +271,10 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
+    $ConnectionModeGraph = New-M365DSCConnection -Workload 'MicrosoftGraph' `
         -InboundParameters $PSBoundParameters
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'MicrosoftGraph' `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
     try
@@ -658,6 +660,11 @@ function Export-TargetResource
         $dscContent = ''
         foreach ($hub in $hubSites)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    [$i/$($hubSites.Length)] $($hub.SiteUrl)" -NoNewline
 
             $Params = @{

@@ -334,7 +334,7 @@ function Set-TargetResource
         $assignmentsHash = @()
         if ($null -ne $Assignments -and $Assignments.count -gt 0 )
         {
-            $assignmentsHash +=  Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            $assignmentsHash +=  ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         }
 
         Update-DeviceConfigurationPolicyAssignment `
@@ -371,7 +371,7 @@ function Set-TargetResource
         $assignmentsHash = @()
         if ($null -ne $Assignments -and $Assignments.count -gt 0 )
         {
-            $assignmentsHash +=  Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            $assignmentsHash += ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         }
 
         Update-DeviceConfigurationPolicyAssignment `
@@ -572,6 +572,11 @@ function Export-TargetResource
         }
         foreach ($policy in $policies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
 
             $params = @{
@@ -927,7 +932,7 @@ function Update-DeviceManagementConfigurationPolicy
     Invoke-MgGraphRequest -Method PUT `
         -Uri $Uri `
         -ContentType 'application/json' `
-        -Body ($policy | ConvertTo-Json -Depth 20) 4> out-null
+        -Body ($policy | ConvertTo-Json -Depth 20) 4> $null
 }
 
 Export-ModuleMember -Function *-TargetResource

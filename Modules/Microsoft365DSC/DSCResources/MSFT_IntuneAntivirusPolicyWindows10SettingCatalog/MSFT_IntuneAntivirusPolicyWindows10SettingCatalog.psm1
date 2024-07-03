@@ -990,7 +990,7 @@ function Set-TargetResource
             -Technologies $technologies `
             -Settings $settings
 
-        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id -Targets $assignmentsHash
 
     }
@@ -1015,7 +1015,7 @@ function Set-TargetResource
             -Technologies $technologies `
             -Settings $settings
 
-        $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentPolicy.Identity -Targets $assignmentsHash
 
     }
@@ -1603,6 +1603,11 @@ function Export-TargetResource
         }
         foreach ($policy in $policies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Name)" -NoNewline
 
             $params = @{
@@ -1830,7 +1835,7 @@ function Update-IntuneDeviceConfigurationPolicy
         }
         $body = $policy | ConvertTo-Json -Depth 20
         #write-verbose -Message $body
-        Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body $body -ErrorAction Stop 4> Out-Null
+        Invoke-MgGraphRequest -Method PUT -Uri $Uri -Body $body -ErrorAction Stop 4> $null
 
     }
     catch
