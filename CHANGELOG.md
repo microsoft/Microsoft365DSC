@@ -19,6 +19,12 @@
 * EXOMailboxPlan
   * Remove `DisplayName` from set parameters
     FIXES [#4817](https://github.com/microsoft/Microsoft365DSC/issues/4817)
+* EXOHostedOutboundSpamFilterRule
+  * Fix `if` clause on update scenario, remove property `Enabled` from being set
+    while updating the resource and ensure that also while updating the resource
+    the property `HostedOutboundSpamFilterPolicy` is only sent if it differs
+    from what the resource already has currently assigned
+    FIXES [#4838](https://github.com/microsoft/Microsoft365DSC/issues/4838)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
 * TeamsFederationConfiguration
