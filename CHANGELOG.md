@@ -11,8 +11,11 @@
     FIXES [#4821](https://github.com/microsoft/Microsoft365DSC/issues/4821)
   FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
 * EXOGroupSettings
- * Export unlimited number of groups
-   FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+  * Export unlimited number of groups
+    FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+* EXOHostedContentFilterRule
+  * When updating the resource assign property `Identity` to the correct value
+    FIXES [#4836](https://github.com/microsoft/Microsoft365DSC/issues/4836)
 * EXOMailboxPlan
   * Remove `DisplayName` from set parameters
     FIXES [#4817](https://github.com/microsoft/Microsoft365DSC/issues/4817)

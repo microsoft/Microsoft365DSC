@@ -303,19 +303,11 @@ function Set-TargetResource
     }
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $BoundParameters = ([System.Collections.Hashtable]$PSBoundParameters).Clone()
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Ensure') | Out-Null
-        $CreationParams.Remove('Credential') | Out-Null
-        $CreationParams.Remove('ApplicationId') | Out-Null
-        $CreationParams.Remove('TenantId') | Out-Null
-        $CreationParams.Remove('CertificateThumbprint') | Out-Null
-        $CreationParams.Remove('CertificatePath') | Out-Null
-        $CreationParams.Remove('CertificatePassword') | Out-Null
-        $CreationParams.Remove('ManagedIdentity') | Out-Null
-        $CreationParams.Remove('AccessTokens') | Out-Null
         if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedContentFilterRule has the Enabled parameter, Set-HostedContentFilterRule does not.
@@ -324,31 +316,20 @@ function Set-TargetResource
             Remove-HostedContentFilterRule -Identity $Identity -Confirm:$false
         }
         Write-Verbose -Message "Creating new HostedContentFilterRule {$Identity}"
-        Write-Verbose -Message "With Parameters: $(Convert-M365DscHashtableToString -Hashtable $CreationParams)"
-        $CreationParams.Add('Name', $Identity)
-        $CreationParams.Remove('Identity') | Out-Null
-        New-HostedContentFilterRule @CreationParams
+        Write-Verbose -Message "With Parameters: $(Convert-M365DscHashtableToString -Hashtable $BoundParameters)"
+        $BoundParameters.Add('Name', $Identity)
+        $BoundParameters.Remove('Identity') | Out-Null
+        New-HostedContentFilterRule @BoundParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
-        $UpdateParams = [System.Collections.Hashtable]($PSBoundParameters)
-        $UpdateParams.Remove('Ensure') | Out-Null
-        $UpdateParams.Remove('Credential') | Out-Null
-        $UpdateParams.Remove('ApplicationId') | Out-Null
-        $UpdateParams.Remove('TenantId') | Out-Null
-        $UpdateParams.Remove('CertificateThumbprint') | Out-Null
-        $UpdateParams.Remove('CertificatePath') | Out-Null
-        $UpdateParams.Remove('CertificatePassword') | Out-Null
-        $UpdateParams.Remove('ManagedIdentity') | Out-Null
-        $UpdateParams.Remove('Enabled') | Out-Null
-        $UpdateParams.Remove('AccessTokens') | Out-Null
-        $UpdateParams.Identity = $HostedContentFilterPolicy
-        if ($CurrentValues.HostedContentFilterPolicy -eq $UpdateParams.HostedContentFilterPolicy )
+        $BoundParameters.Remove('Enabled') | Out-Null
+        if ($CurrentValues.HostedContentFilterPolicy -eq $BoundParameters.HostedContentFilterPolicy)
         {
-            $UpdateParams.Remove('HostedContentFilterPolicy') | Out-Null
+            $BoundParameters.Remove('HostedContentFilterPolicy') | Out-Null
         }
         Write-Verbose -Message "Updating HostedContentFilterRule {$Identity}"
-        Set-HostedContentFilterRule @UpdateParams
+        Set-HostedContentFilterRule @BoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
