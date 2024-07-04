@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.703.1
 
 * EXOCASMailboxPlan
   * Remove `DisplayName` from set parameters
@@ -36,10 +36,10 @@
   * Added Microsoft Graph filter functions.
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
 * MISC
-  * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources  
-    that did not support it previously.  
+  * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources
+    that did not support it previously.
     FIXES [#4597](https://github.com/microsoft/Microsoft365DSC/issues/4597)
-  * Fixes issues with values of type `groupSettingCollection` and `choiceSetting`  
+  * Fixes issues with values of type `groupSettingCollection` and `choiceSetting`
     when creating the settings catalog policy settings body.
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.6
