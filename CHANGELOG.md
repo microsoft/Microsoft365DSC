@@ -1,16 +1,55 @@
 # Change log for Microsoft365DSC
 
+# 1.24.703.1
+
+* EXOCASMailboxPlan
+  * Remove `DisplayName` from set parameters
+    FIXES [#4814](https://github.com/microsoft/Microsoft365DSC/issues/4814)
+* EXODkimSigningConfig
+  * Add support for 2048 key size;
+  * Remove authentication parameters before changing the resources
+    FIXES [#4821](https://github.com/microsoft/Microsoft365DSC/issues/4821)
+  FIXES [#4805](https://github.com/microsoft/Microsoft365DSC/issues/4805)
+* EXOGroupSettings
+  * Export unlimited number of groups
+    FIXES [#4800](https://github.com/microsoft/Microsoft365DSC/issues/4800)
+* EXOHostedContentFilterRule
+  * When updating the resource assign property `Identity` to the correct value
+    FIXES [#4836](https://github.com/microsoft/Microsoft365DSC/issues/4836)
+* EXOMailboxPlan
+  * Remove `DisplayName` from set parameters
+    FIXES [#4817](https://github.com/microsoft/Microsoft365DSC/issues/4817)
+* EXOHostedOutboundSpamFilterRule
+  * Fix `if` clause on update scenario, remove property `Enabled` from being set
+    while updating the resource and ensure that also while updating the resource
+    the property `HostedOutboundSpamFilterPolicy` is only sent if it differs
+    from what the resource already has currently assigned
+    FIXES [#4838](https://github.com/microsoft/Microsoft365DSC/issues/4838)
+* IntuneExploitProtectionPolicyWindows10SettingCatalog
+  * Migrate to new settings catalog cmdlets.
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Migrate to new settings catalog cmdlets.
+* TeamsFederationConfiguration
+  * Add missing property `ExternalAccessWithTrialTenants`
+    FIXES [#4829](https://github.com/microsoft/Microsoft365DSC/issues/4829)
+* M365DSCDRGUtil
+  * Added Microsoft Graph filter functions.
+  * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
+* MISC
+  * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources
+    that did not support it previously.
+    FIXES [#4597](https://github.com/microsoft/Microsoft365DSC/issues/4597)
+  * Fixes issues with values of type `groupSettingCollection` and `choiceSetting`
+    when creating the settings catalog policy settings body.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.6
+
 # 1.24.626.1
 
 * AADGroup
   * FIXES [#4782](https://github.com/microsoft/Microsoft365DSC/issues/4782)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Migrate to new settings catalog cmdlets.
-* IntuneDeviceManagementComplianceSettings
-  * Initial Release.
-* IntuneDeviceRemediation
-  * Fix invalid assignment export and import.
-    FIXES [#4726](https://github.com/microsoft/Microsoft365DSC/issues/4726)
 * M365DSCDRGUtil
   * Fixes an issue with the settings catalog property generation.
   * Add `collectionId` export to `ConvertFrom-IntunePolicyAssignment`
@@ -19,7 +58,7 @@
 * M365DSCUtil
   * Fixes an issue where the comparison with null-valued desired value throws an error.
 * DEPENDENCIES
-  * Updated MSCloudLoginAssistant to version 1.1.18 
+  * Updated MSCloudLoginAssistant to version 1.1.18
 * M365DSCResourceGenerator
   * Update CimInstance comparison template
 * MISC

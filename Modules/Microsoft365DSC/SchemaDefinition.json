@@ -7490,6 +7490,146 @@
                        ]
     },
     {
+        "ClassName":  "MSFT_EXOEOPProtectionPolicyRule",
+        "Parameters":  [
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Comments",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ExceptIfRecipientDomainIs",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ExceptIfSentTo",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "ExceptIfSentToMemberOf",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "State",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "Name",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "UInt32",
+                               "Name":  "Priority",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "RecipientDomainIs",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "SentTo",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "SentToMemberOf",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
+        "ClassName":  "MSFT_EXOExternalInOutlook",
+        "Parameters":  [
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Identity",
+                               "Option":  "Key"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "Enabled",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "AllowList",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "string",
+                               "Name":  "Ensure",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "Credential",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ApplicationId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "TenantId",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "CertificateThumbprint",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "MSFT_Credential",
+                               "Name":  "ApplicationSecret",
+                               "Option":  "Write"
+                           }
+                       ]
+    },
+    {
         "ClassName":  "MSFT_EXOGlobalAddressList",
         "Parameters":  [
                            {
@@ -29764,7 +29904,7 @@
                            },
                            {
                                "CIMType":  "String",
-                               "Name":  "disallowexploitprotectionoverride",
+                               "Name":  "DisallowExploitProtectionOverride",
                                "Option":  "Write"
                            },
                            {
@@ -30133,8 +30273,18 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockAbuseOfExploitedVulnerableSignedDrivers_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "BlockAdobeReaderFromCreatingChildProcesses",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockAdobeReaderFromCreatingChildProcesses_ASROnlyPerRuleExclusions",
                                "Option":  "Write"
                            },
                            {
@@ -30143,8 +30293,18 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockAllOfficeApplicationsFromCreatingChildProcesses_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem_ASROnlyPerRuleExclusions",
                                "Option":  "Write"
                            },
                            {
@@ -30153,8 +30313,18 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockExecutableContentFromEmailClientAndWebmail_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockExecutableFilesRunningUnlessTheyMeetPrevalenceAgeTrustedListCriterion_ASROnlyPerRuleExclusions",
                                "Option":  "Write"
                            },
                            {
@@ -30163,8 +30333,18 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockExecutionOfPotentiallyObfuscatedScripts_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockJavaScriptOrVBScriptFromLaunchingDownloadedExecutableContent_ASROnlyPerRuleExclusions",
                                "Option":  "Write"
                            },
                            {
@@ -30173,13 +30353,28 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockOfficeApplicationsFromCreatingExecutableContent_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses",
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockOfficeApplicationsFromInjectingCodeIntoOtherProcesses_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "BlockOfficeCommunicationAppFromCreatingChildProcesses",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockOfficeCommunicationAppFromCreatingChildProcesses_ASROnlyPerRuleExclusions",
                                "Option":  "Write"
                            },
                            {
@@ -30193,8 +30388,18 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockProcessCreationsFromPSExecAndWMICommands_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "BlockRebootingMachineInSafeMode",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockRebootingMachineInSafeMode_ASROnlyPerRuleExclusions",
                                "Option":  "Write"
                            },
                            {
@@ -30203,8 +30408,18 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockUntrustedUnsignedProcessesThatRunFromUSB_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "BlockUseOfCopiedOrImpersonatedSystemTools",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockUseOfCopiedOrImpersonatedSystemTools_ASROnlyPerRuleExclusions",
                                "Option":  "Write"
                            },
                            {
@@ -30213,13 +30428,28 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockWebshellCreationForServers_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "BlockWin32APICallsFromOfficeMacros",
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "String[]",
+                               "Name":  "BlockWin32APICallsFromOfficeMacros_ASROnlyPerRuleExclusions",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "String",
                                "Name":  "UseAdvancedProtectionAgainstRansomware",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
+                               "Name":  "UseAdvancedProtectionAgainstRansomware_ASROnlyPerRuleExclusions",
                                "Option":  "Write"
                            },
                            {
@@ -40710,6 +40940,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "AllowTeamsConsumerInbound",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
+                               "Name":  "ExternalAccessWithTrialTenants",
                                "Option":  "Write"
                            },
                            {

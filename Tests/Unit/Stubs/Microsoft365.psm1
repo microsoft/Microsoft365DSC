@@ -84608,6 +84608,89 @@ function Get-MgBetaDeviceAppManagementMobileAppConfigurationAssignment
         $CountVariable
     )
 }
+function Set-EOPProtectionPolicyRule
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String]
+        $Comments,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfRecipientDomainIs,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $ExceptIfSentToMemberOf,
+
+        [Parameter()]
+        [System.String]
+        $Name,
+
+        [Parameter()]
+        [System.Int32]
+        $Priority,
+
+        [Parameter()]
+        [System.String[]]
+        $RecipientDomainIs,
+
+        [Parameter()]
+        [system.String[]]
+        $SentTo,
+
+        [Parameter()]
+        [System.String[]]
+        $SentToMemberOf
+    )
+}
+
+function Get-ExternalInOutlook
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowList,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
+function Set-ExternalInOutlook
+{
+    [CmdletBinding()]
+    param
+    (
+        [Parameter()]
+        [System.String]
+        $Identity,
+
+        [Parameter()]
+        [System.String[]]
+        $AllowList,
+
+        [Parameter()]
+        [System.Boolean]
+        $Enabled
+    )
+}
 
 #endregion
 

@@ -950,7 +950,13 @@ function Export-TargetResource
     try
     {
         #region resource generator code
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+        }
         [array]$getValue = Get-MgBetaDeviceAppManagementMdmWindowsInformationProtectionPolicy -Filter $Filter -All -ErrorAction Stop
+        $getValue = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $getValue
         #endregion
 
         $i = 1
