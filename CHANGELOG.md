@@ -35,6 +35,8 @@
 * M365DSCDRGUtil
   * Added Microsoft Graph filter functions.
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
+  * Fix an issue when comparing Intune policy assignments.  
+    FIXES [#4830](https://github.com/microsoft/Microsoft365DSC/issues/4830)
 * MISC
   * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources  
     that did not support it previously.  
