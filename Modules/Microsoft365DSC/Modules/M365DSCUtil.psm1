@@ -723,8 +723,13 @@ function Test-M365DSCParameterState
                         }
                         else
                         {
+                            $desiredValue = $DesiredValues.$fieldName
+                            if ($null -eq $desiredValue)
+                            {
+                                $desiredValue = @()
+                            }
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
-                                -DifferenceObject $DesiredValues.$fieldName
+                                -DifferenceObject $desiredValue
                             if ($null -ne $arrayCompare -and
                                 -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject))
                             {

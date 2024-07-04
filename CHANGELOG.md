@@ -27,11 +27,15 @@
     FIXES [#4838](https://github.com/microsoft/Microsoft365DSC/issues/4838)
 * IntuneExploitProtectionPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
+* IntuneSettingCatalogASRRulesPolicyWindows10
+  * Migrate to new settings catalog cmdlets.
 * TeamsFederationConfiguration
   * Add missing property `ExternalAccessWithTrialTenants`
     FIXES [#4829](https://github.com/microsoft/Microsoft365DSC/issues/4829)
 * M365DSCDRGUtil
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
+  * Fixes issues with values of type `groupSettingCollection` and `choiceSetting`  
+    when creating the settings catalog policy settings body.
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.6
 

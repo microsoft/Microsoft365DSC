@@ -34,7 +34,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Invoke-MgGraphRequest -MockWith {
             }
 
-            Mock -CommandName New-IntuneDeviceConfigurationPolicy -MockWith {
+            Mock -CommandName New-MgBetaDeviceManagementConfigurationPolicy -MockWith {
+                return @{
+                    Id = '619bd4a4-3b3b-4441-bd6f-3f4c0c444870'
+                }
             }
 
             Mock -CommandName Update-IntuneDeviceConfigurationPolicy -MockWith {
@@ -43,12 +46,38 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
 
-            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplate -MockWith {
-                return @{
-                    TemplateId = 'e8c053d6-9f95-42b1-a7f1-ebfd71c67a4b_1'
-                }
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
             }
+
+            Mock -CommandName Update-IntuneDeviceConfigurationPolicy -MockWith {
+            }
+
+            Mock -CommandName Get-IntuneSettingCatalogPolicySetting -MockWith {
+            }
+
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
+                return ,@()
+            }
+
             Mock -CommandName Update-DeviceConfigurationPolicyAssignment -MockWith {
+            }
+
+            Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
+                return @(@{
+                    Id       = '12345-12345-12345-12345-12345'
+                    Source   = 'direct'
+                    SourceId = '12345-12345-12345-12345-12345'
+                    Target   = @{
+                        DeviceAndAppManagementAssignmentFilterId   = '12345-12345-12345-12345-12345'
+                        DeviceAndAppManagementAssignmentFilterType = 'none'
+                        AdditionalProperties                       = @(
+                            @{
+                                '@odata.type' = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                                groupId       = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            }
+                        )
+                    }
+                })
             }
             # Mock Write-Host to hide output during the tests
             Mock -CommandName Write-Host -MockWith {
@@ -61,11 +90,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name "When the policy doesn't already exist" -Fixture {
             BeforeAll {
                 $testParams = @{
-                    blockadobereaderfromcreatingchildprocesses                        = 'audit'
-                    blockallofficeapplicationsfromcreatingchildprocesses              = 'warn'
-                    blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem = 'warn'
-                    blockwin32apicallsfromofficemacros                                = 'block'
-                    Assignments                                                       = @()
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        } -ClientOnly)
+                    )
+                    BlockAdobeReaderFromCreatingChildProcesses                        = 'audit'
+                    BlockAllOfficeApplicationsFromCreatingChildProcesses              = 'warn'
+                    BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem = 'warn'
+                    BlockWin32APICallsFromOfficeMacros                                = 'block'
                     Credential                                                        = $Credential
                     Description                                                       = 'My Test'
                     DisplayName                                                       = 'asdfads'
@@ -75,72 +110,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicy -MockWith {
                     return $null
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
-                    return $null
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
-                    return @()
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
-                    return @(
-                        @{
-                            id                      = '0'
-                            SettingDefinitions      = $null
-                            SettingInstanceTemplate = @(
-                                {
-                                    SettingDefinitionId               = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                    SettingInstanceTemplateReference  = @{
-                                        SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
-                                    }
-                                    AdditionalProperties = @(
-                                        @{
-                                            '@odata.type'                       = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate'
-                                            groupSettingCollectionValueTemplate = @(
-                                                @{
-                                                    'settingValueTemplateId' = 'a04ad36d-3b6a-4087-b946-5bd20dce9cec'
-                                                    children                 = @(
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '7b40cb1e-4b13-4ce3-b387-4b6616565793'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '3e6a12aa-3417-49b8-beff-88913b6935ea'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = 'fa9393ac-b3b8-4f0a-a219-68971d67f9a6'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '30792cfc-6ea0-4d3a-8766-1c4dbcb4e0f2'
-                                                            }
-                                                        }
-                                                    )
-                                                }
-                                            )
-                                        }
-                                    )
-                                }
-                            )
-                            AdditionalProperties    = @{}
-                        }
-                    )
                 }
             }
 
@@ -154,17 +123,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
             It 'Should create the policy from the Set method' {
                 Set-TargetResource @testParams
-                Should -Invoke -CommandName New-IntuneDeviceConfigurationPolicy -Exactly 1
+                Should -Invoke -CommandName New-MgBetaDeviceManagementConfigurationPolicy -Exactly 1
             }
         }
 
         Context -Name 'When the policy already exists and is NOT in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    blockadobereaderfromcreatingchildprocesses                        = 'audit'
-                    blockallofficeapplicationsfromcreatingchildprocesses              = 'warn'
-                    blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem = 'warn'
-                    blockwin32apicallsfromofficemacros                                = 'block'
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        } -ClientOnly)
+                    )
+                    BlockAdobeReaderFromCreatingChildProcesses                        = 'audit'
+                    BlockAllOfficeApplicationsFromCreatingChildProcesses              = 'warn'
+                    BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem = 'warn'
+                    BlockWin32APICallsFromOfficeMacros                                = 'block'
                     Credential                                                        = $Credential
                     Description                                                       = 'test'
                     DisplayName                                                       = 'asdfads'
@@ -182,119 +158,88 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
-                        id                   = '0'
-                        SettingDefinitions   = $null
-                        SettingInstance      = @(
-                            {
-                                SettingDefinitionId               = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                SettingInstanceTemplateReference  = @{
-                                    SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
+                        Id                   = '0'
+                        SettingDefinitions   = @(
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
+                                Name = 'BlockAdobeReaderFromCreatingChildProcesses'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                                 }
-                                AdditionalProperties = @(
-                                    @{
-                                        '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                        groupSettingCollectionValue = @(
-                                            @{
-                                                children = @(
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_block' #drift
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
-                                                        }
-                                                    }
-                                                )
-                                            }
-                                        )
-                                    }
-                                )
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
+                                Name = 'BlockWin32APICallsFromOfficeMacros'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
+                                Name = 'BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
+                                Name = 'BlockAllOfficeApplicationsFromCreatingChildProcesses'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
                             }
                         )
-                        AdditionalProperties = @{}
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
-                    return @()
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
-                    return @(
-                        @{
-                            id                      = '0'
-                            SettingDefinitions      = $null
-                            SettingInstanceTemplate = @(
-                                {
-                                    SettingDefinitionId               = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                    SettingInstanceTemplateReference  = @{
-                                        SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
-                                    }
-                                    AdditionalProperties = @(
+                        SettingInstance      = @{
+                            SettingDefinitionId               = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
+                            SettingInstanceTemplateReference  = @{
+                                SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
+                            }
+                            AdditionalProperties = @(
+                                @{
+                                    '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                                    groupSettingCollectionValue = @(
                                         @{
-                                            '@odata.type'                       = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate'
-                                            groupSettingCollectionValueTemplate = @(
+                                            children = @(
                                                 @{
-                                                    'settingValueTemplateId' = 'a04ad36d-3b6a-4087-b946-5bd20dce9cec'
-                                                    children                 = @(
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '7b40cb1e-4b13-4ce3-b387-4b6616565793'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '3e6a12aa-3417-49b8-beff-88913b6935ea'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = 'fa9393ac-b3b8-4f0a-a219-68971d67f9a6'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '30792cfc-6ea0-4d3a-8766-1c4dbcb4e0f2'
-                                                            }
-                                                        }
-                                                    )
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_block' #drift
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
+                                                    }
                                                 }
                                             )
                                         }
                                     )
                                 }
                             )
-                            AdditionalProperties    = @{}
                         }
-                    )
+                        AdditionalProperties = @{}
+                    }
                 }
             }
 
@@ -315,10 +260,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When the policy already exists and IS in the Desired State' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    blockadobereaderfromcreatingchildprocesses                        = 'audit'
-                    blockallofficeapplicationsfromcreatingchildprocesses              = 'warn'
-                    blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem = 'warn'
-                    blockwin32apicallsfromofficemacros                                = 'block'
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        } -ClientOnly)
+                    )
+                    BlockAdobeReaderFromCreatingChildProcesses                        = 'audit'
+                    BlockAllOfficeApplicationsFromCreatingChildProcesses              = 'warn'
+                    BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem = 'warn'
+                    BlockWin32APICallsFromOfficeMacros                                = 'block'
                     Credential                                                        = $Credential
                     Description                                                       = 'My Test'
                     DisplayName                                                       = 'asdfads'
@@ -336,119 +288,88 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
-                        id                   = '0'
-                        SettingDefinitions   = $null
-                        SettingInstance      = @(
+                        Id                   = '0'
+                        SettingDefinitions   = @(
                             @{
-                                SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                SettingInstanceTemplateReference = @{
-                                    SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
+                                Name = 'BlockAdobeReaderFromCreatingChildProcesses'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                                 }
-                                AdditionalProperties             = @(
-                                    @{
-                                        '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                        groupSettingCollectionValue = @(
-                                            @{
-                                                children = @(
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_warn'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
-                                                        }
-                                                    }
-                                                )
-                                            }
-                                        )
-                                    }
-                                )
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
+                                Name = 'BlockWin32APICallsFromOfficeMacros'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
+                                Name = 'BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
+                                Name = 'BlockAllOfficeApplicationsFromCreatingChildProcesses'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
                             }
                         )
-                        AdditionalProperties = @{}
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
-                    return @()
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
-                    return @(
-                        @{
-                            id                      = '0'
-                            SettingDefinitions      = $null
-                            SettingInstanceTemplate = @(
-                                {
-                                    SettingDefinitionId               = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                    SettingInstanceTemplateReference  = @{
-                                        SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
-                                    }
-                                    AdditionalProperties = @(
+                        SettingInstance      = @{
+                            SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
+                            SettingInstanceTemplateReference = @{
+                                SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
+                            }
+                            AdditionalProperties             = @(
+                                @{
+                                    '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                                    groupSettingCollectionValue = @(
                                         @{
-                                            '@odata.type'                       = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate'
-                                            groupSettingCollectionValueTemplate = @(
+                                            children = @(
                                                 @{
-                                                    'settingValueTemplateId' = 'a04ad36d-3b6a-4087-b946-5bd20dce9cec'
-                                                    children                 = @(
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '7b40cb1e-4b13-4ce3-b387-4b6616565793'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '3e6a12aa-3417-49b8-beff-88913b6935ea'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = 'fa9393ac-b3b8-4f0a-a219-68971d67f9a6'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '30792cfc-6ea0-4d3a-8766-1c4dbcb4e0f2'
-                                                            }
-                                                        }
-                                                    )
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_warn'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
+                                                    }
                                                 }
                                             )
                                         }
                                     )
                                 }
                             )
-                            AdditionalProperties    = @{}
                         }
-                    )
+                        AdditionalProperties = @{}
+                    }
                 }
             }
 
@@ -460,10 +381,17 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Context -Name 'When the policy exists and it SHOULD NOT' -Fixture {
             BeforeAll {
                 $testParams = @{
-                    blockadobereaderfromcreatingchildprocesses                        = 'audit'
-                    blockallofficeapplicationsfromcreatingchildprocesses              = 'warn'
-                    blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem = 'warn'
-                    blockwin32apicallsfromofficemacros                                = 'block'
+                    Assignments = [CimInstance[]]@(
+                        (New-CimInstance -ClassName MSFT_DeviceManagementConfigurationPolicyAssignments -Property @{
+                            DataType     = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId = '26d60dd1-fab6-47bf-8656-358194c1a49d'
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                        } -ClientOnly)
+                    )
+                    BlockAdobeReaderFromCreatingChildProcesses                        = 'audit'
+                    BlockAllOfficeApplicationsFromCreatingChildProcesses              = 'warn'
+                    BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem = 'warn'
+                    BlockWin32APICallsFromOfficeMacros                                = 'block'
                     Credential                                                        = $Credential
                     Description                                                       = 'test'
                     DisplayName                                                       = 'asdfads'
@@ -481,119 +409,88 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
-                        id                   = '0'
-                        SettingDefinitions   = $null
-                        SettingInstance      = @(
+                        Id                   = '0'
+                        SettingDefinitions   = @(
                             @{
-                                SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                SettingInstanceTemplateReference = @{
-                                    SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
+                                Name = 'BlockAdobeReaderFromCreatingChildProcesses'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                                 }
-                                AdditionalProperties             = @(
-                                    @{
-                                        '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                        groupSettingCollectionValue = @(
-                                            @{
-                                                children = @(
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_warn'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
-                                                        }
-                                                    }
-                                                )
-                                            }
-                                        )
-                                    }
-                                )
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
+                                Name = 'BlockWin32APICallsFromOfficeMacros'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
+                                Name = 'BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
+                                Name = 'BlockAllOfficeApplicationsFromCreatingChildProcesses'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
                             }
                         )
-                        AdditionalProperties = @{}
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
-                    return @()
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
-                    return @(
-                        @{
-                            id                      = '0'
-                            SettingDefinitions      = $null
-                            SettingInstanceTemplate = @(
-                                {
-                                    SettingDefinitionId               = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                    SettingInstanceTemplateReference  = @{
-                                        SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
-                                    }
-                                    AdditionalProperties = @(
+                        SettingInstance      = @{
+                            SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
+                            SettingInstanceTemplateReference = @{
+                                SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
+                            }
+                            AdditionalProperties             = @(
+                                @{
+                                    '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                                    groupSettingCollectionValue = @(
                                         @{
-                                            '@odata.type'                       = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate'
-                                            groupSettingCollectionValueTemplate = @(
+                                            children = @(
                                                 @{
-                                                    'settingValueTemplateId' = 'a04ad36d-3b6a-4087-b946-5bd20dce9cec'
-                                                    children                 = @(
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '7b40cb1e-4b13-4ce3-b387-4b6616565793'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '3e6a12aa-3417-49b8-beff-88913b6935ea'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = 'fa9393ac-b3b8-4f0a-a219-68971d67f9a6'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '30792cfc-6ea0-4d3a-8766-1c4dbcb4e0f2'
-                                                            }
-                                                        }
-                                                    )
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_warn'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
+                                                    }
                                                 }
                                             )
                                         }
                                     )
                                 }
                             )
-                            AdditionalProperties    = @{}
                         }
-                    )
+                        AdditionalProperties = @{}
+                    }
                 }
             }
 
@@ -613,6 +510,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
+                $Global:CurrentModeIsExport = $true
+                $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
                 }
@@ -630,119 +529,88 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
                 Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicySetting -MockWith {
                     return @{
-                        id                   = '0'
-                        SettingDefinitions   = $null
-                        SettingInstance      = @(
+                        Id                   = '0'
+                        SettingDefinitions   = @(
                             @{
-                                SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                SettingInstanceTemplateReference = @{
-                                    SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
+                                Name = 'BlockAdobeReaderFromCreatingChildProcesses'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                                 }
-                                AdditionalProperties             = @(
-                                    @{
-                                        '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
-                                        groupSettingCollectionValue = @(
-                                            @{
-                                                children = @(
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_warn'
-                                                        }
-                                                    },
-                                                    @{
-                                                        '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
-                                                        settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                        choiceSettingValue  = @{
-                                                            value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
-                                                        }
-                                                    }
-                                                )
-                                            }
-                                        )
-                                    }
-                                )
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
+                                Name = 'BlockWin32APICallsFromOfficeMacros'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
+                                Name = 'BlockCredentialStealingFromWindowsLocalSecurityAuthoritySubsystem'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
+                            },
+                            @{
+                                Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
+                                Name = 'BlockAllOfficeApplicationsFromCreatingChildProcesses'
+                                AdditionalProperties = @{
+                                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
+                                }
                             }
                         )
-                        AdditionalProperties = @{}
-                    }
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyAssignment -MockWith {
-                    return @()
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -MockWith {
-                    return @(
-                        @{
-                            id                      = '0'
-                            SettingDefinitions      = $null
-                            SettingInstanceTemplate = @(
-                                {
-                                    SettingDefinitionId               = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
-                                    SettingInstanceTemplateReference  = @{
-                                        SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
-                                    }
-                                    AdditionalProperties = @(
+                        SettingInstance      = @{
+                            SettingDefinitionId              = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
+                            SettingInstanceTemplateReference = @{
+                                SettingInstanceTemplateId = '19600663-e264-4c02-8f55-f2983216d6d7'
+                            }
+                            AdditionalProperties             = @(
+                                @{
+                                    '@odata.type'               = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+                                    groupSettingCollectionValue = @(
                                         @{
-                                            '@odata.type'                       = '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstanceTemplate'
-                                            groupSettingCollectionValueTemplate = @(
+                                            children = @(
                                                 @{
-                                                    'settingValueTemplateId' = 'a04ad36d-3b6a-4087-b946-5bd20dce9cec'
-                                                    children                 = @(
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '7b40cb1e-4b13-4ce3-b387-4b6616565793'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '3e6a12aa-3417-49b8-beff-88913b6935ea'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = 'fa9393ac-b3b8-4f0a-a219-68971d67f9a6'
-                                                            }
-                                                        },
-                                                        @{
-                                                            '@odata.type'              = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstanceTemplate'
-                                                            settingDefinitionId        = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
-                                                            choiceSettingValueTemplate = @{
-                                                                'settingValueTemplateId' = '30792cfc-6ea0-4d3a-8766-1c4dbcb4e0f2'
-                                                            }
-                                                        }
-                                                    )
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockadobereaderfromcreatingchildprocesses_audit'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockwin32apicallsfromofficemacros_block'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockcredentialstealingfromwindowslocalsecurityauthoritysubsystem_warn'
+                                                    }
+                                                },
+                                                @{
+                                                    '@odata.type'       = '#microsoft.graph.deviceManagementConfigurationChoiceSettingInstance'
+                                                    settingDefinitionId = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses'
+                                                    choiceSettingValue  = @{
+                                                        children = @()
+                                                        value = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_blockallofficeapplicationsfromcreatingchildprocesses_warn'
+                                                    }
                                                 }
                                             )
                                         }
                                     )
                                 }
                             )
-                            AdditionalProperties    = @{}
                         }
-                    )
+                        AdditionalProperties = @{}
+                    }
                 }
             }
 
