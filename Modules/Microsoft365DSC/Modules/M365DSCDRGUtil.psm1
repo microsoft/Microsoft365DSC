@@ -1996,3 +1996,59 @@ function Update-IntuneDeviceConfigurationPolicy
         return $null
     }
 }
+
+function Get-ComplexFunctionsFromFilterQuery {
+    [CmdletBinding()]
+    [OutputType([System.Array])]
+    param (
+        [string]$FilterQuery
+    )
+
+    $complexFunctionsRegex = "startswith\((.*?),\s*'(.*?)'\)|endswith\((.*?),\s*'(.*?)'\)|contains\((.*?),\s*'(.*?)'\)"
+    [array]$complexFunctions = [regex]::Matches($FilterQuery, $complexFunctionsRegex) | ForEach-Object {
+        $_.Value
+    }
+
+    return $complexFunctions
+}
+
+function Remove-ComplexFunctionsFromFilterQuery {
+    [CmdletBinding()]
+    [OutputType([System.String])]
+    param (
+        [string]$FilterQuery
+    )
+
+    $complexFunctionsRegex = "startswith\((.*?),\s*'(.*?)'\)|endswith\((.*?),\s*'(.*?)'\)|contains\((.*?),\s*'(.*?)'\)"
+    $basicFilterQuery = [regex]::Replace($FilterQuery, $complexFunctionsRegex, "").Trim()
+    $basicFilterQuery = $basicFilterQuery -replace "^and\s","" -replace "\sand$","" -replace "\sand\s+", " and " -replace "\sor\s+", " or "
+
+    return $basicFilterQuery
+}
+
+function Find-GraphDataUsingComplexFunctions {
+    [CmdletBinding()]
+    [OutputType([System.Array])]
+    param (
+        [array]$Policies,
+        [array]$ComplexFunctions
+    )
+
+    foreach ($function in $ComplexFunctions) {
+        if ($function -match "startswith\((.*?),\s*'(.*?)'") {
+            $property = $matches[1]
+            $value = $matches[2]
+            $Policies = $Policies | Where-Object { $_.$property -like "$value*" }
+        } elseif ($function -match "endswith\((.*?),\s*'(.*?)'") {
+            $property = $matches[1]
+            $value = $matches[2]
+            $Policies = $Policies | Where-Object { $_.$property -like "*$value" }
+        } elseif ($function -match "contains\((.*?),\s*'(.*?)'") {
+            $property = $matches[1]
+            $value = $matches[2]
+            $Policies = $Policies | Where-Object { $_.$property -like "*$value*" }
+        }
+    }
+
+    return $Policies
+}

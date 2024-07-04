@@ -33,7 +33,12 @@
   * Add missing property `ExternalAccessWithTrialTenants`
     FIXES [#4829](https://github.com/microsoft/Microsoft365DSC/issues/4829)
 * M365DSCDRGUtil
+  * Added Microsoft Graph filter functions.
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
+* MISC
+  * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources  
+    that did not support it previously.  
+    FIXES [#4597](https://github.com/microsoft/Microsoft365DSC/issues/4597)
   * Fixes issues with values of type `groupSettingCollection` and `choiceSetting`  
     when creating the settings catalog policy settings body.
 * DEPENDENCIES

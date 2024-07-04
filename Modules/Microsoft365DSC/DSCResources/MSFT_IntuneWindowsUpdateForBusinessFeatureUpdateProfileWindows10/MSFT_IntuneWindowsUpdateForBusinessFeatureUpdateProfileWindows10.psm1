@@ -511,7 +511,14 @@ function Export-TargetResource
         #region resource generator code
         # Filter not supported on this resource
         # [array]$getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -Filter $Filter -All -ErrorAction Stop
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            Write-Warning -Message "Microsoft Graph filter is not supported on this resource. Only best-effort filtering using startswith, endswith and contains is supported."
+            $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+        }
         [array]$getValue = Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -All -ErrorAction Stop
+        $getValue = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $getValue
         #endregion
 
         $i = 1

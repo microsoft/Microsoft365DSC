@@ -850,9 +850,16 @@ function Export-TargetResource
 
     try
     {
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+        }
         [array]$configDeviceWindowsPolicies = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' }
+        $configDeviceWindowsPolicies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $configDeviceWindowsPolicies
+
         $i = 1
         $dscContent = ''
         if ($configDeviceWindowsPolicies.Length -eq 0)

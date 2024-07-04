@@ -1153,7 +1153,14 @@ function Export-TargetResource
 
     try
     {
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+        }
         [array]$policies = Get-MgBetaDeviceAppManagementiOSManagedAppProtection -All:$true -Filter $Filter -ErrorAction Stop
+        $policies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $policies
+
         $i = 1
         $dscContent = ''
         if ($policies.Length -eq 0)
