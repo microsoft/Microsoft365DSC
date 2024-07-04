@@ -616,7 +616,7 @@ function Compare-M365DSCComplexObject
             $compareResult = Compare-M365DSCIntunePolicyAssignment `
                 -Source @($Source) `
                 -Target @($Target)
-            
+
             if (-not $compareResult)
             {
                 Write-Verbose -Message "Configuration drift - Intune Policy Assignment: $key Source {$Source} Target {$Target}"
@@ -652,28 +652,61 @@ function Compare-M365DSCComplexObject
 
     if ($Source.GetType().FullName -like "*CimInstance")
     {
-        $keys = $Source.CimInstanceProperties.Name | Where-Object -FilterScript { $_ -notin @('PSComputerName', 'CimClass', 'CimInstanceProperties', 'CimSystemProperties') }
+        $keys = @()
+        $Source.CimInstanceProperties | Foreach-Object {
+            if ($_.Name -notin @('PSComputerName', 'CimClass', 'CimInstanceProperties', 'CimSystemProperties') `
+                -and $_.IsValueModified)
+            {
+                $keys += $_.Name
+            }
+        }
     }
     else
     {
         $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
     }
 
+    if ($Target.GetType().FullName -like "*CimInstance")
+    {
+        $targetKeys = @()
+        $Target.CimInstanceProperties | Foreach-Object {
+            if ($_.Name -notin @('PSComputerName', 'CimClass', 'CimInstanceProperties', 'CimSystemProperties') `
+                -and $_.IsValueModified)
+            {
+                $targetKeys += $_.Name
+            }
+        }
+    }
+    else
+    {
+        $targetKeys = $Target.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+    }
+
     foreach ($key in $keys)
     {
         #Matching possible key names between Source and Target
         $sourceValue = $Source.$key
-        $targetValue = $Target.$key
+
+        # Some classes might contain default properties that have the same name as the key,
+        # so we need to check if the key is present in the target object --> Hashtable <-> IsReadOnly property
+        if ($key -in $targetKeys)
+        {
+            $targetValue = $Target.$key
+        }
+        else
+        {
+            $targetValue = $null
+        }
 
         #One of the item is null and not the other
-        if (($null -eq $Source.$key) -xor ($null -eq $Target.$key))
+        if (($null -eq $Source.$key) -xor ($null -eq $targetValue))
         {
             if ($null -eq $Source.$key)
             {
                 $sourceValue = 'null'
             }
 
-            if ($null -eq $Target.$key)
+            if ($null -eq $targetValue)
             {
                 $targetValue = 'null'
             }
@@ -1230,7 +1263,7 @@ function Compare-M365DSCIntunePolicyAssignment
                         Write-Verbose 'FilterType specified, checking filterType'
                         $testResult = $assignment.deviceAndAppManagementAssignmentFilterType -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterType
                     }
-                    if ($testResult -and $isFilterIdSpecified)
+                    if ($testResult -and $isFilterTypeSpecified -and $isFilterIdSpecified)
                     {
                         Write-Verbose 'FilterId specified, checking filterId'
                         $testResult = $assignment.deviceAndAppManagementAssignmentFilterId -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterId
@@ -1292,7 +1325,7 @@ function Update-DeviceConfigurationPolicyAssignment
             {
                 $target = $target.target
             }
-            
+
             $formattedTarget = @{"@odata.type" = $target.dataType}
             if(-not $formattedTarget."@odata.type" -and $target."@odata.type")
             {
@@ -1894,7 +1927,7 @@ function Export-IntuneSettingCatalogPolicySettings
         $combinationMatches = $SettingDefinitions | Where-Object -FilterScript {
             $_.Name -eq $settingName -and `
             (($_.AdditionalProperties.dependentOn.parentSettingId.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId.Contains($parentSetting.Id)) -or `
-            ($_.AdditionalProperties.options.dependentOn.parentSettingId.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($parentSetting.Id))) 
+            ($_.AdditionalProperties.options.dependentOn.parentSettingId.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($parentSetting.Id)))
         }
 
         # If the combination of parent setting and setting name is unique, add the parent setting name to the setting name
