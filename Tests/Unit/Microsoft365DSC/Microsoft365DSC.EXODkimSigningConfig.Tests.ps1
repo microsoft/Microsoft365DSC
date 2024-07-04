@@ -104,7 +104,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         BodyCanonicalization   = 'Relaxed'
                         Enabled                = $false
                         HeaderCanonicalization = 'Relaxed'
-                        KeySize                = 1024
+                        Selector1KeySize       = 1024
                     }
                 }
             }
@@ -136,7 +136,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         BodyCanonicalization   = 'Simple'
                         Enabled                = $false
                         HeaderCanonicalization = 'Simple'
-                        KeySize                = 1024
+                        Selector1KeySize       = 1024
                     }
                 }
             }

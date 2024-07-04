@@ -299,19 +299,11 @@ function Set-TargetResource
     }
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $BoundParameters = ([System.Collections.Hashtable]$PSBoundParameters).Clone()
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $BoundParameters
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        $CreationParams = $PSBoundParameters
-        $CreationParams.Remove('Ensure') | Out-Null
-        $CreationParams.Remove('Credential') | Out-Null
-        $CreationParams.Remove('ApplicationId') | Out-Null
-        $CreationParams.Remove('TenantId') | Out-Null
-        $CreationParams.Remove('CertificateThumbprint') | Out-Null
-        $CreationParams.Remove('CertificatePath') | Out-Null
-        $CreationParams.Remove('CertificatePassword') | Out-Null
-        $CreationParams.Remove('ManagedIdentity') | Out-Null
-        $CreationParams.Remove('AccessTokens') | Out-Null
         if ($Enabled -and ('Disabled' -eq $CurrentValues.State))
         {
             # New-HostedOutboundSpamFilterRule has the Enabled parameter, Set-HostedOutboundSpamFilterRule does not.
@@ -320,24 +312,19 @@ function Set-TargetResource
             Remove-HostedOutboundSpamFilterRule -Identity $Identity -Confirm:$false
         }
         Write-Verbose -Message "Creating new HostedOutboundSpamFilterRule {$Identity}"
-        $CreationParams.Add('Name', $Identity)
-        $CreationParams.Remove('Identity') | Out-Null
-        New-HostedOutboundSpamFilterRule @CreationParams
+        $BoundParameters.Add('Name', $Identity)
+        $BoundParameters.Remove('Identity') | Out-Null
+        New-HostedOutboundSpamFilterRule @BoundParameters
     }
-    elseif ($Ensure -eq 'Present' -and $CurrentValues -eq 'Present')
+    elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
-        $UpdateParams = [System.Collections.Hashtable]($PSBoundParameters)
-        $UpdateParams.Remove('Ensure') | Out-Null
-        $UpdateParams.Remove('Credential') | Out-Null
-        $UpdateParams.Remove('ApplicationId') | Out-Null
-        $UpdateParams.Remove('TenantId') | Out-Null
-        $UpdateParams.Remove('CertificateThumbprint') | Out-Null
-        $UpdateParams.Remove('CertificatePath') | Out-Null
-        $UpdateParams.Remove('CertificatePassword') | Out-Null
-        $UpdateParams.Remove('ManagedIdentity') | Out-Null
-        $UpdateParams.Remove('AccessTokens') | Out-Null
+        $BoundParameters.Remove('Enabled') | Out-Null
+        if ($CurrentValues.HostedOutboundSpamFilterPolicy -eq $BoundParameters.HostedOutboundSpamFilterPolicy)
+        {
+            $BoundParameters.Remove('HostedOutboundSpamFilterPolicy') | Out-Null
+        }
         Write-Verbose -Message "Updating HostedOutboundSpamFilterRule {$Identity}"
-        Set-HostedOutboundSpamFilterRule @UpdateParams
+        Set-HostedOutboundSpamFilterRule @BoundParameters
     }
     elseif ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
