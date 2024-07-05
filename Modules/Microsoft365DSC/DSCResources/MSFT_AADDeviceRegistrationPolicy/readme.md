@@ -1,6 +1,6 @@
 
-# AADAttributeSet
+# AADDeviceRegistrationPolicy
 
 ## Description
 
-Represents a group of related custom security attribute definitions.
+Represents the policy scope that controls quota restrictions, additional authentication, and authorization policies to register device identities to your organization.

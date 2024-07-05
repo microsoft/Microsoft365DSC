@@ -20,12 +20,12 @@
             "application": {
                 "read": [
                     {
-                        "name": "CustomSecAttributeDefinition.Read.All"
+                        "name": "Policy.Read.DeviceConfiguration"
                     }
                 ],
                 "update": [
                     {
-                        "name": "CustomSecAttributeDefinition.ReadWrite.All"
+                        "name": "Policy.ReadWrite.DeviceConfiguration"
                     }
                 ]
             }

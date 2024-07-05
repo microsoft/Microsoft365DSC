@@ -1,10 +1,17 @@
-[ClassVersion("1.0.0.0"), FriendlyName("AADAttributeSet")]
-class MSFT_AADAttributeSet : OMI_BaseResource
+[ClassVersion("1.0.0.0"), FriendlyName("AADDeviceRegistrationPolicy")]
+class MSFT_AADDeviceRegistrationPolicy : OMI_BaseResource
 {
-    [Key, Description("Identifier for the attribute set that is unique within a tenant. Can be up to 32 characters long and include Unicode characters. Cannot contain spaces or special characters. Cannot be changed later. Case insensitive")] String Id;
-    [Write, Description("Identifier for the attribute set that is unique within a tenant. Can be up to 32 characters long and include Unicode characters. Cannot contain spaces or special characters. Cannot be changed later. Case insensitive")] String Description;
-    [Write, Description("Maximum number of custom security attributes that can be defined in this attribute set. Default value is null. If not specified, the administrator can add up to the maximum of 500 active attributes per tenant. Can be changed later.")] UInt32 MaxAttributesPerSet;
-    [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present"}, Values{"Present"}] string Ensure;
+    [Key, Description("Only valid value is 'Yes'."), ValueMap{"Yes"}, Values{"Yes"}] String IsSingleInstance;
+    [Write, Description("Specifies the maximum number of devices that a user can have within your organization before blocking new device registrations. The default value is set to 50. If this property isn't specified during the policy update operation, it's automatically reset to 0 to indicate that users aren't allowed to join any devices.")] UInt32 UserDeviceQuota;
+    [Write, Description("Scope that a device registration policy applies to."), ValueMap{"All", "Selected", "None"}, Values{"All", "Selected", "None"}] String AzureADAllowedToJoin;
+    [Write, Description("List of users that this policy applies to.")] String AzureADAllowedToJoinUsers[];
+    [Write, Description("List of groups that this policy applies to.")] String AzureADAllowedToJoinGroups[];
+    [Write, Description("Specifies the authentication policy for a user to complete registration using Microsoft Entra join or Microsoft Entra registered within your organization.")] Boolean MultiFactorAuthConfiguration;
+    [Write, Description("Indicates whether global administrators are local administrators on all Microsoft Entra-joined devices. This setting only applies to future registrations. Default is true.")] Boolean LocalAdminsEnableGlobalAdmins;
+    [Write, Description("Scope that a device registration policy applies to for local admins."), ValueMap{"All", "Selected", "None"}, Values{"All", "Selected", "None"}] String AzureAdJoinLocalAdminsRegisteringMode;
+    [Write, Description("List of groups that this policy applies to.")] String AzureAdJoinLocalAdminsRegisteringGroups[];
+    [Write, Description("List of users that this policy applies to.")] String AzureAdJoinLocalAdminsRegisteringUsers[];
+    [Write, Description("Specifies whether this policy scope is configurable by the admin. The default value is false. An admin can set it to true to enable Local Admin Password Solution (LAPS) within their organzation.")] Boolean LocalAdminPasswordIsEnabled;
     [Write, Description("Credentials of the Admin"), EmbeddedInstance("MSFT_Credential")] string Credential;
     [Write, Description("Id of the Azure Active Directory application to authenticate with.")] String ApplicationId;
     [Write, Description("Id of the Azure Active Directory tenant used for authentication.")] String TenantId;

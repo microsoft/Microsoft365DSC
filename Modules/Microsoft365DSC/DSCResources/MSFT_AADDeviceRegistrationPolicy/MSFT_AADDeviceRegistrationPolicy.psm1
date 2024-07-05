@@ -10,13 +10,46 @@ function Get-TargetResource
         $IsSingleInstance,
 
         [Parameter()]
+        [ValidateSet('All', 'Selected', 'None')]
         [System.String]
-        $Description,
+        $AzureADAllowedToJoin,
 
         [Parameter()]
-        [ValidateRange(1,500)]
-        [System.Int32]
-        $MaxAttributesPerSet = $null,
+        [System.String[]]
+        $AzureADAllowedToJoinUsers,
+
+        [Parameter()]
+        [System.String[]]
+        $AzureADAllowedToJoinGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $MultiFactorAuthConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $LocalAdminsEnableGlobalAdmins,
+
+        [Parameter()]
+        [System.Boolean]
+        $LocalAdminPasswordIsEnabled,
+
+        [Parameter()]
+        [ValidateSet('All', 'Selected', 'None')]
+        [System.String]
+        $AzureAdJoinLocalAdminsRegisteringMode,
+
+        [Parameter()]
+        [System.String[]]
+        $AzureAdJoinLocalAdminsRegisteringGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $AzureAdJoinLocalAdminsRegisteringUsers,
+
+        [Parameter()]
+        [System.UInt32]
+        $UserDeviceQuota,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -64,13 +97,11 @@ function Get-TargetResource
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
 
-        $nullResult = $PSBoundParameters
-
         $getValue = Get-MgBetaPolicyDeviceRegistrationPolicy -ErrorAction Stop
 
         $AzureADAllowedToJoin = 'None'
-        $AzureADAllowedToJoinUsers = $null
-        $AzureADAllowedToJoinGroups = $null
+        $AzureADAllowedToJoinUsers = @()
+        $AzureADAllowedToJoinGroups = @()
         if ($getValue.AzureADJoin.AllowedToJoin.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.allDeviceRegistrationMembership')
         {
             $AzureADAllowedToJoin = 'All'
@@ -79,16 +110,40 @@ function Get-TargetResource
         {
             $AzureADAllowedToJoin = 'Selected'
 
-            foreach ($userId in $getValue.AzureAdJoin.AllowedToJoin.AdditionalProperties.Users)
+            foreach ($userId in $getValue.AzureAdJoin.AllowedToJoin.AdditionalProperties.users)
             {
                 $userInfo = Get-MgUser -UserId $userId
                 $AzureADAllowedToJoinUsers += $userInfo.UserPrincipalName
             }
 
-            foreach ($groupId in $getValue.AzureAdJoin.AllowedToJoin.AdditionalProperties.Groups)
+            foreach ($groupId in $getValue.AzureAdJoin.AllowedToJoin.AdditionalProperties.groups)
             {
                 $groupInfo = Get-MgGroup -GroupId $groupId
                 $AzureADAllowedToJoinGroups += $groupInfo.DisplayName
+            }
+        }
+
+        $AzureAdJoinLocalAdminsRegisteringUsers = @()
+        $AzureAdJoinLocalAdminsRegisteringGroups = @()
+        $AzureAdJoinLocalAdminsRegisteringMode = 'All'
+
+        if ($getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.noDeviceRegistrationMembership')
+        {
+            $AzureAdJoinLocalAdminsRegisteringMode = 'None'
+        }
+        elseif ($getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.enumeratedDeviceRegistrationMembership')
+        {
+            $AzureAdJoinLocalAdminsRegisteringMode = 'Selected'
+            foreach ($userId in $getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.users)
+            {
+                $userInfo = Get-MgUser -UserId $userId
+                $AzureAdJoinLocalAdminsRegisteringUsers += $userInfo.UserPrincipalName
+            }
+
+            foreach ($groupId in $getValue.AzureAdJoin.LocalAdmins.RegisteringUsers.AdditionalProperties.groups)
+            {
+                $groupInfo = Get-MgGroup -GroupId $groupId
+                $AzureAdJoinLocalAdminsRegisteringGroups += $groupInfo.DisplayName
             }
         }
 
@@ -97,20 +152,30 @@ function Get-TargetResource
         {
             $MultiFactorAuthConfiguration = $true
         }
-
+        $LocalAdminsEnableGlobalAdmins = $true
+        if (-not $getValue.AzureAdJoin.LocalAdmins.EnableGlobalAdmins)
+        {
+            $LocalAdminsEnableGlobalAdmins = $false
+        }
         $results = @{
-            IsSingleInstance             = 'Yes'
-            AzureADAllowedToJoin         = $AzureADAllowedToJoin
-            AzureADAllowedToJoinGroups   = $AzureADAllowedToJoinGroups
-            UserDeviceQuota              = $getValue.UserDeviceQuota
-            MultiFactorAuthConfiguration = $MultiFactorAuthConfiguration
-            Credential                   = $Credential
-            ApplicationId                = $ApplicationId
-            TenantId                     = $TenantId
-            ApplicationSecret            = $ApplicationSecret
-            CertificateThumbprint        = $CertificateThumbprint
-            Managedidentity              = $ManagedIdentity.IsPresent
-            AccessTokens                 = $AccessTokens
+            IsSingleInstance                        = 'Yes'
+            AzureADAllowedToJoin                    = $AzureADAllowedToJoin
+            AzureADAllowedToJoinGroups              = $AzureADAllowedToJoinGroups
+            AzureADAllowedToJoinUsers               = $AzureADAllowedToJoinUsers
+            UserDeviceQuota                         = $getValue.UserDeviceQuota
+            MultiFactorAuthConfiguration            = $MultiFactorAuthConfiguration
+            LocalAdminsEnableGlobalAdmins           = $LocalAdminsEnableGlobalAdmins
+            LocalAdminPasswordIsEnabled             = [Boolean]$getValue.LocalAdminPassword.IsEnabled
+            AzureAdJoinLocalAdminsRegisteringMode   = $AzureAdJoinLocalAdminsRegisteringMode
+            AzureAdJoinLocalAdminsRegisteringGroups = $AzureAdJoinLocalAdminsRegisteringGroups
+            AzureAdJoinLocalAdminsRegisteringUsers  = $AzureAdJoinLocalAdminsRegisteringUsers
+            Credential                              = $Credential
+            ApplicationId                           = $ApplicationId
+            TenantId                                = $TenantId
+            ApplicationSecret                       = $ApplicationSecret
+            CertificateThumbprint                   = $CertificateThumbprint
+            Managedidentity                         = $ManagedIdentity.IsPresent
+            AccessTokens                            = $AccessTokens
         }
 
         return [System.Collections.Hashtable] $results
@@ -133,22 +198,51 @@ function Set-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
-        $Id,
+        $IsSingleInstance,
 
         [Parameter()]
+        [ValidateSet('All', 'Selected', 'None')]
         [System.String]
-        $Description,
+        $AzureADAllowedToJoin,
 
         [Parameter()]
-        [ValidateRange(1,500)]
-        [System.Int32]
-        $MaxAttributesPerSet = $null,
+        [System.String[]]
+        $AzureADAllowedToJoinUsers,
 
         [Parameter()]
+        [System.String[]]
+        $AzureADAllowedToJoinGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $MultiFactorAuthConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $LocalAdminsEnableGlobalAdmins,
+
+        [Parameter()]
+        [System.Boolean]
+        $LocalAdminPasswordIsEnabled,
+
+        [Parameter()]
+        [ValidateSet('All', 'Selected', 'None')]
         [System.String]
-        [ValidateSet('Present')]
-        $Ensure = 'Present',
+        $AzureAdJoinLocalAdminsRegisteringMode,
+
+        [Parameter()]
+        [System.String[]]
+        $AzureAdJoinLocalAdminsRegisteringGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $AzureAdJoinLocalAdminsRegisteringUsers,
+
+        [Parameter()]
+        [System.UInt32]
+        $UserDeviceQuota,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -191,21 +285,84 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $currentInstance = Get-TargetResource @PSBoundParameters
-    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $MultiFactorAuthConfigurationValue = "notRequired"
+    if ($MultiFactorAuthConfiguration)
+    {
+        $MultiFactorAuthConfigurationValue = 'required'
+    }
 
-    if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
+    $azureADRegistrationAllowedToRegister = "#microsoft.graph.noDeviceRegistrationMembership"
+    if ($AzureAdJoinLocalAdminsRegisteringMode -eq 'All')
     {
-        Write-Verbose -Message "Creating new Attribute Set with Id {$Id}"
-        New-MgBetaDirectoryAttributeSet @BoundParameters | Out-Null
+        $azureADRegistrationAllowedToRegister = "#microsoft.graph.allDeviceRegistrationMembership"
     }
-    elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
+    elseif ($AzureAdJoinLocalAdminsRegisteringMode -eq 'Selected')
     {
-        Write-Verbose -Message "Updating the Attribute Set with Id {$($currentInstance.Id)}"
-        $BoundParameters.Add('AttributeSetId', $Id)
-        $BoundParameters.Remove('Id') | Out-Null
-        Update-MgBetaDirectoryAttributeSet @BoundParameters | Out-Null
+        $azureADRegistrationAllowedToRegister = "#microsoft.graph.enumeratedDeviceRegistrationMembership"
+
+        $azureADRegistrationAllowedUsers = @()
+        foreach ($user in $AzureAdJoinLocalAdminsRegisteringUsers)
+        {
+            $userInfo = Get-MgUser -UserId $user
+            $azureADRegistrationAllowedUsers += $userInfo.Id
+        }
+
+        $azureADRegistrationAllowedGroups = @()
+        foreach ($group in $AzureAdJoinLocalAdminsRegisteringGroups)
+        {
+            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$group'"
+            $azureADRegistrationAllowedGroups += $groupInfo.Id
+        }
     }
+
+    $localAdminAllowedMode = "#microsoft.graph.noDeviceRegistrationMembership"
+    if ($AzureAdJoinLocalAdminsRegisteringMode -eq 'All')
+    {
+        $localAdminAllowedMode = "#microsoft.graph.allDeviceRegistrationMembership"
+    }
+    elseif ($AzureAdJoinLocalAdminsRegisteringMode -eq 'Selected')
+    {
+        $localAdminAllowedMode = "#microsoft.graph.enumeratedDeviceRegistrationMembership"
+
+        $localAdminAllowedUsers = @()
+        foreach ($user in $AzureAdJoinLocalAdminsRegisteringUsers)
+        {
+            $userInfo = Get-MgUser -UserId $user
+            $localAdminAllowedUsers += $userInfo.Id
+        }
+
+        $localAdminAllowedGroups = @()
+        foreach ($group in $AzureAdJoinLocalAdminsRegisteringGroups)
+        {
+            $groupInfo = Get-MgGroup -Filter "DisplayName eq '$group'"
+            $localAdminAllowedGroups += $groupInfo.Id
+        }
+    }
+
+    $updateParameters = @{
+        userDeviceQuota = $UserDeviceQuota
+        multiFactorAuthConfiguration = $MultiFactorAuthConfigurationValue
+        azureADJoin = @{
+            allowedToJoin = @{
+                '@odata.type' = $AzureADAllowedToJoin
+                users = $AzureADAllowedToJoinUsers
+                groups = $AzureADAllowedToJoinGroups
+            }
+            localAdmins = @{
+                enableGlobalAdmins = $LocalAdminsEnableGlobalAdmins
+                registeringUsers = @{
+                    '@odata.type' = $localAdminAllowedMode
+                    users = $localAdminAllowedUsers
+                    groups = $localAdminAllowedGroups
+                }
+            }
+        }
+        localAdminPasswordSettings = @{
+            isEnabled = $LocalAdminPasswordIsEnabled
+        }
+    }
+    $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'beta/policies/deviceRegistrationPolicy'
+    Invoke-MgGraphRequest -Method PUT -Uri $uri -Body $updateParameters
 }
 
 function Test-TargetResource
@@ -215,22 +372,51 @@ function Test-TargetResource
     param
     (
         [Parameter(Mandatory = $true)]
+        [ValidateSet('Yes')]
         [System.String]
-        $Id,
+        $IsSingleInstance,
 
         [Parameter()]
+        [ValidateSet('All', 'Selected', 'None')]
         [System.String]
-        $Description,
+        $AzureADAllowedToJoin,
 
         [Parameter()]
-        [ValidateRange(1,500)]
-        [System.Int32]
-        $MaxAttributesPerSet = $null,
+        [System.String[]]
+        $AzureADAllowedToJoinUsers,
 
         [Parameter()]
+        [System.String[]]
+        $AzureADAllowedToJoinGroups,
+
+        [Parameter()]
+        [System.Boolean]
+        $MultiFactorAuthConfiguration,
+
+        [Parameter()]
+        [System.Boolean]
+        $LocalAdminsEnableGlobalAdmins,
+
+        [Parameter()]
+        [System.Boolean]
+        $LocalAdminPasswordIsEnabled,
+
+        [Parameter()]
+        [ValidateSet('All', 'Selected', 'None')]
         [System.String]
-        [ValidateSet('Present')]
-        $Ensure = 'Present',
+        $AzureAdJoinLocalAdminsRegisteringMode,
+
+        [Parameter()]
+        [System.String[]]
+        $AzureAdJoinLocalAdminsRegisteringGroups,
+
+        [Parameter()]
+        [System.String[]]
+        $AzureAdJoinLocalAdminsRegisteringUsers,
+
+        [Parameter()]
+        [System.UInt32]
+        $UserDeviceQuota,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -273,7 +459,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Attribute Set with Id {$Id}"
+    Write-Verbose -Message "Testing configuration of the Device Registration Policy"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -342,6 +528,10 @@ function Export-TargetResource
 
     try
     {
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
         $params = @{
             IsSingleInstance      = 'Yes'
             Credential            = $Credential
