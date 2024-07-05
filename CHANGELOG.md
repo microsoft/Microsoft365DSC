@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCDRGUtil
+  * Fixes an issue where the return value was changed to a single object  
+    instead of an array.  
+    FIXES [#4844](https://github.com/microsoft/Microsoft365DSC/issues/4844)
+
 # 1.24.703.1
 
 * EXOCASMailboxPlan
