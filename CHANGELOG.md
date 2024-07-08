@@ -2,9 +2,12 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Fixes an error where the duplicate error was being trapped,
+    which could cause extra instances to be created.
 * AADGroup
   * Fixes an error where the duplicate error was being trapped,
-    which could cause extra instanceds to be created.
+    which could cause extra instances to be created.
 * TELEMETRY
   * Added instance count.
 * DEPENDENCIES
