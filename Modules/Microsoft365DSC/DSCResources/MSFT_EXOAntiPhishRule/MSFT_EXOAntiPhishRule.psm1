@@ -295,14 +295,6 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    # Make sure that the associated Policy exists;
-    $AssociatedPolicy = Get-AntiPhishPolicy -Identity $AntiPhishPolicy -ErrorAction 'SilentlyContinue'
-    if ($null -eq $AssociatedPolicy)
-    {
-        throw "Error attempting to create EXOAntiPhishRule {$Identity}. The specified AntiPhishPolicy {$AntiPhishPolicy} " + `
-            "doesn't exist. Make sure you either create it first or specify a valid policy."
-    }
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $BoundParameters = ([System.Collections.Hashtable]$PSBoundParameters).Clone()
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
@@ -311,6 +303,14 @@ function Set-TargetResource
     {
         $BoundParameters.Add('Name', $Identity) | Out-Null
         $BoundParameters.Remove('Identity') | Out-Null
+
+        # Make sure that the associated Policy exists;
+        $AssociatedPolicy = Get-AntiPhishPolicy -Identity $AntiPhishPolicy -ErrorAction 'SilentlyContinue'
+        if ($null -eq $AssociatedPolicy)
+        {
+            throw "Error attempting to create EXOAntiPhishRule {$Identity}. The specified AntiPhishPolicy {$AntiPhishPolicy} " + `
+                "doesn't exist. Make sure you either create it first or specify a valid policy."
+        }
 
         # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
         # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -326,6 +326,14 @@ function Set-TargetResource
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
         $BoundParameters.Remove('Enabled') | Out-Null
+
+        # Make sure that the associated Policy exists;
+        $AssociatedPolicy = Get-AntiPhishPolicy -Identity $AntiPhishPolicy -ErrorAction 'SilentlyContinue'
+        if ($null -eq $AssociatedPolicy)
+        {
+            throw "Error attempting to create EXOAntiPhishRule {$Identity}. The specified AntiPhishPolicy {$AntiPhishPolicy} " + `
+                "doesn't exist. Make sure you either create it first or specify a valid policy."
+        }
 
         # Check to see if the specified policy already has the rule assigned;
         $existingRule = Get-AntiPhishRule | Where-Object -FilterScript { $_.AntiPhishPolicy -eq $AntiPhishPolicy }
