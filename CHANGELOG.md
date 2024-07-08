@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOHostedOutboundSpamFilterRule
+  * Don't check if associated `EXOHostedOutboundSpamFilterPolicy` is present
+    while removing resource since it's not required
+    FIXES [#4847](https://github.com/microsoft/Microsoft365DSC/issues/4847)
+
 # 1.24.703.1
 
 * EXOCASMailboxPlan
