@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOAntiPhishRule
+  * Don't check if associated `EXOAntiPhishPolicy` is present while removing
+    resource since it's not required
+    FIXES [#4846](https://github.com/microsoft/Microsoft365DSC/issues/4846)
+
 # 1.24.703.1
 
 * EXOCASMailboxPlan
