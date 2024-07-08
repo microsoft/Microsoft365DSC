@@ -1,5 +1,16 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* AADGroup
+  * Fixes an error where the duplicate error was being trapped,
+    which could cause extra instanceds to be created.
+* TELEMETRY
+  * Added instance count.
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.20.0
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.191
+
 # 1.24.703.1
 
 * EXOCASMailboxPlan
