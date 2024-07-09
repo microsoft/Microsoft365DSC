@@ -2,6 +2,20 @@
 
 # UNRELEASED
 
+* AADApplication
+  * Fixes an error where the duplicate error was being trapped,
+    which could cause extra instances to be created.
+* AADGroup
+  * Fixes an error where the duplicate error was being trapped,
+    which could cause extra instances to be created.
+* TELEMETRY
+  * Added instance count.
+* DEPENDENCIES
+  * Updated Microsoft.Graph to version 2.20.0
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.191
+
+# 1.24.703.1
+
 * EXOCASMailboxPlan
   * Remove `DisplayName` from set parameters
     FIXES [#4814](https://github.com/microsoft/Microsoft365DSC/issues/4814)
@@ -40,10 +54,10 @@
   * Fixed an issue when comparing complex objects where the key to compare is available as a 
     instance property on the class.
 * MISC
-  * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources  
-    that did not support it previously.  
+  * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources
+    that did not support it previously.
     FIXES [#4597](https://github.com/microsoft/Microsoft365DSC/issues/4597)
-  * Fixes issues with values of type `groupSettingCollection` and `choiceSetting`  
+  * Fixes issues with values of type `groupSettingCollection` and `choiceSetting`
     when creating the settings catalog policy settings body.
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.6

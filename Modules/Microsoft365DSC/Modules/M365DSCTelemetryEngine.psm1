@@ -66,6 +66,33 @@ function Add-M365DSCTelemetryEvent
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
             [System.EnvironmentVariableTarget]::Machine)
 
+    if ($Type -eq 'DriftEvaluation')
+    {
+        try
+        {
+            $hostId = (Get-Host).InstanceId
+            if ($null -eq $Script:M365DSCCountResourceInstance -or $hostId -ne $Script:M365DSCExecutionContextId)
+            {
+                $Script:M365DSCCountResourceInstance = 1
+            }
+            else
+            {
+                $Script:M365DSCCountResourceInstance++
+            }
+
+            if ($hostId -ne $Script:M365DSCExecutionContextId)
+            {
+                $Script:M365DSCExecutionContextId = $hostId
+            }
+            $Data.Add('ResourceInstancesCount', $Script:M365DSCCountResourceInstance)
+            $Data.Add('M365DSCExecutionContextId', $hostId)
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+    }
+
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
         $TelemetryClient = Get-M365DSCApplicationInsightsTelemetryClient
