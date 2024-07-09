@@ -8,6 +8,12 @@
 * AADGroup
   * Fixes an error where the duplicate error was being trapped,
     which could cause extra instances to be created.
+* IntuneDeviceConfigurationPlatformScriptMacOS
+  * Fixes an issue where the assignments are missing if filtered by display name.
+* M365DSCDRGUtil
+  * Fixes an issue where the return value was changed to a single object  
+    instead of an array.  
+    FIXES [#4844](https://github.com/microsoft/Microsoft365DSC/issues/4844)
 * TELEMETRY
   * Added instance count.
 * DEPENDENCIES
