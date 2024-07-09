@@ -14,6 +14,7 @@
   * Fixes an issue where the return value was changed to a single object  
     instead of an array.  
     FIXES [#4844](https://github.com/microsoft/Microsoft365DSC/issues/4844)
+  * Fixes an issue where Graph models were not treated properly as a complex object.
 * TELEMETRY
   * Added instance count.
 * DEPENDENCIES

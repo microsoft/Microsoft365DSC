@@ -677,8 +677,13 @@ function Compare-M365DSCComplexObject
             }
         }
     }
-    else
+    elseif ($Target.GetType().FullName -like "*Hashtable")
     {
+        $targetKeys = $Target.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+    }
+    else # Most likely a Microsoft Graph Model
+    {
+        $Target = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target
         $targetKeys = $Target.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
     }
 
