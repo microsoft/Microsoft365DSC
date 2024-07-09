@@ -602,7 +602,6 @@ function Test-M365DSCParameterState
     if ($null -ne $IncludedDrifts -and $IncludedDrifts.Keys.Count -gt 0)
     {
         $DriftedParameters = $IncludedDrifts
-        Write-Verbose -Message "@@@@@@@@@@`r`n$($IncludedDrifts | Out-String)"
         $returnValue = $false
     }
 
