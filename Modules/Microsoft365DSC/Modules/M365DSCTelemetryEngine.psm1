@@ -93,6 +93,47 @@ function Add-M365DSCTelemetryEvent
         }
     }
 
+    try
+    {
+        if ($null -eq $Global:M365DSCCurrentRoles -or $Global:M365DSCCurrentRoles.Length -eq 0)
+        {
+            if ($null -ne $Data.ConnectionMode -and $Data.ConnectionMode.StartsWith('Credential'))
+            {
+                try
+                {
+                    Connect-M365Tenant -Workload 'MicrosoftGraph' @Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction SilentlyContinue
+                }
+                catch
+                {
+                    Write-Verbose -Message $_
+                }
+                $Global:M365DSCCurrentRoles = @()
+
+                $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'v1.0/me?$select=id'
+                $currentUser = Invoke-MgGraphRequest -Uri $uri -Method GET
+                $currentUserId = $currentUser.id
+
+                $assignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "principalId eq '$currentUserId'" `
+                                -Property 'RoleDefinitionId'
+                foreach ($assignment in $assignments)
+                {
+                    $role = Get-MgBetaRoleManagementDirectoryRoleDefinition -UnifiedRoleDefinitionId $assignment.RoleDefinitionId `
+                                -Property 'DisplayName'
+                    $Global:M365DSCCurrentRoles += $role.DisplayName
+                }
+                $Data.Add('M365DSCCurrentRoles', $Global:M365DSCCurrentRoles -join ',')
+            }
+        }
+        else
+        {
+            $Data.Add('M365DSCCurrentRoles', $Global:M365DSCCurrentRoles -join ',')
+        }
+    }
+    catch
+    {
+        Write-Verbose -Message $_
+    }
+
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
         $TelemetryClient = Get-M365DSCApplicationInsightsTelemetryClient
