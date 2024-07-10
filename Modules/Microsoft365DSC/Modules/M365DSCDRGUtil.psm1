@@ -600,13 +600,29 @@ function Compare-M365DSCComplexObject
 
     if ($Source.GetType().FullName -like '*CimInstance[[\]]' -or $Source.GetType().FullName -like '*Hashtable[[\]]')
     {
-        if ($source.Count -ne $target.Count)
+        if ($Source.Count -ne $Target.Count)
         {
-            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($source.Count)} Target {$($target.Count)}"
+            Write-Verbose -Message "Configuration drift - The complex array have different number of items: Source {$($Source.Count)} Target {$($Target.Count)}"
             return $false
         }
-        if ($source.Count -eq 0)
+        if ($Source.Count -eq 0)
         {
+            return $true
+        }
+
+        if ($Source[0].CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
+            $Source[0].CimClass.CimClassName -like 'MSFT_Intune*Assignments')
+        {
+            $compareResult = Compare-M365DSCIntunePolicyAssignment `
+                -Source @($Source) `
+                -Target @($Target)
+
+            if (-not $compareResult)
+            {
+                Write-Verbose -Message "Configuration drift - Intune Policy Assignment: $key Source {$Source} Target {$Target}"
+                return $false
+            }
+
             return $true
         }
 
@@ -630,46 +646,82 @@ function Compare-M365DSCComplexObject
                 return $false
             }
         }
+
         return $true
     }
 
     if ($Source.GetType().FullName -like "*CimInstance")
     {
-        $keys = $Source.CimInstanceProperties.Name | Where-Object -FilterScript { $_ -notin @('PSComputerName', 'CimClass', 'CmiInstanceProperties', 'CimSystemProperties') }
+        $keys = @()
+        $Source.CimInstanceProperties | Foreach-Object {
+            if ($_.Name -notin @('PSComputerName', 'CimClass', 'CimInstanceProperties', 'CimSystemProperties') `
+                -and $_.IsValueModified)
+            {
+                $keys += $_.Name
+            }
+        }
     }
     else
     {
         $keys = $Source.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
     }
 
+    if ($Target.GetType().FullName -like "*CimInstance")
+    {
+        $targetKeys = @()
+        $Target.CimInstanceProperties | Foreach-Object {
+            if ($_.Name -notin @('PSComputerName', 'CimClass', 'CimInstanceProperties', 'CimSystemProperties') `
+                -and $_.IsValueModified)
+            {
+                $targetKeys += $_.Name
+            }
+        }
+    }
+    elseif ($Target.GetType().FullName -like "*Hashtable")
+    {
+        $targetKeys = $Target.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+    }
+    else # Most likely a Microsoft Graph Model
+    {
+        $Target = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Target
+        $targetKeys = $Target.Keys | Where-Object -FilterScript { $_ -ne 'PSComputerName' }
+    }
+
     foreach ($key in $keys)
     {
         #Matching possible key names between Source and Target
-        $skey = $key
-        $tkey = $key
-
         $sourceValue = $Source.$key
-        $targetValue = $Target.$tkey
-        #One of the item is null and not the other
-        if (($null -eq $Source.$key) -xor ($null -eq $Target.$tkey))
-        {
 
+        # Some classes might contain default properties that have the same name as the key,
+        # so we need to check if the key is present in the target object --> Hashtable <-> IsReadOnly property
+        if ($key -in $targetKeys)
+        {
+            $targetValue = $Target.$key
+        }
+        else
+        {
+            $targetValue = $null
+        }
+
+        #One of the item is null and not the other
+        if (($null -eq $Source.$key) -xor ($null -eq $targetValue))
+        {
             if ($null -eq $Source.$key)
             {
                 $sourceValue = 'null'
             }
 
-            if ($null -eq $Target.$tkey)
+            if ($null -eq $targetValue)
             {
                 $targetValue = 'null'
             }
 
-            #Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
+            Write-Verbose -Message "Configuration drift - key: $key Source {$sourceValue} Target {$targetValue}"
             return $false
         }
 
         #Both keys aren't null or empty
-        if (($null -ne $Source.$key) -and ($null -ne $Target.$tkey))
+        if (($null -ne $Source.$key) -and ($null -ne $Target.$key))
         {
             if ($Source.$key.GetType().FullName -like '*CimInstance*' -or $Source.$key.GetType().FullName -like '*hashtable*')
             {
@@ -679,30 +731,30 @@ function Compare-M365DSCComplexObject
                 {
                     $compareResult = Compare-M365DSCIntunePolicyAssignment `
                         -Source @($Source.$key) `
-                        -Target @($Target.$tkey)
+                        -Target @($Target.$key)
                 }
                 else
                 {
                     #Recursive call for complex object
                     $compareResult = Compare-M365DSCComplexObject `
                         -Source $Source.$key `
-                        -Target $Target.$tkey
+                        -Target $Target.$key
                 }
 
                 if (-not $compareResult)
                 {
-                    #Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
+                    Write-Verbose -Message "Configuration drift - complex object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
             }
             else
             {
                 #Simple object comparison
-                $referenceObject = $Target.$tkey
+                $referenceObject = $Target.$key
                 $differenceObject = $Source.$key
 
                 #Identifying date from the current values
-                $targetType = ($Target.$tkey.GetType()).Name
+                $targetType = ($Target.$key.GetType()).Name
                 if ($targetType -like '*Date*')
                 {
                     $compareResult = $true
@@ -721,7 +773,7 @@ function Compare-M365DSCComplexObject
 
                 if ($null -ne $compareResult)
                 {
-                    #Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
+                    Write-Verbose -Message "Configuration drift - simple object key: $key Source {$sourceValue} Target {$targetValue}"
                     return $false
                 }
             }
@@ -1182,6 +1234,7 @@ function Compare-M365DSCIntunePolicyAssignment
     )
 
     $testResult = $Source.Count -eq $Target.Count
+    Write-Verbose "Count: $($Source.Count) - $($Target.Count)"
     if ($testResult)
     {
         foreach ($assignment in $Source)
@@ -1193,26 +1246,38 @@ function Compare-M365DSCIntunePolicyAssignment
                 # Using assignment groupDisplayName only if the groupId is not found in the directory otherwise groupId should be the key
                 if (-not $testResult)
                 {
+                    Write-Verbose 'Group not found by groupId, checking if group exists by id'
                     $groupNotFound =  $null -eq (Get-MgGroup -GroupId ($assignment.groupId) -ErrorAction SilentlyContinue)
                 }
                 if (-not $testResult -and $groupNotFound)
                 {
+                    Write-Verbose 'Group not found by groupId, looking for group by groupDisplayName'
                     $assignmentTarget = $Target | Where-Object -FilterScript { $_.dataType -eq $assignment.DataType -and $_.groupDisplayName -eq $assignment.groupDisplayName }
                     $testResult = $null -ne $assignmentTarget
                 }
 
                 if ($testResult)
                 {
-                    $isFilterIdSpecified = $assignment.deviceAndAppManagementAssignmentFilterType -ne 'none'
-                    $testResult = $assignment.deviceAndAppManagementAssignmentFilterType -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterType
-                    if ($testResult -and $isFilterIdSpecified)
+                    Write-Verbose 'Group found by groupId or groupDisplayName, checking filters'
+                    $isFilterTypeSpecified = ($null -ne $assignment.deviceAndAppManagementAssignmentFilterType -and $assignment.deviceAndAppManagementAssignmentFilterType -ne 'none') -or `
+                        ($null -ne $assignmentTarget.deviceAndAppManagementAssignmentFilterType -and $assignmentTarget.deviceAndAppManagementAssignmentFilterType -ne 'none')
+                    $isFilterIdSpecified = ($null -ne $assignment.deviceAndAppManagementAssignmentFilterId -and $assignment.deviceAndAppManagementAssignmentFilterId -ne '00000000-0000-0000-0000-000000000000') -or `
+                        ($null -ne $assignmentTarget.deviceAndAppManagementAssignmentFilterId -and $assignmentTarget.deviceAndAppManagementAssignmentFilterId -ne '00000000-0000-0000-0000-000000000000')
+                    if ($isFilterTypeSpecified)
                     {
+                        Write-Verbose 'FilterType specified, checking filterType'
+                        $testResult = $assignment.deviceAndAppManagementAssignmentFilterType -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterType
+                    }
+                    if ($testResult -and $isFilterTypeSpecified -and $isFilterIdSpecified)
+                    {
+                        Write-Verbose 'FilterId specified, checking filterId'
                         $testResult = $assignment.deviceAndAppManagementAssignmentFilterId -eq $assignmentTarget.deviceAndAppManagementAssignmentFilterId
                     }
                 }
 
                 if ($testResult)
                 {
+                    Write-Verbose 'Group and filters match, checking collectionId'
                     $testResult = $assignment.collectionId -eq $assignmentTarget.collectionId
                 }
             }
@@ -1265,7 +1330,7 @@ function Update-DeviceConfigurationPolicyAssignment
             {
                 $target = $target.target
             }
-            
+
             $formattedTarget = @{"@odata.type" = $target.dataType}
             if(-not $formattedTarget."@odata.type" -and $target."@odata.type")
             {
@@ -1476,7 +1541,7 @@ function Get-IntuneSettingCatalogPolicySetting
         }
     }
 
-    return $settingInstances
+    return ,$settingInstances
 }
 
 function Get-IntuneSettingCatalogPolicySettingInstanceValue
@@ -1867,7 +1932,7 @@ function Export-IntuneSettingCatalogPolicySettings
         $combinationMatches = $SettingDefinitions | Where-Object -FilterScript {
             $_.Name -eq $settingName -and `
             (($_.AdditionalProperties.dependentOn.parentSettingId.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId.Contains($parentSetting.Id)) -or `
-            ($_.AdditionalProperties.options.dependentOn.parentSettingId.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($parentSetting.Id))) 
+            ($_.AdditionalProperties.options.dependentOn.parentSettingId.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($parentSetting.Id)))
         }
 
         # If the combination of parent setting and setting name is unique, add the parent setting name to the setting name
