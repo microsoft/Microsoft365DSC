@@ -8,6 +8,13 @@
 * AADGroup
   * Fixes an error where the duplicate error was being trapped,
     which could cause extra instances to be created.
+* IntuneDeviceConfigurationPlatformScriptMacOS
+  * Fixes an issue where the assignments are missing if filtered by display name.
+* M365DSCDRGUtil
+  * Fixes an issue where the return value was changed to a single object  
+    instead of an array.  
+    FIXES [#4844](https://github.com/microsoft/Microsoft365DSC/issues/4844)
+  * Fixes an issue where Graph models were not treated properly as a complex object.
 * TELEMETRY
   * Added instance count.
 * DEPENDENCIES
@@ -49,6 +56,10 @@
 * M365DSCDRGUtil
   * Added Microsoft Graph filter functions.
   * Force array as parameter in `Compare-M365DSCIntunePolicyAssignment`.
+  * Fixed an issue when comparing Intune policy assignments.  
+    FIXES [#4830](https://github.com/microsoft/Microsoft365DSC/issues/4830)
+  * Fixed an issue when comparing complex objects where the key to compare is available as a 
+    instance property on the class.
 * MISC
   * Added support for `startswith`, `endswith` and `contains` filter methods to Intune resources
     that did not support it previously.
