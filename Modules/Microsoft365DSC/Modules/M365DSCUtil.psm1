@@ -1852,7 +1852,7 @@ function New-M365DSCConnection
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-Credential")
             {
-                $data.Add('ConnectionType', 'Credential')
+                $data.Add('ConnectionMode', 'Credentials')
                 try
                 {
                     if (-not $Data.ContainsKey('Tenant'))
@@ -1882,7 +1882,7 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-Credential")
             {
-                $data.Add('ConnectionType', 'Credential')
+                $data.Add('ConnectionMode', 'Credential')
                 try
                 {
                     if (-not $Data.ContainsKey('Tenant'))
@@ -1919,7 +1919,7 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-CredentialsWithApplicationId")
             {
-                $data.Add('ConnectionType', 'CredentialsWithApplicationId')
+                $data.Add('ConnectionMode', 'CredentialsWithApplicationId')
 
                 try
                 {
@@ -1951,7 +1951,7 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-CredentialsWithApplicationId")
             {
-                $data.Add('ConnectionType', 'CredentialsWithApplicationId')
+                $data.Add('ConnectionMode', 'CredentialsWithApplicationId')
 
                 try
                 {
@@ -1997,7 +1997,7 @@ function New-M365DSCConnection
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithPath")
             {
-                $data.Add('ConnectionType', 'ServicePrincipalWithPath')
+                $data.Add('ConnectionMode', 'ServicePrincipalWithPath')
                 if (-not $data.ContainsKey('Tenant'))
                 {
                     $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2027,7 +2027,7 @@ function New-M365DSCConnection
         }
         else
         {
-            $data.Add('ConnectionType', 'ServicePrincipalWithPath')
+            $data.Add('ConnectionMode', 'ServicePrincipalWithPath')
             if (-not $data.ContainsKey('Tenant'))
             {
                 if (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId))
@@ -2065,7 +2065,7 @@ function New-M365DSCConnection
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithSecret")
             {
-                $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
+                $data.Add('ConnectionMode', 'ServicePrincipalWithSecret')
                 if (-not $data.ContainsKey('Tenant'))
                 {
                     $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2089,7 +2089,7 @@ function New-M365DSCConnection
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithSecret")
             {
-                $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
+                $data.Add('ConnectionMode', 'ServicePrincipalWithSecret')
                 if (-not $data.ContainsKey('Tenant'))
                 {
                     $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2115,7 +2115,7 @@ function New-M365DSCConnection
             -Url $Url
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithThumbprint")
         {
-            $data.Add('ConnectionType', 'ServicePrincipalWithThumbprint')
+            $data.Add('ConnectionMode', 'ServicePrincipalWithThumbprint')
             if (-not $data.ContainsKey('Tenant'))
             {
                 $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2138,7 +2138,7 @@ function New-M365DSCConnection
             -SkipModuleReload $Global:CurrentModeIsExport
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-CredentialsWithTenantId")
         {
-            $data.Add('ConnectionType', 'CredentialsWithTenantId')
+            $data.Add('ConnectionMode', 'CredentialsWithTenantId')
             if (-not $data.ContainsKey('Tenant'))
             {
                 $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2163,7 +2163,7 @@ function New-M365DSCConnection
 
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ManagedIdentity")
         {
-            $data.Add('ConnectionType', 'ManagedIdentity')
+            $data.Add('ConnectionMode', 'ManagedIdentity')
             if (-not $data.ContainsKey('Tenant'))
             {
                 $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2188,7 +2188,7 @@ function New-M365DSCConnection
 
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-AccessTokens")
         {
-            $data.Add('ConnectionType', 'AccessTokens')
+            $data.Add('ConnectionMode', 'AccessTokens')
             if (-not $data.ContainsKey('Tenant'))
             {
                 $data.Add('Tenant', $InboundParameters.TenantId)
@@ -4063,6 +4063,10 @@ function Get-M365DSCAuthenticationMode
     elseif ($Parameters.ManagedIdentity)
     {
         $AuthenticationType = 'ManagedIdentity'
+    }
+    elseif ($Parameters.AccessTokens)
+    {
+        $AuthenticationType = 'AccessTokens'
     }
     else
     {
