@@ -12,6 +12,10 @@
   * Don't check if associated `EXOAntiPhishPolicy` is present while removing
     resource since it's not required
     FIXES [#4846](https://github.com/microsoft/Microsoft365DSC/issues/4846)
+* EXOHostedOutboundSpamFilterRule
+  * Don't check if associated `EXOHostedOutboundSpamFilterPolicy` is present
+    while removing resource since it's not required
+    FIXES [#4847](https://github.com/microsoft/Microsoft365DSC/issues/4847)
 * IntuneDeviceConfigurationPlatformScriptMacOS
   * Fixes an issue where the assignments are missing if filtered by display name.
 * M365DSCDRGUtil
