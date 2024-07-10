@@ -295,30 +295,22 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    # Make sure that the associated Policy exists;
-    $AssociatedPolicy = Get-AntiPhishPolicy -Identity $AntiPhishPolicy -ErrorAction 'SilentlyContinue'
-    if ($null -eq $AssociatedPolicy)
-    {
-        throw "Error attempting to create EXOAntiPhishRule {$Identity}. The specified AntiPhishPolicy {$AntiPhishPolicy} " + `
-            "doesn't exist. Make sure you either create it first or specify a valid policy."
-    }
-
     $CurrentValues = Get-TargetResource @PSBoundParameters
+    $BoundParameters = ([System.Collections.Hashtable]$PSBoundParameters).Clone()
+    $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Absent')
     {
-        $CreationParams = [System.Collections.Hashtable]($PSBoundParameters)
-        $CreationParams.Remove('Ensure') | Out-Null
-        $CreationParams.Remove('Credential') | Out-Null
-        $CreationParams.Add('Name', $Identity) | Out-Null
-        $CreationParams.Remove('Identity') | Out-Null
-        $CreationParams.Remove('ApplicationId') | Out-Null
-        $CreationParams.Remove('TenantId') | Out-Null
-        $CreationParams.Remove('CertificateThumbprint') | Out-Null
-        $CreationParams.Remove('CertificatePath') | Out-Null
-        $CreationParams.Remove('CertificatePassword') | Out-Null
-        $CreationParams.Remove('ManagedIdentity') | Out-Null
-        $CreationParams.Remove('AccessTokens') | Out-Null
+        $BoundParameters.Add('Name', $Identity) | Out-Null
+        $BoundParameters.Remove('Identity') | Out-Null
+
+        # Make sure that the associated Policy exists;
+        $AssociatedPolicy = Get-AntiPhishPolicy -Identity $AntiPhishPolicy -ErrorAction 'SilentlyContinue'
+        if ($null -eq $AssociatedPolicy)
+        {
+            throw "Error attempting to create EXOAntiPhishRule {$Identity}. The specified AntiPhishPolicy {$AntiPhishPolicy} " + `
+                "doesn't exist. Make sure you either create it first or specify a valid policy."
+        }
 
         # New-AntiPhishRule has the Enabled parameter, Set-AntiPhishRule does not.
         # There doesn't appear to be any way to change the Enabled state of a rule once created.
@@ -329,21 +321,19 @@ function Set-TargetResource
         }
 
         Write-Verbose -Message "Creating AntiPhishRule {$Identity}"
-        New-AntiPhishRule @CreationParams
+        New-AntiPhishRule @BoundParameters
     }
     elseif ($Ensure -eq 'Present' -and $CurrentValues.Ensure -eq 'Present')
     {
-        $UpdateParams = $PSBoundParameters
-        $UpdateParams.Remove('Ensure') | Out-Null
-        $UpdateParams.Remove('Credential') | Out-Null
-        $UpdateParams.Remove('Enabled') | Out-Null
-        $UpdateParams.Remove('ApplicationId') | Out-Null
-        $UpdateParams.Remove('TenantId') | Out-Null
-        $UpdateParams.Remove('CertificateThumbprint') | Out-Null
-        $UpdateParams.Remove('CertificatePath') | Out-Null
-        $UpdateParams.Remove('CertificatePassword') | Out-Null
-        $UpdateParams.Remove('ManagedIdentity') | Out-Null
-        $UpdateParams.Remove('AccessTokens') | Out-Null
+        $BoundParameters.Remove('Enabled') | Out-Null
+
+        # Make sure that the associated Policy exists;
+        $AssociatedPolicy = Get-AntiPhishPolicy -Identity $AntiPhishPolicy -ErrorAction 'SilentlyContinue'
+        if ($null -eq $AssociatedPolicy)
+        {
+            throw "Error attempting to create EXOAntiPhishRule {$Identity}. The specified AntiPhishPolicy {$AntiPhishPolicy} " + `
+                "doesn't exist. Make sure you either create it first or specify a valid policy."
+        }
 
         # Check to see if the specified policy already has the rule assigned;
         $existingRule = Get-AntiPhishRule | Where-Object -FilterScript { $_.AntiPhishPolicy -eq $AntiPhishPolicy }
@@ -351,11 +341,11 @@ function Set-TargetResource
         if ($null -ne $existingRule)
         {
             # The rule is already assigned to the policy, do try to update the AntiPhishPolicy parameter;
-            $UpdateParams.Remove('AntiPhishPolicy') | Out-Null
+            $BoundParameters.Remove('AntiPhishPolicy') | Out-Null
         }
 
         Write-Verbose -Message "Updating AntiPhishRule {$Identity}."
-        Set-AntiPhishRule @UpdateParams
+        Set-AntiPhishRule @BoundParameters
     }
     if ($Ensure -eq 'Absent' -and $CurrentValues.Ensure -eq 'Present')
     {
