@@ -95,10 +95,13 @@ function Add-M365DSCTelemetryEvent
 
     try
     {
-        if ($null -eq $Global:M365DSCCurrentRoles -or $Global:M365DSCCurrentRoles.Length -eq 0)
+        $VerbosePreference = 'continue'
+        if ($null -ne $Data.ConnectionMode -and $Data.ConnectionMode.StartsWith('Credential'))
         {
-            if ($null -ne $Data.ConnectionMode -and $Data.ConnectionMode.StartsWith('Credential'))
+            Write-Verbose -Message "Flag1"
+            if ($null -eq $Global:M365DSCCurrentRoles -or $Global:M365DSCCurrentRoles.Length -eq 0)
             {
+                Write-Verbose -Message "Flag3"
                 try
                 {
                     Connect-M365Tenant -Workload 'MicrosoftGraph' @Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction SilentlyContinue
@@ -123,10 +126,14 @@ function Add-M365DSCTelemetryEvent
                 }
                 $Data.Add('M365DSCCurrentRoles', $Global:M365DSCCurrentRoles -join ',')
             }
+            else
+            {
+                $Data.Add('M365DSCCurrentRoles', $Global:M365DSCCurrentRoles -join ',')
+            }
         }
         else
         {
-            $Data.Add('M365DSCCurrentRoles', $Global:M365DSCCurrentRoles -join ',')
+            Write-Verbose -Message "Flag2"
         }
     }
     catch
