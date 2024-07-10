@@ -1541,7 +1541,7 @@ function Get-IntuneSettingCatalogPolicySetting
         }
     }
 
-    return $settingInstances
+    return ,$settingInstances
 }
 
 function Get-IntuneSettingCatalogPolicySettingInstanceValue
