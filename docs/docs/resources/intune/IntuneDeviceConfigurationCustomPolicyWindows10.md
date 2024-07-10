@@ -43,7 +43,7 @@
 | **IsEncrypted** | Write | Boolean | Indicates whether the value field is encrypted. This property is read-only. | |
 | **OmaUri** | Write | String | OMA. | |
 | **SecretReferenceValueId** | Write | String | ReferenceId for looking up secret for decryption. This property is read-only. | |
-| **FileName** | Write | String | File name associated with the Value property (.cer | |
+| **FileName** | Write | String | File name associated with the Value property (.cer) | |
 | **Value** | Write | String | Value. (Base64 encoded string) | |
 | **IsReadOnly** | Write | Boolean | By setting to true, the CSP (configuration service provider) specified in the OMA-URI will perform a get, instead of set | |
 | **odataType** | Write | String | The type of the entity. | `#microsoft.graph.omaSettingBase64`, `#microsoft.graph.omaSettingBoolean`, `#microsoft.graph.omaSettingDateTime`, `#microsoft.graph.omaSettingFloatingPoint`, `#microsoft.graph.omaSettingInteger`, `#microsoft.graph.omaSettingString`, `#microsoft.graph.omaSettingStringXml` |
