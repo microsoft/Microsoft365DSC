@@ -559,7 +559,6 @@ function Format-M365DSCTelemetryParameters
         [System.Collections.Hashtable]
         $Parameters
     )
-    $VerbosePreference = 'continue'
     $data = [System.Collections.Generic.Dictionary[[String], [String]]]::new()
 
     try
@@ -589,7 +588,6 @@ function Format-M365DSCTelemetryParameters
         }
         $connectionMode = Get-M365DSCAuthenticationMode -Parameters $Parameters
         $data.Add('ConnectionMode', $connectionMode)
-        Write-Verbose -Message "ConnectionMODE:: $connectionMode"
     }
     catch
     {
