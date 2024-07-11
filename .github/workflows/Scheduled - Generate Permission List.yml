@@ -23,6 +23,7 @@ jobs:
       - name: Get Permissions List
         shell: pwsh
         run: |
+          get-childitem -recurse
           Import-Module './Tests/TestHarness.psm1' -Force;
           $permissions = Get-M365DSCAllGraphPermissionsList
           $permission - join ',' | Out-File '.\Tests\QA\Graph.PermissionList.txt'
