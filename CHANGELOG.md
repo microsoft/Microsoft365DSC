@@ -3,7 +3,7 @@
 # 1.24.710.3
 
 * MISC
-  * Fixesd issue with App Secret Authentication flow.
+  * Fixes issue with App Secret Authentication flow.
 
 # 1.24.710.2
 

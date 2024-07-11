@@ -163,7 +163,7 @@
   * Updated Microsoft.Graph to version 2.20.0
   * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.191
 * MISC
-  * Fixesd issue with App Secret Authentication flow.'
+  * Fixes issue with App Secret Authentication flow.'
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update
       # RequireLicenseAcceptance = $false
