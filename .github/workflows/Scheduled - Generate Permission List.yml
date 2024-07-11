@@ -1,5 +1,5 @@
 name: Generate Permissions List
-on: [push, pull_request]
+on: [push]
 
 jobs:
   # This workflow contains a single job called "build"
@@ -15,18 +15,13 @@ jobs:
     # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - name: Get Files
-        shell: pwsh
-        run: |
-          $results = get-childitem -recurse | Out-String
-          Write-Host $results
       - name: Install Dependencies
-        shell: pwsh
+        shell: powershell
         run: |
           Import-Module './Modules/Microsoft365DSC/Modules/M365DSCUtil.psm1' -Force;
           Update-M365DSCModule
       - name: Get Permissions List
-        shell: pwsh
+        shell: powershell
         run: |
           Import-Module './Tests/TestHarness.psm1' -Force;
           $permissions = Get-M365DSCAllGraphPermissionsList
