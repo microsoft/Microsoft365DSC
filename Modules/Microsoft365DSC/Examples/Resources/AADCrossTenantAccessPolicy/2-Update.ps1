@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -17,7 +25,9 @@ Configuration Example
         AADCrossTenantAccessPolicy "AADCrossTenantAccessPolicy"
         {
             AllowedCloudEndpoints = @("microsoftonline.us");
-            Credential            = $Credscredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             DisplayName           = "MyXTAPPolicy";
             Ensure                = "Present";
             IsSingleInstance      = "Yes";

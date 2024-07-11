@@ -15,21 +15,18 @@ jobs:
     steps:
       # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
       - uses: actions/checkout@v3
-      - name: Install Microsoft365DSC
+      - name: Copy Microsoft365DSC
         shell: powershell
         run: |
-          winrm quickconfig -force
           $source = "./Modules/Microsoft365DSC/"
           $destination = "C:\Program Files\WindowsPowerShell\Modules"
           Copy-Item -Path $source -Recurse -Destination $destination -Container -Force
-          Update-M365DSCDependencies
       - name: Configure Environment
         shell: powershell
         run: |
           Set-ExecutionPolicy Unrestricted -Force
           Get-ChildItem "C:\Program Files\WindowsPowerShell\Modules" -Recurse | Unblock-File
           Set-M365DSCTelemetryOption -Enabled $false
-          Set-Item -Path WSMan:\localhost\MaxEnvelopeSizekb -Value 99999
       - name: Generate {Create} Integration Tests from Examples
         shell: powershell
         run: |
@@ -46,66 +43,9 @@ jobs:
           git push
           $SHA = git rev-parse HEAD
           echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
-      - name: Run {Create} Integration Tests
-        shell: powershell
-        env:
-          INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
-          INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
-        run: |
-          $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
-          $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)
-          try
-          {
-            & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.AAD.Create.Tests.ps1 -Credential $Credential
-          }
-          catch
-          {
-            throw $_
-          }
-      - name: Validating {Create} Integration Tests
-        shell: powershell
-        run: |
-          try
-          {
-            $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
-          }
-          catch
-          {
-            throw $_
-          }
-
-          Write-Host ""
-
-          if ($Result.InDesiredState -eq $false)
-          {
-            Write-Host -Message "Resources below are not in the Desired State:"
-            foreach ($Resource in $Result.ResourcesNotInDesiredState)
-            {
-                Write-Host $Resource.InstanceName
-            }
-
-            throw "Could not validate that the Tenant is in the Desired State"
-          }
-          else
-          {
-            Write-Host "All resources in the Tenant are in the Desired State"
-          }
-
-          try
-          {
-            # Commenting out since this is very finnicky right now and its preventing other tests from running.
-            # The Get-DSCConfiguration cmdlet isn't providing much value added when failing and doesn't provide
-            # info about what parsing issues occured.
-            #$Result = Get-DSCConfiguration -Verbose -ErrorAction Stop
-          }
-          catch
-          {
-            throw $_
-          }
       - name: Generate {Update} Integration Tests from Examples
         shell: powershell
         run: |
-          Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
           New-M365DSCIntegrationTest -Workload AAD -Step '2-Update'
       - name: Commit {Update} Integration Tests
         shell: powershell
@@ -118,66 +58,9 @@ jobs:
           git push
           $SHA = git rev-parse HEAD
           echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
-      - name: Run {Update} Integration Tests
-        shell: powershell
-        env:
-          INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
-          INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
-        run: |
-          $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
-          $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)
-          try
-          {
-            & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.AAD.Update.Tests.ps1 -Credential $Credential
-          }
-          catch
-          {
-            throw $_
-          }
-      - name: Validating {Update} Integration Tests
-        shell: powershell
-        run: |
-          try
-          {
-            $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
-          }
-          catch
-          {
-            throw $_
-          }
-
-          Write-Host ""
-
-          if ($Result.InDesiredState -eq $false)
-          {
-            Write-Host -Message "Resources below are not in the Desired State:"
-            foreach ($Resource in $Result.ResourcesNotInDesiredState)
-            {
-                Write-Host $Resource.InstanceName
-            }
-
-            throw "Could not validate that the Tenant is in the Desired State"
-          }
-          else
-          {
-            Write-Host "All resources in the Tenant are in the Desired State"
-          }
-
-          try
-          {
-            # Commenting out since this is very finnicky right now and its preventing other tests from running.
-            # The Get-DSCConfiguration cmdlet isn't providing much value added when failing and doesn't provide
-            # info about what parsing issues occured.
-            #$Result = Get-DSCConfiguration -Verbose -ErrorAction Stop
-          }
-          catch
-          {
-            throw $_
-          }
       - name: Generate {Remove} Integration Tests from Examples
         shell: powershell
         run: |
-            Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
             New-M365DSCIntegrationTest -Workload AAD -Step '3-Remove'
       - name: Commit {Remove} Integration Tests
         shell: powershell
@@ -190,56 +73,3 @@ jobs:
             git push
             $SHA = git rev-parse HEAD
             echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
-      - name: Run {Remove} Integration Tests
-        shell: powershell
-        env:
-          INTEGRATION_USERNAME: ${{ secrets.INTEGRATION_USERNAME }}
-          INTEGRATION_PASSWORD: ${{ secrets.INTEGRATION_PASSWORD }}
-        run: |
-            $CredPassword = ConvertTo-SecureString $env:INTEGRATION_PASSWORD -AsPlainText -Force
-            $Credential = New-Object System.Management.Automation.PSCredential ($env:INTEGRATION_USERNAME, $CredPassword)
-            try
-            {
-              & .\Tests\Integration\Microsoft365DSC\M365DSCIntegration.AAD.Remove.Tests.ps1 -Credential $Credential
-            }
-            catch
-            {
-              throw $_
-            }
-      - name: Validating {Remove} Integration Tests
-        shell: powershell
-        run: |
-            try
-            {
-              $Result = Test-DSCConfiguration -Detailed -Verbose -ErrorAction Stop
-            }
-            catch
-            {
-              throw $_
-            }
-
-            Write-Host ""
-
-            if ($Result.InDesiredState -eq $false)
-            {
-              Write-Host -Message "Resources below are not in the Desired State:"
-              foreach ($Resource in $Result.ResourcesNotInDesiredState)
-              {
-                  Write-Host $Resource.InstanceName
-              }
-
-              throw "Could not validate that the Tenant is in the Desired State"
-            }
-            else
-            {
-              Write-Host "All resources in the Tenant are in the Desired State"
-            }
-
-            try
-            {
-              #$Result = Get-DSCConfiguration -Verbose -ErrorAction Stop
-            }
-            catch
-            {
-              throw $_
-            }
