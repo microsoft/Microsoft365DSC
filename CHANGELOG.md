@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* TELEMETRY
+  * Don't run engine if telemetry was set to be disabled
+
 # 1.24.710.1
 
 * AADApplication

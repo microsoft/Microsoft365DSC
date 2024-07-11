@@ -63,8 +63,14 @@ function Add-M365DSCTelemetryEvent
         [System.Collections.Generic.Dictionary[[System.String], [System.Double]]]
         $Metrics
     )
+
     $TelemetryEnabled = [System.Environment]::GetEnvironmentVariable('M365DSCTelemetryEnabled', `
             [System.EnvironmentVariableTarget]::Machine)
+
+    if ($TelemetryEnabled -eq $false)
+    {
+        return
+    }
 
     if ($Type -eq 'DriftEvaluation')
     {
