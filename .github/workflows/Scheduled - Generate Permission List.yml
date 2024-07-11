@@ -1,0 +1,42 @@
+name: Unit Tests
+on: [push, pull_request]
+
+jobs:
+  # This workflow contains a single job called "build"
+  UnitTests:
+    # The type of runner that the job will run on
+    runs-on: windows-latest
+
+    permissions: write-all
+
+    # Only when run from the main repo
+    if: github.repository == 'microsoft/Microsoft365DSC'
+
+    # Steps represent a sequence of tasks that will be executed as part of the job
+    steps:
+      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Install Dependencies
+        shell: pwsh
+        run: |
+          Import-Module './Modules/M365DSCUtil.psm1' -Force;
+          Update-M365DSCModule
+      - name: Get Permissions List
+        shell: pwsh
+        run: |
+          Import-Module './Tests/TestHarness.psm1' -Force;
+          $permissions = Get-M365DSCAllGraphPermissionsList
+          $permission - join ',' | Out-File '.\Tests\QA\Graph.PermissionList.txt'
+      - name: Commit Permissions List
+        shell: powershell
+        run: |
+          git config --local user.email "nicharl@microsoft.com"
+          git config --local user.name "NikCharlebois"
+          git add D:/a/Microsoft365DSC/Microsoft365DSC/Tests/QA/*
+          git pull
+          git commit -m "Updated Graph Permissions List"
+          git push
+          $SHA = git rev-parse HEAD
+          echo "commitid=$SHA" >> $env:GITHUB_OUTPUT
