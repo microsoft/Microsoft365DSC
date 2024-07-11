@@ -1,4 +1,4 @@
- name: Generate Permissions List
+name: Generate Permissions List
 on: [push, pull_request]
 
 jobs:
