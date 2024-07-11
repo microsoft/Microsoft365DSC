@@ -17,7 +17,9 @@ Configuration Example
     {
         AADAuthenticationMethodPolicyX509 "AADAuthenticationMethodPolicyX509-X509Certificate"
         {
-            Credential                      = $credsCredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             Ensure                          = "Absent";
             Id                              = "X509Certificate";
         }
