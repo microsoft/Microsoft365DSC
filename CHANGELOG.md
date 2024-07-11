@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# 1.24.710.3
+
+* MISC
+  * Fixes issue with App Secret Authentication flow.
+
 # 1.24.710.2
 
 * Telemetry

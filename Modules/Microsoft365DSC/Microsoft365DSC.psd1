@@ -11,7 +11,7 @@
   # RootModule = ''
 
   # Version number of this module.
-  ModuleVersion     = '1.24.710.2'
+  ModuleVersion     = '1.24.710.3'
 
   # Supported PSEditions
   # CompatiblePSEditions = @()
@@ -161,7 +161,9 @@
 * DEPENDENCIES
   * Updated DSCParser to version 2.0.0.7.
   * Updated Microsoft.Graph to version 2.20.0
-  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.191'
+  * Updated Microsoft.PowerApps.Administration.PowerShell to version 2.0.191
+* MISC
+  * Fixes issue with App Secret Authentication flow.'
 
       # Flag to indicate whether the module requires explicit user acceptance for install/update
       # RequireLicenseAcceptance = $false
