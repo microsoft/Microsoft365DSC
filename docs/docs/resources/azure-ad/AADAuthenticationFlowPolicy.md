@@ -57,8 +57,17 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example {
     param(
-        [System.Management.Automation.PSCredential]
-        $credsCredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -67,7 +76,9 @@ Configuration Example {
     {
         AADAuthenticationFlowPolicy "AADAuthenticationFlowPolicy"
         {
-            Credential               = $credsCredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             Description              = "Authentication flows policy allows modification of settings related to authentication flows in AAD tenant, such as self-service sign up configuration.";
             DisplayName              = "Authentication flows policy";
             Id                       = "authenticationFlowsPolicy";

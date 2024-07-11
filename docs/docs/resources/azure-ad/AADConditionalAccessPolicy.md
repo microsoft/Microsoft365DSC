@@ -98,11 +98,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -112,7 +119,9 @@ Configuration Example
         {
             BuiltInControls                          = @("mfa");
             ClientAppTypes                           = @("all");
-            Credential                               = $Credscredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             DeviceFilterMode                         = "exclude";
             DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
             DisplayName                              = "Example CAP";
@@ -139,11 +148,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -153,7 +169,9 @@ Configuration Example
         {
             BuiltInControls                          = @("mfa");
             ClientAppTypes                           = @("all");
-            Credential                               = $Credscredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             DeviceFilterMode                         = "exclude";
             DeviceFilterRule                         = "device.trustType -eq `"AzureAD`" -or device.trustType -eq `"ServerAD`" -or device.trustType -eq `"Workplace`"";
             DisplayName                              = "Example CAP";
@@ -180,11 +198,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -194,7 +219,9 @@ Configuration Example
         {
             DisplayName                          = 'Example CAP'
             Ensure                               = 'Absent'
-            Credential                           = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

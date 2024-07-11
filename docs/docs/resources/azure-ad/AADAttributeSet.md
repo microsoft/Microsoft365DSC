@@ -57,11 +57,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -70,7 +77,9 @@ Configuration Example
     {
         AADAttributeSet "AADAttributeSetTest"
         {
-            Credential           = $credsCredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             Description          = "Attribute set with 420 attributes";
             Ensure               = "Present";
             Id                   = "TestAttributeSet";
@@ -88,11 +97,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -101,7 +117,9 @@ Configuration Example
     {
         AADAttributeSet "AADAttributeSetTest"
         {
-            Credential           = $credsCredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             Description          = "Attribute set with 420 attributes";
             Ensure               = "Present";
             Id                   = "TestAttributeSet";

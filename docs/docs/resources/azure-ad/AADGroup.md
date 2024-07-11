@@ -81,12 +81,19 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
-    $Domain = $Credscredential.Username.Split('@')[1]
 
     node localhost
     {
@@ -99,9 +106,11 @@ Configuration Example
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
             Visibility      = "Private"
-            Owners          = @("admin@$Domain", "AdeleV@$Domain")
+            Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
             Ensure          = "Present"
-            Credential      = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -116,12 +125,19 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADGroup 'MyGroups'
@@ -133,9 +149,11 @@ Configuration Example
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
             Visibility      = "Private"
-            Owners          = @("admin@$Domain", "AdeleV@$Domain")
+            Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
             Ensure          = "Present"
-            Credential      = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -150,9 +168,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -165,7 +191,9 @@ Configuration Example
             MailEnabled     = $True
             DisplayName     = "DSCGroup"
             Ensure          = "Absent"
-            Credential      = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
