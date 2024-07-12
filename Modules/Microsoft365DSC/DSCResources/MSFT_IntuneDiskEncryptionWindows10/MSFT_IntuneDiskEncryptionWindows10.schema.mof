@@ -62,7 +62,7 @@ class MSFT_IntuneDiskEncryptionWindows10 : OMI_BaseResource
     [Write, Description("Do not enable BitLocker until recovery information is stored to AD DS for fixed data drives (0: False, 1: True)"), ValueMap{"0", "1"}, Values{"0", "1"}] String FDVRequireActiveDirectoryBackup_Name;
     [Write, Description("Allow data recovery agent (0: False, 1: True)"), ValueMap{"0", "1"}, Values{"0", "1"}] String FDVAllowDRA_Name;
     [Write, Description("Configure storage of BitLocker recovery information to AD DS: (1: Backup recovery passwords and key packages, 2: Backup recovery passwords only)"), ValueMap{"1", "2"}, Values{"1", "2"}] String FDVActiveDirectoryBackupDropDown_Name;
-    [Write, Description(" (2: Allow 256-bit recovery key, 1: Require 256-bit recovery key, 0: Do not allow 256-bit recovery key)"), ValueMap{"2", "1", "0"}, Values{"2", "1", "0"}] String FDVRecoveryKeyUsageDropDown_Name;
+    [Write, Description("Select the fixed drive recovery key usage: (2: Allow 256-bit recovery key, 1: Require 256-bit recovery key, 0: Do not allow 256-bit recovery key)"), ValueMap{"2", "1", "0"}, Values{"2", "1", "0"}] String FDVRecoveryKeyUsageDropDown_Name;
     [Write, Description("Deny write access to fixed drives not protected by BitLocker (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String FDVDenyWriteAccess_Name;
     [Write, Description("Control use of BitLocker on removable drives (0: Disabled, 1: Enabled)"), ValueMap{"0", "1"}, Values{"0", "1"}] String RDVConfigureBDE;
     [Write, Description("Allow users to apply BitLocker protection on removable data drives (Device) (0: False, 1: True)"), ValueMap{"0", "1"}, Values{"0", "1"}] String RDVAllowBDE_Name;
