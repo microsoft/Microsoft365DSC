@@ -1,5 +1,9 @@
 name: Generate Permissions List
 on:
+  push:
+    branches:
+      - Master
+      - Dev
   schedule:
     - cron: "0 0 * * *"
 
