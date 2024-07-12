@@ -156,7 +156,17 @@ function Get-M365DSCAllGraphPermissionsList
                         'ReportSettings.Read.All', `
                         'RoleManagementPolicy.Read.Directory', `
                         'RoleEligibilitySchedule.Read.Directory', `
-                        'Agreement.Read.All')
+                        'Agreement.Read.All', `
+                        'Policy.ReadWrite.ConditionalAccess', `
+                        'Policy.Read.ConditionalAccess', `
+                        'Policy.ReadWrite.AuthenticationMethod', `
+                        'SharePointTenantSettings.Read.All', `
+                        'AppCatalog.ReadWrite.All', `
+                        'TeamSettings.ReadWrite.All', `
+                        'Channel.Delete.All', `
+                        'ChannelSettings.ReadWrite.All', `
+                        'ChannelMember.ReadWrite.All', `
+                        'ChannelSettings.Read.All')
     $roles = $allPermissions | Select-Object -Unique | Sort-Object -Descending:$false
     return $roles
 }
