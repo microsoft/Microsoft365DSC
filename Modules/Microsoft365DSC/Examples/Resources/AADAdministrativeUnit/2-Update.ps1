@@ -20,7 +20,6 @@ Configuration Example
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADAdministrativeUnit 'TestUnit'
@@ -37,7 +36,7 @@ Configuration Example
                     RoleName       = 'User Administrator'
                     RoleMemberInfo = MSFT_MicrosoftGraphMember
                     {
-                        Identity = "AdeleV@$Domain" # Updated Property
+                        Identity = "AdeleV@$TenantId" # Updated Property
                         Type     = "User"
                     }
                 }

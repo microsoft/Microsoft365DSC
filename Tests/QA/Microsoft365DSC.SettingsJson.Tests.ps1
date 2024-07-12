@@ -17,7 +17,8 @@ Describe -Name 'Successfully import Settings.json files' {
 
 Describe -Name 'Successfully validate all used permissions in Settings.json files ' {
     BeforeAll {
-        
+        $permissionsFile = Join-Path -Path $PSScriptRoot -ChildPath '..\..\Tests\QA\Graph.PermissionList.txt'
+        $roles = (Get-Content $permissionsFile -Raw).Split(',')
     }
 
     It "Permissions used in settings.json file for '<ResourceName>' should exist" -TestCases $settingsFiles {

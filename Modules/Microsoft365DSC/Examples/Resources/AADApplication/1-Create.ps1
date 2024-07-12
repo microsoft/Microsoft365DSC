@@ -19,8 +19,6 @@ Configuration Example
         $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
-
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADApplication 'AADApp1'
@@ -29,12 +27,12 @@ Configuration Example
             AvailableToOtherTenants   = $false
             Description               = "Application Description"
             GroupMembershipClaims     = "None"
-            Homepage                  = "https://$Domain"
-            IdentifierUris            = "https://$Domain"
+            Homepage                  = "https://$TenandId"
+            IdentifierUris            = "https://$TenandId"
             KnownClientApplications   = ""
-            LogoutURL                 = "https://$Domain/logout"
+            LogoutURL                 = "https://$TenandId/logout"
             PublicClient              = $false
-            ReplyURLs                 = "https://$Domain"
+            ReplyURLs                 = "https://$TenandId"
             Permissions               = @(
                 MSFT_AADApplicationPermission
                 {
