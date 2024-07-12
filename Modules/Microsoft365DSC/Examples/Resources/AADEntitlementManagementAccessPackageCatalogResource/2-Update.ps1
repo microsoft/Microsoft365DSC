@@ -20,19 +20,18 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
             DisplayName         = 'Human Resources'
             CatalogId           = 'My Catalog'
-            Description         = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+            Description         = "https://$($TenantId.Split('.')[0]).sharepoint.com/sites/HumanResources"
             IsPendingOnboarding = $false # Updated Property
-            OriginId            = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+            OriginId            = "https://$($TenantId.Split('.')[0]).sharepoint.com/sites/HumanResources"
             OriginSystem        = 'SharePointOnline'
             ResourceType        = 'SharePoint Online Site'
-            Url                 = "https://$($Domain.Split('.')[0]).sharepoint.com/sites/HumanResources"
+            Url                 = "https://$($TenantId.Split('.')[0]).sharepoint.com/sites/HumanResources"
             Ensure              = 'Present'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
