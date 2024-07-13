@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneWindowsUpdateForBusinessQualityUpdateProfileWindows10
+  * Initial release.
+    FIXES [#2659](https://github.com/microsoft/Microsoft365DSC/issues/2659)
+
 # 1.24.710.3
 
 * MISC
