@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCReport
+  * Fixes an issue where the comparison treats empty arrays as an empty string.
+    FIXES [#4796](https://github.com/microsoft/Microsoft365DSC/issues/4796)
+
 # 1.24.710.3
 
 * MISC
