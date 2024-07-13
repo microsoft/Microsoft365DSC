@@ -218,7 +218,9 @@
                         IsApprovalRequiredForExtension = $False
                     };
                     Ensure                     = "Present"
-                    Credential                 = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
                 {
