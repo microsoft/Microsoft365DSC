@@ -22,9 +22,24 @@ Configuration Example
 
     node localhost
     {
+        AADGroup 'MyGroups'
+        {
+            DisplayName     = "MyGroup"
+            Description     = "Microsoft DSC Group"
+            SecurityEnabled = $True
+            MailEnabled     = $True
+            GroupTypes      = @("Unified")
+            MailNickname    = "MyGroup"
+            Visibility      = "Private"
+            Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
+            Ensure          = "Absent"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+        }
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
-            DisplayName         = 'Finance Team'
+            DisplayName         = 'DSCGroup'
             Ensure              = 'Absent'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
