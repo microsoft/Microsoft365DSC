@@ -24,7 +24,7 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
-            DisplayName         = 'DSCGroup'
+            DisplayName         = 'Finance Team'
             Ensure              = 'Absent'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
