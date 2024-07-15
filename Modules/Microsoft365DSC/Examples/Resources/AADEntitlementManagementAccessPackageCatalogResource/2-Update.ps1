@@ -33,7 +33,6 @@ Configuration Example
             Ensure                = "Present";
             IsPendingOnboarding   = $False;
             TenantId              = $TenantId;
-            Url                   = "https://myapps.microsoft.com/$TenantId/signin/$ApplicationId/";
         }
     }
 }
