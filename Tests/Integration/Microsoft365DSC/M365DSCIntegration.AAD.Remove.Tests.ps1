@@ -175,7 +175,7 @@
                 }
                 AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
                 {
-                    DisplayName         = 'Communication site'
+                    DisplayName         = 'Integration Package Resource'
                     Ensure              = 'Absent'
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
