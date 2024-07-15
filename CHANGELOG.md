@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCDRGUtil
+  * Add support for converting Intune assignments directly from Graph.  
+    FIXES [#4875](https://github.com/microsoft/Microsoft365DSC/issues/4875)
+
 # 1.24.710.3
 
 * MISC
