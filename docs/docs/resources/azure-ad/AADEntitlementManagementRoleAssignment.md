@@ -83,7 +83,7 @@ Configuration Example
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             Ensure          = "Present";
-            Principal       = "John.Smith@$TenantId";
+            Principal       = "AdeleV@$TenantId";
             RoleDefinition  = "Catalog creator";
         }
     }
@@ -122,7 +122,7 @@ Configuration Example
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             Ensure          = "Absent";
-            Principal       = "John.Smith@$TenantId";
+            Principal       = "AdeleV@$TenantId";
             RoleDefinition  = "Catalog creator";
         }
     }
