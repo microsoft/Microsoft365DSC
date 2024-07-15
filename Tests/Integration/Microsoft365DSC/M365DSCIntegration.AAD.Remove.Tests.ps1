@@ -175,7 +175,7 @@
                 }
                 AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
                 {
-                    DisplayName         = 'Integration Package Resource'
+                    DisplayName         = 'DSCGroup'
                     Ensure              = 'Absent'
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
