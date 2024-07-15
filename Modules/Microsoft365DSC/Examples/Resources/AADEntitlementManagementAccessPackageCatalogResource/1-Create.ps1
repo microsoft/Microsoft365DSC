@@ -31,9 +31,8 @@ Configuration Example
             OriginSystem          = "AADGroup";
             OriginId              = '849b3661-61a8-44a8-92e7-fcc91d296235'
             Ensure                = "Present";
-            IsPendingOnboarding   = $True;
+            IsPendingOnboarding   = $False;
             TenantId              = $TenantId;
-            Url                   = "https://myapps.microsoft.com/$TenantId/signin/$ApplicationId/";
         }
     }
 }
