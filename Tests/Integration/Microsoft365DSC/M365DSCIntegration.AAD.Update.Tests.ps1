@@ -38,7 +38,7 @@
                 {
                     DisplayName                   = 'Test-Unit'
                     Description                   = 'Test Description Updated' # Updated Property
-                    Visibility                    = 'HiddenMembership' # Updated Property
+                    Visibility                    = 'Public'
                     MembershipRule                = "(user.country -eq `"US`")" # Updated Property
                     MembershipRuleProcessingState = 'On'
                     MembershipType                = 'Dynamic'
