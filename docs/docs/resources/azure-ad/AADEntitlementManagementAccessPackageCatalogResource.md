@@ -161,7 +161,7 @@ Configuration Example
             ApplicationId         = $ApplicationId;
             CatalogId             = "My Catalog";
             CertificateThumbprint = $CertificateThumbprint;
-            DisplayName           = "Integration Package Resource";
+            DisplayName           = "DSCGroup";
             OriginSystem          = "AADGroup";
             OriginId              = '849b3661-61a8-44a8-92e7-fcc91d296235'
             Ensure                = "Present";
@@ -202,7 +202,7 @@ Configuration Example
             ApplicationId         = $ApplicationId;
             CatalogId             = "My Catalog";
             CertificateThumbprint = $CertificateThumbprint;
-            DisplayName           = "Integration Package Resource";
+            DisplayName           = "DSCGroup";
             OriginSystem          = "AADGroup";
             OriginId              = '849b3661-61a8-44a8-92e7-fcc91d296235'
             Ensure                = "Present";
@@ -240,7 +240,7 @@ Configuration Example
     {
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
-            DisplayName         = 'Integration Package Resource'
+            DisplayName         = 'DSCGroup'
             Ensure              = 'Absent'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
