@@ -717,7 +717,6 @@ function Export-TargetResource
             [array]$resources = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId  $catalogId -ErrorAction Stop
 
             $j = 1
-            $dscContent = ''
 
             if ($resources.Length -eq 0)
             {
