@@ -22,7 +22,7 @@ Configuration Example
 
     node localhost
     {
-        AADGroup 'MyGroups'
+        AADGroup 'DependantGroup'
         {
             DisplayName     = "MyGroup"
             Description     = "Microsoft DSC Group"
