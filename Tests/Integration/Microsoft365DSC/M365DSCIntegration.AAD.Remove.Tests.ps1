@@ -175,7 +175,7 @@
                 }
                 AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
                 {
-                    DisplayName         = 'Finance Team'
+                    DisplayName         = 'DSCGroup'
                     Ensure              = 'Absent'
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
