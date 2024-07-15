@@ -31,7 +31,6 @@ Configuration Example
             GroupTypes      = @("Unified")
             MailNickname    = "MyGroup"
             Visibility      = "Private"
-            Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
             Ensure          = "Present"
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
