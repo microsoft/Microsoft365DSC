@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOMessageClassification
+  * Fix issue while creating policy for first time
+    FIXES [#4877](https://github.com/microsoft/Microsoft365DSC/issues/4877)
+
 # 1.24.710.3
 
 * MISC
