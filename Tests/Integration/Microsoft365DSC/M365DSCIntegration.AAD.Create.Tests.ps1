@@ -287,7 +287,7 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure          = "Present";
-                    Principal       = "John.Smith@$TenantId";
+                    Principal       = "AdeleV@$TenantId";
                     RoleDefinition  = "Catalog creator";
                 }
                 AADGroup 'MyGroups'
