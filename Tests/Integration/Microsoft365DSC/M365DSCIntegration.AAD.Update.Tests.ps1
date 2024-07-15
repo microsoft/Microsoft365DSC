@@ -620,9 +620,9 @@
                     ApplicationId         = $ApplicationId;
                     CatalogId             = "My Catalog";
                     CertificateThumbprint = $CertificateThumbprint;
-                    DisplayName           = "Finance Team";
+                    DisplayName           = "DSCGroup";
                     OriginSystem          = "AADGroup";
-                    OriginId              = '50523ab8-a3d2-4b4f-a77d-16bd1abd328f'
+                    OriginId              = '849b3661-61a8-44a8-92e7-fcc91d296235'
                     Ensure                = "Present";
                     IsPendingOnboarding   = $False;
                     TenantId              = $TenantId;
