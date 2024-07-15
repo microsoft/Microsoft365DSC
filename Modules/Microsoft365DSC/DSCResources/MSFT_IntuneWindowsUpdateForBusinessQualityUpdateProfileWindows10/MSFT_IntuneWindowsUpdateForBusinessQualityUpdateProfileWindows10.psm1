@@ -95,8 +95,10 @@ function Get-TargetResource
             if (-not [System.String]::IsNullOrEmpty($DisplayName))
             {
                 $getValue = Get-MgBetaDeviceManagementWindowsQualityUpdateProfile `
-                    -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue
+                    -All `
+                    -ErrorAction SilentlyContinue | Where-Object -FilterScript {
+                        $_.DisplayName -eq $DisplayName
+                    }
             }
         }
         #endregion
