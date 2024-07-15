@@ -156,14 +156,29 @@ Configuration Example
 
     node localhost
     {
+        AADGroup 'MyGroups'
+        {
+            DisplayName     = "MyGroup"
+            Description     = "Microsoft DSC Group"
+            SecurityEnabled = $True
+            MailEnabled     = $True
+            GroupTypes      = @("Unified")
+            MailNickname    = "MyGroup"
+            Visibility      = "Private"
+            Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
+            Ensure          = "Present"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+        }
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
             ApplicationId         = $ApplicationId;
             CatalogId             = "My Catalog";
             CertificateThumbprint = $CertificateThumbprint;
-            DisplayName           = "Finance Team";
+            DisplayName           = "MyGroup";
             OriginSystem          = "AADGroup";
-            OriginId              = '50523ab8-a3d2-4b4f-a77d-16bd1abd328f'
+            OriginId              = 'MyGroup'
             Ensure                = "Present";
             IsPendingOnboarding   = $False;
             TenantId              = $TenantId;
@@ -197,14 +212,29 @@ Configuration Example
 
     node localhost
     {
+        AADGroup 'MyGroups'
+        {
+            DisplayName     = "MyGroup"
+            Description     = "Microsoft DSC Group"
+            SecurityEnabled = $True
+            MailEnabled     = $True
+            GroupTypes      = @("Unified")
+            MailNickname    = "MyGroup"
+            Visibility      = "Private"
+            Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
+            Ensure          = "Present"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+        }
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
             ApplicationId         = $ApplicationId;
             CatalogId             = "My Catalog";
             CertificateThumbprint = $CertificateThumbprint;
-            DisplayName           = "Finance Team";
+            DisplayName           = "DSCGroup";
             OriginSystem          = "AADGroup";
-            OriginId              = '50523ab8-a3d2-4b4f-a77d-16bd1abd328f'
+            OriginId              = '849b3661-61a8-44a8-92e7-fcc91d296235'
             Ensure                = "Present";
             IsPendingOnboarding   = $False;
             TenantId              = $TenantId;
@@ -238,9 +268,24 @@ Configuration Example
 
     node localhost
     {
+        AADGroup 'MyGroups'
+        {
+            DisplayName     = "MyGroup"
+            Description     = "Microsoft DSC Group"
+            SecurityEnabled = $True
+            MailEnabled     = $True
+            GroupTypes      = @("Unified")
+            MailNickname    = "MyGroup"
+            Visibility      = "Private"
+            Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
+            Ensure          = "Absent"
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
+        }
         AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
         {
-            DisplayName         = 'Finance Team'
+            DisplayName         = 'DSCGroup'
             Ensure              = 'Absent'
             ApplicationId         = $ApplicationId
             TenantId              = $TenantId
