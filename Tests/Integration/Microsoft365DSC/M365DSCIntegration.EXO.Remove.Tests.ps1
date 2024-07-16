@@ -189,9 +189,11 @@
                 }
                 EXODkimSigningConfig 'ConfigureDKIMSigning'
                 {
-                    Identity               = $Domain
+                    Identity               = $TenantId
                     Ensure                 = "Absent"
-                    Credential             = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
                 {
