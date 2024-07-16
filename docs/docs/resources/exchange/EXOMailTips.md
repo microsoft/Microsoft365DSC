@@ -70,7 +70,7 @@ Configuration Example
             IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
             MailTipsGroupMetricsEnabled           = $True
-            MailTipsLargeAudienceThreshold        = 100
+            #MailTipsLargeAudienceThreshold        = 100
             MailTipsMailboxSourcedTipsEnabled     = $True
             MailTipsExternalRecipientsTipsEnabled = $True
             Ensure                                = "Present"
@@ -112,7 +112,7 @@ Configuration Example
             IsSingleInstance                      = 'Yes'
             MailTipsAllTipsEnabled                = $True
             MailTipsGroupMetricsEnabled           = $False # Updated Property
-            MailTipsLargeAudienceThreshold        = 100
+            #MailTipsLargeAudienceThreshold        = 100
             MailTipsMailboxSourcedTipsEnabled     = $True
             MailTipsExternalRecipientsTipsEnabled = $True
             Ensure                                = "Present"
