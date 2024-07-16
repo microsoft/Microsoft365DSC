@@ -18,10 +18,8 @@ Configuration Example
         [System.String]
         $CertificateThumbprint
     )
-    $OrganizationName = $Credscredential.UserName.Split('@')[1]
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
