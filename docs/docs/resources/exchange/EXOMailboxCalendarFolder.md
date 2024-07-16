@@ -50,27 +50,35 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOMailboxCalendarFolder "JohnCalendarFolder"
         {
-            Credential           = $credsCredential;
             DetailLevel          = "AvailabilityOnly";
             Ensure               = "Present";
-            Identity             = "AlexW@$Domain" + ":\Calendar";
+            Identity             = "AlexW@$TenantId" + ":\Calendar";
             PublishDateRangeFrom = "ThreeMonths";
             PublishDateRangeTo   = "ThreeMonths";
             PublishEnabled       = $True; # Updated Property
             SearchableUrlEnabled = $False;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

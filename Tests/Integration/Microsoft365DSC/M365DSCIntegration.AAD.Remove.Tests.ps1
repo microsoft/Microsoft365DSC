@@ -175,7 +175,7 @@
                 }
                 AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
                 {
-                    DisplayName         = 'Communication site'
+                    DisplayName         = 'DSCGroup'
                     Ensure              = 'Absent'
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -196,7 +196,7 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure          = "Absent";
-                    Principal       = "John.Smith@$TenantId";
+                    Principal       = "AdeleV@$TenantId";
                     RoleDefinition  = "Catalog creator";
                 }
                 AADGroup 'MyGroups'

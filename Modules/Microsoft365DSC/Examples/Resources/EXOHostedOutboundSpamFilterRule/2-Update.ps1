@@ -5,15 +5,22 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOHostedOutboundSpamFilterRule 'ConfigureHostedOutboundSpamFilterRule'
@@ -21,11 +28,13 @@ Configuration Example
             Identity                       = "Contoso Executives"
             Comments                       = "Does not apply to Executives"
             Enabled                        = $False # Updated Property
-            ExceptIfFrom                   = "AdeleV@$Domain"
-            FromMemberOf                   = "Executives@$Domain"
+            ExceptIfFrom                   = "AdeleV@$TenantId"
+            FromMemberOf                   = "Executives@$TenantId"
             HostedOutboundSpamFilterPolicy = "Integration SFP"
             Ensure                         = "Present"
-            Credential                     = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

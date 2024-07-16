@@ -5,11 +5,18 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -20,7 +27,9 @@ Configuration Example
             Identity             = "Integration Policy"
             AppID                = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
             Ensure               = "Absent"
-            Credential           = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

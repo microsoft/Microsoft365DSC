@@ -55,9 +55,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -66,11 +74,13 @@ Configuration Example
     {
         EXOManagementRoleAssignment 'AssignManagementRole'
         {
-            Credential           = $credsCredential;
             Ensure               = "Present";
             Name                 = "MyManagementRoleAssignment";
             Role                 = "UserApplication";
-            User                 = "AdeleV@$Domain";
+            User                 = "AdeleV@$TenantId";
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -85,9 +95,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -96,11 +114,13 @@ Configuration Example
     {
         EXOManagementRoleAssignment 'AssignManagementRole'
         {
-            Credential           = $credsCredential;
             Ensure               = "Present";
             Name                 = "MyManagementRoleAssignment";
             Role                 = "UserApplication";
-            User                 = "AlexW@$Domain"; # Updated Property
+            User                 = "AlexW@$TenantId"; # Updated Property
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -115,9 +135,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -126,11 +154,13 @@ Configuration Example
     {
         EXOManagementRoleAssignment 'AssignManagementRole'
         {
-            Credential           = $credsCredential;
             Ensure               = "Absent";
             Name                 = "MyManagementRoleAssignment";
             Role                 = "UserApplication";
-            User                 = "AlexW@$Domain"; # Updated Property
+            User                 = "AlexW@$TenantId"; # Updated Property
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

@@ -235,20 +235,31 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                 }
-                AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
+                AADGroup 'DependantGroup'
                 {
-                    DisplayName         = 'Human Resources'
-                    CatalogId           = 'My Catalog'
-                    Description         = "https://$($TenantId.Split('.')[0]).sharepoint.com/sites/HumanResources"
-                    IsPendingOnboarding = $true
-                    OriginId            = "https://$($TenantId.Split('.')[0]).sharepoint.com/sites/HumanResources"
-                    OriginSystem        = 'SharePointOnline'
-                    ResourceType        = 'SharePoint Online Site'
-                    Url                 = "https://$($TenantId.Split('.')[0]).sharepoint.com/sites/HumanResources"
-                    Ensure              = 'Present'
+                    DisplayName     = "MyGroup"
+                    Description     = "Microsoft DSC Group"
+                    SecurityEnabled = $True
+                    MailEnabled     = $True
+                    GroupTypes      = @("Unified")
+                    MailNickname    = "MyGroup"
+                    Visibility      = "Private"
+                    Ensure          = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
+                }
+                AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
+                {
+                    ApplicationId         = $ApplicationId;
+                    CatalogId             = "My Catalog";
+                    CertificateThumbprint = $CertificateThumbprint;
+                    DisplayName           = "MyGroup";
+                    OriginSystem          = "AADGroup";
+                    OriginId              = 'MyGroup'
+                    Ensure                = "Present";
+                    IsPendingOnboarding   = $False;
+                    TenantId              = $TenantId;
                 }
                 AADEntitlementManagementConnectedOrganization 'MyConnectedOrganization'
                 {
@@ -276,7 +287,7 @@
                     TenantId              = $TenantId
                     CertificateThumbprint = $CertificateThumbprint
                     Ensure          = "Present";
-                    Principal       = "John.Smith@$TenantId";
+                    Principal       = "AdeleV@$TenantId";
                     RoleDefinition  = "Catalog creator";
                 }
                 AADGroup 'MyGroups'
