@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOHostedOutboundSpamFilterPolicy
+  * Changed the RecipientLimitInternalPerHour, RecipientLimitPerDay, and
+    RecipientLimitExternalPerHour parameters to UInt32.
 * M365DSCDRGUtil
   * Add support for converting Intune assignments directly from Graph.  
     FIXES [#4875](https://github.com/microsoft/Microsoft365DSC/issues/4875)
