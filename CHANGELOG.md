@@ -5,6 +5,10 @@
 * M365DSCDRGUtil
   * Add support for converting Intune assignments directly from Graph.  
     FIXES [#4875](https://github.com/microsoft/Microsoft365DSC/issues/4875)
+* M365DSCReport
+  * Changes behaviour to not throw on empty configuration during report generation.  
+    FIXES [#4559](https://github.com/microsoft/Microsoft365DSC/issues/4559)  
+    FIXES [#4505](https://github.com/microsoft/Microsoft365DSC/issues/4505)
 
 # 1.24.710.3
 

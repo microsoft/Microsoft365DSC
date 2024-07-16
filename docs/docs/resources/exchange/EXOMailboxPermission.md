@@ -49,24 +49,33 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $credsCredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOMailboxPermission "TestPermission"
         {
             AccessRights         = @("FullAccess","ReadPermission");
-            Credential           = $credsCredential;
             Deny                 = $True; # Updated Property
             Ensure               = "Present";
-            Identity             = "AlexW@$Domain";
+            Identity             = "AlexW@$TenantId";
             InheritanceType      = "All";
             User                 = "NT AUTHORITY\SELF";
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

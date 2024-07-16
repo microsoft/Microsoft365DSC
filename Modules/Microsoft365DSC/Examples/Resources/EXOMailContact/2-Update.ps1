@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -18,7 +26,6 @@ Configuration Example
         EXOMailContact 'TestMailContact'
         {
             Alias                       = 'TestMailContact'
-            Credential                  = $Credscredential
             DisplayName                 = 'My Test Contact'
             Ensure                      = 'Present'
             ExternalEmailAddress        = 'SMTP:test@tailspintoys.com'
@@ -28,11 +35,14 @@ Configuration Example
             ModeratedBy                 = @()
             ModerationEnabled           = $false
             Name                        = 'My Test Contact'
-            OrganizationalUnit          = $Domain
+            OrganizationalUnit          = $TenantId
             SendModerationNotifications = 'Always'
             UsePreferMessageFormat      = $false # Updated Property
             CustomAttribute1            = 'Custom Value 1'
             ExtensionCustomAttribute5   = 'Extension Custom Value 1', 'Extension Custom Value 2'
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

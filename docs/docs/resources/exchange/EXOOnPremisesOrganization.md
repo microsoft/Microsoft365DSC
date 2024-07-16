@@ -50,11 +50,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -71,7 +78,9 @@ Configuration Example
             OrganizationName  = 'O365DSC'
             OutboundConnector = 'Contoso Outbound Connector'
             Ensure            = 'Present'
-            Credential        = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             DependsOn         = "[EXOOutboundConnector]OutboundDependency"
         }
         EXOOutboundConnector 'OutboundDependency'
@@ -90,7 +99,9 @@ Configuration Example
             TlsSettings                   = "DomainValidation"
             UseMxRecord                   = $True
             Ensure                        = "Present"
-            Credential                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -104,11 +115,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -125,7 +143,9 @@ Configuration Example
             OrganizationName  = 'O365DSC'
             OutboundConnector = 'Contoso Outbound Connector'
             Ensure            = 'Present'
-            Credential        = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -139,11 +159,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
@@ -153,7 +180,9 @@ Configuration Example
         EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
         {
             Identity          = 'Contoso'
-            Credential        = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

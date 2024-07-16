@@ -210,11 +210,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -224,14 +231,16 @@ Configuration Example
         EXOTransportRule 'ConfigureTransportRule'
         {
             Name                                          = "Ethical Wall - Sales and Executives Departments"
-            BetweenMemberOf1                              = "SalesTeam@$Domain"
-            BetweenMemberOf2                              = "Executives@$Domain"
-            ExceptIfFrom                                  = "AdeleV@$Domain"
+            BetweenMemberOf1                              = "SalesTeam@$TenantId"
+            BetweenMemberOf2                              = "Executives@$TenantId"
+            ExceptIfFrom                                  = "AdeleV@$TenantId"
             ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
             RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
             Enabled                                       = $True
             Ensure                                        = "Present"
-            Credential                                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -245,11 +254,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -259,14 +275,16 @@ Configuration Example
         EXOTransportRule 'ConfigureTransportRule'
         {
             Name                                          = "Ethical Wall - Sales and Executives Departments"
-            BetweenMemberOf1                              = "SalesTeam@$Domain"
-            BetweenMemberOf2                              = "Executives@$Domain"
-            ExceptIfFrom                                  = "AdeleV@$Domain"
+            BetweenMemberOf1                              = "SalesTeam@$TenantId"
+            BetweenMemberOf2                              = "Executives@$TenantId"
+            ExceptIfFrom                                  = "AdeleV@$TenantId"
             ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
             RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
             Enabled                                       = $False # Updated Property
             Ensure                                        = "Present"
-            Credential                                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -280,11 +298,18 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -295,7 +320,9 @@ Configuration Example
             Name                                          = "Ethical Wall - Sales and Brokerage Departments"
             Enabled                                       = $True
             Ensure                                        = "Absent"
-            Credential                                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
