@@ -3,7 +3,7 @@
 # UNRELEASED
 
 * EXOHostedOutboundSpamFilterPolicy
-  * Changed the RecipientLimitInternalPerHour, RecipientLimitPerDay, an
+  * Changed the RecipientLimitInternalPerHour, RecipientLimitPerDay, and
     RecipientLimitExternalPerHour parameters to UInt32.
 
 # 1.24.710.3
