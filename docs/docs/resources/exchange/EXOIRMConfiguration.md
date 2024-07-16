@@ -58,12 +58,20 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
     node localhost
@@ -85,7 +93,9 @@ Configuration Example
             SimplifiedClientAccessEncryptOnlyDisabled  = $True
             TransportDecryptionSetting                 = 'Mandatory'
             Ensure                                     = 'Present'
-            Credential                                 = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

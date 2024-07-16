@@ -633,7 +633,7 @@ function New-M365DSCReportFromConfiguration
     }
     else
     {
-        throw "Parsed content was null."
+        Write-Warning -Message "Parsed content was null. No report was generated."
     }
 }
 

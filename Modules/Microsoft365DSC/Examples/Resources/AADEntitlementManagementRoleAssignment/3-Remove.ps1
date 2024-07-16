@@ -29,7 +29,7 @@ Configuration Example
             TenantId              = $TenantId
             CertificateThumbprint = $CertificateThumbprint
             Ensure          = "Absent";
-            Principal       = "John.Smith@$TenantId";
+            Principal       = "AdeleV@$TenantId";
             RoleDefinition  = "Catalog creator";
         }
     }

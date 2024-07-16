@@ -50,25 +50,34 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXODkimSigningConfig 'ConfigureDKIMSigning'
         {
             KeySize                = 1024
-            Identity               = $Domain
+            Identity               = $TenantId
             HeaderCanonicalization = "Relaxed"
             Enabled                = $True
             BodyCanonicalization   = "Relaxed"
             AdminDisplayName       = ""
             Ensure                 = "Present"
-            Credential             = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -83,25 +92,34 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXODkimSigningConfig 'ConfigureDKIMSigning'
         {
             KeySize                = 1024
-            Identity               = $Domain
+            Identity               = $TenantId
             HeaderCanonicalization = "Relaxed"
             Enabled                = $False # Updated Property
             BodyCanonicalization   = "Relaxed"
             AdminDisplayName       = ""
             Ensure                 = "Present"
-            Credential             = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -116,20 +134,29 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXODkimSigningConfig 'ConfigureDKIMSigning'
         {
-            Identity               = $Domain
+            Identity               = $TenantId
             Ensure                 = "Absent"
-            Credential             = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

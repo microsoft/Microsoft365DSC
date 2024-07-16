@@ -5,15 +5,21 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSafeLinksRule 'ConfigureSafeLinksRule'
@@ -21,11 +27,13 @@ Configuration Example
             Identity                  = "Research Department URL Rule"
             Comments                  = "Applies to Research Department, except managers"
             Enabled                   = $True
-            ExceptIfSentToMemberOf    = "Executives@$Domain"
+            ExceptIfSentToMemberOf    = "Executives@$TenantId"
             SafeLinksPolicy           = "Marketing Block URL"
-            SentToMemberOf            = "LegalTeam@$Domain"
+            SentToMemberOf            = "LegalTeam@$TenantId"
             Ensure                    = "Present"
-            Credential                = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
