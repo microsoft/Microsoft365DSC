@@ -411,7 +411,7 @@
                     IsSingleInstance                      = 'Yes'
                     MailTipsAllTipsEnabled                = $True
                     MailTipsGroupMetricsEnabled           = $True
-                    MailTipsLargeAudienceThreshold        = 100
+                    #MailTipsLargeAudienceThreshold        = 100
                     MailTipsMailboxSourcedTipsEnabled     = $True
                     MailTipsExternalRecipientsTipsEnabled = $True
                     Ensure                                = "Present"
