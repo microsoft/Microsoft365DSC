@@ -6,26 +6,33 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOEOPProtectionPolicyRule "EXOEOPProtectionPolicyRule-Strict Preset Security Policy"
         {
-            ApplicationId             = $ConfigurationData.NonNodeData.ApplicationId;
-            CertificateThumbprint     = $ConfigurationData.NonNodeData.CertificateThumbprint;
             Ensure                    = "Present";
             ExceptIfRecipientDomainIs = @("sandrodev.onmicrosoft.com");
             Identity                  = "Strict Preset Security Policy";
             Name                      = "Strict Preset Security Policy";
             Priority                  = 0;
             State                     = "Enabled";
-            TenantId                  = $OrganizationName;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

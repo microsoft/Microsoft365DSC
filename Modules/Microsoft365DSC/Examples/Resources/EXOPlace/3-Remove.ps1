@@ -5,25 +5,33 @@ It is not meant to use as a production baseline.
 
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOPlace 'TestPlace'
         {
             AudioDeviceName        = "MyAudioDevice";
-            Credential             = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
             DisplayDeviceName      = "DisplayDeviceName";
             Ensure                 = 'Absent'
-            Identity               = "Hood@$Domain";
+            Identity               = "Hood@$TenantId";
         }
     }
 }

@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     $OrganizationName = $Credscredential.UserName.Split('@')[1]
     Import-DscResource -ModuleName Microsoft365DSC
@@ -20,9 +28,11 @@ Configuration Example
         {
             EndUserQuarantinePermissionsValue = 87;
             ESNEnabled                        = $True; # Updated Property
-            Identity                          = "$Domain\IntegrationPolicy";
+            Identity                          = "$TenantId\IntegrationPolicy";
             Ensure                            = "Present"
-            Credential                        = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
