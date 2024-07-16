@@ -6,13 +6,21 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOMailboxAutoReplyConfiguration "EXOMailboxAutoReplyConfiguration"
@@ -20,7 +28,6 @@ Configuration Example
             AutoDeclineFutureRequestsWhenOOF = $False;
             AutoReplyState                   = "Disabled";
             CreateOOFEvent                   = $False;
-            Credential                       = $Credscredential;
             DeclineAllEventsForScheduledOOF  = $False;
             DeclineEventsForScheduledOOF     = $False;
             DeclineMeetingMessage            = "";
@@ -28,10 +35,13 @@ Configuration Example
             Ensure                           = "Present";
             ExternalAudience                 = "All";
             ExternalMessage                  = (New-Guid).ToString(); # Updated Property
-            Identity                         = "AdeleV@$Domain";
+            Identity                         = "AdeleV@$TenantId";
             InternalMessage                  = "";
             OOFEventSubject                  = "";
             StartTime                        = "1/22/2024 3:00:00 PM";
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

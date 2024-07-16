@@ -120,7 +120,7 @@ function Get-TargetResource
 
         if ($null -eq $getValue -and -not [string]::IsNullOrEmpty($DisplayName))
         {
-            Write-Verbose -Message "Could not find an Azure AD Administrative Unit with Id {$Id}"
+            Write-Verbose -Message "Could not find an Azure AD Administrative Unit by Id, trying by DisplayName {$DisplayName}"
             if (-Not [string]::IsNullOrEmpty($DisplayName))
             {
                 if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
