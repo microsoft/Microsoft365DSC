@@ -326,13 +326,15 @@
                 EXODkimSigningConfig 'ConfigureDKIMSigning'
                 {
                     KeySize                = 1024
-                    Identity               = $Domain
+                    Identity               = $TenantId
                     HeaderCanonicalization = "Relaxed"
                     Enabled                = $False # Updated Property
                     BodyCanonicalization   = "Relaxed"
                     AdminDisplayName       = ""
                     Ensure                 = "Present"
-                    Credential             = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
                 {
