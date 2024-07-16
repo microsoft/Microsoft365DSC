@@ -101,12 +101,12 @@ Configuration Example
             AvailableToOtherTenants   = $false
             Description               = "Application Description"
             GroupMembershipClaims     = "None"
-            Homepage                  = "https://$TenandId"
-            IdentifierUris            = "https://$TenandId"
+            Homepage                  = "https://$TenantId"
+            IdentifierUris            = "https://$TenantId"
             KnownClientApplications   = ""
-            LogoutURL                 = "https://$TenandId/logout"
+            LogoutURL                 = "https://$TenantId/logout"
             PublicClient              = $false
-            ReplyURLs                 = "https://$TenandId"
+            ReplyURLs                 = "https://$TenantId"
             Permissions               = @(
                 MSFT_AADApplicationPermission
                 {
@@ -170,12 +170,12 @@ Configuration Example
             AvailableToOtherTenants   = $true # Updated Property
             Description               = "Application Description"
             GroupMembershipClaims     = "None"
-            Homepage                  = "https://$TenandId"
-            IdentifierUris            = "https://$TenandId"
+            Homepage                  = "https://$TenantId"
+            IdentifierUris            = "https://$TenantId"
             KnownClientApplications   = ""
-            LogoutURL                 = "https://$TenandId/logout"
+            LogoutURL                 = "https://$TenantId/logout"
             PublicClient              = $false
-            ReplyURLs                 = "https://$TenandId"
+            ReplyURLs                 = "https://$TenantId"
             Permissions               = @(
                 MSFT_AADApplicationPermission
                 {

@@ -46,6 +46,7 @@ jobs:
       - name: Generate {Update} Integration Tests from Examples
         shell: powershell
         run: |
+          Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
           New-M365DSCIntegrationTest -Workload AAD -Step '2-Update'
       - name: Commit {Update} Integration Tests
         shell: powershell
@@ -61,7 +62,8 @@ jobs:
       - name: Generate {Remove} Integration Tests from Examples
         shell: powershell
         run: |
-            New-M365DSCIntegrationTest -Workload AAD -Step '3-Remove'
+          Import-Module './Tests/Integration/M365DSCTestEngine.psm1'
+          New-M365DSCIntegrationTest -Workload AAD -Step '3-Remove'
       - name: Commit {Remove} Integration Tests
         shell: powershell
         run: |
