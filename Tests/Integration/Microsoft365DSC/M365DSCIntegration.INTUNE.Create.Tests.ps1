@@ -2089,6 +2089,21 @@
                     SelectedRecoveryKeyTypes            = @("personalRecoveryKey");
                     Credential                          = $Credscredential
                 }
+                IntuneDiskEncryptionWindows10 'myDiskEncryption'
+                {
+                    DisplayName        = 'Disk Encryption'
+                    Assignments        = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments {
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            dataType                                   = '#microsoft.graph.allDevicesAssignmentTarget'
+                        })
+                    Description        = ''
+                    IdentificationField_Name = '1'
+                    IdentificationField = 'IdentificationField'
+                    SecIdentificationField = 'SecIdentificationField'
+                    Ensure             = 'Present'
+                    Credential         = $Credscredential
+                }
                 IntuneEndpointDetectionAndResponsePolicyWindows10 'myEDRPolicy'
                 {
                     DisplayName = 'Edr Policy'

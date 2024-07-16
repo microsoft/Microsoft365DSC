@@ -19,6 +19,8 @@
   * Changes behaviour to not throw on empty configuration during report generation.
     FIXES [#4559](https://github.com/microsoft/Microsoft365DSC/issues/4559)
     FIXES [#4505](https://github.com/microsoft/Microsoft365DSC/issues/4505)
+  * Fixes an issue where the comparison treats empty arrays as an empty string.
+    FIXES [#4796](https://github.com/microsoft/Microsoft365DSC/issues/4796)
 
 # 1.24.710.3
 
