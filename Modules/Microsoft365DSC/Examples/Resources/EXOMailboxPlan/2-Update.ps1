@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -25,7 +33,9 @@ Configuration Example
             ProhibitSendReceiveQuota = "15 GB (16,106,127,360 bytes)"; # Updated Property
             RetainDeletedItemsFor    = "14.00:00:00";
             RoleAssignmentPolicy     = "Default Role Assignment Policy";
-            Credential               = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
