@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOHostedOutboundSpamFilterPolicy
+  * Changed the RecipientLimitInternalPerHour, RecipientLimitPerDay, and
+    RecipientLimitExternalPerHour parameters to UInt32.
 * IntuneDiskEncryptionWindows10
   * Initial Release  
     FIXES [#4050](https://github.com/microsoft/Microsoft365DSC/issues/4050)

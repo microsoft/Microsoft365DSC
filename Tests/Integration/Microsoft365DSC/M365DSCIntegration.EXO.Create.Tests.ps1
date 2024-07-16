@@ -326,9 +326,9 @@
                     BccSuspiciousOutboundMail                 = $False
                     NotifyOutboundSpam                        = $False
                     NotifyOutboundSpamRecipients              = @()
-                    RecipientLimitExternalPerHour             = 0
-                    RecipientLimitInternalPerHour             = 0
-                    RecipientLimitPerDay                      = 0
+                    #RecipientLimitExternalPerHour             = 0
+                    #RecipientLimitInternalPerHour             = 0
+                    #RecipientLimitPerDay                      = 0
                     Ensure                                    = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
