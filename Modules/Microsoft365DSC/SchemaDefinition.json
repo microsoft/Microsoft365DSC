@@ -473,7 +473,7 @@
                                "Option":  "Write"
                            },
                            {
-                               "CIMType":  "String",
+                               "CIMType":  "Boolean",
                                "Name":  "SelfServiceSignUpEnabled",
                                "Option":  "Write"
                            },

@@ -5,6 +5,10 @@
 * EXOHostedOutboundSpamFilterPolicy
   * Changed the RecipientLimitInternalPerHour, RecipientLimitPerDay, and
     RecipientLimitExternalPerHour parameters to UInt32.
+* M365DSCReport
+  * Changes behaviour to not throw on empty configuration during report generation.  
+    FIXES [#4559](https://github.com/microsoft/Microsoft365DSC/issues/4559)  
+    FIXES [#4505](https://github.com/microsoft/Microsoft365DSC/issues/4505)
 
 # 1.24.710.3
 

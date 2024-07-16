@@ -94,16 +94,22 @@ It is not meant to use as a production baseline.
 ```powershell
 Configuration Example
 {
-    param
-    (
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+    param(
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOGroupSettings 'TestGroup'
@@ -115,7 +121,6 @@ Configuration Example
             AutoSubscribeNewMembers                = $False;
             CalendarMemberReadOnly                 = $False;
             ConnectorsEnabled                      = $False; # Updated Property
-            Credential                             = $Credscredential;
             HiddenFromAddressListsEnabled          = $True;
             HiddenFromExchangeClientsEnabled       = $True;
             InformationBarrierMode                 = "Open";
@@ -124,9 +129,12 @@ Configuration Example
             MaxSendSize                            = "35 MB (36,700,160 bytes)";
             ModerationEnabled                      = $False;
             Notes                                  = "My Notes";
-            PrimarySmtpAddress                     = "TestGroup@$Domain";
+            PrimarySmtpAddress                     = "TestGroup@$TenantId";
             RequireSenderAuthenticationEnabled     = $True;
             SubscriptionEnabled                    = $False;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

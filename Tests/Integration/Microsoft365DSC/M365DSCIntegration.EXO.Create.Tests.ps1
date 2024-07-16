@@ -36,11 +36,13 @@
         {
                 EXOAcceptedDomain 'O365DSCDomain'
                 {
-                    Identity     = $Domain
+                    Identity     = $TenantId
                     DomainType   = "Authoritative"
                     OutboundOnly = $false
                     Ensure       = "Present"
-                    Credential   = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOActiveSyncDeviceAccessRule 'ConfigureActiveSyncDeviceAccessRule'
                 {
@@ -49,7 +51,9 @@
                     QueryString          = "iOS 6.1 10B146"
                     AccessLevel          = "Allow"
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOAddressBookPolicy 'ConfigureAddressBookPolicy'
                 {
@@ -59,7 +63,9 @@
                     OfflineAddressBook   = "\Default Offline Address Book"
                     GlobalAddressList    = "\Default Global Address List"
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOAddressList 'HRUsersAddressList'
                 {
@@ -69,7 +75,9 @@
                     ConditionalStateOrProvince = "US"
                     IncludedRecipients         = "AllRecipients"
                     Ensure                     = "Present"
-                    Credential                 = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOAntiPhishPolicy 'ConfigureAntiphishPolicy'
                 {
@@ -94,26 +102,32 @@
                     EnableUnusualCharactersSafetyTips     = $null
                     TargetedUserActionRecipients          = $null
                     Ensure                                = "Present"
-                    Credential                            = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOAntiPhishRule 'ConfigureAntiPhishRule'
                 {
                     Identity                  = "Test Rule"
                     AntiPhishPolicy           = "Our Rule"
                     Enabled                   = $True
-                    SentToMemberOf            = @("executives@$Domain")
+                    SentToMemberOf            = @("executives@$TenantId")
                     Ensure                    = "Present"
-                    Credential                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOApplicationAccessPolicy 'ConfigureApplicationAccessPolicy'
                 {
                     Identity             = "Integration Policy"
                     AccessRight          = "DenyAccess"
                     AppID                = '3dbc2ae1-7198-45ed-9f9f-d86ba3ec35b5'
-                    PolicyScopeGroupId   = "IntegrationMailEnabled@$Domain"
+                    PolicyScopeGroupId   = "IntegrationMailEnabled@$TenantId"
                     Description          = "Engineering Group Policy"
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOAuthenticationPolicy 'ConfigureAuthenticationPolicy'
                 {
@@ -131,14 +145,18 @@
                     AllowBasicAuthSmtp                  = $False
                     AllowBasicAuthWebServices           = $False
                     Ensure                              = "Present"
-                    Credential                          = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
                 {
-                    UserName                 = "AdeleV@$Domain"
+                    UserName                 = "AdeleV@$TenantId"
                     AuthenticationPolicyName = "Block Basic Auth"
                     Ensure                   = "Present"
-                    Credential               = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOAvailabilityAddressSpace 'ConfigureAvailabilityAddressSpace'
                 {
@@ -148,13 +166,17 @@
                     TargetServiceEpr      = 'https://contoso.com/autodiscover/autodiscover.xml'
                     TargetTenantId        = 'o365dsc.onmicrosoft.com'
                     Ensure                = 'Present'
-                    Credential            = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOAvailabilityConfig 'ConfigureAvailabilityConfig'
                 {
-                    OrgWideAccount       = "adelev@$Domain"
+                    OrgWideAccount       = "adelev@$TenantId"
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOClientAccessRule 'ConfigureClientAccessRule'
                 {
@@ -172,7 +194,9 @@
                     ExceptAnyOfClientIPAddressesOrRanges = @()
                     AnyOfClientIPAddressesOrRanges       = @()
                     Ensure                               = "Present"
-                    Credential                           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXODistributionGroup 'DemoDG'
                 {
@@ -182,38 +206,44 @@
                     DisplayName                        = "My Demo DG";
                     Ensure                             = "Present";
                     HiddenGroupMembershipEnabled       = $True;
-                    ManagedBy                          = @("adeleV@$Domain");
+                    ManagedBy                          = @("adeleV@$TenantId");
                     MemberDepartRestriction            = "Open";
                     MemberJoinRestriction              = "Closed";
-                    ModeratedBy                        = @("alexW@$Domain");
+                    ModeratedBy                        = @("alexW@$TenantId");
                     ModerationEnabled                  = $False;
                     Identity                           = "DemoDG";
                     Name                               = "DemoDG";
-                    PrimarySmtpAddress                 = "demodg@$Domain";
+                    PrimarySmtpAddress                 = "demodg@$TenantId";
                     RequireSenderAuthenticationEnabled = $True;
                     SendModerationNotifications        = "Always";
-                    Credential                         = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXODkimSigningConfig 'ConfigureDKIMSigning'
                 {
                     KeySize                = 1024
-                    Identity               = $Domain
+                    Identity               = $TenantId
                     HeaderCanonicalization = "Relaxed"
                     Enabled                = $True
                     BodyCanonicalization   = "Relaxed"
                     AdminDisplayName       = ""
                     Ensure                 = "Present"
-                    Credential             = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOEmailAddressPolicy 'ConfigureEmailAddressPolicy'
                 {
                     Name                              = "Integration Policy"
-                    EnabledEmailAddressTemplates      = @("SMTP:@$Domain")
-                    EnabledPrimarySMTPAddressTemplate = "@$Domain"
+                    EnabledEmailAddressTemplates      = @("SMTP:@$TenantId")
+                    EnabledPrimarySMTPAddressTemplate = "@$TenantId"
                     ManagedByFilter                   = ""
                     Priority                          = 1
                     Ensure                            = "Present"
-                    Credential                        = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOGlobalAddressList 'ConfigureGlobalAddressList'
                 {
@@ -223,7 +253,9 @@
                     ConditionalStateOrProvince   = "Washington"
                     IncludedRecipients           = 'AllRecipients'
                     Ensure                       = "Present"
-                    Credential                   = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOHostedContentFilterPolicy 'ConfigureHostedContentFilterPolicy'
                 {
@@ -267,18 +299,22 @@
                     TestModeAction                       = "None"
                     TestModeBccToRecipients              = @()
                     Ensure                               = "Present"
-                    Credential                           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOHostedContentFilterRule 'ConfigureHostedContentFilterRule'
                 {
                     Identity                  = "Integration CFR"
                     Comments                  = "Applies to all users, except when member of HR group"
                     Enabled                   = $True
-                    ExceptIfSentToMemberOf    = "LegalTeam@$Domain"
+                    ExceptIfSentToMemberOf    = "LegalTeam@$TenantId"
                     RecipientDomainIs         = @('contoso.com')
                     HostedContentFilterPolicy = "Integration CFP"
                     Ensure                    = "Present"
-                    Credential                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOHostedOutboundSpamFilterPolicy 'HostedOutboundSpamFilterPolicy'
                 {
@@ -294,18 +330,22 @@
                     RecipientLimitInternalPerHour             = 0
                     RecipientLimitPerDay                      = 0
                     Ensure                                    = "Present"
-                    Credential                                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOHostedOutboundSpamFilterRule 'ConfigureHostedOutboundSpamFilterRule'
                 {
                     Identity                       = "Contoso Executives"
                     Comments                       = "Does not apply to Executives"
                     Enabled                        = $True
-                    ExceptIfFrom                   = "AdeleV@$Domain"
-                    FromMemberOf                   = "Executives@$Domain"
+                    ExceptIfFrom                   = "AdeleV@$TenantId"
+                    FromMemberOf                   = "Executives@$TenantId"
                     HostedOutboundSpamFilterPolicy = "Integration SFP"
                     Ensure                         = "Present"
-                    Credential                     = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOInboundConnector 'ConfigureInboundConnector'
                 {
@@ -319,7 +359,9 @@
                     SenderDomains                = "*.contoso.com"
                     TlsSenderCertificateName     = "contoso.com"
                     Ensure                       = "Present"
-                    Credential                   = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOIntraOrganizationConnector 'ConfigureIntraOrganizationConnector'
                 {
@@ -328,21 +370,24 @@
                     TargetAddressDomains = "Cloud1.contoso.com","Cloud2.contoso.com"
                     Enabled              = $True
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOJournalRule 'CreateJournalRule'
                 {
                     Enabled              = $True
-                    JournalEmailAddress  = "AdeleV@$Domain"
+                    JournalEmailAddress  = "AdeleV@$TenantId"
                     Name                 = "Send to Adele"
                     RuleScope            = "Global"
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOMailContact 'TestMailContact'
                 {
                     Alias                       = 'TestMailContact'
-                    Credential                  = $Credscredential
                     DisplayName                 = 'My Test Contact'
                     Ensure                      = 'Present'
                     ExternalEmailAddress        = 'SMTP:test@tailspintoys.com'
@@ -352,11 +397,14 @@
                     ModeratedBy                 = @()
                     ModerationEnabled           = $false
                     Name                        = 'My Test Contact'
-                    OrganizationalUnit          = $Domain
+                    OrganizationalUnit          = $TenantId
                     SendModerationNotifications = 'Always'
                     UsePreferMessageFormat      = $true
                     CustomAttribute1            = 'Custom Value 1'
                     ExtensionCustomAttribute5   = 'Extension Custom Value 1', 'Extension Custom Value 2'
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOMailTips 'OrgWideMailTips'
                 {
@@ -367,7 +415,9 @@
                     MailTipsMailboxSourcedTipsEnabled     = $True
                     MailTipsExternalRecipientsTipsEnabled = $True
                     Ensure                                = "Present"
-                    Credential                            = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOMalwareFilterPolicy 'ConfigureMalwareFilterPolicy'
                 {
@@ -381,7 +431,9 @@
                     QuarantineTag                          = "AdminOnlyAccessPolicy"
                     ZapEnabled                             = $True
                     Ensure                                 = "Present"
-                    Credential                             = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOMalwareFilterRule 'ConfigureMalwareFilterRule'
                 {
@@ -391,23 +443,29 @@
                     Enabled                   = $True
                     RecipientDomainIs         = "contoso.com"
                     Ensure                    = "Present"
-                    Credential                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOManagementRole 'ConfigureManagementRole'
                 {
                     Name                 = "MyDisplayName"
                     Description          = ""
-                    Parent               = "$Domain\MyProfileInformation"
+                    Parent               = "$TenantId\MyProfileInformation"
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOManagementRoleAssignment 'AssignManagementRole'
                 {
-                    Credential           = $credsCredential;
                     Ensure               = "Present";
                     Name                 = "MyManagementRoleAssignment";
                     Role                 = "UserApplication";
-                    User                 = "AdeleV@$Domain";
+                    User                 = "AdeleV@$TenantId";
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOMessageClassification 'ConfigureMessageClassification'
                 {
@@ -420,7 +478,9 @@
                     SenderDescription           = "Shown to senders"
                     RetainClassificationEnabled = $True
                     Ensure                      = "Present"
-                    Credential                  = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOMobileDeviceMailboxPolicy 'ConfigureMobileDeviceMailboxPolicy'
                 {
@@ -479,7 +539,9 @@
                     UNCAccessEnabled                         = $True
                     WSSAccessEnabled                         = $True
                     Ensure                                   = "Present"
-                    Credential                               = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOOfflineAddressBook 'ConfigureOfflineAddressBook'
                 {
@@ -488,7 +550,9 @@
                     DiffRetentionPeriod  = "30"
                     IsDefault            = $true
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOOMEConfiguration 'ConfigureOMEConfiguration'
                 {
@@ -502,7 +566,9 @@
                     PortalText               = "This portal is encrypted."
                     SocialIdSignIn           = $True
                     Ensure                   = "Present"
-                    Credential               = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOOnPremisesOrganization 'ConfigureOnPremisesOrganization'
                 {
@@ -514,7 +580,9 @@
                     OrganizationName  = 'O365DSC'
                     OutboundConnector = 'Contoso Outbound Connector'
                     Ensure            = 'Present'
-                    Credential        = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     DependsOn         = "[EXOOutboundConnector]OutboundDependency"
                 }
                 EXOOutboundConnector 'OutboundDependency'
@@ -533,7 +601,9 @@
                     TlsSettings                   = "DomainValidation"
                     UseMxRecord                   = $True
                     Ensure                        = "Present"
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOOrganizationRelationship 'ConfigureOrganizationRelationship'
                 {
@@ -551,7 +621,9 @@
                     TargetApplicationUri  = "mail.contoso.com"
                     TargetAutodiscoverEpr = "https://mail.contoso.com/autodiscover/autodiscover.svc/wssecurity"
                     Ensure                = "Present"
-                    Credential            = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOOwaMailboxPolicy 'ConfigureOwaMailboxPolicy'
                 {
@@ -629,7 +701,9 @@
                     WeatherEnabled                                       = $True
                     WebPartsFrameOptionsType                             = "SameOrigin"
                     Ensure                                               = "Present"
-                    Credential                                           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOPartnerApplication 'ConfigurePartnerApplication'
                 {
@@ -638,17 +712,21 @@
                     AcceptSecurityIdentifierInformation = $true
                     Enabled                             = $True
                     Ensure                              = "Present"
-                    Credential                          = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOPlace 'TestPlace'
                 {
                     AudioDeviceName        = "MyAudioDevice";
                     Capacity               = 15;
                     City                   = "";
-                    Credential             = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     DisplayDeviceName      = "DisplayDeviceName";
                     Ensure                 = 'Present'
-                    Identity               = "Hood@$Domain";
+                    Identity               = "Hood@$TenantId";
                     IsWheelChairAccessible = $True;
                     MTREnabled             = $False;
                     ParentType             = "None";
@@ -661,23 +739,29 @@
                     Name                 = "en\NotifyOnly"
                     Value                = "This message contains content that is restricted by Contoso company policy."
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOQuarantinePolicy 'ConfigureQuarantinePolicy'
                 {
                     EndUserQuarantinePermissionsValue = 87;
                     ESNEnabled                        = $False;
-                    Identity                          = "$Domain\IntegrationPolicy";
+                    Identity                          = "$TenantId\IntegrationPolicy";
                     Ensure                            = "Present"
-                    Credential                        = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXORecipientPermission 'AddSendAs'
                 {
-                    Identity     = "AlexW@$Domain"
-                    Trustee      = "admin@$Domain"
+                    Identity     = "AlexW@$TenantId"
+                    Trustee      = "admin@$TenantId"
                     AccessRights = 'SendAs'
                     Ensure       = 'Present'
-                    Credential   = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXORemoteDomain '583b0b70-b45d-401f-98a6-0e7fa8434946'
                 {
@@ -702,7 +786,9 @@
                     TrustedMailOutboundEnabled           = $False
                     UseSimpleDisplayName                 = $False
                     Ensure                               = "Present"
-                    Credential                           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXORoleAssignmentPolicy 'ConfigureRoleAssignmentPolicy'
                 {
@@ -711,7 +797,9 @@
                     IsDefault            = $True
                     Roles                = @("My Marketplace Apps","MyVoiceMail","MyDistributionGroups","MyRetentionPolicies","MyContactInformation","MyBaseOptions","MyTextMessaging","MyDistributionGroupMembership","MyProfileInformation","My Custom Apps","My ReadWriteMailbox Apps")
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXORoleGroup 'ConfigureRoleGroup'
                 {
@@ -720,27 +808,33 @@
                     Members                   = @("Exchange Administrator")
                     Roles                     = @("Address Lists")
                     Ensure                    = "Present"
-                    Credential                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOSafeAttachmentPolicy 'ConfigureSafeAttachmentPolicy'
                 {
                     Identity             = "Marketing Block Attachments"
                     Enable               = $True
                     Redirect             = $True
-                    RedirectAddress      = "admin@$Domain"
+                    RedirectAddress      = "admin@$TenantId"
                     Ensure               = "Present"
-                    Credential           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOSafeAttachmentRule 'ConfigureSafeAttachmentRule'
                 {
                     Identity                  = "Research Department Attachment Rule"
                     Comments                  = "Applies to Research Department, except managers"
                     Enabled                   = $True
-                    ExceptIfSentToMemberOf    = "Executives@$Domain"
+                    ExceptIfSentToMemberOf    = "Executives@$TenantId"
                     SafeAttachmentPolicy      = "Marketing Block Attachments"
-                    SentToMemberOf            = "LegalTeam@$Domain"
+                    SentToMemberOf            = "LegalTeam@$TenantId"
                     Ensure                    = "Present"
-                    Credential                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOSafeLinksPolicy 'ConfigureSafeLinksPolicy'
                 {
@@ -752,27 +846,33 @@
                     EnableSafeLinksForTeams       = $True
                     ScanUrls                      = $True
                     Ensure                        = 'Present'
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOSafeLinksRule 'ConfigureSafeLinksRule'
                 {
                     Identity                  = "Research Department URL Rule"
                     Comments                  = "Applies to Research Department, except managers"
                     Enabled                   = $True
-                    ExceptIfSentToMemberOf    = "Executives@$Domain"
+                    ExceptIfSentToMemberOf    = "Executives@$TenantId"
                     SafeLinksPolicy           = "Marketing Block URL"
-                    SentToMemberOf            = "LegalTeam@$Domain"
+                    SentToMemberOf            = "LegalTeam@$TenantId"
                     Ensure                    = "Present"
-                    Credential                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOSharedMailbox 'SharedMailbox'
                 {
                     DisplayName        = "Integration"
-                    PrimarySMTPAddress = "Integration@$Domain"
-                    EmailAddresses     = @("IntegrationSM@$Domain")
+                    PrimarySMTPAddress = "Integration@$TenantId"
+                    EmailAddresses     = @("IntegrationSM@$TenantId")
                     Alias              = "IntegrationSM"
                     Ensure             = "Present"
-                    Credential         = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOSharingPolicy 'ConfigureSharingPolicy'
                 {
@@ -781,19 +881,23 @@
                     Domains    = @("Anonymous:CalendarSharingFreeBusyReviewer", "*:CalendarSharingFreeBusySimple")
                     Enabled    = $True
                     Ensure     = "Present"
-                    Credential = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 EXOTransportRule 'ConfigureTransportRule'
                 {
                     Name                                          = "Ethical Wall - Sales and Executives Departments"
-                    BetweenMemberOf1                              = "SalesTeam@$Domain"
-                    BetweenMemberOf2                              = "Executives@$Domain"
-                    ExceptIfFrom                                  = "AdeleV@$Domain"
+                    BetweenMemberOf1                              = "SalesTeam@$TenantId"
+                    BetweenMemberOf2                              = "Executives@$TenantId"
+                    ExceptIfFrom                                  = "AdeleV@$TenantId"
                     ExceptIfSubjectContainsWords                  = "Press Release","Corporate Communication"
                     RejectMessageReasonText                       = "Messages sent between the Sales and Brokerage departments are strictly prohibited."
                     Enabled                                       = $True
                     Ensure                                        = "Present"
-                    Credential                                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
         }
     }
