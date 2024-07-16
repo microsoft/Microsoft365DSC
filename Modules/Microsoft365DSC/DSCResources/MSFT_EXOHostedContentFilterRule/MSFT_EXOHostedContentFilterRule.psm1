@@ -86,7 +86,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    Write-Verbose -Message "Getting configuration of HostedContentFilterRule for $Identity"
+    Write-Verbose -Message "Getting configuration of HostedContentFilterRule for [$Identity]"
 
     #Ensure the proper dependencies are installed in the current environment.
     Confirm-M365DSCDependencies
@@ -122,10 +122,19 @@ function Get-TargetResource
         }
         catch
         {
-            $Message = 'Error calling {Get-HostedContentFilterRule}'
-            New-M365DSCLogEntry -Message $Message `
-                -Exception $_ `
-                -Source $MyInvocation.MyCommand.ModuleName
+            try
+            {
+                Write-Verbose -Message "Couldn't find rule by ID, trying by name."
+                $rules = Get-HostedContentFilterRule
+                $HostedContentFilterRule = $rules | Where-Object -FilterScript {$_.Name -eq $Identity -and $_.HostedContentFilterPolicy -eq $HostedContentFilterPolicy}
+            }
+            catch
+            {
+                $Message = 'Error calling {Get-HostedContentFilterRule}'
+                New-M365DSCLogEntry -Message $Message `
+                    -Exception $_ `
+                    -Source $MyInvocation.MyCommand.ModuleName
+            }
         }
         if (-not $HostedContentFilterRule)
         {

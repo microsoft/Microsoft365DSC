@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOHostedOutboundSpamFilterPolicy
+  * Changed the RecipientLimitInternalPerHour, RecipientLimitPerDay, an
+    RecipientLimitExternalPerHour parameters to UInt32.
+
 # 1.24.710.3
 
 * MISC
