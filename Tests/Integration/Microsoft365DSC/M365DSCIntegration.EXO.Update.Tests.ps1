@@ -465,9 +465,9 @@
                     BccSuspiciousOutboundMail                 = $False
                     NotifyOutboundSpam                        = $False
                     NotifyOutboundSpamRecipients              = @()
-                    RecipientLimitExternalPerHour             = 0
-                    RecipientLimitInternalPerHour             = 1 # Updated Property
-                    RecipientLimitPerDay                      = 0
+                    #RecipientLimitExternalPerHour             = 0
+                    #RecipientLimitInternalPerHour             = 1 # Updated Property
+                    #RecipientLimitPerDay                      = 0
                     Ensure                                    = "Present"
                     ApplicationId         = $ApplicationId
                     TenantId              = $TenantId
@@ -641,7 +641,7 @@
                     IsSingleInstance                      = 'Yes'
                     MailTipsAllTipsEnabled                = $True
                     MailTipsGroupMetricsEnabled           = $False # Updated Property
-                    MailTipsLargeAudienceThreshold        = 100
+                    #MailTipsLargeAudienceThreshold        = 100
                     MailTipsMailboxSourcedTipsEnabled     = $True
                     MailTipsExternalRecipientsTipsEnabled = $True
                     Ensure                                = "Present"

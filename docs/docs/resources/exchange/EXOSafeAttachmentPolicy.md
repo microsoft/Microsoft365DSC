@@ -106,7 +106,6 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSafeAttachmentPolicy 'ConfigureSafeAttachmentPolicy'
@@ -147,7 +146,6 @@ Configuration Example
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSafeAttachmentPolicy 'ConfigureSafeAttachmentPolicy'
