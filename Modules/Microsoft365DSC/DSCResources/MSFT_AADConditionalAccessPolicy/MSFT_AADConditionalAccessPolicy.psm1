@@ -1666,7 +1666,7 @@ function Set-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
 
-            Write-Error -Message "Set-Targetresource: Failed change policy $DisplayName"
+            Write-Error -Message "Set-Targetresource: Failed changing policy $DisplayName"
         }
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
