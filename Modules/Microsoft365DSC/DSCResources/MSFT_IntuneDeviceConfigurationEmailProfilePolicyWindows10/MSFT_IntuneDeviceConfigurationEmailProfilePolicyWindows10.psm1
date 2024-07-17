@@ -187,21 +187,21 @@ function Get-TargetResource
         }
 
         $enumUserDomainNameSource = $null
-        if ($null -ne $getValue.UserDomainNameSource)
+        if ($null -ne $getValue.AdditionalProperties.userDomainNameSource)
         {
-            $enumUserDomainNameSource = $getValue.UserDomainNameSource.ToString()
+            $enumUserDomainNameSource = $getValue.AdditionalProperties.userDomainNameSource.ToString()
         }
 
         $enumUsernameAADSource = $null
-        if ($null -ne $getValue.UsernameAADSource)
+        if ($null -ne $getValue.AdditionalProperties.usernameAADSource)
         {
-            $enumUsernameAADSource = $getValue.UsernameAADSource.ToString()
+            $enumUsernameAADSource = $getValue.AdditionalProperties.usernameAADSource.ToString()
         }
 
         $enumUsernameSource = $null
-        if ($null -ne $getValue.UsernameSource)
+        if ($null -ne $getValue.AdditionalProperties.usernameSource)
         {
-            $enumUsernameSource = $getValue.UsernameSource.ToString()
+            $enumUsernameSource = $getValue.AdditionalProperties.usernameSource.ToString()
         }
         #endregion
 
@@ -216,7 +216,7 @@ function Get-TargetResource
             SyncCalendar          = $getValue.AdditionalProperties.syncCalendar
             SyncContacts          = $getValue.AdditionalProperties.syncContacts
             SyncTasks             = $getValue.AdditionalProperties.syncTasks
-            CustomDomainName      = $getValue.CustomDomainName
+            CustomDomainName      = $getValue.AdditionalProperties.customDomainName
             UserDomainNameSource  = $enumUserDomainNameSource
             UsernameAADSource     = $enumUsernameAADSource
             UsernameSource        = $enumUsernameSource

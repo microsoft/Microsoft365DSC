@@ -8,6 +8,9 @@
 * EXOMessageClassification
   * Fix issue while creating policy for first time
     FIXES [#4877](https://github.com/microsoft/Microsoft365DSC/issues/4877)
+* IntuneDeviceConfigurationEmailProfilePolicyWindows10
+  * Fix export by fixing some typos and from where values are extracted
+    FIXES [#3960](https://github.com/microsoft/Microsoft365DSC/issues/3960)
 * IntuneDiskEncryptionWindows10
   * Initial Release
     FIXES [#4050](https://github.com/microsoft/Microsoft365DSC/issues/4050)
