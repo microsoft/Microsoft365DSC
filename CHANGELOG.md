@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.717.1
 
 * AADConditionalAccessPolicy
   * Made failures write to the error output instead of just verbose.
@@ -17,13 +17,13 @@
   * Initial Release
     FIXES [#4050](https://github.com/microsoft/Microsoft365DSC/issues/4050)
 * IntuneWindowsUpdateForBusinessQualityUpdateProfileWindows10
-  * Initial release.  
+  * Initial release.
     FIXES [#2659](https://github.com/microsoft/Microsoft365DSC/issues/2659)
 * SPOSharingSettings
   * Improved performance by using -Filter on Get-PnPTenantSite calls.
 * M365DSCDRGUtil
   * Fixes an issue with nested and duplicate settings in the settings catalog
-  * Add support for converting Intune assignments directly from Graph.  
+  * Add support for converting Intune assignments directly from Graph.
     FIXES [#4875](https://github.com/microsoft/Microsoft365DSC/issues/4875)
 * M365DSCResourceGenerator
   * Update Intune resource generation.
@@ -33,6 +33,8 @@
     FIXES [#4505](https://github.com/microsoft/Microsoft365DSC/issues/4505)
   * Fixes an issue where the comparison treats empty arrays as an empty string.
     FIXES [#4796](https://github.com/microsoft/Microsoft365DSC/issues/4796)
+* Telemetry
+  * Added info about operation total execution time.
 
 # 1.24.710.3
 
