@@ -2674,6 +2674,26 @@
                     Ensure               = 'Present'
                     Credential           = $Credscredential
                 }
+                IntuneWindowsUpdateForBusinessQualityUpdateProfileWindows10 'Example'
+                {
+                    Assignments             = @(
+                        MSFT_DeviceManagementConfigurationPolicyAssignments{
+                            deviceAndAppManagementAssignmentFilterType = 'none'
+                            groupDisplayName = 'Exclude'
+                            dataType         = '#microsoft.graph.exclusionGroupAssignmentTarget'
+                            groupId          = '258a1749-8408-4dd0-8028-fab6208a28d7'
+                        }
+                    );
+                    DisplayName              = 'Windows Quality Update'
+                    Description              = ''
+                    ExpeditedUpdateSettings = MSFT_MicrosoftGraphexpeditedWindowsQualityUpdateSettings{
+                        QualityUpdateRelease  = '2024-06-11T00:00:00Z'
+                        DaysUntilForcedReboot = 0
+                    }
+                    RoleScopeTagIds           = @("0")
+                    Ensure                    = 'Present'
+                    Credential                = $Credscredential
+                }
                 IntuneWindowsUpdateForBusinessRingUpdateProfileWindows10 'Example'
                 {
                     DisplayName                         = 'WUfB Ring'
