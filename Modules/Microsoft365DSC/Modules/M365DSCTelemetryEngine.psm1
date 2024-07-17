@@ -81,6 +81,12 @@ function Add-M365DSCTelemetryEvent
                 {
                     $Script:M365DSCCountResourceInstance++
                 }
+                if ($null -eq $Script:M365DSCOperationStartTime -or $hostId -ne $Script:M365DSCExecutionContextId)
+                {
+                    $Script:M365DSCOperationStartTime = [System.DateTime]::Now
+                }
+
+                $Script:M365DSCOperationTimeTaken = [System.DateTime]::Now.Subtract($Script:M365DSCOperationStartTime)
 
                 if ($hostId -ne $Script:M365DSCExecutionContextId)
                 {
@@ -88,6 +94,7 @@ function Add-M365DSCTelemetryEvent
                 }
                 $Data.Add('ResourceInstancesCount', $Script:M365DSCCountResourceInstance)
                 $Data.Add('M365DSCExecutionContextId', $hostId)
+                $Data.Add('M365DSCOperationTotalTime', $Script:M365DSCOperationTimeTaken.TotalSeconds)
             }
             catch
             {
