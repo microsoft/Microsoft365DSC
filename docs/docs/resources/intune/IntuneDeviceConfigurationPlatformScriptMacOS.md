@@ -79,9 +79,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -95,7 +103,6 @@ Configuration Example
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             );
-            Credential           = $Credscredential;
             DisplayName          = "custom";
             Ensure               = "Present";
             BlockExecutionNotifications = $False;
@@ -107,7 +114,9 @@ Configuration Example
             RoleScopeTagIds             = @("0");
             RunAsAccount                = "user";
             ScriptContent               = "Base64 encoded script content";
-            TenantId                    = $OrganizationName;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -122,9 +131,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -138,7 +155,6 @@ Configuration Example
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             );
-            Credential           = $Credscredential;
             DisplayName          = "custom";
             Ensure               = "Present";
             BlockExecutionNotifications = $False;
@@ -150,7 +166,9 @@ Configuration Example
             RoleScopeTagIds             = @("0");
             RunAsAccount                = "user";
             ScriptContent               = "Base64 encoded script content";
-            TenantId                    = $OrganizationName;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -165,9 +183,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -175,10 +201,12 @@ Configuration Example
     {
         IntuneDeviceConfigurationPlatformScriptMacOS 'Example'
         {
-            Credential           = $Credscredential;
             DisplayName          = "custom";
             Ensure               = "Absent";
             Id                   = "00000000-0000-0000-0000-000000000000";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
