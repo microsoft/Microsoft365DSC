@@ -1091,9 +1091,32 @@ function ConvertFrom-IntunePolicyAssignment
     foreach ($assignment in $Assignments)
     {
         $hashAssignment = @{}
-        $dataType = $assignment.Target.AdditionalProperties."@odata.type"
-        $groupId = $assignment.Target.AdditionalProperties.groupId
-        $collectionId = $assignment.Target.AdditionalProperties.collectionId
+        if ($null -ne $assignment.Target.'@odata.type')
+        {
+            $dataType = $assignment.Target.'@odata.type'
+        }
+        else
+        {
+            $dataType = $assignment.Target.AdditionalProperties.'@odata.type'
+        }
+
+        if ($null -ne $assignment.Target.groupId)
+        {
+            $groupId = $assignment.Target.groupId
+        }
+        else
+        {
+            $groupId = $assignment.Target.AdditionalProperties.groupId
+        }
+
+        if ($null -ne $assignment.Target.collectionId)
+        {
+            $collectionId = $assignment.Target.collectionId
+        }
+        else
+        {
+            $collectionId = $assignment.Target.AdditionalProperties.collectionId
+        }
 
         $hashAssignment.Add('dataType',$dataType)
         if (-not [string]::IsNullOrEmpty($groupId))
