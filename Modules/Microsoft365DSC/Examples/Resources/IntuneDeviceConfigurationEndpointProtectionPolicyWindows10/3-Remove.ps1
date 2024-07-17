@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -17,8 +25,10 @@ Configuration Example
         IntuneDeviceConfigurationEndpointProtectionPolicyWindows10 'Example'
         {
             DisplayName                                                                  = "endpoint protection legacy - dsc v2.0";
-            Credential                                                                   = $Credscredential;
             Ensure                                                                       = "Absent";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

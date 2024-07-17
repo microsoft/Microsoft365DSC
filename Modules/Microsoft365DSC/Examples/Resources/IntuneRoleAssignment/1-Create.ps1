@@ -5,9 +5,17 @@ This example creates a new Intune Role Assigment.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -25,7 +33,9 @@ Configuration Example
             RoleDefinition             = '2d00d0fd-45e9-4166-904f-b76ac5eed2c7'
             RoleDefinitionDisplayName  = 'This is my role'
             Ensure                     = 'Present'
-            Credential                 = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
