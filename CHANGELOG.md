@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* MSFT_AADConditionalAccessPolicy
+  * Made failures write to the error output instead of just verbose
 * EXOHostedOutboundSpamFilterPolicy
   * Changed the RecipientLimitInternalPerHour, RecipientLimitPerDay, and
     RecipientLimitExternalPerHour parameters to UInt32.
