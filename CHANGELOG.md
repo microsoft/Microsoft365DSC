@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Migrate to new settings catalog cmdlets.
+* M365DSCDRGUtil
+  * Fixes an issue where only 25 settings catalog templates were fetched with one call.
+
 # 1.24.717.1
 
 * AADConditionalAccessPolicy
