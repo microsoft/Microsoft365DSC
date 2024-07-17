@@ -17,6 +17,8 @@
 * IntuneWindowsUpdateForBusinessQualityUpdateProfileWindows10
   * Initial release.  
     FIXES [#2659](https://github.com/microsoft/Microsoft365DSC/issues/2659)
+* SPOSharingSettings
+  * Improved performance by using -Filter on Get-PnPTenantSite calls.
 * M365DSCDRGUtil
   * Fixes an issue with nested and duplicate settings in the settings catalog
   * Add support for converting Intune assignments directly from Graph.  
