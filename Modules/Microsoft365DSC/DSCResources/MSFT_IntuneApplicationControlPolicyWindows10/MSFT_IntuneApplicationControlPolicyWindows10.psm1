@@ -86,7 +86,7 @@ function Get-TargetResource {
         #Retrieve policy general settings
         #$policy = Get-MgBetaDeviceManagementIntent -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
 
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "templateReference/TemplateFamily eq 'endpointSecurityApplicationControl'" -ErrorAction Stop
+        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "templateReference/TemplateFamily eq 'endpointSecurityApplicationControl'" -ErrorAction Stop | Where-Object name -eq $DisplayName0
 
         if (([array]$policy).count -gt 1) {
             throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
@@ -99,16 +99,20 @@ function Get-TargetResource {
 
         #Retrieve policy specific settings
         [array]$settings = Get-MgBetaDeviceManagementIntentSetting -DeviceManagementIntentId $policy.Id -ErrorAction Stop
+
+
         $settingAppLockerApplicationControl = ($settings | Where-Object -FilterScript { $_.DefinitionId -like '*appLockerApplicationControl' }).ValueJson.Replace("`"", '')
         $settingSmartScreenBlockOverrideForFiles = [System.Convert]::ToBoolean(($settings | Where-Object -FilterScript { $_.DefinitionId -like '*smartScreenBlockOverrideForFiles' }).ValueJson)
         $settingSmartScreenEnableInShell = [System.Convert]::ToBoolean(($settings | Where-Object -FilterScript { $_.DefinitionId -like '*smartScreenEnableInShell' }).ValueJson)
         Write-Verbose -Message "Found Endpoint Protection Application Control Policy {$DisplayName}"
 
+        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "templateReference/TemplateFamily eq 'endpointSecurityApplicationControl'" -ErrorAction Stop | Where-Object name -eq $DisplayName
+
         $returnHashtable = @{
             Description                      = $policy.Description
             DisplayName                      = $policy.DisplayName
             AppLockerApplicationControl      = $settingAppLockerApplicationControl
-            SmartScreenBlockOverrideForFiles = $settingSmartScreenBlockOverrideForFiles
+            SmartScreenBlockOverrideForFiles = $settingSmartScreenBlockOverrideForFilesv
             SmartScreenEnableInShell         = $settingSmartScreenEnableInShell
             Ensure                           = 'Present'
             Credential                       = $Credential
