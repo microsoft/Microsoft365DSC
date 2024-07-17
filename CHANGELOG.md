@@ -16,6 +16,8 @@
     FIXES [#2659](https://github.com/microsoft/Microsoft365DSC/issues/2659)
 * M365DSCDRGUtil
   * Fixes an issue with nested and duplicate settings in the settings catalog
+  * Add support for converting Intune assignments directly from Graph.  
+    FIXES [#4875](https://github.com/microsoft/Microsoft365DSC/issues/4875)
 * M365DSCResourceGenerator
   * Update Intune resource generation.
 * M365DSCReport
