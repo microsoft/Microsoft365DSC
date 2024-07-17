@@ -79,13 +79,20 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADServicePrincipal 'AADServicePrincipal'
@@ -95,13 +102,15 @@ Configuration Example
             AlternativeNames              = "AlternativeName1","AlternativeName2"
             AccountEnabled                = $true
             AppRoleAssignmentRequired     = $false
-            Homepage                      = "https://$Domain"
-            LogoutUrl                     = "https://$Domain/logout"
-            ReplyURLs                     = "https://$Domain"
+            Homepage                      = "https://$TenantId"
+            LogoutUrl                     = "https://$TenantId/logout"
+            ReplyURLs                     = "https://$TenantId"
             ServicePrincipalType          = "Application"
             Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
             Ensure                        = "Present"
-            Credential                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -116,13 +125,20 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADServicePrincipal 'AADServicePrincipal'
@@ -132,13 +148,15 @@ Configuration Example
             AlternativeNames              = "AlternativeName1","AlternativeName3" # Updated Property
             AccountEnabled                = $true
             AppRoleAssignmentRequired     = $false
-            Homepage                      = "https://$Domain"
-            LogoutUrl                     = "https://$Domain/logout"
-            ReplyURLs                     = "https://$Domain"
+            Homepage                      = "https://$TenantId"
+            LogoutUrl                     = "https://$TenantId/logout"
+            ReplyURLs                     = "https://$TenantId"
             ServicePrincipalType          = "Application"
             Tags                          = "{WindowsAzureActiveDirectoryIntegratedApp}"
             Ensure                        = "Present"
-            Credential                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -153,9 +171,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -166,7 +192,9 @@ Configuration Example
             AppId                         = "AppDisplayName"
             DisplayName                   = "AppDisplayName"
             Ensure                        = "Absent"
-            Credential                    = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

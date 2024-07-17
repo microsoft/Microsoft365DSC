@@ -9,17 +9,26 @@ Configuration Example
 
     Node localhost
     {
-        param
-        (
-            [Parameter(Mandatory = $true)]
-            [PSCredential]
-            $credsCredential
+        param(
+            [Parameter()]
+            [System.String]
+            $ApplicationId,
+
+            [Parameter()]
+            [System.String]
+            $TenantId,
+
+            [Parameter()]
+            [System.String]
+            $CertificateThumbprint
         )
         AADAuthenticationMethodPolicyFido2 "AADAuthenticationMethodPolicyFido2-Fido2"
         {
             Ensure                           = "Absent";
             Id                               = "Fido2";
-            Credential                       = $credsCredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

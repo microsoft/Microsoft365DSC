@@ -633,7 +633,7 @@ function New-M365DSCReportFromConfiguration
     }
     else
     {
-        throw "Parsed content was null."
+        Write-Warning -Message "Parsed content was null. No report was generated."
     }
 }
 
@@ -794,11 +794,7 @@ function Compare-M365DSCConfigurations
                 {
                     if ($propertyName -notin $filteredProperties)
                     {
-                        $destinationPropertyName = $destinationResource.Keys | Where-Object -FilterScript { $_ -eq $propertyName }
-                        if ([System.String]::IsNullOrEmpty($destinationPropertyName))
-                        {
-                            $destinationPropertyName = $propertyName
-                        }
+                        $destinationPropertyName = $propertyName
 
                         # Case where the property contains CIMInstances
                         if ($null -ne $sourceResource.$propertyName.Keys -and $sourceResource.$propertyName.Keys.Contains('CIMInstance'))
@@ -892,7 +888,7 @@ function Compare-M365DSCConfigurations
                         }
                         # Needs to be a separate nested if statement otherwise the ReferenceObject can be null and it will error out;
                         elseif ($destinationResource.ContainsKey($destinationPropertyName) -eq $false -or (-not [System.String]::IsNullOrEmpty($propertyName) -and
-                                (-not [System.String]::IsNullOrEmpty($sourceResource.$propertyName) -and
+                                ($null -ne $sourceResource.$propertyName -and
                                     $null -ne (Compare-Object -ReferenceObject ($sourceResource.$propertyName)`
                                         -DifferenceObject ($destinationResource.$destinationPropertyName)))) -and
                             -not ([System.String]::IsNullOrEmpty($destinationResource.$destinationPropertyName) -and [System.String]::IsNullOrEmpty($sourceResource.$propertyName)))
@@ -952,11 +948,8 @@ function Compare-M365DSCConfigurations
                 {
                     if ($propertyName -notin $filteredProperties)
                     {
-                        $sourcePropertyName = $destinationResource.Keys | Where-Object -FilterScript { $_ -eq $propertyName }
-                        if ([System.String]::IsNullOrEmpty($sourcePropertyName))
-                        {
-                            $sourcePropertyName = $propertyName
-                        }
+                        $sourcePropertyName = $propertyName
+
                         # Case where the property contains CIMInstances
                         if ($null -ne $destinationResource.$propertyName.Keys -and $destinationResource.$propertyName.Keys.Contains('CIMInstance'))
                         {
@@ -979,13 +972,15 @@ function Compare-M365DSCConfigurations
                                         foreach ($property in $instance.Keys)
                                         {
                                             if ($null -eq $sourceResourceInstance."$property" -or `
-                                                (-not [System.String]::IsNullOrEmpty($instance."$property") -and `
+                                                ($null -ne $instance."$property" -and `
                                                     $null -ne (Compare-Object -ReferenceObject ($instance."$property")`
                                                 -DifferenceObject ($sourceResourceInstance."$property"))))
                                             {
                                                 # Make sure we haven't already added this drift in the delta return object to prevent duplicates.
-                                                $existing = $delta | Where-Object -FilterScript {$_.ResourceName -eq $destinationResource.ResourceName -and `
-                                                                                                    $_.ResourceInstanceName -eq $destinationResource.ResourceInstanceName}
+                                                $existing = $delta | Where-Object -FilterScript {
+                                                    $_.ResourceName -eq $destinationResource.ResourceName -and
+                                                    $_.ResourceInstanceName -eq $destinationResource.ResourceInstanceName
+                                                }
 
                                                 $sameEntry = $null
                                                 if ($null -ne $existing)

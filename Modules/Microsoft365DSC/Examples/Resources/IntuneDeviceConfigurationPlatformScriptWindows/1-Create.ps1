@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -22,7 +30,6 @@ Configuration Example
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             );
-            Credential            = $Credscredential;
             DisplayName           = "custom";
             Ensure                = "Present";
             EnforceSignatureCheck = $False;
@@ -31,7 +38,9 @@ Configuration Example
             RunAs32Bit            = $True;
             RunAsAccount          = "system";
             ScriptContent         = "Base64 encoded script content";
-            TenantId              = $OrganizationName;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

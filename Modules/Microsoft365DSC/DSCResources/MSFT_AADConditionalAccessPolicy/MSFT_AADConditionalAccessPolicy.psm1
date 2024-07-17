@@ -1666,7 +1666,7 @@ function Set-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
 
-            Write-Verbose -Message "Set-Targetresource: Failed change policy $DisplayName"
+            Write-Error -Message "Set-Targetresource: Failed changing policy $DisplayName"
         }
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
@@ -1689,7 +1689,7 @@ function Set-TargetResource
                     -TenantId $TenantId `
                     -Credential $Credential
 
-                Write-Verbose -Message 'Set-Targetresource: Failed creating new policy'
+                Write-Error -Message 'Set-Targetresource: Failed creating new policy'
             }
         }
         else
@@ -1699,7 +1699,7 @@ function Set-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
 
-            Write-Verbose -Message 'Set-Targetresource: Failed creating new policy. At least a user rule, application rule and grant or session control is required'
+            Write-Error -Message 'Set-Targetresource: Failed creating new policy. At least a user rule, application rule and grant or session control is required'
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
@@ -1717,7 +1717,7 @@ function Set-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
 
-            Write-Verbose -Message "Set-Targetresource: Failed deleting policy $DisplayName"
+            Write-Error -Message "Set-Targetresource: Failed deleting policy $DisplayName"
         }
     }
     Write-Verbose -Message "Set-Targetresource: Finished processing Policy $Displayname"

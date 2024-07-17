@@ -435,9 +435,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -508,7 +516,6 @@ Configuration Example
                 StartupAuthenticationTpmKeyUsage = 'allowed'
                 StartupAuthenticationBlockWithoutTpmChip = $False
             };
-            Credential                                                                   = $Credscredential;
             DefenderAdditionalGuardedFolders                                             = @();
             DefenderAdobeReaderLaunchChildProcess                                        = "notConfigured";
             DefenderAdvancedRansomewareProtectionType                                    = "notConfigured";
@@ -670,6 +677,9 @@ Configuration Example
             XboxServicesLiveAuthManagerServiceStartupMode                                = "manual";
             XboxServicesLiveGameSaveServiceStartupMode                                   = "manual";
             XboxServicesLiveNetworkingServiceStartupMode                                 = "manual";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -684,9 +694,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -757,7 +775,6 @@ Configuration Example
                 StartupAuthenticationTpmKeyUsage = 'allowed'
                 StartupAuthenticationBlockWithoutTpmChip = $False
             };
-            Credential                                                                   = $Credscredential;
             DefenderAdditionalGuardedFolders                                             = @();
             DefenderAdobeReaderLaunchChildProcess                                        = "notConfigured";
             DefenderAdvancedRansomewareProtectionType                                    = "notConfigured";
@@ -919,6 +936,9 @@ Configuration Example
             XboxServicesLiveAuthManagerServiceStartupMode                                = "manual";
             XboxServicesLiveGameSaveServiceStartupMode                                   = "manual";
             XboxServicesLiveNetworkingServiceStartupMode                                 = "manual";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -933,9 +953,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -944,8 +972,10 @@ Configuration Example
         IntuneDeviceConfigurationEndpointProtectionPolicyWindows10 'Example'
         {
             DisplayName                                                                  = "endpoint protection legacy - dsc v2.0";
-            Credential                                                                   = $Credscredential;
             Ensure                                                                       = "Absent";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

@@ -183,7 +183,7 @@ function Get-TargetResource
             Description           = $getValue.description
             DisplayName           = $getValue.displayName
             IsPendingOnboarding   = $getValue.isPendingOnboarding #Read-Only
-            OriginId              = $getValue.originId
+            OriginId              = $OriginId
             OriginSystem          = $getValue.originSystem
             ResourceType          = $getValue.resourceType
             Url                   = $getValue.url
@@ -336,9 +336,20 @@ function Set-TargetResource
     $PSBoundParameters.Remove('isPendingOnboarding') | Out-Null
     $PSBoundParameters.Remove('AccessTokens') | Out-Null
 
+    $resource = ([Hashtable]$PSBoundParameters).clone()
+    $ObjectGuid = [System.Guid]::empty
+    if ($OriginSystem -eq 'AADGroup' -and `
+        -not [System.Guid]::TryParse($OriginId, [System.Management.Automation.PSReference]$ObjectGuid))
+    {
+        Write-Verbose -Message "The Group reference was provided by name {$OriginId}. Retrieving associated id."
+        $groupInfo = Get-MgGroup -Filter "DisplayName eq '$OriginId'"
+        if ($null -ne $groupInfo)
+        {
+            $resource.OriginId = $groupInfo.Id
+        }
+    }
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        $resource = ([Hashtable]$PSBoundParameters).clone()
         $ObjectGuid = [System.Guid]::empty
         if (-not [System.Guid]::TryParse($CatalogId, [System.Management.Automation.PSReference]$ObjectGuid))
         {
@@ -717,7 +728,6 @@ function Export-TargetResource
             [array]$resources = Get-MgBetaEntitlementManagementAccessPackageCatalogAccessPackageResource -AccessPackageCatalogId  $catalogId -ErrorAction Stop
 
             $j = 1
-            $dscContent = ''
 
             if ($resources.Length -eq 0)
             {

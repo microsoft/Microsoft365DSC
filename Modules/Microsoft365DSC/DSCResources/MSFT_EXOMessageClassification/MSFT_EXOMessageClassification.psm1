@@ -258,7 +258,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $MessageClassification = Get-MessageClassification -Identity $Identity
+    $MessageClassification = Get-MessageClassification -Identity $Identity -ErrorAction SilentlyContinue
     $MessageClassificationParams = [System.Collections.Hashtable]($PSBoundParameters)
     $MessageClassificationParams.Remove('Ensure') | Out-Null
     $MessageClassificationParams.Remove('Credential') | Out-Null

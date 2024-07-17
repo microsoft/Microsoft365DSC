@@ -48,23 +48,32 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSharedMailbox 'SharedMailbox'
         {
             DisplayName        = "Integration"
-            PrimarySMTPAddress = "Integration@$Domain"
-            EmailAddresses     = @("IntegrationSM@$Domain")
+            PrimarySMTPAddress = "Integration@$TenantId"
+            EmailAddresses     = @("IntegrationSM@$TenantId")
             Alias              = "IntegrationSM"
             Ensure             = "Present"
-            Credential         = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -79,23 +88,32 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSharedMailbox 'SharedMailbox'
         {
             DisplayName        = "Integration"
-            PrimarySMTPAddress = "Integration@$Domain"
-            EmailAddresses     = @("IntegrationSM@$Domain", "IntegrationSM2@$Domain")
+            PrimarySMTPAddress = "Integration@$TenantId"
+            EmailAddresses     = @("IntegrationSM@$TenantId", "IntegrationSM2@$TenantId")
             Alias              = "IntegrationSM"
             Ensure             = "Present"
-            Credential         = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -110,23 +128,32 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOSharedMailbox 'SharedMailbox'
         {
             DisplayName        = "Integration"
-            PrimarySMTPAddress = "Integration@$Domain"
-            EmailAddresses     = @("IntegrationSM@$Domain", "IntegrationSM2@$Domain")
+            PrimarySMTPAddress = "Integration@$TenantId"
+            EmailAddresses     = @("IntegrationSM@$TenantId", "IntegrationSM2@$TenantId")
             Alias              = "IntegrationSM"
             Ensure             = "Absent"
-            Credential         = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
