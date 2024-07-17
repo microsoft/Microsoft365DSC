@@ -8,6 +8,9 @@
 * IntuneDiskEncryptionWindows10
   * Initial Release  
     FIXES [#4050](https://github.com/microsoft/Microsoft365DSC/issues/4050)
+* IntuneWindowsUpdateForBusinessQualityUpdateProfileWindows10
+  * Initial release.  
+    FIXES [#2659](https://github.com/microsoft/Microsoft365DSC/issues/2659)
 * M365DSCDRGUtil
   * Fixes an issue with nested and duplicate settings in the settings catalog
 * M365DSCResourceGenerator
