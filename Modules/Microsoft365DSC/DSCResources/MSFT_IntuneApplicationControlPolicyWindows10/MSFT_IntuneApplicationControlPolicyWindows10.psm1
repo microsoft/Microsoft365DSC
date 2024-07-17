@@ -84,9 +84,7 @@ function Get-TargetResource {
 
     try {
         #Retrieve policy general settings
-        #$policy = Get-MgBetaDeviceManagementIntent -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
-
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "templateReference/TemplateFamily eq 'endpointSecurityApplicationControl'" -ErrorAction Stop | Where-Object name -eq $DisplayName0
+        $policy = Get-MgBetaDeviceManagementIntent -Filter "displayName eq '$DisplayName'" -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' }
 
         if (([array]$policy).count -gt 1) {
             throw "A policy with a duplicated displayName {'$DisplayName'} was found - Ensure displayName is unique"
@@ -99,20 +97,16 @@ function Get-TargetResource {
 
         #Retrieve policy specific settings
         [array]$settings = Get-MgBetaDeviceManagementIntentSetting -DeviceManagementIntentId $policy.Id -ErrorAction Stop
-
-
         $settingAppLockerApplicationControl = ($settings | Where-Object -FilterScript { $_.DefinitionId -like '*appLockerApplicationControl' }).ValueJson.Replace("`"", '')
         $settingSmartScreenBlockOverrideForFiles = [System.Convert]::ToBoolean(($settings | Where-Object -FilterScript { $_.DefinitionId -like '*smartScreenBlockOverrideForFiles' }).ValueJson)
         $settingSmartScreenEnableInShell = [System.Convert]::ToBoolean(($settings | Where-Object -FilterScript { $_.DefinitionId -like '*smartScreenEnableInShell' }).ValueJson)
         Write-Verbose -Message "Found Endpoint Protection Application Control Policy {$DisplayName}"
 
-        $policy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "templateReference/TemplateFamily eq 'endpointSecurityApplicationControl'" -ErrorAction Stop | Where-Object name -eq $DisplayName
-
         $returnHashtable = @{
             Description                      = $policy.Description
             DisplayName                      = $policy.DisplayName
             AppLockerApplicationControl      = $settingAppLockerApplicationControl
-            SmartScreenBlockOverrideForFiles = $settingSmartScreenBlockOverrideForFilesv
+            SmartScreenBlockOverrideForFiles = $settingSmartScreenBlockOverrideForFiles
             SmartScreenEnableInShell         = $settingSmartScreenEnableInShell
             Ensure                           = 'Present'
             Credential                       = $Credential
@@ -253,12 +247,10 @@ function Set-TargetResource {
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present') {
         Write-Verbose -Message "Updating existing Endpoint Protection Application Control Policy {$DisplayName}"
-        #$appControlPolicy = Get-MgBetaDeviceManagementIntent `
-        #    -ErrorAction Stop | Where-Object `
-        #    -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' -and `
-        #        $_.displayName -eq $($DisplayName) }
-        
-        $appControlPolicy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "templateReference/TemplateFamily eq 'endpointSecurityApplicationControl'" -ErrorAction Stop | Where-Object name -eq $DisplayName
+        $appControlPolicy = Get-MgBetaDeviceManagementIntent `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' -and `
+                $_.displayName -eq $($DisplayName) }
 
         $PSBoundParameters.Remove('DisplayName') | Out-Null
         $PSBoundParameters.Remove('Description') | Out-Null
@@ -289,12 +281,11 @@ function Set-TargetResource {
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present') {
         Write-Verbose -Message "Removing Endpoint Protection Application Control Policy {$DisplayName}"
-        #$appControlPolicy = Get-MgBetaDeviceManagementIntent `
-        #    -ErrorAction Stop | Where-Object `
-        #    -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' -and `
-        #        $_.displayName -eq $($DisplayName) }
+        $appControlPolicy = Get-MgBetaDeviceManagementIntent `
+            -ErrorAction Stop | Where-Object `
+            -FilterScript { $_.TemplateId -eq '63be6324-e3c9-4c97-948a-e7f4b96f0f20' -and `
+                $_.displayName -eq $($DisplayName) }
         
-        $appControlPolicy = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "templateReference/TemplateFamily eq 'endpointSecurityApplicationControl'" -ErrorAction Stop | Where-Object name -eq $DisplayName
 
         Remove-MgBetaDeviceManagementIntent -DeviceManagementIntentId $appControlPolicy.Id -ErrorAction Stop
     }
@@ -468,11 +459,10 @@ function Export-TargetResource {
     $i = 1
 
     try {
-        #$policyTemplateID = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
-        #[array]$policies = Get-MgBetaDeviceManagementIntent -All:$true -Filter $Filter `
-        #    -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq $policyTemplateID }
+        $policyTemplateID = '63be6324-e3c9-4c97-948a-e7f4b96f0f20'
+        [array]$policies = Get-MgBetaDeviceManagementIntent -All:$true -Filter $Filter `
+            -ErrorAction Stop | Where-Object -FilterScript { $_.TemplateId -eq $policyTemplateID }
 
-        [array]$policies = Get-MgBetaDeviceManagementConfigurationPolicy -Filter "templateReference/TemplateFamily eq 'endpointSecurityApplicationControl'" -ErrorAction Stop
         if ($policies.Length -eq 0) {
             Write-Host $Global:M365DSCEmojiGreenCheckMark
         }

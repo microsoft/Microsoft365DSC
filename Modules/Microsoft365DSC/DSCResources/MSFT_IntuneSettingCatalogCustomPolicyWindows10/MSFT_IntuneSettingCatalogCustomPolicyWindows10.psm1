@@ -110,7 +110,7 @@ function Get-TargetResource
             if (-Not [string]::IsNullOrEmpty($Name))
             {
                 $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
-                    -Filter "Name eq '$Name' and Platforms eq 'windows10'" `
+                    -All `
                     -ErrorAction SilentlyContinue | Where-Object `
                     -FilterScript {[String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId)}
                 if ($getValue.count -gt 1)
@@ -564,7 +564,7 @@ function Export-TargetResource
     try
     {
         #region resource generator code
-        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy -Filter $Filter -All `
+        [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy -All `
             -ErrorAction Stop | Where-Object -FilterScript { `
                 $_.Platforms -eq 'windows10' -and
                 [String]::IsNullOrWhiteSpace($_.TemplateReference.TemplateId)
