@@ -5,16 +5,19 @@
 * EXOHostedOutboundSpamFilterPolicy
   * Changed the RecipientLimitInternalPerHour, RecipientLimitPerDay, and
     RecipientLimitExternalPerHour parameters to UInt32.
+* IntuneDeviceConfigurationEmailProfilePolicyWindows10
+  * Fix export by fixing some typos and from where values are extracted
+    FIXES [#3960](https://github.com/microsoft/Microsoft365DSC/issues/3960)
 * IntuneDiskEncryptionWindows10
-  * Initial Release  
+  * Initial Release
     FIXES [#4050](https://github.com/microsoft/Microsoft365DSC/issues/4050)
 * M365DSCDRGUtil
   * Fixes an issue with nested and duplicate settings in the settings catalog
 * M365DSCResourceGenerator
   * Update Intune resource generation.
 * M365DSCReport
-  * Changes behaviour to not throw on empty configuration during report generation.  
-    FIXES [#4559](https://github.com/microsoft/Microsoft365DSC/issues/4559)  
+  * Changes behaviour to not throw on empty configuration during report generation.
+    FIXES [#4559](https://github.com/microsoft/Microsoft365DSC/issues/4559)
     FIXES [#4505](https://github.com/microsoft/Microsoft365DSC/issues/4505)
   * Fixes an issue where the comparison treats empty arrays as an empty string.
     FIXES [#4796](https://github.com/microsoft/Microsoft365DSC/issues/4796)
