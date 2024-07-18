@@ -107,6 +107,8 @@ function Get-TargetResource
         {
             Write-Verbose -Message "Could not find an Intune Setting Catalog Custom Policy for Windows10 with Id {$Id}"
 
+            Write-Verbose -Message "Searching for an Intune Setting Catalog Custom Policy with filter $filter"
+
             if (-Not [string]::IsNullOrEmpty($Name))
             {
                 $getValue = Get-MgBetaDeviceManagementConfigurationPolicy `
@@ -562,7 +564,8 @@ function Export-TargetResource
     #endregion
 
     try
-    {
+    {   
+        Write-Verbose -Message "Exporting Intune Setting Catalog Custom Policy for Windows10 with filter $Filter"
         #region resource generator code
         [array]$getValue = Get-MgBetaDeviceManagementConfigurationPolicy -All `
             -ErrorAction Stop | Where-Object -FilterScript { `
