@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED 
+
+* IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
+  * Migrate to new settings catalog cmdlets.  
+    FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
+
 # 1.24.717.1
 
 * AADConditionalAccessPolicy
