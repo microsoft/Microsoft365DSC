@@ -1,10 +1,12 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED 
+# UNRELEASED
 
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
-  * Migrate to new settings catalog cmdlets.  
+  * Migrate to new settings catalog cmdlets.
     FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
+* SPOSharingSettings
+  * Changed approach to MySite filtering.
 
 # 1.24.717.1
 
