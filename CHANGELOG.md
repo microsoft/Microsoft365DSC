@@ -1,15 +1,17 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED 
+# UNRELEASED
 
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
-  * Migrate to new settings catalog cmdlets.  
+  * Migrate to new settings catalog cmdlets.
     FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * Introduces new properties and updates the handling of the  
     start and end dates.  
     FIXES [#4614](https://github.com/microsoft/Microsoft365DSC/issues/4614)  
     FIXES [#3438](https://github.com/microsoft/Microsoft365DSC/issues/3438)
+* SPOSharingSettings
+  * Changed approach to MySite filtering.
 
 # 1.24.717.1
 
