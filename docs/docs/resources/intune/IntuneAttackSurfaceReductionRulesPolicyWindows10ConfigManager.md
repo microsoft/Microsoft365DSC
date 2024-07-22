@@ -27,7 +27,7 @@
 | **UseAdvancedProtectionAgainstRansomware** | Write | String | This rule provides an extra layer of protection against ransomware. | `off`, `block`, `audit`, `warn` |
 | **ControlledFolderAccessProtectedFolders** | Write | StringArray[] | List of additional folders that need to be protected | |
 | **ControlledFolderAccessAllowedApplications** | Write | StringArray[] | List of apps that have access to protected folders. | |
-| **EnableControlledFolderAccess** | Write | String | This rule enable Controlled folder access which protects your data by checking apps against a list of known, trusted apps.values 0:disable, 1:enable, 2:audit | `0`, `1`, `2` |
+| **EnableControlledFolderAccess** | Write | String | This rule enable Controlled folder access which protects your data by checking apps against a list of known, trusted apps.values 0:disable, 1:enable, 2:audit, 3: Block disk modification only, 4: Audit disk modification only | `0`, `1`, `2`, `3`, `4` |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
 | **ApplicationId** | Write | String | Id of the Azure Active Directory application to authenticate with. | |
