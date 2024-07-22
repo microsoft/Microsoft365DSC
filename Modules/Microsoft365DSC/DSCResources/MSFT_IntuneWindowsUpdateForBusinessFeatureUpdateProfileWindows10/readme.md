@@ -24,4 +24,4 @@ The RolloutSettings for this resource have the following constraints and notes:
         * If the start date is before the current date + 2 days, it will be adjusted to this date.
 * When testing a policy:
     * If the policy is missing and the start and end date are before the current date, it will return true.
-    * If the start date is different but before the current start date and time, it will return true.
+    * If the start date is different but before the current start date or time, it will return true.

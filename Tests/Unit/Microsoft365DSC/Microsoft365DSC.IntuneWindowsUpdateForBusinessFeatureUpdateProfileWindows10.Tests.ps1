@@ -34,15 +34,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = @{
-                        OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     }
                 }
             }
 
             Mock -CommandName 'Get-Date' -MockWith {
-                return [datetime]::new(2022, 12, 30)
+                return [datetime]::new(2024, 01, 01)
             }
 
             Mock -CommandName Update-MgBetaDeviceManagementWindowsFeatureUpdateProfile -MockWith {
@@ -77,8 +77,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'    
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     } -ClientOnly)
                     Ensure               = 'Present'
@@ -109,8 +109,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     } -ClientOnly)
                     Ensure               = 'Absent'
@@ -139,8 +139,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'    
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     } -ClientOnly)
                     Ensure               = 'Present'
@@ -161,8 +161,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'    
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     } -ClientOnly)
                     Ensure               = 'Present'
@@ -176,8 +176,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FeatureUpdateVersion = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
                         RolloutSettings      = @{
-                            OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'
-                            OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                            OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                            OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                             OfferIntervalInDays     = 1 #drift
                         }
                     }
@@ -206,8 +206,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'    
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     } -ClientOnly)
                     Ensure               = 'Present'
@@ -223,7 +223,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FeatureUpdateVersion = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
                         RolloutSettings      = @{
-                            OfferStartDateTimeInUTC = '2023-01-03T00:00:00.000Z'
+                            OfferStartDateTimeInUTC = '2024-01-07T00:00:00.000Z'
                             OfferEndDateTimeInUTC   = $null
                             OfferIntervalInDays     = $null
                         }
@@ -258,15 +258,15 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2022-12-31T00:00:00.000Z'
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     } -ClientOnly)
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
                 Mock -CommandName 'Get-Date' -MockWith {
-                    return [datetime]::new(2023, 1, 1)
+                    return [datetime]::new(2024, 1, 5)
                 }
                 Test-TargetResource @testParams | Should -Be $true
             }
@@ -278,8 +278,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'    
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     } -ClientOnly)
                     Ensure               = 'Present'
@@ -287,7 +287,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 }
 
                 Mock -CommandName 'Get-Date' -MockWith {
-                    return [datetime]::new(2023, 02, 02)
+                    return [datetime]::new(2024, 02, 01)
                 }
 
                 Test-TargetResource @testParams | Should -Be $true
@@ -302,8 +302,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2023-01-04T00:00:00.000Z'
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-08T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     } -ClientOnly)
                     Ensure               = 'Present'
@@ -312,24 +312,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 { Set-TargetResource @testParams } | Should -Throw 'OfferEndDateTimeInUTC must be greater than OfferStartDateTimeInUTC + 1 day.'
             }
 
-            It 'Should throw from the Set method because OfferStartDateTimeInUTC is already set and OfferEndDateTimeInUTC is not greater than the current time' {
+            It 'Should throw from the Set method because OfferStartDateTimeInUTC is adjusted and OfferEndDateTimeInUTC is not greater than that time + 1 day' {
                 $testParams = @{
                     Description          = 'FakeStringValue'
                     DisplayName          = 'FakeStringValue'
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 2
                     } -ClientOnly)
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
                 Mock -CommandName 'Get-Date' -MockWith {
-                    return [datetime]::new(2023, 1, 4)
+                    return [datetime]::new(2024, 1, 5)
                 }
-                { Set-TargetResource @testParams } | Should -Throw 'OfferEndDateTimeInUTC must be greater than the current time.'
+                { Set-TargetResource @testParams } | Should -Throw 'OfferEndDateTimeInUTC must be greater than OfferStartDateTimeInUTC + 1 day.'
             }
 
             It 'Should throw from the Set method because OfferIntervalInDays is more than the gap between start and end time' {
@@ -339,8 +339,8 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                        OfferStartDateTimeInUTC = '2023-01-01T00:00:00.000Z'
-                        OfferEndDateTimeInUTC   = '2023-01-03T00:00:00.000Z'
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
                         OfferIntervalInDays     = 3
                     } -ClientOnly)
                     Ensure               = 'Present'

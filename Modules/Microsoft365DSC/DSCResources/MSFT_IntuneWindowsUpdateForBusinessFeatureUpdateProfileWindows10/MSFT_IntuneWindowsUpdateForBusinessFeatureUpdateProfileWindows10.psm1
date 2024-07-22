@@ -320,17 +320,18 @@ function Set-TargetResource
 
                 if (-not [string]::IsNullOrEmpty($RolloutSettings.OfferEndDateTimeInUTC))
                 {
-                    # If an end date is configured, then the start date must be greater than the current time + 2 days
+                    # If an end date is configured, then the start date must be at least the current time + 2 days
                     $minTimeForAvailable = $currentTime.AddDays(2)
                     if ($newOfferStartDate -lt $minTimeForAvailable)
                     {
+                        Write-Verbose -Message 'OfferStartDateTimeInUTC must be at least the current time + 2 days, adjusting it...'
                         $newOfferStartDate = $minTimeForAvailable
                         $BoundParameters.RolloutSettings.OfferStartDateTimeInUTC = $newOfferStartDate.ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
                     }
 
-                    if ($offerEndDate -lt $newOfferStartDate)
+                    if ($offerEndDate -lt $newOfferStartDate.AddDays(1))
                     {
-                        throw 'OfferEndDateTimeInUTC must be greater than current time + 2 days.'
+                        throw 'OfferEndDateTimeInUTC must be greater than OfferStartDateTimeInUTC + 1 day.'
                     }
 
                     if ($RolloutSettings.OfferIntervalInDays -gt ($offerEndDate - $newOfferStartDate).Days)
@@ -387,7 +388,7 @@ function Set-TargetResource
                 }
                 $newOfferStartDate = $offerStartDate
 
-                # If the configured start date is different from the current start date and is less than the current time, we use the current start date
+                # If the configured start date is different from the current start date but less than the current time, we use the current start date
                 if ($offerStartDate -ne $currentOfferDate -and $offerStartDate -lt $minTimeForAvailable)
                 {
                     if ($currentOfferDate -eq [datetime]::MinValue)
@@ -399,29 +400,24 @@ function Set-TargetResource
                     {
                         $newOfferStartDate = $currentOfferDate
                     }
-                    $BoundParameters.RolloutSettings.OfferStartDateTimeInUTC = $currentOfferDate.ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
+                    $BoundParameters.RolloutSettings.OfferStartDateTimeInUTC = $newOfferStartDate.ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
                 }
 
                 if (-not [string]::IsNullOrEmpty($RolloutSettings.OfferEndDateTimeInUTC))
                 {
-                    # If an end date is configured, then the start date must be greater than the current time + 2 days
+                    # If an end date is configured, then the start date must be at least the current time + 2 days
                     $offerEndDate = [datetime]::Parse($RolloutSettings.OfferEndDateTimeInUTC)
                     $minTimeForAvailable = $currentTime.AddDays(2)
                     if ($newOfferStartDate -lt $minTimeForAvailable)
                     {
+                        Write-Verbose -Message 'OfferStartDateTimeInUTC must be at least the current time + 2 days, adjusting it...'
                         $newOfferStartDate = $minTimeForAvailable
                         $BoundParameters.RolloutSettings.OfferStartDateTimeInUTC = $newOfferStartDate.ToString('yyyy-MM-ddTHH:mm:ss.fffZ')
                     }
 
-                    if (-not [string]::IsNullOrEmpty($currentInstance.RolloutSettings.OfferEndDateTimeInUTC))
+                    if ($offerEndDate -lt $newOfferStartDate.AddDays(1))
                     {
-                        $currentOfferEndDate = [datetime]::Parse($currentInstance.RolloutSettings.OfferEndDateTimeInUTC)
-                    }
-
-                    # If the end date is less than the start date + 1 day or the current time, we throw an error
-                    if ($offerEndDate -lt $newOfferStartDate.AddDays(1) -or $offerEndDate -lt $currentTime)
-                    {
-                        throw 'OfferEndDateTimeInUTC must be greater than OfferStartDateTimeInUTC and current time (+ 2 days if not previously specified).'
+                        throw 'OfferEndDateTimeInUTC must be greater than OfferStartDateTimeInUTC + 1 day.'
                     }
 
                     if ($RolloutSettings.OfferIntervalInDays -gt ($offerEndDate - $newOfferStartDate).Days)
@@ -644,6 +640,14 @@ function Test-TargetResource
 
         if ($testResult -and $offerEndDate -ne [datetime]::MinValue -and $currentOfferEndDate -ne [datetime]::MinValue)
         {
+            if ($offerStartDate -ne $currentOfferStartDate `
+                -and $offerStartDate -gt $currentTime `
+                -and $offerStartDate -lt $currentTime.AddDays(2))
+            {
+                Write-Verbose -Message 'OfferStartDateTimeInUTC must be greater than the current time + 2 days to be changable if OfferEndDateTimeInUTC is specified, resetting testResult to true.'
+                $testResult = $true
+            }
+
             if ($offerEndDate -ne $currentOfferEndDate `
                     -and $offerEndDate -gt $currentTime `
                     -and $offerEndDate -gt $offerStartDate)
