@@ -1,9 +1,12 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# UNRELEASED 
 
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
+* IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
+  * Migrate to new settings catalog cmdlets.  
+    FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
 * M365DSCDRGUtil
   * Fixes an issue where only 25 settings catalog templates were fetched with one call.
 
