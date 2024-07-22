@@ -97,6 +97,13 @@
             RequiredVersion = '1.12.0'
         },
         @{
+            ModuleName      = 'PSDesiredStateConfiguration'
+            RequiredVersion = '2.0.7'
+            PowerShellCore  = $true
+            ExplicitLoading = $true
+            Prefix          = 'Pwsh'
+        },
+        @{
             ModuleName      = 'ReverseDSC'
             RequiredVersion = '2.0.0.20'
         }
