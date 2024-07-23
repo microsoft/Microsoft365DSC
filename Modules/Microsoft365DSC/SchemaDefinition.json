@@ -32853,6 +32853,16 @@
                                "Option":  "Write"
                            },
                            {
+                               "CIMType":  "Boolean",
+                               "Name":  "InstallFeatureUpdatesOptional",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "InstallLatestWindows10OnWindows11IneligibleDevice",
+                               "Option":  "Write"
+                           },
+                           {
                                "CIMType":  "MSFT_MicrosoftGraphwindowsUpdateRolloutSettings",
                                "Name":  "RolloutSettings",
                                "Option":  "Write"
