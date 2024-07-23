@@ -16034,6 +16034,11 @@
                            },
                            {
                                "CIMType":  "String",
+                               "Name":  "DisableSshParsing",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String",
                                "Name":  "enablelowcpupriority",
                                "Option":  "Write"
                            },
