@@ -7,6 +7,8 @@
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * Migrate to new settings catalog cmdlets.
     FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
+* IntuneEndointDetectionAndResponsePolicyMacOS
+  * Initial release.
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * Introduces new properties and updates the handling of the  
     start and end dates.  
