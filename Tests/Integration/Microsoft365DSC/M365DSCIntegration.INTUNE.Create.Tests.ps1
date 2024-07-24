@@ -2222,6 +2222,19 @@
                     CertificateThumbprint = $CertificateThumbprint;
         
                 }
+                IntuneEndpointDetectionAndResponsePolicyMacOS 'myEDRPolicy'
+                {
+                    DisplayName     = 'Edr Policy'
+                    tags_item_key   = '0'
+                    tags_item_value = 'tag'
+                    Assignments     = @()
+                    Description     = 'My revised description'
+                    Ensure          = 'Present'
+                    ApplicationId         = $ApplicationId;
+                    TenantId              = $TenantId;
+                    CertificateThumbprint = $CertificateThumbprint;
+        
+                }
                 IntuneEndpointDetectionAndResponsePolicyWindows10 'myEDRPolicy'
                 {
                     DisplayName = 'Edr Policy'
