@@ -173,7 +173,7 @@ function Get-TargetResource
     try
     {
         $SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
-        $MySite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.' -and Template -notlike '^RedirectSite#'"
+        $MySite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -notmatch "^RedirectSite#" }
 
         if ($null -ne $MySite)
         {
@@ -532,7 +532,7 @@ function Set-TargetResource
     Set-PnPTenant @CurrentParameters | Out-Null
     if ($SetMySharingCapability)
     {
-        $mysite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.' -and Template -notlike '^RedirectSite#'"
+        $mysite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -notmatch "^RedirectSite#" }
         Set-PnPTenantSite -Identity $mysite.Url -SharingCapability $MySiteSharingCapability
     }
 }

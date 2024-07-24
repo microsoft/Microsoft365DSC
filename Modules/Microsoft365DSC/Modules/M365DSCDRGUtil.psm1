@@ -1512,7 +1512,10 @@ function Get-IntuneSettingCatalogPolicySetting
     $DSCParams.Remove('Description') | Out-Null
 
     # Prepare setting definitions mapping
-    $settingTemplates = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate -DeviceManagementConfigurationPolicyTemplateId $TemplateId -ExpandProperty 'SettingDefinitions'
+    $settingTemplates = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate `
+        -DeviceManagementConfigurationPolicyTemplateId $TemplateId `
+        -ExpandProperty 'SettingDefinitions' `
+        -All
     $settingInstances = @()
 
     # Iterate over all setting instance templates
@@ -1560,6 +1563,11 @@ function Get-IntuneSettingCatalogPolicySetting
 
         if ($settingValue.Count -gt 0)
         {
+            if ($settingValue.Keys -contains 'groupSettingCollectionValue' -and $settingValue.groupSettingCollectionValue.children.Count -eq 0)
+            {
+                continue
+            }
+
             $settingInstance += [Hashtable]$settingValue
             if ($settingInstance.Keys -notcontains 'settingDefinitionId')
             {
