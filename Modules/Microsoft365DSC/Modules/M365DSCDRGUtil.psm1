@@ -1511,6 +1511,16 @@ function Get-IntuneSettingCatalogPolicySetting
     $DSCParams.Remove('DisplayName') | Out-Null
     $DSCParams.Remove('Description') | Out-Null
 
+    $DSCParams = Rename-M365DSCCimInstanceParameter -Properties $DSCParams
+    $keys = (([Hashtable]$DSCParams).Clone()).Keys
+    foreach ($key in $keys)
+    {
+        if ($null -ne $DSCParams.$key -and $DSCParams.$key.GetType().Name -like '*CimInstance*')
+        {
+            $DSCParams.$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $DSCParams.$key
+        }
+    }
+
     # Prepare setting definitions mapping
     $settingTemplates = Get-MgBetaDeviceManagementConfigurationPolicyTemplateSettingTemplate `
         -DeviceManagementConfigurationPolicyTemplateId $TemplateId `

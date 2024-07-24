@@ -188,7 +188,7 @@ function New-M365DSCResource
             -CimClasses $cimClasses `
             -Workload $Workload
         $typeProperties = $typeProperties | Where-Object -FilterScript {
-            $_.Name -notin @('createdDateTime', 'isAssigned', 'lastModifiedDateTime', 'priorityMetaData', 'retryCount', 'settingCount', 'templateReference')
+            $_.Name -notin @('createdDateTime', 'isAssigned', 'lastModifiedDateTime', 'priorityMetaData', 'retryCount', 'settingCount', 'templateReference', 'creationSource')
         }
         $global:ComplexList = $null
         $global:searchedEntity = $null
@@ -236,12 +236,6 @@ function New-M365DSCResource
         $Global:AlreadyFoundInstances = $null
 
         $parameterString = Get-ParameterBlockStringForModule -ParameterBlockInformation $parameterInformation
-        $hashtableResults = New-M365HashTableMapping -Properties $parameterInformation `
-            -DefaultParameterSetProperties $defaultParameterSetProperties `
-            -GraphNoun $CmdLetNoun `
-            -Workload $Workload `
-            -DateFormat $DateFormat
-        $hashTableMapping = $hashtableResults.StringContent
 
         if ($CmdLetNoun -like "*DeviceManagementConfigurationPolicy")
         {
@@ -267,7 +261,30 @@ function New-M365DSCResource
 
             $parameterString += $definitionSettings.PowerShell -join ",`r`n`r`n"
             $parameterString += ",`r`n`r`n"
+
+            $complexParameters = @($definitionSettings.PowerShell | Where-Object -FilterScript { $_ -like "*CimInstance*" })
+            foreach ($parameter in $complexParameters)
+            {
+                $parameter -match '\$.*$'
+                $parameterName = $Matches[0].Replace('$', '')
+                $parameterInformation += @{
+                    Name = $parameterName
+                    IsComplexType = $true
+                    IsMandatory = $false
+                    IsArray = $true
+                    Type = 'IntuneSettingsCatalog' + $parameterName
+                }
+
+                Write-Warning "Do not forget to replace the value `$getValue.$parameterName with `$policySettings.$parameterName in Get-TargetResource and update the description in the MOF template."
+            }
         }
+
+        $hashtableResults = New-M365HashTableMapping -Properties $parameterInformation `
+            -DefaultParameterSetProperties $defaultParameterSetProperties `
+            -GraphNoun $CmdLetNoun `
+            -Workload $Workload `
+            -DateFormat $DateFormat
+        $hashTableMapping = $hashtableResults.StringContent
 
         #region UnitTests
         $fakeValues = Get-M365DSCFakeValues `
@@ -477,11 +494,11 @@ function New-M365DSCResource
         $newDefaultParameterSet = $newCmdlet.ParameterSets | Where-Object -FilterScript { $_.Name -eq 'Create' }
         [Array]$newKeyIdentifier = ($newDefaultParameterSet.Parameters | Where-Object -FilterScript { $_.IsMandatory }).Name
         $defaultCreateParameters = @"
-        `$createParameters = ([Hashtable]`$BoundParameters).clone()
+        `$createParameters = ([Hashtable]`$BoundParameters).Clone()
         `$createParameters = Rename-M365DSCCimInstanceParameter -Properties `$createParameters
         `$createParameters.Remove('Id') | Out-Null
 
-        `$keys = (([Hashtable]`$createParameters).clone()).Keys
+        `$keys = (([Hashtable]`$createParameters).Clone()).Keys
         foreach (`$key in `$keys)
         {
             if (`$null -ne `$createParameters.`$key -and `$createParameters.`$key.GetType().Name -like '*CimInstance*')
@@ -491,17 +508,17 @@ function New-M365DSCResource
         }
 "@
         $defaultUpdateParameters = @"
-        `$UpdateParameters = ([Hashtable]`$BoundParameters).clone()
-        `$UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $`UpdateParameters
+        `$updateParameters = ([Hashtable]`$BoundParameters).Clone()
+        `$updateParameters = Rename-M365DSCCimInstanceParameter -Properties `$updateParameters
 
-        `$UpdateParameters.Remove('Id') | Out-Null
+        `$updateParameters.Remove('Id') | Out-Null
 
-        `$keys = (([Hashtable]`$UpdateParameters).clone()).Keys
+        `$keys = (([Hashtable]`$updateParameters).Clone()).Keys
         foreach (`$key in `$keys)
         {
-            if (`$null -ne `$UpdateParameters.`$key -and `$UpdateParameters.`$key.GetType().Name -like '*CimInstance*')
+            if (`$null -ne `$pdateParameters.`$key -and `$updateParameters.`$key.GetType().Name -like '*CimInstance*')
             {
-                `$UpdateParameters.`$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject `$UpdateParameters.$key
+                `$updateParameters.`$key = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject `$updateParameters.$key
             }
         }
 
@@ -534,7 +551,6 @@ function New-M365DSCResource
         }
 
         $settingsCatalogProperties = ""
-        $defaultCreateParameters = ""
         if ($CmdLetNoun -like "*DeviceManagementConfigurationPolicy")
         {
             $odataType = ""
@@ -662,7 +678,6 @@ function New-M365DSCResource
         }
 
         $updateCmdletName = "        $updateVerb-$CmdLetNoun"
-        $defaultUpdateParameters = ""
         if ($CmdLetNoun -like "*DeviceManagementConfigurationPolicy")
         {
             $odataType = ""
@@ -681,7 +696,7 @@ function New-M365DSCResource
             -Platforms `$platforms ``
             -Technologies `$technologies ``
             -Settings `$settings`r`n
-"@
+"@ 
         }
         Write-TokenReplacement -Token '<#DefaultUpdateParameters#>' -Value $defaultUpdateParameters -FilePath $moduleFilePath
         Write-TokenReplacement -Token '<UpdateDataType>' -Value "$odataType" -FilePath $moduleFilePath
@@ -731,7 +746,7 @@ function New-M365DSCResource
 
             $AssignmentsRemove += "        `$BoundParameters.Remove(`"Assignments`") | Out-Null`r`n"
 
-            $AssignmentsNew += "        "
+            $AssignmentsNew += ""
             $AssignmentsNew += "`r`n"
             $AssignmentsNew += "        if (`$policy.Id)`r`n"
             $AssignmentsNew += "        {`r`n"
@@ -811,6 +826,9 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
         }
     }
 "@
+            Write-TokenReplacement -Token 'Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)' `
+                -Value 'Target Values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)' `
+                -FilePath $moduleFilePath
         }
         Write-TokenReplacement -Token '<#DefaultTestValuesToCheck#>' -Value $defaultTestValuesToCheck -FilePath $moduleFilePath
 
@@ -825,6 +843,7 @@ class MSFT_DeviceManagementConfigurationPolicyAssignments
 
         if ($CmdLetNoun -like "*DeviceManagementConfigurationPolicy")
         {
+            $CimInstancesSchemaContent += "`r`n" + ($definitionsettings.MOFInstance -join "`r`n`r`n")
             $schemaProperties += $definitionSettings.MOF -join "`r`n"
         }
 
@@ -3643,9 +3662,19 @@ function Get-SettingsCatalogSettingDefinitionValueType {
     if ($type -eq 'Simple') {
         $type += $SettingDefinition.AdditionalProperties.defaultValue.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValue", "")
     } elseif ($type -eq 'SimpleCollection') {
-        $type = $type.Replace("Collection", $SettingDefinition.AdditionalProperties.defaultValue.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValue", "") + "Collection")
+        if ($null -ne $SettingDefinition.AdditionalProperties.defaultValue) {
+            $type = $type.Replace("Collection", $SettingDefinition.AdditionalProperties.defaultValue.'@odata.type'.Replace($settingDefinitionOdataTypeBase, "").Replace("SettingValue", "") + "Collection")
+        } else {
+            $type = $type.Replace("Collection", "StringCollection")
+        }
+    } elseif ($type -eq 'ChoiceCollection') {
+        $type = $type.Replace("Collection", "StringCollection")
     } else {
         # Type is GroupCollection and does not have a default value to narrow down the type
+        # but we can check the maximum count to determine if it is a collection or not
+        if ($SettingDefinition.AdditionalProperties.maximumCount -gt 1) {
+            $type += 'Collection'
+        }
     }
 
     return $type
@@ -3669,7 +3698,13 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
         $RootSettingDefinitions,
 
         [Parameter(ParameterSetName = "Start")]
-        [switch] $FromRoot
+        [switch] $FromRoot,
+
+        [Parameter(ParameterSetName = "ParseChild")]
+        [System.String]$ParentInstanceName,
+
+        [Parameter(ParameterSetName = "ParseChild")]
+        [System.Int32]$Level = 0
     )
 
     $settingDefinitionOdataTypeBase = "#microsoft.graph.deviceManagementConfiguration"
@@ -3678,7 +3713,7 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
             $_.Id -eq $SettingTemplate.SettingInstanceTemplate.SettingDefinitionId -and `
             ($_.AdditionalProperties.dependentOn.Count -eq 0 -and $_.AdditionalProperties.options.dependentOn.Count -eq 0)
         }
-        $settingDefinitionIdPrefix = $SettingTemplate.SettingInstanceTemplate.SettingDefinitionId.Split("_")[0..-1] -join "_"
+        $settingDefinitionIdPrefix = $SettingTemplate.SettingInstanceTemplate.SettingDefinitionId
         return New-SettingsCatalogSettingDefinitionSettingsFromTemplate `
             -SettingTemplate $SettingTemplate `
             -RootSettingDefinitions $RootSettingDefinitions `
@@ -3691,7 +3726,9 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
             $settings += New-SettingsCatalogSettingDefinitionSettingsFromTemplate `
                 -SettingTemplate $SettingTemplate `
                 -SettingDefinition $RootSettingDefinition `
-                -SettingDefinitionIdPrefix $settingDefinitionIdPrefix
+                -SettingDefinitionIdPrefix $settingDefinitionIdPrefix `
+                -Level 1 `
+                -ParentInstanceName "MSFT_MicrosoftGraphIntuneSettingsCatalog"
         }
         return $settings
     }
@@ -3702,20 +3739,12 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
     $valueRestriction = Get-SettingsCatalogSettingDefinitionValueDefinition -SettingDefinition $SettingDefinition -SettingDefinitionOdataTypeBase $settingDefinitionOdataTypeBase
 
     $settingName = $SettingDefinition.Name
-    $settingNameLowercase = ""
-    $settingNameLowercase = $SettingDefinition.Id.Replace($SettingDefinitionIdPrefix, "")
 
     if ($SettingDefinition.AdditionalProperties.dependentOn.Count -gt 0) {
         $possibleParentSettingId = $SettingDefinition.AdditionalProperties.dependentOn.parentSettingId.Replace($SettingDefinitionIdPrefix, "")
     } elseif ($SettingDefinition.AdditionalProperties.options.dependentOn.Count -gt 0) {
         $possibleParentSettingId = $SettingDefinition.AdditionalProperties.options.dependentOn.parentSettingId | Select-Object -Unique
         $possibleParentSettingId = $possibleParentSettingId.Replace($SettingDefinitionIdPrefix, "")
-    }
-    $regex = [Regex]::new($possibleParentSettingId + "_")
-    $settingNameLowercase = $regex.Replace($settingNameLowercase, "", 1)
-
-    if ($settingNameLowercase -match "_.*_.*") {
-        $settingNameLowercase = $settingNameLowercase.Split("_")[1..2] -join "_"
     }
 
     $settingsWithSameName = $SettingTemplate.SettingDefinitions | Where-Object -FilterScript { $_.Name -eq $settingName }
@@ -3757,21 +3786,37 @@ function New-SettingsCatalogSettingDefinitionSettingsFromTemplate {
     $childSettings = @()
     $childSettings += $SettingTemplate.SettingDefinitions | Where-Object -FilterScript {
         $_.visibility -notlike "*none*" -and
-        (($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId.Contains($SettingDefinition.Id)) -or
-        ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($SettingDefinition.Id)))
+        (($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId -contains $SettingDefinition.Id) -or
+        ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId -contains $SettingDefinition.Id))
+    }
+
+    $instanceName = "MSFT_MicrosoftGraphIntuneSettingsCatalog"
+    if ($Level -ge 2 -and $type -like "GroupCollection*" -and $childSettings.Count -gt 1)
+    {
+        $instanceName = $ParentInstanceName + $SettingDefinition.Name
+    }
+
+    $innerChildSettings = @()
+    foreach ($childSetting in $childSettings) {
+        $innerChildSettings += New-SettingsCatalogSettingDefinitionSettingsFromTemplate -SettingTemplate $SettingTemplate -SettingDefinition $childSetting -SettingDefinitionIdPrefix $SettingDefinitionIdPrefix -Level $($Level + 1) -ParentInstanceName $instanceName
     }
 
     $setting = [ordered]@{
-        NameFromId    = $settingNameLowercase
-        Name          = $settingName
-        DisplayName   = $SettingDefinition.DisplayName
-        Type          = $type
-        DefaultValue  = $defaultValue
-        Options       = $options
+        Name             = $settingName
+        DisplayName      = $SettingDefinition.DisplayName
+        Type             = $type
+        DefaultValue     = $defaultValue
+        Options          = $options
         ValueRestriction = $valueRestriction
-        ChildSettings = foreach ($childSetting in $childSettings) {
-            New-SettingsCatalogSettingDefinitionSettingsFromTemplate -SettingTemplate $SettingTemplate -SettingDefinition $childSetting -SettingDefinitionIdPrefix $SettingDefinitionIdPrefix
-        }
+        InstanceName     = $instanceName
+        ChildSettings    = $innerChildSettings
+    }
+
+    if ($type -eq "GroupCollectionCollection" -and $childSettings.Count -eq 1)
+    {
+        # Reset type and make child setting a collection
+        $setting.Type = "GroupCollection"
+        $setting.ChildSettings[0].Type += "Collection"
     }
 
     $setting
@@ -3785,6 +3830,7 @@ function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {
 
     $mofTypeMapping = @{
         "Choice" = "String"
+        "ChoiceStringCollection" = "String"
         "SimpleString" = "String"
         "String" = "String"
         "SimpleInteger" = "SInt32"
@@ -3795,17 +3841,26 @@ function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {
     }
     $powerShellTypeMapping = @{
         "Choice" = "System.String"
+        "ChoiceStringCollection" = "System.String[]"
         "SimpleString" = "System.String"
         "String" = "System.String"
         "SimpleInteger" = "System.Int32"
         "Integer" = "System.Int32"
         "Boolean" = "System.Boolean"
         "DateTime" = "System.DateTime"
+        "GroupCollection" = "Microsoft.Management.Infrastructure.CimInstance"
+        "GroupCollectionCollection" = "Microsoft.Management.Infrastructure.CimInstance[]"
         "SimpleStringCollection" = "System.String[]"
         "SimpleIntegerCollection" = "System.Int32[]"
     }
 
-    $mofParameterTemplate = "    [Write, Description(""<DisplayName><Options>"")<ValueMap>] <Type> <Name><Collection>;"
+    $mofInstanceTemplate = @"
+[ClassVersion("1.0.0.0")]
+class <ClassName>
+{
+<MofParameterTemplate>};
+"@
+    $mofParameterTemplate = "    [Write, Description(""<DisplayName><Options><EmbeddedInstance>"")<ValueMap>] <Type> <Name><Collection>;"
     $powerShellParameterTemplate = @"
         [Parameter()]<Restriction>
         [<Type>]
@@ -3827,9 +3882,17 @@ function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {
     }
     $mofDefinition = $mofDefinition.Replace("<Options>", $optionsString)
     $mofDefinition = $mofDefinition.Replace("<ValueMap>", $valueMapString)
-    $mofDefinition = $mofDefinition.Replace("<Type>", $mofTypeMapping[$TemplateSetting.Type])
+
+    if ($TemplateSetting.InstanceName -ne "MSFT_MicrosoftGraphIntuneSettingsCatalog") {
+        $mofDefinition = $mofDefinition.Replace("<EmbeddedInstance>", """), EmbeddedInstance(""$($TemplateSetting.InstanceName)")
+        $mofDefinition = $mofDefinition.Replace("<Type>", "String")
+    } else {
+        $mofDefinition = $mofDefinition.Replace("<Type>", $mofTypeMapping[$TemplateSetting.Type])
+        $mofDefinition = $mofDefinition.Replace("<EmbeddedInstance>", "")
+    }
+
     $mofDefinition = $mofDefinition.Replace("<Name>", $TemplateSetting.Name)
-    $isCollection = $TemplateSetting.Type -like "*Collection"
+    $isCollection = ($TemplateSetting.Type -like "*Collection" -and $TemplateSetting.Type -ne "GroupCollection") -or $TemplateSetting.Type -eq "GroupColletionCollection"
     $mofDefinition = $mofDefinition.Replace("<Collection>", $( if ($isCollection) { "[]" } else { "" } ))
 
     $powerShellDefinition = $powerShellParameterTemplate.Replace("<Name>", $TemplateSetting.Name)
@@ -3848,15 +3911,31 @@ function New-ParameterDefinitionFromSettingsCatalogTemplateSetting {
     $powerShellDefinition = $powerShellDefinition.Replace("<Restriction>", $( if ($restriction) { "`n    $restriction" } else { "" }))
 
     $definition = @{}
-    if ($TemplateSetting.Type -ne "GroupCollection") {
+    if ($TemplateSetting.Type -notlike "GroupCollection*" -or $TemplateSetting.InstanceName -ne "MSFT_MicrosoftGraphIntuneSettingsCatalog") {
         $definition.Add("MOF", @($mofDefinition))
         $definition.Add("PowerShell", @($powerShellDefinition))
     }
 
-    $TemplateSetting.ChildSettings | ForEach-Object {
-        $childDefinitions = New-ParameterDefinitionFromSettingsCatalogTemplateSetting -TemplateSetting $_
-        $definition.MOF += $childDefinitions.MOF
-        $definition.PowerShell += $childDefinitions.PowerShell
+    $childDefinitions = @()
+    foreach ($childSetting in $TemplateSetting.ChildSettings) {
+        $childDefinitions += New-ParameterDefinitionFromSettingsCatalogTemplateSetting -TemplateSetting $childSetting
+    }
+
+    if ($TemplateSetting.Type -like "GroupCollection*" -and $TemplateSetting.InstanceName -ne "MSFT_MicrosoftGraphIntuneSettingsCatalog") {
+        $mofInstanceDefinition = $mofInstanceTemplate.Replace("<ClassName>", $TemplateSetting.InstanceName)
+        $mofInstanceDefinition = $mofInstanceDefinition.Replace("<MofParameterTemplate>", $($childDefinitions.MOF | Out-String))
+        $definition.Add("MOFInstance", @($mofInstanceDefinition))
+        $definition.MOFInstance += $childDefinitions.MOFInstance
+    } else {
+        if ($null -ne $childDefinitions.MOFInstance) {
+            $definition.MOFInstance += $childDefinitions.MOFInstance
+        }
+        if ($null -ne $childDefinitions.MOF) {
+            $definition.MOF += $childDefinitions.MOF
+        }
+        if ($null -ne $childDefinitions.PowerShell) {
+            $definition.PowerShell += $childDefinitions.PowerShell
+        }
     }
 
     $definition
