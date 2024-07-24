@@ -2,14 +2,30 @@
 
 # UNRELEASED
 
+* MISC
+  * Improve PowerShell Core support across the DSC resources.
+    FIXES [#4911](https://github.com/microsoft/Microsoft365DSC/issues/4911)
+
+# 1.24.724.1
+
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Migrate to new settings catalog cmdlets.
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * Migrate to new settings catalog cmdlets.
     FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
+* IntuneEndpointDetectionAndResponsePolicyLinux
+  * Initial release.
+* IntuneEndointDetectionAndResponsePolicyMacOS
+  * Initial release.
+* IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
+  * Introduces new properties and updates the handling of the
+    start and end dates.
+    FIXES [#4614](https://github.com/microsoft/Microsoft365DSC/issues/4614)
+    FIXES [#3438](https://github.com/microsoft/Microsoft365DSC/issues/3438)
+* M365DSCDRGUtil
+  * Fixes an issue where only 25 settings catalog templates were fetched with one call.
 * SPOSharingSettings
   * Changed approach to MySite filtering.
-* MISC
-  * Improve PowerShell Core support across the DSC resources.  
-    FIXES [#4911](https://github.com/microsoft/Microsoft365DSC/issues/4911)
 
 # 1.24.717.1
 

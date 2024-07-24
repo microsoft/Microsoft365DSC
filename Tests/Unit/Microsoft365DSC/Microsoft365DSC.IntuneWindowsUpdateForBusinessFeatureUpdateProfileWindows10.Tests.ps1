@@ -27,6 +27,24 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
             }
 
+            Mock -CommandName Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -MockWith {
+                return @{
+                    Description          = 'FakeStringValue'
+                    DisplayName          = 'FakeStringValue'
+                    FeatureUpdateVersion = 'FakeStringValue'
+                    Id                   = 'FakeStringValue'
+                    RolloutSettings      = @{
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    }
+                }
+            }
+
+            Mock -CommandName 'Get-Date' -MockWith {
+                return [datetime]::new(2024, 01, 01)
+            }
+
             Mock -CommandName Update-MgBetaDeviceManagementWindowsFeatureUpdateProfile -MockWith {
             }
 
@@ -59,10 +77,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                            OfferEndDateTimeInUTC   = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferStartDateTimeInUTC = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferIntervalInDays     = 25
-                        } -ClientOnly)
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    } -ClientOnly)
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
@@ -91,30 +109,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                            OfferEndDateTimeInUTC   = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferStartDateTimeInUTC = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferIntervalInDays     = 25
-                        } -ClientOnly)
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    } -ClientOnly)
                     Ensure               = 'Absent'
                     Credential           = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -MockWith {
-                    return @{
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.WindowsFeatureUpdateProfile'
-                        }
-                        Description          = 'FakeStringValue'
-                        DisplayName          = 'FakeStringValue'
-                        FeatureUpdateVersion = 'FakeStringValue'
-                        Id                   = 'FakeStringValue'
-                        RolloutSettings      = @{
-                            OfferEndDateTimeInUTC   = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferStartDateTimeInUTC = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferIntervalInDays     = 25
-                        }
-
-                    }
                 }
             }
 
@@ -122,16 +122,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 (Get-TargetResource @testParams).Ensure | Should -Be 'Present'
             }
 
-            It 'Should return true from the Test method' {
+            It 'Should return false from the Test method' {
                 Test-TargetResource @testParams | Should -Be $false
             }
 
-            It 'Should Remove the group from the Set method' {
+            It 'Should remove the profile from the Set method' {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName Remove-MgBetaDeviceManagementWindowsFeatureUpdateProfile -Exactly 1
             }
         }
-        Context -Name 'The IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 Exists and Values are already in the desired state' -Fixture {
+        Context -Name 'The IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 exists and values are already in the desired state' -Fixture {
             BeforeAll {
                 $testParams = @{
                     Description          = 'FakeStringValue'
@@ -139,33 +139,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                            OfferEndDateTimeInUTC   = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferStartDateTimeInUTC = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferIntervalInDays     = 25
-                        } -ClientOnly)
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    } -ClientOnly)
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
-
-                Mock -CommandName Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -MockWith {
-                    return @{
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.WindowsFeatureUpdateProfile'
-                        }
-                        Description          = 'FakeStringValue'
-                        DisplayName          = 'FakeStringValue'
-                        FeatureUpdateVersion = 'FakeStringValue'
-                        Id                   = 'FakeStringValue'
-                        RolloutSettings      = @{
-                            OfferEndDateTimeInUTC   = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferStartDateTimeInUTC = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferIntervalInDays     = 25
-                        }
-
-                    }
-                }
             }
-
 
             It 'Should return true from the Test method' {
                 Test-TargetResource @testParams | Should -Be $true
@@ -180,10 +161,10 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                     FeatureUpdateVersion = 'FakeStringValue'
                     Id                   = 'FakeStringValue'
                     RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
-                            OfferEndDateTimeInUTC   = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferStartDateTimeInUTC = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferIntervalInDays     = 25
-                        } -ClientOnly)
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    } -ClientOnly)
                     Ensure               = 'Present'
                     Credential           = $Credential
                 }
@@ -195,9 +176,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         FeatureUpdateVersion = 'FakeStringValue'
                         Id                   = 'FakeStringValue'
                         RolloutSettings      = @{
-                            OfferEndDateTimeInUTC   = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferStartDateTimeInUTC = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferIntervalInDays     = 7
+                            OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                            OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                            OfferIntervalInDays     = 1 #drift
                         }
                     }
                 }
@@ -217,30 +198,164 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             }
         }
 
+        Context -Name 'The IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 exists and the RolloutSettings are NOT in the desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    Description          = 'FakeStringValue'
+                    DisplayName          = 'FakeStringValue'
+                    FeatureUpdateVersion = 'FakeStringValue'
+                    Id                   = 'FakeStringValue'
+                    RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    } -ClientOnly)
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                }
+            }
+
+            It 'Should return false from the Test method because OfferEndDateTimeInUTC is missing' {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -MockWith {
+                    return @{
+                        Description          = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        FeatureUpdateVersion = 'FakeStringValue'
+                        Id                   = 'FakeStringValue'
+                        RolloutSettings      = @{
+                            OfferStartDateTimeInUTC = '2024-01-07T00:00:00.000Z'
+                            OfferEndDateTimeInUTC   = $null
+                            OfferIntervalInDays     = $null
+                        }
+                    }
+                }
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should return false from the Test method because neither OfferStartDateTimeInUTC nor OfferEndDateTimeInUTC is set' {
+                Mock -CommandName Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -MockWith {
+                    return @{
+                        Description          = 'FakeStringValue'
+                        DisplayName          = 'FakeStringValue'
+                        FeatureUpdateVersion = 'FakeStringValue'
+                        Id                   = 'FakeStringValue'
+                        RolloutSettings      = @{
+                            OfferEndDateTimeInUTC   = $null
+                            OfferStartDateTimeInUTC = $null
+                            OfferIntervalInDays     = $null
+                        }
+                    }
+                }
+                Test-TargetResource @testParams | Should -Be $false
+            }
+        }
+
+        Context -Name 'The IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 exists and RolloutSettings are different but still valid' -Fixture {
+            It 'Should return true from the Test method because OfferStartDateTimeInUTC is before the current value and time' {
+                $testParams = @{
+                    Description          = 'FakeStringValue'
+                    DisplayName          = 'FakeStringValue'
+                    FeatureUpdateVersion = 'FakeStringValue'
+                    Id                   = 'FakeStringValue'
+                    RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    } -ClientOnly)
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                }
+                Mock -CommandName 'Get-Date' -MockWith {
+                    return [datetime]::new(2024, 1, 5)
+                }
+                Test-TargetResource @testParams | Should -Be $true
+            }
+
+            It 'Should return true from the Test method because OfferStartDateTimeInUTC and OfferEndDateTimeInUTC are in the past' {
+                $testParams = @{
+                    Description          = 'FakeStringValue'
+                    DisplayName          = 'FakeStringValue'
+                    FeatureUpdateVersion = 'FakeStringValue'
+                    Id                   = 'FakeStringValue'
+                    RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    } -ClientOnly)
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                }
+
+                Mock -CommandName 'Get-Date' -MockWith {
+                    return [datetime]::new(2024, 02, 01)
+                }
+
+                Test-TargetResource @testParams | Should -Be $true
+            }
+        }
+
+        Context -Name 'The IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10 exists and RolloutSettings are different and invalid' -Fixture {
+            It 'Should throw from the Set method because OfferStartDateTimeInUTC is after OfferEndDateTimeInUTC' {
+                $testParams = @{
+                    Description          = 'FakeStringValue'
+                    DisplayName          = 'FakeStringValue'
+                    FeatureUpdateVersion = 'FakeStringValue'
+                    Id                   = 'FakeStringValue'
+                    RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
+                        OfferStartDateTimeInUTC = '2024-01-08T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    } -ClientOnly)
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                }
+                { Set-TargetResource @testParams } | Should -Throw 'OfferEndDateTimeInUTC must be greater than OfferStartDateTimeInUTC + 1 day.'
+            }
+
+            It 'Should throw from the Set method because OfferStartDateTimeInUTC is adjusted and OfferEndDateTimeInUTC is not greater than that time + 1 day' {
+                $testParams = @{
+                    Description          = 'FakeStringValue'
+                    DisplayName          = 'FakeStringValue'
+                    FeatureUpdateVersion = 'FakeStringValue'
+                    Id                   = 'FakeStringValue'
+                    RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 2
+                    } -ClientOnly)
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                }
+                Mock -CommandName 'Get-Date' -MockWith {
+                    return [datetime]::new(2024, 1, 5)
+                }
+                { Set-TargetResource @testParams } | Should -Throw 'OfferEndDateTimeInUTC must be greater than OfferStartDateTimeInUTC + 1 day.'
+            }
+
+            It 'Should throw from the Set method because OfferIntervalInDays is more than the gap between start and end time' {
+                $testParams = @{
+                    Description          = 'FakeStringValue'
+                    DisplayName          = 'FakeStringValue'
+                    FeatureUpdateVersion = 'FakeStringValue'
+                    Id                   = 'FakeStringValue'
+                    RolloutSettings      = (New-CimInstance -ClassName MSFT_MicrosoftGraphwindowsUpdateRolloutSettings -Property @{
+                        OfferStartDateTimeInUTC = '2024-01-05T00:00:00.000Z'
+                        OfferEndDateTimeInUTC   = '2024-01-07T00:00:00.000Z'
+                        OfferIntervalInDays     = 3
+                    } -ClientOnly)
+                    Ensure               = 'Present'
+                    Credential           = $Credential
+                }
+                { Set-TargetResource @testParams } | Should -Throw 'OfferIntervalInDays must be less than or equal to the difference between OfferEndDateTimeInUTC and OfferStartDateTimeInUTC in days.'
+            }
+        }
+
         Context -Name 'ReverseDSC Tests' -Fixture {
             BeforeAll {
                 $Global:CurrentModeIsExport = $true
                 $Global:PartialExportFileName = "$(New-Guid).partial.ps1"
                 $testParams = @{
                     Credential = $Credential
-                }
-
-                Mock -CommandName Get-MgBetaDeviceManagementWindowsFeatureUpdateProfile -MockWith {
-                    return @{
-                        AdditionalProperties = @{
-                            '@odata.type' = '#microsoft.graph.WindowsFeatureUpdateProfile'
-                        }
-                        Description          = 'FakeStringValue'
-                        DisplayName          = 'FakeStringValue'
-                        FeatureUpdateVersion = 'FakeStringValue'
-                        Id                   = 'FakeStringValue'
-                        RolloutSettings      = @{
-                            OfferEndDateTimeInUTC   = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferStartDateTimeInUTC = '2023-01-01T00:00:00.0000000+00:00'
-                            OfferIntervalInDays     = 25
-                        }
-
-                    }
                 }
             }
             It 'Should Reverse Engineer resource from the Export method' {
