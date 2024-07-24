@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.724.1
 
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Migrate to new settings catalog cmdlets.
@@ -12,9 +12,9 @@
 * IntuneEndointDetectionAndResponsePolicyMacOS
   * Initial release.
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
-  * Introduces new properties and updates the handling of the  
-    start and end dates.  
-    FIXES [#4614](https://github.com/microsoft/Microsoft365DSC/issues/4614)  
+  * Introduces new properties and updates the handling of the
+    start and end dates.
+    FIXES [#4614](https://github.com/microsoft/Microsoft365DSC/issues/4614)
     FIXES [#3438](https://github.com/microsoft/Microsoft365DSC/issues/3438)
 * M365DSCDRGUtil
   * Fixes an issue where only 25 settings catalog templates were fetched with one call.
