@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fixes an issue where the template reference is not set correctly.
+    FIXES [#4925](https://github.com/microsoft/Microsoft365DSC/issues/4925)
+
 # 1.24.724.1
 
 * IntuneAntivirusPolicyWindows10SettingCatalog
