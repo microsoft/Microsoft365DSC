@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCReport
+  * Update key properties for delta report in `AADGroup` resource.
+    FIXES [#4921](https://github.com/microsoft/Microsoft365DSC/issues/4921)
+
 # 1.24.724.1
 
 * IntuneAntivirusPolicyWindows10SettingCatalog
