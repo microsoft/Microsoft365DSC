@@ -409,7 +409,7 @@ function Get-TargetResource
         $AccessTokens
     )
 
-    try 
+    try
     {
         Write-Verbose -Message "Checking for the Intune Endpoint Protection Policy {$DisplayName}"
 
@@ -955,7 +955,7 @@ function Set-TargetResource
         $createParameters = @{
             Name                = $DisplayName
             Description         = $Description
-            TemplateReferenceId = @{ templateId = $templateReferenceId }
+            TemplateReference   = @{ templateId = $templateReferenceId }
             Platforms           = $platforms
             Technologies        = $technologies
             Settings            = $settings
