@@ -5,6 +5,10 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue where the template reference is not set correctly.
     FIXES [#4925](https://github.com/microsoft/Microsoft365DSC/issues/4925)
+* MISC
+  * M365DSCReport
+    * Update key properties for delta report in `AADGroup` resource.
+      FIXES [#4921](https://github.com/microsoft/Microsoft365DSC/issues/4921)
 
 # 1.24.724.1
 
