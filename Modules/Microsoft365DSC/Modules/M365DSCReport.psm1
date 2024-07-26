@@ -1260,6 +1260,10 @@ function Get-M365DSCResourceKey
         {
             return @('Id')
         }
+        if ($Resource.ResourceName -eq 'AADGroup' -and -not [System.String]::IsNullOrEmpty($Resource.MailNickname))
+        {
+            return ('DisplayName', 'MailNickname')
+        }
         if ($Resource.ResourceName -eq 'IntuneDeviceEnrollmentPlatformRestriction' -and $Resource.Keys.Where({ $_ -like "*Restriction"}))
         {
             return @('ResourceInstanceName')
