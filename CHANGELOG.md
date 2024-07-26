@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* AADAuthenticationMethodPolicyFido2
+  * Add missing class identifier to schema.
+    FIXES [#4900](https://github.com/microsoft/Microsoft365DSC/issues/4900)
+    FIXES [#4079](https://github.com/microsoft/Microsoft365DSC/issues/4079)
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue where the template reference is not set correctly.
     FIXES [#4925](https://github.com/microsoft/Microsoft365DSC/issues/4925)
@@ -19,7 +23,7 @@
     FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
 * IntuneEndpointDetectionAndResponsePolicyLinux
   * Initial release.
-* IntuneEndointDetectionAndResponsePolicyMacOS
+* IntuneEndpointDetectionAndResponsePolicyMacOS
   * Initial release.
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * Introduces new properties and updates the handling of the
