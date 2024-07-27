@@ -5,6 +5,9 @@
 * IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
   * Migrate to new settings catalog cmdlets.
     FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
+* IntuneDeviceConfigurationPolicyiOS
+  * Fix export of property NetworkUsageRules
+    FIXES [#4934](https://github.com/microsoft/Microsoft365DSC/issues/4934)
 * SPOSharingSettings
   * Changed approach to MySite filtering.
 
