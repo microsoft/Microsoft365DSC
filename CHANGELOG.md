@@ -2,12 +2,39 @@
 
 # UNRELEASED
 
-* IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
-  * Migrate to new settings catalog cmdlets.
-    FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
+* AADAuthenticationMethodPolicyFido2
+  * Add missing class identifier to schema.
+    FIXES [#4900](https://github.com/microsoft/Microsoft365DSC/issues/4900)
+    FIXES [#4079](https://github.com/microsoft/Microsoft365DSC/issues/4079)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fixes an issue where the template reference is not set correctly.
+    FIXES [#4925](https://github.com/microsoft/Microsoft365DSC/issues/4925)
 * IntuneDeviceConfigurationPolicyiOS
   * Fix export of property NetworkUsageRules
     FIXES [#4934](https://github.com/microsoft/Microsoft365DSC/issues/4934)
+* MISC
+  * M365DSCReport
+    * Update key properties for delta report in `AADGroup` resource.
+      FIXES [#4921](https://github.com/microsoft/Microsoft365DSC/issues/4921)
+
+# 1.24.724.1
+
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Migrate to new settings catalog cmdlets.
+* IntuneAttackSurfaceReductionRulesPolicyWindows10ConfigManager
+  * Migrate to new settings catalog cmdlets.
+    FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
+* IntuneEndpointDetectionAndResponsePolicyLinux
+  * Initial release.
+* IntuneEndpointDetectionAndResponsePolicyMacOS
+  * Initial release.
+* IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
+  * Introduces new properties and updates the handling of the
+    start and end dates.
+    FIXES [#4614](https://github.com/microsoft/Microsoft365DSC/issues/4614)
+    FIXES [#3438](https://github.com/microsoft/Microsoft365DSC/issues/3438)
+* M365DSCDRGUtil
+  * Fixes an issue where only 25 settings catalog templates were fetched with one call.
 * SPOSharingSettings
   * Changed approach to MySite filtering.
 

@@ -51,6 +51,7 @@
 | **disablecatchupquickscan** | Write | String | This policy setting allows you to configure catch-up scans for scheduled quick scans.  (1: disabled, 0: enabled) | `0`, `1` |
 | **disablednsovertcpparsing** | Write | String | Disables or enables DNS over TCP Parsing for Network Protection. (0: enable feature. 1: disable feature) | `0`, `1` |
 | **disablehttpparsing** | Write | String | Disables or enables HTTP Parsing for Network Protection. (0: enable feature. 1: disable feature) | `0`, `1` |
+| **DisableSshParsing** | Write | String | Disable Ssh Parsing (1: SSH parsing is disabled, 0: SSH parsing is enabled) | `1`, `0` |
 | **enablelowcpupriority** | Write | String | This policy setting allows you to enable or disable low CPU priority for scheduled scans. (0: disable feature. 1: enable feature) | `0`, `1` |
 | **enablenetworkprotection** | Write | String | This policy allows you to turn on network protection (block/audit) or off. (0: disabled, 1: block mode, 2: audit mode) | `0`, `1`, `2` |
 | **excludedextensions** | Write | StringArray[] | Allows an administrator to specify a list of file type extensions to ignore during a scan. | |
@@ -65,13 +66,13 @@
 | **scanparameter** | Write | String | Selects whether to perform a quick scan or full scan. (1: Quick scan, 2: Full scan) | `1`, `2` |
 | **schedulequickscantime** | Write | SInt32 | Selects the time of day that the Windows Defender quick scan should run. | |
 | **schedulescanday** | Write | String | Selects the day that the Windows Defender scan should run. (0: Every day, 1: Sunday, 2: Monday, 3: Tuesday, 4: Wednesday, 5: Thursday, 6: Friday, 7: Saturday, 8: No scheduled scan) | `0`, `1`, `2`, `3`, `4`, `5`, `6`, `7`, `8` |
-| **schedulescantime** | Write | SInt32 | Selects the time of day that the Windows Defender scan should run. | |
+| **schedulescantime** | Write | SInt32 | Selects the time of day that the Windows Defender scan should run. Must be between 0 and 1380 minutes. | |
 | **disabletlsparsing** | Write | String | This setting disables TLS Parsing for Network Protection. (0: enabled, 1: disabled) | `0`, `1` |
 | **randomizescheduletasktimes** | Write | String | Specifies if the start time of the scan is randomized. (0: no randomization, 1: randomized) | `0`, `1` |
 | **schedulerrandomizationtime** | Write | SInt32 | This setting allows you to configure the scheduler randomization in hours. The randomization interval is [1 - 23] hours. | |
 | **signatureupdatefallbackorder** | Write | StringArray[] | This policy setting allows you to define the order in which different definition update sources should be contacted. | |
 | **signatureupdatefilesharessources** | Write | StringArray[] | This policy setting allows you to configure UNC file share sources for downloading definition updates. | |
-| **signatureupdateinterval** | Write | SInt32 | Specifies the interval (in hours) that will be used to check for signatures, so instead of using the ScheduleDay and ScheduleTime the check for new signatures will be set according to the interval. | |
+| **signatureupdateinterval** | Write | SInt32 | Specifies the interval (in hours) that will be used to check for signatures, so instead of using the ScheduleDay and ScheduleTime the check for new signatures will be set according to the interval. Must be between 0 and 24 hours. | |
 | **submitsamplesconsent** | Write | String | Checks for the user consent level in Windows Defender to send data. (0: Always prompt, 1: Send safe samples automatically, 2: Never send, 3: Send all samples automatically) | `0`, `1`, `2`, `3` |
 | **disablelocaladminmerge** | Write | String | This policy setting controls whether or not complex list settings configured by a local administrator are merged with managed settings. (0: enable local admin merge, 1: disable local admin merge) | `0`, `1` |
 | **allowonaccessprotection** | Write | String | Allows or disallows Windows Defender On Access Protection functionality. (0: disable feature. 1: enable feature) | `0`, `1` |
@@ -79,7 +80,7 @@
 | **moderateseveritythreats** | Write | String | Allows an administrator to specify moderate severity threats corresponding action ID to take. | `clean`, `quarantine`, `remove`, `allow`, `userdefined`, `block` |
 | **severethreats** | Write | String | Allows an administrator to specify high severity threats corresponding action ID to take. | `clean`, `quarantine`, `remove`, `allow`, `userdefined`, `block` |
 | **highseveritythreats** | Write | String | Allows an administrator to specify severe threats corresponding action ID to take. | `clean`, `quarantine`, `remove`, `allow`, `userdefined`, `block` |
-| **templateId** | Write | String | Template Id of the policy. | `d948ff9b-99cb-4ee0-8012-1fbc09685377_1`, `e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1`, `45fea5e9-280d-4da1-9792-fb5736da0ca9_1`, `804339ad-1553-4478-a742-138fb5807418_1` |
+| **templateId** | Write | String | Template Id of the policy. 0: Windows Security Experience, 1: Defender Update controls, 2: Microsoft Defender Antivirus exclusions, 3: Microsoft Defender Antivirus | `d948ff9b-99cb-4ee0-8012-1fbc09685377_1`, `e3f74c5a-a6de-411d-aef6-eb15628f3a0a_1`, `45fea5e9-280d-4da1-9792-fb5736da0ca9_1`, `804339ad-1553-4478-a742-138fb5807418_1` |
 | **Assignments** | Write | MSFT_DeviceManagementConfigurationPolicyAssignments[] | Represents the assignment to the Intune policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed | `Present`, `Absent` |
 | **Credential** | Write | PSCredential | Credentials of the Intune Admin | |
