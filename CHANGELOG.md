@@ -9,6 +9,10 @@
 * IntuneAntivirusPolicyWindows10SettingCatalog
   * Fixes an issue where the template reference is not set correctly.
     FIXES [#4925](https://github.com/microsoft/Microsoft365DSC/issues/4925)
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Fix compiling if `ProfileTypes` (in `FirewallRules`) is present and contains
+    more than one value
+    FIXES [#4936](https://github.com/microsoft/Microsoft365DSC/issues/4936)
 * MISC
   * M365DSCReport
     * Update key properties for delta report in `AADGroup` resource.
