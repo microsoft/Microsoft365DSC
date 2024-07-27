@@ -1057,7 +1057,11 @@ function Get-TargetResource
             {
                 $getValue = Get-MgBetaDeviceManagementDeviceConfiguration `
                     -Filter "DisplayName eq '$DisplayName'" `
-                    -ErrorAction SilentlyContinue
+                    -ErrorAction SilentlyContinue | Where-Object `
+                    -FilterScript {
+                        $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10EndpointProtectionConfiguration'
+                }
+
                 if ($null -eq $getValue)
                 {
                     Write-Verbose -Message "Could not find an Intune Device Configuration Endpoint Protection Policy for Windows10 with DisplayName {$DisplayName}"
