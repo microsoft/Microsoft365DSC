@@ -20,6 +20,8 @@
   * Fixes an issue where only 25 settings catalog templates were fetched with one call.
 * SPOSharingSettings
   * Changed approach to MySite filtering.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.8.
 
 # 1.24.717.1
 
