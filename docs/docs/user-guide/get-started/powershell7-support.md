@@ -43,8 +43,8 @@ Connect-PnPOnline: Could not load file or assembly 'System.IdentityModel.Tokens.
 
 # PSDesiredStateConfiguration needs to be installed separately
 
-Starting with PowerShell 7.2, the core Desired State Configuration module (PSdesiredStateConfiguration) has been decoupled from the core PowerShell build and now needs to be installed separately. In a PowerShell 7+ console, you can install the module by running the command:
+Starting with PowerShell 7.2, the core Desired State Configuration module (PSdesiredStateConfiguration) has been decoupled from the core PowerShell build and now needs to be installed separately. In an administrative PowerShell 7+ console, you can install the module by running the command:
 
 ```powershell
-Install-Module PSDesiredStateConfiguration -RequiredVersion 2.0.7 -Force
+Update-M365DSCDependencies -Scope AllUsers
 ```
