@@ -13,6 +13,9 @@
   * Fix compiling if `ProfileTypes` (in `FirewallRules`) is present and contains
     more than one value
     FIXES [#4936](https://github.com/microsoft/Microsoft365DSC/issues/4936)
+* IntuneDeviceConfigurationPolicyiOS
+  * Fix export of property NetworkUsageRules
+    FIXES [#4934](https://github.com/microsoft/Microsoft365DSC/issues/4934)
 * MISC
   * M365DSCReport
     * Update key properties for delta report in `AADGroup` resource.
