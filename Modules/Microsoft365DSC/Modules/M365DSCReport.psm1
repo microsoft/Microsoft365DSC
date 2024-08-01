@@ -419,21 +419,12 @@ function Get-Base64EncodedImage
         {
             $mimeType = "image/jpeg"
         }
-
         if($icon.Extension.endsWith("png"))
         {
             $mimeType = "image/png"
         }
 
-        if ($PSVersionTable.PSEdition -eq 'Core')
-        {
-            $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $IconPath -AsByteStream -ReadCount 0))
-        }
-        else
-        {
-            $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $iconPath -Encoding Byte -ReadCount 0))
-        }
-
+        $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $iconPath -Encoding Byte -ReadCount 0))
         return $("data:$($mimeType);base64,$($base64EncodedImage)")
     }
     else
@@ -745,15 +736,7 @@ function Compare-M365DSCConfigurations
         [Array]$DestinationObject = $DestinationObject | Where-Object -FilterScript { $_.ResourceName -notin $ExcludedResources }
     }
 
-    $isPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
-    if ($isPowerShellCore)
-    {
-        $dscResourceInfo = Get-PwshDSCResource -Module 'Microsoft365DSC'
-    }
-    else
-    {
-        $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
-    }
+    $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
     # Loop through all items in the source array
     $i = 1
     foreach ($sourceResource in $SourceObject)
