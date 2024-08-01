@@ -1,6 +1,6 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
+# 1.24.731.1
 
 * AADAuthenticationMethodPolicyFido2
   * Add missing class identifier to schema.
