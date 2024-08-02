@@ -226,8 +226,7 @@ function New-ExoUnitTest
     }
     catch
     {
-        Write-Host "DSC resource $ResourceName not found!"
-        break;
+        throw "DSC resource $ResourceName not found!"
     }
 
     # Copy unit test template
@@ -238,8 +237,7 @@ function New-ExoUnitTest
     }
     catch
     {
-        Write-Host 'Cannot create unit test file!'
-        break;
+        throw 'Failed to create unit test file!'
     }
 
     $parameterInformation = @()

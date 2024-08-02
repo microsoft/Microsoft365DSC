@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Replace some `Write-Host` occurrences in core engine with
+    appropriate alternatives.
+    FIXES [#4943](https://github.com/microsoft/Microsoft365DSC/issues/4943)
+
 # 1.24.731.1
 
 * AADAuthenticationMethodPolicyFido2

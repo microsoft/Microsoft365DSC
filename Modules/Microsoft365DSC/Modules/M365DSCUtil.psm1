@@ -1209,7 +1209,7 @@ function Export-M365DSCConfiguration
                 }
                 else
                 {
-                    Write-Host -Object "[WARNING] We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*" -ForegroundColor Yellow
+                    Write-Warning -Message "We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*"
                 }
             }
             return $true
@@ -1276,30 +1276,27 @@ function Export-M365DSCConfiguration
     {
         if ($Credential.Username -notmatch ".onmicrosoft.")
         {
-            Write-Host -Object "[WARNING] We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property." -ForegroundColor Yellow
+            Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
         }
     }
 
     if ($PSBoundParameters.ContainsKey('CertificatePath') -eq $true -and `
             $PSBoundParameters.ContainsKey('CertificatePassword') -eq $false)
     {
-        Write-Host -Object '[ERROR] You have to specify CertificatePassword when you specify CertificatePath' -ForegroundColor Red
-        return
+        throw 'You have to specify CertificatePassword when you specify CertificatePath'
     }
 
     if ($PSBoundParameters.ContainsKey('CertificatePassword') -eq $true -and `
             $PSBoundParameters.ContainsKey('CertificatePath') -eq $false)
     {
-        Write-Host -Object '[ERROR] You have to specify CertificatePath when you specify CertificatePassword' -ForegroundColor Red
-        return
+        throw 'You have to specify CertificatePath when you specify CertificatePassword'
     }
 
     if ($PSBoundParameters.ContainsKey('ApplicationId') -eq $true -and `
             $PSBoundParameters.ContainsKey('Credential') -eq $false -and `
             $PSBoundParameters.ContainsKey('TenantId') -eq $false)
     {
-        Write-Host -Object '[ERROR] You have to specify TenantId when you specify ApplicationId' -ForegroundColor Red
-        return
+        throw 'You have to specify TenantId when you specify ApplicationId'
     }
 
     if ($PSBoundParameters.ContainsKey('ApplicationId') -eq $true -and `
@@ -1309,8 +1306,7 @@ function Export-M365DSCConfiguration
                 $PSBoundParameters.ContainsKey('ApplicationSecret') -eq $false -and `
                 $PSBoundParameters.ContainsKey('CertificatePath') -eq $false))
     {
-        Write-Host -Object '[ERROR] You have to specify ApplicationSecret, CertificateThumbprint or CertificatePath when you specify ApplicationId/TenantId' -ForegroundColor Red
-        return
+        throw 'You have to specify ApplicationSecret, CertificateThumbprint or CertificatePath when you specify ApplicationId/TenantId'
     }
 
     if (($PSBoundParameters.ContainsKey('ApplicationId') -eq $false -or `
@@ -1320,8 +1316,7 @@ function Export-M365DSCConfiguration
                 $PSBoundParameters.ContainsKey('ApplicationSecret') -eq $true -or `
                 $PSBoundParameters.ContainsKey('CertificatePath') -eq $true))
     {
-        Write-Host -Message '[ERROR] You have to specify ApplicationId and TenantId when you specify ApplicationSecret, CertificateThumbprint or CertificatePath' -ForegroundColor Red
-        return
+        throw 'You have to specify ApplicationId and TenantId when you specify ApplicationSecret, CertificateThumbprint or CertificatePath'
     }
 
     # Default to Credential if no authentication mechanism were provided
@@ -3091,7 +3086,7 @@ function Update-M365DSCDependencies
 
         foreach ($dependency in $dependencies)
         {
-            Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $dependencies.Count * 100)
+            Write-Progress -Activity 'Scanning dependencies' -PercentComplete ($i / $dependencies.Count * 100)
             try
             {
                 if (-not $Force)
@@ -3134,15 +3129,14 @@ function Update-M365DSCDependencies
             }
             catch
             {
-                Write-Host "Could not update or import {$($dependency.ModuleName)}"
-                Write-Host "Error-Mesage: $($_.Exception.Message)"
+                Write-Error -Message "Could not update or import {$($dependency.ModuleName)}: $($_.Exception.Message)" -ErrorAction Continue
             }
 
             $i++
         }
 
         # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
-        Write-Progress -Activity 'Scanning Dependencies' -Completed
+        Write-Progress -Activity 'Scanning dependencies' -Completed
 
         if ($ValidateOnly)
         {
@@ -3152,10 +3146,10 @@ function Update-M365DSCDependencies
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error Updating Dependencies:' `
+        New-M365DSCLogEntry -Message 'Error updating dependencies:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source)
-        Write-Error $_
+        Write-Error $_ -ErrorAction Continue
     }
 }
 
@@ -3194,7 +3188,7 @@ function Uninstall-M365DSCOutdatedDependencies
                 New-M365DSCLogEntry -Message "Could not uninstall $($module.Name) Version $($module.Version)" `
                     -Exception $_ `
                     -Source $($MyInvocation.MyCommand.Source)
-                Write-Host "Could not uninstall $($module.Name) Version $($module.Version)"
+                Write-Error -Message "Could not uninstall $($module.Name) Version $($module.Version)" -ErrorAction Continue
             }
         }
 
@@ -3225,20 +3219,20 @@ function Uninstall-M365DSCOutdatedDependencies
                         New-M365DSCLogEntry -Message "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)" `
                             -Exception $_ `
                             -Source $($MyInvocation.MyCommand.Source)
-                        Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)"
+                        Write-Error -Message "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)" -ErrorAction Continue
                     }
                 }
             }
             catch
             {
-                Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+                Write-Error -Message "Could not uninstall {$($dependency.ModuleName)}" -ErrorAction Continue
             }
             $i++
         }
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error Uninstalling Outdated Dependencies:' `
+        New-M365DSCLogEntry -Message 'Error uninstalling outdated dependencies:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source)
         Write-Error $_
@@ -3261,13 +3255,13 @@ function Uninstall-M365DSCOutdatedDependencies
             }
             catch
             {
-                Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version) "
+                Write-Error -Message "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)" -ErrorAction Continue
             }
         }
     }
     catch
     {
-        Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+        Write-Error -Message "Could not uninstall {$($dependency.ModuleName)}" -ErrorAction Continue
     }
 }
 
