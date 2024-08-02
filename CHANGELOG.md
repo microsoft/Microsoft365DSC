@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* MISC
+  * Improve module updates and PowerShell Core support across the DSC
+    resources.
+    FIXES [#4941](https://github.com/microsoft/Microsoft365DSC/issues/4941)
+
 # 1.24.731.1
 
 * AADAuthenticationMethodPolicyFido2
