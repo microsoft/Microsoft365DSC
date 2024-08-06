@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCUtil
+  * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
+    FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
+
 # 1.24.731.1
 
 * AADAuthenticationMethodPolicyFido2
