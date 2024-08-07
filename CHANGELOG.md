@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXOHostedContentFilterRule
+  * Don't check if associated `EXOHostedContentFilterPolicy` is present
+    while removing resource since it's not required
 * MISC
   * Replace some `Write-Host` occurrences in core engine with
     appropriate alternatives.
