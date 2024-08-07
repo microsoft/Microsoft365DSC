@@ -1,5 +1,11 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* EXOHostedContentFilterRule
+  * Don't check if associated `EXOHostedContentFilterPolicy` is present
+    while removing resource since it's not required
+
 # 1.24.731.1
 
 * AADAuthenticationMethodPolicyFido2
