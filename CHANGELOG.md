@@ -1,5 +1,12 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* M365DSCDRGUtil
+  * Update Intune Settings Catalog Handling.
+* M365DSCResourceGenerator
+  * Update Intune resource generation for the Settings Catalog.
+
 # 1.24.724.1
 
 * IntuneAntivirusPolicyWindows10SettingCatalog
