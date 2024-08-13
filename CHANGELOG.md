@@ -2,10 +2,34 @@
 
 # UNRELEASED
 
+* EXOHostedContentFilterRule
+  * Don't check if associated `EXOHostedContentFilterPolicy` is present
+    while removing resource since it's not required
 * M365DSCDRGUtil
   * Update Intune Settings Catalog Handling.
 * M365DSCResourceGenerator
   * Update Intune resource generation for the Settings Catalog.
+
+# 1.24.731.1
+
+* AADAuthenticationMethodPolicyFido2
+  * Add missing class identifier to schema.
+    FIXES [#4900](https://github.com/microsoft/Microsoft365DSC/issues/4900)
+    FIXES [#4079](https://github.com/microsoft/Microsoft365DSC/issues/4079)
+* IntuneAntivirusPolicyWindows10SettingCatalog
+  * Fixes an issue where the template reference is not set correctly.
+    FIXES [#4925](https://github.com/microsoft/Microsoft365DSC/issues/4925)
+* IntuneDeviceConfigurationEndpointProtectionPolicyWindows10
+  * Fix compiling if `ProfileTypes` (in `FirewallRules`) is present and contains
+    more than one value
+    FIXES [#4936](https://github.com/microsoft/Microsoft365DSC/issues/4936)
+* IntuneDeviceConfigurationPolicyiOS
+  * Fix export of property NetworkUsageRules
+    FIXES [#4934](https://github.com/microsoft/Microsoft365DSC/issues/4934)
+* MISC
+  * M365DSCReport
+    * Update key properties for delta report in `AADGroup` resource.
+      FIXES [#4921](https://github.com/microsoft/Microsoft365DSC/issues/4921)
 
 # 1.24.724.1
 
@@ -16,7 +40,7 @@
     FIXES [#3966](https://github.com/microsoft/Microsoft365DSC/issues/3966)
 * IntuneEndpointDetectionAndResponsePolicyLinux
   * Initial release.
-* IntuneEndointDetectionAndResponsePolicyMacOS
+* IntuneEndpointDetectionAndResponsePolicyMacOS
   * Initial release.
 * IntuneWindowsUpdateForBusinessFeatureUpdateProfileWindows10
   * Introduces new properties and updates the handling of the
@@ -27,6 +51,8 @@
   * Fixes an issue where only 25 settings catalog templates were fetched with one call.
 * SPOSharingSettings
   * Changed approach to MySite filtering.
+* DEPENDENCIES
+  * Updated DSCParser to version 2.0.0.8.
 
 # 1.24.717.1
 
