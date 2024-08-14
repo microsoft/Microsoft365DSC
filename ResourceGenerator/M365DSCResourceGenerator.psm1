@@ -3664,8 +3664,7 @@ function Get-SettingsCatalogSettingDefinitionDefaultValue {
         switch ($type) {
             "String" { if (-not $nullOrEmpty) { $value } else { "" } }
             "Integer" { if (-not $nullOrEmpty) { [System.Int32]::Parse($value) } else { 0 } }
-            # Does not exist
-            # "Boolean" { if (-not $nullOrEmpty) { [System.Boolean]::Parse($value) } else { $false } }
+            # The secret value will require an update at a later date. Currently no use case found for this.
             "Secret" { if (-not $nullOrEmpty) { $value } else { "" } }
             default { $value }
         }
