@@ -2212,7 +2212,7 @@ function Export-IntuneSettingCatalogPolicySettings
             }
             else
             {
-                $childSettings = $childSettingsOrInstances
+                $childSettings = $groupSettingCollectionValue.children
                 foreach ($value in $childSettings)
                 {
                     Export-IntuneSettingCatalogPolicySettings -SettingInstance $value -SettingDefinitions $SettingDefinitions -ReturnHashtable $ReturnHashtable
