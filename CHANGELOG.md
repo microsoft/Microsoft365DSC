@@ -5,6 +5,9 @@
 * EXOHostedContentFilterRule
   * Don't check if associated `EXOHostedContentFilterPolicy` is present
     while removing resource since it's not required
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Fixed issue if `PasswordComplexity` was set to 5 by allowing that value
+    FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
 
 # 1.24.731.1
 
