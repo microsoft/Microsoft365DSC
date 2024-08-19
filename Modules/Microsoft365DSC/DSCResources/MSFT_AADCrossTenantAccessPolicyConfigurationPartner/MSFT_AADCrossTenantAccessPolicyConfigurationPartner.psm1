@@ -6,7 +6,7 @@ function Get-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PartnerTenantId,
+        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -86,12 +86,12 @@ function Get-TargetResource
         $nullResult = $PSBoundParameters
         $nullResult.Ensure = 'Absent'
 
-        $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId `
+        $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $Id `
             -ErrorAction SilentlyContinue
 
         if ($null -eq $getValue)
         {
-            Write-Verbose -Message "Could not find an Azure AD Cross Tenant Access Configuration Partner with TenantId {$PartnerTenantId}"
+            Write-Verbose -Message "Could not find an Azure AD Cross Tenant Access Configuration Partner with TenantId {$Id}"
             return $nullResult
         }
 
@@ -121,7 +121,7 @@ function Get-TargetResource
             $InboundTrustValue = $getValue.InboundTrust
         }
         $results = @{
-            PartnerTenantId              = $getValue.TenantId
+            Id                           = $getValue.TenantId
             B2BCollaborationInbound      = $B2BCollaborationInboundValue
             B2BCollaborationOutbound     = $B2BCollaborationOutboundValue
             B2BDirectConnectInbound      = $B2BDirectConnectInboundValue
@@ -159,7 +159,7 @@ function Set-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PartnerTenantId,
+        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -273,23 +273,23 @@ function Set-TargetResource
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
-        Write-Verbose -Message "Creating new Cross Tenant Access Policy Configuration Partner entry for TenantId {$PartnerTenantId}"
+        Write-Verbose -Message "Creating new Cross Tenant Access Policy Configuration Partner entry for TenantId {$Id}"
         Write-Verbose -Message (Convert-M365DscHashtableToString -Hashtable $OperationParams)
-        $OperationParams.Add('TenantId', $PartnerTenantId)
-        $OperationParams.Remove('PartnerTenantId') | Out-Null
+        $OperationParams.Add('TenantId', $Id)
+        $OperationParams.Remove('Id') | Out-Null
         New-MgBetaPolicyCrossTenantAccessPolicyPartner @OperationParams
     }
     elseif ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Updating Cross Tenant Access Policy Configuration Partner entry with TenantId {$PartnerTenantId}"
-        $OperationParams.Add('-CrossTenantAccessPolicyConfigurationPartnerTenantId', $PartnerTenantId)
-        $OperationParams.Remove('PartnerTenantId') | Out-Null
+        Write-Verbose -Message "Updating Cross Tenant Access Policy Configuration Partner entry with TenantId {$Id}"
+        $OperationParams.Add('-CrossTenantAccessPolicyConfigurationPartnerTenantId', $Id)
+        $OperationParams.Remove('Id') | Out-Null
         Update-MgBetaPolicyCrossTenantAccessPolicyPartner @OperationParams
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
-        Write-Verbose -Message "Removing Cross Tenant Access Policy Configuration Partner entry with TenantId {$PartnerTenantId}"
-        Remove-MgBetaPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $PartnerTenantId
+        Write-Verbose -Message "Removing Cross Tenant Access Policy Configuration Partner entry with TenantId {$Id}"
+        Remove-MgBetaPolicyCrossTenantAccessPolicyPartner -CrossTenantAccessPolicyConfigurationPartnerTenantId $Id
     }
 }
 
@@ -301,7 +301,7 @@ function Test-TargetResource
     (
         [Parameter(Mandatory = $true)]
         [System.String]
-        $PartnerTenantId,
+        $Id,
 
         [Parameter()]
         [Microsoft.Management.Infrastructure.CimInstance]
@@ -373,7 +373,7 @@ function Test-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    Write-Verbose -Message "Testing configuration of the Azure AD Cross Tenant Access Policy Configuration Partner with Tenant Id [$PartnerTenantId]"
+    Write-Verbose -Message "Testing configuration of the Azure AD Cross Tenant Access Policy Configuration Partner with Tenant Id [$Id]"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
     $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
@@ -478,7 +478,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -ErrorAction Stop
+        [array] $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -ErrorAction Stop # -All:$true
 
         $i = 1
         $dscContent = ''
@@ -492,7 +492,7 @@ function Export-TargetResource
 
             Write-Host "    |---[$i/$($getValue.Count)] $($entry.TenantId)" -NoNewline
             $Params = @{
-                PartnerTenantId       = $entry.TenantId
+                Id                    = $entry.TenantId
                 ApplicationSecret     = $ApplicationSecret
                 ApplicationId         = $ApplicationId
                 TenantId              = $TenantId
@@ -797,7 +797,7 @@ function Get-M365DSCAADCrossTenantAccessPolicyAutomaticUserConsentSettingsAsStri
         {
             $StringContent += "                InboundAllowed           = `$" + $Setting.InboundAllowed.ToString() + "`r`n"
         }
-       if ($null -ne $Setting.OutboundAllowed)
+        if ($null -ne $Setting.OutboundAllowed)
         {
             $StringContent += "                OutboundAllowed          = `$" + $Setting.OutboundAllowed.ToString() + "`r`n"
         }
