@@ -478,7 +478,7 @@ function Export-TargetResource
 
     try
     {
-        [array] $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -ErrorAction Stop # -All:$true
+        [array] $getValue = Get-MgBetaPolicyCrossTenantAccessPolicyPartner -ErrorAction Stop -All:$true
 
         $i = 1
         $dscContent = ''
