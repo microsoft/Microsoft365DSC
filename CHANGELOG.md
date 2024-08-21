@@ -2,14 +2,29 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Fixing issue where the resource crashed when trying to retrieve groups
+    and users from Entra ID which no longer existed
+  * Fixes an issue where the `AuthenticationFlows` property changed in Graph
+    and updates on the documentation for the possible values of `TransferMethods`.
+    FIXES [#4961](https://github.com/microsoft/Microsoft365DSC/issues/4961)
+    FIXES [#4960](https://github.com/microsoft/Microsoft365DSC/issues/4960)
+    FIXES [#4734](https://github.com/microsoft/Microsoft365DSC/issues/4734)
+    FIXES [#4725](https://github.com/microsoft/Microsoft365DSC/issues/4725)
 * EXOAuthenticationPolicyAssignment
   * Removes the 1000 user limit when exporting authentication policy assignments
     FIXES [#4956](https://github.com/microsoft/Microsoft365DSC/issues/4956)
 * EXOHostedContentFilterRule
   * Don't check if associated `EXOHostedContentFilterPolicy` is present
     while removing resource since it's not required
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Fixed issue if `PasswordComplexity` was set to 5 by allowing that value
+    FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
 * IntuneDeviceCompliancePolicyWindows10
   * Fix extraction of property `TpmRequired`
+* M365DSCUtil
+  * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
+    FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
 
 # 1.24.731.1
 
