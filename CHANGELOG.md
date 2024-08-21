@@ -9,9 +9,15 @@
     FIXES [#4960](https://github.com/microsoft/Microsoft365DSC/issues/4960)
     FIXES [#4734](https://github.com/microsoft/Microsoft365DSC/issues/4734)
     FIXES [#4725](https://github.com/microsoft/Microsoft365DSC/issues/4725)
+* EXOAuthenticationPolicyAssignment
+  * Removes the 1000 user limit when exporting authentication policy assignments
+    FIXES [#4956](https://github.com/microsoft/Microsoft365DSC/issues/4956)
 * EXOHostedContentFilterRule
   * Don't check if associated `EXOHostedContentFilterPolicy` is present
     while removing resource since it's not required
+* M365DSCUtil
+  * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
+    FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
 
 # 1.24.731.1
 
