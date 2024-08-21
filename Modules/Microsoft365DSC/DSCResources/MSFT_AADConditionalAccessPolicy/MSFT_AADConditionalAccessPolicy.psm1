@@ -314,6 +314,7 @@ function Get-TargetResource
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
                         -Credential $Credential
+                    continue
                 }
                 if ($IncludeUser)
                 {
@@ -349,6 +350,7 @@ function Get-TargetResource
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
                         -Credential $Credential
+                    continue
                 }
                 if ($ExcludeUser)
                 {
