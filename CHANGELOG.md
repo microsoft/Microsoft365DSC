@@ -9,7 +9,7 @@
   * Don't check if associated `EXOHostedContentFilterPolicy` is present
     while removing resource since it's not required
 * IntuneDeviceCompliancePolicyWindows10
-  * Fix extraction of property TpmRequired
+  * Fix extraction of property `TpmRequired`
 
 # 1.24.731.1
 
