@@ -16,7 +16,7 @@
 | **AdPasswordEncryptionEnabled** | Write | Boolean | Configures whether the password is encrypted before being stored in Active Directory. | |
 | **AdPasswordEncryptionPrincipal** | Write | String | Configures the name or SID of a user or group that can decrypt the password stored in Active Directory. | |
 | **AdministratorAccountName** | Write | String | Configures the name of the managed local administrator account. | |
-| **PasswordComplexity** | Write | UInt32 | Configures the password complexity of the managed local administrator account. 1 - Large letters, 2 - Large + small letters, 3 - Large + small letters + numbers, 4 - Large + small letters + numbers + special characters | `1`, `2`, `3`, `4` |
+| **PasswordComplexity** | Write | UInt32 | Configures the password complexity of the managed local administrator account. 1 - Large letters, 2 - Large + small letters, 3 - Large + small letters + numbers, 4 - Large + small letters + numbers + special characters, 5 - Large letters + small letters + numbers + special characters (improved readability) | `1`, `2`, `3`, `4`, `5` |
 | **PasswordLength** | Write | UInt32 | Configures the length of the password of the managed local administrator account. Minimum - 8, Maximum - 64 | |
 | **PostAuthenticationActions** | Write | UInt32 | Specifies the actions to take upon expiration of the configured grace period. 1 - Reset password, 3 - Reset password and log off, 5 - Reset password and restart | `1`, `3`, `5` |
 | **PostAuthenticationResetDelay** | Write | UInt32 | Specifies the amount of time (in hours) to wait after an authentication before executing the specified post-authentication actions. Minimum - 0, Maximum - 24 | |
