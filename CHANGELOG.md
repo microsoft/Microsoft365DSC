@@ -2,6 +2,10 @@
 
 # UNRELEASED
 
+* EXOAuthenticationPolicyAssignment
+  * Removes the 1000 user limit when exporting authentication policy assignments
+    FIXES [#4956](https://github.com/microsoft/Microsoft365DSC/issues/4956)
+
 * EXOHostedContentFilterRule
   * Don't check if associated `EXOHostedContentFilterPolicy` is present
     while removing resource since it's not required
