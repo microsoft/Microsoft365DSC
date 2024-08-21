@@ -2,6 +2,13 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Fixes an issue where the `AuthenticationFlows` property changed in Graph
+    and updates on the documentation for the possible values of `TransferMethods`.
+    FIXES [#4961](https://github.com/microsoft/Microsoft365DSC/issues/4961)
+    FIXES [#4960](https://github.com/microsoft/Microsoft365DSC/issues/4960)
+    FIXES [#4734](https://github.com/microsoft/Microsoft365DSC/issues/4734)
+    FIXES [#4725](https://github.com/microsoft/Microsoft365DSC/issues/4725)
 * EXOAuthenticationPolicyAssignment
   * Removes the 1000 user limit when exporting authentication policy assignments
     FIXES [#4956](https://github.com/microsoft/Microsoft365DSC/issues/4956)
