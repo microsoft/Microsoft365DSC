@@ -43,7 +43,7 @@
 | **IsEncrypted** | Write | Boolean | Indicates whether the value field is encrypted. This property is read-only. | |
 | **OmaUri** | Write | String | OMA. | |
 | **SecretReferenceValueId** | Write | String | ReferenceId for looking up secret for decryption. This property is read-only. | |
-| **FileName** | Write | String | File name associated with the Value property (.cer | |
+| **FileName** | Write | String | File name associated with the Value property (.cer) | |
 | **Value** | Write | String | Value. (Base64 encoded string) | |
 | **IsReadOnly** | Write | Boolean | By setting to true, the CSP (configuration service provider) specified in the OMA-URI will perform a get, instead of set | |
 | **odataType** | Write | String | The type of the entity. | `#microsoft.graph.omaSettingBase64`, `#microsoft.graph.omaSettingBoolean`, `#microsoft.graph.omaSettingDateTime`, `#microsoft.graph.omaSettingFloatingPoint`, `#microsoft.graph.omaSettingInteger`, `#microsoft.graph.omaSettingString`, `#microsoft.graph.omaSettingStringXml` |
@@ -90,9 +90,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -106,7 +114,6 @@ Configuration Example
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             );
-            Credential           = $Credscredential;
             DisplayName          = "custom";
             Ensure               = "Present";
             OmaSettings          = @(
@@ -130,6 +137,9 @@ Configuration Example
                 }
             );
             SupportsScopeTags    = $True;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -144,9 +154,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -160,7 +178,6 @@ Configuration Example
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             );
-            Credential           = $Credscredential;
             DisplayName          = "custom";
             Ensure               = "Present";
             OmaSettings          = @(
@@ -184,6 +201,9 @@ Configuration Example
                 }
             );
             SupportsScopeTags    = $True;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -198,9 +218,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -208,9 +236,11 @@ Configuration Example
     {
         IntuneDeviceConfigurationCustomPolicyWindows10 'Example'
         {
-            Credential           = $Credscredential;
             DisplayName          = "custom";
             Ensure               = "Absent";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

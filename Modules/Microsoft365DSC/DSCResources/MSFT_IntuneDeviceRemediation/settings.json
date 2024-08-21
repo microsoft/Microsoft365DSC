@@ -1,0 +1,39 @@
+{
+    "resourceName": "IntuneDeviceRemediation",
+    "description": "This resource configures an Intune Device Remediation.",
+    "permissions":    {
+  "graph": {
+    "application": {
+      "read": [
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        }
+      ],
+      "update": [
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        },
+        {
+          "name": "DeviceManagementConfiguration.ReadWrite.All"
+        }
+      ]
+    },
+    "delegated": {
+      "read": [
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        }
+      ],
+      "update": [
+        {
+          "name": "DeviceManagementConfiguration.Read.All"
+        },
+        {
+          "name": "DeviceManagementConfiguration.ReadWrite.All"
+        }
+      ]
+    }
+  }
+}
+
+}

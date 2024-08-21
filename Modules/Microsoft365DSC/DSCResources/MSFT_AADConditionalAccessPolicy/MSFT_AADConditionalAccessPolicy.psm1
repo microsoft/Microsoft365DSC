@@ -198,6 +198,10 @@ function Get-TargetResource
         [System.String[]]
         $AuthenticationContexts,
 
+        [Parameter()]
+        [System.String]
+        $TransferMethods,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -310,6 +314,7 @@ function Get-TargetResource
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
                         -Credential $Credential
+                    continue
                 }
                 if ($IncludeUser)
                 {
@@ -345,6 +350,7 @@ function Get-TargetResource
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
                         -Credential $Credential
+                    continue
                 }
                 if ($ExcludeUser)
                 {
@@ -368,7 +374,7 @@ function Get-TargetResource
             $IncludeGroup = $null
             try
             {
-                $IncludeGroup = (Get-MgGroup -GroupId $IncludeGroupGUID).displayname
+                $IncludeGroup = (Get-MgGroup -GroupId $IncludeGroupGUID -ErrorAction Stop).displayname
             }
             catch
             {
@@ -378,6 +384,7 @@ function Get-TargetResource
                     -Source $($MyInvocation.MyCommand.Source) `
                     -TenantId $TenantId `
                     -Credential $Credential
+                continue
             }
             if ($IncludeGroup)
             {
@@ -396,7 +403,7 @@ function Get-TargetResource
             $ExcludeGroup = $null
             try
             {
-                $ExcludeGroup = (Get-MgGroup -GroupId $ExcludeGroupGUID).displayname
+                $ExcludeGroup = (Get-MgGroup -GroupId $ExcludeGroupGUID -ErrorAction Stop).displayname
             }
             catch
             {
@@ -406,6 +413,7 @@ function Get-TargetResource
                     -Source $($MyInvocation.MyCommand.Source) `
                     -TenantId $TenantId `
                     -Credential $Credential
+                continue
             }
             if ($ExcludeGroup)
             {
@@ -657,25 +665,26 @@ function Get-TargetResource
         BuiltInControls                          = [System.String[]](@() + $Policy.GrantControls.BuiltInControls)
         CustomAuthenticationFactors              = [System.String[]](@() + $Policy.GrantControls.CustomAuthenticationFactors)
         #no translation needed, return empty string array if undefined
-        ApplicationEnforcedRestrictionsIsEnabled = $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
+        ApplicationEnforcedRestrictionsIsEnabled = $false -or $Policy.SessionControls.ApplicationEnforcedRestrictions.IsEnabled
         #make false if undefined, true if true
-        CloudAppSecurityIsEnabled                = $Policy.SessionControls.CloudAppSecurity.IsEnabled
+        CloudAppSecurityIsEnabled                = $false -or $Policy.SessionControls.CloudAppSecurity.IsEnabled
         #make false if undefined, true if true
         CloudAppSecurityType                     = [System.String]$Policy.SessionControls.CloudAppSecurity.CloudAppSecurityType
         #no translation needed, return empty string array if undefined
-        SignInFrequencyIsEnabled                 = $Policy.SessionControls.SignInFrequency.IsEnabled
+        SignInFrequencyIsEnabled                 = $false -or $Policy.SessionControls.SignInFrequency.IsEnabled
         #make false if undefined, true if true
         SignInFrequencyValue                     = $Policy.SessionControls.SignInFrequency.Value
         #no translation or conversion needed, $null returned if undefined
         SignInFrequencyType                      = [System.String]$Policy.SessionControls.SignInFrequency.Type
         SignInFrequencyInterval                  = $SignInFrequencyIntervalValue
         #no translation needed
-        PersistentBrowserIsEnabled               = $Policy.SessionControls.PersistentBrowser.IsEnabled
+        PersistentBrowserIsEnabled               = $false -or $Policy.SessionControls.PersistentBrowser.IsEnabled
         #make false if undefined, true if true
         PersistentBrowserMode                    = [System.String]$Policy.SessionControls.PersistentBrowser.Mode
         #no translation needed
         AuthenticationStrength                   = $AuthenticationStrengthValue
         AuthenticationContexts                   = $AuthenticationContextsValues
+        TransferMethods                          = [System.String]$Policy.Conditions.AuthenticationFlows.TransferMethods
         #Standard part
         TermsOfUse                               = $termOfUseName
         Ensure                                   = 'Present'
@@ -891,6 +900,10 @@ function Set-TargetResource
         [System.String[]]
         $AuthenticationContexts,
 
+        [Parameter()]
+        [System.String]
+        $TransferMethods,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -956,23 +969,23 @@ function Set-TargetResource
     {
         Write-Verbose -Message "Set-Targetresource: Policy $Displayname Ensure Present"
         $NewParameters = @{}
-        $NewParameters.Add('DisplayName', $DisplayName)
-        $NewParameters.Add('State', $State)
+        $NewParameters.Add('displayName', $DisplayName)
+        $NewParameters.Add('state', $State)
         #create Conditions object
         Write-Verbose -Message 'Set-Targetresource: create Conditions object'
         $conditions = @{
-            Applications = @{}
-            Users        = @{}
+            applications = @{}
+            users        = @{}
         }
         #create and provision Application Condition object
         Write-Verbose -Message 'Set-Targetresource: create Application Condition object'
         if ($currentParameters.ContainsKey('IncludeApplications'))
         {
-            $conditions.Applications.Add('IncludeApplications', $IncludeApplications)
+            $conditions.Applications.Add('includeApplications', $IncludeApplications)
         }
-        if ($currentParameters.ContainsKey('ExcludeApplications'))
+        if ($currentParameters.ContainsKey('excludeApplications'))
         {
-            $conditions.Applications.Add('ExcludeApplications', $ExcludeApplications)
+            $conditions.Applications.Add('excludeApplications', $ExcludeApplications)
         }
         if ($ApplicationsFilter -and $ApplicationsFilterMode)
         {
@@ -980,11 +993,11 @@ function Set-TargetResource
                 rule = $ApplicationsFilter
                 mode = $ApplicationsFilterMode
             }
-            $conditions.Applications.Add('ApplicationFilter', $appFilterValue)
+            $conditions.Applications.Add('applicationFilter', $appFilterValue)
         }
         if ($IncludeUserActions)
         {
-            $conditions.Applications.Add('IncludeUserActions', $IncludeUserActions)
+            $conditions.Applications.Add('includeUserActions', $IncludeUserActions)
         }
         if ($AuthenticationContexts)
         {
@@ -999,14 +1012,14 @@ function Set-TargetResource
                     $AuthenticationContextsValues += $currentClassId.Id
                 }
             }
-            $conditions.Applications.Add('IncludeAuthenticationContextClassReferences', $AuthenticationContextsValues)
+            $conditions.Applications.Add('includeAuthenticationContextClassReferences', $AuthenticationContextsValues)
         }
 
         #create and provision User Condition object
         Write-Verbose -Message 'Set-Targetresource: process includeusers'
         if ($currentParameters.ContainsKey('IncludeUsers'))
         {
-            $conditions.Users.Add('IncludeUsers', @())
+            $conditions.Users.Add('includeUsers', @())
             foreach ($includeuser in $IncludeUsers)
             {
                 #translate user UPNs to GUID, except id value is GuestsOrExternalUsers, None or All
@@ -1017,7 +1030,7 @@ function Set-TargetResource
                         $userguid = $null
                         try
                         {
-                            $userguid = (Get-MgUser -UserId $includeuser).Id
+                            $userguid = (Get-MgUser -UserId $includeuser -ErrorAction Stop).Id
                         }
                         catch
                         {
@@ -1039,12 +1052,12 @@ function Set-TargetResource
                         }
                         else
                         {
-                            $conditions.Users.IncludeUsers += $userguid
+                            $conditions.users.includeUsers += $userguid
                         }
                     }
                     else
                     {
-                        $conditions.Users.IncludeUsers += $includeuser
+                        $conditions.users.includeUsers += $includeuser
                     }
                 }
             }
@@ -1053,7 +1066,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process excludeusers'
         if ($currentParameters.ContainsKey('ExcludeUsers'))
         {
-            $conditions.Users.Add('ExcludeUsers', @())
+            $conditions.users.Add('excludeUsers', @())
             foreach ($excludeuser in $ExcludeUsers)
             {
                 #translate user UPNs to GUID, except id value is GuestsOrExternalUsers, None or All
@@ -1064,7 +1077,7 @@ function Set-TargetResource
                         $userguid = $null
                         try
                         {
-                            $userguid = (Get-MgUser -UserId $excludeuser).Id
+                            $userguid = (Get-MgUser -UserId $excludeuser -ErrorAction Stop).Id
                         }
                         catch
                         {
@@ -1086,12 +1099,12 @@ function Set-TargetResource
                         }
                         else
                         {
-                            $conditions.Users.ExcludeUsers += $userguid
+                            $conditions.users.excludeUsers += $userguid
                         }
                     }
                     else
                     {
-                        $conditions.Users.ExcludeUsers += $excludeuser
+                        $conditions.users.excludeUsers += $excludeuser
                     }
                 }
             }
@@ -1100,7 +1113,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process includegroups'
         if ($currentParameters.ContainsKey('IncludeGroups'))
         {
-            $conditions.Users.Add('IncludeGroups', @())
+            $conditions.users.Add('includeGroups', @())
             foreach ($includegroup in $IncludeGroups)
             {
                 #translate user Group names to GUID
@@ -1109,7 +1122,7 @@ function Set-TargetResource
                     $GroupLookup = $null
                     try
                     {
-                        $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$includegroup'"
+                        $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$includegroup'" -ErrorAction Stop
                     }
                     catch
                     {
@@ -1150,7 +1163,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process excludegroups'
         if ($currentParameters.ContainsKey('ExcludeGroups'))
         {
-            $conditions.Users.Add('ExcludeGroups', @())
+            $conditions.users.Add('excludeGroups', @())
             foreach ($ExcludeGroup in $ExcludeGroups)
             {
                 #translate user Group names to GUID
@@ -1159,7 +1172,7 @@ function Set-TargetResource
                     $GroupLookup = $null
                     try
                     {
-                        $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$ExcludeGroup'"
+                        $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$ExcludeGroup'" -ErrorAction Stop
                     }
                     catch
                     {
@@ -1191,7 +1204,7 @@ function Set-TargetResource
                     else
                     {
                         Write-Verbose -Message 'Adding group to ExcludeGroups'
-                        $conditions.Users.ExcludeGroups += $GroupLookup.Id
+                        $conditions.users.excludeGroups += $GroupLookup.Id
                     }
                 }
             }
@@ -1200,7 +1213,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process includeroles'
         if ($currentParameters.ContainsKey('IncludeRoles'))
         {
-            $conditions.Users.Add('IncludeRoles', @())
+            $conditions.Users.Add('includeRoles', @())
             if ($IncludeRoles)
             {
                 #translate role names to template guid if defined
@@ -1224,7 +1237,7 @@ function Set-TargetResource
                         }
                         else
                         {
-                            $conditions.Users.IncludeRoles += $rolelookup[$IncludeRole]
+                            $conditions.users.includeRoles += $rolelookup[$IncludeRole]
                         }
                     }
                 }
@@ -1234,7 +1247,7 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process excluderoles'
         if ($currentParameters.ContainsKey('ExcludeRoles'))
         {
-            $conditions.Users.Add('ExcludeRoles', @())
+            $conditions.users.Add('excludeRoles', @())
             if ($ExcludeRoles)
             {
                 #translate role names to template guid if defined
@@ -1258,7 +1271,7 @@ function Set-TargetResource
                         }
                         else
                         {
-                            $conditions.Users.ExcludeRoles += $rolelookup[$ExcludeRole]
+                            $conditions.users.excludeRoles += $rolelookup[$ExcludeRole]
                         }
                     }
                 }
@@ -1268,55 +1281,63 @@ function Set-TargetResource
         Write-Verbose -Message 'Set-Targetresource: process includeGuestOrExternalUser'
         If ($currentParameters.ContainsKey('IncludeGuestOrExternalUserTypes'))
         {
+            $includeGuestsOrExternalUsers = $null
             if ($IncludeGuestOrExternalUserTypes.Count -ne 0)
             {
-                $includeGuestsOrExternalUsers = @{}
-                [string]$IncludeGuestOrExternalUserTypes = $IncludeGuestOrExternalUserTypes -join ','
-                $includeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $IncludeGuestOrExternalUserTypes)
-                $externalTenants = @{}
-                if ($IncludeExternalTenantsMembershipKind -eq 'All')
+                if ($IncludeGuestOrExternalUserTypes -ne 'None')
                 {
-                    $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+                    $includeGuestsOrExternalUsers = @{}
+                    [string]$IncludeGuestOrExternalUserTypes = $IncludeGuestOrExternalUserTypes -join ','
+                    $includeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $IncludeGuestOrExternalUserTypes)
+                    $externalTenants = @{}
+                    if ($IncludeExternalTenantsMembershipKind -eq 'All')
+                    {
+                        $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+                    }
+                    elseif ($IncludeExternalTenantsMembershipKind -eq 'enumerated')
+                    {
+                        $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
+                    }
+                    $externalTenants.Add('membershipKind', $IncludeExternalTenantsMembershipKind)
+                    if ($IncludeExternalTenantsMembers)
+                    {
+                        $externalTenants.Add('members', $IncludeExternalTenantsMembers)
+                    }
+                    $includeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
                 }
-                elseif ($IncludeExternalTenantsMembershipKind -eq 'enumerated')
-                {
-                    $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
-                }
-                $externalTenants.Add('membershipKind', $IncludeExternalTenantsMembershipKind)
-                if ($IncludeExternalTenantsMembers)
-                {
-                    $externalTenants.Add('members', $IncludeExternalTenantsMembers)
-                }
-                $includeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
-                $conditions.Users.Add('includeGuestsOrExternalUsers', $includeGuestsOrExternalUsers)
             }
+            $conditions.Users.Add('includeGuestsOrExternalUsers', $includeGuestsOrExternalUsers)
         }
 
         Write-Verbose -Message 'Set-Targetresource: process excludeGuestsOrExternalUsers'
         If ($currentParameters.ContainsKey('ExcludeGuestOrExternalUserTypes'))
         {
+            $excludeGuestsOrExternalUsers = $null
             if ($ExcludeGuestOrExternalUserTypes.Count -ne 0)
             {
-                $excludeGuestsOrExternalUsers = @{}
-                [string]$ExcludeGuestOrExternalUserTypes = $ExcludeGuestOrExternalUserTypes -join ','
-                $excludeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $ExcludeGuestOrExternalUserTypes)
-                $externalTenants = @{}
-                if ($ExcludeExternalTenantsMembershipKind -eq 'All')
+                if ($ExcludeGuestOrExternalUserTypes -ne 'None')
                 {
-                    $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+                    $excludeGuestsOrExternalUsers = @{}
+                    [string]$ExcludeGuestOrExternalUserTypes = $ExcludeGuestOrExternalUserTypes -join ','
+                    $excludeGuestsOrExternalUsers.Add('guestOrExternalUserTypes', $ExcludeGuestOrExternalUserTypes)
+                    $externalTenants = @{}
+                    if ($ExcludeExternalTenantsMembershipKind -eq 'All')
+                    {
+                        $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessAllExternalTenants')
+                    }
+                    elseif ($ExcludeExternalTenantsMembershipKind -eq 'enumerated')
+                    {
+                        $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
+                    }
+                    $externalTenants.Add('membershipKind', $ExcludeExternalTenantsMembershipKind)
+                    if ($ExcludeExternalTenantsMembers)
+                    {
+                        $externalTenants.Add('members', $ExcludeExternalTenantsMembers)
+                    }
+                    $excludeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
                 }
-                elseif ($ExcludeExternalTenantsMembershipKind -eq 'enumerated')
-                {
-                    $externalTenants.Add('@odata.type', '#microsoft.graph.conditionalAccessEnumeratedExternalTenants')
-                }
-                $externalTenants.Add('membershipKind', $ExcludeExternalTenantsMembershipKind)
-                if ($ExcludeExternalTenantsMembers)
-                {
-                    $externalTenants.Add('members', $ExcludeExternalTenantsMembers)
-                }
-                $excludeGuestsOrExternalUsers.Add('externalTenants', $externalTenants)
-                $conditions.Users.Add('excludeGuestsOrExternalUsers', $excludeGuestsOrExternalUsers)
             }
+            $conditions.Users.Add('excludeGuestsOrExternalUsers', $excludeGuestsOrExternalUsers)
         }
 
         Write-Verbose -Message 'Set-Targetresource: process platform condition'
@@ -1325,36 +1346,36 @@ function Set-TargetResource
             if ($IncludePlatforms -or $ExcludePlatforms)
             {
                 #create and provision Platform condition object if used
-                if (-not $conditions.Contains('Platforms'))
+                if (-not $conditions.Contains('platforms'))
                 {
-                    $conditions.Add('Platforms', @{
-                            ExcludePlatforms = @()
-                            IncludePlatforms = @()
+                    $conditions.Add('platforms', @{
+                            excludePlatforms = @()
+                            includePlatforms = @()
                         })
                 }
                 else
                 {
-                    $conditions.Platforms.Add('ExcludePlatforms', @())
-                    $conditions.Platforms.Add('IncludePlatforms', @())
+                    $conditions.platforms.Add('excludePlatforms', @())
+                    $conditions.platforms.Add('includePlatforms', @())
                 }
                 Write-Verbose -Message "Set-Targetresource: IncludePlatforms: $IncludePlatforms"
                 if (([Array]$IncludePlatforms).Length -eq 0)
                 {
-                    $conditions.Platforms.IncludePlatforms = @('all')
+                    $conditions.platforms.includePlatforms = @('all')
                 }
                 else
                 {
-                    $conditions.Platforms.IncludePlatforms = @() + $IncludePlatforms
+                    $conditions.platforms.includePlatforms = @() + $IncludePlatforms
                 }
                 #no translation or conversion needed
                 Write-Verbose -Message "Set-Targetresource: ExcludePlatforms: $ExcludePlatforms"
-                $conditions.Platforms.ExcludePlatforms = @() + $ExcludePlatforms
+                $conditions.platforms.excludePlatforms = @() + $ExcludePlatforms
                 #no translation or conversion needed
             }
             else
             {
                 Write-Verbose -Message 'Set-Targetresource: setting platform condition to null'
-                $conditions.Platforms = $null
+                $conditions.platforms = $null
             }
         }
 
@@ -1363,18 +1384,18 @@ function Set-TargetResource
         {
             if ($IncludeLocations -or $ExcludeLocations)
             {
-                $conditions.Add('Locations', @{
-                        ExcludeLocations = @()
-                        IncludeLocations = @()
+                $conditions.Add('locations', @{
+                        excludeLocations = @()
+                        includeLocations = @()
                     })
-                $conditions.Locations.IncludeLocations = @()
-                $conditions.Locations.ExcludeLocations = @()
+                $conditions.locations.includeLocations = @()
+                $conditions.locations.excludeLocations = @()
                 Write-Verbose -Message 'Set-Targetresource: locations specified'
                 #create and provision Location condition object if used, translate Location names to guid
                 $LocationLookup = @{}
                 foreach ($Location in Get-MgBetaIdentityConditionalAccessNamedLocation)
                 {
-                    $LocationLookup[$Location.DisplayName] = $Location.Id
+                    $LocationLookup[$Location.displayName] = $Location.Id
                 }
                 foreach ($IncludeLocation in $IncludeLocations)
                 {
@@ -1382,11 +1403,11 @@ function Set-TargetResource
                     {
                         if ($IncludeLocation -in 'All', 'AllTrusted')
                         {
-                            $conditions.Locations.IncludeLocations += $IncludeLocation
+                            $conditions.locations.includeLocations += $IncludeLocation
                         }
                         elseif ($IncludeLocation -eq 'Multifactor authentication trusted IPs')
                         {
-                            $conditions.Locations.IncludeLocations += '00000000-0000-0000-0000-000000000000'
+                            $conditions.locations.includeLocations += '00000000-0000-0000-0000-000000000000'
                         }
                         elseif ($null -eq $LocationLookup[$IncludeLocation])
                         {
@@ -1398,7 +1419,7 @@ function Set-TargetResource
                         }
                         else
                         {
-                            $conditions.Locations.IncludeLocations += $LocationLookup[$IncludeLocation]
+                            $conditions.locations.includeLocations += $LocationLookup[$IncludeLocation]
                         }
                     }
                 }
@@ -1408,11 +1429,11 @@ function Set-TargetResource
                     {
                         if ($ExcludeLocation -eq 'All' -or $ExcludeLocation -eq 'AllTrusted')
                         {
-                            $conditions.Locations.ExcludeLocations += $ExcludeLocation
+                            $conditions.locations.excludeLocations += $ExcludeLocation
                         }
                         elseif ($ExcludeLocation -eq 'Multifactor authentication trusted IPs')
                         {
-                            $conditions.Locations.ExcludeLocations += '00000000-0000-0000-0000-000000000000'
+                            $conditions.locations.excludeLocations += '00000000-0000-0000-0000-000000000000'
                         }
                         elseif ($null -eq $LocationLookup[$ExcludeLocation])
                         {
@@ -1424,7 +1445,7 @@ function Set-TargetResource
                         }
                         else
                         {
-                            $conditions.Locations.ExcludeLocations += $LocationLookup[$ExcludeLocation]
+                            $conditions.locations.excludeLocations += $LocationLookup[$ExcludeLocation]
                         }
                     }
                 }
@@ -1438,36 +1459,36 @@ function Set-TargetResource
             {
                 if (-not $conditions.Contains('Devices'))
                 {
-                    $conditions.Add('Devices', @{})
-                    $conditions.Devices.Add('DeviceFilter', @{})
-                    $conditions.Devices.DeviceFilter.Add('Mode', $DeviceFilterMode)
-                    $conditions.Devices.DeviceFilter.Add('Rule', $DeviceFilterRule)
+                    $conditions.Add('devices', @{})
+                    $conditions.devices.Add('deviceFilter', @{})
+                    $conditions.devices.deviceFilter.Add('mode', $DeviceFilterMode)
+                    $conditions.devices.deviceFilter.Add('rule', $DeviceFilterRule)
                 }
                 else
                 {
                     if (-not $conditions.Devices.Contains('DeviceFilter'))
                     {
-                        $conditions.Devices.Add('DeviceFilter', @{})
-                        $conditions.Devices.DeviceFilter.Add('Mode', $DeviceFilterMode)
-                        $conditions.Devices.DeviceFilter.Add('Rule', $DeviceFilterRule)
+                        $conditions.devices.Add('DeviceFilter', @{})
+                        $conditions.devices.deviceFilter.Add('mode', $DeviceFilterMode)
+                        $conditions.devices.deviceFilter.Add('rule', $DeviceFilterRule)
                     }
                     else
                     {
-                        if (-not $conditions.Devices.DeviceFilter.Contains('Mode'))
+                        if (-not $conditions.devices.deviceFilter.Contains('mode'))
                         {
-                            $conditions.Devices.DeviceFilter.Add('Mode', $DeviceFilterMode)
+                            $conditions.devices.deviceFilter.Add('mode', $DeviceFilterMode)
                         }
                         else
                         {
-                            $conditions.Devices.DeviceFilter.Mode = $DeviceFilterMode
+                            $conditions.devices.deviceFilter.mode = $DeviceFilterMode
                         }
-                        if (-not $conditions.Devices.DeviceFilter.Contains('Rule'))
+                        if (-not $conditions.devices.deviceFilter.Contains('rule'))
                         {
-                            $conditions.Devices.DeviceFilter.Add('Rule', $DeviceFilterRule)
+                            $conditions.devices.deviceFilter.Add('rule', $DeviceFilterRule)
                         }
                         else
                         {
-                            $conditions.Devices.DeviceFilter.Rule = $DeviceFilterRule
+                            $conditions.devices.deviceFilter.rule = $DeviceFilterRule
                         }
                     }
                 }
@@ -1478,7 +1499,7 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: UserRiskLevels: $UserRiskLevels"
         If ($currentParameters.ContainsKey('UserRiskLevels'))
         {
-            $Conditions.Add('UserRiskLevels', $UserRiskLevels)
+            $Conditions.Add('userRiskLevels', $UserRiskLevels)
             #no translation or conversion needed
         }
 
@@ -1486,7 +1507,7 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: SignInRiskLevels: $SignInRiskLevels"
         If ($currentParameters.ContainsKey('SignInRiskLevels'))
         {
-            $Conditions.Add('SignInRiskLevels', $SignInRiskLevels)
+            $Conditions.Add('signInRiskLevels', $SignInRiskLevels)
             #no translation or conversion needed
         }
 
@@ -1494,24 +1515,49 @@ function Set-TargetResource
         Write-Verbose -Message "Set-Targetresource: ClientAppTypes: $ClientAppTypes"
         If ($currentParameters.ContainsKey('ClientAppTypes'))
         {
-            $Conditions.Add('ClientAppTypes', $ClientAppTypes)
+            $Conditions.Add('clientAppTypes', $ClientAppTypes)
             #no translation or conversion needed
+        }
+
+        Write-Verbose -Message "Set-Targetresource: authenticationFlows transferMethods: $TransferMethods"
+        if ($currentParameters.ContainsKey('TransferMethods'))
+        {
+            #create and provision TransferMethods condition object if used
+            $authenticationFlows = if ([System.String]::IsNullOrEmpty($TransferMethods))
+            {
+                $null
+            }
+            else
+            {
+                @{
+                    transferMethods = $TransferMethods
+                }
+            }
+            if (-not $conditions.Contains('authenticationFlows'))
+            {
+                $conditions.Add('authenticationFlows', $authenticationFlows)
+            }
+            else
+            {
+                $conditions.authenticationFlows = $authenticationFlows
+            }
+
         }
         Write-Verbose -Message 'Set-Targetresource: Adding processed conditions'
         #add all conditions to the parameter list
-        $NewParameters.Add('Conditions', $Conditions)
+        $NewParameters.Add('conditions', $Conditions)
         #create and provision Grant Control object
         Write-Verbose -Message 'Set-Targetresource: create and provision Grant Control object'
 
         if ($GrantControlOperator -and ($BuiltInControls -or $TermsOfUse -or $CustomAuthenticationFactors -or $AuthenticationStrength))
         {
-            $GrantControls = @{
-                Operator = $GrantControlOperator
+            $grantControls = @{
+                operator = $GrantControlOperator
             }
 
             if ($BuiltInControls)
             {
-                $GrantControls.Add('BuiltInControls', $BuiltInControls)
+                $GrantControls.Add('builtInControls', $BuiltInControls)
             }
             if ($customAuthenticationFactors)
             {
@@ -1534,12 +1580,12 @@ function Set-TargetResource
             {
                 Write-Verbose -Message "Gettign Terms of Use {$TermsOfUse}"
                 $TermsOfUseObj = Get-MgBetaAgreement | Where-Object -FilterScript { $_.DisplayName -eq $TermsOfUse }
-                $GrantControls.Add('TermsOfUse', $TermsOfUseObj.Id)
+                $GrantControls.Add('termsOfUse', $TermsOfUseObj.Id)
             }
 
             #no translation or conversion needed
             Write-Verbose -Message 'Set-Targetresource: Adding processed grant controls'
-            $NewParameters.Add('GrantControls', $GrantControls)
+            $NewParameters.Add('grantControls', $GrantControls)
         }
 
         Write-Verbose -Message 'Set-Targetresource: process session controls'
@@ -1549,70 +1595,70 @@ function Set-TargetResource
         {
             Write-Verbose -Message 'Set-Targetresource: create provision Session Control object'
             $sessioncontrols = @{
-                ApplicationEnforcedRestrictions = @{}
+                applicationEnforcedRestrictions = @{}
             }
 
             if ($ApplicationEnforcedRestrictionsIsEnabled -eq $true)
             {
                 #create and provision ApplicationEnforcedRestrictions object if used
-                $sessioncontrols.ApplicationEnforcedRestrictions.Add('IsEnabled', $true)
+                $sessioncontrols.applicationEnforcedRestrictions.Add('IsEnabled', $true)
             }
             if ($CloudAppSecurityIsEnabled)
             {
-                $CloudAppSecurityValue = @{
-                    IsEnabled            = $false
-                    CloudAppSecurityType = $null
+                $cloudAppSecurityValue = @{
+                    isEnabled            = $false
+                    cloudAppSecurityType = $null
                 }
 
-                $sessioncontrols.Add('CloudAppSecurity', $CloudAppSecurityValue)
+                $sessioncontrols.Add('cloudAppSecurity', $CloudAppSecurityValue)
                 #create and provision CloudAppSecurity object if used
-                $sessioncontrols.CloudAppSecurity.IsEnabled = $true
-                $sessioncontrols.CloudAppSecurity.CloudAppSecurityType = $CloudAppSecurityType
+                $sessioncontrols.cloudAppSecurity.isEnabled = $true
+                $sessioncontrols.cloudAppSecurity.cloudAppSecurityType = $CloudAppSecurityType
             }
             if ($SignInFrequencyIsEnabled)
             {
-                $SigninFrequencyProp = @{
+                $signinFrequencyProp = @{
                     isEnabled         = $true
                     type              = $null
                     value             = $null
                     frequencyInterval = $null
                 }
 
-                $sessioncontrols.Add('SignInFrequency', $SigninFrequencyProp)
+                $sessioncontrols.Add('signInFrequency', $SigninFrequencyProp)
                 #create and provision SignInFrequency object if used
-                $sessioncontrols.SignInFrequency.isEnabled = $true
+                $sessioncontrols.signInFrequency.isEnabled = $true
                 if ($SignInFrequencyType -ne '')
                 {
-                    $sessioncontrols.SignInFrequency.type = $SignInFrequencyType
+                    $sessioncontrols.signInFrequency.type = $SignInFrequencyType
                 }
                 else
                 {
-                    $sessioncontrols.SignInFrequency.Remove('type') | Out-Null
+                    $sessioncontrols.signInFrequency.Remove('type') | Out-Null
                 }
                 if ($SignInFrequencyValue -gt 0)
                 {
-                    $sessioncontrols.SignInFrequency.value = $SignInFrequencyValue
+                    $sessioncontrols.signInFrequency.value = $SignInFrequencyValue
                 }
                 else
                 {
-                    $sessioncontrols.SignInFrequency.Remove('value') | Out-Null
+                    $sessioncontrols.signInFrequency.Remove('value') | Out-Null
                 }
-                $sessioncontrols.SignInFrequency.frequencyInterval = $SignInFrequencyInterval
+                $sessioncontrols.signInFrequency.frequencyInterval = $SignInFrequencyInterval
             }
             if ($PersistentBrowserIsEnabled)
             {
-                $PersistentBrowserValue = @{
-                    IsEnabled = $false
-                    Mode      = $false
+                $persistentBrowserValue = @{
+                    isEnabled = $false
+                    mode      = $false
                 }
-                $sessioncontrols.Add('PersistentBrowser', $PersistentBrowserValue)
+                $sessioncontrols.Add('persistentBrowser', $PersistentBrowserValue)
                 Write-Verbose -Message "Set-Targetresource: Persistent Browser settings defined: PersistentBrowserIsEnabled:$PersistentBrowserIsEnabled, PersistentBrowserMode:$PersistentBrowserMode"
                 #create and provision PersistentBrowser object if used
-                $sessioncontrols.PersistentBrowser.IsEnabled = $true
-                $sessioncontrols.PersistentBrowser.Mode = $PersistentBrowserMode
+                $sessioncontrols.persistentBrowser.isEnabled = $true
+                $sessioncontrols.persistentBrowser.mode = $PersistentBrowserMode
             }
         }
-        $NewParameters.Add('SessionControls', $sessioncontrols)
+        $NewParameters.Add('sessionControls', $sessioncontrols)
         #add SessionControls to the parameter list
     }
     if ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Present')
@@ -1622,7 +1668,7 @@ function Set-TargetResource
         try
         {
             Write-Verbose -Message "Updating existing policy with values: $(Convert-M365DscHashtableToString -Hashtable $NewParameters)"
-            Update-MgBetaIdentityConditionalAccessPolicy @NewParameters
+            Invoke-MgGraphRequest -Method PATCH -Uri "https://graph.microsoft.com/beta/identity/conditionalAccess/policies/$($currentPolicy.Id)" -Body $NewParameters
         }
         catch
         {
@@ -1632,7 +1678,7 @@ function Set-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
 
-            Write-Verbose -Message "Set-Targetresource: Failed change policy $DisplayName"
+            Write-Error -Message "Set-Targetresource: Failed changing policy $DisplayName"
         }
     }
     elseif ($Ensure -eq 'Present' -and $currentPolicy.Ensure -eq 'Absent')
@@ -1645,7 +1691,7 @@ function Set-TargetResource
         {
             try
             {
-                New-MgBetaIdentityConditionalAccessPolicy @NewParameters
+                Invoke-MgGraphRequest -Method POST -Uri 'https://graph.microsoft.com/beta/identity/conditionalAccess/policies' -Body $NewParameters
             }
             catch
             {
@@ -1655,7 +1701,7 @@ function Set-TargetResource
                     -TenantId $TenantId `
                     -Credential $Credential
 
-                Write-Verbose -Message 'Set-Targetresource: Failed creating new policy'
+                Write-Error -Message 'Set-Targetresource: Failed creating new policy'
             }
         }
         else
@@ -1665,7 +1711,7 @@ function Set-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
 
-            Write-Verbose -Message 'Set-Targetresource: Failed creating new policy. At least a user rule, application rule and grant or session control is required'
+            Write-Error -Message 'Set-Targetresource: Failed creating new policy. At least a user rule, application rule and grant or session control is required'
         }
     }
     elseif ($Ensure -eq 'Absent' -and $currentPolicy.Ensure -eq 'Present')
@@ -1683,7 +1729,7 @@ function Set-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
 
-            Write-Verbose -Message "Set-Targetresource: Failed deleting policy $DisplayName"
+            Write-Error -Message "Set-Targetresource: Failed deleting policy $DisplayName"
         }
     }
     Write-Verbose -Message "Set-Targetresource: Finished processing Policy $Displayname"
@@ -1889,6 +1935,10 @@ function Test-TargetResource
         [System.String[]]
         $AuthenticationContexts,
 
+        [Parameter()]
+        [System.String]
+        $TransferMethods,
+
         #generic
         [Parameter()]
         [ValidateSet('Present', 'Absent')]
@@ -1934,10 +1984,28 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Id') | Out-Null
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    # If no TransferMethod is specified, ignore it
+    # If a TransferMethod is specified, check if it is equal to the current value
+    # while ignoring the order of the values
+    if (-not $PSBoundParameters.ContainsKey('TransferMethods') -or
+        $null -eq (Compare-Object -ReferenceObject $TransferMethods.Split(',') -DifferenceObject $CurrentValues.TransferMethods.Split(',')))
+    {
+        $ValuesToCheck.Remove('TransferMethods') | Out-Null
+        $TestResult = $true
+    }
+    else
+    {
+        Write-Verbose -Message "TransferMethods are not equal: [$TransferMethods] - [$($CurrentValues.TransferMethods)]"
+        $TestResult  = $false
+    }
+
+    if ($TestResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 
@@ -2013,6 +2081,11 @@ function Export-TargetResource
             Write-Host "`r`n" -NoNewline
             foreach ($Policy in $Policies)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($Policies.Count)] $($Policy.DisplayName)" -NoNewline
                 $Params = @{
                     DisplayName           = $Policy.DisplayName

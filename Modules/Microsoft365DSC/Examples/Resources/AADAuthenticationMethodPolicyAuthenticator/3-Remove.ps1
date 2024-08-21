@@ -9,11 +9,18 @@ Configuration Example
 
     Node localhost
     {
-        param
-        (
-            [Parameter(Mandatory = $true)]
-            [PSCredential]
-            $credsCredential
+        param(
+            [Parameter()]
+            [System.String]
+            $ApplicationId,
+
+            [Parameter()]
+            [System.String]
+            $TenantId,
+
+            [Parameter()]
+            [System.String]
+            $CertificateThumbprint
         )
         AADAuthenticationMethodPolicyAuthenticator "AADAuthenticationMethodPolicyAuthenticator-MicrosoftAuthenticator"
         {
@@ -27,7 +34,9 @@ Configuration Example
             );
             IsSoftwareOathEnabled = $True; # Updated Property
             State                 = "enabled";
-            Credential            = $credsCredential;
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

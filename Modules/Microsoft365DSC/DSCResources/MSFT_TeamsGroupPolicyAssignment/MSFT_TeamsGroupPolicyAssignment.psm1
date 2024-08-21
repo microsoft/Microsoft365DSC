@@ -13,7 +13,7 @@ function Get-TargetResource
         $GroupId,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('ApplicationAccessPolicy','CallingLineIdentity','OnlineAudioConferencingRoutingPolicy','OnlineVoicemailPolicy','OnlineVoiceRoutingPolicy','TeamsAudioConferencingPolicy','TeamsCallHoldPolicy','TeamsCallParkPolicy','TeamsChannelsPolicy','TeamsComplianceRecordingPolicy','TeamsCortanaPolicy','TeamsEmergencyCallingPolicy','TeamsEnhancedEncryptionPolicy','TeamsFeedbackPolicy','TeamsFilesPolicy','TeamsIPPhonePolicy','TeamsMediaLoggingPolicy','TeamsMeetingBroadcastPolicy','TeamsMeetingPolicy','TeamsMessagingPolicy','TeamsMobilityPolicy','TeamsRoomVideoTeleConferencingPolicy','TeamsShiftsPolicy','TeamsUpdateManagementPolicy','TeamsVdiPolicy','TeamsVideoInteropServicePolicy','TenantDialPlan','ExternalAccessPolicy','TeamsAppSetupPolicy','TeamsCallingPolicy','TeamsEventsPolicy','TeamsMeetingBrandingPolicy','TeamsMeetingTemplatePermissionPolicy')]
+        [ValidateSet('ApplicationAccessPolicy','CallingLineIdentity','OnlineAudioConferencingRoutingPolicy','OnlineVoicemailPolicy','OnlineVoiceRoutingPolicy','TeamsAudioConferencingPolicy','TeamsCallHoldPolicy','TeamsCallParkPolicy','TeamsChannelsPolicy','TeamsComplianceRecordingPolicy','TeamsCortanaPolicy','TeamsEmergencyCallingPolicy','TeamsEnhancedEncryptionPolicy','TeamsFeedbackPolicy','TeamsFilesPolicy','TeamsIPPhonePolicy','TeamsMediaLoggingPolicy','TeamsMeetingBroadcastPolicy','TeamsMeetingPolicy','TeamsMessagingPolicy','TeamsMobilityPolicy','TeamsRoomVideoTeleConferencingPolicy','TeamsShiftsPolicy','TeamsUpdateManagementPolicy','TeamsVdiPolicy','TeamsVideoInteropServicePolicy','TenantDialPlan','ExternalAccessPolicy','TeamsAppSetupPolicy','TeamsCallingPolicy','TeamsEventsPolicy','TeamsMeetingBrandingPolicy','TeamsMeetingTemplatePermissionPolicy','TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
 
@@ -153,7 +153,7 @@ function Set-TargetResource
         $GroupId,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('ApplicationAccessPolicy','CallingLineIdentity','OnlineAudioConferencingRoutingPolicy','OnlineVoicemailPolicy','OnlineVoiceRoutingPolicy','TeamsAudioConferencingPolicy','TeamsCallHoldPolicy','TeamsCallParkPolicy','TeamsChannelsPolicy','TeamsComplianceRecordingPolicy','TeamsCortanaPolicy','TeamsEmergencyCallingPolicy','TeamsEnhancedEncryptionPolicy','TeamsFeedbackPolicy','TeamsFilesPolicy','TeamsIPPhonePolicy','TeamsMediaLoggingPolicy','TeamsMeetingBroadcastPolicy','TeamsMeetingPolicy','TeamsMessagingPolicy','TeamsMobilityPolicy','TeamsRoomVideoTeleConferencingPolicy','TeamsShiftsPolicy','TeamsUpdateManagementPolicy','TeamsVdiPolicy','TeamsVideoInteropServicePolicy','TenantDialPlan','ExternalAccessPolicy','TeamsAppSetupPolicy','TeamsCallingPolicy','TeamsEventsPolicy','TeamsMeetingBrandingPolicy','TeamsMeetingTemplatePermissionPolicy')]
+        [ValidateSet('ApplicationAccessPolicy','CallingLineIdentity','OnlineAudioConferencingRoutingPolicy','OnlineVoicemailPolicy','OnlineVoiceRoutingPolicy','TeamsAudioConferencingPolicy','TeamsCallHoldPolicy','TeamsCallParkPolicy','TeamsChannelsPolicy','TeamsComplianceRecordingPolicy','TeamsCortanaPolicy','TeamsEmergencyCallingPolicy','TeamsEnhancedEncryptionPolicy','TeamsFeedbackPolicy','TeamsFilesPolicy','TeamsIPPhonePolicy','TeamsMediaLoggingPolicy','TeamsMeetingBroadcastPolicy','TeamsMeetingPolicy','TeamsMessagingPolicy','TeamsMobilityPolicy','TeamsRoomVideoTeleConferencingPolicy','TeamsShiftsPolicy','TeamsUpdateManagementPolicy','TeamsVdiPolicy','TeamsVideoInteropServicePolicy','TenantDialPlan','ExternalAccessPolicy','TeamsAppSetupPolicy','TeamsCallingPolicy','TeamsEventsPolicy','TeamsMeetingBrandingPolicy','TeamsMeetingTemplatePermissionPolicy','TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
 
@@ -273,7 +273,7 @@ function Test-TargetResource
         $GroupId,
 
         [Parameter(Mandatory = $true)]
-        [ValidateSet('ApplicationAccessPolicy','CallingLineIdentity','OnlineAudioConferencingRoutingPolicy','OnlineVoicemailPolicy','OnlineVoiceRoutingPolicy','TeamsAudioConferencingPolicy','TeamsCallHoldPolicy','TeamsCallParkPolicy','TeamsChannelsPolicy','TeamsComplianceRecordingPolicy','TeamsCortanaPolicy','TeamsEmergencyCallingPolicy','TeamsEnhancedEncryptionPolicy','TeamsFeedbackPolicy','TeamsFilesPolicy','TeamsIPPhonePolicy','TeamsMediaLoggingPolicy','TeamsMeetingBroadcastPolicy','TeamsMeetingPolicy','TeamsMessagingPolicy','TeamsMobilityPolicy','TeamsRoomVideoTeleConferencingPolicy','TeamsShiftsPolicy','TeamsUpdateManagementPolicy','TeamsVdiPolicy','TeamsVideoInteropServicePolicy','TenantDialPlan','ExternalAccessPolicy','TeamsAppSetupPolicy','TeamsCallingPolicy','TeamsEventsPolicy','TeamsMeetingBrandingPolicy','TeamsMeetingTemplatePermissionPolicy')]
+        [ValidateSet('ApplicationAccessPolicy','CallingLineIdentity','OnlineAudioConferencingRoutingPolicy','OnlineVoicemailPolicy','OnlineVoiceRoutingPolicy','TeamsAudioConferencingPolicy','TeamsCallHoldPolicy','TeamsCallParkPolicy','TeamsChannelsPolicy','TeamsComplianceRecordingPolicy','TeamsCortanaPolicy','TeamsEmergencyCallingPolicy','TeamsEnhancedEncryptionPolicy','TeamsFeedbackPolicy','TeamsFilesPolicy','TeamsIPPhonePolicy','TeamsMediaLoggingPolicy','TeamsMeetingBroadcastPolicy','TeamsMeetingPolicy','TeamsMessagingPolicy','TeamsMobilityPolicy','TeamsRoomVideoTeleConferencingPolicy','TeamsShiftsPolicy','TeamsUpdateManagementPolicy','TeamsVdiPolicy','TeamsVideoInteropServicePolicy','TenantDialPlan','ExternalAccessPolicy','TeamsAppSetupPolicy','TeamsCallingPolicy','TeamsEventsPolicy','TeamsMeetingBrandingPolicy','TeamsMeetingTemplatePermissionPolicy','TeamsVerticalPackagePolicy')]
         [System.String]
         $PolicyType,
 
@@ -414,6 +414,11 @@ function Export-TargetResource
                     -Credential $Credential
 
                 continue
+            }
+
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
             }
 
             Write-Host "    |---[$j/$($instances.Length)] GroupPolicyAssignment {$($Group.DisplayName)-$($item.PolicyType)}" -NoNewline

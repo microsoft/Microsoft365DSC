@@ -238,7 +238,7 @@ function Get-TargetResource
                 -TenantId $TenantId `
                 -Credential $Credential
 
-            return $nullReturn
+            throw $_
         }
     }
 }
@@ -911,6 +911,11 @@ function Export-TargetResource
         [array] $Script:exportedInstances = Get-MgApplication -Filter $Filter -All -ErrorAction Stop
         foreach ($AADApp in $Script:exportedInstances)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($Script:exportedInstances.Count)] $($AADApp.DisplayName)" -NoNewline
             $Params = @{
                 ApplicationId         = $ApplicationId

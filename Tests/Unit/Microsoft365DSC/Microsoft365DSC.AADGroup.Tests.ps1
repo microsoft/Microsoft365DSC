@@ -75,7 +75,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Remove-MgGroupMemberDirectoryObjectByRef -MockWith {
             }
 
-            Mock -CommandName Remove-MgBetaDirectoryRoleMemberByRef -MockWith {
+            Mock -CommandName Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef -MockWith {
             }
 
             # Mock Write-Host to hide output during the tests
@@ -470,6 +470,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
+                        AssignedToRole     = @()
                         Ensure             = 'Present'
                     }
                 }
@@ -530,7 +531,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         GroupTypes         = @()
                         MailNickname       = 'M365DSC'
                         IsAssignableToRole = $true
-                        Ensure             = 'Present'
                     }
                 }
                 Mock -CommandName Get-MgGroupMemberOf -MockWith {
@@ -563,7 +563,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Set-TargetResource @testParams
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
                 Should -Invoke -CommandName 'Get-MgBetaDirectoryRole' -Exactly 1
-                Should -Invoke -CommandName 'Remove-MgBetaDirectoryRoleMemberByRef' -Exactly 1
+                Should -Invoke -CommandName 'Remove-MgBetaDirectoryRoleMemberDirectoryObjectByRef' -Exactly 1
             }
         }
 

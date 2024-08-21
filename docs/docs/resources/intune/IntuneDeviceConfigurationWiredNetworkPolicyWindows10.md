@@ -101,9 +101,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -124,7 +132,6 @@ Configuration Example
             AuthenticationRetryDelayPeriodInSeconds               = 5
             AuthenticationType                                    = 'machine'
             CacheCredentials                                      = $True
-            Credential                                            = $Credscredential
             DisplayName                                           = 'Wired Network'
             EapolStartPeriodInSeconds                             = 5
             EapType                                               = 'teap'
@@ -136,6 +143,9 @@ Configuration Example
             TrustedServerCertificateNames                         = @('srv.domain.com')
             RootCertificatesForServerValidationIds                = @('a485d322-13cd-43ef-beda-733f656f48ea', '169bf4fc-5914-40f4-ad33-48c225396183')
             SecondaryIdentityCertificateForClientAuthenticationId = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -150,9 +160,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -173,7 +191,6 @@ Configuration Example
             AuthenticationRetryDelayPeriodInSeconds               = 5
             AuthenticationType                                    = 'machine'
             CacheCredentials                                      = $True
-            Credential                                            = $Credscredential
             DisplayName                                           = 'Wired Network'
             EapolStartPeriodInSeconds                             = 5
             EapType                                               = 'teap'
@@ -185,6 +202,9 @@ Configuration Example
             TrustedServerCertificateNames                         = @('srv.domain.com')
             RootCertificatesForServerValidationIds                = @('a485d322-13cd-43ef-beda-733f656f48ea', '169bf4fc-5914-40f4-ad33-48c225396183')
             SecondaryIdentityCertificateForClientAuthenticationId = '0b9aef2f-1671-4260-8eb9-3ab3138e176a'
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -199,9 +219,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -209,9 +237,11 @@ Configuration Example
     {
         IntuneDeviceConfigurationWiredNetworkPolicyWindows10 'Example'
         {
-            Credential                                            = $Credscredential
             DisplayName                                           = 'Wired Network'
             Ensure                                                = 'Present'
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

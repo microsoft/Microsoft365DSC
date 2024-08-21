@@ -356,10 +356,15 @@ function Export-TargetResource
         foreach ($AuthenticationPolicy in $AllAuthenticationPolicies)
         {
             Write-Host "    |---[$i/$($AllAuthenticationPolicies.Count)] $($AuthenticationPolicy.Identity)" -NoNewline
-            $assignedUsers = Get-User -Filter "AuthenticationPolicy -eq '$($AuthenticationPolicy.DistinguishedName)'"
+            $assignedUsers = Get-User -Filter "AuthenticationPolicy -eq '$($AuthenticationPolicy.DistinguishedName)'" -ResultSize unlimited
 
             foreach ($user in $assignedUsers)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 $Params = @{
                     UserName              = $user.UserPrincipalName
                     Credential            = $Credential

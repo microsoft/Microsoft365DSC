@@ -21,7 +21,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
         Invoke-Command -ScriptBlock $Global:DscHelper.InitializeScript -NoNewScope
         BeforeAll {
 
-            $secpasswd = ConvertTo-SecureString 'f@kepassword1' -AsPlainText -Force
+            $secpasswd = ConvertTo-SecureString (New-GUID).ToString() -AsPlainText -Force
             $Credential = New-Object System.Management.Automation.PSCredential ('tenantadmin@mydomain.com', $secpasswd)
 
             Mock -CommandName Confirm-M365DSCDependencies -MockWith {
@@ -384,7 +384,7 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName = 'ClientCertificate'
                     }
                 } -ParameterFilter { $CertificateName -eq 'secondaryIdentityCertificateForClientAuthentication' }
-                
+
                 Mock -CommandName Get-IntuneDeviceConfigurationCertificateId -MockWith {
                     return 'a485d322-13cd-43ef-beda-733f656f48ea'
                 } -ParameterFilter { $DisplayName -eq 'RootCertificate' }

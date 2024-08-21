@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -31,7 +39,6 @@ Configuration Example
             CacheServerBackgroundDownloadFallbackToHttpDelayInSeconds = 3;
             CacheServerForegroundDownloadFallbackToHttpDelayInSeconds = 3;
             CacheServerHostNames                                      = @("domain.com");
-            Credential                                                = $Credscredential;
             DeliveryOptimizationMode                                  = "httpWithPeeringPrivateGroup";
             DisplayName                                               = "delivery optimisation";
             Ensure                                                    = "Present";
@@ -53,6 +60,9 @@ Configuration Example
             RestrictPeerSelectionBy                                   = "subnetMask";
             SupportsScopeTags                                         = $True;
             VpnPeerCaching                                            = "enabled";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

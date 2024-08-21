@@ -9,7 +9,7 @@
 | **AllowChannelMeetingScheduling** | Write | Boolean | Determines whether a user can schedule channel meetings. Set this to TRUE to allow a user to schedule channel meetings. Set this to FALSE to prohibit the user from scheduling channel meetings. Note this only restricts from scheduling and not from joining a meeting scheduled by another user. | |
 | **AllowMeetNow** | Write | Boolean | Determines whether a user can start ad-hoc meetings. Set this to TRUE to allow a user to start ad-hoc meetings. Set this to FALSE to prohibit the user from starting ad-hoc meetings. | |
 | **AllowPrivateMeetNow** | Write | Boolean | Determines whether a user can start private ad-hoc meetings. Set this to TRUE to allow a user to start private ad-hoc meetings. Set this to FALSE to prohibit the user from starting private ad-hoc meetings. | |
-| **MeetingChatEnabledType** | Write | String | Determines whether or not Chat will be enabled or disabled for meetings. | `Disabled`, `Enabled` |
+| **MeetingChatEnabledType** | Write | String | Determines whether or not Chat will be enabled, enabled except anonymous or disabled for meetings. | `Disabled`, `Enabled`, `EnabledExceptAnonymous` |
 | **LiveCaptionsEnabledType** | Write | String | Determines whether a user should have the option to view live captions or not in a meeting. | `Disabled`, `DisabledUserOverride` |
 | **AllowIPAudio** | Write | Boolean | Determines whether audio is enabled in a user's meetings or calls. Set this to TRUE to allow the user to share their audioo. Set this to FALSE to prohibit the user from sharing their audio. | |
 | **AllowIPVideo** | Write | Boolean | Determines whether video is enabled in a user's meetings or calls. Set this to TRUE to allow the user to share their video. Set this to FALSE to prohibit the user from sharing their video. | |
@@ -42,7 +42,7 @@
 | **RoomAttributeUserOverride** | Write | String | Determines whether or not biometric data will be used to distinguish and or attribute in the transcript. | `Off`, `Distinguish`, `Attribute` |
 | **StreamingAttendeeMode** | Write | String | Determines whether or not meetings created by users with this policy are able to utilize the meeting overflow capability. | `Disabled`, `Enabled` |
 | **AllowBreakoutRooms** | Write | Boolean | Determines whether or not meetings created by users with this policy are able to utilize the Breakout Rooms feature. | |
-| **TeamsCameraFarEndPTZMode** | Write | String | Determines whether or not meetings created by users with this policy are able to utilize the Camera Far-End PTZ Mode. | `Disabled`, `Enabled` |
+| **TeamsCameraFarEndPTZMode** | Write | String | Determines whether or not meetings created by users with this policy are able to utilize the Camera Far-End PTZ Mode. | `Disabled`, `AutoAcceptInTenant`, `AutoAcceptAll` |
 | **AllowMeetingReactions** | Write | Boolean | Determines whether or not meetings created by users with this policy are able to utilize the Meeting Reactions feature. | |
 | **WhoCanRegister** | Write | String | Specifies who can attend and register for webinars. | `Everyone`, `EveryoneInCompany` |
 | **AllowAnnotations** | Write | Boolean | N/A | |

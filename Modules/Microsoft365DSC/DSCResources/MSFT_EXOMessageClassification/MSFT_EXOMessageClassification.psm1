@@ -258,7 +258,7 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $MessageClassification = Get-MessageClassification -Identity $Identity
+    $MessageClassification = Get-MessageClassification -Identity $Identity -ErrorAction SilentlyContinue
     $MessageClassificationParams = [System.Collections.Hashtable]($PSBoundParameters)
     $MessageClassificationParams.Remove('Ensure') | Out-Null
     $MessageClassificationParams.Remove('Credential') | Out-Null
@@ -506,6 +506,11 @@ function Export-TargetResource
         $i = 1
         foreach ($MessageClassification in $MessageClassifications)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($MessageClassifications.Length)] $($MessageClassification.Identity)" -NoNewline
 
             $Params = @{
