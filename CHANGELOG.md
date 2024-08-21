@@ -20,6 +20,11 @@
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Fixed issue if `PasswordComplexity` was set to 5 by allowing that value
     FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Change app and delegated permissions for reading to
+    DeviceManagementConfiguration.ReadWrite.All to cope with
+    getOmaSettingPlainTextValue which is only working if RW is granted
+    FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
@@ -344,10 +349,6 @@
   * Update setting handling so that the value is reverted to default when unset
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Fixed an issue where the payload of xml files was not encoded as base64.
-  * Change app and delegated permissions for reading to
-    DeviceManagementConfiguration.ReadWrite.All to cope with
-    getOmaSettingPlainTextValue which is only working if RW is granted
-    FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
 * IntuneDeviceConfigurationDefenderForEndpointOnboardingPolicyWindows10
   * Fixed a creation and update issue when the exported policy contains a
     onboarding blob and the tenant is connected to Defender for Endpoint Service.
