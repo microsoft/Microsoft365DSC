@@ -3,6 +3,8 @@
 # UNRELEASED
 
 * AADConditionalAccessPolicy
+  * Fixing issue where the resource crashed when trying to retrieve groups
+    and users from Entra ID which no longer existed
   * Fixes an issue where the `AuthenticationFlows` property changed in Graph
     and updates on the documentation for the possible values of `TransferMethods`.
     FIXES [#4961](https://github.com/microsoft/Microsoft365DSC/issues/4961)
