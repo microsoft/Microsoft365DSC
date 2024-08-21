@@ -22,6 +22,11 @@
     FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
 * IntuneDeviceCompliancePolicyWindows10
   * Fix extraction of property `TpmRequired`
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Change app and delegated permissions for reading to
+    DeviceManagementConfiguration.ReadWrite.All to cope with
+    getOmaSettingPlainTextValue which is only working if RW is granted
+    FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
