@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* AADConditionalAccessPolicy
+  * Fixing issue where the resource crashed when trying to retrieve groups
+    and users from Entra ID which no longer existed
 * EXOHostedContentFilterRule
   * Don't check if associated `EXOHostedContentFilterPolicy` is present
     while removing resource since it's not required
