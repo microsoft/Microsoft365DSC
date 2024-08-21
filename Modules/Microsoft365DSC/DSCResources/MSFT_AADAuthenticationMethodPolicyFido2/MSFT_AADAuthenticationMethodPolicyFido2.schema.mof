@@ -11,7 +11,7 @@ class MSFT_AADAuthenticationMethodPolicyFido2ExcludeTarget
     [Write, Description("The object identifier of an Azure AD group.")] String Id;
     [Write, Description("The type of the authentication method target. Possible values are: group and unknownFutureValue."), ValueMap{"user","group","unknownFutureValue"}, Values{"user","group","unknownFutureValue"}] String TargetType;
 };
-
+[ClassVersion("1.0.0")]
 class MSFT_AADAuthenticationMethodPolicyFido2IncludeTarget
 {
     [Write, Description("The object identifier of an Azure AD group.")] String Id;

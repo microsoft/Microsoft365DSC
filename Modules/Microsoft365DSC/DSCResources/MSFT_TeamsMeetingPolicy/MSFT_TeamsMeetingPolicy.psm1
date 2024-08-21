@@ -262,7 +262,7 @@ function Get-TargetResource
         $StreamingAttendeeMode = 'Enabled',
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'AutoAcceptInTenant', 'AutoAcceptAll')]
         [System.String]
         $TeamsCameraFarEndPTZMode,
 
@@ -683,7 +683,7 @@ function Set-TargetResource
         $StreamingAttendeeMode = 'Enabled',
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'AutoAcceptInTenant', 'AutoAcceptAll')]
         [System.String]
         $TeamsCameraFarEndPTZMode,
 
@@ -1065,7 +1065,7 @@ function Test-TargetResource
         $StreamingAttendeeMode = 'Enabled',
 
         [Parameter()]
-        [ValidateSet('Disabled', 'Enabled')]
+        [ValidateSet('Disabled', 'AutoAcceptInTenant', 'AutoAcceptAll')]
         [System.String]
         $TeamsCameraFarEndPTZMode,
 
@@ -1207,6 +1207,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewline
             $params = @{
                 Identity              = $policy.Identity

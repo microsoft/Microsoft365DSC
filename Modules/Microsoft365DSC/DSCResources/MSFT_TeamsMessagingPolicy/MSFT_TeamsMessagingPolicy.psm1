@@ -641,6 +641,11 @@ function Export-TargetResource
         Write-Host "`r`n" -NoNewline
         foreach ($policy in $policies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($policies.Count)] $($policy.Identity)" -NoNewline
             if ($policy.Identity.ToString().contains(':'))
             {

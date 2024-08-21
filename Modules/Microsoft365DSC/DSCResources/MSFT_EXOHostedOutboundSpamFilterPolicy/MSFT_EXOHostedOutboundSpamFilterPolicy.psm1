@@ -29,15 +29,15 @@ function Get-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $RecipientLimitInternalPerHour,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $RecipientLimitPerDay,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $RecipientLimitExternalPerHour,
 
         [Parameter()]
@@ -196,15 +196,15 @@ function Set-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $RecipientLimitInternalPerHour,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $RecipientLimitPerDay,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $RecipientLimitExternalPerHour,
 
         [Parameter()]
@@ -337,15 +337,15 @@ function Test-TargetResource
         $NotifyOutboundSpam = $true,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $RecipientLimitInternalPerHour,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $RecipientLimitPerDay,
 
         [Parameter()]
-        [System.String]
+        [System.UInt32]
         $RecipientLimitExternalPerHour,
 
         [Parameter()]
@@ -494,6 +494,11 @@ function Export-TargetResource
         $i = 1
         foreach ($HostedOutboundSpamFilterPolicy in $HostedOutboundSpamFilterPolicies)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $Params = @{
                 Credential            = $Credential
                 Identity              = $HostedOutboundSpamFilterPolicy.Identity

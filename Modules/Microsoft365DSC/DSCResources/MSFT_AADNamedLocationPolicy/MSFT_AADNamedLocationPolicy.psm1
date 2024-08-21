@@ -497,6 +497,11 @@ function Export-TargetResource
         }
         foreach ($AADNamedLocation in $AADNamedLocations)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AADNamedLocations.Count)] $($AADNamedLocation.DisplayName)" -NoNewline
             $Params = @{
                 ApplicationSecret     = $ApplicationSecret

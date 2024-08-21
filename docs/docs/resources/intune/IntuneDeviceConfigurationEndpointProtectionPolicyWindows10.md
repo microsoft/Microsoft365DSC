@@ -367,7 +367,7 @@
 | **LocalPortRanges** | Write | StringArray[] | List of local port ranges. For example, '100-120', '200', '300-320'. If not specified, the default is All. | |
 | **LocalUserAuthorizations** | Write | String | Specifies the list of authorized local users for the app container. This is a string in Security Descriptor Definition Language (SDDL) format. | |
 | **PackageFamilyName** | Write | String | The package family name of a Microsoft Store application that's affected by the firewall rule. | |
-| **ProfileTypes** | Write | String | Specifies the profiles to which the rule belongs. If not specified, the default is All. Possible values are: notConfigured, domain, private, public. | `notConfigured`, `domain`, `private`, `public` |
+| **ProfileTypes** | Write | String | Specifies the profiles to which the rule belongs. If not specified, the default is All. Possible values are: notConfigured, domain, private, public. | |
 | **Protocol** | Write | UInt32 | 0-255 number representing the IP protocol (TCP = 6, UDP = 17). If not specified, the default is All. Valid values 0 to 255 | |
 | **RemoteAddressRanges** | Write | StringArray[] | List of tokens specifying the remote addresses covered by the rule. Tokens are case insensitive. Default is any address. Valid tokens include:'' indicates any remote address. If present, this must be the only token included.'Defaultgateway''DHCP''DNS''WINS''Intranet' (supported on Windows versions 1809+)'RmtIntranet' (supported on Windows versions 1809+)'Internet' (supported on Windows versions 1809+)'Ply2Renders' (supported on Windows versions 1809+)'LocalSubnet' indicates any local address on the local subnet.A subnet can be specified using either the subnet mask or network prefix notation. If neither a subnet mask nor a network prefix is specified, the subnet mask defaults to 255.255.255.255.A valid IPv6 address.An IPv4 address range in the format of 'start address - end address' with no spaces included.An IPv6 address range in the format of 'start address - end address' with no spaces included. | |
 | **RemotePortRanges** | Write | StringArray[] | List of remote port ranges. For example, '100-120', '200', '300-320'. If not specified, the default is All. | |
@@ -435,9 +435,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -508,7 +516,6 @@ Configuration Example
                 StartupAuthenticationTpmKeyUsage = 'allowed'
                 StartupAuthenticationBlockWithoutTpmChip = $False
             };
-            Credential                                                                   = $Credscredential;
             DefenderAdditionalGuardedFolders                                             = @();
             DefenderAdobeReaderLaunchChildProcess                                        = "notConfigured";
             DefenderAdvancedRansomewareProtectionType                                    = "notConfigured";
@@ -670,6 +677,9 @@ Configuration Example
             XboxServicesLiveAuthManagerServiceStartupMode                                = "manual";
             XboxServicesLiveGameSaveServiceStartupMode                                   = "manual";
             XboxServicesLiveNetworkingServiceStartupMode                                 = "manual";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -684,9 +694,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -757,7 +775,6 @@ Configuration Example
                 StartupAuthenticationTpmKeyUsage = 'allowed'
                 StartupAuthenticationBlockWithoutTpmChip = $False
             };
-            Credential                                                                   = $Credscredential;
             DefenderAdditionalGuardedFolders                                             = @();
             DefenderAdobeReaderLaunchChildProcess                                        = "notConfigured";
             DefenderAdvancedRansomewareProtectionType                                    = "notConfigured";
@@ -919,6 +936,9 @@ Configuration Example
             XboxServicesLiveAuthManagerServiceStartupMode                                = "manual";
             XboxServicesLiveGameSaveServiceStartupMode                                   = "manual";
             XboxServicesLiveNetworkingServiceStartupMode                                 = "manual";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -933,9 +953,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -944,8 +972,10 @@ Configuration Example
         IntuneDeviceConfigurationEndpointProtectionPolicyWindows10 'Example'
         {
             DisplayName                                                                  = "endpoint protection legacy - dsc v2.0";
-            Credential                                                                   = $Credscredential;
             Ensure                                                                       = "Absent";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

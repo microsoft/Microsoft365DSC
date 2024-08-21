@@ -1223,6 +1223,11 @@ function Export-TargetResource
         }
         foreach ($label in $labels)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($labels.Count)] $($label.Name)" -NoNewline
 
             $Results = Get-TargetResource @PSBoundParameters -Name $label.Name

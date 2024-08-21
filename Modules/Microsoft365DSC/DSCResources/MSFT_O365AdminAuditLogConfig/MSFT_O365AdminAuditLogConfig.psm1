@@ -202,7 +202,6 @@ function Set-TargetResource
             $Message = "Couldn't set the Audit Log Ingestion. Please run Enable-OrganizationCustomization first."
             New-M365DSCLogEntry -Message $Message `
                 -Exception $_ `
-                -Message $Message `
                 -Source $MyInvocation.MyCommand.ModuleName
         }
     }
@@ -367,6 +366,11 @@ function Export-TargetResource
         if ($O365AdminAuditLogConfig.UnifiedAuditLogIngestionEnabled)
         {
             $value = 'Enabled'
+        }
+
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
         }
 
         $dscContent = ''

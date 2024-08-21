@@ -559,6 +559,11 @@ function Export-TargetResource
             $i = 1
             foreach ($SafeLinksPolicy in $SafeLinksPolicies)
             {
+                if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                {
+                    $Global:M365DSCExportResourceInstancesCount++
+                }
+
                 Write-Host "    |---[$i/$($SafeLinksPolicies.Length)] $($SafeLinksPolicy.Name)" -NoNewline
                 $Params = @{
                     Credential            = $Credential

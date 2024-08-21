@@ -6,9 +6,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -28,11 +36,13 @@ Configuration Example
             );
             ConfigurationAccount     = "user@domain.com";
             ConfigurationAccountType = "azureADAccount";
-            Credential               = $Credscredential;
             DisplayName              = "Secure Assessment";
             Ensure                   = "Present";
             LaunchUri                = "https://assessment.domain.com";
             LocalGuestAccountName    = "";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

@@ -1,0 +1,32 @@
+﻿{
+    "resourceName": "TeamsM365App",
+    "description": "This resource manages Teams app. This includes app state, app availability, user who updated app availability, and the associated timestamp.",
+    "roles": {
+        "read": [
+            "Global Reader"
+        ],
+        "update": [
+            "Teams Administrator"
+        ]
+    },
+    "permissions": {
+        "graph": {
+            "delegated": {
+                "read": [],
+                "update": []
+            },
+            "application": {
+                "read": [
+                    {
+                        "name": "Organization.Read.All"
+                    }
+                ],
+                "update": [
+                    {
+                        "name": "Organization.Read.All"
+                    }
+                ]
+            }
+        }
+    }
+}

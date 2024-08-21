@@ -436,6 +436,11 @@ function Export-TargetResource
         $i = 1
         foreach ($OfflineAddressBook in $AllOfflineAddressBooks)
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             Write-Host "    |---[$i/$($AllOfflineAddressBooks.Count)] $($OfflineAddressBook.Name)" -NoNewline
 
             $Params = @{

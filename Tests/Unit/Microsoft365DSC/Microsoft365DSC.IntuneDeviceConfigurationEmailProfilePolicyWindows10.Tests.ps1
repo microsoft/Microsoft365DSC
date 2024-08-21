@@ -127,15 +127,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             emailAddressSource = "userPrincipalName"
                             durationOfEmailToSync = "userDefined"
                             syncCalendar = $True
+                            customDomainName = "FakeStringValue"
+                            userDomainNameSource = "fullDomainName"
+                            usernameAADSource = "userPrincipalName"
+                            usernameSource = "userPrincipalName"
                         }
-                        CustomDomainName = "FakeStringValue"
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        UserDomainNameSource = "fullDomainName"
-                        UsernameAADSource = "userPrincipalName"
-                        UsernameSource = "userPrincipalName"
-
                     }
                 }
             }
@@ -189,15 +188,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             emailAddressSource = "userPrincipalName"
                             durationOfEmailToSync = "userDefined"
                             syncCalendar = $True
+                            customDomainName = "FakeStringValue"
+                            userDomainNameSource = "fullDomainName"
+                            usernameAADSource = "userPrincipalName"
+                            usernameSource = "userPrincipalName"
                         }
-                        CustomDomainName = "FakeStringValue"
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        UserDomainNameSource = "fullDomainName"
-                        UsernameAADSource = "userPrincipalName"
-                        UsernameSource = "userPrincipalName"
-
                     }
                 }
             }
@@ -240,14 +238,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             emailSyncSchedule = "userDefined"
                             emailAddressSource = "userPrincipalName"
                             durationOfEmailToSync = "userDefined"
+                            customDomainName = "FakeStringValue"
+                            userDomainNameSource = "fullDomainName"
+                            usernameAADSource = "userPrincipalName"
+                            usernameSource = "userPrincipalName"
                         }
-                        CustomDomainName = "FakeStringValue"
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        UserDomainNameSource = "fullDomainName"
-                        UsernameAADSource = "userPrincipalName"
-                        UsernameSource = "userPrincipalName"
                     }
                 }
             }
@@ -287,15 +285,14 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             emailAddressSource = "userPrincipalName"
                             durationOfEmailToSync = "userDefined"
                             syncCalendar = $True
+                            customDomainName = "FakeStringValue"
+                            userDomainNameSource = "fullDomainName"
+                            usernameAADSource = "userPrincipalName"
+                            usernameSource = "userPrincipalName"
                         }
-                        CustomDomainName = "FakeStringValue"
                         Description = "FakeStringValue"
                         DisplayName = "FakeStringValue"
                         Id = "FakeStringValue"
-                        UserDomainNameSource = "fullDomainName"
-                        UsernameAADSource = "userPrincipalName"
-                        UsernameSource = "userPrincipalName"
-
                     }
                 }
             }

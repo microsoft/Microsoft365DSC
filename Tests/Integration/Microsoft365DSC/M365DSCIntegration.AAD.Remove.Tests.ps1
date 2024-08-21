@@ -1,38 +1,60 @@
     param
     (
         [Parameter()]
-        [System.Management.Automation.PSCredential]
-        $Credential
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
 
     Configuration Master
     {
         param
         (
-            [Parameter(Mandatory = $true)]
-            [System.Management.Automation.PSCredential]
-            $Credscredential
+            [Parameter()]
+            [System.String]
+            $ApplicationId,
+
+            [Parameter()]
+            [System.String]
+            $TenantId,
+
+            [Parameter()]
+            [System.String]
+            $CertificateThumbprint
         )
 
         Import-DscResource -ModuleName Microsoft365DSC
-        $Domain = $Credscredential.Username.Split('@')[1]
+        $Domain = $TenantId
         Node Localhost
         {
                 AADAdministrativeUnit 'TestUnit'
                 {
                     DisplayName                   = 'Test-Unit'
                     Ensure                        = 'Absent'
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADApplication 'AADApp1'
                 {
                     DisplayName               = "AppDisplayName"
                     Ensure                    = "Absent"
-                    Credential                = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADAuthenticationContextClassReference 'AADAuthenticationContextClassReference-Test'
                 {
-                    Credential           = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Description          = "Context test Updated"; # Updated Property
                     DisplayName          = "My Context";
                     Ensure               = "Absent";
@@ -51,41 +73,55 @@
                     );
                     IsSoftwareOathEnabled = $True; # Updated Property
                     State                 = "enabled";
-                    Credential            = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADAuthenticationMethodPolicyFido2 'AADAuthenticationMethodPolicyFido2-Fido2'
                 {
                     Ensure                           = "Absent";
                     Id                               = "Fido2";
-                    Credential                       = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADAuthenticationMethodPolicySms 'AADAuthenticationMethodPolicySms-Sms'
                 {
-                    Credential            = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                = "Absent";
                     Id                    = "Sms";
                 }
                 AADAuthenticationMethodPolicySoftware 'AADAuthenticationMethodPolicySoftware-SoftwareOath'
                 {
-                    Credential            = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                = "Absent";
                     Id                    = "SoftwareOath";
                 }
                 AADAuthenticationMethodPolicyTemporary 'AADAuthenticationMethodPolicyTemporary-TemporaryAccessPass'
                 {
-                    Credential               = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                   = "Absent";
                     Id                       = "TemporaryAccessPass";
                 }
                 AADAuthenticationMethodPolicyVoice 'AADAuthenticationMethodPolicyVoice-Voice'
                 {
-                    Credential            = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                = "Absent";
                     Id                    = "Voice";
                 }
                 AADAuthenticationMethodPolicyX509 'AADAuthenticationMethodPolicyX509-X509Certificate'
                 {
-                    Credential                      = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                          = "Absent";
                     Id                              = "X509Certificate";
                 }
@@ -93,17 +129,23 @@
                 {
                     DisplayName          = "Example";
                     Ensure               = "Absent";
-                    Credential           = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADConditionalAccessPolicy 'ConditionalAccessPolicy'
                 {
                     DisplayName                          = 'Example CAP'
                     Ensure                               = 'Absent'
-                    Credential                           = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADCrossTenantAccessPolicyConfigurationPartner 'AADCrossTenantAccessPolicyConfigurationPartner'
                 {
-                    Credential               = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     Ensure                   = "Absent";
                     PartnerTenantId          = "12345-12345-12345-12345-12345";
                 }
@@ -111,31 +153,51 @@
                 {
                     DisplayName                     = 'Integration Package'
                     Ensure                          = 'Absent'
-                    Credential                      = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADEntitlementManagementAccessPackageAssignmentPolicy 'myAssignmentPolicyWithAccessReviewsSettings'
                 {
                     DisplayName                = "External tenant";
                     Ensure                     = "Absent"
-                    Credential                 = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADEntitlementManagementAccessPackageCatalog 'myAccessPackageCatalog'
                 {
                     DisplayName         = 'My Catalog'
                     Ensure              = 'Absent'
-                    Credential          = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADEntitlementManagementAccessPackageCatalogResource 'myAccessPackageCatalogResource'
                 {
-                    DisplayName         = 'Communication site'
+                    DisplayName         = 'DSCGroup'
                     Ensure              = 'Absent'
-                    Credential          = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADEntitlementManagementConnectedOrganization 'MyConnectedOrganization'
                 {
                     DisplayName           = "Test Tenant - DSC";
                     Ensure                = "Absent"
-                    Credential            = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                }
+                AADEntitlementManagementRoleAssignment 'AADEntitlementManagementRoleAssignment-Remove'
+                {
+                    AppScopeId      = "/";
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
+                    Ensure          = "Absent";
+                    Principal       = "AdeleV@$TenantId";
+                    RoleDefinition  = "Catalog creator";
                 }
                 AADGroup 'MyGroups'
                 {
@@ -144,34 +206,44 @@
                     MailEnabled     = $True
                     DisplayName     = "DSCGroup"
                     Ensure          = "Absent"
-                    Credential      = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADGroupLifecyclePolicy 'GroupLifecyclePolicy'
                 {
                     IsSingleInstance            = "Yes"
-                    AlternateNotificationEmails = @("john.smith@contoso.com")
+                    AlternateNotificationEmails = @("john.smith@$TenantId")
                     GroupLifetimeInDays         = 99
                     ManagedGroupTypes           = "Selected"
                     Ensure                      = "Absent"
-                    Credential                  = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADGroupsNamingPolicy 'GroupsNamingPolicy'
                 {
                     IsSingleInstance              = "Yes"
                     Ensure                        = "Absent"
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADGroupsSettings 'GeneralGroupsSettings'
                 {
                     IsSingleInstance              = "Yes"
                     Ensure                        = "Absent"
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADNamedLocationPolicy 'CompanyNetwork'
                 {
                     DisplayName = "Company Network"
                     Ensure      = "Absent"
-                    Credential  = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADRoleDefinition 'AADRoleDefinition1'
                 {
@@ -179,16 +251,20 @@
                     RolePermissions               = "microsoft.directory/applicationPolicies/allProperties/read"
                     DisplayName                   = "DSCRole1"
                     Ensure                        = "Absent"
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADRoleEligibilityScheduleRequest 'MyRequest'
                 {
                     Action               = "AdminAssign";
-                    Credential           = $Credscredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     DirectoryScopeId     = "/";
                     Ensure               = "Absent";
                     IsValidationOnly     = $True; # Updated Property
-                    Principal            = "John.Smith@$OrganizationName";
+                    Principal            = "AdeleV@$TenantId";
                     RoleDefinition       = "Teams Communications Administrator";
                     ScheduleInfo         = MSFT_AADRoleEligibilityScheduleRequestSchedule {
                         startDateTime             = '2023-09-01T02:40:44Z'
@@ -204,13 +280,17 @@
                     AppId                         = "AppDisplayName"
                     DisplayName                   = "AppDisplayName"
                     Ensure                        = "Absent"
-                    Credential                    = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADSocialIdentityProvider 'AADSocialIdentityProvider-Google'
                 {
                     ClientId             = "Google-OAUTH";
                     ClientSecret         = "FakeSecret-Updated"; # Updated Property
-                    Credential           = $credsCredential;
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                     DisplayName          = "My Google Provider";
                     Ensure               = "Absent";
                     IdentityProviderType = "Google";
@@ -219,14 +299,18 @@
                 {
                     DisplayName           = "PolicyDisplayName"
                     Ensure                = "Absent"
-                    Credential            = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
                 AADUser 'ConfigureJohnSMith'
                 {
-                    UserPrincipalName  = "John.Smith@$Domain"
+                    UserPrincipalName  = "John.Smith@$TenantId"
                     DisplayName        = "John J. Smith"
                     Ensure             = "Absent"
-                    Credential         = $Credscredential
+                    ApplicationId         = $ApplicationId
+                    TenantId              = $TenantId
+                    CertificateThumbprint = $CertificateThumbprint
                 }
         }
     }
@@ -243,7 +327,7 @@
     # Compile and deploy configuration
     try
     {
-        Master -ConfigurationData $ConfigurationData -Credscredential $Credential
+        Master -ConfigurationData $ConfigurationData -ApplicationId $ApplicationId -TenantId $TenantId -CertificateThumbprint $CertificateThumbprint
         Start-DscConfiguration Master -Wait -Force -Verbose -ErrorAction Stop
     }
     catch

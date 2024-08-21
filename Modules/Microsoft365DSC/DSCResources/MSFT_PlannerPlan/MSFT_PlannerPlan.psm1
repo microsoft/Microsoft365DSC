@@ -386,6 +386,11 @@ function Export-TargetResource
                 $j = 1
                 foreach ($plan in $plans)
                 {
+                    if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                    {
+                        $Global:M365DSCExportResourceInstancesCount++
+                    }
+
                     $params = @{
                         Title                 = $plan.Title
                         OwnerGroup            = $group.Id

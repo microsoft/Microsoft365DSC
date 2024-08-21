@@ -342,6 +342,11 @@ function Export-TargetResource
     #endregion
     try
     {
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
+
         $PerimeterConfiguration = Get-PerimeterConfig 2>&1
         if ($null -ne ($PerimeterConfiguration | Where-Object { $_.gettype().Name -like '*ErrorRecord*' }))
         {

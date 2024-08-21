@@ -151,6 +151,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message 'Getting configuration for SPO Sharing settings'
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 
@@ -172,7 +173,7 @@ function Get-TargetResource
     try
     {
         $SPOSharingSettings = Get-PnPTenant -ErrorAction Stop
-        $MySite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.' -and $_.Template -notmatch '^RedirectSite#' }
+        $MySite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -notmatch "^RedirectSite#" }
 
         if ($null -ne $MySite)
         {
@@ -531,7 +532,7 @@ function Set-TargetResource
     Set-PnPTenant @CurrentParameters | Out-Null
     if ($SetMySharingCapability)
     {
-        $mysite = Get-PnPTenantSite | Where-Object { $_.Url -match '-my.sharepoint.com/' -and $_.Template -notmatch '^RedirectSite#' }
+        $mysite = Get-PnPTenantSite -Filter "Url -like '-my.sharepoint.'" | Where-Object -FilterScript { $_.Template -notmatch "^RedirectSite#" }
         Set-PnPTenantSite -Identity $mysite.Url -SharingCapability $MySiteSharingCapability
     }
 }
@@ -845,6 +846,11 @@ function Export-TargetResource
             -Parameters $PSBoundParameters
         Add-M365DSCTelemetryEvent -Data $data
         #endregion
+
+        if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+        {
+            $Global:M365DSCExportResourceInstancesCount++
+        }
 
         $Params = @{
             IsSingleInstance      = 'Yes'

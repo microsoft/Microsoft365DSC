@@ -101,9 +101,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -124,7 +132,6 @@ Configuration Example
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             );
-            Credential                   = $Credscredential;
             DisableAccountManager        = $False;
             DisableEduPolicies           = $False;
             DisablePowerPolicies         = $False;
@@ -140,6 +147,9 @@ Configuration Example
             SetEduPolicies               = "enabled";
             SetPowerPolicies             = "enabled";
             SignInOnResume               = "enabled";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -154,9 +164,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -177,7 +195,6 @@ Configuration Example
                     dataType = '#microsoft.graph.allDevicesAssignmentTarget'
                 }
             );
-            Credential                   = $Credscredential;
             DisableAccountManager        = $False;
             DisableEduPolicies           = $False;
             DisablePowerPolicies         = $False;
@@ -193,6 +210,9 @@ Configuration Example
             SetEduPolicies               = "enabled";
             SetPowerPolicies             = "enabled";
             SignInOnResume               = "enabled";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -207,9 +227,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -217,9 +245,11 @@ Configuration Example
     {
         IntuneDeviceConfigurationSharedMultiDevicePolicyWindows10 'Example'
         {
-            Credential                   = $Credscredential;
             DisplayName                  = "Shared Multi device";
             Ensure                       = "Absent";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

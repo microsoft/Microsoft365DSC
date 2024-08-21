@@ -43,21 +43,30 @@ To authenticate with Microsoft Exchange, this resource required the following pe
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
         {
-            UserName                 = "AdeleV@$Domain"
+            UserName                 = "AdeleV@$TenantId"
             AuthenticationPolicyName = "Block Basic Auth"
             Ensure                   = "Present"
-            Credential               = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }
@@ -70,21 +79,30 @@ Configuration Example
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         EXOAuthenticationPolicyAssignment 'ConfigureAuthenticationPolicyAssignment'
         {
-            UserName                 = "AdeleV@$Domain"
+            UserName                 = "AdeleV@$TenantId"
             AuthenticationPolicyName = "Test Policy"
             Ensure                   = "Absent"
-            Credential               = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

@@ -107,9 +107,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -126,7 +134,6 @@ Configuration Example
             CertificateStore               = "user";
             CertificateValidityPeriodScale = "years";
             CertificateValidityPeriodValue = 5;
-            Credential                     = $Credscredential;
             CustomSubjectAlternativeNames  = @(
                 MSFT_MicrosoftGraphcustomSubjectAlternativeName{
                     SanType = 'domainNameService'
@@ -151,6 +158,9 @@ Configuration Example
             SubjectNameFormat              = "custom";
             SubjectNameFormatString        = "CN={{UserName}},E={{EmailAddress}}";
             RootCertificateId              = "169bf4fc-5914-40f4-ad33-48c225396183";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -165,9 +175,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -184,7 +202,6 @@ Configuration Example
             CertificateStore               = "user";
             CertificateValidityPeriodScale = "years";
             CertificateValidityPeriodValue = 5;
-            Credential                     = $Credscredential;
             CustomSubjectAlternativeNames  = @(
                 MSFT_MicrosoftGraphcustomSubjectAlternativeName{
                     SanType = 'domainNameService'
@@ -209,6 +226,9 @@ Configuration Example
             SubjectNameFormat              = "custom";
             SubjectNameFormatString        = "CN={{UserName}},E={{EmailAddress}}";
             RootCertificateId              = "169bf4fc-5914-40f4-ad33-48c225396183";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -223,9 +243,17 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -233,9 +261,11 @@ Configuration Example
     {
         IntuneDeviceConfigurationScepCertificatePolicyWindows10 'Example'
         {
-            Credential                     = $Credscredential;
             DisplayName                    = "SCEP";
             Ensure                         = "Absent";
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

@@ -428,6 +428,11 @@ function Export-TargetResource
                 Write-Host "    |---[$j/$($Teams.Length)] Team {$($team.DisplayName)}"
                 foreach ($channel in $channels)
                 {
+                    if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+                    {
+                        $Global:M365DSCExportResourceInstancesCount++
+                    }
+
                     Write-Host "        |---[$i/$($channels.Length)] $($channel.DisplayName)" -NoNewline
                     $params = @{
                         TeamName              = $team.DisplayName

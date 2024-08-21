@@ -366,6 +366,11 @@ function Export-TargetResource
 
         if (-not [System.String]::IsNullOrEmpty($DisplayNameValue))
         {
+            if ($null -ne $Global:M365DSCExportResourceInstancesCount)
+            {
+                $Global:M365DSCExportResourceInstancesCount++
+            }
+
             $Params = @{
                 Credential            = $Credential
                 DisplayName           = $DisplayNameValue
