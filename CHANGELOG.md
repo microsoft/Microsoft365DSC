@@ -3,6 +3,8 @@
 # UNRELEASED
 
 * AADConditionalAccessPolicy
+  * Fixing issue where the resource crashed when trying to retrieve groups
+    and users from Entra ID which no longer existed
   * Fixes an issue where the `AuthenticationFlows` property changed in Graph
     and updates on the documentation for the possible values of `TransferMethods`.
     FIXES [#4961](https://github.com/microsoft/Microsoft365DSC/issues/4961)
@@ -18,6 +20,13 @@
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Fixed issue if `PasswordComplexity` was set to 5 by allowing that value
     FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
+* IntuneDeviceCompliancePolicyWindows10
+  * Fix extraction of property `TpmRequired`
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Change app and delegated permissions for reading to
+    DeviceManagementConfiguration.ReadWrite.All to cope with
+    getOmaSettingPlainTextValue which is only working if RW is granted
+    FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
 * M365DSCDRGUtil
   * Update Intune Settings Catalog Handling.
 * M365DSCResourceGenerator
