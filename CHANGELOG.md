@@ -15,6 +15,9 @@
 * EXOHostedContentFilterRule
   * Don't check if associated `EXOHostedContentFilterPolicy` is present
     while removing resource since it's not required
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Fixed issue if `PasswordComplexity` was set to 5 by allowing that value
+    FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
