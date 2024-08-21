@@ -20,6 +20,8 @@
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Fixed issue if `PasswordComplexity` was set to 5 by allowing that value
     FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
+* IntuneDeviceCompliancePolicyWindows10
+  * Fix extraction of property `TpmRequired`
 * IntuneDeviceConfigurationCustomPolicyWindows10
   * Change app and delegated permissions for reading to
     DeviceManagementConfiguration.ReadWrite.All to cope with
