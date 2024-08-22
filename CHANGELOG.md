@@ -1,5 +1,10 @@
 # Change log for Microsoft365DSC
 
+# UNRELEASED
+
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 6.5.0.
+
 # 1.24.731.1
 
 * AADAuthenticationMethodPolicyFido2
