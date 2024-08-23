@@ -240,7 +240,14 @@ function Set-TargetResource
         Remove-RoleGroup -Identity $Name -Confirm:$false -Force
     }
     # CASE: Role Group exists and it should, but has different member values than the desired ones
-    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject $($currentRoleGroupConfig.Members) -DifferenceObject $Members))
+    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $null -ne (Compare-Object -ReferenceObject @($($currentRoleGroupConfig.Members) | Select-Object) -DifferenceObject @($Members | Select-Object)))
+    {
+        Write-Verbose -Message "Role Group '$($Name)' already exists, but members need updating."
+        Write-Verbose -Message "Updating Role Group $($Name) members with values: $(Convert-M365DscHashtableToString -Hashtable $NewRoleGroupParams)"
+        Update-RoleGroupMember -Identity $Name -Members $Members -Confirm:$false
+    }
+    # CASE: Role Assignment Policy exists and it should, but Role has no members as its never been set
+    elseif ($Ensure -eq 'Present' -and $currentRoleGroupConfig.Ensure -eq 'Present' -and $currentRoleGroupConfig.Members -eq '')
     {
         Write-Verbose -Message "Role Group '$($Name)' already exists, but members need updating."
         Write-Verbose -Message "Updating Role Group $($Name) members with values: $(Convert-M365DscHashtableToString -Hashtable $NewRoleGroupParams)"
