@@ -2,6 +2,9 @@
 
 # UNRELEASED
 
+* EXORoleGroup
+ * Fix an issue where roles that have empty members cannot be compared
+   FIXES [#4977] (https://github.com/microsoft/Microsoft365DSC/issues/4977)
 * AADConditionalAccessPolicy
   * Fixing issue where the resource crashed when trying to retrieve groups
     and users from Entra ID which no longer existed
