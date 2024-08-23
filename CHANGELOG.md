@@ -2,9 +2,7 @@
 
 # UNRELEASED
 
-* EXORoleGroup
- * Fix an issue where roles that have empty members cannot be compared
-   FIXES [#4977] (https://github.com/microsoft/Microsoft365DSC/issues/4977)
+
 * AADConditionalAccessPolicy
   * Fixing issue where the resource crashed when trying to retrieve groups
     and users from Entra ID which no longer existed
@@ -20,6 +18,9 @@
 * EXOHostedContentFilterRule
   * Don't check if associated `EXOHostedContentFilterPolicy` is present
     while removing resource since it's not required
+ * EXORoleGroup
+    * Fix an issue where roles that have empty members cannot be compared
+   FIXES [#4977] (https://github.com/microsoft/Microsoft365DSC/issues/4977)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Fixed issue if `PasswordComplexity` was set to 5 by allowing that value
     FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
