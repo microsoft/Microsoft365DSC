@@ -1103,7 +1103,7 @@ function Compare-M365DSCConfigurations
         }
         catch
         {
-            Write-Host "Error: $_"
+            Write-Error -Message $_ -ErrorAction Continue
         }
         $i++
     }
@@ -1157,7 +1157,7 @@ function Compare-M365DSCConfigurations
     }
     catch
     {
-        Write-Host "Error: $_"
+        Write-Error -Message $_ -ErrorAction Continue
     }
     Write-Progress -Activity 'Scanning Destination...' -Completed
 

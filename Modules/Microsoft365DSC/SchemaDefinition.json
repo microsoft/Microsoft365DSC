@@ -18639,7 +18639,7 @@
                            },
                            {
                                "CIMType":  "Boolean",
-                               "Name":  "TPMRequired",
+                               "Name":  "TpmRequired",
                                "Option":  "Write"
                            },
                            {

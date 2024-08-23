@@ -80,6 +80,13 @@ Describe -Name 'Successfully validate all used permissions in Settings.json file
             )
         }
 
+        if ($settings.ResourceName -eq 'IntuneDeviceConfigurationCustomPolicyWindows10')
+        {
+            $allowedPermissions = @(
+                'DeviceManagementConfiguration.ReadWrite.All'
+            )
+        }
+
         foreach ($permission in $settings.permissions.graph.application.read)
         {
             $ObjectGuid = [System.Guid]::empty

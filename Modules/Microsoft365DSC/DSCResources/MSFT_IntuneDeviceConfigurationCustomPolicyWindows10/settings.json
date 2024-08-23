@@ -9,7 +9,7 @@
                                                     "name": "Group.Read.All"
                                                 },
                                                 {
-                                                     "name":  "DeviceManagementConfiguration.Read.All"
+                                                     "name":  "DeviceManagementConfiguration.ReadWrite.All"
                                                  }
                                              ],
                                     "update":  [
@@ -24,7 +24,7 @@
                                                         "name": "Group.Read.All"
                                                     },
                                                     {
-                                                       "name":  "DeviceManagementConfiguration.Read.All"
+                                                       "name":  "DeviceManagementConfiguration.ReadWrite.All"
                                                    }
                                                ],
                                       "update":  [
