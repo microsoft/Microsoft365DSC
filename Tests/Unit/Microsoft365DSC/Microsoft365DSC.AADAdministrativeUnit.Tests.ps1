@@ -302,7 +302,6 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                         DisplayName          = 'DSCAU'
                         Id                   = 'DSCAU'
                         MembershipType       = 'Assigned'
-                        }
                     }
                 }
 
