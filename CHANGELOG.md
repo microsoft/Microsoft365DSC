@@ -30,11 +30,16 @@
     DeviceManagementConfiguration.ReadWrite.All to cope with
     getOmaSettingPlainTextValue which is only working if RW is granted
     FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
-* O365OrgSettings
-  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
+* IntuneDeviceRemediation
+  * Add export of global remediation scripts.
+* M365DSCDRGUtil
+  * Fixes an issue where the `MSFT_IntuneDeviceRemediationPolicyAssignments`
+    type would trigger an incorrect comparison in `Compare-M365DSCComplexObject`.
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
+* O365OrgSettings
+  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
 * MISC
   * Replace some `Write-Host` occurrences in core engine with
     appropriate alternatives.

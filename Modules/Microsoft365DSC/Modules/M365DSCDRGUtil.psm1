@@ -611,7 +611,8 @@ function Compare-M365DSCComplexObject
         }
 
         if ($Source[0].CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
-            $Source[0].CimClass.CimClassName -like 'MSFT_Intune*Assignments')
+            ($Source[0].CimClass.CimClassName -like 'MSFT_Intune*Assignments' -and
+            $Source[0].CimClass.CimClassName -ne 'MSFT_IntuneDeviceRemediationPolicyAssignments'))
         {
             $compareResult = Compare-M365DSCIntunePolicyAssignment `
                 -Source @($Source) `
@@ -1865,7 +1866,7 @@ function Get-IntuneSettingCatalogPolicySettingDSCValue
         $matchesId = $false
         $settingDefinitions = $SettingTemplates.SettingDefinitions `
             | Where-Object -FilterScript { $_.Name -eq $key }
-        
+
         # Edge case where the same setting is defined twice in the template, with the same name and id
         if ($settingDefinitions.Count -eq 2)
         {
@@ -1884,7 +1885,7 @@ function Get-IntuneSettingCatalogPolicySettingDSCValue
             {
                 $parentSettingName = $key.Split('_')[0]
                 $parentDefinition = $SettingTemplates.SettingDefinitions | Where-Object -FilterScript { $_.Name -eq $parentSettingName }
-                $childDefinition = $SettingTemplates.SettingDefinitions | Where-Object -FilterScript { 
+                $childDefinition = $SettingTemplates.SettingDefinitions | Where-Object -FilterScript {
                     $_.Name -eq $SettingName -and
                     (($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId.Contains($parentDefinition.Id)) -or
                     ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($parentDefinition.Id))
