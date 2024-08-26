@@ -138,7 +138,7 @@ function New-M365DSCLogEntry
         }
         else
         {
-            Write-Host " Error Log created at {file://$LogFileName}" -ForegroundColor Red
+            Write-Host "Error Log created at {file://$LogFileName}" -ForegroundColor Red
         }
         #endregion
     }
@@ -332,8 +332,7 @@ function Export-M365DSCDiagnosticData
 
     if (([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole] 'Administrator') -eq $false)
     {
-        Write-Host -Object '[ERROR] You need to run this cmdlet with Administrator privileges!' -ForegroundColor Red
-        return
+        throw 'You need to run this cmdlet with Administrator privileges!'
     }
 
     $afterDate = (Get-Date).AddDays(($NumberOfDays * -1))

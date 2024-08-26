@@ -1230,14 +1230,12 @@ function Get-MgGraphModuleCmdLetDifference
 
     if ($modules.Count -eq 0)
     {
-        Write-Host '[ERROR] No module selected!' -ForegroundColor Red
-        return
+        throw 'No module selected!'
     }
 
     if (($modules.Name | Sort-Object | Select-Object -Unique).Count -ne 1 -or $modules.Count -ne 2)
     {
-        Write-Host '[ERROR] Please select two versions of the same module' -ForegroundColor Red
-        return
+        throw 'Please select two versions of the same module'
     }
 
     [array]$exportedKeysModule1 = $modules[0].ExportedCommands.Keys
@@ -2617,7 +2615,6 @@ function Get-M365DSCFakeValues
                 {
                     $parameterName = Get-StringFirstCharacterToLower -Value $parameterName
                 }
-                write-host -ForegroundColor Yellow $parameterName
                 $result.Add($parameterName, $hashValue)
             }
         }

@@ -17,6 +17,9 @@
 * EXOHostedContentFilterRule
   * Don't check if associated `EXOHostedContentFilterPolicy` is present
     while removing resource since it's not required
+ * EXORoleGroup
+    * Fix an issue where roles that have empty members cannot be compared
+   FIXES [#4977] (https://github.com/microsoft/Microsoft365DSC/issues/4977)
 * IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
   * Fixed issue if `PasswordComplexity` was set to 5 by allowing that value
     FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
@@ -34,6 +37,12 @@
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
+* O365OrgSettings
+  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
+* MISC
+  * Replace some `Write-Host` occurrences in core engine with
+    appropriate alternatives.
+    FIXES [#4943](https://github.com/microsoft/Microsoft365DSC/issues/4943)
 
 # 1.24.731.1
 
