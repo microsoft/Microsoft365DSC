@@ -62,6 +62,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting SPOSiteGroups for {$Url}"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters
 
@@ -239,7 +240,9 @@ function Set-TargetResource
         -Parameters $PSBoundParameters
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters `
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+        -InboundParameters $PSBoundParameters `
         -ErrorAction SilentlyContinue
 
     $currentValues = Get-TargetResource @PSBoundParameters
@@ -479,7 +482,8 @@ function Export-TargetResource
 
     try
     {
-        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters `
+        $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+            -InboundParameters $PSBoundParameters `
             -ErrorAction SilentlyContinue
 
         #Ensure the proper dependencies are installed in the current environment.

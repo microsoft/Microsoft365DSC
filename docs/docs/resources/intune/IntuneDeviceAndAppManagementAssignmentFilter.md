@@ -61,9 +61,17 @@ This example creates a new Device and App Management Assignment Filter.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $intuneAdmin
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -76,7 +84,9 @@ Configuration Example
             Platform    = 'windows10AndLater'
             Rule        = "(device.manufacturer -ne `"Microsoft Corporation`")"
             Ensure      = 'Present'
-            Credential  = $intuneAdmin
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -90,9 +100,17 @@ This example creates a new Device and App Management Assignment Filter.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $intuneAdmin
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -105,7 +123,9 @@ Configuration Example
             Platform    = 'windows10AndLater'
             Rule        = "(device.manufacturer -ne `"Apple`")" # Updated Property
             Ensure      = 'Present'
-            Credential  = $intuneAdmin
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -119,9 +139,17 @@ This example creates a new Device and App Management Assignment Filter.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $intuneAdmin
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -131,7 +159,9 @@ Configuration Example
         {
             DisplayName = 'Test Device Filter'
             Ensure      = 'Absent'
-            Credential  = $intuneAdmin
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

@@ -60,6 +60,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO SiteDesignRights for $SiteDesignTitle"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
         -InboundParameters $PSBoundParameters
 
@@ -207,7 +208,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+        -InboundParameters $PSBoundParameters
 
     $cursiteDesign = Get-PnPSiteDesign -Identity $SiteDesignTitle
     if ($null -eq $cursiteDesign)

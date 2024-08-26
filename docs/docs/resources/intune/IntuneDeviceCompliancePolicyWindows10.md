@@ -36,7 +36,7 @@
 | **DeviceThreatProtectionEnabled** | Write | Boolean | DeviceThreatProtectionEnabled of the Windows 10 device compliance policy. | |
 | **DeviceThreatProtectionRequiredSecurityLevel** | Write | String | DeviceThreatProtectionRequiredSecurityLevel of the Windows 10 device compliance policy. | `Unavailable`, `Secured`, `Low`, `Medium`, `High`, `NotSet` |
 | **ConfigurationManagerComplianceRequired** | Write | Boolean | ConfigurationManagerComplianceRequired of the Windows 10 device compliance policy. | |
-| **TPMRequired** | Write | Boolean | TPMRequired of the Windows 10 device compliance policy. | |
+| **TpmRequired** | Write | Boolean | TpmRequired of the Windows 10 device compliance policy. | |
 | **DeviceCompliancePolicyScript** | Write | String | DeviceCompliancePolicyScript of the Windows 10 device compliance policy. | |
 | **ValidOperatingSystemBuildRanges** | Write | StringArray[] | ValidOperatingSystemBuildRanges of the Windows 10 device compliance policy. | |
 | **Ensure** | Write | String | Present ensures the policy exists, absent ensures it is removed. | `Present`, `Absent` |
@@ -287,9 +287,17 @@ This example creates a new Device Comliance Policy for Windows.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -332,7 +340,9 @@ Configuration Example
             deviceCompliancePolicyScript                = $null
             ValidOperatingSystemBuildRanges             = @()
             Ensure                                      = 'Present'
-            Credential                                  = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -346,9 +356,17 @@ This example creates a new Device Comliance Policy for Windows.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -391,7 +409,9 @@ Configuration Example
             deviceCompliancePolicyScript                = $null
             ValidOperatingSystemBuildRanges             = @()
             Ensure                                      = 'Present'
-            Credential                                  = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }
@@ -405,9 +425,17 @@ This example creates a new Device Comliance Policy for Windows.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -417,7 +445,9 @@ Configuration Example
         {
             DisplayName                                 = 'Windows 10 DSC Policy'
             Ensure                                      = 'Absent'
-            Credential                                  = $Credscredential
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

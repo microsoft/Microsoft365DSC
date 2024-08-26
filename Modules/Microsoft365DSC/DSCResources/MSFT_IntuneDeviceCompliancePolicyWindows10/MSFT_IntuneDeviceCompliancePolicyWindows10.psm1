@@ -132,7 +132,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
@@ -247,7 +247,7 @@ function Get-TargetResource
             DeviceThreatProtectionEnabled               = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
             DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
             ConfigurationManagerComplianceRequired      = $devicePolicy.AdditionalProperties.configurationManagerComplianceRequired
-            TPMRequired                                 = $devicePolicy.AdditionalProperties.tPMRequired
+            TpmRequired                                 = $devicePolicy.AdditionalProperties.tpmRequired
             DeviceCompliancePolicyScript                = $devicePolicy.AdditionalProperties.deviceCompliancePolicyScript
             ValidOperatingSystemBuildRanges             = $devicePolicy.AdditionalProperties.validOperatingSystemBuildRanges
             Ensure                                      = 'Present'
@@ -418,7 +418,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
@@ -517,7 +517,7 @@ function Set-TargetResource
 
         if ($Assignments.Count -gt 0)
         {
-            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $policy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceCompliancePolicies'
@@ -542,7 +542,7 @@ function Set-TargetResource
 
         if ($Assignments.Count -gt 0)
         {
-            $assignmentsHash = Convert-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignments
+            $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $configDevicePolicy.id `
                 -Targets $assignmentsHash `
                 -Repository 'deviceManagement/deviceCompliancePolicies'
@@ -694,7 +694,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
@@ -850,9 +850,16 @@ function Export-TargetResource
 
     try
     {
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+        }
         [array]$configDeviceWindowsPolicies = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.windows10CompliancePolicy' }
+        $configDeviceWindowsPolicies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $configDeviceWindowsPolicies
+
         $i = 1
         $dscContent = ''
         if ($configDeviceWindowsPolicies.Length -eq 0)

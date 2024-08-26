@@ -32,9 +32,9 @@ function Get-TargetResource
         $HeaderCanonicalization = 'Relaxed',
 
         [Parameter()]
-        [ValidateSet(1024)]
+        [ValidateSet(1024, 2048)]
         [uint16]
-        $KeySize = 1024,
+        $KeySize,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -126,7 +126,7 @@ function Get-TargetResource
             BodyCanonicalization   = $DkimSigningConfig.BodyCanonicalization
             Enabled                = $DkimSigningConfig.Enabled
             HeaderCanonicalization = $DkimSigningConfig.HeaderCanonicalization
-            KeySize                = 1024
+            KeySize                = $DkimSigningConfig.Selector1KeySize
             Credential             = $Credential
             ApplicationId          = $ApplicationId
             CertificateThumbprint  = $CertificateThumbprint
@@ -176,9 +176,9 @@ function Set-TargetResource
         $HeaderCanonicalization = 'Relaxed',
 
         [Parameter()]
-        [ValidateSet(1024)]
+        [ValidateSet(1024, 2048)]
         [uint16]
-        $KeySize = 1024,
+        $KeySize,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]
@@ -230,37 +230,23 @@ function Set-TargetResource
     $ConnectionMode = New-M365DSCConnection -Workload 'ExchangeOnline' `
         -InboundParameters $PSBoundParameters
 
-    $DkimSigningConfigs = Get-DkimSigningConfig
-
-    $DkimSigningConfig = $DkimSigningConfigs | Where-Object -FilterScript { $_.Identity -eq $Identity }
+    $DkimSigningConfig = Get-TargetResource @PSBoundParameters
+    $PSBoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
     if (('Present' -eq $Ensure ) -and ($null -eq $DkimSigningConfig))
     {
-        $DkimSigningConfigParams = [System.Collections.Hashtable]($PSBoundParameters)
-        $DkimSigningConfigParams.Remove('Ensure') | Out-Null
-        $DkimSigningConfigParams.Remove('Credential') | Out-Null
-        $DkimSigningConfigParams.Remove('ApplicationId') | Out-Null
-        $DkimSigningConfigParams.Remove('TenantId') | Out-Null
-        $DkimSigningConfigParams.Remove('CertificateThumbprint') | Out-Null
-        $DkimSigningConfigParams.Remove('CertificatePath') | Out-Null
-        $DkimSigningConfigParams.Remove('CertificatePassword') | Out-Null
-        $DkimSigningConfigParams.Remove('ManagedIdentity') | Out-Null
-        $DkimSigningConfigParams.Remove('AccessTokens') | Out-Null
-        $DkimSigningConfigParams += @{
+        $PSBoundParameters += @{
             DomainName = $PSBoundParameters.Identity
         }
-        $DkimSigningConfigParams.Remove('Identity') | Out-Null
+        $PSBoundParameters.Remove('Identity') | Out-Null
         Write-Verbose -Message "Creating DkimSigningConfig $($Identity)."
-        New-DkimSigningConfig @DkimSigningConfigParams
+        New-DkimSigningConfig @PSBoundParameters
     }
     elseif (('Present' -eq $Ensure ) -and ($null -ne $DkimSigningConfig))
     {
-        $DkimSigningConfigParams = $PSBoundParameters
-        $DkimSigningConfigParams.Remove('Ensure') | Out-Null
-        $DkimSigningConfigParams.Remove('Credential') | Out-Null
-        $DkimSigningConfigParams.Remove('KeySize') | Out-Null
-        Write-Verbose -Message "Setting DkimSigningConfig $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $DkimSigningConfigParams)"
-        Set-DkimSigningConfig @DkimSigningConfigParams -Confirm:$false
+        $PSBoundParameters.Remove('KeySize') | Out-Null
+        Write-Verbose -Message "Setting DkimSigningConfig $($Identity) with values: $(Convert-M365DscHashtableToString -Hashtable $PSBoundParameters)"
+        Set-DkimSigningConfig @PSBoundParameters -Confirm:$false
     }
 
     if (('Absent' -eq $Ensure ) -and ($DkimSigningConfig))
@@ -304,9 +290,9 @@ function Test-TargetResource
         $HeaderCanonicalization = 'Relaxed',
 
         [Parameter()]
-        [ValidateSet(1024)]
+        [ValidateSet(1024, 2048)]
         [uint16]
-        $KeySize = 1024,
+        $KeySize,
 
         [Parameter()]
         [System.Management.Automation.PSCredential]

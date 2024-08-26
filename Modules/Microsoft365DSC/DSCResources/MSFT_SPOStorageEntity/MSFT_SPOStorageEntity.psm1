@@ -72,7 +72,9 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for SPO Storage Entity for $Key"
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters `
+
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+        -InboundParameters $PSBoundParameters `
         -Url $SiteUrl
 
     #Ensure the proper dependencies are installed in the current environment.
@@ -229,7 +231,8 @@ function Set-TargetResource
     Add-M365DSCTelemetryEvent -Data $data
     #endregion
 
-    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' -InboundParameters $PSBoundParameters `
+    $ConnectionMode = New-M365DSCConnection -Workload 'PNP' `
+        -InboundParameters $PSBoundParameters `
         -Url $SiteUrl
 
     $curStorageEntry = Get-TargetResource @PSBoundParameters

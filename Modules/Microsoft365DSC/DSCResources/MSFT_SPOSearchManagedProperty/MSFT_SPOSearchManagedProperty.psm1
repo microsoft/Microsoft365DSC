@@ -126,6 +126,7 @@ function Get-TargetResource
     )
 
     Write-Verbose -Message "Getting configuration for Managed Property instance $Name"
+
     $ConnectionMode = New-M365DSCConnection -Workload 'PnP' `
         -InboundParameters $PSBoundParameters
 

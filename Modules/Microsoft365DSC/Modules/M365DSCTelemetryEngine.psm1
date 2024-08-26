@@ -68,6 +68,130 @@ function Add-M365DSCTelemetryEvent
 
     if ($null -eq $TelemetryEnabled -or $TelemetryEnabled -eq $true)
     {
+        if ($Type -eq 'DriftEvaluation')
+        {
+            try
+            {
+                $hostId = (Get-Host).InstanceId
+                if ($null -eq $Script:M365DSCCountResourceInstance -or $hostId -ne $Script:M365DSCExecutionContextId)
+                {
+                    $Script:M365DSCCountResourceInstance = 1
+                }
+                else
+                {
+                    $Script:M365DSCCountResourceInstance++
+                }
+                if ($null -eq $Script:M365DSCOperationStartTime -or $hostId -ne $Script:M365DSCExecutionContextId)
+                {
+                    $Script:M365DSCOperationStartTime = [System.DateTime]::Now
+                }
+
+                $Script:M365DSCOperationTimeTaken = [System.DateTime]::Now.Subtract($Script:M365DSCOperationStartTime)
+
+                if ($hostId -ne $Script:M365DSCExecutionContextId)
+                {
+                    $Script:M365DSCExecutionContextId = $hostId
+                }
+                $Data.Add('ResourceInstancesCount', $Script:M365DSCCountResourceInstance)
+                $Data.Add('M365DSCExecutionContextId', $hostId)
+                $Data.Add('M365DSCOperationTotalTime', $Script:M365DSCOperationTimeTaken.TotalSeconds)
+            }
+            catch
+            {
+                Write-Verbose -Message $_
+            }
+        }
+
+        try
+        {
+            if ($null -ne $Data.ConnectionMode -and $Data.ConnectionMode.StartsWith('Credential'))
+            {
+                if ($null -eq $Script:M365DSCCurrentRoles -or $Script:M365DSCCurrentRoles.Length -eq 0)
+                {
+                    try
+                    {
+                        Connect-M365Tenant -Workload 'MicrosoftGraph' @Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction SilentlyContinue
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
+                    $Script:M365DSCCurrentRoles = @()
+
+                    $uri = $Global:MSCloudLoginConnectionProfile.MicrosoftGraph.ResourceUrl + 'v1.0/me?$select=id'
+                    $currentUser = Invoke-MgGraphRequest -Uri $uri -Method GET
+                    $currentUserId = $currentUser.id
+
+                    $assignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "principalId eq '$currentUserId'" `
+                                    -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
+
+                    if ($null -ne $assignments)
+                    {
+                        $roles = Get-MgBetaRoleManagementDirectoryRoleDefinition -All `
+                                    -Property @('Id', 'DisplayName')
+                        foreach ($assignment in $assignments)
+                        {
+                            $role = $roles | Where-Object -FilterScript {$_.Id -eq $assignment.RoleDefinitionId}
+                            if ($null -ne $role)
+                            {
+                                $Script:M365DSCCurrentRoles += $role.DisplayName + '|' + $assignment.DirectoryScopeId
+                            }
+                        }
+                        $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
+                    }
+                }
+                else
+                {
+                    $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
+                }
+            }
+            elseif ($null -ne $Data.ConnectionMode -and $Data.ConnectionMode.StartsWith('ServicePrincipal'))
+            {
+                if ($null -eq $Script:M365DSCCurrentRoles -or $Script:M365DSCCurrentRoles.Length -eq 0)
+                {
+                    try
+                    {
+                        Connect-M365Tenant -Workload 'MicrosoftGraph' @Global:M365DSCTelemetryConnectionToGraphParams -ErrorAction Stop
+                        $Script:M365DSCCurrentRoles = @()
+
+                        $sp = Get-MgServicePrincipal -Filter "AppId eq '$($Global:M365DSCTelemetryConnectionToGraphParams.ApplicationId)'" `
+                                -ErrorAction 'SilentlyContinue'
+                        if ($null -ne $sp)
+                        {
+                            $assignments = Get-MgBetaRoleManagementDirectoryRoleAssignment -Filter "principalId eq '$($sp.Id)'" `
+                                        -Property @('RoleDefinitionId', 'DirectoryScopeId') -All -ErrorAction 'SilentlyContinue'
+                            if ($null -ne $assignments)
+                            {
+                                $roles = Get-MgBetaRoleManagementDirectoryRoleDefinition -All `
+                                            -Property @('Id', 'DisplayName')
+                                foreach ($assignment in $assignments)
+                                {
+                                    $role = $roles | Where-Object -FilterScript {$_.Id -eq $assignment.RoleDefinitionId}
+                                    if ($null -ne $role)
+                                    {
+                                        $Script:M365DSCCurrentRoles += $role.DisplayName + '|' + $assignment.DirectoryScopeId
+                                    }
+                                }
+                                $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
+                            }
+                        }
+                    }
+                    catch
+                    {
+                        Write-Verbose -Message $_
+                    }
+                }
+                else
+                {
+                    $Data.Add('M365DSCCurrentRoles', $Script:M365DSCCurrentRoles -join ',')
+                }
+            }
+        }
+        catch
+        {
+            Write-Verbose -Message $_
+        }
+
         $TelemetryClient = Get-M365DSCApplicationInsightsTelemetryClient
 
         try
@@ -322,6 +446,10 @@ function Add-M365DSCTelemetryEvent
             }
         }
     }
+    else
+    {
+        return
+    }
 }
 
 <#
@@ -475,7 +603,8 @@ function Format-M365DSCTelemetryParameters
         {
             $data.Add('Tenant', $Parameters.TenantId)
         }
-        $data.Add('ConnectionMode', (Get-M365DSCAuthenticationMode -Parameters $Parameters))
+        $connectionMode = Get-M365DSCAuthenticationMode -Parameters $Parameters
+        $data.Add('ConnectionMode', $connectionMode)
     }
     catch
     {

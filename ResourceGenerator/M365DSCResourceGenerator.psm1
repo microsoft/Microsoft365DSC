@@ -731,25 +731,18 @@ function New-M365DSCResource
 
             $AssignmentsRemove += "        `$BoundParameters.Remove(`"Assignments`") | Out-Null`r`n"
 
-            $AssignmentsNew += "        `$assignmentsHash = @()`r`n"
-            $AssignmentsNew += "        foreach (`$assignment in `$Assignments)`r`n"
-            $AssignmentsNew += "        {`r`n"
-            $AssignmentsNew += "            `$assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$assignment`r`n"
-            $AssignmentsNew += "        }`r`n"
+            $AssignmentsNew += "        "
             $AssignmentsNew += "`r`n"
             $AssignmentsNew += "        if (`$policy.Id)`r`n"
             $AssignmentsNew += "        {`r`n"
+            $AssignmentsNew += "            `$assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:`$true -Assignments `$Assignments`r`n"
             $AssignmentsNew += "            Update-DeviceConfigurationPolicyAssignment ```r`n"
             $AssignmentsNew += "                -DeviceConfigurationPolicyId `$policy.Id ```r`n"
             $AssignmentsNew += "                -Targets `$assignmentsHash ```r`n"
             $AssignmentsNew += "                -Repository '$repository'`r`n"
             $AssignmentsNew += "        }`r`n"
 
-            $AssignmentsUpdate += "        `$assignmentsHash = @()`r`n"
-            $AssignmentsUpdate += "        foreach (`$assignment in `$Assignments)`r`n"
-            $AssignmentsUpdate += "        {`r`n"
-            $AssignmentsUpdate += "            `$assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject `$assignment`r`n"
-            $AssignmentsUpdate += "        }`r`n"
+            $AssignmentsUpdate += "        `$assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:`$true -Assignments `$Assignments`r`n"
             $AssignmentsUpdate += "        Update-DeviceConfigurationPolicyAssignment ```r`n"
             $AssignmentsUpdate += "            -DeviceConfigurationPolicyId `$currentInstance.Id ```r`n"
             $AssignmentsUpdate += "            -Targets `$assignmentsHash ```r`n"
@@ -1188,14 +1181,12 @@ function Get-MgGraphModuleCmdLetDifference
 
     if ($modules.Count -eq 0)
     {
-        Write-Host '[ERROR] No module selected!' -ForegroundColor Red
-        return
+        throw 'No module selected!'
     }
 
     if (($modules.Name | Sort-Object | Select-Object -Unique).Count -ne 1 -or $modules.Count -ne 2)
     {
-        Write-Host '[ERROR] Please select two versions of the same module' -ForegroundColor Red
-        return
+        throw 'Please select two versions of the same module'
     }
 
     [array]$exportedKeysModule1 = $modules[0].ExportedCommands.Keys
@@ -2575,7 +2566,6 @@ function Get-M365DSCFakeValues
                 {
                     $parameterName = Get-StringFirstCharacterToLower -Value $parameterName
                 }
-                write-host -ForegroundColor Yellow $parameterName
                 $result.Add($parameterName, $hashValue)
             }
         }

@@ -437,10 +437,12 @@ function Compare-PSCustomObjectArrays
     param
     (
         [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
         [System.Object[]]
         $DesiredValues,
 
         [Parameter(Mandatory = $true)]
+        [AllowEmptyCollection()]
         [System.Object[]]
         $CurrentValues
     )
@@ -514,11 +516,11 @@ function Get-M365DSCTenantNameFromParameterSet
         [System.Collections.HashTable]
         $ParameterSet
     )
-    if ($ParameterSet.TenantId)
+    if ($ParameterSet.ContainsKey('TenantId'))
     {
         return $ParameterSet.TenantId
     }
-    elseif ($ParameterSet.Credential)
+    elseif ($ParameterSet.ContainsKey('Credential'))
     {
         try
         {
@@ -584,6 +586,9 @@ function Test-M365DSCParameterState
     $dataEvaluation.Add('Resource', "$Source")
     $dataEvaluation.Add('Method', 'Test-TargetResource')
     $dataEvaluation.Add('Tenant', $TenantName)
+
+    $ConnectionMode = Get-M365DSCAuthenticationMode $DesiredValues
+    $dataEvaluation.Add('ConnectionMode', $ConnectionMode)
     $ValuesToCheckData = $ValuesToCheck | Where-Object -FilterScript {$_ -ne 'Verbose'}
     $dataEvaluation.Add('Parameters', $ValuesToCheckData -join "`r`n")
     $dataEvaluation.Add('ParametersCount', $ValuesToCheckData.Length)
@@ -599,7 +604,6 @@ function Test-M365DSCParameterState
     if ($null -ne $IncludedDrifts -and $IncludedDrifts.Keys.Count -gt 0)
     {
         $DriftedParameters = $IncludedDrifts
-        Write-Verbose -Message "@@@@@@@@@@`r`n$($IncludedDrifts | Out-String)"
         $returnValue = $false
     }
 
@@ -649,7 +653,16 @@ function Test-M365DSCParameterState
 
                 if ($CheckDesiredValue)
                 {
-                    $desiredType = $DesiredValues.$_.GetType()
+                    $desiredValue = $DesiredValues.$_
+                    if ($null -eq $desiredValue)
+                    {
+                        $desiredType = $CurrentValues.$_.GetType()
+                    }
+                    else
+                    {
+                        $desiredType = $DesiredValues.$_.GetType()
+                    }
+
                     $fieldName = $_
                     if ($desiredType.IsArray -eq $true)
                     {
@@ -711,8 +724,13 @@ function Test-M365DSCParameterState
                         }
                         else
                         {
+                            $desiredValue = $DesiredValues.$fieldName
+                            if ($null -eq $desiredValue)
+                            {
+                                $desiredValue = @()
+                            }
                             $arrayCompare = Compare-Object -ReferenceObject $CurrentValues.$fieldName `
-                                -DifferenceObject $DesiredValues.$fieldName
+                                -DifferenceObject $desiredValue
                             if ($null -ne $arrayCompare -and
                                 -not [System.String]::IsNullOrEmpty($arrayCompare.InputObject))
                             {
@@ -1193,7 +1211,7 @@ function Export-M365DSCConfiguration
                 }
                 else
                 {
-                    Write-Host -Object "[WARNING] We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*" -ForegroundColor Yellow
+                    Write-Warning -Message "We recommend providing the TenantId property in the format of <tenant>.onmicrosoft.*"
                 }
             }
             return $true
@@ -1260,40 +1278,37 @@ function Export-M365DSCConfiguration
     {
         if ($Credential.Username -notmatch ".onmicrosoft.")
         {
-            Write-Host -Object "[WARNING] We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property." -ForegroundColor Yellow
+            Write-Warning -Message "We recommend providing the username in the format of <tenant>.onmicrosoft.* for the Credential property."
         }
     }
 
     if ($PSBoundParameters.ContainsKey('CertificatePath') -eq $true -and `
             $PSBoundParameters.ContainsKey('CertificatePassword') -eq $false)
     {
-        Write-Host -Object '[ERROR] You have to specify CertificatePassword when you specify CertificatePath' -ForegroundColor Red
-        return
+        throw 'You have to specify CertificatePassword when you specify CertificatePath'
     }
 
     if ($PSBoundParameters.ContainsKey('CertificatePassword') -eq $true -and `
             $PSBoundParameters.ContainsKey('CertificatePath') -eq $false)
     {
-        Write-Host -Object '[ERROR] You have to specify CertificatePath when you specify CertificatePassword' -ForegroundColor Red
-        return
+        throw 'You have to specify CertificatePath when you specify CertificatePassword'
     }
 
     if ($PSBoundParameters.ContainsKey('ApplicationId') -eq $true -and `
             $PSBoundParameters.ContainsKey('Credential') -eq $false -and `
             $PSBoundParameters.ContainsKey('TenantId') -eq $false)
     {
-        Write-Host -Object '[ERROR] You have to specify TenantId when you specify ApplicationId' -ForegroundColor Red
-        return
+        throw 'You have to specify TenantId when you specify ApplicationId'
     }
 
     if ($PSBoundParameters.ContainsKey('ApplicationId') -eq $true -and `
             $PSBoundParameters.ContainsKey('TenantId') -eq $true -and `
+            $PSBoundParameters.ContainsKey('Credential') -eq $false -and `
         ($PSBoundParameters.ContainsKey('CertificateThumbprint') -eq $false -and `
                 $PSBoundParameters.ContainsKey('ApplicationSecret') -eq $false -and `
                 $PSBoundParameters.ContainsKey('CertificatePath') -eq $false))
     {
-        Write-Host -Object '[ERROR] You have to specify ApplicationSecret, CertificateThumbprint or CertificatePath when you specify ApplicationId/TenantId' -ForegroundColor Red
-        return
+        throw 'You have to specify ApplicationSecret, CertificateThumbprint or CertificatePath when you specify ApplicationId/TenantId'
     }
 
     if (($PSBoundParameters.ContainsKey('ApplicationId') -eq $false -or `
@@ -1303,8 +1318,7 @@ function Export-M365DSCConfiguration
                 $PSBoundParameters.ContainsKey('ApplicationSecret') -eq $true -or `
                 $PSBoundParameters.ContainsKey('CertificatePath') -eq $true))
     {
-        Write-Host -Message '[ERROR] You have to specify ApplicationId and TenantId when you specify ApplicationSecret, CertificateThumbprint or CertificatePath' -ForegroundColor Red
-        return
+        throw 'You have to specify ApplicationId and TenantId when you specify ApplicationSecret, CertificateThumbprint or CertificatePath'
     }
 
     # Default to Credential if no authentication mechanism were provided
@@ -1775,6 +1789,8 @@ function New-M365DSCConnection
     $data.Add('Source', 'M365DSCUtil')
     $data.Add('Workload', $Workload)
 
+    $Global:M365DSCTelemetryConnectionToGraphParams = @{}
+
     # Keep track of workloads we already connected so that we don't send additional Telemetry events.
     if ($null -eq $Script:M365ConnectedToWorkloads)
     {
@@ -1786,6 +1802,10 @@ function New-M365DSCConnection
     if ($InboundParameters.ApplicationSecret)
     {
         $InboundParameters.ApplicationSecret = $InboundParameters.ApplicationSecret.GetNetworkCredential().Password
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationSecret'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationSecret', $InboundParameters.ApplicationSecret)
+        }
     }
 
     # Case both authentication methods are attempted
@@ -1826,19 +1846,28 @@ function New-M365DSCConnection
         Write-Verbose -Message 'Credential was specified. Connecting via User Principal'
         if ([System.String]::IsNullOrEmpty($Url))
         {
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('Credential'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('Credential', $InboundParameters.Credential)
+            }
             Connect-M365Tenant -Workload $Workload `
                 -Credential $InboundParameters.Credential `
                 -SkipModuleReload $Global:CurrentModeIsExport
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-Credential")
             {
-                $data.Add('ConnectionType', 'Credential')
+                $data.Add('ConnectionMode', 'Credentials')
                 try
                 {
                     if (-not $Data.ContainsKey('Tenant'))
                     {
                         $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
                         $data.Add('Tenant', $tenantId)
+
+                        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+                        {
+                            $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $tenantId)
+                        }
                     }
                 }
                 catch
@@ -1854,19 +1883,27 @@ function New-M365DSCConnection
         if ($InboundParameters.ContainsKey('Credential') -and
             $null -ne $InboundParameters.Credential)
         {
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('Credential'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('Credential', $InboundParameters.Credential)
+            }
             Connect-M365Tenant -Workload $Workload `
                 -Credential $InboundParameters.Credential `
                 -Url $Url `
                 -SkipModuleReload $Global:CurrentModeIsExport
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-Credential")
             {
-                $data.Add('ConnectionType', 'Credential')
+                $data.Add('ConnectionMode', 'Credential')
                 try
                 {
                     if (-not $Data.ContainsKey('Tenant'))
                     {
                         $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
                         $data.Add('Tenant', $tenantId)
+                        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+                        {
+                            $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $tenantId)
+                        }
                     }
                 }
                 catch
@@ -1888,13 +1925,21 @@ function New-M365DSCConnection
     {
         if ([System.String]::IsNullOrEmpty($Url))
         {
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('Credential'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('Credential', $InboundParameters.Credential)
+            }
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationId'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationId', $InboundParameters.ApplicationId)
+            }
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -Credential $InboundParameters.Credential `
                 -SkipModuleReload $Global:CurrentModeIsExport
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-CredentialsWithApplicationId")
             {
-                $data.Add('ConnectionType', 'CredentialsWithApplicationId')
+                $data.Add('ConnectionMode', 'CredentialsWithApplicationId')
 
                 try
                 {
@@ -1902,6 +1947,10 @@ function New-M365DSCConnection
                     {
                         $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
                         $data.Add('Tenant', $tenantId)
+                        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+                        {
+                            $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $tenantId)
+                        }
                     }
                 }
                 catch
@@ -1916,6 +1965,14 @@ function New-M365DSCConnection
         }
         else
         {
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationId'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationId', $InboundParameters.ApplicationId)
+            }
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('Credential'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('Credential', $InboundParameters.Credential)
+            }
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -Credential $InboundParameters.Credential `
@@ -1923,7 +1980,7 @@ function New-M365DSCConnection
                 -SkipModuleReload $Global:CurrentModeIsExport
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-CredentialsWithApplicationId")
             {
-                $data.Add('ConnectionType', 'CredentialsWithApplicationId')
+                $data.Add('ConnectionMode', 'CredentialsWithApplicationId')
 
                 try
                 {
@@ -1931,6 +1988,10 @@ function New-M365DSCConnection
                     {
                         $tenantId = $InboundParameters.Credential.Username.Split('@')[1]
                         $data.Add('Tenant', $tenantId)
+                        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationId'))
+                        {
+                            $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationId', $tenantId)
+                        }
                     }
                 }
                 catch
@@ -1954,6 +2015,23 @@ function New-M365DSCConnection
         if ([System.String]::IsNullOrEmpty($url))
         {
             Write-Verbose -Message 'ApplicationId, TenantId, CertificatePath & CertificatePassword were specified. Connecting via Service Principal'
+
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationId'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationId', $InboundParameters.ApplicationId)
+            }
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $InboundParameters.TenantId)
+            }
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('CertificatePassword'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('CertificatePassword', $InboundParameters.CertificatePassword.Password)
+            }
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('CertificatePath'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('CertificatePath', $InboundParameters.CertificatePath)
+            }
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
@@ -1963,10 +2041,14 @@ function New-M365DSCConnection
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithPath")
             {
-                $data.Add('ConnectionType', 'ServicePrincipalWithPath')
+                $data.Add('ConnectionMode', 'ServicePrincipalWithPath')
                 if (-not $data.ContainsKey('Tenant'))
                 {
                     $data.Add('Tenant', $InboundParameters.TenantId)
+                    if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+                    {
+                        $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $InboundParameters.TenantId)
+                    }
                 }
                 Add-M365DSCTelemetryEvent -Data $data -Type 'Connection'
                 $Script:M365ConnectedToWorkloads += "$Workload-ServicePrincipalWithPath"
@@ -1992,7 +2074,7 @@ function New-M365DSCConnection
         }
         else
         {
-            $data.Add('ConnectionType', 'ServicePrincipalWithPath')
+            $data.Add('ConnectionMode', 'ServicePrincipalWithPath')
             if (-not $data.ContainsKey('Tenant'))
             {
                 if (-not [System.String]::IsNullOrEmpty($InboundParameters.TenantId))
@@ -2018,6 +2100,19 @@ function New-M365DSCConnection
         if ([System.String]::IsNullOrEmpty($url))
         {
             Write-Verbose -Message 'ApplicationId, TenantId, ApplicationSecret were specified. Connecting via Service Principal'
+
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationId'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationId', $InboundParameters.ApplicationId)
+            }
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $InboundParameters.TenantId)
+            }
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationSecret'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationSecret', $InboundParameters.ApplicationSecret)
+            }
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
@@ -2026,7 +2121,7 @@ function New-M365DSCConnection
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithSecret")
             {
-                $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
+                $data.Add('ConnectionMode', 'ServicePrincipalWithSecret')
                 if (-not $data.ContainsKey('Tenant'))
                 {
                     $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2038,6 +2133,18 @@ function New-M365DSCConnection
         }
         else
         {
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationId'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationId', $InboundParameters.ApplicationId)
+            }
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $InboundParameters.TenantId)
+            }
+            if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationSecret'))
+            {
+                $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationSecret', $InboundParameters.ApplicationSecret)
+            }
             Connect-M365Tenant -Workload $Workload `
                 -ApplicationId $InboundParameters.ApplicationId `
                 -TenantId $InboundParameters.TenantId `
@@ -2047,7 +2154,7 @@ function New-M365DSCConnection
 
             if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithSecret")
             {
-                $data.Add('ConnectionType', 'ServicePrincipalWithSecret')
+                $data.Add('ConnectionMode', 'ServicePrincipalWithSecret')
                 if (-not $data.ContainsKey('Tenant'))
                 {
                     $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2061,6 +2168,19 @@ function New-M365DSCConnection
     elseif ($InboundParameters.CertificateThumbprint -and $InboundParameters.ApplicationId -and $InboundParameters.TenantId)
     {
         Write-Verbose -Message 'ApplicationId, TenantId, CertificateThumbprint were specified. Connecting via Service Principal'
+
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('ApplicationId'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('ApplicationId', $InboundParameters.ApplicationId)
+        }
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $InboundParameters.TenantId)
+        }
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('CertificateThumbprint'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('CertificateThumbprint', $InboundParameters.CertificateThumbprint)
+        }
         Connect-M365Tenant -Workload $Workload `
             -ApplicationId $InboundParameters.ApplicationId `
             -TenantId $InboundParameters.TenantId `
@@ -2069,7 +2189,7 @@ function New-M365DSCConnection
             -Url $Url
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ServicePrincipalWithThumbprint")
         {
-            $data.Add('ConnectionType', 'ServicePrincipalWithThumbprint')
+            $data.Add('ConnectionMode', 'ServicePrincipalWithThumbprint')
             if (-not $data.ContainsKey('Tenant'))
             {
                 $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2083,6 +2203,14 @@ function New-M365DSCConnection
     elseif ($null -ne $InboundParameters.Credential -and `
     -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId))
     {
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('Credential'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('Credential', $InboundParameters.Credential)
+        }
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $InboundParameters.TenantId)
+        }
         Connect-M365Tenant -Workload $Workload `
             -TenantId $InboundParameters.TenantId `
             -Credential $InboundParameters.Credential `
@@ -2090,7 +2218,7 @@ function New-M365DSCConnection
             -SkipModuleReload $Global:CurrentModeIsExport
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-CredentialsWithTenantId")
         {
-            $data.Add('ConnectionType', 'CredentialsWithTenantId')
+            $data.Add('ConnectionMode', 'CredentialsWithTenantId')
             if (-not $data.ContainsKey('Tenant'))
             {
                 $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2105,6 +2233,15 @@ function New-M365DSCConnection
             -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId))
     {
         Write-Verbose -Message 'Connecting via managed identity'
+
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('Identity'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('Identity', $true)
+        }
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $InboundParameters.TenantId)
+        }
         Connect-M365Tenant -Workload $Workload `
             -Identity `
             -TenantId $InboundParameters.TenantId `
@@ -2112,7 +2249,7 @@ function New-M365DSCConnection
 
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-ManagedIdentity")
         {
-            $data.Add('ConnectionType', 'ManagedIdentity')
+            $data.Add('ConnectionMode', 'ManagedIdentity')
             if (-not $data.ContainsKey('Tenant'))
             {
                 $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2127,6 +2264,16 @@ function New-M365DSCConnection
     -not [System.String]::IsNullOrEmpty($InboundParameters.TenantId))
     {
         Write-Verbose -Message 'Connecting via Access Tokens'
+
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('AccessTokens'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('AccessTokens', $InboundParameters.AccessTokens)
+        }
+
+        if (-not $Global:M365DSCTelemetryConnectionToGraphParams.ContainsKey('TenantId'))
+        {
+            $Global:M365DSCTelemetryConnectionToGraphParams.Add('TenantId', $InboundParameters.TenantId)
+        }
         Connect-M365Tenant -Workload $Workload `
             -AccessTokens $InboundParameters.AccessTokens `
             -TenantId $InboundParameters.TenantId `
@@ -2134,7 +2281,7 @@ function New-M365DSCConnection
 
         if (-not $Script:M365ConnectedToWorkloads -contains "$Workload-AccessTokens")
         {
-            $data.Add('ConnectionType', 'AccessTokens')
+            $data.Add('ConnectionMode', 'AccessTokens')
             if (-not $data.ContainsKey('Tenant'))
             {
                 $data.Add('Tenant', $InboundParameters.TenantId)
@@ -2941,7 +3088,7 @@ function Update-M365DSCDependencies
 
         foreach ($dependency in $dependencies)
         {
-            Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $dependencies.Count * 100)
+            Write-Progress -Activity 'Scanning dependencies' -PercentComplete ($i / $dependencies.Count * 100)
             try
             {
                 if (-not $Force)
@@ -2984,15 +3131,14 @@ function Update-M365DSCDependencies
             }
             catch
             {
-                Write-Host "Could not update or import {$($dependency.ModuleName)}"
-                Write-Host "Error-Mesage: $($_.Exception.Message)"
+                Write-Error -Message "Could not update or import {$($dependency.ModuleName)}: $($_.Exception.Message)" -ErrorAction Continue
             }
 
             $i++
         }
 
         # The progress bar seems to hang sometimes. Make sure it is no longer displayed.
-        Write-Progress -Activity 'Scanning Dependencies' -Completed
+        Write-Progress -Activity 'Scanning dependencies' -Completed
 
         if ($ValidateOnly)
         {
@@ -3002,10 +3148,10 @@ function Update-M365DSCDependencies
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error Updating Dependencies:' `
+        New-M365DSCLogEntry -Message 'Error updating dependencies:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source)
-        Write-Error $_
+        Write-Error $_ -ErrorAction Continue
     }
 }
 
@@ -3044,7 +3190,7 @@ function Uninstall-M365DSCOutdatedDependencies
                 New-M365DSCLogEntry -Message "Could not uninstall $($module.Name) Version $($module.Version)" `
                     -Exception $_ `
                     -Source $($MyInvocation.MyCommand.Source)
-                Write-Host "Could not uninstall $($module.Name) Version $($module.Version)"
+                Write-Error -Message "Could not uninstall $($module.Name) Version $($module.Version)" -ErrorAction Continue
             }
         }
 
@@ -3075,20 +3221,20 @@ function Uninstall-M365DSCOutdatedDependencies
                         New-M365DSCLogEntry -Message "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)" `
                             -Exception $_ `
                             -Source $($MyInvocation.MyCommand.Source)
-                        Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)"
+                        Write-Error -Message "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)" -ErrorAction Continue
                     }
                 }
             }
             catch
             {
-                Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+                Write-Error -Message "Could not uninstall {$($dependency.ModuleName)}" -ErrorAction Continue
             }
             $i++
         }
     }
     catch
     {
-        New-M365DSCLogEntry -Message 'Error Uninstalling Outdated Dependencies:' `
+        New-M365DSCLogEntry -Message 'Error uninstalling outdated dependencies:' `
             -Exception $_ `
             -Source $($MyInvocation.MyCommand.Source)
         Write-Error $_
@@ -3111,13 +3257,13 @@ function Uninstall-M365DSCOutdatedDependencies
             }
             catch
             {
-                Write-Host "Could not uninstall $($foundModule.Name) Version $($foundModule.Version) "
+                Write-Error -Message "Could not uninstall $($foundModule.Name) Version $($foundModule.Version)" -ErrorAction Continue
             }
         }
     }
     catch
     {
-        Write-Host "Could not uninstall {$($dependency.ModuleName)}"
+        Write-Error -Message "Could not uninstall {$($dependency.ModuleName)}" -ErrorAction Continue
     }
 }
 
@@ -3439,6 +3585,13 @@ function Get-M365DSCExportContentForResource
         $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
         $Keys = $Resource.Properties.Where({ $_.IsMandatory }) | `
             Select-Object -ExpandProperty Name
+        if ($null -eq $keys)
+        {
+            Import-Module $Resource.Path -Force
+            $moduleInfo = Get-Command -Module $ModuleFullName -ErrorAction SilentlyContinue
+            $cmdInfo = $moduleInfo | Where-Object -FilterScript {$_.Name -eq 'Get-TargetResource'}
+            $Keys = $cmdInfo.Parameters.Keys
+        }
     }
     else
     {
@@ -4002,6 +4155,10 @@ function Get-M365DSCAuthenticationMode
     elseif ($Parameters.ManagedIdentity)
     {
         $AuthenticationType = 'ManagedIdentity'
+    }
+    elseif ($Parameters.AccessTokens)
+    {
+        $AuthenticationType = 'AccessTokens'
     }
     else
     {

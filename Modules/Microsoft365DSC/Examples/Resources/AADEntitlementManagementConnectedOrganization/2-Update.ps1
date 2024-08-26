@@ -6,20 +6,27 @@ It is not meant to use as a production baseline.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
-    $Domain = $Credscredential.Username.Split('@')[1]
     node localhost
     {
         AADEntitlementManagementConnectedOrganization 'MyConnectedOrganization'
         {
             Description           = "This is the tenant partner - Updated"; # Updated Property
             DisplayName           = "Test Tenant - DSC";
-            ExternalSponsors      = @("AdeleV@$Domain");
+            ExternalSponsors      = @("AdeleV@$TenantId");
             IdentitySources       = @(
                 MSFT_AADEntitlementManagementConnectedOrganizationIdentitySource{
                     ExternalTenantId = "e7a80bcf-696e-40ca-8775-a7f85fbb3ebc"
@@ -27,10 +34,12 @@ Configuration Example
                     odataType = '#microsoft.graph.azureActiveDirectoryTenant'
                 }
             );
-            InternalSponsors      = @("AdeleV@$Domain");
+            InternalSponsors      = @("AdeleV@$TenantId");
             State                 = "configured";
             Ensure                = "Present"
-            Credential            = $Credscredential
+            ApplicationId         = $ApplicationId
+            TenantId              = $TenantId
+            CertificateThumbprint = $CertificateThumbprint
         }
     }
 }

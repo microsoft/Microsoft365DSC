@@ -126,6 +126,51 @@ function Invoke-TestHarness
     return $results
 }
 
+function Get-M365DSCAllGraphPermissionsList
+{
+    [CmdletBinding()]
+    [OutputType([System.String[]])]
+    param()
+
+    $allModules = Get-module Microsoft.graph.* -ListAvailable
+    $allPermissions = @()
+    foreach ($module in $allModules)
+    {
+        $cmds = Get-Command -Module $module.Name
+        foreach ($cmd in $cmds)
+        {
+            $graphInfo = Find-MgGraphCommand -Command $cmd.Name -ErrorAction SilentlyContinue
+            if ($null -ne $graphInfo)
+            {
+                $permissions = $graphInfo.Permissions | Where-Object -FilterScript {$_.PermissionType -eq 'Application'}
+                $allPermissions += $permissions.Name
+            }
+        }
+    }
+
+    $allPermissions+= @('OrgSettings-Microsoft365Install.Read.All', `
+                        'OrgSettings-Forms.Read.All', `
+                        'OrgSettings-Todo.Read.All', `
+                        'OrgSettings-AppsAndServices.Read.All', `
+                        'OrgSettings-DynamicsVoice.Read.All', `
+                        'ReportSettings.Read.All', `
+                        'RoleManagementPolicy.Read.Directory', `
+                        'RoleEligibilitySchedule.Read.Directory', `
+                        'Agreement.Read.All', `
+                        'Policy.ReadWrite.ConditionalAccess', `
+                        'Policy.Read.ConditionalAccess', `
+                        'Policy.ReadWrite.AuthenticationMethod', `
+                        'SharePointTenantSettings.Read.All', `
+                        'AppCatalog.ReadWrite.All', `
+                        'TeamSettings.ReadWrite.All', `
+                        'Channel.Delete.All', `
+                        'ChannelSettings.ReadWrite.All', `
+                        'ChannelMember.ReadWrite.All', `
+                        'ChannelSettings.Read.All')
+    $roles = $allPermissions | Select-Object -Unique | Sort-Object -Descending:$false
+    return $roles
+}
+
 function Invoke-QualityChecksHarness
 {
     [CmdletBinding()]

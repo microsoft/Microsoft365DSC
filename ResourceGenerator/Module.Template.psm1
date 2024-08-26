@@ -262,20 +262,9 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($null -ne $source -and $source.GetType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
-            if ($key -eq "Assignments")
-            {
-                $testResult = Compare-M365DSCIntunePolicyAssignment `
-                    -Source $source `
-                    -Target $target
-            }
-            else
-            {
-                $testResult = Compare-M365DSCComplexObject `
-                    -Source ($source) `
-                    -Target ($target)
-            }
+            $testResult = Compare-M365DSCComplexObject `
+                -Source ($source) `
+                -Target ($target)
 
             if (-not $testResult)
             {
@@ -380,6 +369,10 @@ function Export-TargetResource
             if (-not [String]::IsNullOrEmpty($config.displayName))
             {
                 $displayedKey = $config.displayName
+            }
+            elseif (-not [string]::IsNullOrEmpty($config.name))
+            {
+                $displayedKey = $config.name
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{

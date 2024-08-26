@@ -424,11 +424,7 @@ function Set-TargetResource
             -ScheduledActionsForRule $scheduledActionsForRule
 
         #region Assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($policy.id)
         {
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
@@ -455,11 +451,7 @@ function Set-TargetResource
             -DeviceCompliancePolicyId $configDevicePolicy.Id
 
         #region Assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $configDevicePolicy.id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceCompliancePolicies'
@@ -726,9 +718,16 @@ function Export-TargetResource
 
     try
     {
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+        }
         [array]$configDeviceMacOsPolicies = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.macOSCompliancePolicy' }
+        $configDeviceMacOsPolicies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $configDeviceMacOsPolicies
+
         $i = 1
         $dscContent = ''
         if ($configDeviceMacOsPolicies.Length -eq 0)

@@ -408,11 +408,7 @@ function Set-TargetResource
             -ScheduledActionsForRule $scheduledActionsForRule
 
         #region Assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         if ($policy.id)
         {
             Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $policy.id `
@@ -444,12 +440,7 @@ function Set-TargetResource
             -Description $Description `
             -DeviceCompliancePolicyId $configDevicePolicy.Id
         #region Assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
-
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId  $configDevicePolicy.id `
             -Targets $assignmentsHash `
             -Repository 'deviceManagement/deviceCompliancePolicies'
@@ -708,9 +699,16 @@ function Export-TargetResource
 
     try
     {
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+        }
         [array]$configDeviceiOsPolicies = Get-MgBetaDeviceManagementDeviceCompliancePolicy `
             -ErrorAction Stop -All:$true -Filter $Filter | Where-Object `
             -FilterScript { $_.AdditionalProperties.'@odata.type' -eq '#microsoft.graph.iosCompliancePolicy' }
+        $configDeviceiOsPolicies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $configDeviceiOsPolicies
+
         $i = 1
         $dscContent = ''
         if ($configDeviceiOsPolicies.Length -eq 0)

@@ -5,9 +5,17 @@ This example deletes a new App Configuration Device Policy.
 Configuration Example
 {
     param(
-        [Parameter(Mandatory = $true)]
-        [PSCredential]
-        $Credscredential
+        [Parameter()]
+        [System.String]
+        $ApplicationId,
+
+        [Parameter()]
+        [System.String]
+        $TenantId,
+
+        [Parameter()]
+        [System.String]
+        $CertificateThumbprint
     )
     Import-DscResource -ModuleName Microsoft365DSC
 
@@ -15,12 +23,13 @@ Configuration Example
     {
         IntuneAppConfigurationDevicePolicy "IntuneAppConfigurationDevicePolicy-Example"
         {
-            Credential  = $Credscredential;
             Description = "";
             DisplayName = "Example";
             Ensure      = "Present";
             Id          = "0000000-0000-0000-0000-000000000000";
-            TenantId    = $OrganizationName;
+            ApplicationId         = $ApplicationId;
+            TenantId              = $TenantId;
+            CertificateThumbprint = $CertificateThumbprint;
         }
     }
 }

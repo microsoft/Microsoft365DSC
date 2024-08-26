@@ -246,11 +246,7 @@ function Set-TargetResource
         $policy = New-MgBetaDeviceAppManagementTargetedManagedAppConfiguration @creationParams
 
         #region Assignments
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
 
         if ($policy.id)
         {
@@ -276,11 +272,7 @@ function Set-TargetResource
         }
         Update-MgBetaDeviceAppManagementTargetedManagedAppConfiguration @updateParams
 
-        $assignmentsHash = @()
-        foreach ($assignment in $Assignments)
-        {
-            $assignmentsHash += Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $Assignment
-        }
+        $assignmentsHash = ConvertTo-IntunePolicyAssignment -IncludeDeviceFilter:$true -Assignments $Assignments
         Update-DeviceConfigurationPolicyAssignment -DeviceConfigurationPolicyId $currentconfigPolicy.Id `
             -Targets $assignmentsHash `
             -Repository 'deviceAppManagement/targetedManagedAppConfigurations'
@@ -392,16 +384,9 @@ function Test-TargetResource
         $target = $CurrentValues.$key
         if ($source.getType().Name -like '*CimInstance*')
         {
-            $source = Get-M365DSCDRGComplexTypeToHashtable -ComplexObject $source
-
             $testResult = Compare-M365DSCComplexObject `
                 -Source ($source) `
                 -Target ($target)
-
-            if ($key -eq 'Assignments')
-            {
-                $testResult = Compare-M365DSCIntunePolicyAssignment -Source $source -Target $target
-            }
 
             if (-Not $testResult)
             {
@@ -481,7 +466,14 @@ function Export-TargetResource
 
     try
     {
+        if (-not [string]::IsNullOrEmpty($Filter))
+        {
+            $complexFunctions = Get-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+            $Filter = Remove-ComplexFunctionsFromFilterQuery -FilterQuery $Filter
+        }
         [array]$configPolicies = Get-MgBetaDeviceAppManagementTargetedManagedAppConfiguration -All:$true -Filter $Filter -ErrorAction Stop
+        $configPolicies = Find-GraphDataUsingComplexFunctions -ComplexFunctions $complexFunctions -Policies $configPolicies
+
         $i = 1
         $dscContent = ''
         if ($configPolicies.Length -eq 0)
