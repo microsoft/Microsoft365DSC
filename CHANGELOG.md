@@ -32,6 +32,10 @@
     FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
 * O365OrgSettings
   * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
+* SCAutoSensitivityLabelRule
+  * Fixes issue where the export was looping through all possible workloads
+    instead of the actually targeted workload
+    FIXES [#4989](https://github.com/microsoft/Microsoft365DSC/issues/4989)
 * SCSensitivityLabel
   * Corrected issue where ExternalAccess properties were configured inverted
     FIXES [#3782](https://github.com/microsoft/Microsoft365DSC/issues/3782)

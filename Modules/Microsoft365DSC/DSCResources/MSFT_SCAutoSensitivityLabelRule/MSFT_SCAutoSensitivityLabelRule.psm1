@@ -1140,6 +1140,7 @@ function Export-TargetResource
         {
             Write-Host "`r`n" -NoNewline
         }
+
         foreach ($rule in $rules)
         {
             if ($null -ne $Global:M365DSCExportResourceInstancesCount)
@@ -1148,83 +1149,79 @@ function Export-TargetResource
             }
 
             Write-Host "    |---[$i/$($rules.Length)] $($rule.Name)" -NoNewline
+            $Results = Get-TargetResource @PSBoundParameters `
+                -Name $rule.name `
+                -Policy $rule.ParentPolicyName `
+                -Workload $rule.LogicalWorkload
 
-            [Array]$workloads = $rule.Workload.Replace(' ', '').Split(',')
-            foreach ($workload in $workloads)
+            $IsCIMArray = $false
+            $IsSitCIMArray = $false
+
+            if ($Results.ContentContainsSensitiveInformation.Length -gt 1)
             {
-                $Results = Get-TargetResource @PSBoundParameters `
-                    -Name $rule.name `
-                    -Policy $rule.ParentPolicyName `
-                    -Workload $workload
-
-                $IsCIMArray = $false
-                $IsSitCIMArray = $false
-
-                if ($Results.ContentContainsSensitiveInformation.Length -gt 1)
-                {
-                    $IsSitCIMArray = $true
-                }
-
-                if ($Results.ExceptIfContentContainsSensitiveInformation.Length -gt 1)
-                {
-                    $IsCIMArray = $true
-                }
-
-                if ($null -ne $Results.ContentContainsSensitiveInformation)
-                {
-                    if ($null -ne $results.ContentContainsSensitiveInformation.Groups)
-                    {
-                        $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationStringGroup -InformationArray $Results.ContentContainsSensitiveInformation
-                    }
-                    else
-                    {
-                        $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
-                    }
-                }
-
-                if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation)
-                {
-                    if ($null -ne $results.ExceptIfContentContainsSensitiveInformation.Groups)
-                    {
-                        $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationStringGroup -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
-                    }
-                    else
-                    {
-                        $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
-                    }
-                }
-
-                $IsHeaderPatternsCIMArray = $false
-                if ($null -ne $Results.HeaderMatchesPatterns -and $null -ne $Results.HeaderMatchesPatterns.Name)
-                {
-                    $Results.HeaderMatchesPatterns = ConvertTo-HeadersMatchesPatternString -Patterns $Results.HeaderMatchesPatterns
-                }
-
-                $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
-                    -Results $Results
-                $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
-                    -ConnectionMode $ConnectionMode `
-                    -ModulePath $PSScriptRoot `
-                    -Results $Results `
-                    -Credential $Credential
-
-                if ($null -ne $Results.ContentContainsSensitiveInformation )
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ContentContainsSensitiveInformation' -IsCIMArray $IsSitCIMArray
-                }
-                if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExceptIfContentContainsSensitiveInformation' -IsCIMArray $IsCIMArray
-                }
-                if ($null -ne $Results.HeaderMatchesPatterns)
-                {
-                    $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'HeaderMatchesPatterns' -IsCIMArray $false
-                }
-                $dscContent += $currentDSCBlock
-
-                Save-M365DSCPartialExport -Content $currentDSCBlock `
-                    -FileName $Global:PartialExportFileName
+                $IsSitCIMArray = $true
             }
+
+            if ($Results.ExceptIfContentContainsSensitiveInformation.Length -gt 1)
+            {
+                $IsCIMArray = $true
+            }
+
+            if ($null -ne $Results.ContentContainsSensitiveInformation)
+            {
+                if ($null -ne $results.ContentContainsSensitiveInformation.Groups)
+                {
+                    $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationStringGroup -InformationArray $Results.ContentContainsSensitiveInformation
+                }
+                else
+                {
+                    $Results.ContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ContentContainsSensitiveInformation
+                }
+            }
+
+            if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation)
+            {
+                if ($null -ne $results.ExceptIfContentContainsSensitiveInformation.Groups)
+                {
+                    $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationStringGroup -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
+                }
+                else
+                {
+                    $Results.ExceptIfContentContainsSensitiveInformation = ConvertTo-SCDLPSensitiveInformationString -InformationArray $Results.ExceptIfContentContainsSensitiveInformation
+                }
+            }
+
+            $IsHeaderPatternsCIMArray = $false
+            if ($null -ne $Results.HeaderMatchesPatterns -and $null -ne $Results.HeaderMatchesPatterns.Name)
+            {
+                $Results.HeaderMatchesPatterns = ConvertTo-HeadersMatchesPatternString -Patterns $Results.HeaderMatchesPatterns
+            }
+
+            $Results = Update-M365DSCExportAuthenticationResults -ConnectionMode $ConnectionMode `
+                -Results $Results
+            $currentDSCBlock = Get-M365DSCExportContentForResource -ResourceName $ResourceName `
+                -ConnectionMode $ConnectionMode `
+                -ModulePath $PSScriptRoot `
+                -Results $Results `
+                -Credential $Credential
+
+            if ($null -ne $Results.ContentContainsSensitiveInformation )
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ContentContainsSensitiveInformation' -IsCIMArray $IsSitCIMArray
+            }
+            if ($null -ne $Results.ExceptIfContentContainsSensitiveInformation )
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'ExceptIfContentContainsSensitiveInformation' -IsCIMArray $IsCIMArray
+            }
+            if ($null -ne $Results.HeaderMatchesPatterns)
+            {
+                $currentDSCBlock = Convert-DSCStringParamToVariable -DSCBlock $currentDSCBlock -ParameterName 'HeaderMatchesPatterns' -IsCIMArray $false
+            }
+            $dscContent += $currentDSCBlock
+
+            Save-M365DSCPartialExport -Content $currentDSCBlock `
+                -FileName $Global:PartialExportFileName
+
             Write-Host $Global:M365DSCEmojiGreenCheckMark
             $i++
         }
