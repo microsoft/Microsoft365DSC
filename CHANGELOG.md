@@ -32,6 +32,10 @@
     FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
 * O365OrgSettings
   * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
+* SCAutoSensitivityLabelPolicy
+  * Fixes issue where Mode=Enabled is not supported for SP and OD. Changing
+    property to TestWithoutNotifications in those instances.
+    FIXES [#4990](https://github.com/microsoft/Microsoft365DSC/issues/4990)
 * SCAutoSensitivityLabelRule
   * Fixes issue where the export was looping through all possible workloads
     instead of the actually targeted workload
