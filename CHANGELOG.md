@@ -2,7 +2,6 @@
 
 # UNRELEASED
 
-
 * AADConditionalAccessPolicy
   * Fixing issue where the resource crashed when trying to retrieve groups
     and users from Entra ID which no longer existed
@@ -31,6 +30,8 @@
     DeviceManagementConfiguration.ReadWrite.All to cope with
     getOmaSettingPlainTextValue which is only working if RW is granted
     FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
+* O365OrgSettings
+  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
