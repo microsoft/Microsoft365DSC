@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fix Properties for Dynamic Administrative Units in Graph have moved
 * AADConditionalAccessPolicy
   * Fixing issue where the resource crashed when trying to retrieve groups
     and users from Entra ID which no longer existed
