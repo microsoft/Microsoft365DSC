@@ -38,6 +38,7 @@ function Invoke-TestHarness
     }
 
     Import-Module -Name "$repoDir/Modules/Microsoft365DSC/Microsoft365DSC.psd1"
+    Import-Module -Name PSDesiredStateConfiguration -Global -Prefix 'Pwsh' -Force
     $testsToRun = @()
 
     # Run Unit Tests
