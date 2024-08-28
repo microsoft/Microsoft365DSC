@@ -132,7 +132,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
@@ -247,7 +247,7 @@ function Get-TargetResource
             DeviceThreatProtectionEnabled               = $devicePolicy.AdditionalProperties.deviceThreatProtectionEnabled
             DeviceThreatProtectionRequiredSecurityLevel = $devicePolicy.AdditionalProperties.deviceThreatProtectionRequiredSecurityLevel
             ConfigurationManagerComplianceRequired      = $devicePolicy.AdditionalProperties.configurationManagerComplianceRequired
-            TPMRequired                                 = $devicePolicy.AdditionalProperties.tPMRequired
+            TpmRequired                                 = $devicePolicy.AdditionalProperties.tpmRequired
             DeviceCompliancePolicyScript                = $devicePolicy.AdditionalProperties.deviceCompliancePolicyScript
             ValidOperatingSystemBuildRanges             = $devicePolicy.AdditionalProperties.validOperatingSystemBuildRanges
             Ensure                                      = 'Present'
@@ -418,7 +418,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]
@@ -694,7 +694,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.Boolean]
-        $TPMRequired,
+        $TpmRequired,
 
         [Parameter()]
         [System.String]

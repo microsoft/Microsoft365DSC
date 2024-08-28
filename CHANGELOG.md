@@ -2,6 +2,50 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fix Properties for Dynamic Administrative Units in Graph have moved
+* AADConditionalAccessPolicy
+  * Fixing issue where the resource crashed when trying to retrieve groups
+    and users from Entra ID which no longer existed
+  * Fixes an issue where the `AuthenticationFlows` property changed in Graph
+    and updates on the documentation for the possible values of `TransferMethods`.
+    FIXES [#4961](https://github.com/microsoft/Microsoft365DSC/issues/4961)
+    FIXES [#4960](https://github.com/microsoft/Microsoft365DSC/issues/4960)
+    FIXES [#4734](https://github.com/microsoft/Microsoft365DSC/issues/4734)
+    FIXES [#4725](https://github.com/microsoft/Microsoft365DSC/issues/4725)
+* EXOAuthenticationPolicyAssignment
+  * Removes the 1000 user limit when exporting authentication policy assignments
+    FIXES [#4956](https://github.com/microsoft/Microsoft365DSC/issues/4956)
+* EXOHostedContentFilterRule
+  * Don't check if associated `EXOHostedContentFilterPolicy` is present
+    while removing resource since it's not required
+ * EXORoleGroup
+    * Fix an issue where roles that have empty members cannot be compared
+   FIXES [#4977] (https://github.com/microsoft/Microsoft365DSC/issues/4977)
+* IntuneAccountProtectionLocalAdministratorPasswordSolutionPolicy
+  * Fixed issue if `PasswordComplexity` was set to 5 by allowing that value
+    FIXES [#4963](https://github.com/microsoft/Microsoft365DSC/issues/4963)
+* IntuneDeviceCompliancePolicyWindows10
+  * Fix extraction of property `TpmRequired`
+* IntuneDeviceConfigurationCustomPolicyWindows10
+  * Change app and delegated permissions for reading to
+    DeviceManagementConfiguration.ReadWrite.All to cope with
+    getOmaSettingPlainTextValue which is only working if RW is granted
+    FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
+* O365OrgSettings
+  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
+* M365DSCUtil
+  * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
+    FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
+* MISC
+  * Improve module updates and PowerShell Core support across the DSC
+    resources.
+    FIXES [#4941](https://github.com/microsoft/Microsoft365DSC/issues/4941)
+  * Replace some `Write-Host` occurrences in core engine with
+    appropriate alternatives.
+    FIXES [#4943](https://github.com/microsoft/Microsoft365DSC/issues/4943)
+  * Fixed a typo within M365DSCReport.psm1 related to a .png file
+    FIXES [#4983](https://github.com/microsoft/Microsoft365DSC/pull/4983)
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 6.5.0.
 
