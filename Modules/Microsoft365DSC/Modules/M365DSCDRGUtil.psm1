@@ -285,7 +285,7 @@ function Get-M365DSCDRGComplexTypeToString
     {
         $indent += '    '
     }
-    #If ComplexObject  is an Array
+    #If ComplexObject is an Array
     if ($ComplexObject.GetType().FullName -like '*[[\]]')
     {
         $currentProperty = @()
@@ -318,13 +318,13 @@ function Get-M365DSCDRGComplexTypeToString
         $currentProperty += $indent
     }
 
-    $CIMInstanceName = $CIMInstanceName.replace('MSFT_', '')
+    $CIMInstanceName = $CIMInstanceName.Replace('MSFT_', '')
     $currentProperty += "MSFT_$CIMInstanceName{`r`n"
     $IndentLevel++
     $indent = '    ' * $IndentLevel
     $keyNotNull = 0
 
-    if ($ComplexObject.Keys.count -eq 0)
+    if ($ComplexObject.Keys.Count -eq 0)
     {
         return $null
     }
@@ -336,7 +336,7 @@ function Get-M365DSCDRGComplexTypeToString
             $keyNotNull++
             if ($ComplexObject.$key.GetType().FullName -like 'Microsoft.Graph.PowerShell.Models.*' -or $key -in $ComplexTypeMapping.Name)
             {
-                $hashPropertyType = $ComplexObject[$key].GetType().Name.tolower()
+                $hashPropertyType = $ComplexObject[$key].GetType().Name.ToLower()
 
                 $isArray = $false
                 if ($ComplexObject[$key].GetType().FullName -like '*[[\]]')
@@ -349,7 +349,6 @@ function Get-M365DSCDRGComplexTypeToString
                     $hashPropertyType = ([Array]($ComplexTypeMapping | Where-Object -FilterScript { $_.Name -eq $key }).CimInstanceName)[0]
                     $hashProperty = $ComplexObject[$key]
                     $currentProperty += "`r`n"
-
                 }
                 else
                 {
@@ -363,7 +362,7 @@ function Get-M365DSCDRGComplexTypeToString
 
                 if ($isArray -and $key -in $ComplexTypeMapping.Name)
                 {
-                    if ($ComplexObject.$key.count -gt 0)
+                    if ($ComplexObject.$key.Count -gt 0)
                     {
                         $currentProperty += $indent + $key + ' = '
                         $currentProperty += '@('
@@ -408,7 +407,7 @@ function Get-M365DSCDRGComplexTypeToString
                 }
                 if ($isArray)
                 {
-                    if ($ComplexObject.$key.count -gt 0)
+                    if ($ComplexObject.$key.Count -gt 0)
                     {
                         $currentProperty += $indent
                         $currentProperty += ')'
@@ -464,7 +463,7 @@ function Get-M365DSCDRGComplexTypeToString
         $currentProperty += $indent
     }
 
-    $emptyCIM = $currentProperty.replace(' ', '').replace("`r`n", '')
+    $emptyCIM = $currentProperty.Replace(' ', '').Replace("`r`n", '')
     if ($emptyCIM -eq "MSFT_$CIMInstanceName{}")
     {
         $currentProperty = $null
@@ -1518,7 +1517,7 @@ function Get-IntuneSettingCatalogPolicySetting
         -All
     $settingInstances = @()
 
-    # Iterate over all setting instance templates
+    # Iterate over all setting instance templates in the setting template
     foreach ($settingInstanceTemplate in $settingTemplates.SettingInstanceTemplate)
     {
         $settingInstance = @{}
@@ -1616,7 +1615,15 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
 
         [Parameter()]
         [System.String]
-        $SettingValueTemplateId
+        $SettingValueTemplateId,
+
+        [Parameter()]
+        [System.String]
+        $SettingInstanceName = 'MSFT_MicrosoftGraphIntuneSettingsCatalog',
+
+        [Parameter()]
+        [System.Int32]
+        $Level = 1
     )
 
     $settingValuesToReturn = @{}
@@ -1630,10 +1637,10 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
     }
 
     # Depending on the setting type, there is other logic involved
-    switch ($settingType)
+    switch ($SettingType)
     {
         # GroupSettingCollections are a collection of settings without a value of their own
-        '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+        { $_ -eq '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance' -or $_ -eq '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition' }
         {
             $groupSettingCollectionValue = @{}
             $groupSettingCollectionValueChildren = @()
@@ -1643,40 +1650,94 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 $_.settingInstanceTemplate.settingDefinitionId -eq $SettingDefinition.RootDefinitionId
             }
             $groupSettingCollectionDefinitionChildren += $templates.SettingDefinitions | Where-Object {
-                ($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId.Contains($SettingDefinition.Id)) -or
-                ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($SettingDefinition.Id))
+                ($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId -contains $SettingDefinition.Id) -or
+                ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId -contains $SettingDefinition.Id)
             }
-            foreach ($childDefinition in $groupSettingCollectionDefinitionChildren)
-            {
-                $childSettingName = $childDefinition.Name
-                $childSettingType = $childDefinition.AdditionalProperties.'@odata.type'.Replace('Definition', 'Instance')
-                $childSettingValueName = $childSettingType.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace('Instance', 'Value')
-                $childSettingValueType = "#microsoft.graph.deviceManagementConfiguration$($childSettingValueName)"
-                $childSettingValueName = $childSettingValueName.Substring(0, 1).ToLower() + $childSettingValueName.Substring(1, $childSettingValueName.length - 1 )
-                $childSettingInstanceTemplate = $SettingTemplates.SettingInstanceTemplate | Where-Object { $_.SettingDefinitionId -eq $childDefinition.Id }
-                $childSettingValueTemplateId = $childSettingInstanceTemplate.AdditionalProperties."$($childSettingValueName)Template".settingValueTemplateId
-                $childSettingValue = Get-IntuneSettingCatalogPolicySettingInstanceValue `
-                    -DSCParams $DSCParams `
-                    -SettingDefinition $childDefinition `
-                    -SettingTemplates $SettingTemplates `
-                    -SettingName $childSettingName `
-                    -SettingType $childDefinition.AdditionalProperties.'@odata.type' `
-                    -SettingValueName $childSettingValueName `
-                    -SettingValueType $childSettingValueType `
-                    -SettingValueTemplateId $childSettingValueTemplateId
 
-                if ($childSettingValue.Keys.Count -gt 0)
+            $instanceCount = 1
+            if ($Level -ge 2 -and $groupSettingCollectionDefinitionChildren.Count -gt 1)
+            {
+                $SettingInstanceName += $SettingDefinition.Name
+                $cimDSCParams = @()
+                $cimDSCParamsName = ""
+                $DSCParams.GetEnumerator() | Where-Object -FilterScript {
+                    $_.Value.CimClass.CimClassName -contains $SettingInstanceName
+                } | Foreach-Object -Process {
+                    $cimDSCParams += $_.Value
+                    $cimDSCParamsName = $_.Key
+                }
+                $newDSCParams = @{
+                    $cimDSCParamsName = @()
+                }
+                foreach ($instance in $cimDSCParams) {
+                    $newInstanceDSCParams = @{}
+                    # Preserve CIM instances when converting to hashtable
+                    foreach ($property in $instance.CimInstanceProperties) {
+                        $newInstanceDSCParams.Add($property.Name, $property.Value)
+                    }
+                    $newDSCParams.$cimDSCParamsName += $newInstanceDSCParams
+                }
+                $instanceCount = $newDSCParams.$cimDSCParamsName.Count
+                $DSCParams = @{
+                    $cimDSCParamsName = if ($instanceCount -eq 1) { $newDSCParams.$cimDSCParamsName[0] } else { $newDSCParams.$cimDSCParamsName }
+                }
+            }
+
+            for ($i = 0; $i -lt $instanceCount; $i++)
+            {
+                $currentDSCParams = if ($instanceCount -eq 1) {
+                    if (-not [System.String]::IsNullOrEmpty($cimDSCParamsName)) {
+                        $DSCParams.$cimDSCParamsName
+                    } else {
+                        $DSCParams
+                    }
+                } else {
+                    if (-not [System.String]::IsNullOrEmpty($cimDSCParamsName)) {
+                        $DSCParams.$cimDSCParamsName[$i]
+                    } else {
+                        $DSCParams[$i]
+                    }
+                }
+                if ($null -eq $currentDSCParams)
                 {
-                    if ($childSettingValue.Keys -notcontains 'settingDefinitionId')
+                    # Should we continue? Let's try out
+                    $currentDSCParams = @{}
+                }
+
+                foreach ($childDefinition in $groupSettingCollectionDefinitionChildren)
+                {
+                    $childSettingName = $childDefinition.Name
+                    $childSettingType = $childDefinition.AdditionalProperties.'@odata.type'.Replace('Definition', 'Instance')
+                    $childSettingValueName = $childSettingType.Replace('#microsoft.graph.deviceManagementConfiguration', '').Replace('Instance', 'Value')
+                    $childSettingValueType = "#microsoft.graph.deviceManagementConfiguration$($childSettingValueName)"
+                    $childSettingValueName = $childSettingValueName.Substring(0, 1).ToLower() + $childSettingValueName.Substring(1, $childSettingValueName.length - 1 )
+                    $childSettingInstanceTemplate = $SettingTemplates.SettingInstanceTemplate | Where-Object { $_.SettingDefinitionId -eq $childDefinition.Id }
+                    $childSettingValueTemplateId = $childSettingInstanceTemplate.AdditionalProperties."$($childSettingValueName)Template".settingValueTemplateId
+                    $childSettingValue = Get-IntuneSettingCatalogPolicySettingInstanceValue `
+                        -DSCParams $currentDSCParams `
+                        -SettingDefinition $childDefinition `
+                        -SettingTemplates $SettingTemplates `
+                        -SettingName $childSettingName `
+                        -SettingType $childDefinition.AdditionalProperties.'@odata.type' `
+                        -SettingValueName $childSettingValueName `
+                        -SettingValueType $childSettingValueType `
+                        -SettingValueTemplateId $childSettingValueTemplateId `
+                        -SettingInstanceName $SettingInstanceName `
+                        -Level ($Level + 1)
+
+                    if ($childSettingValue.Keys.Count -gt 0)
                     {
-                        $childSettingValue.Add('settingDefinitionId', $childDefinition.Id)
+                        if ($childSettingValue.Keys -notcontains 'settingDefinitionId')
+                        {
+                            $childSettingValue.Add('settingDefinitionId', $childDefinition.Id)
+                        }
+                        if (-not [string]::IsNullOrEmpty($childSettingInstanceTemplate.settingInstanceTemplateId))
+                        {
+                            $childSettingValue.Add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $childSettingInstanceTemplate.settingInstanceTemplateId })
+                        }
+                        $childSettingValue.Add('@odata.type', $childSettingType)
+                        $groupSettingCollectionValueChildren += $childSettingValue
                     }
-                    if (-not [string]::IsNullOrEmpty($childSettingInstanceTemplate.settingInstanceTemplateId))
-                    {
-                        $childSettingValue.Add('settingInstanceTemplateReference', @{'settingInstanceTemplateId' = $childSettingInstanceTemplate.settingInstanceTemplateId })
-                    }
-                    $childSettingValue.Add('@odata.type', $childSettingType)
-                    $groupSettingCollectionValueChildren += $childSettingValue
                 }
             }
 
@@ -1720,7 +1781,8 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                     -SettingType $childDefinition.AdditionalProperties.'@odata.type' `
                     -SettingValueName $childSettingValueName `
                     -SettingValueType $childSettingValueType `
-                    -SettingValueTemplateId $childSettingValueTemplateId
+                    -SettingValueTemplateId $childSettingValueTemplateId `
+                    -SettingInstanceName $SettingInstanceName
 
                 if ($childSettingValue.Keys.Count -gt 0)
                 {
@@ -1772,6 +1834,31 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 $settingValuesToReturn.Add('choiceSettingValue', $choiceSettingValue)
             }
         }
+        # ChoiceSettingCollection is a collection of ChoiceSettings
+        { $_ -eq '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionInstance' -or $_ -eq '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionDefinition' }
+        {
+            $choiceSettingValueCollection = @()
+            $valueResult = Get-IntuneSettingCatalogPolicySettingDSCValue `
+                -SettingName $SettingName `
+                -SettingValueType $SettingValueType `
+                -SettingTemplates $SettingTemplates `
+                -SettingDefinition $SettingDefinition `
+                -DSCParams $DSCParams
+
+            $values = $valueResult.Value
+
+            # We iterate over all the values in the DSC params and add them to the choice setting collection
+            foreach ($value in $values)
+            {
+                $choiceSettingValueCollection += @{
+                    value    = $value
+                    children = @()
+                    '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingValue'
+                }
+            }
+
+            $settingValuesToReturn.Add('choiceSettingCollectionValue', $choiceSettingValueCollection)
+        }
         # SimpleSettingCollections are collections of simple settings, e.g. strings or integers
         { $_ -eq '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance' -or $_ -eq '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionDefinition' }
         {
@@ -1783,7 +1870,7 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 -DSCParams $DSCParams
 
             $values = $valuesResult.Value
-            $SettingValueType = $valuesResult.SettingValueType
+            $SettingValueType = $valuesResult.SettingDefinition.AdditionalProperties.valueDefinition.'@odata.type'.Replace('Definition', '')
 
             $settingValueCollection = @()
             foreach ($v in $values)
@@ -1797,7 +1884,7 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 $settingValuesToReturn.Add($SettingValueName, $settingValueCollection)
             }
         }
-        # For all other types, e.g. Integer, String, Boolean, etc., we add the value directly
+        # For all other types, e.g. Integer or String, we add the value directly
         Default
         {
             $valueResult = Get-IntuneSettingCatalogPolicySettingDSCValue `
@@ -1865,7 +1952,7 @@ function Get-IntuneSettingCatalogPolicySettingDSCValue
         $matchesId = $false
         $settingDefinitions = $SettingTemplates.SettingDefinitions `
             | Where-Object -FilterScript { $_.Name -eq $key }
-        
+
         # Edge case where the same setting is defined twice in the template, with the same name and id
         if ($settingDefinitions.Count -eq 2)
         {
@@ -1884,10 +1971,10 @@ function Get-IntuneSettingCatalogPolicySettingDSCValue
             {
                 $parentSettingName = $key.Split('_')[0]
                 $parentDefinition = $SettingTemplates.SettingDefinitions | Where-Object -FilterScript { $_.Name -eq $parentSettingName }
-                $childDefinition = $SettingTemplates.SettingDefinitions | Where-Object -FilterScript { 
+                $childDefinition = $SettingTemplates.SettingDefinitions | Where-Object -FilterScript {
                     $_.Name -eq $SettingName -and
-                    (($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId.Contains($parentDefinition.Id)) -or
-                    ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId.Contains($parentDefinition.Id))
+                    (($_.AdditionalProperties.dependentOn.Count -gt 0 -and $_.AdditionalProperties.dependentOn.parentSettingId -contains $parentDefinition.Id) -or
+                    ($_.AdditionalProperties.options.dependentOn.Count -gt 0 -and $_.AdditionalProperties.options.dependentOn.parentSettingId -contains $parentDefinition.Id)
                     )
                 }
                 if ($null -ne $parentDefinition -and $null -ne $childDefinition -and $childDefinition.Id -eq $SettingDefinition.Id)
@@ -1916,7 +2003,7 @@ function Get-IntuneSettingCatalogPolicySettingDSCValue
             }
         }
 
-        # If there is exactly one setting with the name, the setting is combined or the id matches, we get the DSC value update the real setting value type
+        # If there is exactly one setting with the name, the setting is combined or the id matches, we get the DSC value and update the real setting value type
         if (($name.Count -eq 1 -and $SettingName -eq $key) -or $matchCombined -or $matchesId)
         {
             $isArray = $false
@@ -1941,12 +2028,25 @@ function Get-IntuneSettingCatalogPolicySettingDSCValue
                     $isArray = $true
                 }
             }
+
             if ($SettingValueType -like "*Simple*" -or $SettingValueType -in @("#microsoft.graph.deviceManagementConfigurationIntegerSettingValue", "#microsoft.graph.deviceManagementConfigurationStringSettingValue"))
             {
                 return @{
                     SettingDefinition = $SettingDefinition
                     SettingValueType = $SettingValueType
                     Value = if ($isArray) { ,$DSCParams[$key] } else { $DSCParams[$key] }
+                }
+            }
+            elseif ($SettingValueType -like "*ChoiceSettingCollection*")
+            {
+                $values = @()
+                foreach ($value in $DSCParams[$key])
+                {
+                    $values += "$($SettingDefinition.Id)_$value"
+                }
+
+                return @{
+                    Value = $values
                 }
             }
             else
@@ -2060,14 +2160,64 @@ function Export-IntuneSettingCatalogPolicySettings
                 Export-IntuneSettingCatalogPolicySettings -SettingInstance $childSetting -SettingDefinitions $SettingDefinitions -ReturnHashtable $ReturnHashtable
             }
         }
-        '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+        '#microsoft.graph.deviceManagementConfigurationChoiceSettingCollectionInstance'
         {
             $values = @()
-            $childSettings = if ($IsRoot) { $SettingInstance.AdditionalProperties.groupSettingCollectionValue.children } else { $SettingInstance.groupSettingCollectionValue.children }
-            foreach ($value in $childSettings)
+            $childValues = if ($IsRoot) { $SettingInstance.AdditionalProperties.choiceSettingCollectionValue.value } else { $SettingInstance.choiceSettingCollectionValue.value }
+            foreach ($value in $childValues)
             {
-                Export-IntuneSettingCatalogPolicySettings -SettingInstance $value -SettingDefinitions $SettingDefinitions -ReturnHashtable $ReturnHashtable
+                $values += $value.Split('_') | Select-Object -Last 1
+            }
+            $settingValue = $values
+        }
+        '#microsoft.graph.deviceManagementConfigurationGroupSettingCollectionInstance'
+        {
+            $groupSettingCollectionValue = if ($IsRoot) { $SettingInstance.AdditionalProperties.groupSettingCollectionValue } else { $SettingInstance.groupSettingCollectionValue }
+            $childSettingDefinitions = $SettingDefinitions | Where-Object -FilterScript {
+                $settingDefinition.AdditionalProperties.childIds -contains $_.Id
+            }
+
+            if ($settingDefinition.AdditionalProperties.maximumCount -gt 1 -and $childSettingDefinitions.Count -eq 1)
+            {
+                # Skip GroupSettingCollection with only one child, go straight to the child property
+                foreach ($child in $groupSettingCollectionValue)
+                {
+                    $childInstances = $child.children
+                    foreach ($childInstance in $childInstances)
+                    {
+                        Export-IntuneSettingCatalogPolicySettings -SettingInstance $childInstance -SettingDefinitions $SettingDefinitions -ReturnHashtable $ReturnHashtable
+                    }
+                }
                 $addToParameters = $false
+            }
+            elseif (-not $IsRoot -and $childSettingDefinitions.Count -gt 1)
+            {
+                $childValue = $null
+                $parentSettingDefinition = $SettingDefinitions | Where-Object -FilterScript { $_.Id -eq $settingDefinition.AdditionalProperties.dependentOn.parentSettingId }
+                if ($settingDefinition.AdditionalProperties.maximumCount -gt 1 -or
+                    $parentSettingDefinition.AdditionalProperties.maximumCount -gt 1)
+                {
+                    $childValue = @()
+                }
+                foreach ($child in $groupSettingCollectionValue)
+                {
+                    $childHashtable = @{}
+                    foreach ($childInstance in $child.children)
+                    {
+                        Export-IntuneSettingCatalogPolicySettings -SettingInstance $childInstance -SettingDefinitions $SettingDefinitions -ReturnHashtable $childHashtable
+                    }
+                    $childValue += $childHashtable
+                }
+                $settingValue = if ($null -eq $childValue) { $childHashtable } else { ,$childValue }
+            }
+            else
+            {
+                $childSettings = $groupSettingCollectionValue.children
+                foreach ($value in $childSettings)
+                {
+                    Export-IntuneSettingCatalogPolicySettings -SettingInstance $value -SettingDefinitions $SettingDefinitions -ReturnHashtable $ReturnHashtable
+                    $addToParameters = $false
+                }
             }
         }
         '#microsoft.graph.deviceManagementConfigurationSimpleSettingCollectionInstance'
@@ -2088,7 +2238,15 @@ function Export-IntuneSettingCatalogPolicySettings
 
     if ($addToParameters)
     {
-        $ReturnHashtable.Add($settingName, $settingValue)
+        if (-not $ReturnHashtable.ContainsKey($settingName))
+        {
+            $ReturnHashtable.Add($settingName, $settingValue)
+        }
+        else
+        {
+            # Only happens when it's a GroupCollection(Collection) with multiple entries
+            $ReturnHashtable[$settingName] = @($ReturnHashtable[$settingName]) + $settingValue
+        }
     }
 }
 

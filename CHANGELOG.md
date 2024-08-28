@@ -32,11 +32,15 @@
     DeviceManagementConfiguration.ReadWrite.All to cope with
     getOmaSettingPlainTextValue which is only working if RW is granted
     FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
-* O365OrgSettings
-  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
+* M365DSCDRGUtil
+  * Update Intune Settings Catalog Handling.
+* M365DSCResourceGenerator
+  * Update Intune resource generation for the Settings Catalog.
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
+* O365OrgSettings
+  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
 * MISC
   * Improve module updates and PowerShell Core support across the DSC
     resources.

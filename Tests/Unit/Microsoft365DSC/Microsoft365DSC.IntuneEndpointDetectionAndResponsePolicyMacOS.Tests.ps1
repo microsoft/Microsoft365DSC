@@ -57,6 +57,12 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             Name = 'tags'
                             AdditionalProperties = @{
                                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                childIds = @(
+                                    'com.apple.managedclient.preferences_tags_item_value',
+                                    'com.apple.managedclient.preferences_tags_item_key'
+                                )
+                                minimumCount = 1
+                                maximumCount = 1
                             }
                         },
                         @{
