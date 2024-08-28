@@ -368,7 +368,7 @@ function Get-IconPath
     }
     elseif ($ResourceName.StartsWith('SC'))
     {
-        return Get-Base64EncodedImage -IconName "SecurityAndComplance.png"
+        return Get-Base64EncodedImage -IconName "SecurityAndCompliance.png"
     }
     elseif ($ResourceName.StartsWith('SPO'))
     {
