@@ -1,7 +1,8 @@
 # Change log for Microsoft365DSC
 
 # UNRELEASED
-
+* AADGroup
+  * FIXES [#4994](https://github.com/microsoft/Microsoft365DSC/issues/4994)
 * AADAdministrativeUnit
   * Fix Properties for Dynamic Administrative Units in Graph have moved
 * AADConditionalAccessPolicy
