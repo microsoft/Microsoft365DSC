@@ -1448,6 +1448,7 @@ function Export-M365DSCConfiguration
 }
 
 $Script:M365DSCDependenciesValidated = $false
+$Script:IsPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
 
 <#
 .Description
@@ -1474,7 +1475,7 @@ function Confirm-M365DSCDependencies
             {
                 $ErrorMessage += '    * ' + $invalidDependency.ModuleName + "`r`n"
             }
-            $ErrorMessage += 'Please run Update-M365DSCDependencies with scope "currentUser" or as Administrator.'
+            $ErrorMessage += 'Please run Update-M365DSCDependencies as Administrator.'
             $ErrorMessage += 'Please run Uninstall-M365DSCOutdatedDependencies.'
             $Script:M365DSCDependenciesValidated = $false
             Add-M365DSCEvent -Message $ErrorMessage -EntryType 'Error' `
@@ -1519,6 +1520,17 @@ function Import-M365DSCDependencies
 
     foreach ($dependency in $dependencies)
     {
+        if ($dependency.PowerShellCore -and -not $Script:IsPowerShellCore)
+        {
+            Write-Verbose -Message "Skipping module {$($dependency.ModuleName)} as it is not compatible with Windows PowerShell."
+            continue
+        }
+        elseif ($dependency.PowerShellCore -eq $false -and $Script:IsPowerShellCore)
+        {
+            Write-Verbose -Message "Skipping module {$($dependency.ModuleName)} as it is not compatible with PowerShell Core."
+            continue
+        }
+
         Import-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -Force -Global:$Global
     }
 }
@@ -3093,6 +3105,16 @@ function Update-M365DSCDependencies
             {
                 if (-not $Force)
                 {
+                    if ($dependency.PowerShellCore -and -not $Script:IsPowerShellCore)
+                    {
+                        Write-Verbose -Message "The dependency {$($dependency.ModuleName)} requires PowerShell Core. Skipping."
+                        continue
+                    }
+                    elseif ($dependency.PowerShellCore -eq $false -and $Script:IsPowerShellCore)
+                    {
+                        Write-Verbose -Message "The dependency {$($dependency.ModuleName)} requires Windows PowerShell. Skipping."
+                        continue
+                    }
                     $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -eq $dependency.RequiredVersion }
                 }
 
@@ -3109,10 +3131,21 @@ function Update-M365DSCDependencies
                     }
                     catch
                     {
-                        Write-Verbose -Message "Couldn't retrieve Windows Principal. One possible cause is that the current environment is not Windows OS."
+                        Write-Verbose -Message "Couldn't retrieve Windows Principal. One possible cause is that the current environment is not a Windows OS."
                     }
                     if (-not $errorFound)
                     {
+                        if (-not $dependency.PowerShellCore -and $Script:IsPowerShellCore)
+                        {
+                            Write-Warning "The dependency {$($dependency.ModuleName)} does not support PowerShell Core. Please run Update-M365DSCDependencies in Windows PowerShell."
+                            continue
+                        }
+                        elseif ($dependency.PowerShellCore -and -not $Script:IsPowerShellCore)
+                        {
+                            Write-Warning "The dependency {$($dependency.ModuleName)} requires PowerShell Core. Please run Update-M365DSCDependencies in PowerShell Core."
+                            continue
+                        }
+
                         Write-Information -MessageData "Installing $($dependency.ModuleName) version {$($dependency.RequiredVersion)}"
                         Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
                         if ($dependency.ModuleName -like 'Microsoft.Graph*')
@@ -3121,6 +3154,19 @@ function Update-M365DSCDependencies
                         }
                         Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
                         Install-Module $dependency.ModuleName -RequiredVersion $dependency.RequiredVersion -AllowClobber -Force -Scope "$Scope"
+                    }
+                }
+
+                if ($dependency.ExplicitLoading)
+                {
+                    Remove-Module $dependency.ModuleName -Force -ErrorAction SilentlyContinue
+                    if ($dependency.Prefix)
+                    {
+                        Import-Module $dependency.ModuleName -Global -Prefix $dependency.Prefix -Force
+                    }
+                    else
+                    {
+                        Import-Module $dependency.ModuleName -Global -Force
                     }
                 }
 
@@ -3205,6 +3251,16 @@ function Uninstall-M365DSCOutdatedDependencies
             Write-Progress -Activity 'Scanning Dependencies' -PercentComplete ($i / $allDependenciesExceptAuth.Count * 100)
             try
             {
+                if ($dependency.PowerShellCore -and -not $Script:IsPowerShellCore)
+                {
+                    Write-Verbose -Message "Skipping module {$($dependency.ModuleName)} as it is managed by PowerShell Core."
+                    continue
+                }
+                elseif ($dependency.PowerShellCore -eq $false -and $Script:IsPowerShellCore)
+                {
+                    Write-Verbose -Message "Skipping module {$($dependency.ModuleName)} as it is managed by Windows PowerShell."
+                    continue
+                }
                 $found = Get-Module $dependency.ModuleName -ListAvailable | Where-Object -FilterScript { $_.Version -ne $dependency.RequiredVersion }
                 foreach ($foundModule in $found)
                 {
@@ -3579,7 +3635,14 @@ function Get-M365DSCExportContentForResource
     {
         if ($Script:AllM365DscResources.Count -eq 0)
         {
-            $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
+            if ($Script:IsPowerShellCore)
+            {
+                $Script:AllM365DscResources = Get-PwshDscResource -Module 'Microsoft365Dsc'
+            }
+            else
+            {
+                $Script:AllM365DscResources = Get-DscResource -Module 'Microsoft365Dsc'
+            }
         }
 
         $Resource = $Script:AllM365DscResources.Where({ $_.Name -eq $ResourceName })
@@ -4324,7 +4387,14 @@ function Create-M365DSCResourceExample
         $ResourceName
     )
 
-    $resource = Get-DscResource -Name $ResourceName
+    if ($Script:IsPowerShellCore)
+    {
+        $resource = Get-PwshDscResource -Name $ResourceName
+    }
+    else
+    {
+        $resource = Get-DscResource -Name $ResourceName
+    }
 
     $params = Get-DSCFakeParameters -ModulePath $resource.Path
 
@@ -4409,7 +4479,14 @@ function New-M365DSCMissingResourcesExample
 {
     $location = $PSScriptRoot
 
-    $m365Resources = Get-DscResource -Module Microsoft365DSC | Select-Object -ExpandProperty Name
+    if ($Script:IsPowerShellCore)
+    {
+        $m365Resources = Get-PwshDscResource -Module Microsoft365DSC | Select-Object -ExpandProperty Name
+    }
+    else
+    {
+        $m365Resources = Get-DscResource -Module Microsoft365DSC | Select-Object -ExpandProperty Name
+    }
 
     $examplesPath = Join-Path $location -ChildPath '..\Examples\Resources'
     $examples = Get-ChildItem -Path $examplesPath | Where-Object { $_.PsIsContainer } | Select-Object -ExpandProperty Name
@@ -4511,7 +4588,7 @@ function Update-M365DSCModule
     )
     try
     {
-        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop -Scope $Scope
+        Update-Module -Name 'Microsoft365DSC' -ErrorAction Stop
     }
     catch
     {
@@ -4765,7 +4842,14 @@ function Get-M365DSCConfigurationConflict
     $parsedContent = ConvertTo-DSCObject -Content $ConfigurationContent
 
     $resourcesPrimaryIdentities = @()
-    $resourcesInModule = Get-DSCResource -Module 'Microsoft365DSC'
+    if ($Script:IsPowerShellCore)
+    {
+        $resourcesInModule = Get-PwshDSCResource -Module 'Microsoft365DSC'
+    }
+    else
+    {
+        $resourcesInModule = Get-DSCResource -Module 'Microsoft365DSC'
+    }
     foreach ($component in $parsedContent)
     {
         $resourceDefinition = $resourcesInModule | Where-Object -FilterScript {$_.Name -eq $component.ResourceName}
