@@ -34,6 +34,19 @@
     FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
 * IntuneDeviceRemediation
   * Add export of global remediation scripts.
+* O365OrgSettings
+  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
+* SCAutoSensitivityLabelPolicy
+  * Fixes issue where Mode=Enabled is not supported for SP and OD. Changing
+    property to TestWithoutNotifications in those instances.
+    FIXES [#4990](https://github.com/microsoft/Microsoft365DSC/issues/4990)
+* SCAutoSensitivityLabelRule
+  * Fixes issue where the export was looping through all possible workloads
+    instead of the actually targeted workload
+    FIXES [#4989](https://github.com/microsoft/Microsoft365DSC/issues/4989)
+* SCSensitivityLabel
+  * Corrected issue where ExternalAccess properties were configured inverted
+    FIXES [#3782](https://github.com/microsoft/Microsoft365DSC/issues/3782)
 * M365DSCDRGUtil
   * Update Intune Settings Catalog Handling.
   * Fixes an issue where the `MSFT_IntuneDeviceRemediationPolicyAssignments`
