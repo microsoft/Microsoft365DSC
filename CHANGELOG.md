@@ -32,8 +32,12 @@
     DeviceManagementConfiguration.ReadWrite.All to cope with
     getOmaSettingPlainTextValue which is only working if RW is granted
     FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
+* IntuneDeviceRemediation
+  * Add export of global remediation scripts.
 * M365DSCDRGUtil
   * Update Intune Settings Catalog Handling.
+  * Fixes an issue where the `MSFT_IntuneDeviceRemediationPolicyAssignments`
+    type would trigger an incorrect comparison in `Compare-M365DSCComplexObject`.
 * M365DSCResourceGenerator
   * Update Intune resource generation for the Settings Catalog.
 * M365DSCUtil

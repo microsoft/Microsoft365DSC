@@ -610,7 +610,8 @@ function Compare-M365DSCComplexObject
         }
 
         if ($Source[0].CimClass.CimClassName -eq 'MSFT_DeviceManagementConfigurationPolicyAssignments' -or
-            $Source[0].CimClass.CimClassName -like 'MSFT_Intune*Assignments')
+            ($Source[0].CimClass.CimClassName -like 'MSFT_Intune*Assignments' -and
+            $Source[0].CimClass.CimClassName -ne 'MSFT_IntuneDeviceRemediationPolicyAssignments'))
         {
             $compareResult = Compare-M365DSCIntunePolicyAssignment `
                 -Source @($Source) `
