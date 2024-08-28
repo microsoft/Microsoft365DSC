@@ -3519,6 +3519,11 @@
                            },
                            {
                                "CIMType":  "String[]",
+                               "Name":  "GroupAsMembers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
                                "Name":  "MemberOf",
                                "Option":  "Write"
                            },
