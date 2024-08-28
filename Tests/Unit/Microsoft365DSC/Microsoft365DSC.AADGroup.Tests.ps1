@@ -37,6 +37,9 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
             Mock -CommandName Get-MgGroupMember -MockWith {
             }
 
+            Mock -CommandName Get-MgGroup -MockWith {
+            }
+
             Mock -CommandName Restore-MgBetaDirectoryDeletedItem -MockWith {
             }
             Mock -CommandName Get-MgBetaDirectoryDeletedItemAsGroup -MockWith {
@@ -497,6 +500,63 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                 Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
                 Should -Invoke -CommandName 'Get-MgBetaDirectoryRole' -Exactly 1
                 Should -Invoke -CommandName 'New-MgBetaDirectoryRoleMemberByRef' -Exactly 1
+            }
+        }
+
+        Context -Name 'The Group Exists but group is not assigned as member. Values are NOT in the desired state' -Fixture {
+            BeforeAll {
+                $testParams = @{
+                    DisplayName        = 'DSCGroup'
+                    ID                 = '12345-12345-12345-12345'
+                    Description        = 'Microsoft DSC Group'
+                    SecurityEnabled    = $True
+                    MailEnabled        = $true
+                    GroupTypes         = @()
+                    MailNickname       = 'M365DSC'
+                    IsAssignableToRole = $true
+                    GroupAsMembers     = 'DSCGroupMember'
+                    Ensure             = 'Present'
+                    Credential         = $Credential
+                }
+
+
+                Mock -CommandName New-M365DSCConnection -MockWith {
+                    return 'Credentials'
+                }
+
+                Mock -CommandName Get-MgGroup -MockWith {
+                    return @{
+                        DisplayName        = 'DSCGroupMember'
+                        ID                 = '12345-12345-12345-12345'
+                        Description        = 'Microsoft DSC Group'
+                        SecurityEnabled    = $True
+                        MailEnabled        = $true
+                        GroupTypes         = @()
+                        MailNickname       = 'M365DSC'
+                        IsAssignableToRole = $true
+                        AssignedToRole     = @()
+                        Ensure             = 'Present'
+                    }
+                }
+
+                Mock -CommandName New-MgGroupMemberByRef -MockWith {
+                }
+            }
+
+            It 'Should return Values from the Get method' {
+                Get-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 1
+            }
+
+            It 'Should return false from the Test method' {
+                Test-TargetResource @testParams | Should -Be $false
+            }
+
+            It 'Should call the Set method' {
+                Set-TargetResource @testParams
+                Should -Invoke -CommandName 'Get-MgGroup' -Exactly 2
+                Should -Invoke -CommandName 'New-MgGroupMemberByRef' -Exactly 1
+                #Should -Invoke -CommandName 'Remove-MgGroupMemberDirectoryObjectByRef' -Exactly 1
             }
         }
 

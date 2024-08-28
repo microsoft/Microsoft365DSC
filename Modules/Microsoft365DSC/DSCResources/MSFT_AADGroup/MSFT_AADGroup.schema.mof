@@ -14,6 +14,7 @@ class MSFT_AADGroup : OMI_BaseResource
     [Write, Description("Specifies an ID for the group.")] String Id;
     [Write, Description("User Service Principal values for the group's owners.")] String Owners[];
     [Write, Description("User Service Principal values for the group's members.")] String Members[];
+    [Write, Description("Displayname values for the groups member of the group.")] String GroupAsMembers[];
     [Write, Description("DisplayName values for the groups that this group is a member of.")] String MemberOf[];
     [Write, Description("Specifies that the group is a dynamic group. To create a dynamic group, specify a value of DynamicMembership.")] String GroupTypes[];
     [Write, Description("Specifies the membership rule for a dynamic group.")] String MembershipRule;
