@@ -46,6 +46,8 @@
     FIXES [#4943](https://github.com/microsoft/Microsoft365DSC/issues/4943)
   * Fixed a typo within M365DSCReport.psm1 related to a .png file
     FIXES [#4983](https://github.com/microsoft/Microsoft365DSC/pull/4983)
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 6.5.0.
 
 # 1.24.731.1
 
