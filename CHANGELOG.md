@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* AADAdministrativeUnit
+  * Fix Properties for Dynamic Administrative Units in Graph have moved
 * AADConditionalAccessPolicy
   * Fixing issue where the resource crashed when trying to retrieve groups
     and users from Entra ID which no longer existed
@@ -50,6 +52,8 @@
   * Replace some `Write-Host` occurrences in core engine with
     appropriate alternatives.
     FIXES [#4943](https://github.com/microsoft/Microsoft365DSC/issues/4943)
+  * Fixed a typo within M365DSCReport.psm1 related to a .png file
+    FIXES [#4983](https://github.com/microsoft/Microsoft365DSC/pull/4983)
 
 # 1.24.731.1
 
