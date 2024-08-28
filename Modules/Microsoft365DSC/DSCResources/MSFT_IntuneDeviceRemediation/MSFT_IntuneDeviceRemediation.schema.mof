@@ -46,7 +46,8 @@ class MSFT_IntuneDeviceRemediation : OMI_BaseResource
     [Write, Description("List of ComplexType DetectionScriptParameters objects."), EmbeddedInstance("MSFT_MicrosoftGraphdeviceHealthScriptParameter")] String DetectionScriptParameters[];
     [Write, Description("DeviceHealthScriptType for the script policy. Possible values are: deviceHealthScript, managedInstallerScript."), ValueMap{"deviceHealthScript","managedInstallerScript"}, Values{"deviceHealthScript","managedInstallerScript"}] String DeviceHealthScriptType;
     [Required, Description("Name of the device health script")] String DisplayName;
-    [Write, Description("Indicate whether the script signature needs be checked")] Boolean EnforceSignatureCheck;
+    [Write, Description("Indicates whether the script signature needs be checked")] Boolean EnforceSignatureCheck;
+    [Write, Description("Indicates whether the script is a global script provided by Microsoft")] Boolean IsGlobalScript;
     [Write, Description("Name of the device health script publisher")] String Publisher;
     [Write, Description("The entire content of the remediation powershell script")] String RemediationScriptContent;
     [Write, Description("List of ComplexType RemediationScriptParameters objects."), EmbeddedInstance("MSFT_MicrosoftGraphdeviceHealthScriptParameter")] String RemediationScriptParameters[];

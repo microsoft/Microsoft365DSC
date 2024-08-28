@@ -32,17 +32,30 @@
     DeviceManagementConfiguration.ReadWrite.All to cope with
     getOmaSettingPlainTextValue which is only working if RW is granted
     FIXES [#4412](https://github.com/microsoft/Microsoft365DSC/issues/4412)
-* O365OrgSettings
-  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
+* IntuneDeviceRemediation
+  * Add export of global remediation scripts.
+* M365DSCDRGUtil
+  * Update Intune Settings Catalog Handling.
+  * Fixes an issue where the `MSFT_IntuneDeviceRemediationPolicyAssignments`
+    type would trigger an incorrect comparison in `Compare-M365DSCComplexObject`.
+* M365DSCResourceGenerator
+  * Update Intune resource generation for the Settings Catalog.
 * M365DSCUtil
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
+* O365OrgSettings
+  * FIXES [#4741](https://github.com/microsoft/Microsoft365DSC/issues/4741)
 * MISC
+  * Improve module updates and PowerShell Core support across the DSC
+    resources.
+    FIXES [#4941](https://github.com/microsoft/Microsoft365DSC/issues/4941)
   * Replace some `Write-Host` occurrences in core engine with
     appropriate alternatives.
     FIXES [#4943](https://github.com/microsoft/Microsoft365DSC/issues/4943)
   * Fixed a typo within M365DSCReport.psm1 related to a .png file
     FIXES [#4983](https://github.com/microsoft/Microsoft365DSC/pull/4983)
+* DEPENDENCIES
+  * Updated MicrosoftTeams to version 6.5.0.
 
 # 1.24.731.1
 

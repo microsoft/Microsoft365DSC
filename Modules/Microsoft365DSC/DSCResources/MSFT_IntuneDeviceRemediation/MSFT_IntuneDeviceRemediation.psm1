@@ -31,6 +31,10 @@ function Get-TargetResource
         $EnforceSignatureCheck,
 
         [Parameter()]
+        [System.Boolean]
+        $IsGlobalScript,
+
+        [Parameter()]
         [System.String]
         $Publisher,
 
@@ -211,6 +215,7 @@ function Get-TargetResource
             DeviceHealthScriptType      = $enumDeviceHealthScriptType
             DisplayName                 = $getValue.DisplayName
             EnforceSignatureCheck       = $getValue.EnforceSignatureCheck
+            IsGlobalScript              = $getValue.IsGlobalScript
             Publisher                   = $getValue.Publisher
             RemediationScriptContent    = [System.Convert]::ToBase64String($getValue.RemediationScriptContent)
             RemediationScriptParameters = $complexRemediationScriptParameters
@@ -304,6 +309,10 @@ function Set-TargetResource
         $EnforceSignatureCheck,
 
         [Parameter()]
+        [System.Boolean]
+        $IsGlobalScript,
+
+        [Parameter()]
         [System.String]
         $Publisher,
 
@@ -385,20 +394,20 @@ function Set-TargetResource
     $currentInstance = Get-TargetResource @PSBoundParameters
 
     $BoundParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
+    $BoundParameters.Remove('IsGlobalScript') | Out-Null
 
     if ($Ensure -eq 'Present' -and $currentInstance.Ensure -eq 'Absent')
     {
         Write-Verbose -Message "Creating an Intune Device Remediation with DisplayName {$DisplayName}"
         $BoundParameters.Remove("Assignments") | Out-Null
 
-        $CreateParameters = ([Hashtable]$BoundParameters).clone()
+        $CreateParameters = ([Hashtable]$BoundParameters).Clone()
         $CreateParameters = Rename-M365DSCCimInstanceParameter -Properties $CreateParameters
-        $CreateParameters.Add('IsGlobalScript', $false) | Out-Null
         $CreateParameters.DetectionScriptContent = [System.Convert]::FromBase64String($CreateParameters.DetectionScriptContent)
         $CreateParameters.RemediationScriptContent = [System.Convert]::FromBase64String($CreateParameters.RemediationScriptContent)
         $CreateParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$CreateParameters).clone()).Keys
+        $keys = (([Hashtable]$CreateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
             if ($null -ne $CreateParameters.$key -and $CreateParameters.$key.getType().Name -like '*cimInstance*')
@@ -407,7 +416,6 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $CreateParameters.Add("@odata.type", "#microsoft.graph.DeviceHealthScript")
         $policy = New-MgBetaDeviceManagementDeviceHealthScript -BodyParameter $CreateParameters
         $assignmentsHash = @()
         foreach ($assignment in $Assignments)
@@ -457,14 +465,25 @@ function Set-TargetResource
         Write-Verbose -Message "Updating the Intune Device Remediation with Id {$($currentInstance.Id)}"
         $BoundParameters.Remove("Assignments") | Out-Null
 
-        $UpdateParameters = ([Hashtable]$BoundParameters).clone()
+        $UpdateParameters = ([Hashtable]$BoundParameters).Clone()
         $UpdateParameters = Rename-M365DSCCimInstanceParameter -Properties $UpdateParameters
         $UpdateParameters.DetectionScriptContent = [System.Convert]::FromBase64String($UpdateParameters.DetectionScriptContent)
         $UpdateParameters.RemediationScriptContent = [System.Convert]::FromBase64String($UpdateParameters.RemediationScriptContent)
         $UpdateParameters.Remove('DeviceHealthScriptType') | Out-Null
         $UpdateParameters.Remove('Id') | Out-Null
 
-        $keys = (([Hashtable]$UpdateParameters).clone()).Keys
+        if ($currentInstance.IsGlobalScript)
+        {
+            Write-Warning -Message "The Intune Device Remediation with Id {$($currentInstance.Id)} is a global script and only few properties can be updated."
+            $UpdateParameters = @{
+                Id = $currentInstance.Id
+                RoleScopeTagIds = $RoleScopeTagIds
+                RunAs32Bit = $RunAs32Bit
+                RunAsAccount = $RunAsAccount
+            }
+        }
+
+        $keys = (([Hashtable]$UpdateParameters).Clone()).Keys
         foreach ($key in $keys)
         {
             if ($null -ne $UpdateParameters.$key -and $UpdateParameters.$key.getType().Name -like '*cimInstance*')
@@ -473,7 +492,6 @@ function Set-TargetResource
             }
         }
         #region resource generator code
-        $UpdateParameters.Add("@odata.type", "#microsoft.graph.DeviceHealthScript")
         Update-MgBetaDeviceManagementDeviceHealthScript  `
             -DeviceHealthScriptId $currentInstance.Id `
             -BodyParameter $UpdateParameters
@@ -519,6 +537,10 @@ function Set-TargetResource
     }
     elseif ($Ensure -eq 'Absent' -and $currentInstance.Ensure -eq 'Present')
     {
+        if ($currentInstance.IsGlobalScript)
+        {
+            throw "The Intune Device Remediation with Id {$($currentInstance.Id)} is a global script and cannot be removed."
+        }
         Write-Verbose -Message "Removing the Intune Device Remediation with Id {$($currentInstance.Id)}"
         #region resource generator code
         Remove-MgBetaDeviceManagementDeviceHealthScript -DeviceHealthScriptId $currentInstance.Id
@@ -557,6 +579,10 @@ function Test-TargetResource
         [Parameter()]
         [System.Boolean]
         $EnforceSignatureCheck,
+
+        [Parameter()]
+        [System.Boolean]
+        $IsGlobalScript,
 
         [Parameter()]
         [System.String]
@@ -641,7 +667,7 @@ function Test-TargetResource
     Write-Verbose -Message "Testing configuration of the Intune Device Remediation with Id {$Id} and DisplayName {$DisplayName}"
 
     $CurrentValues = Get-TargetResource @PSBoundParameters
-    $ValuesToCheck = ([Hashtable]$PSBoundParameters).clone()
+    $ValuesToCheck = ([Hashtable]$PSBoundParameters).Clone()
 
     if ($CurrentValues.Ensure -ne $Ensure)
     {
@@ -671,7 +697,22 @@ function Test-TargetResource
     }
 
     $ValuesToCheck.Remove('Id') | Out-Null
+    $ValuesToCheck.Remove('IsGlobalScript') | Out-Null
     $ValuesToCheck = Remove-M365DSCAuthenticationParameter -BoundParameters $ValuesToCheck
+
+    if ($CurrentValues.IsGlobalScript)
+    {
+        Write-Verbose -Message "Detected a global script, removing read-only properties from the comparison"
+        $ValuesToCheck.Remove('DetectionScriptContent') | Out-Null
+        $ValuesToCheck.Remove('RemediationScriptContent') | Out-Null
+        $ValuesToCheck.Remove('DetectionScriptParameters') | Out-Null
+        $ValuesToCheck.Remove('RemediationScriptParameters') | Out-Null
+        $ValuesToCheck.Remove('DeviceHealthScriptType') | Out-Null
+        $ValuesToCheck.Remove('Publisher') | Out-Null
+        $ValuesToCheck.Remove('EnforceSignatureCheck') | Out-Null
+        $ValuesToCheck.Remove('DisplayName') | Out-Null
+        $ValuesToCheck.Remove('Description') | Out-Null
+    }
 
     Write-Verbose -Message "Current Values: $(Convert-M365DscHashtableToString -Hashtable $CurrentValues)"
     Write-Verbose -Message "Target Values: $(Convert-M365DscHashtableToString -Hashtable $ValuesToCheck)"
@@ -750,9 +791,7 @@ function Export-TargetResource
         [array]$getValue = Get-MgBetaDeviceManagementDeviceHealthScript `
             -Filter $Filter `
             -All `
-            -ErrorAction Stop | Where-Object -FilterScript {
-                $_.IsGlobalScript -eq $false
-            }
+            -ErrorAction Stop
         #endregion
 
         $i = 1
@@ -773,9 +812,9 @@ function Export-TargetResource
             }
 
             $displayedKey = $config.Id
-            if (-not [String]::IsNullOrEmpty($config.displayName))
+            if (-not [String]::IsNullOrEmpty($config.DisplayName))
             {
-                $displayedKey = $config.displayName
+                $displayedKey = $config.DisplayName
             }
             Write-Host "    |---[$i/$($getValue.Count)] $displayedKey" -NoNewline
             $params = @{

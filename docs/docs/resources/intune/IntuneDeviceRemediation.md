@@ -9,7 +9,8 @@
 | **DetectionScriptParameters** | Write | MSFT_MicrosoftGraphdeviceHealthScriptParameter[] | List of ComplexType DetectionScriptParameters objects. | |
 | **DeviceHealthScriptType** | Write | String | DeviceHealthScriptType for the script policy. Possible values are: deviceHealthScript, managedInstallerScript. | `deviceHealthScript`, `managedInstallerScript` |
 | **DisplayName** | Required | String | Name of the device health script | |
-| **EnforceSignatureCheck** | Write | Boolean | Indicate whether the script signature needs be checked | |
+| **EnforceSignatureCheck** | Write | Boolean | Indicates whether the script signature needs be checked | |
+| **IsGlobalScript** | Write | Boolean | Indicates whether the script is a global script provided by Microsoft | |
 | **Publisher** | Write | String | Name of the device health script publisher | |
 | **RemediationScriptContent** | Write | String | The entire content of the remediation powershell script | |
 | **RemediationScriptParameters** | Write | MSFT_MicrosoftGraphdeviceHealthScriptParameter[] | List of ComplexType RemediationScriptParameters objects. | |
@@ -79,6 +80,14 @@
 ## Description
 
 Intune Device Remediation
+
+**Important:** Global scripts only allow the update of the following properties:
+
+* Assignments
+* RoleScopeTagIds
+* RunAs32Bit
+* RunAsAccount
+
 
 ## Permissions
 
