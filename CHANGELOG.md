@@ -38,6 +38,9 @@
   * Fix `Compare-PSCustomObjectArrays` by allowing empty arrays as input
     FIXES [#4952](https://github.com/microsoft/Microsoft365DSC/issues/4952)
 * MISC
+  * Improve module updates and PowerShell Core support across the DSC
+    resources.
+    FIXES [#4941](https://github.com/microsoft/Microsoft365DSC/issues/4941)
   * Replace some `Write-Host` occurrences in core engine with
     appropriate alternatives.
     FIXES [#4943](https://github.com/microsoft/Microsoft365DSC/issues/4943)
