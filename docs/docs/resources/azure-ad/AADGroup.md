@@ -10,6 +10,7 @@
 | **Id** | Write | String | Specifies an ID for the group. | |
 | **Owners** | Write | StringArray[] | User Service Principal values for the group's owners. | |
 | **Members** | Write | StringArray[] | User Service Principal values for the group's members. | |
+| **GroupAsMembers** | Write | StringArray[] | Displayname values for the groups member of the group. | |
 | **MemberOf** | Write | StringArray[] | DisplayName values for the groups that this group is a member of. | |
 | **GroupTypes** | Write | StringArray[] | Specifies that the group is a dynamic group. To create a dynamic group, specify a value of DynamicMembership. | |
 | **MembershipRule** | Write | String | Specifies the membership rule for a dynamic group. | |
@@ -105,6 +106,8 @@ Configuration Example
             MailEnabled     = $True
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
+            Members         = @("admin@$TenantId", "AdeleV@$TenantId")
+            GroupAsMembers  = @("Group1", "Group2")
             Visibility      = "Private"
             Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
             Ensure          = "Present"
@@ -148,6 +151,8 @@ Configuration Example
             MailEnabled     = $True
             GroupTypes      = @("Unified")
             MailNickname    = "M365DSC"
+            Members         = @("AdeleV@$TenantId")
+            GroupAsMembers  = @("Group1")
             Visibility      = "Private"
             Owners          = @("admin@$TenantId", "AdeleV@$TenantId")
             Ensure          = "Present"
