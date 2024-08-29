@@ -1,8 +1,7 @@
 # Change log for Microsoft365DSC
 
-# UNRELEASED
-* AADGroup
-  * FIXES [#4994](https://github.com/microsoft/Microsoft365DSC/issues/4994)
+# 1.24.828.1
+
 * AADAdministrativeUnit
   * Fix Properties for Dynamic Administrative Units in Graph have moved
 * AADConditionalAccessPolicy
@@ -14,6 +13,8 @@
     FIXES [#4960](https://github.com/microsoft/Microsoft365DSC/issues/4960)
     FIXES [#4734](https://github.com/microsoft/Microsoft365DSC/issues/4734)
     FIXES [#4725](https://github.com/microsoft/Microsoft365DSC/issues/4725)
+* AADGroup
+  * FIXES [#4994](https://github.com/microsoft/Microsoft365DSC/issues/4994)
 * EXOAuthenticationPolicyAssignment
   * Removes the 1000 user limit when exporting authentication policy assignments
     FIXES [#4956](https://github.com/microsoft/Microsoft365DSC/issues/4956)
@@ -70,6 +71,7 @@
     FIXES [#4983](https://github.com/microsoft/Microsoft365DSC/pull/4983)
 * DEPENDENCIES
   * Updated MicrosoftTeams to version 6.5.0.
+  * Updated MSCloudLoginAssistant to version 1.1.19.
 
 # 1.24.731.1
 
