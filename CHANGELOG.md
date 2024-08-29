@@ -1,5 +1,8 @@
 # Change log for Microsoft365DSC
 
+* EXOOwaMailboxPolicy
+  * Add support for AccountTransferEnabled parameter
+
 # 1.24.828.1
 
 * AADAdministrativeUnit
