@@ -63,6 +63,18 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
                             AdditionalProperties = @{
                                 '@odata.type' = '#microsoft.graph.deviceManagementConfigurationChoiceSettingDefinition'
                             }
+                        },
+                        @{
+                            Id = 'device_vendor_msft_policy_config_defender_attacksurfacereductionrules'
+                            Name = 'AttackSurfaceReductionRules'
+                            AdditionalProperties = @{
+                                '@odata.type' = '#microsoft.graph.deviceManagementConfigurationSettingGroupCollectionDefinition'
+                                'childIds' = @(
+                                    'device_vendor_msft_policy_config_defender_attacksurfacereductionrules_useadvancedprotectionagainstransomware'
+                                )
+                                minimumCount = 0
+                                maximumCount = 1
+                            }
                         }
                     )
                     SettingInstance      = @{

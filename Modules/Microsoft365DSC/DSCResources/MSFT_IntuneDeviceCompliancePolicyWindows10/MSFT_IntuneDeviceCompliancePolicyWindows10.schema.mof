@@ -44,7 +44,7 @@ class MSFT_IntuneDeviceCompliancePolicyWindows10 : OMI_BaseResource
     [Write, Description("DeviceThreatProtectionEnabled of the Windows 10 device compliance policy.")] Boolean DeviceThreatProtectionEnabled;
     [Write, Description("DeviceThreatProtectionRequiredSecurityLevel of the Windows 10 device compliance policy."), ValueMap{"Unavailable","Secured","Low", "Medium","High","NotSet"}, Values{"Unavailable","Secured","Low", "Medium","High","NotSet"}] String DeviceThreatProtectionRequiredSecurityLevel;
     [Write, Description("ConfigurationManagerComplianceRequired of the Windows 10 device compliance policy.")] Boolean ConfigurationManagerComplianceRequired;
-    [Write, Description("TPMRequired of the Windows 10 device compliance policy.")] Boolean TPMRequired;
+    [Write, Description("TpmRequired of the Windows 10 device compliance policy.")] Boolean TpmRequired;
     [Write, Description("DeviceCompliancePolicyScript of the Windows 10 device compliance policy.")] String DeviceCompliancePolicyScript;
     [Write, Description("ValidOperatingSystemBuildRanges of the Windows 10 device compliance policy.")] String ValidOperatingSystemBuildRanges[];
     [Write, Description("Present ensures the policy exists, absent ensures it is removed."), ValueMap{"Present","Absent"}, Values{"Present","Absent"}] string Ensure;

@@ -3519,6 +3519,11 @@
                            },
                            {
                                "CIMType":  "String[]",
+                               "Name":  "GroupAsMembers",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "String[]",
                                "Name":  "MemberOf",
                                "Option":  "Write"
                            },
@@ -18639,7 +18644,7 @@
                            },
                            {
                                "CIMType":  "Boolean",
-                               "Name":  "TPMRequired",
+                               "Name":  "TpmRequired",
                                "Option":  "Write"
                            },
                            {
@@ -29610,6 +29615,11 @@
                            {
                                "CIMType":  "Boolean",
                                "Name":  "EnforceSignatureCheck",
+                               "Option":  "Write"
+                           },
+                           {
+                               "CIMType":  "Boolean",
+                               "Name":  "IsGlobalScript",
                                "Option":  "Write"
                            },
                            {

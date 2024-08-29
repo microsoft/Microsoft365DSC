@@ -314,6 +314,7 @@ function Get-TargetResource
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
                         -Credential $Credential
+                    continue
                 }
                 if ($IncludeUser)
                 {
@@ -349,6 +350,7 @@ function Get-TargetResource
                         -Source $($MyInvocation.MyCommand.Source) `
                         -TenantId $TenantId `
                         -Credential $Credential
+                    continue
                 }
                 if ($ExcludeUser)
                 {
@@ -372,7 +374,7 @@ function Get-TargetResource
             $IncludeGroup = $null
             try
             {
-                $IncludeGroup = (Get-MgGroup -GroupId $IncludeGroupGUID).displayname
+                $IncludeGroup = (Get-MgGroup -GroupId $IncludeGroupGUID -ErrorAction Stop).displayname
             }
             catch
             {
@@ -382,6 +384,7 @@ function Get-TargetResource
                     -Source $($MyInvocation.MyCommand.Source) `
                     -TenantId $TenantId `
                     -Credential $Credential
+                continue
             }
             if ($IncludeGroup)
             {
@@ -400,7 +403,7 @@ function Get-TargetResource
             $ExcludeGroup = $null
             try
             {
-                $ExcludeGroup = (Get-MgGroup -GroupId $ExcludeGroupGUID).displayname
+                $ExcludeGroup = (Get-MgGroup -GroupId $ExcludeGroupGUID -ErrorAction Stop).displayname
             }
             catch
             {
@@ -410,6 +413,7 @@ function Get-TargetResource
                     -Source $($MyInvocation.MyCommand.Source) `
                     -TenantId $TenantId `
                     -Credential $Credential
+                continue
             }
             if ($ExcludeGroup)
             {
@@ -1026,7 +1030,7 @@ function Set-TargetResource
                         $userguid = $null
                         try
                         {
-                            $userguid = (Get-MgUser -UserId $includeuser).Id
+                            $userguid = (Get-MgUser -UserId $includeuser -ErrorAction Stop).Id
                         }
                         catch
                         {
@@ -1073,7 +1077,7 @@ function Set-TargetResource
                         $userguid = $null
                         try
                         {
-                            $userguid = (Get-MgUser -UserId $excludeuser).Id
+                            $userguid = (Get-MgUser -UserId $excludeuser -ErrorAction Stop).Id
                         }
                         catch
                         {
@@ -1118,7 +1122,7 @@ function Set-TargetResource
                     $GroupLookup = $null
                     try
                     {
-                        $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$includegroup'"
+                        $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$includegroup'" -ErrorAction Stop
                     }
                     catch
                     {
@@ -1168,7 +1172,7 @@ function Set-TargetResource
                     $GroupLookup = $null
                     try
                     {
-                        $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$ExcludeGroup'"
+                        $GroupLookup = Get-MgGroup -Filter "DisplayName eq '$ExcludeGroup'" -ErrorAction Stop
                     }
                     catch
                     {
@@ -1519,15 +1523,23 @@ function Set-TargetResource
         if ($currentParameters.ContainsKey('TransferMethods'))
         {
             #create and provision TransferMethods condition object if used
-            if (-not $conditions.Contains('authenticationFlows'))
+            $authenticationFlows = if ([System.String]::IsNullOrEmpty($TransferMethods))
             {
-                $conditions.Add('authenticationFlows', @{
-                        transferMethods = $TransferMethods
-                    })
+                $null
             }
             else
             {
-                $conditions.authenticationFlows.Add('transferMethods', $TransferMethods)
+                @{
+                    transferMethods = $TransferMethods
+                }
+            }
+            if (-not $conditions.Contains('authenticationFlows'))
+            {
+                $conditions.Add('authenticationFlows', $authenticationFlows)
+            }
+            else
+            {
+                $conditions.authenticationFlows = $authenticationFlows
             }
 
         }
@@ -1972,10 +1984,28 @@ function Test-TargetResource
     $ValuesToCheck = $PSBoundParameters
     $ValuesToCheck.Remove('Id') | Out-Null
 
-    $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
-        -Source $($MyInvocation.MyCommand.Source) `
-        -DesiredValues $PSBoundParameters `
-        -ValuesToCheck $ValuesToCheck.Keys
+    # If no TransferMethod is specified, ignore it
+    # If a TransferMethod is specified, check if it is equal to the current value
+    # while ignoring the order of the values
+    if (-not $PSBoundParameters.ContainsKey('TransferMethods') -or
+        $null -eq (Compare-Object -ReferenceObject $TransferMethods.Split(',') -DifferenceObject $CurrentValues.TransferMethods.Split(',')))
+    {
+        $ValuesToCheck.Remove('TransferMethods') | Out-Null
+        $TestResult = $true
+    }
+    else
+    {
+        Write-Verbose -Message "TransferMethods are not equal: [$TransferMethods] - [$($CurrentValues.TransferMethods)]"
+        $TestResult  = $false
+    }
+
+    if ($TestResult)
+    {
+        $TestResult = Test-M365DSCParameterState -CurrentValues $CurrentValues `
+            -Source $($MyInvocation.MyCommand.Source) `
+            -DesiredValues $PSBoundParameters `
+            -ValuesToCheck $ValuesToCheck.Keys
+    }
 
     Write-Verbose -Message "Test-TargetResource returned $TestResult"
 

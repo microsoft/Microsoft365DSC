@@ -368,7 +368,7 @@ function Get-IconPath
     }
     elseif ($ResourceName.StartsWith('SC'))
     {
-        return Get-Base64EncodedImage -IconName "SecurityAndComplance.png"
+        return Get-Base64EncodedImage -IconName "SecurityAndCompliance.png"
     }
     elseif ($ResourceName.StartsWith('SPO'))
     {
@@ -419,12 +419,21 @@ function Get-Base64EncodedImage
         {
             $mimeType = "image/jpeg"
         }
+
         if($icon.Extension.endsWith("png"))
         {
             $mimeType = "image/png"
         }
 
-        $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $iconPath -Encoding Byte -ReadCount 0))
+        if ($PSVersionTable.PSEdition -eq 'Core')
+        {
+            $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $IconPath -AsByteStream -ReadCount 0))
+        }
+        else
+        {
+            $base64EncodedImage = [System.Convert]::ToBase64String((Get-Content -Path $iconPath -Encoding Byte -ReadCount 0))
+        }
+
         return $("data:$($mimeType);base64,$($base64EncodedImage)")
     }
     else
@@ -736,7 +745,15 @@ function Compare-M365DSCConfigurations
         [Array]$DestinationObject = $DestinationObject | Where-Object -FilterScript { $_.ResourceName -notin $ExcludedResources }
     }
 
-    $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
+    $isPowerShellCore = $PSVersionTable.PSEdition -eq 'Core'
+    if ($isPowerShellCore)
+    {
+        $dscResourceInfo = Get-PwshDSCResource -Module 'Microsoft365DSC'
+    }
+    else
+    {
+        $dscResourceInfo = Get-DSCResource -Module 'Microsoft365DSC'
+    }
     # Loop through all items in the source array
     $i = 1
     foreach ($sourceResource in $SourceObject)
@@ -1086,7 +1103,7 @@ function Compare-M365DSCConfigurations
         }
         catch
         {
-            Write-Host "Error: $_"
+            Write-Error -Message $_ -ErrorAction Continue
         }
         $i++
     }
@@ -1140,7 +1157,7 @@ function Compare-M365DSCConfigurations
     }
     catch
     {
-        Write-Host "Error: $_"
+        Write-Error -Message $_ -ErrorAction Continue
     }
     Write-Progress -Activity 'Scanning Destination...' -Completed
 
