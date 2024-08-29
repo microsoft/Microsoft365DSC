@@ -1870,6 +1870,11 @@ function Get-IntuneSettingCatalogPolicySettingInstanceValue
                 -SettingDefinition $SettingDefinition `
                 -DSCParams $DSCParams
 
+            if ($null -eq $valuesResult)
+            {
+                return $null
+            }
+
             $values = $valuesResult.Value
             $SettingValueType = $valuesResult.SettingDefinition.AdditionalProperties.valueDefinition.'@odata.type'.Replace('Definition', '')
 
