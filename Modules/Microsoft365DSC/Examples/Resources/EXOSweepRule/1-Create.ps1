@@ -21,8 +21,8 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        ApplicationId         = $ConfigurationData.NonNodeData.ApplicationId;
-        CertificateThumbprint = $ConfigurationData.NonNodeData.CertificateThumbprint;
+        ApplicationId         = $ApplicationId;
+        CertificateThumbprint = $CertificateThumbprint;
         DestinationFolder     = "Test2:\Deleted Items";
         Enabled               = $True;
         Ensure                = "Present";
@@ -32,6 +32,6 @@ Configuration Example
         Provider              = "Exchange16";
         SenderName            = "michelle@fabrikam.com";
         SourceFolder          = "Test2:\Inbox";
-        TenantId              = $OrganizationName;
+        TenantId              = $TenantId;
     }
 }

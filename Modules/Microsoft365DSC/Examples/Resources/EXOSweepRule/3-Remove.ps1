@@ -21,12 +21,12 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        ApplicationId         = $ConfigurationData.NonNodeData.ApplicationId;
-        CertificateThumbprint = $ConfigurationData.NonNodeData.CertificateThumbprint;
+        ApplicationId         = $ApplicationId;
+        CertificateThumbprint = $CertificateThumbprint;
         Enabled               = $True;
         Ensure                = "Absent";
         Mailbox               = "Test2";
         Name                  = "From Michelle";
-        TenantId              = $OrganizationName;
+        TenantId              = $TenantId;
     }
 }
