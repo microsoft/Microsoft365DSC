@@ -16,14 +16,8 @@
                 "update": []
             },
             "application": {
-                "read": [
-                    {
-                    }
-                ],
-                "update": [
-                    {
-                    }
-                ]
+                "read": [],
+                "update": []
             }
         }
     }
