@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOSweepRule
+  * Initial Release.
 * M365DSCDRGUtil
   * Fixes an issue where a Intune settings catalog DSC param was not handled
     correctly when it was not specified.
