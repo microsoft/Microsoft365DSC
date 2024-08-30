@@ -21,17 +21,20 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        ApplicationId         = $ApplicationId;
-        CertificateThumbprint = $CertificateThumbprint;
-        DestinationFolder     = "Test2:\Deleted Items";
-        Enabled               = $True;
-        Ensure                = "Present";
-        KeepLatest            = 13; # Drift
-        Mailbox               = "Test2";
-        Name                  = "From Michelle";
-        Provider              = "Exchange16";
-        SenderName            = "michelle@fabrikam.com";
-        SourceFolder          = "Test2:\Inbox";
-        TenantId              = $TenantId;
+        EXOSweepRule 'MyRule'
+        {
+            ApplicationId         = $ApplicationId;
+            CertificateThumbprint = $CertificateThumbprint;
+            DestinationFolder     = "Test2:\Deleted Items";
+            Enabled               = $True;
+            Ensure                = "Present";
+            KeepLatest            = 13; # Drift
+            Mailbox               = "Test2";
+            Name                  = "From Michelle";
+            Provider              = "Exchange16";
+            SenderName            = "michelle@fabrikam.com";
+            SourceFolder          = "Test2:\Inbox";
+            TenantId              = $TenantId;
+        }
     }
 }

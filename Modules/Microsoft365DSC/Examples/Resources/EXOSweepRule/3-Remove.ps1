@@ -21,12 +21,15 @@ Configuration Example
     Import-DscResource -ModuleName Microsoft365DSC
     node localhost
     {
-        ApplicationId         = $ApplicationId;
-        CertificateThumbprint = $CertificateThumbprint;
-        Enabled               = $True;
-        Ensure                = "Absent";
-        Mailbox               = "Test2";
-        Name                  = "From Michelle";
-        TenantId              = $TenantId;
+        EXOSweepRule 'MyRule'
+        {
+            ApplicationId         = $ApplicationId;
+            CertificateThumbprint = $CertificateThumbprint;
+            Enabled               = $True;
+            Ensure                = "Absent";
+            Mailbox               = "Test2";
+            Name                  = "From Michelle";
+            TenantId              = $TenantId;
+        }
     }
 }
