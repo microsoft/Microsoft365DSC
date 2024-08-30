@@ -121,18 +121,16 @@ Describe -Name $Global:DscHelper.DescribeHeader -Fixture {
 
         Context -Name "The instance exists and values are NOT in the desired state" -Fixture {
             BeforeAll {
-                BeforeAll {
-                    $testParams = @{
-                        ##TODO - Add Parameters
-                        Ensure              = 'Present'
-                        Credential          = $Credential;
-                    }
+                $testParams = @{
+                    ##TODO - Add Parameters
+                    Ensure              = 'Present'
+                    Credential          = $Credential;
+                }
 
-                    ##TODO - Mock the Get-Cmdlet to return a drift
-                    Mock -CommandName Get-Cmdlet -MockWith {
-                        return @{
+                ##TODO - Mock the Get-Cmdlet to return a drift
+                Mock -CommandName Get-Cmdlet -MockWith {
+                    return @{
 
-                        }
                     }
                 }
             }
