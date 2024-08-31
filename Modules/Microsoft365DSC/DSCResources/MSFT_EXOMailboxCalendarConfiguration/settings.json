@@ -1,5 +1,5 @@
 ﻿{
-    "resourceName": "EXOMailboxCalendarFolder",
+    "resourceName": "EXOMailboxCalendarConfiguration",
     "description": "",
     "roles": {
         "read": [

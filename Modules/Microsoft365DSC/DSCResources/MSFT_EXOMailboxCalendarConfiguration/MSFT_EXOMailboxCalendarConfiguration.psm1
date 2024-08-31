@@ -45,7 +45,7 @@ function Get-TargetResource
         $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DefaultOnlineMeetingProvider,
 
         [Parameter()]
@@ -69,7 +69,7 @@ function Get-TargetResource
         $EventsFromEmailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $FirstWeekOfYear,
 
         [Parameter()]
@@ -85,15 +85,15 @@ function Get-TargetResource
         $InvoiceEventsFromEmailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $LocationDetailsInFreeBusy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MailboxLocation,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OnlineMeetingsByDefaultEnabled,
 
         [Parameter()]
@@ -121,7 +121,7 @@ function Get-TargetResource
         $ServiceAppointmentEventsFromEmailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ShortenEventScopeDefault,
 
         [Parameter()]
@@ -129,7 +129,7 @@ function Get-TargetResource
         $ShowWeekNumbers,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $TimeIncrement,
 
         [Parameter()]
@@ -137,7 +137,7 @@ function Get-TargetResource
         $UseBrightCalendarColorThemeInOwa,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WeatherEnabled,
 
         [Parameter()]
@@ -145,19 +145,19 @@ function Get-TargetResource
         $WeatherLocationBookmark,
 
         [Parameter()]
-        [System.Object]
+        [System.String[]]
         $WeatherLocations,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WeatherUnit,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WeekStartDay,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WorkDays,
 
         [Parameter()]
@@ -169,11 +169,11 @@ function Get-TargetResource
         $WorkingHoursStartTime,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WorkingHoursTimeZone,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WorkspaceUserEnabled,
 
         [Parameter()]
@@ -225,64 +225,53 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        if ($null -ne $Script:exportedInstances -and $Script:ExportMode)
-        {
-            $instance = $Script:exportedInstances | Where-Object -FilterScript {$_.Identity -eq $Identity}
-        }
-        else
-        {
-            $instance = Get-MailboxCalendarConfiguration -Identity $Identity -ErrorAction Stop
-        }
-        if ($null -eq $instance)
-        {
-            return $nullResult
-        }
+        $config = Get-MailboxCalendarConfiguration -Identity $Identity -ErrorAction Stop
 
         $results = @{
             Ensure                              = 'Present'
             Identity                            = $Identity
-            AgendaMailIntroductionEnabled       = $AgendaMailIntroductionEnabled
-            AutoDeclineWhenBusy                 = $AutoDeclineWhenBusy
-            CalendarFeedsPreferredLanguage      = $CalendarFeedsPreferredLanguage
-            CalendarFeedsPreferredRegion        = $CalendarFeedsPreferredRegion
-            CalendarFeedsRootPageId             = $CalendarFeedsRootPageId
-            ConversationalSchedulingEnabled     = $ConversationalSchedulingEnabled
-            CreateEventsFromEmailAsPrivate      = $CreateEventsFromEmailAsPrivate
-            DefaultMinutesToReduceLongEventsBy  = $DefaultMinutesToReduceLongEventsBy
-            DefaultMinutesToReduceShortEventsBy = $DefaultMinutesToReduceShortEventsBy
-            DefaultOnlineMeetingProvider        = $DefaultOnlineMeetingProvider
-            DefaultReminderTime                 = $DefaultReminderTime
-            DeleteMeetingRequestOnRespond       = $DeleteMeetingRequestOnRespond
-            DiningEventsFromEmailEnabled        = $DiningEventsFromEmailEnabled
-            EntertainmentEventsFromEmailEnabled = $EntertainmentEventsFromEmailEnabled
-            EventsFromEmailEnabled              = $EventsFromEmailEnabled
-            FirstWeekOfYear                     = $FirstWeekOfYear
-            FlightEventsFromEmailEnabled        = $FlightEventsFromEmailEnabled
-            HotelEventsFromEmailEnabled         = $HotelEventsFromEmailEnabled
-            InvoiceEventsFromEmailEnabled       = $InvoiceEventsFromEmailEnabled
-            LocationDetailsInFreeBusy           = $LocationDetailsInFreeBusy
-            MailboxLocation                     = $MailboxLocation
-            OnlineMeetingsByDefaultEnabled      = $OnlineMeetingsByDefaultEnabled
-            PackageDeliveryEventsFromEmailEnabled = $PackageDeliveryEventsFromEmailEnabled
-            PreserveDeclinedMeetings            = $PreserveDeclinedMeetings
-            RemindersEnabled                    = $RemindersEnabled
-            ReminderSoundEnabled                = $ReminderSoundEnabled
-            RentalCarEventsFromEmailEnabled     = $RentalCarEventsFromEmailEnabled
-            ServiceAppointmentEventsFromEmailEnabled = $ServiceAppointmentEventsFromEmailEnabled
-            ShortenEventScopeDefault            = $ShortenEventScopeDefault
-            ShowWeekNumbers                     = $ShowWeekNumbers
-            TimeIncrement                       = $TimeIncrement
-            UseBrightCalendarColorThemeInOwa    = $UseBrightCalendarColorThemeInOwa
-            WeatherEnabled                      = $WeatherEnabled
-            WeatherLocationBookmark             = $WeatherLocationBookmark
-            WeatherLocations                    = $WeatherLocations
-            WeatherUnit                         = $WeatherUnit
-            WeekStartDay                        = $WeekStartDay
-            WorkDays                            = $WorkDays
-            WorkingHoursEndTime                 = $WorkingHoursEndTime
-            WorkingHoursStartTime               = $WorkingHoursStartTime
-            WorkingHoursTimeZone                = $WorkingHoursTimeZone
-            WorkspaceUserEnabled                = $WorkspaceUserEnabled
+            AgendaMailIntroductionEnabled       = $config.AgendaMailIntroductionEnabled
+            AutoDeclineWhenBusy                 = $config.AutoDeclineWhenBusy
+            CalendarFeedsPreferredLanguage      = $config.CalendarFeedsPreferredLanguage
+            CalendarFeedsPreferredRegion        = $config.CalendarFeedsPreferredRegion
+            CalendarFeedsRootPageId             = $config.CalendarFeedsRootPageId
+            ConversationalSchedulingEnabled     = $config.ConversationalSchedulingEnabled
+            CreateEventsFromEmailAsPrivate      = $config.CreateEventsFromEmailAsPrivate
+            DefaultMinutesToReduceLongEventsBy  = $config.DefaultMinutesToReduceLongEventsBy
+            DefaultMinutesToReduceShortEventsBy = $config.DefaultMinutesToReduceShortEventsBy
+            DefaultOnlineMeetingProvider        = $config.DefaultOnlineMeetingProvider
+            DefaultReminderTime                 = $config.DefaultReminderTime
+            DeleteMeetingRequestOnRespond       = $config.DeleteMeetingRequestOnRespond
+            DiningEventsFromEmailEnabled        = $config.DiningEventsFromEmailEnabled
+            EntertainmentEventsFromEmailEnabled = $config.EntertainmentEventsFromEmailEnabled
+            EventsFromEmailEnabled              = $config.EventsFromEmailEnabled
+            FirstWeekOfYear                     = $config.FirstWeekOfYear
+            FlightEventsFromEmailEnabled        = $config.FlightEventsFromEmailEnabled
+            HotelEventsFromEmailEnabled         = $config.HotelEventsFromEmailEnabled
+            InvoiceEventsFromEmailEnabled       = $config.InvoiceEventsFromEmailEnabled
+            LocationDetailsInFreeBusy           = $config.LocationDetailsInFreeBusy
+            MailboxLocation                     = $config.MailboxLocation
+            OnlineMeetingsByDefaultEnabled      = $config.OnlineMeetingsByDefaultEnabled
+            PackageDeliveryEventsFromEmailEnabled = $config.PackageDeliveryEventsFromEmailEnabled
+            PreserveDeclinedMeetings            = $config.PreserveDeclinedMeetings
+            RemindersEnabled                    = $config.RemindersEnabled
+            ReminderSoundEnabled                = $config.ReminderSoundEnabled
+            RentalCarEventsFromEmailEnabled     = $config.RentalCarEventsFromEmailEnabled
+            ServiceAppointmentEventsFromEmailEnabled = $config.ServiceAppointmentEventsFromEmailEnabled
+            ShortenEventScopeDefault            = $config.ShortenEventScopeDefault
+            ShowWeekNumbers                     = $config.ShowWeekNumbers
+            TimeIncrement                       = $config.TimeIncrement
+            UseBrightCalendarColorThemeInOwa    = $config.UseBrightCalendarColorThemeInOwa
+            WeatherEnabled                      = $config.WeatherEnabled
+            WeatherLocationBookmark             = $config.WeatherLocationBookmark
+            WeatherLocations                    = $config.WeatherLocations
+            WeatherUnit                         = $config.WeatherUnit
+            WeekStartDay                        = $config.WeekStartDay
+            WorkDays                            = $config.WorkDays
+            WorkingHoursEndTime                 = $config.WorkingHoursEndTime
+            WorkingHoursStartTime               = $config.WorkingHoursStartTime
+            WorkingHoursTimeZone                = $config.WorkingHoursTimeZone
+            WorkspaceUserEnabled                = $config.WorkspaceUserEnabled
             Credential                          = $Credential
             ApplicationId                       = $ApplicationId
             TenantId                            = $TenantId
@@ -350,7 +339,7 @@ function Set-TargetResource
         $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DefaultOnlineMeetingProvider,
 
         [Parameter()]
@@ -374,7 +363,7 @@ function Set-TargetResource
         $EventsFromEmailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $FirstWeekOfYear,
 
         [Parameter()]
@@ -390,15 +379,15 @@ function Set-TargetResource
         $InvoiceEventsFromEmailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $LocationDetailsInFreeBusy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MailboxLocation,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OnlineMeetingsByDefaultEnabled,
 
         [Parameter()]
@@ -426,7 +415,7 @@ function Set-TargetResource
         $ServiceAppointmentEventsFromEmailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ShortenEventScopeDefault,
 
         [Parameter()]
@@ -434,7 +423,7 @@ function Set-TargetResource
         $ShowWeekNumbers,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $TimeIncrement,
 
         [Parameter()]
@@ -442,7 +431,7 @@ function Set-TargetResource
         $UseBrightCalendarColorThemeInOwa,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WeatherEnabled,
 
         [Parameter()]
@@ -450,19 +439,19 @@ function Set-TargetResource
         $WeatherLocationBookmark,
 
         [Parameter()]
-        [System.Object]
+        [System.String[]]
         $WeatherLocations,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WeatherUnit,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WeekStartDay,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WorkDays,
 
         [Parameter()]
@@ -474,11 +463,11 @@ function Set-TargetResource
         $WorkingHoursStartTime,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WorkingHoursTimeZone,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WorkspaceUserEnabled,
 
         [Parameter()]
@@ -577,7 +566,7 @@ function Test-TargetResource
         $DefaultMinutesToReduceShortEventsBy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $DefaultOnlineMeetingProvider,
 
         [Parameter()]
@@ -601,7 +590,7 @@ function Test-TargetResource
         $EventsFromEmailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $FirstWeekOfYear,
 
         [Parameter()]
@@ -617,15 +606,15 @@ function Test-TargetResource
         $InvoiceEventsFromEmailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $LocationDetailsInFreeBusy,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $MailboxLocation,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $OnlineMeetingsByDefaultEnabled,
 
         [Parameter()]
@@ -653,7 +642,7 @@ function Test-TargetResource
         $ServiceAppointmentEventsFromEmailEnabled,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $ShortenEventScopeDefault,
 
         [Parameter()]
@@ -661,7 +650,7 @@ function Test-TargetResource
         $ShowWeekNumbers,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $TimeIncrement,
 
         [Parameter()]
@@ -669,7 +658,7 @@ function Test-TargetResource
         $UseBrightCalendarColorThemeInOwa,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WeatherEnabled,
 
         [Parameter()]
@@ -677,19 +666,19 @@ function Test-TargetResource
         $WeatherLocationBookmark,
 
         [Parameter()]
-        [System.Object]
+        [System.String[]]
         $WeatherLocations,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WeatherUnit,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WeekStartDay,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WorkDays,
 
         [Parameter()]
@@ -701,11 +690,11 @@ function Test-TargetResource
         $WorkingHoursStartTime,
 
         [Parameter()]
-        [System.Object]
+        [System.String]
         $WorkingHoursTimeZone,
 
         [Parameter()]
-        [System.Object]
+        [System.Boolean]
         $WorkspaceUserEnabled,
 
         [Parameter()]
