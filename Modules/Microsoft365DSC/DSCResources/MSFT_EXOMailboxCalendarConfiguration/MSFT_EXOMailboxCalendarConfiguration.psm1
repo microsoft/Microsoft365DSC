@@ -264,7 +264,7 @@ function Get-TargetResource
             UseBrightCalendarColorThemeInOwa    = $config.UseBrightCalendarColorThemeInOwa
             WeatherEnabled                      = $config.WeatherEnabled
             WeatherLocationBookmark             = $config.WeatherLocationBookmark
-            WeatherLocations                    = $config.WeatherLocations
+            WeatherLocations                    = [Array]$config.WeatherLocations
             WeatherUnit                         = $config.WeatherUnit
             WeekStartDay                        = $config.WeekStartDay
             WorkDays                            = $config.WorkDays
