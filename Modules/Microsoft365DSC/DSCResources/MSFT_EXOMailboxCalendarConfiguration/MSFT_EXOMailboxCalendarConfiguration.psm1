@@ -227,6 +227,11 @@ function Get-TargetResource
     {
         $config = Get-MailboxCalendarConfiguration -Identity $Identity -ErrorAction Stop
 
+        if ($null -eq $config)
+        {
+            return $nullResult 
+        }
+
         $results = @{
             Ensure                              = 'Present'
             Identity                            = $Identity
