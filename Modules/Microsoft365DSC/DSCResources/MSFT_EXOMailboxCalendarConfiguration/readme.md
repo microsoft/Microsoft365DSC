@@ -3,4 +3,4 @@
 
 ## Description
 
-##TODO - Provide a short description of what the resource is set to configure.
+This resource allows users to manage mailbox calendar settings. 
