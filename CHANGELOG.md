@@ -2,6 +2,8 @@
 
 # UNRELEASED
 
+* EXOManagementScope
+  * Initial Release.
 * EXOSweepRule
   * Initial Release.
 * M365DSCDRGUtil
