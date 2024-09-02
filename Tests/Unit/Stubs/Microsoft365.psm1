@@ -1,4 +1,19 @@
 # region ExchangeOnlineManagement
+
+function Get-MigrationConfig
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
+function Set-MigrationConfig
+{
+    [CmdletBinding()]
+    param(
+    )
+}
+
 function Get-SweepRule
 {
     [CmdletBinding()]
