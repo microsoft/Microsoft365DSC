@@ -18,9 +18,19 @@ Configuration Example
         [System.String]
         $CertificateThumbprint
     )
+
     Import-DscResource -ModuleName Microsoft365DSC
+
     node localhost
     {
-        
+        EXOManagementScope "EXOManagementScope-Test New DGs"
+        {
+            Credential                 = $Credscredential;
+            Ensure                     = "Present";
+            Exclusive                  = $False;
+            Identity                   = "Test New DGs";
+            Name                       = "Test New DGs";
+            RecipientRestrictionFilter = "Name -like 'Test*'";
+        }
     }
 }
