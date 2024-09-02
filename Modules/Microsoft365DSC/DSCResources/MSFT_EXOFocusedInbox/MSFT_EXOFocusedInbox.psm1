@@ -10,7 +10,7 @@ function Get-TargetResource
 
         [Parameter()]
         [System.DateTime]
-        $FocusedInboxOnLastUpdateTime
+        $FocusedInboxOnLastUpdateTime,
 
         [Parameter()]
         [System.Boolean]
@@ -65,7 +65,7 @@ function Get-TargetResource
     $nullResult.Ensure = 'Absent'
     try
     {
-        $instance = Get-FocusedInbox -Identity $Identity -ErrorAction Stop
+        $instance = Get-FocusedInbox -Identity $Identity 
         if ($null -eq $instance)
         {
             return $nullResult
@@ -74,8 +74,7 @@ function Get-TargetResource
         $results = @{
             Identity              = $Identity
             FocusedInboxOn        = [Boolean]$instance.FocusedInboxOn
-            UseCustomRouting      = [Boolean]$instance.UseCustomRouting
-            FocusedInboxOnLastUpdateTime = $instance.FocusedInboxOnLastUpdateTime
+            FocusedInboxOnLastUpdateTime = [DateTime]$instance.FocusedInboxOnLastUpdateTime
             Ensure                = 'Present'
             Credential            = $Credential
             ApplicationId         = $ApplicationId
@@ -109,7 +108,7 @@ function Set-TargetResource
 
         [Parameter()]
         [System.DateTime]
-        $FocusedInboxOnLastUpdateTime
+        $FocusedInboxOnLastUpdateTime,
 
         [Parameter()]
         [System.Boolean]
@@ -161,7 +160,7 @@ function Set-TargetResource
 
     $setParameters = Remove-M365DSCAuthenticationParameter -BoundParameters $PSBoundParameters
 
-    SetParameters.Remove("FocusedInboxOnLastUpdateTime") | Out-Null
+    $SetParameters.Remove("FocusedInboxOnLastUpdateTime") | Out-Null
     Set-FocusedInbox @SetParameters
 }
 
@@ -177,7 +176,7 @@ function Test-TargetResource
 
         [Parameter()]
         [System.DateTime]
-        $FocusedInboxOnLastUpdateTime
+        $FocusedInboxOnLastUpdateTime,
 
         [Parameter()]
         [System.Boolean]
